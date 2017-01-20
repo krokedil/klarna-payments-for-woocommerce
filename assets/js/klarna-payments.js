@@ -4,13 +4,26 @@ jQuery( function( $ ) {
 	// @TODO: Make sure the form is OK'd by WooCommerce before calling Klarna.Credit.authorize
 
 	var klarna_payments = {
+		authorization_token: false,
+
 		start: function() {
 			$( document.body ).on( 'updated_checkout', function() {
 				klarna_payments.init().then(klarna_payments.load());
 			});
 
-			$( 'form.checkout' ).on( 'checkout_place_order', function() {
-				klarna_payments.authorize().then(function() { return true; });
+			$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
+				console.log('test');
+				console.log('before', klarna_payments.authorization_token);
+				klarna_payments.authorize().done(function() {
+					console.log('after', klarna_payments.authorization_token);
+					$( 'form.checkout' ).append( '<input type="text" name="slbd_name" value="slbd_value" />').submit();
+				});
+
+				if ( klarna_payments.authorization_token ) {
+					return true;
+				} else {
+					return false;
+				}
 			});
 		},
 
@@ -26,7 +39,7 @@ jQuery( function( $ ) {
 					//
 				}
 
-				if (Klarna && !Klarna.Credit.initialized) {
+				if (Klarna && Klarna.Credit && !Klarna.Credit.initialized) {
 					clearInterval(klarnaLoadedInterval);
 					clearTimeout(klarnaLoadedTimeout);
 
@@ -129,6 +142,7 @@ jQuery( function( $ ) {
 				console.log('****** Klarna Credit - Klarna.Credit.authorize RESPONSE: ******');
 				console.log(response);
 				if (response.authorization_token) {
+					klarna_payments.authorization_token = response.authorization_token;
 					console.log( response.authorization_token );
 				}
 				$defer.resolve(response);

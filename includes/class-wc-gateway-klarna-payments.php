@@ -305,6 +305,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Place Klarna Payments order, after authorization
+	 *
+	 *
 	 * @param int $order_id WooCommerce order ID.
 	 *
 	 * @return array
