@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// @TODO: Make translateable
+
 /**
  * Required minimums and constants
  */
@@ -149,6 +151,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 
 			include_once( dirname( __FILE__ ) . '/includes/class-wc-gateway-klarna-payments.php' );
+			include_once( dirname( __FILE__ ) . '/includes/class-wc-klarna-payments-order-lines.php' );
 
 			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateways' ) );

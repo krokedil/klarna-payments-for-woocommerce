@@ -1,29 +1,45 @@
 jQuery( function( $ ) {
 	'use strict';
 
-	// @TODO: Make sure the form is OK'd by WooCommerce before calling Klarna.Credit.authorize
-
 	var klarna_payments = {
-		authorization_token: false,
+		authorization_response: {},
+		client_token: false,
 
 		start: function() {
 			$( document.body ).on( 'updated_checkout', function() {
-				klarna_payments.init().then(klarna_payments.load());
-			});
-
-			$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
-				console.log('test');
-				console.log('before', klarna_payments.authorization_token);
-				klarna_payments.authorize().done(function() {
-					console.log('after', klarna_payments.authorization_token);
-					$( 'form.checkout' ).append( '<input type="text" name="slbd_name" value="slbd_value" />').submit();
-				});
-
-				if ( klarna_payments.authorization_token ) {
-					return true;
-				} else {
-					return false;
+				if (typeof klarna_payments_params !== undefined) {
+					if (klarna_payments_params.hasOwnProperty('client_token')) {
+						klarna_payments.client_token = klarna_payments_params.client_token
+						klarna_payments.init().then(klarna_payments.load());
+					}
 				}
+
+				// @TODO: Improve error handling on authorize, currently it just keeps submitting
+				$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
+					// If we don't have response, call Klarna.Credit.authorize
+					if ( $.isEmptyObject( klarna_payments.authorization_response ) ) {
+						klarna_payments.authorize().done( function( response ) {
+							$( 'form.checkout' ).append( '<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit();
+						} );
+
+						return false;
+					} else {
+						if ( klarna_payments.authorization_response.approved ) {
+							return true
+						} else if ( klarna_payments.authorization_response.show_form ) {
+							// Fix the form, try again.
+							klarna_payments.authorization_response = {}
+							return false;
+						} else {
+							// Hide Klarna Payments.
+							// @TODO: Figure out what to do when KP is the only payment method
+							$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
+							$('li.payment_method_klarna_payments').hide()
+
+							return false;
+						}
+					}
+				});
 			});
 		},
 
@@ -36,7 +52,9 @@ jQuery( function( $ ) {
 				try {
 					Klarna = window.Klarna;
 				} catch (e) {
-					//
+					if ( klarna_payments_params.testmode == true ) {
+						console.log(e)
+					}
 				}
 
 				if (Klarna && Klarna.Credit && !Klarna.Credit.initialized) {
@@ -44,13 +62,17 @@ jQuery( function( $ ) {
 					clearTimeout(klarnaLoadedTimeout);
 
 					var data = {
-						client_token: klarna_payments_params.client_token,
+						client_token: klarna_payments.client_token,
 					};
 
-					console.log('****** Klarna Credit - Klarna.Credit.init() ******');
-					console.log(data);
+					try {
+						Klarna.Credit.init(data);
+					} catch (e) {
+						if ( klarna_payments_params.testmode == true ) {
+							console.log(e)
+						}
+					}
 
-					Klarna.Credit.init( data);
 					$defer.resolve();
 				}
 			}, 100);
@@ -64,87 +86,113 @@ jQuery( function( $ ) {
 		},
 
 		load: function() {
-			var $defer = $.Deferred();
+			if ($('#klarna_container').length) {
+				var $defer = $.Deferred();
 
-			var klarnaLoadedInterval = setInterval( function() {
-				var Klarna = false;
+				var klarnaLoadedInterval = setInterval(function () {
+					var Klarna = false;
 
-				try {
-					Klarna = window.Klarna;
-				} catch (e) {
-					//
-				}
+					try {
+						Klarna = window.Klarna;
+					} catch (e) {
+						//
+					}
 
-				if (Klarna) {
+					if (Klarna && Klarna.Credit.initialized) {
+						clearInterval(klarnaLoadedInterval);
+						clearTimeout(klarnaLoadedTimeout);
+
+						var options = {
+							container: '#klarna_container'
+						};
+
+						Klarna.Credit.load(options, function (response) {
+							$defer.resolve(response);
+						});
+					}
+				}, 100);
+
+				var klarnaLoadedTimeout = setTimeout(function () {
 					clearInterval(klarnaLoadedInterval);
-					clearTimeout(klarnaLoadedTimeout);
+					$defer.reject();
+				}, 3000);
 
-					var options = {
-						container: '#klarna_container'
-					};
-
-					// var data = credit.orderData.get();
-
-					console.log('****** Klarna Credit - Klarna.Credit.load() ******');
-					console.log(options);
-
-					Klarna.Credit.load(options, function(response) {
-						console.log('****** Klarna Credit - Klarna.Credit.load RESPONSE: ******');
-						console.log(response);
-						$defer.resolve(response);
-					});
-				}
-			}, 100);
-
-			var klarnaLoadedTimeout = setTimeout( function() {
-				clearInterval(klarnaLoadedInterval);
-				$defer.reject();
-			}, 3000);
-
-			return $defer.promise();
+				return $defer.promise();
+			}
 		},
 
 		authorize: function() {
+			// Clear the authorization token.
+			klarna_payments.authorization_response = {};
+
 			var $defer = $.Deferred();
 
-			console.log('****** Klarna Credit - Klarna.Credit.authorize() ******');
+			// @TODO: Currently using billing phone and email for shipping details, check if this is OK
+			var first_name = $('#billing_first_name').val(),
+				last_name = $('#billing_last_name').val(),
+				email = $('#billing_email').val(),
+				phone = $('#billing_phone').val(),
+				country = $('#billing_country').val(),
+				state = $('#billing_state').val(),
+				postcode = $('input#billing_postcode').val(),
+				city = $('#billing_city').val(),
+				address = $('input#billing_address_1').val(),
+				address_2 = $('input#billing_address_2').val(),
+
+				s_first_name = first_name,
+				s_last_name = last_name,
+				s_country = country,
+				s_state = state,
+				s_postcode = postcode,
+				s_city = city,
+				s_address = address,
+				s_address_2 = address_2,
+				s_phone = phone,
+				s_email = email;
+
+			if ( $( '#ship-to-different-address' ).find( 'input' ).is( ':checked' ) ) {
+				s_first_name = $('#shipping_first_name').val();
+				s_last_name = $('#shipping_last_name').val();
+				s_country = $('#shipping_country').val();
+				s_state = $('#shipping_state').val();
+				s_postcode = $('input#shipping_postcode').val();
+				s_city = $('#shipping_city').val();
+				s_address = $('input#shipping_address_1').val();
+				s_address_2 = $('input#shipping_address_2').val();
+			}
+
 			Klarna.Credit.authorize( {
 				purchase_country: "US",
 				purchase_currency: "USD",
 				locale: "en-US",
 				billing_address: {
-					given_name: "John",
-					family_name: "Doe",
-					email: "john@doe.com",
-					title: "Mr",
-					street_address: "Lombard St 10",
-					street_address2: "Apt 214",
-					postal_code: "90210",
-					city: "Beverly Hills",
-					region: "CA",
-					phone: "0333444555",
-					country: "US"
+					given_name: first_name,
+					family_name: last_name,
+					email: email,
+					// title: "Mr",
+					street_address: address,
+					street_address2: address_2,
+					postal_code: postcode,
+					city: city,
+					region: state,
+					phone: phone,
+					country: country
 				},
 				shipping_address: {
-					given_name: "John",
-					family_name: "Doe",
-					email: "john@doe.com",
-					title: "Mr",
-					street_address: "Lombard St 10",
-					street_address2: "Apt 214",
-					postal_code: "90210",
-					city: "Beverly Hills",
-					region: "CA",
-					phone: "0333444555",
-					country: "US"
+					given_name: s_first_name,
+					family_name: s_last_name,
+					email: s_email,
+					// title: "Mr",
+					street_address: s_address,
+					street_address2: s_address_2,
+					postal_code: s_postcode,
+					city: s_city,
+					region: s_state,
+					phone: s_phone,
+					country: s_country
 				}
 			}, function(response) {
-				console.log('****** Klarna Credit - Klarna.Credit.authorize RESPONSE: ******');
-				console.log(response);
-				if (response.authorization_token) {
-					klarna_payments.authorization_token = response.authorization_token;
-					console.log( response.authorization_token );
-				}
+				klarna_payments.authorization_response = response;
 				$defer.resolve(response);
 			});
 

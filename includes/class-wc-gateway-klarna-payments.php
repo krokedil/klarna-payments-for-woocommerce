@@ -9,7 +9,47 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
-	private $client_token;
+	/**
+	 * Client token retrieved from Klarna when session is created.
+	 *
+	 * @var string
+	 */
+	public $client_token;
+
+	/**
+	 * Sets Klarna Payments in test mode.
+	 *
+	 * @var string
+	 */
+	public $testmode = 'no';
+
+	/**
+	 * Klarna payments server base url.
+	 *
+	 * @var string
+	 */
+	public $server_base = '';
+
+	/**
+	 * Klarna merchant ID.
+	 *
+	 * @var string
+	 */
+	public $merchant_id = '';
+
+	/**
+	 * Klarna shared secret.
+	 *
+	 * @var string
+	 */
+	public $shared_secret = '';
+
+	/**
+	 * Turns on logging.
+	 *
+	 * @var string
+	 */
+	public $logging = false;
 
 	/**
 	 * Constructor
@@ -43,18 +83,20 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( $this->testmode ) {
 			$this->description .= ' ' . __( 'TEST MODE ENABLED.', 'woocommerce-gateway-klarna-payments' );
 			$this->description  = trim( $this->description );
+
+			$this->server_base = 'https://api-na.playground.klarna.com/';
+		} else {
+			$this->server_base = 'https://api-na.klarna.com/';
 		}
 
-		// Add Klarna Payments container.
-		$this->description .= '<div id="klarna_container"></div>';
-
 		// Hooks.
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'wp_footer', array( $this, 'klarna_payments_sdk' ) );
 		add_action( 'woocommerce_checkout_init', array( $this, 'klarna_payments_session' ) );
-		// add_action( 'woocommerce_after_order_notes', array( $this, 'add_authorization_token_field' ) );
+		add_action( 'woocommerce_checkout_init', array( $this, 'add_klarna_payments_container' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
+		add_action( 'woocommerce_after_order_notes', array( $this, 'add_authorization_token_field' ) );
 	}
 
 	/**
@@ -137,20 +179,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		) );
 	}
 
-	/**
-	 * Adds hidden field to checkout form.
-	 */
-	public function add_authorization_token_field() {
-		woocommerce_form_field(
-			'klarna_payments_authorization_token',
-			array(
-				'type'          => 'text',
-				'class'         => array( 'hidden' ),
-				'label'         => __( 'Fill in this field' ),
-				'placeholder'   => __( 'Enter something' ),
-			)
-		);
-	}
 
 	/**
 	 * Klarna Payments SDK.
@@ -161,9 +189,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( ! is_cart() && ! is_checkout() ) {
 			return;
 		}
-
-		$klarna_payments_session = WC()->session->get( 'klarna_payments_session' );
-		$client_token = $klarna_payments_session['client_token'];
 
 		?>
 		<script type="text/javascript" id="klarna-credit-lib-x">
@@ -178,122 +203,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		  })(this,document);
 		  /* ]]> */
 		</script>
-
-		<!--
-		<script type="text/javascript">
-			jQuery( function( $ ) {
-				'use strict';
-
-				$( document.body ).on( 'updated_checkout', function() {
-					var klarnaLoadedInterval = setInterval(function () {
-						console.log("test interval");
-						if (Klarna.Credit && !Klarna.Credit.initialized) {
-							Klarna.Credit.init({
-								client_token: "<?php echo esc_attr( $client_token ); ?>"
-							});
-
-							Klarna.Credit.load({
-								container: "#klarna_container"
-							}, function (res) {
-								console.debug(res);
-							})
-						}
-					}, 100);
-
-					var klarnaLoadedTimeout = setTimeout(function () {
-						clearInterval(klarnaLoadedInterval);
-					}, 3000);
-				});
-
-				// @TODO: As soon as I fire Klarna.Credit.authorize, I lose form data and can't add to it
-				var checkout_form = $( 'form.checkout' );
-				var return_value = false;
-				var token = '';
-
-				checkout_form.on( 'checkout_place_order', function() {
-					if ($('input[name="payment_method"]:checked').val() != 'klarna_payments') {
-						return true;
-					}
-
-					console.log('first_check')
-					checkout_form.append('<input type="hidden" name="m_prevent_submit" value="1">');
-
-					Klarna.Credit.authorize({
-						purchase_country: "US",
-						purchase_currency: "USD",
-						locale: "en-US",
-						billing_address: {
-							given_name: "John",
-							family_name: "Doe",
-							email: "john@doe.com",
-							title: "Mr",
-							street_address: "Lombard St 10",
-							street_address2: "Apt 214",
-							postal_code: "90210",
-							city: "Beverly Hills",
-							region: "CA",
-							phone: "0333444555",
-							country: "US"
-						},
-						shipping_address: {
-							given_name: "John",
-							family_name: "Doe",
-							email: "john@doe.com",
-							title: "Mr",
-							street_address: "Lombard St 10",
-							street_address2: "Apt 214",
-							postal_code: "90210",
-							city: "Beverly Hills",
-							region: "CA",
-							phone: "0333444555",
-							country: "US"
-						}
-					}, function (res) {
-						console.debug('res', res);
-
-						/**
-						 * res structure:
-						 * { authorization_token: "b4bd3423-24e3", approved: true, show_form: true }
-						 *
-						 * Possible outcomes:
-						 *  1. approved: true
-						 *     - store authorization token in hidden form field, so it can be processed on process_payment
-						 *     - token is valid for 60 minutes
-						 *     - return true
-						 *  2. approved: false, show_form: true
-						 *     - something in the form is missing, a field left empty etc.
-						 *  3. approved: false, show_form: false
-						 *     - game over, hide Klarna Payments, use another payment method
-						 */
-						if (res.approved) {
-							// $('form.woocommerce-checkout #klarna_payments_authorization_token').val(res.authorization_token);
-							checkout_form.append('<input type="hidden" name="m_prevent_submit_2" value="1">');
-							// checkout_form.append('<input type="hidden" name="klarna_payments_authorization_token" value="' + res.authorization_token + '">');
-							token = res.authorization_token;
-
-							console.log('flow1')
-							return_value = true;
-						} else {
-							if (res.show_form) {
-								checkout_form.append('<input type="hidden" name="m_prevent_submit_3" value="1">');
-								console.log('flow2')
-								return_value = true;
-							} else {
-								checkout_form.append('<input type="hidden" name="m_prevent_submit_4" value="1">');
-								console.log('flow3')
-								return_value = false;
-							}
-						}
-					});
-
-					console.log('return_value', return_value)
-					checkout_form.append('<input type="hidden" name="klarna_payments_authorization_token" value="' + token + '">')
-					checkout_form.append('<input type="hidden" name="blah_blah" value="meh">');
-					return return_value;
-				});
-			});
-		</script>
-		-->
 		<?php
 	}
 
@@ -301,102 +210,100 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Check if Klarna Payments should be available
 	 */
 	public function is_available() {
-		return true;
+		// Currently only available for US and UK.
+		if ( in_array( WC()->customer->get_country(), array( 'US', 'GB' ), true ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
-	 * Place Klarna Payments order, after authorization
+	 * Place Klarna Payments order, after authorization.
 	 *
+	 * Uses authorization token to place the order.
 	 *
 	 * @param int $order_id WooCommerce order ID.
-	 *
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
 		// Place order.
-		// $this->place_order();
+		$response = $this->place_order( $_POST['klarna_payments_authorization_token'] );
 
+		// Process the response.
+		if ( ! is_wp_error( $response ) && 200 === $response['response']['code'] ) {
+			$decoded = json_decode( $response['body'] );
+
+			if ( 'ACCEPTED' === $decoded->fraud_status ) {
+				$order->payment_complete( $decoded->order_id );
+				$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded->order_id );
+				add_post_meta( $order_id, 'wc_klarna_payments_order_id', $decoded->order_id, true );
+			} elseif ( 'PENDING' === $decoded->fraud_status ) {
+				// Process pending here.
+			}
+
+			return array(
+				'result' => 'success',
+				'redirect' => $this->get_return_url( $order ),
+			);
+		}
+
+		// Return failure if something went wrong.
 		return array(
-			'result' => 'success',
-			'redirect' => $this->get_return_url( $order ),
+			'result'   => 'fail',
+			'redirect' => '',
 		);
 	}
 
 	/**
 	 * Create Klarna Payments session.
 	 *
-	 * @TODO: Improve how session update/create is handled.
-	 * Check cart hash before sending update.
+	 * @TODO: Improve how session update/create is handled. Currently never updating, but it should if we already have a valid session to work with.
 	 */
 	public function klarna_payments_session() {
-		$request_url  = 'https://api-na.playground.klarna.com/credit/v1/sessions';
+		$order_lines = WC_Klarna_Payments_Order_Lines::order_lines();
+
+		$request_url  = $this->server_base . 'credit/v1/sessions';
 		$request_args = array(
 			'headers' => array(
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . $this->shared_secret ),
 				'Content-Type'  => 'application/json',
 			),
-			'body'    => wp_json_encode( array(
+			'body' => wp_json_encode( array(
 				'purchase_country'  => 'US',
 				'purchase_currency' => 'USD',
 				'locale'            => 'en-US',
-				'order_amount'      => 9999,
-				'order_tax_amount'  => 0,
-				'order_lines'       => array(
-					array(
-						'type'                  => 'physical',
-						'reference'             => '19-402-USA',
-						'name'                  => 'Battery Power Pack',
-						'quantity'              => 1,
-						'unit_price'            => 9999,
-						'tax_rate'              => 0,
-						'total_amount'          => 9999,
-						'total_discount_amount' => 0,
-						'total_tax_amount'      => 0,
-					),
-				),
+				'order_amount'      => $order_lines['order_amount'],
+				'order_tax_amount'  => $order_lines['order_tax_amount'],
+				'order_lines'       => $order_lines['order_lines'],
 			) ),
 		);
 
-		// Change URL if we're updating Klarna Payments session.
-		if ( WC()->session->get( 'klarna_payments_session' ) ) {
-			$klarna_payments_session = WC()->session->get( 'klarna_payments_session' );
-
-			if (
-				isset( $klarna_payments_session['timestamp'] ) &&
-				time() - $klarna_payments_session['timestamp'] > 48 * 60 * 60 &&
-				null !== $klarna_payments_session['session_id'] &&
-				null !== $klarna_payments_session['client_token']
-			) {
-				if ( md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) === $klarna_payments_session['cart_key]'] ) {
-					return;
-				}
-
-				$request_url .= '/' . $klarna_payments_session['session_id'];
-			}
-		}
-
 		$response = wp_safe_remote_post( $request_url, $request_args );
 
-		// Response body is empty on update.
-		if ( '' !== $response['body'] ) {
-			$decoded = json_decode( $response['body'] );
-			wp_localize_script( 'klarna_payments', 'klarna_payments_params', array( 'client_token' => $decoded->client_token ) );
+		$klarna_payments_params = array();
+		$klarna_payments_params['testmode'] = $this->testmode;
 
-			WC()->session->set( 'klarna_payments_session', array(
-				'session_id'   => $decoded->session_id,
-				'client_token' => $decoded->client_token,
-				'timestamp'    => time(),
-				'cart_hash'    => md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ),
-			) );
+		// Process the response.
+		if ( 200 === $response['response']['code'] ) {
+			$decoded = json_decode( $response['body'] );
+			$klarna_payments_params['client_token'] = $decoded->client_token;
 		}
+
+		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 	}
 
 	/**
-	 * payment_scripts function.
-	 *
-	 * Outputs scripts used for stripe payment
+	 * Adds Klarna Payments container to checkout page.
+	 */
+	public function add_klarna_payments_container() {
+		$this->description .= '<div id="klarna_container"></div>';
+	}
+
+	/**
+	 * Enqueue payment scripts.
 	 *
 	 * @access public
 	 */
@@ -413,6 +320,76 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			true
 		);
 		wp_enqueue_script( 'klarna_payments' );
+	}
+
+	/**
+	 * Check posted data for authorization token.
+	 *
+	 * If authorization token is missing, we'll add error notice and bail.
+	 * Authorization token field is added to the form in JavaScript, when Klarna.Credit.authorize is completed.
+	 */
+	public function check_authorization_token() {
+		if ( ! $_POST['klarna_payments_authorization_token'] ) { // Input var okay.
+			wc_add_notice( __( 'Could not create Klarna Payments authorization token.' ), 'error' );
+		}
+	}
+
+	/**
+	 * Places the order with Klarna
+	 *
+	 * @TODO: Ask about shipping phone and email. OK to use billing instead?
+	 *
+	 * @param string $auth_token Klarna Payments authorization token.
+	 *
+	 * @return array|WP_Error
+	 */
+	public function place_order( $auth_token ) {
+		$order_lines = WC_Klarna_Payments_Order_Lines::order_lines();
+		$posted_data = $_POST; // Input var okay.
+
+		$request_url  = $this->server_base . 'credit/v1/authorizations/' . $auth_token . '/order';
+		$request_args = array(
+			'headers' => array(
+				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . $this->shared_secret ),
+				'Content-Type'  => 'application/json',
+			),
+			'body' => wp_json_encode( array(
+				'purchase_country'  => 'US',
+				'purchase_currency' => 'USD',
+				'locale'            => 'en-US',
+				'billing_address'   => array(
+					'given_name' => $posted_data['billing_first_name'],
+					'family_name' => $posted_data['billing_last_name'],
+					'email' => $posted_data['billing_email'],
+					'phone' => $posted_data['billing_phone'],
+					// 'title' => 'Mr',
+					'street_address' => $posted_data['billing_address_1'],
+					'street_address2' => $posted_data['billing_address_2'],
+					'postal_code' => $posted_data['billing_postcode'],
+					'city' => $posted_data['billing_city'],
+					'region' => $posted_data['billing_state'],
+					'country' => $posted_data['billing_country'],
+				),
+				'shipping_address'   => array(
+					'given_name' => $posted_data['shipping_first_name'],
+					'family_name' => $posted_data['shipping_last_name'],
+					'email' => $posted_data['billing_email'],
+					'phone' => $posted_data['shipping_email'],
+					// 'title' => 'Mr',
+					'street_address' => $posted_data['shipping_address_1'],
+					'street_address2' => $posted_data['shipping_address_2'],
+					'postal_code' => $posted_data['shipping_postcode'],
+					'city' => $posted_data['shipping_city'],
+					'region' => $posted_data['shipping_state'],
+					'country' => $posted_data['shipping_country'],
+				),
+				'order_amount'      => $order_lines['order_amount'],
+				'order_tax_amount'  => $order_lines['order_tax_amount'],
+				'order_lines'       => $order_lines['order_lines'],
+			) ),
+		);
+
+		return wp_safe_remote_post( $request_url, $request_args );
 	}
 
 }
