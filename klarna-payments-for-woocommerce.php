@@ -182,6 +182,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		}
 	}
 
-	$GLOBALS['wc_klarna_payments'] = WC_Klarna_Payments::get_instance();
+	WC_Klarna_Payments::get_instance();
 
 }

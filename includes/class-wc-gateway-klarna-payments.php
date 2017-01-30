@@ -244,6 +244,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				// Process pending here.
 			}
 
+			if ( 'yes' === $this->testmode ) {
+				update_post_meta( $order_id, '_wc_klarna_payments_mode', 'yes' );
+			}
+
 			return array(
 				'result' => 'success',
 				'redirect' => $this->get_return_url( $order ),
