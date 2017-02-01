@@ -17,7 +17,20 @@ jQuery( function( $ ) {
 				// @TODO: Improve error handling on authorize, currently it just keeps submitting
 				$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
 					// If we don't have response, call Klarna.Credit.authorize
-					if ( $.isEmptyObject( klarna_payments.authorization_response ) ) {
+					if ( ! klarna_payments.authorization_response.hasOwnProperty('authorization_token') ) {
+						console.log('step1')
+						console.log(klarna_payments.authorization_response)
+
+						if ( klarna_payments.authorization_response.show_form ) {
+							console.log('step2')
+							if ( ! klarna_payments.authorization_response.show_form ) {
+								console.log('step3')
+								return false;
+							}
+						}
+
+						console.log('step4')
+
 						klarna_payments.authorize().done( function( response ) {
 							$( 'form.checkout' ).append( '<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit();
 						} );
@@ -28,7 +41,9 @@ jQuery( function( $ ) {
 							return true
 						} else if ( klarna_payments.authorization_response.show_form ) {
 							// Fix the form, try again.
-							klarna_payments.authorization_response = {}
+							// klarna_payments.authorization_response = {}
+							console.log(klarna_payments.authorization_response.show_form)
+
 							return false;
 						} else {
 							// Hide Klarna Payments.
@@ -122,9 +137,6 @@ jQuery( function( $ ) {
 		},
 
 		authorize: function() {
-			// Clear the authorization token.
-			klarna_payments.authorization_response = {};
-
 			var $defer = $.Deferred();
 
 			// @TODO: Currently using billing phone and email for shipping details, check if this is OK
@@ -192,8 +204,14 @@ jQuery( function( $ ) {
 					country: s_country
 				}
 			}, function(response) {
+				console.log(response)
+				console.log('test')
 				klarna_payments.authorization_response = response;
-				$defer.resolve(response);
+				// if ( klarna_payments.authorization_response.hasOwnProperty('authorization_token') ) {
+					$defer.resolve(response)
+				// } else {
+					// $defer.reject(response)
+				// }
 			});
 
 			return $defer.promise();

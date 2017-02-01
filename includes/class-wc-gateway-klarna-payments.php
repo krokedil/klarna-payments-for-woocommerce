@@ -251,6 +251,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 
 			WC()->session->__unset( 'klarna_payments_session_id' );
+			WC()->session->__unset( 'klarna_payments_client_token' );
 
 			return array(
 				'result' => 'success',
@@ -271,17 +272,25 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @TODO: Improve how session update/create is handled. Currently never updating, but it should if we already have a valid session to work with.
 	 */
 	public function klarna_payments_session() {
-		if ( ! is_checkout() ) {
+		if ( ! is_checkout() || is_order_received_page() ) {
 			return;
 		}
+
+		$klarna_payments_params = array();
+		$klarna_payments_params['testmode'] = $this->testmode;
 
 		$order_lines_processor = new WC_Klarna_Payments_Order_Lines();
 		$order_lines = $order_lines_processor->order_lines();
 
-		if ( WC()->session->get( 'klarna_payments_session_id' ) ) {
-			$request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
-		} else {
+		// Create session on first Checkout page load.
+		if ( ! is_ajax() ) {
+			WC()->session->__unset( 'klarna_payments_session_id' );
+			WC()->session->__unset( 'klarna_payments_client_token' );
+
 			$request_url  = $this->server_base . 'credit/v1/sessions';
+		} else {
+			$request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
+			$klarna_payments_params['client_token'] = WC()->session->get( 'klarna_payments_client_token' );
 		}
 
 		$request_args = array(
@@ -301,14 +310,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$response = wp_safe_remote_post( $request_url, $request_args );
 
-		$klarna_payments_params = array();
-		$klarna_payments_params['testmode'] = $this->testmode;
-
 		// Process the response.
 		if ( 200 === $response['response']['code'] ) {
 			$decoded = json_decode( $response['body'] );
 			$klarna_payments_params['client_token'] = $decoded->client_token;
+
 			WC()->session->set( 'klarna_payments_session_id', $decoded->session_id );
+			WC()->session->set( 'klarna_payments_client_token', $decoded->session_id );
 		}
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
@@ -327,7 +335,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @access public
 	 */
 	public function enqueue_scripts() {
-		if ( ! is_checkout() ) {
+		if ( ! is_checkout() || is_order_received_page() ) {
 			return;
 		}
 
