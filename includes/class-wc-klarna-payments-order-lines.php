@@ -14,48 +14,44 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @var $order_lines
 	 */
-	public static $order_lines;
+	public $order_lines = array();
 
 	/**
 	 * Formatted order lines.
 	 *
 	 * @var $order_lines
 	 */
-	public static $order_amount;
+	public $order_amount = 0;
 
 	/**
 	 * Formatted order lines.
 	 *
 	 * @var $order_lines
 	 */
-	public static $order_tax_amount;
+	public $order_tax_amount = 0;
 
 	/**
 	 * Gets formatted order lines from WooCommerce cart.
 	 *
-	 * @TODO: Return one array with three elements: order_lines, order_amount, order_tax_amount, then process it when called.
-	 *
 	 * @return array
 	 */
-	public static function order_lines() {
-		self::$order_lines = array();
-
-		self::process_cart();
-		self::process_shipping();
-		self::process_sales_tax();
+	public function order_lines() {
 		// @TODO: Process fees
+		$this->process_cart();
+		$this->process_shipping();
+		$this->process_sales_tax();
 
 		return array(
-			'order_lines' => self::$order_lines,
-			'order_amount' => self::$order_amount,
-			'order_tax_amount' => self::$order_tax_amount,
+			'order_lines' => $this->order_lines,
+			'order_amount' => $this->order_amount,
+			'order_tax_amount' => $this->order_tax_amount,
 		);
 	}
 
 	/**
 	 * Process WooCommerce cart to Klarna Payments order lines.
 	 */
-	public static function process_cart() {
+	public function process_cart() {
 		foreach ( WC()->cart->get_cart() as $cart_item ) {
 			if ( $cart_item['quantity'] ) {
 				if ( $cart_item['variation_id'] ) {
@@ -65,18 +61,18 @@ class WC_Klarna_Payments_Order_Lines {
 				}
 
 				$klarna_item = array(
-					'reference'             => self::get_item_reference( $product ),
-					'name'                  => self::get_item_name( $cart_item ),
-					'quantity'              => self::get_item_quantity( $cart_item ),
-					'unit_price'            => self::get_item_price( $cart_item ),
-					'tax_rate'              => self::get_item_tax_rate( $cart_item, $product ),
-					'total_amount'          => self::get_item_total_amount( $cart_item ),
-					'total_tax_amount'      => self::get_item_tax_amount( $cart_item ),
-					'total_discount_amount' => self::get_item_discount_amount( $cart_item ),
+					'reference'             => $this->get_item_reference( $product ),
+					'name'                  => $this->get_item_name( $cart_item ),
+					'quantity'              => $this->get_item_quantity( $cart_item ),
+					'unit_price'            => $this->get_item_price( $cart_item ),
+					'tax_rate'              => $this->get_item_tax_rate( $cart_item, $product ),
+					'total_amount'          => $this->get_item_total_amount( $cart_item ),
+					'total_tax_amount'      => $this->get_item_tax_amount( $cart_item ),
+					'total_discount_amount' => $this->get_item_discount_amount( $cart_item ),
 				);
 
-				self::$order_lines[] = $klarna_item;
-				self::$order_amount += self::get_item_quantity( $cart_item ) * self::get_item_price( $cart_item );
+				$this->order_lines[] = $klarna_item;
+				$this->order_amount += $this->get_item_quantity( $cart_item ) * $this->get_item_price( $cart_item );
 			}
 		}
 	}
@@ -84,28 +80,28 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Process WooCommerce shipping to Klarna Payments order lines.
 	 */
-	public static function process_shipping() {
+	public function process_shipping() {
 		if ( WC()->shipping->get_packages() && WC()->session->get( 'chosen_shipping_methods' ) ) {
 			$shipping = array(
 				'type'             => 'shipping_fee',
-				'reference'        => self::get_shipping_reference(),
-				'name'             => self::get_shipping_name(),
+				'reference'        => $this->get_shipping_reference(),
+				'name'             => $this->get_shipping_name(),
 				'quantity'         => 1,
-				'unit_price'       => self::get_shipping_amount(),
-				'tax_rate'         => self::get_shipping_tax_rate(),
-				'total_amount'     => self::get_shipping_amount(),
-				'total_tax_amount' => self::get_shipping_tax_amount(),
+				'unit_price'       => $this->get_shipping_amount(),
+				'tax_rate'         => $this->get_shipping_tax_rate(),
+				'total_amount'     => $this->get_shipping_amount(),
+				'total_tax_amount' => $this->get_shipping_tax_amount(),
 			);
 
-			self::$order_lines[] = $shipping;
-			self::$order_amount += self::get_shipping_amount();
+			$this->order_lines[] = $shipping;
+			$this->order_amount += $this->get_shipping_amount();
 		}
 	}
 
 	/**
 	 * Process sales tax for US
 	 */
-	public static function process_sales_tax() {
+	public function process_sales_tax() {
 		if ( 'US' === WC()->customer->get_country() ) {
 			$sales_tax_amount = round( ( WC()->cart->tax_total + WC()->cart->shipping_tax_total ) * 100 );
 
@@ -122,9 +118,9 @@ class WC_Klarna_Payments_Order_Lines {
 				'total_tax_amount'      => 0,
 			);
 
-			self::$order_lines[] = $sales_tax;
-			self::$order_amount += $sales_tax_amount;
-
+			$this->order_lines[] = $sales_tax;
+			$this->order_tax_amount = $sales_tax_amount;
+			$this->order_amount += $sales_tax_amount;
 		}
 	}
 
@@ -140,7 +136,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @return string $item_name Cart item name.
 	 */
-	public static function get_item_name( $cart_item ) {
+	public function get_item_name( $cart_item ) {
 		$cart_item_data = $cart_item['data'];
 		$item_name      = $cart_item_data->post->post_title;
 
@@ -166,7 +162,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @return integer $item_tax_amount Item tax amount.
 	 */
-	public static function get_item_tax_amount( $cart_item ) {
+	public function get_item_tax_amount( $cart_item ) {
 		if ( 'US' === WC()->customer->get_country() ) {
 			$item_tax_amount = 00;
 		} else {
@@ -186,7 +182,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @return integer $item_tax_rate Item tax percentage formatted for Klarna.
 	 */
-	public static function get_item_tax_rate( $cart_item, $product ) {
+	public function get_item_tax_rate( $cart_item, $product ) {
 		// We manually calculate the tax percentage here.
 		if ( $product->is_taxable() && $cart_item['line_subtotal_tax'] > 0 ) {
 			// Calculate tax rate.
@@ -212,7 +208,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @return integer $item_price Cart item price.
 	 */
-	public static function get_item_price( $cart_item ) {
+	public function get_item_price( $cart_item ) {
 		// apply_filters to item price so we can filter this if needed.
 		if ( 'US' === WC()->customer->get_country() ) {
 			$item_price_including_tax = $cart_item['line_subtotal'];
@@ -236,7 +232,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @return integer $item_quantity Cart item quantity.
 	 */
-	public static function get_item_quantity( $cart_item ) {
+	public function get_item_quantity( $cart_item ) {
 		return (int) $cart_item['quantity'];
 	}
 
@@ -252,7 +248,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @return string $item_reference Cart item reference.
 	 */
-	public static function get_item_reference( $product ) {
+	public function get_item_reference( $product ) {
 		if ( $product->get_sku() ) {
 			$item_reference = $product->get_sku();
 		} elseif ( $product->variation_id ) {
@@ -274,10 +270,10 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @return integer $item_discount_amount Cart item discount.
 	 */
-	public static function get_item_discount_amount( $cart_item ) {
+	public function get_item_discount_amount( $cart_item ) {
 		if ( $cart_item['line_subtotal'] > $cart_item['line_total'] ) {
-			$item_price           = self::get_item_price( $cart_item );
-			$item_total_amount    = self::get_item_total_amount( $cart_item );
+			$item_price           = $this->get_item_price( $cart_item );
+			$item_total_amount    = $this->get_item_total_amount( $cart_item );
 			$item_discount_amount = ( $item_price * $cart_item['quantity'] - $item_total_amount );
 		} else {
 			$item_discount_amount = 0;
@@ -296,7 +292,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @return integer $item_discount_rate Cart item discount rate.
 	 */
-	public static function get_item_discount_rate( $cart_item ) {
+	public function get_item_discount_rate( $cart_item ) {
 		$item_discount_rate = ( 1 - ( $cart_item['line_total'] / $cart_item['line_subtotal'] ) ) * 10000;
 
 		return (int) round( $item_discount_rate );
@@ -312,7 +308,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @return integer $item_total_amount Cart item total amount.
 	 */
-	public static function get_item_total_amount( $cart_item ) {
+	public function get_item_total_amount( $cart_item ) {
 		if ( 'US' === WC()->customer->get_country() ) {
 			$item_total_amount = ( $cart_item['line_total'] * 100 );
 		} else {

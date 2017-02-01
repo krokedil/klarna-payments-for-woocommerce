@@ -239,14 +239,18 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			if ( 'ACCEPTED' === $decoded->fraud_status ) {
 				$order->payment_complete( $decoded->order_id );
 				$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded->order_id );
-				add_post_meta( $order_id, 'wc_klarna_payments_order_id', $decoded->order_id, true );
+				add_post_meta( $order_id, '_wc_klarna_payments_order_id', $decoded->order_id, true );
 			} elseif ( 'PENDING' === $decoded->fraud_status ) {
 				// Process pending here.
 			}
 
-			if ( 'yes' === $this->testmode ) {
-				update_post_meta( $order_id, '_wc_klarna_payments_mode', 'yes' );
+			if ( true === $this->testmode ) {
+				update_post_meta( $order_id, '_wc_klarna_payments_env', 'test' );
+			} else {
+				update_post_meta( $order_id, '_wc_klarna_payments_env', 'live' );
 			}
+
+			WC()->session->__unset( 'klarna_payments_session_id' );
 
 			return array(
 				'result' => 'success',
@@ -267,9 +271,19 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @TODO: Improve how session update/create is handled. Currently never updating, but it should if we already have a valid session to work with.
 	 */
 	public function klarna_payments_session() {
-		$order_lines = WC_Klarna_Payments_Order_Lines::order_lines();
+		if ( ! is_checkout() ) {
+			return;
+		}
 
-		$request_url  = $this->server_base . 'credit/v1/sessions';
+		$order_lines_processor = new WC_Klarna_Payments_Order_Lines();
+		$order_lines = $order_lines_processor->order_lines();
+
+		if ( WC()->session->get( 'klarna_payments_session_id' ) ) {
+			$request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
+		} else {
+			$request_url  = $this->server_base . 'credit/v1/sessions';
+		}
+
 		$request_args = array(
 			'headers' => array(
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . $this->shared_secret ),
@@ -294,6 +308,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( 200 === $response['response']['code'] ) {
 			$decoded = json_decode( $response['body'] );
 			$klarna_payments_params['client_token'] = $decoded->client_token;
+			WC()->session->set( 'klarna_payments_session_id', $decoded->session_id );
 		}
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
@@ -312,7 +327,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @access public
 	 */
 	public function enqueue_scripts() {
-		if ( ! is_cart() && ! is_checkout() ) {
+		if ( ! is_checkout() ) {
 			return;
 		}
 
@@ -348,8 +363,42 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array|WP_Error
 	 */
 	public function place_order( $auth_token ) {
-		$order_lines = WC_Klarna_Payments_Order_Lines::order_lines();
+		$order_lines_processor = new WC_Klarna_Payments_Order_Lines();
+		$order_lines = $order_lines_processor->order_lines();
+
 		$posted_data = $_POST; // Input var okay.
+
+		$billing_address = array(
+			'given_name' => $posted_data['billing_first_name'],
+			'family_name' => $posted_data['billing_last_name'],
+			'email' => $posted_data['billing_email'],
+			'phone' => $posted_data['billing_phone'],
+			// 'title' => 'Mr',
+			'street_address' => $posted_data['billing_address_1'],
+			'street_address2' => $posted_data['billing_address_2'],
+			'postal_code' => $posted_data['billing_postcode'],
+			'city' => $posted_data['billing_city'],
+			'region' => $posted_data['billing_state'],
+			'country' => $posted_data['billing_country'],
+		);
+
+		if ( ! empty( $_POST['ship_to_different_address'] ) && ! wc_ship_to_billing_address_only() ) {
+			$shipping_address = array(
+				'given_name' => $posted_data['shipping_first_name'],
+				'family_name' => $posted_data['shipping_last_name'],
+				'email' => $posted_data['billing_email'],
+				'phone' => $posted_data['shipping_email'],
+				// 'title' => 'Mr',
+				'street_address' => $posted_data['shipping_address_1'],
+				'street_address2' => $posted_data['shipping_address_2'],
+				'postal_code' => $posted_data['shipping_postcode'],
+				'city' => $posted_data['shipping_city'],
+				'region' => $posted_data['shipping_state'],
+				'country' => $posted_data['shipping_country'],
+			);
+		} else {
+			$shipping_address = $billing_address;
+		}
 
 		$request_url  = $this->server_base . 'credit/v1/authorizations/' . $auth_token . '/order';
 		$request_args = array(
@@ -361,32 +410,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'purchase_country'  => 'US',
 				'purchase_currency' => 'USD',
 				'locale'            => 'en-US',
-				'billing_address'   => array(
-					'given_name' => $posted_data['billing_first_name'],
-					'family_name' => $posted_data['billing_last_name'],
-					'email' => $posted_data['billing_email'],
-					'phone' => $posted_data['billing_phone'],
-					// 'title' => 'Mr',
-					'street_address' => $posted_data['billing_address_1'],
-					'street_address2' => $posted_data['billing_address_2'],
-					'postal_code' => $posted_data['billing_postcode'],
-					'city' => $posted_data['billing_city'],
-					'region' => $posted_data['billing_state'],
-					'country' => $posted_data['billing_country'],
-				),
-				'shipping_address'   => array(
-					'given_name' => $posted_data['shipping_first_name'],
-					'family_name' => $posted_data['shipping_last_name'],
-					'email' => $posted_data['billing_email'],
-					'phone' => $posted_data['shipping_email'],
-					// 'title' => 'Mr',
-					'street_address' => $posted_data['shipping_address_1'],
-					'street_address2' => $posted_data['shipping_address_2'],
-					'postal_code' => $posted_data['shipping_postcode'],
-					'city' => $posted_data['shipping_city'],
-					'region' => $posted_data['shipping_state'],
-					'country' => $posted_data['shipping_country'],
-				),
+				'billing_address'   => $billing_address,
+				'shipping_address'   => $shipping_address,
 				'order_amount'      => $order_lines['order_amount'],
 				'order_tax_amount'  => $order_lines['order_tax_amount'],
 				'order_lines'       => $order_lines['order_lines'],
