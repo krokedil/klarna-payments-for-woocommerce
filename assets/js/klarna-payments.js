@@ -18,19 +18,14 @@ jQuery( function( $ ) {
 				$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
 					// If we don't have response, call Klarna.Credit.authorize
 					if ( ! klarna_payments.authorization_response.hasOwnProperty('authorization_token') ) {
-						console.log('step1')
 						console.log(klarna_payments.authorization_response)
 
 						if ( klarna_payments.authorization_response.show_form ) {
-							console.log('step2')
 							if ( ! klarna_payments.authorization_response.show_form ) {
-								console.log('step3')
 								return false;
 							}
 						}
-
-						console.log('step4')
-
+						
 						klarna_payments.authorize().done( function( response ) {
 							$( 'form.checkout' ).append( '<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit();
 						} );
