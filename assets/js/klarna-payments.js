@@ -4,53 +4,118 @@ jQuery( function( $ ) {
 	var klarna_payments = {
 		authorization_response: {},
 		client_token: false,
+		klarna_loaded: false,
+		klarna_html: '',
+		defer_authorize: $.Deferred(),
 
 		start: function() {
+			$( document.body ).on( 'update_checkout', function() {
+				$('.wc-klarna-payments-hide').remove()
+			})
+
 			$( document.body ).on( 'updated_checkout', function() {
+				// Now that we are filtering into fragments that are getting refreshed, we need to hide unavailable
+				// gateways manually.
+				$('.wc-klarna-payments-hide + li.wc_payment_method').hide().find('input[type="radio"]').attr('disabled', true)
+
+				// Also manually hide Klarna Payments if billing country is not US or GB
+				if ( 'US' !== $('#billing_country').val() ) {
+					$('li.wc_payment_method.payment_method_klarna_payments').hide().find('input[type="radio"]').attr('disabled', true)
+				} else {
+					$('li.wc_payment_method.payment_method_klarna_payments').show().find('input[type="radio"]').attr('disabled', false)
+				}
+
+				// Unblock the payments element if blocked
+				var element_data = $('.woocommerce-checkout-payment').data()
+				if ( 1 === element_data['blockUI.isBlocked'] ) {
+					$('.woocommerce-checkout-payment').unblock();
+				}
+
 				if (typeof klarna_payments_params !== undefined) {
-					if (klarna_payments_params.hasOwnProperty('client_token')) {
-						klarna_payments.client_token = klarna_payments_params.client_token
-						klarna_payments.init().then(klarna_payments.load());
+					if (!klarna_payments.klarna_loaded) {
+						if ('client_token' in klarna_payments_params) {
+							klarna_payments.client_token = klarna_payments_params.client_token
+							klarna_payments.init().then(klarna_payments.load().done(function (response) {
+								klarna_payments.klarna_loaded = true
+							}))
+						}
+					}
+				}
+			})
+
+			$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
+				if ($('input[name="klarna_payments_authorization_token"]').length) {
+					return true
+				}
+
+				klarna_payments.authorize().done( function(response) {
+					console.log(response)
+
+					if ('authorization_token' in response) {
+						$('input[name="klarna_payments_authorization_token"]').remove()
+						$('form.checkout').append('<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit()
+					}
+
+					if (false === response.show_form) {
+						// Hide Klarna Payments.
+						$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
+						$('li.payment_method_klarna_payments').hide()
+					}
+				})
+
+				// klarna_payments.load()
+				return false
+			})
+
+			/*
+			$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
+				console.log('here')
+				console.log('resp', klarna_payments.authorization_response)
+				console.log('state', klarna_payments.defer_authorize.state())
+
+				if ( 'show_form' in klarna_payments.authorization_response !== true ) {
+					klarna_payments.defer_authorize.reject()
+					console.log('state', klarna_payments.defer_authorize.state())
+					klarna_payments.defer_authorize = $.Deferred()
+					console.log('state', klarna_payments.defer_authorize.state())
+
+					klarna_payments.authorize().done( function(response) {
+						console.log(response)
+						if ( 'authorization_token' in response ) {
+							$('input[name="klarna_payments_authorization_token"]').remove()
+							$('form.checkout').append('<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit()
+						}
+					} );
+
+					console.log('here')
+					return false;
+				}
+
+				if ( 'approved' in klarna_payments.authorization_response && true !== klarna_payments.authorization_response.approved ) {
+					if ( 'show_form' in klarna_payments.authorization_response && false === klarna_payments.authorization_response.show_form ) {
+						klarna_payments.authorization_response = {}
+
+						// Hide Klarna Payments.
+						$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
+						$('li.payment_method_klarna_payments').hide()
+
+						console.log('here')
+						return false;
+					} else {
+						klarna_payments.authorization_response = {}
+
+						console.log('here')
+						return false;
+					}
+				} else {
+					if ( 'authorization_token' in klarna_payments.authorization_response ) {
+						return true
 					}
 				}
 
-				// @TODO: Improve error handling on authorize, currently it just keeps submitting
-				$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
-					// If we don't have response, call Klarna.Credit.authorize
-					if ( ! klarna_payments.authorization_response.hasOwnProperty('authorization_token') ) {
-						console.log(klarna_payments.authorization_response)
-
-						if ( klarna_payments.authorization_response.show_form ) {
-							if ( ! klarna_payments.authorization_response.show_form ) {
-								return false;
-							}
-						}
-						
-						klarna_payments.authorize().done( function( response ) {
-							$( 'form.checkout' ).append( '<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit();
-						} );
-
-						return false;
-					} else {
-						if ( klarna_payments.authorization_response.approved ) {
-							return true
-						} else if ( klarna_payments.authorization_response.show_form ) {
-							// Fix the form, try again.
-							// klarna_payments.authorization_response = {}
-							console.log(klarna_payments.authorization_response.show_form)
-
-							return false;
-						} else {
-							// Hide Klarna Payments.
-							// @TODO: Figure out what to do when KP is the only payment method
-							$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
-							$('li.payment_method_klarna_payments').hide()
-
-							return false;
-						}
-					}
-				});
+				return false
 			});
+			*/
 		},
 
 		init: function() {
@@ -117,7 +182,7 @@ jQuery( function( $ ) {
 						};
 
 						Klarna.Credit.load(options, function (response) {
-							$defer.resolve(response);
+							$defer.resolve(response)
 						});
 					}
 				}, 100);
@@ -132,7 +197,7 @@ jQuery( function( $ ) {
 		},
 
 		authorize: function() {
-			var $defer = $.Deferred();
+			klarna_payments.authorization_response = {}
 
 			// @TODO: Currently using billing phone and email for shipping details, check if this is OK
 			var first_name = $('#billing_first_name').val(),
@@ -201,15 +266,12 @@ jQuery( function( $ ) {
 			}, function(response) {
 				console.log(response)
 				console.log('test')
+
 				klarna_payments.authorization_response = response;
-				// if ( klarna_payments.authorization_response.hasOwnProperty('authorization_token') ) {
-					$defer.resolve(response)
-				// } else {
-					// $defer.reject(response)
-				// }
+				klarna_payments.defer_authorize.resolve(response)
 			});
 
-			return $defer.promise();
+			return klarna_payments.defer_authorize.promise();
 		}
 	}
 	klarna_payments.start();
