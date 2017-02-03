@@ -514,6 +514,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . $this->shared_secret ),
 				'Content-Type'  => 'application/json',
 			),
+			// @TODO: Make args filterable, so order management plugin can hook in.
 			'body' => wp_json_encode( array(
 				'purchase_country'    => 'US',
 				'purchase_currency'   => 'USD',
