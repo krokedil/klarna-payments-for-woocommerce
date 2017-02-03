@@ -6,7 +6,6 @@ jQuery( function( $ ) {
 		client_token: false,
 		klarna_loaded: false,
 		klarna_html: '',
-		defer_authorize: $.Deferred(),
 
 		start: function() {
 			$( document.body ).on( 'update_checkout', function() {
@@ -17,13 +16,6 @@ jQuery( function( $ ) {
 				// Now that we are filtering into fragments that are getting refreshed, we need to hide unavailable
 				// gateways manually.
 				$('.wc-klarna-payments-hide + li.wc_payment_method').hide().find('input[type="radio"]').attr('disabled', true)
-
-				// Also manually hide Klarna Payments if billing country is not US or GB
-				if ( 'US' !== $('#billing_country').val() ) {
-					$('li.wc_payment_method.payment_method_klarna_payments').hide().find('input[type="radio"]').attr('disabled', true)
-				} else {
-					$('li.wc_payment_method.payment_method_klarna_payments').show().find('input[type="radio"]').attr('disabled', false)
-				}
 
 				// Unblock the payments element if blocked
 				var element_data = $('.woocommerce-checkout-payment').data()
@@ -63,59 +55,8 @@ jQuery( function( $ ) {
 					}
 				})
 
-				// klarna_payments.load()
 				return false
 			})
-
-			/*
-			$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
-				console.log('here')
-				console.log('resp', klarna_payments.authorization_response)
-				console.log('state', klarna_payments.defer_authorize.state())
-
-				if ( 'show_form' in klarna_payments.authorization_response !== true ) {
-					klarna_payments.defer_authorize.reject()
-					console.log('state', klarna_payments.defer_authorize.state())
-					klarna_payments.defer_authorize = $.Deferred()
-					console.log('state', klarna_payments.defer_authorize.state())
-
-					klarna_payments.authorize().done( function(response) {
-						console.log(response)
-						if ( 'authorization_token' in response ) {
-							$('input[name="klarna_payments_authorization_token"]').remove()
-							$('form.checkout').append('<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit()
-						}
-					} );
-
-					console.log('here')
-					return false;
-				}
-
-				if ( 'approved' in klarna_payments.authorization_response && true !== klarna_payments.authorization_response.approved ) {
-					if ( 'show_form' in klarna_payments.authorization_response && false === klarna_payments.authorization_response.show_form ) {
-						klarna_payments.authorization_response = {}
-
-						// Hide Klarna Payments.
-						$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
-						$('li.payment_method_klarna_payments').hide()
-
-						console.log('here')
-						return false;
-					} else {
-						klarna_payments.authorization_response = {}
-
-						console.log('here')
-						return false;
-					}
-				} else {
-					if ( 'authorization_token' in klarna_payments.authorization_response ) {
-						return true
-					}
-				}
-
-				return false
-			});
-			*/
 		},
 
 		init: function() {
@@ -197,6 +138,7 @@ jQuery( function( $ ) {
 		},
 
 		authorize: function() {
+			var $defer = $.Deferred();
 			klarna_payments.authorization_response = {}
 
 			// @TODO: Currently using billing phone and email for shipping details, check if this is OK
@@ -264,14 +206,11 @@ jQuery( function( $ ) {
 					country: s_country
 				}
 			}, function(response) {
-				console.log(response)
-				console.log('test')
-
 				klarna_payments.authorization_response = response;
-				klarna_payments.defer_authorize.resolve(response)
+				$defer.resolve(response)
 			});
 
-			return klarna_payments.defer_authorize.promise();
+			return $defer.promise();
 		}
 	}
 	klarna_payments.start();

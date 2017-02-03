@@ -45,11 +45,25 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $shared_secret = '';
 
 	/**
+	 * Klarna country.
+	 *
+	 * @var string
+	 */
+	public $shop_country = 'US';
+
+	/**
 	 * Turns on logging.
 	 *
 	 * @var string
 	 */
 	public $logging = false;
+
+	/**
+	 * Klarna Payments create session error.
+	 *
+	 * @var bool|WP_Error
+	 */
+	public $create_session_error = false;
 
 	/**
 	 * Constructor
@@ -73,11 +87,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Get setting values.
 		$this->title                  = $this->get_option( 'title' );
-		$this->description            = $this->get_option( 'description' );
+		$this->description            = $this->get_option( 'description', '' );
 		$this->enabled                = $this->get_option( 'enabled' );
 		$this->testmode               = 'yes' === $this->get_option( 'testmode' );
-		$this->merchant_id            = $this->testmode ? $this->get_option( 'test_merchant_id' ) : $this->get_option( 'merchant_id' );
-		$this->shared_secret          = $this->testmode ? $this->get_option( 'test_shared_secret' ) : $this->get_option( 'shared_secret' );
+		$this->merchant_id            = $this->testmode ? $this->get_option( 'test_merchant_id_us' ) : $this->get_option( 'merchant_id_us', '' );
+		$this->shared_secret          = $this->testmode ? $this->get_option( 'test_shared_secret_us' ) : $this->get_option( 'shared_secret_us', '' );
 		$this->logging                = 'yes' === $this->get_option( 'logging' );
 
 		if ( $this->testmode ) {
@@ -92,11 +106,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'wp_footer', array( $this, 'klarna_payments_sdk' ) );
-		add_action( 'woocommerce_checkout_init', array( $this, 'klarna_payments_session' ) );
+		add_action( 'woocommerce_checkout_init', array( $this, 'klarna_payments_session' ), 10, 1 );
 		add_action( 'woocommerce_checkout_init', array( $this, 'add_klarna_payments_container' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
 		add_action( 'woocommerce_after_order_notes', array( $this, 'add_authorization_token_field' ) );
+		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'preserve_iframe_on_order_review_update' ) );
 	}
 
@@ -126,6 +141,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => __( 'Pay with Klarna Payments.', 'woocommerce' ),
 				'desc_tip'    => true,
 			),
+			/*
 			'instructions' => array(
 				'title'       => __( 'Instructions', 'woocommerce' ),
 				'type'        => 'textarea',
@@ -133,29 +149,30 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => __( 'Pay with Klarna Payments.', 'woocommerce' ),
 				'desc_tip'    => true,
 			),
-			'test_merchant_id' => array(
-				'title'       => __( 'Test merchant ID', 'woocommerce-gateway-klarna-payments' ),
+			*/
+			'test_merchant_id_us' => array(
+				'title'       => __( 'Test merchant ID (US)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'Get your API keys from your Klarna Payments merchant account.', 'woocommerce-gateway-klarna-payments' ),
 				'default'     => '',
 				'desc_tip'    => true,
 			),
-			'test_shared_secret' => array(
-				'title'       => __( 'Test shared secret', 'woocommerce-gateway-klarna-payments' ),
+			'test_shared_secret_us' => array(
+				'title'       => __( 'Test shared secret (US)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'Get your API keys from your Klarna Payments merchant account.', 'woocommerce-gateway-klarna-payments' ),
 				'default'     => '',
 				'desc_tip'    => true,
 			),
-			'merchant_id' => array(
-				'title'       => __( 'Live merchant ID', 'woocommerce-gateway-klarna-payments' ),
+			'merchant_id_us' => array(
+				'title'       => __( 'Live merchant ID (US)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'Get your API keys from your Klarna Payments merchant account.', 'woocommerce-gateway-klarna-payments' ),
 				'default'     => '',
 				'desc_tip'    => true,
 			),
-			'shared_secret' => array(
-				'title'       => __( 'Live shared secret', 'woocommerce-gateway-klarna-payments' ),
+			'shared_secret_us' => array(
+				'title'       => __( 'Live shared secret (US)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'Get your API keys from your Klarna Payments merchant account.', 'woocommerce-gateway-klarna-payments' ),
 				'default'     => '',
@@ -169,6 +186,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => 'yes',
 				'desc_tip'    => true,
 			),
+			/*
 			'logging' => array(
 				'title'       => __( 'Logging', 'woocommerce-gateway-klarna-payments' ),
 				'label'       => __( 'Log debug messages', 'woocommerce-gateway-klarna-payments' ),
@@ -177,6 +195,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => 'no',
 				'desc_tip'    => true,
 			),
+			*/
 		) );
 	}
 
@@ -211,66 +230,19 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Check if Klarna Payments should be available
 	 */
 	public function is_available() {
-		// Currently only available for US and UK.
-		if ( in_array( WC()->customer->get_country(), array( 'US' ), true ) ) {
-			return true;
+		if ( is_wp_error( $this->create_session_error ) ) {
+			return false;
 		}
 
-		return false;
-	}
-
-	/**
-	 * Place Klarna Payments order, after authorization.
-	 *
-	 * Uses authorization token to place the order.
-	 *
-	 * @param int $order_id WooCommerce order ID.
-	 * @return array
-	 */
-	public function process_payment( $order_id ) {
-		$order = wc_get_order( $order_id );
-
-		// Place order.
-		$response = $this->place_order( $_POST['klarna_payments_authorization_token'] );
-
-		// Process the response.
-		if ( ! is_wp_error( $response ) && 200 === $response['response']['code'] ) {
-			$decoded = json_decode( $response['body'] );
-
-			if ( 'ACCEPTED' === $decoded->fraud_status ) {
-				$order->payment_complete( $decoded->order_id );
-				$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded->order_id );
-				add_post_meta( $order_id, '_wc_klarna_payments_order_id', $decoded->order_id, true );
-			} elseif ( 'PENDING' === $decoded->fraud_status ) {
-				// Process pending here.
-			}
-
-			if ( true === $this->testmode ) {
-				update_post_meta( $order_id, '_wc_klarna_payments_env', 'test' );
-			} else {
-				update_post_meta( $order_id, '_wc_klarna_payments_env', 'live' );
-			}
-
-			WC()->session->__unset( 'klarna_payments_session_id' );
-			WC()->session->__unset( 'klarna_payments_client_token' );
-
-			return array(
-				'result' => 'success',
-				'redirect' => $this->get_return_url( $order ),
-			);
+		if ( '' === $this->merchant_id || '' === $this->shared_secret ) {
+			return false;
 		}
 
-		// Return failure if something went wrong.
-		return array(
-			'result'   => 'fail',
-			'redirect' => '',
-		);
+		return true;
 	}
 
 	/**
 	 * Create Klarna Payments session.
-	 *
-	 * @TODO: Improve how session update/create is handled. Currently never updating, but it should if we already have a valid session to work with.
 	 */
 	public function klarna_payments_session() {
 		if ( ! is_checkout() || is_order_received_page() ) {
@@ -280,20 +252,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_payments_params = array();
 		$klarna_payments_params['testmode'] = $this->testmode;
 
-		$order_lines_processor = new WC_Klarna_Payments_Order_Lines();
+		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
 		$order_lines = $order_lines_processor->order_lines();
-
-		// Create session on first Checkout page load.
-		if ( ! is_ajax() ) {
-			WC()->session->__unset( 'klarna_payments_session_id' );
-			WC()->session->__unset( 'klarna_payments_client_token' );
-
-			$request_url  = $this->server_base . 'credit/v1/sessions';
-		} else {
-			$request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
-			$klarna_payments_params['client_token'] = WC()->session->get( 'klarna_payments_client_token' );
-		}
-
 		$request_args = array(
 			'headers' => array(
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . $this->shared_secret ),
@@ -309,18 +269,91 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			) ),
 		);
 
-		$response = wp_safe_remote_post( $request_url, $request_args );
+		if ( ! is_ajax() ) { // On initial page load update or create session
+			if ( WC()->session->get( 'klarna_payments_session_id' ) ) { // Check if we have session ID.
+				// Try to update the session, if it fails try to create new session.
+				$update_request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
+				$update_response = $this->update_session_request( $update_request_url, $request_args );
 
-		// Process the response.
-		if ( 200 === $response['response']['code'] ) {
-			$decoded = json_decode( $response['body'] );
-			$klarna_payments_params['client_token'] = $decoded->client_token;
+				if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
+					WC()->session->__unset( 'klarna_payments_session_id' );
+					WC()->session->__unset( 'klarna_payments_client_token' );
 
-			WC()->session->set( 'klarna_payments_session_id', $decoded->session_id );
-			WC()->session->set( 'klarna_payments_client_token', $decoded->session_id );
+					$create_request_url = $this->server_base . 'credit/v1/sessions';
+					$create_response = $this->create_session_request( $create_request_url, $request_args );
+
+					if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
+						$this->create_session_error = $create_response;
+					} else { // Store session ID and client token in WC session.
+						WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
+						WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
+					}
+				}
+
+				// Localize the script.
+				$klarna_payments_params = array();
+				$klarna_payments_params['testmode'] = $this->testmode;
+				$klarna_payments_params['client_token'] = WC()->session->get( 'klarna_payments_client_token' );
+
+				wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
+			} else {
+				// Try to update the session, if it fails try to create new session.
+				$create_request_url = $this->server_base . 'credit/v1/sessions';
+				$create_response = $this->create_session_request( $create_request_url, $request_args );
+
+				WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
+				WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
+
+				if ( is_wp_error( $create_response ) ) { // If update session failed try to create new session.
+					wc_add_notice( 'test', 'message' );
+				}
+
+				// Localize the script.
+				$klarna_payments_params = array();
+				$klarna_payments_params['testmode'] = $this->testmode;
+				$klarna_payments_params['client_token'] = WC()->session->get( 'klarna_payments_client_token' );
+
+				wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
+			}
 		}
+	}
 
-		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
+	/**
+	 * Create Klarna Payments session.
+	 *
+	 * @param $request_url
+	 * @param $request_args
+	 *
+	 * @return array|mixed|object|WP_Error
+	 */
+	public function create_session_request( $request_url, $request_args ) {
+		$response = wp_safe_remote_post( $request_url, $request_args );
+		$decoded = json_decode( $response['body'] );
+
+		if ( 200 === $response['response']['code'] ) {
+			return $decoded;
+		} else {
+			return new WP_Error( $response['response']['code'], $response['response']['message'] );
+		}
+	}
+
+	/**
+	 * Update Klarna Payments session.
+	 *
+	 * @param $request_url
+	 * @param $request_args
+	 *
+	 * @return array|mixed|object|WP_Error
+	 */
+	public function update_session_request( $request_url, $request_args ) {
+		$response = wp_safe_remote_post( $request_url, $request_args );
+		$decoded = json_decode( $response['body'] );
+
+		if ( 204 === $response['response']['code'] ) {
+			return $decoded;
+		} else {
+			return new WP_Error( $response['response']['code'], $response['response']['message'] );
+		}
 	}
 
 	/**
@@ -367,6 +400,68 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Place Klarna Payments order, after authorization.
+	 *
+	 * Uses authorization token to place the order.
+	 *
+	 * @param int $order_id WooCommerce order ID.
+	 * @return array
+	 */
+	public function process_payment( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		// Place order.
+		$response = $this->place_order( $order_id, $_POST['klarna_payments_authorization_token'] );
+
+		// Process the response.
+		if ( ! is_wp_error( $response ) && 200 === $response['response']['code'] ) {
+			$decoded = json_decode( $response['body'] );
+
+			if ( 'ACCEPTED' === $decoded->fraud_status ) {
+				$order->payment_complete( $decoded->order_id );
+				$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded->order_id );
+				add_post_meta( $order_id, '_wc_klarna_payments_order_id', $decoded->order_id, true );
+
+				do_action( 'wc_klarna_payments_accepted', $order_id, $decoded );
+			} elseif ( 'PENDING' === $decoded->fraud_status ) {
+				$order->update_status( 'on-hold', 'Klarna order is under review.' );
+				add_post_meta( $order_id, '_wc_klarna_payments_pending', 'yes', true );
+
+				do_action( 'wc_klarna_payments_pending', $order_id, $decoded );
+			} elseif ( 'REJECTED' === $decoded->fraud_status ) {
+				$order->update_status( 'on-hold', 'Klarna order was rejected.' );
+
+				do_action( 'wc_klarna_payments_rejected', $order_id, $decoded );
+
+				return array(
+					'result'   => 'fail',
+					'redirect' => '',
+				);
+			}
+
+			if ( true === $this->testmode ) {
+				update_post_meta( $order_id, '_wc_klarna_payments_env', 'test' );
+			} else {
+				update_post_meta( $order_id, '_wc_klarna_payments_env', 'live' );
+			}
+
+			WC()->session->__unset( 'klarna_payments_session_id' );
+			WC()->session->__unset( 'klarna_payments_client_token' );
+
+			return array(
+				'result' => 'success',
+				'redirect' => $this->get_return_url( $order ),
+			);
+		}
+
+		// Return failure if something went wrong.
+		return array(
+			'result'   => 'fail',
+			'redirect' => '',
+		);
+	}
+
+	/**
 	 * Places the order with Klarna
 	 *
 	 * @TODO: Ask about shipping phone and email. OK to use billing instead?
@@ -375,11 +470,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @return array|WP_Error
 	 */
-	public function place_order( $auth_token ) {
-		$order_lines_processor = new WC_Klarna_Payments_Order_Lines();
-		$order_lines = $order_lines_processor->order_lines();
-
-		$posted_data = $_POST; // Input var okay.
+	public function place_order( $order_id, $auth_token ) {
+		$order                 = wc_get_order( $order_id );
+		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
+		$order_lines           = $order_lines_processor->order_lines();
+		$posted_data           = $_POST; // Input var okay.
 
 		$billing_address = array(
 			'given_name' => $posted_data['billing_first_name'],
@@ -420,14 +515,19 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Content-Type'  => 'application/json',
 			),
 			'body' => wp_json_encode( array(
-				'purchase_country'  => 'US',
-				'purchase_currency' => 'USD',
-				'locale'            => 'en-US',
-				'billing_address'   => $billing_address,
-				'shipping_address'  => $shipping_address,
-				'order_amount'      => $order_lines['order_amount'],
-				'order_tax_amount'  => $order_lines['order_tax_amount'],
-				'order_lines'       => $order_lines['order_lines'],
+				'purchase_country'    => 'US',
+				'purchase_currency'   => 'USD',
+				'locale'              => 'en-US',
+				'billing_address'     => $billing_address,
+				'shipping_address'    => $shipping_address,
+				'order_amount'        => $order_lines['order_amount'],
+				'order_tax_amount'    => $order_lines['order_tax_amount'],
+				'order_lines'         => $order_lines['order_lines'],
+				'merchant_reference1' => $order_id, // @TODO: Add support for Sequential Numbers plugins.
+				'merchant_urls'       => array(
+					'confirmation' => $order->get_checkout_order_received_url(),
+					'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $order_id,
+				),
 			) ),
 		);
 
@@ -470,6 +570,31 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		return $elements;
+	}
+
+	/**
+	 * Notification listener for Pending orders.
+	 *
+	 * @TODO: MOVE TO ORDER MANAGEMENT PLUGIN. Use wc_klarna_payments_pending hook defined in this file.
+	 *
+	 * @link https://developers.klarna.com/en/us/kco-v3/pending-orders
+	 */
+	public function notification_listener() {
+		if ( $_GET['order_id'] ) { // Input var okay.
+			$order_id = intval( $_GET['order_id'] ); // Input var okay.
+			$order = wc_get_order( $order_id );
+
+			$post_body = file_get_contents( 'php://input' );
+			$data = json_decode( $post_body, true );
+
+			if ( 'FRAUD_RISK_ACCEPTED' === $data['event_type'] ) {
+				$order->payment_complete( $data['order_id'] );
+				$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $data['order_id'] );
+				add_post_meta( $order_id, '_wc_klarna_payments_order_id', $data['order_id'], true );
+			} elseif ( 'FRAUD_RISK_REJECTED' === $data['event_type'] || 'FRAUD_RISK_STOPPED' === $data['event_type'] ) {
+				$order->cancel_order( 'Klarna order rejected' );
+			}
+		}
 	}
 
 }
