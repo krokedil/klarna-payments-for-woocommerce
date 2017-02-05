@@ -613,7 +613,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'order_amount'        => $order_lines['order_amount'],
 				'order_tax_amount'    => $order_lines['order_tax_amount'],
 				'order_lines'         => $order_lines['order_lines'],
-				'merchant_reference1' => $order_id, // @TODO: Add support for Sequential Numbers plugins.
+				'merchant_reference1' => $order->get_order_number(), // @TODO: Add support for Sequential Numbers plugins.
 				'merchant_urls'       => array(
 					'confirmation' => $order->get_checkout_order_received_url(),
 					'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $order_id, // @TODO: Add filter here, so OM plugin can read the URL
@@ -676,28 +676,27 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Notification listener for Pending orders.
-	 *
-	 * @TODO: MOVE TO ORDER MANAGEMENT PLUGIN. Use wc_klarna_payments_pending hook defined in this file.
+	 * Notification listener for Pending orders. This plugin doesn't handle pending orders, but it does allow Klarna
+	 * Order Management plugin to hook in and process pending orders.
 	 *
 	 * @link https://developers.klarna.com/en/us/kco-v3/pending-orders
 	 */
 	public function notification_listener() {
-		if ( $_GET['order_id'] ) { // Input var okay.
-			$order_id = intval( $_GET['order_id'] ); // Input var okay.
-			$order = wc_get_order( $order_id );
+		do_action( 'wc_klarna_notification_listener' );
+	}
 
-			$post_body = file_get_contents( 'php://input' );
-			$data = json_decode( $post_body, true );
-
-			if ( 'FRAUD_RISK_ACCEPTED' === $data['event_type'] ) {
-				$order->payment_complete( $data['order_id'] );
-				$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $data['order_id'] );
-				add_post_meta( $order_id, '_wc_klarna_payments_order_id', $data['order_id'], true );
-			} elseif ( 'FRAUD_RISK_REJECTED' === $data['event_type'] || 'FRAUD_RISK_STOPPED' === $data['event_type'] ) {
-				$order->cancel_order( 'Klarna order rejected' );
-			}
-		}
+	/**
+	 * This plugin doesn't handle order management, but it allows Klarna Order Management plugin to process refunds
+	 * and then return true or false.
+	 *
+	 * @param int      $order_id WooCommerce order ID.
+	 * @param null|int $amount   Refund amount.
+	 * @param string   $reason   Reason for refund.
+	 *
+	 * @return bool
+	 */
+	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+		return apply_filters( 'wc_klarna_payments_process_refund', false, $order_id, $amount, $reason );
 	}
 
 }
