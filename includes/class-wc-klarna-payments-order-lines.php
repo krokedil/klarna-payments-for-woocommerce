@@ -6,6 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC_Klarna_Payments_Order_Lines class.
  *
  * Processes order lines for Klarna Payments requests.
+ *
+ * @TODO: Test with coupons.
  */
 class WC_Klarna_Payments_Order_Lines {
 
@@ -232,7 +234,7 @@ class WC_Klarna_Payments_Order_Lines {
 			$item_price_including_tax = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
 		}
 
-		$item_price = apply_filters( 'klarna_item_price_including_tax', $item_price_including_tax );
+		$item_price = $item_price_including_tax;
 		$item_price = number_format( $item_price * 100, 0, '', '' ) / $cart_item['quantity'];
 
 		return round( $item_price );
