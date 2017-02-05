@@ -498,8 +498,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				do_action( 'wc_klarna_payments_rejected', $order_id, $decoded );
 
 				return array(
-					'result'   => 'fail',
+					'result'   => 'failure',
 					'redirect' => '',
+					'messages' => '<div class="woocommerce-error">Klarna payment rejected</div>',
 				);
 			}
 
@@ -516,13 +517,21 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'result' => 'success',
 				'redirect' => $this->get_return_url( $order ),
 			);
-		}
+		} else {
+			if ( is_wp_error( $response ) ) {
+				$error_message = $response->get_error_message();
+			} else {
+				$error_message = 'Klarna error failed. ' . $response['response']['code'] . ' - ' . $response['response']['message'] . '.';
+			}
 
-		// Return failure if something went wrong.
-		return array(
-			'result'   => 'fail',
-			'redirect' => '',
-		);
+			wc_add_notice( $error_message, 'error' );
+
+			// Return failure if something went wrong.
+			return array(
+				'result'   => 'failure',
+				'redirect' => '',
+			);
+		}
 	}
 
 	/**
