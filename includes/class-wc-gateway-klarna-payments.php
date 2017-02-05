@@ -316,7 +316,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 						console.log('not yet')
 					}
 
-					if (Klarna.Credit) {
+					if (Klarna && Klarna.Credit) {
 						clearInterval(klarnaLoadedInterval);
 						clearTimeout(klarnaLoadedTimeout);
 

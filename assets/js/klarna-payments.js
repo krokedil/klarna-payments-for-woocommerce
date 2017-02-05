@@ -264,21 +264,40 @@ jQuery( function( $ ) {
 		},
 
 		check_required_fields: function() {
+			var input_value
+			var input_flag = false
+
 			if ( $( '#ship-to-different-address' ).find( 'input' ).is( ':checked' ) ) {
 				$('.woocommerce-billing-fields .validate-required[id^="billing"], .woocommerce-shipping-fields .validate-required[id^="shipping"]').each(function() {
-					if ('' === $(this).val()) {
-						return false
+					if ( $(this).find('select').length ) {
+						input_value = $(this).find('select').val()
+					} else {
+						input_value = $(this).find('input').val()
+					}
+
+					if ('' === input_value || undefined === input_value) {
+						input_flag = true
 					}
 				})
 			} else {
 				$('.woocommerce-billing-fields .validate-required[id^="billing"]').each(function() {
-					if ('' === $(this).val()) {
-						return false
+					if ( $(this).find('select').length ) {
+						input_value = $(this).find('select').val()
+					} else {
+						input_value = $(this).find('input').val()
+					}
+
+					if ('' === input_value || undefined === input_value) {
+						input_flag = true
 					}
 				})
 			}
 
-			return true
+			if ( input_flag ) {
+				return false
+			} else {
+				return true
+			}
 		}
 	}
 	klarna_payments.start();
