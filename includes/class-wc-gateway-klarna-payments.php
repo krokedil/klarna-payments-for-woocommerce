@@ -247,12 +247,16 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		if ( WC()->session->get( 'klarna_payments_session_id' ) ) { // Check if we have session ID.
 			if ( $this->logging ) {
-				WC_Klarna_Payments::log( 'ajax session update: ' . var_export( $request_args, true ) );
+				WC_Klarna_Payments::log( 'reload session update args: ' . var_export( $request_args, true ) );
 			}
 
 			// Try to update the session, if it fails try to create new session.
 			$update_request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response = $this->update_session_request( $update_request_url, $request_args );
+
+			if ( $this->logging ) {
+				WC_Klarna_Payments::log( 'reload session update response: ' . var_export( $update_response, true ) );
+			}
 
 			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
 				WC()->session->__unset( 'klarna_payments_session_id' );
@@ -363,12 +367,16 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			);
 
 			if ( $this->logging ) {
-				WC_Klarna_Payments::log( 'ajax session update: ' . var_export( $request_args, true ) );
+				WC_Klarna_Payments::log( 'ajax session update args: ' . var_export( $request_args, true ) );
 			}
 
 			// Try to update the session, if it fails try to create new session.
 			$update_request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response = $this->update_session_request( $update_request_url, $request_args );
+
+			if ( $this->logging ) {
+				WC_Klarna_Payments::log( 'ajax session update response: ' . var_export( $update_response, true ) );
+			}
 
 			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
 				$this->session_error = $update_response;
@@ -613,7 +621,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			) ),
 		);
 
-		return wp_safe_remote_post( $request_url, $request_args );
+		if ( $this->logging ) {
+			WC_Klarna_Payments::log( 'place order args: ' . var_export( $request_args, true ) );
+		}
+
+		$response = wp_safe_remote_post( $request_url, $request_args );
+
+		if ( $this->logging ) {
+			WC_Klarna_Payments::log( 'place order response: ' . var_export( $response, true ) );
+		}
+
+		return $response;
 	}
 
 	/**
