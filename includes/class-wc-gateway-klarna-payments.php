@@ -181,7 +181,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => 'yes',
 				'desc_tip'    => true,
 			),
-			/*
 			'logging' => array(
 				'title'       => __( 'Logging', 'woocommerce-gateway-klarna-payments' ),
 				'label'       => __( 'Log debug messages', 'woocommerce-gateway-klarna-payments' ),
@@ -190,7 +189,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => 'no',
 				'desc_tip'    => true,
 			),
-			*/
 		) );
 	}
 
@@ -246,17 +244,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		);
 
 		if ( WC()->session->get( 'klarna_payments_session_id' ) ) { // Check if we have session ID.
-			if ( $this->logging ) {
-				WC_Klarna_Payments::log( 'reload session update args: ' . var_export( $request_args, true ) );
-			}
-
 			// Try to update the session, if it fails try to create new session.
 			$update_request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response = $this->update_session_request( $update_request_url, $request_args );
-
-			if ( $this->logging ) {
-				WC_Klarna_Payments::log( 'reload session update response: ' . var_export( $update_response, true ) );
-			}
 
 			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
 				WC()->session->__unset( 'klarna_payments_session_id' );
@@ -366,17 +356,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				) ),
 			);
 
-			if ( $this->logging ) {
-				WC_Klarna_Payments::log( 'ajax session update args: ' . var_export( $request_args, true ) );
-			}
-
 			// Try to update the session, if it fails try to create new session.
 			$update_request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response = $this->update_session_request( $update_request_url, $request_args );
-
-			if ( $this->logging ) {
-				WC_Klarna_Payments::log( 'ajax session update response: ' . var_export( $update_response, true ) );
-			}
 
 			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
 				$this->session_error = $update_response;
@@ -503,9 +485,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 				do_action( 'wc_klarna_payments_accepted', $order_id, $decoded );
 			} elseif ( 'PENDING' === $decoded->fraud_status ) {
-				// @TODO: Add meta field using this hook from Order Management plugin.
 				$order->update_status( 'on-hold', 'Klarna order is under review.' );
-				add_post_meta( $order_id, '_wc_klarna_payments_pending', 'yes', true );
 
 				do_action( 'wc_klarna_payments_pending', $order_id, $decoded );
 			} elseif ( 'REJECTED' === $decoded->fraud_status ) {
@@ -521,9 +501,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 
 			if ( true === $this->testmode ) {
-				update_post_meta( $order_id, '_wc_klarna_payments_env', 'test' );
+				update_post_meta( $order_id, '_wc_klarna_environment', 'us-test' );
 			} else {
-				update_post_meta( $order_id, '_wc_klarna_payments_env', 'live' );
+				update_post_meta( $order_id, '_wc_klarna_environment', 'us-live' );
 			}
 
 			WC()->session->__unset( 'klarna_payments_session_id' );
@@ -552,8 +532,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 	/**
 	 * Places the order with Klarna
-	 *
-	 * @TODO: Ask about shipping phone and email. OK to use billing instead?
 	 *
 	 * @param string $auth_token Klarna Payments authorization token.
 	 *
@@ -603,7 +581,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . $this->shared_secret ),
 				'Content-Type'  => 'application/json',
 			),
-			// @TODO: Make args filterable, so order management plugin can hook in.
 			'body' => wp_json_encode( array(
 				'purchase_country'    => 'US',
 				'purchase_currency'   => 'USD',
@@ -613,23 +590,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'order_amount'        => $order_lines['order_amount'],
 				'order_tax_amount'    => $order_lines['order_tax_amount'],
 				'order_lines'         => $order_lines['order_lines'],
-				'merchant_reference1' => $order->get_order_number(), // @TODO: Add support for Sequential Numbers plugins.
+				'merchant_reference1' => $order->get_order_number(),
 				'merchant_urls'       => array(
 					'confirmation' => $order->get_checkout_order_received_url(),
-					'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $order_id, // @TODO: Add filter here, so OM plugin can read the URL
+					'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $order_id,
 				),
 			) ),
 		);
 
-		if ( $this->logging ) {
-			WC_Klarna_Payments::log( 'place order args: ' . var_export( $request_args, true ) );
-		}
-
 		$response = wp_safe_remote_post( $request_url, $request_args );
-
-		if ( $this->logging ) {
-			WC_Klarna_Payments::log( 'place order response: ' . var_export( $response, true ) );
-		}
 
 		return $response;
 	}

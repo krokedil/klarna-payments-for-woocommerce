@@ -75,10 +75,11 @@ jQuery( function( $ ) {
 					}
 
 					if (false === response.show_form) {
-						// @TODO: Do not do this
-						// Hide Klarna Payments.
+						// Hide Klarna Payments (for now, do not do this).
+						/*
 						$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
 						$('li.payment_method_klarna_payments').hide()
+						*/
 					}
 				})
 
@@ -103,7 +104,6 @@ jQuery( function( $ ) {
 						clearInterval(klarnaLoadedInterval);
 						clearTimeout(klarnaLoadedTimeout);
 
-						// @TODO: Currently using billing phone and email for shipping details, check if this is OK
 						var first_name = $('#billing_first_name').val(),
 							last_name = $('#billing_last_name').val(),
 							email = $('#billing_email').val(),
@@ -191,7 +191,6 @@ jQuery( function( $ ) {
 			var $defer = $.Deferred();
 			klarna_payments.authorization_response = {}
 
-			// @TODO: Currently using billing phone and email for shipping details, check if this is OK
 			var first_name = $('#billing_first_name').val(),
 				last_name = $('#billing_last_name').val(),
 				email = $('#billing_email').val(),

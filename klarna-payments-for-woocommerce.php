@@ -87,8 +87,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 		/**
 		 * Init the plugin after plugins_loaded so environment variables are set.
-		 *
-		 * @TODO: Add environment warnings (see Stripe gateway).
 		 */
 		public function init() {
 			// Init the gateway itself.
