@@ -194,33 +194,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		) );
 	}
 
-
-	/**
-	 * Klarna Payments SDK.
-	 *
-	 * @access public
-	 */
-	public function klarna_payments_sdk() {
-		if ( ! is_cart() && ! is_checkout() ) {
-			return;
-		}
-
-		?>
-		<script type="text/javascript" id="klarna-credit-lib-x">
-		  /* <![CDATA[ */
-		  (function(w,d) {
-		    var url = "https://credit.klarnacdn.net/lib/v1/api.js";
-		    n = d.createElement("script");
-		    c = d.getElementById("klarna-credit-lib-x");
-		    n.async = !0;
-		    n.src = url + "?" + (new Date()).getTime();
-		    c.parentNode.replaceChild(n, c);
-		  })(this,document);
-		  /* ]]> */
-		</script>
-		<?php
-	}
-
 	/**
 	 * Check if Klarna Payments should be available
 	 */
@@ -335,7 +308,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 						console.log('not yet')
 					}
 
-					if (Klarna) {
+					if (Klarna.Credit) {
 						clearInterval(klarnaLoadedInterval);
 						clearTimeout(klarnaLoadedTimeout);
 
