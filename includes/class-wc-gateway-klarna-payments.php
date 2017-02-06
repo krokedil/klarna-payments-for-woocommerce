@@ -234,7 +234,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Content-Type'  => 'application/json',
 			),
 			'body' => wp_json_encode( array(
-				'purchase_country'  => 'US',
+				'purchase_country'  => WC()->customer->get_country(),
 				'purchase_currency' => 'USD',
 				'locale'            => 'en-US',
 				'order_amount'      => $order_lines['order_amount'],
@@ -347,7 +347,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					'Content-Type'  => 'application/json',
 				),
 				'body' => wp_json_encode( array(
-					'purchase_country'  => 'US',
+					'purchase_country'  => WC()->customer->get_country(),
 					'purchase_currency' => 'USD',
 					'locale'            => 'en-US',
 					'order_amount'      => $order_lines['order_amount'],
@@ -373,8 +373,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Create Klarna Payments session.
 	 *
-	 * @param $request_url
-	 * @param $request_args
+	 * @param string $request_url  Klarna request URL.
+	 * @param array  $request_args Klarna request arguments.
 	 *
 	 * @return array|mixed|object|WP_Error
 	 */

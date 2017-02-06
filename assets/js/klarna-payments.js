@@ -228,7 +228,7 @@ jQuery( function( $ ) {
 			}
 
 			Klarna.Credit.authorize( {
-				purchase_country: "US",
+				purchase_country: country,
 				purchase_currency: "USD",
 				locale: "en-US",
 				billing_address: {
