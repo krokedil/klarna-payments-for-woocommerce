@@ -22,7 +22,6 @@ jQuery( function( $ ) {
 
 					if ( klarna_payments.check_required_fields() ) {
 						klarna_payments.load().then(function (response) {
-							console.log(response)
 							klarna_payments.iframe_loaded = true
 							if (response.show_form) {
 								klarna_payments.show_form = true;
@@ -39,7 +38,6 @@ jQuery( function( $ ) {
 						$('#place_order').attr('disabled', true)
 
 						klarna_payments.load().then(function (response) {
-							console.log(response)
 							klarna_payments.iframe_loaded = true
 							if (response.show_form) {
 								klarna_payments.show_form = true;
@@ -70,8 +68,6 @@ jQuery( function( $ ) {
 				}
 
 				klarna_payments.authorize().done( function(response) {
-					console.log(response)
-
 					if ('authorization_token' in response) {
 						$('input[name="klarna_payments_authorization_token"]').remove()
 						$('form.checkout').append('<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit()
@@ -100,10 +96,10 @@ jQuery( function( $ ) {
 					try {
 						Klarna = window.Klarna;
 					} catch (e) {
-						//
+						console.debug(e)
 					}
 
-					if (Klarna && Klarna.Credit.initialized) {
+					if (Klarna && Klarna.Credit && Klarna.Credit.initialized) {
 						clearInterval(klarnaLoadedInterval);
 						clearTimeout(klarnaLoadedTimeout);
 

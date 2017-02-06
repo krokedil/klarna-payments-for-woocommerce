@@ -5,7 +5,7 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: Krokedil
  * Author URI: https://krokedil.se/
- * Version: 0.1-alpha
+ * Version: 1.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
 */
@@ -19,30 +19,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '0.1-alpha' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '1.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.3.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '2.5.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
-define( 'WC_KLARNA_PAYMENTS_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
+define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 
 if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 	class WC_Klarna_Payments {
 
 		/**
-		 * @var Singleton The reference the *Singleton* instance of this class
+		 * The reference the *Singleton* instance of this class.
+		 *
+		 * @var $instance
 		 */
 		private static $instance;
 
 		/**
-		 * @var Reference to logging class.
+		 * Reference to logging class.
+		 *
+		 * @var $log
 		 */
 		private static $log;
 
 		/**
 		 * Returns the *Singleton* instance of this class.
 		 *
-		 * @return Singleton The *Singleton* instance.
+		 * @return self::$instance The *Singleton* instance.
 		 */
 		public static function get_instance() {
 			if ( null === self::$instance ) {
@@ -72,6 +76,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 		/**
 		 * Notices (array)
+		 *
 		 * @var array
 		 */
 		public $notices = array();
@@ -98,7 +103,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		/**
 		 * Adds plugin action links
 		 *
-		 * @since 1.0.0
+		 * @param array $links Plugin action link before filtering.
+		 *
+		 * @return array Filtered links.
 		 */
 		public function plugin_action_links( $links ) {
 			$setting_link = $this->get_setting_link();
@@ -148,8 +155,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				return;
 			}
 
-			include_once( dirname( __FILE__ ) . '/includes/class-wc-gateway-klarna-payments.php' );
-			include_once( dirname( __FILE__ ) . '/includes/class-wc-klarna-payments-order-lines.php' );
+			include_once( WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-gateway-klarna-payments.php' );
+			include_once( WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-payments-order-lines.php' );
 
 			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateways' ) );

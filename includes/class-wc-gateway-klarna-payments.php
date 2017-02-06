@@ -54,9 +54,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Turns on logging.
 	 *
-	 * @var string
-	 *
-	 * @TODO: Add logging.
+	 * @var WC_Logger
 	 */
 	public $logging = false;
 
@@ -136,15 +134,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => __( 'Pay with Klarna Payments.', 'woocommerce' ),
 				'desc_tip'    => true,
 			),
-			/*
-			'instructions' => array(
-				'title'       => __( 'Instructions', 'woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'Instructions that will be added to the thank you page.', 'woocommerce' ),
-				'default'     => __( 'Pay with Klarna Payments.', 'woocommerce' ),
-				'desc_tip'    => true,
-			),
-			*/
 			'test_merchant_id_us' => array(
 				'title'       => __( 'Test merchant ID (US)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
@@ -303,7 +292,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					try {
 						Klarna = window.Klarna;
 					} catch (e) {
-						console.log('not yet')
+						console.log(e)
 					}
 
 					if (Klarna && Klarna.Credit) {
@@ -311,10 +300,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 						clearTimeout(klarnaLoadedTimeout);
 
 						var data = {client_token: "<?php echo esc_attr( WC()->session->get( 'klarna_payments_client_token' ) ); ?>"};
-
-						console.log('****** Klarna Credit - Klarna.Credit.init() ******');
-						console.log(data);
-
 						Klarna.Credit.init(data);
 					}
 				}, 100);
@@ -392,8 +377,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Update Klarna Payments session.
 	 *
-	 * @param $request_url
-	 * @param $request_args
+	 * @param string $request_url  Klarna request URL.
+	 * @param array  $request_args Klarna request arguments.
 	 *
 	 * @return array|mixed|object|WP_Error
 	 */
@@ -416,7 +401,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			echo wpautop( wptexturize( $description ) );
 		}
 
-		echo '<div id="klarna_container"></div>';
+		echo '<div id="klarna_container" style="margin-top:1em;"></div>';
 	}
 
 	/**
@@ -449,6 +434,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * If authorization token is missing, we'll add error notice and bail.
 	 * Authorization token field is added to the form in JavaScript, when Klarna.Credit.authorize is completed.
+	 *
+	 * @param array $posted Posted data on WooCommerce checkout process.
 	 */
 	public function check_authorization_token( $posted ) {
 		if ( 'klarna_payments' !== $posted['payment_method'] ) {
@@ -536,6 +523,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Places the order with Klarna
 	 *
+	 * @param int    $order_ir   WooCommerce order ID.
 	 * @param string $auth_token Klarna Payments authorization token.
 	 *
 	 * @return array|WP_Error
@@ -551,7 +539,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'family_name' => $posted_data['billing_last_name'],
 			'email' => $posted_data['billing_email'],
 			'phone' => $posted_data['billing_phone'],
-			// 'title' => 'Mr',
 			'street_address' => $posted_data['billing_address_1'],
 			'street_address2' => $posted_data['billing_address_2'],
 			'postal_code' => $posted_data['billing_postcode'],
@@ -566,7 +553,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'family_name' => $posted_data['shipping_last_name'],
 				'email' => $posted_data['billing_email'],
 				'phone' => $posted_data['shipping_email'],
-				// 'title' => 'Mr',
 				'street_address' => $posted_data['shipping_address_1'],
 				'street_address2' => $posted_data['shipping_address_2'],
 				'postal_code' => $posted_data['shipping_postcode'],
