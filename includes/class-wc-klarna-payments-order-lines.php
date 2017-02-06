@@ -90,7 +90,7 @@ class WC_Klarna_Payments_Order_Lines {
 				);
 
 				$this->order_lines[] = $klarna_item;
-				$this->order_amount += $this->get_item_quantity( $cart_item ) * $this->get_item_price( $cart_item );
+				$this->order_amount += $this->get_item_quantity( $cart_item ) * $this->get_item_price( $cart_item ) - $this->get_item_discount_amount( $cart_item );
 			}
 		}
 	}
@@ -227,15 +227,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return integer $item_price Cart item price.
 	 */
 	public function get_item_price( $cart_item ) {
-		// apply_filters to item price so we can filter this if needed.
 		if ( 'US' === $this->shop_country ) {
-			$item_price_including_tax = $cart_item['line_subtotal'];
+			$item_subtotal = $cart_item['line_subtotal'];
 		} else {
-			$item_price_including_tax = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
+			$item_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
 		}
 
-		$item_price = $item_price_including_tax;
-		$item_price = number_format( $item_price * 100, 0, '', '' ) / $cart_item['quantity'];
+		$item_price = number_format( $item_subtotal * 100, 0, '', '' ) / $cart_item['quantity'];
 
 		return round( $item_price );
 	}
@@ -290,14 +288,16 @@ class WC_Klarna_Payments_Order_Lines {
 	 */
 	public function get_item_discount_amount( $cart_item ) {
 		if ( $cart_item['line_subtotal'] > $cart_item['line_total'] ) {
-			$item_price           = $this->get_item_price( $cart_item );
-			$item_total_amount    = $this->get_item_total_amount( $cart_item );
-			$item_discount_amount = ( $item_price * $cart_item['quantity'] - $item_total_amount );
+			if ( 'US' === $this->shop_country ) {
+				$item_discount_amount = $cart_item['line_subtotal'] - $cart_item['line_total'];
+			} else {
+				$item_discount_amount = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'] - $cart_item['line_total'] - $cart_item['line_total_tax'];
+			}
 		} else {
 			$item_discount_amount = 0;
 		}
 
-		return round( $item_discount_amount );
+		return round( $item_discount_amount * 100 );
 	}
 
 	/**
@@ -332,6 +332,7 @@ class WC_Klarna_Payments_Order_Lines {
 		} else {
 			$item_total_amount = ( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 );
 		}
+
 		return round( $item_total_amount );
 	}
 
