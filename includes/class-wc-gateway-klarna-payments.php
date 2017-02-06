@@ -485,7 +485,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 				do_action( 'wc_klarna_payments_accepted', $order_id, $decoded );
 			} elseif ( 'PENDING' === $decoded->fraud_status ) {
-				$order->update_status( 'on-hold', 'Klarna order is under review.' );
+				$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded->order_id );
 
 				do_action( 'wc_klarna_payments_pending', $order_id, $decoded );
 			} elseif ( 'REJECTED' === $decoded->fraud_status ) {

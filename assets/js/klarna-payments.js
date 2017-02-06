@@ -4,14 +4,11 @@ jQuery( function( $ ) {
 	var klarna_payments = {
 		authorization_response: {},
 		iframe_loaded: false,
+		show_form: false,
 		// klarna_html: '',
 		klarna_container_selector: '#klarna_container',
 
 		start: function() {
-			$( document.body ).on( 'update_checkout', function() {
-				$('')
-			})
-
 			$('body').on('updated_checkout', function() {
 				// Unblock the payments element if blocked
 				var element_data = $('.woocommerce-checkout-payment').data()
@@ -25,8 +22,12 @@ jQuery( function( $ ) {
 
 					if ( klarna_payments.check_required_fields() ) {
 						klarna_payments.load().then(function (response) {
+							console.log(response)
 							klarna_payments.iframe_loaded = true
-							$('#place_order').attr('disabled', false)
+							if (response.show_form) {
+								klarna_payments.show_form = true;
+								$('#place_order').attr('disabled', false)
+							}
 						})
 					}
 				}
@@ -38,8 +39,10 @@ jQuery( function( $ ) {
 						$('#place_order').attr('disabled', true)
 
 						klarna_payments.load().then(function (response) {
+							console.log(response)
 							klarna_payments.iframe_loaded = true
-							if (! response.error) {
+							if (response.show_form) {
+								klarna_payments.show_form = true;
 								$('#place_order').attr('disabled', false)
 							}
 						})
@@ -49,7 +52,7 @@ jQuery( function( $ ) {
 				// When changing payment method.
 				if ( 'payment_method' === $(this).attr('name') ) {
 					// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
-					if (!klarna_payments.iframe_loaded && 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
+					if (!klarna_payments.show_form && 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
 						$('#place_order').attr('disabled', true)
 					}
 
@@ -293,6 +296,7 @@ jQuery( function( $ ) {
 			}
 
 			if ( input_flag ) {
+				klarna_payments.show_form = false;
 				return false
 			} else {
 				return true
