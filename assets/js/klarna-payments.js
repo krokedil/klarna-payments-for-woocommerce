@@ -61,7 +61,33 @@ jQuery( function( $ ) {
 				}
 			})
 
-			// Hooking into WooCommerce.
+			// Need to do this for form auto-fill (no change event).
+			var checkFormInterval = setInterval(function () {
+				if (klarna_payments.show_form) {
+					clearInterval(checkFormInterval);
+				}
+
+				if ( 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val() ) {
+					if ( klarna_payments.check_required_fields() ) {
+						$('#place_order').attr('disabled', true)
+
+						klarna_payments.load().then(function (response) {
+							klarna_payments.iframe_loaded = true
+							if (response.show_form) {
+								klarna_payments.show_form = true;
+								$('#place_order').attr('disabled', false)
+								clearInterval(checkFormInterval);
+							}
+						})
+					}
+				}
+			}, 100)
+
+			/**
+			 * Hooking into WooCommerce.
+			 *
+			 * Firing Klarna.Credit.authorize(), then once it resolves, adding the hidden form field and re-submitting the form.
+ 			 */
 			$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
 				if ($('input[name="klarna_payments_authorization_token"]').length) {
 					return true
