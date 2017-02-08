@@ -9,11 +9,15 @@ jQuery( function( $ ) {
 		klarna_container_selector: '#klarna_container',
 
 		start: function() {
+			// Add page visibility listener to handle tab changes.
+			klarna_payments.page_visibility_listener()
+
 			$('body').on('updated_checkout', function() {
 				// Unblock the payments element if blocked
-				var element_data = $('.woocommerce-checkout-payment').data()
-				if ( 1 === element_data['blockUI.isBlocked'] ) {
-					$('.woocommerce-checkout-payment').unblock()
+				var blocked_el = $('.woocommerce-checkout-payment')
+				var blocked_el_data = blocked_el.data()
+				if ( blocked_el.length && 1 === blocked_el_data['blockUI.isBlocked'] ) {
+					blocked_el.unblock()
 				}
 
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
@@ -197,6 +201,7 @@ jQuery( function( $ ) {
 								}
 							},
 							function (response) {
+								console.log(response)
 								$defer.resolve(response)
 							}
 						);
@@ -322,6 +327,37 @@ jQuery( function( $ ) {
 				return false
 			} else {
 				return true
+			}
+		},
+
+		page_visibility_listener: function() {
+			var hidden, visibilityChange;
+
+			if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
+				hidden = "hidden";
+				visibilityChange = "visibilitychange";
+			} else if (typeof document.msHidden !== "undefined") {
+				hidden = "msHidden";
+				visibilityChange = "msvisibilitychange";
+			} else if (typeof document.webkitHidden !== "undefined") {
+				hidden = "webkitHidden";
+				visibilityChange = "webkitvisibilitychange";
+			}
+
+			// Warn if the browser doesn't support addEventListener or the Page Visibility API
+			if (typeof document.addEventListener === "undefined" || typeof document[hidden] === "undefined") {
+				console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+			} else {
+				// Handle page visibility change
+				document.addEventListener(visibilityChange, handleVisibilityChange, false);
+			}
+
+			function handleVisibilityChange() {
+				if (! document[hidden]) {
+					if ( 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val() ) {
+						$('body').trigger('update_checkout')
+					}
+				}
 			}
 		}
 	}
