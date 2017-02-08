@@ -365,6 +365,18 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Get gateway icon.
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public function get_icon() {
+		$icon = '<a style="font-size: .83em" href="https://www.klarna.com/us/pay-over-time" title="What is Klarna?"><img src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/black.png?width=100" alt="Klarna" />What is Klarna?</a>';
+
+		return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
+	}
+
+	/**
 	 * Check if Klarna Payments should be available
 	 */
 	public function is_available() {
