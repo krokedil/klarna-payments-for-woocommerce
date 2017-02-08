@@ -66,6 +66,90 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $session_error = false;
 
 	/**
+	 * Klarna Payments iframe button color.
+	 *
+	 * @var string
+	 */
+	public $color_button;
+
+	/**
+	 * Klarna Payments iframe button text color.
+	 *
+	 * @var string
+	 */
+	public $color_button_text;
+
+	/**
+	 * Klarna Payments iframe checkbox color.
+	 *
+	 * @var string
+	 */
+	public $color_checkbox;
+
+	/**
+	 * Klarna Payments iframe checkbox checkmark color.
+	 *
+	 * @var string
+	 */
+	public $color_checkbox_checkmark;
+
+	/**
+	 * Klarna Payments iframe header color.
+	 *
+	 * @var string
+	 */
+	public $color_header;
+
+	/**
+	 * Klarna Payments iframe link color.
+	 *
+	 * @var string
+	 */
+	public $color_link;
+
+	/**
+	 * Klarna Payments iframe border color.
+	 *
+	 * @var string
+	 */
+	public $color_border;
+
+	/**
+	 * Klarna Payments iframe selected border color.
+	 *
+	 * @var string
+	 */
+	public $color_border_selected;
+
+	/**
+	 * Klarna Payments iframe text color.
+	 *
+	 * @var string
+	 */
+	public $color_text;
+
+	/**
+	 * Klarna Payments iframe details color.
+	 *
+	 * @var string
+	 */
+	public $color_details;
+
+	/**
+	 * Klarna Payments iframe secondary text color.
+	 *
+	 * @var string
+	 */
+	public $color_text_secondary;
+
+	/**
+	 * Klarna Payments radius border.
+	 *
+	 * @var string
+	 */
+	public $radius_border;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -90,6 +174,20 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->shared_secret          = $this->testmode ? $this->get_option( 'test_shared_secret_us' ) : $this->get_option( 'shared_secret_us', '' );
 		$this->logging                = 'yes' === $this->get_option( 'logging' );
 
+		// Iframe options.
+		$this->color_button             = $this->get_option( 'color_button' );
+		$this->color_button_text        = $this->get_option( 'color_button_text' );
+		$this->color_checkbox           = $this->get_option( 'color_checkbox' );
+		$this->color_checkbox_checkmark = $this->get_option( 'color_checkbox_checkmark' );
+		$this->color_header             = $this->get_option( 'color_header' );
+		$this->color_link               = $this->get_option( 'color_link' );
+		$this->color_border             = $this->get_option( 'color_border' );
+		$this->color_border_selected    = $this->get_option( 'color_border_selected' );
+		$this->color_text               = $this->get_option( 'color_text' );
+		$this->color_details            = $this->get_option( 'color_details' );
+		$this->color_text_secondary     = $this->get_option( 'color_text_secondary' );
+		$this->radius_border            = $this->get_option( 'radius_border' );
+
 		if ( $this->testmode ) {
 			$this->description .= ' ' . __( '<p>TEST MODE ENABLED.</p>', 'woocommerce-gateway-klarna-payments' );
 			$this->description  = trim( $this->description );
@@ -106,6 +204,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'preserve_iframe_on_order_review_update' ) );
+		add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'iframe_options' ) );
 	}
 
 	/**
@@ -162,6 +261,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => '',
 				'desc_tip'    => true,
 			),
+			'prescreen' => array(
+				'title'       => __( 'Prescreen', 'woocommerce-gateway-klarna-payments' ),
+				'label'       => __( 'Enable Prescreen (US merchants only)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'checkbox',
+				'default'     => 'no',
+				'desc_tip'    => true,
+			),
 			'testmode' => array(
 				'title'       => __( 'Test mode', 'woocommerce-gateway-klarna-payments' ),
 				'label'       => __( 'Enable Test Mode', 'woocommerce-gateway-klarna-payments' ),
@@ -176,6 +282,83 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'type'        => 'checkbox',
 				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'woocommerce-gateway-klarna-payments' ),
 				'default'     => 'no',
+				'desc_tip'    => true,
+			),
+
+			'iframe_options' => array(
+				'title' => 'Iframe settings',
+				'type'  => 'title',
+			),
+			'color_button' => array(
+				'title'       => 'Button color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'color_button_text' => array(
+				'title'       => 'Button text color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'color_checkbox' => array(
+				'title'       => 'Checkbox color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'color_checkbox_checkmark' => array(
+				'title'       => 'Checkbox checkmark color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'color_header' => array(
+				'title'       => 'Header color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'color_link' => array(
+				'title'       => 'Link color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'color_border' => array(
+				'title'       => 'Border color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'color_border_selected' => array(
+				'title'       => 'Selected border color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'color_text' => array(
+				'title'       => 'Text color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'color_details' => array(
+				'title'       => 'Details color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'color_text_secondary' => array(
+				'title'       => 'Secondary text color',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'radius_border' => array(
+				'title'       => 'Border radius (px)',
+				'type'        => 'number',
+				'default'     => '',
 				'desc_tip'    => true,
 			),
 		) );
@@ -204,9 +387,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
-		WC()->session->__unset( 'klarna_payments_session_id' );
-		WC()->session->__unset( 'klarna_payments_client_token' );
-
 		// Need to calculate these here, because WooCommerce hasn't done it yet.
 		WC()->cart->calculate_fees();
 		WC()->cart->calculate_shipping();
@@ -222,14 +402,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . $this->shared_secret ),
 				'Content-Type'  => 'application/json',
 			),
-			'body' => wp_json_encode( array(
+			'body' => wp_json_encode( apply_filters( 'wc_klarna_payments_session_request_body', array(
 				'purchase_country'  => WC()->customer->get_country(),
 				'purchase_currency' => 'USD',
 				'locale'            => 'en-US',
 				'order_amount'      => $order_lines['order_amount'],
 				'order_tax_amount'  => $order_lines['order_tax_amount'],
 				'order_lines'       => $order_lines['order_lines'],
-			) ),
+			) ) ),
 		);
 
 		if ( WC()->session->get( 'klarna_payments_session_id' ) ) { // Check if we have session ID.
@@ -364,6 +544,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array|mixed|object|WP_Error
 	 */
 	public function create_session_request( $request_url, $request_args ) {
+		// Make it filterable.
+		$request_args = apply_filters( 'wc_klarna_payments_create_session_args', $request_args );
+
 		$response = wp_safe_remote_post( $request_url, $request_args );
 		$decoded = json_decode( $response['body'] );
 
@@ -383,6 +566,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array|mixed|object|WP_Error
 	 */
 	public function update_session_request( $request_url, $request_args ) {
+		// Make it filterable.
+		$request_args = apply_filters( 'wc_klarna_payments_update_session_args', $request_args );
+
 		$response = wp_safe_remote_post( $request_url, $request_args );
 		$decoded = json_decode( $response['body'] );
 
@@ -655,6 +841,74 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		return apply_filters( 'wc_klarna_payments_process_refund', false, $order_id, $amount, $reason );
+	}
+
+	/**
+	 * Add display options to create session request.
+	 *
+	 * @param array $request_args Klarna create session request arguments.
+	 *
+	 * @return mixed
+	 */
+	public function iframe_options( $request_args ) {
+		$options = array();
+
+		if ( '' !== $this->color_button ) {
+			$options['color_button'] = $this->color_button;
+		}
+
+		if ( '' !== $this->color_button_text ) {
+			$options['color_button_text'] = $this->color_button_text;
+		}
+
+		if ( '' !== $this->color_checkbox ) {
+			$options['color_checkbox'] = $this->color_checkbox;
+		}
+
+		if ( '' !== $this->color_checkbox_checkmark ) {
+			$options['color_checkbox_checkmark'] = $this->color_checkbox_checkmark;
+		}
+
+		if ( '' !== $this->color_header ) {
+			$options['color_header'] = $this->color_header;
+		}
+
+		if ( '' !== $this->color_link ) {
+			$options['color_link'] = $this->color_link;
+		}
+
+		if ( '' !== $this->color_border ) {
+			$options['color_border'] = $this->color_border;
+		}
+
+		if ( '' !== $this->color_border_selected ) {
+			$options['color_border_selected'] = $this->color_border_selected;
+		}
+
+		if ( '' !== $this->color_text ) {
+			$options['color_text'] = $this->color_text;
+		}
+
+		if ( '' !== $this->color_details ) {
+			$options['color_details'] = $this->color_details;
+		}
+
+		if ( '' !== $this->color_text_secondary ) {
+			$options['color_text_secondary'] = $this->color_text_secondary;
+		}
+
+		if ( '' !== $this->radius_border ) {
+			$options['radius_border'] = $this->radius_border . 'px';
+		}
+
+		if ( ! empty( $options ) ) {
+			$decoded_body = json_decode( $request_args['body'] );
+			$decoded_body->options = $options;
+
+			$request_args['body'] = wp_json_encode( $decoded_body );
+		}
+
+		return $request_args;
 	}
 
 }
