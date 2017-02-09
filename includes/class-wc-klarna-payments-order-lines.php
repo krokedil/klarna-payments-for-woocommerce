@@ -172,7 +172,7 @@ class WC_Klarna_Payments_Order_Lines {
 		}
 	}
 
-		// Helpers.
+	// Helpers.
 
 	/**
 	 * Get cart item name.
@@ -479,36 +479,6 @@ class WC_Klarna_Payments_Order_Lines {
 		}
 
 		return (int) $shipping_tax_amount;
-	}
-
-	/**
-	 * Get coupon method name.
-	 *
-	 * @since  1.0
-	 * @access public
-	 *
-	 * @param WC_Coupon $coupon WooCommerce coupon.
-	 *
-	 * @return string $coupon_name Name for selected coupon method.
-	 */
-	public function get_coupon_name( $coupon ) {
-		$coupon_name = $coupon->code;
-
-		return $coupon_name;
-	}
-
-	/**
-	 * Get coupon amount.
-	 *
-	 * @param WC_Coupon $coupon WooCommerce coupon.
-	 *
-	 * @return float|int
-	 */
-	public function get_coupon_amount( $coupon ) {
-		$coupon_amount = WC()->cart->get_coupon_discount_amount( $coupon->code, false );
-		$coupon_amount = (int) number_format( ( $coupon_amount ) * 100, 0, '', '' );
-
-		return $coupon_amount;
 	}
 
 }
