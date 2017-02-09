@@ -48,6 +48,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Klarna country.
 	 *
 	 * @var string
+	 *
+	 * @TODO: Change this when EU is also available.
 	 */
 	public $shop_country = 'US';
 
@@ -404,6 +406,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		WC()->cart->calculate_shipping();
 		WC()->cart->calculate_totals();
 
+		if ( '' === WC()->customer->get_country() ) {
+			$purchase_country = $this->shop_country;
+		} else {
+			$purchase_country = WC()->customer->get_country();
+		}
+
 		$klarna_payments_params = array();
 		$klarna_payments_params['testmode'] = $this->testmode;
 
@@ -415,7 +423,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Content-Type'  => 'application/json',
 			),
 			'body' => wp_json_encode( apply_filters( 'wc_klarna_payments_session_request_body', array(
-				'purchase_country'  => WC()->customer->get_country(),
+				'purchase_country'  => $purchase_country,
 				'purchase_currency' => 'USD',
 				'locale'            => 'en-US',
 				'order_amount'      => $order_lines['order_amount'],
@@ -516,6 +524,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			WC()->cart->calculate_shipping();
 			WC()->cart->calculate_totals();
 
+			if ( '' === WC()->customer->get_country() ) {
+				$purchase_country = $this->shop_country;
+			} else {
+				$purchase_country = WC()->customer->get_country();
+			}
+
 			$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
 			$order_lines = $order_lines_processor->order_lines();
 			$request_args = array(
@@ -524,7 +538,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					'Content-Type'  => 'application/json',
 				),
 				'body' => wp_json_encode( array(
-					'purchase_country'  => WC()->customer->get_country(),
+					'purchase_country'  => $purchase_country,
 					'purchase_currency' => 'USD',
 					'locale'            => 'en-US',
 					'order_amount'      => $order_lines['order_amount'],
