@@ -201,7 +201,6 @@ jQuery( function( $ ) {
 								}
 							},
 							function (response) {
-								console.log(response)
 								$defer.resolve(response)
 							}
 						);

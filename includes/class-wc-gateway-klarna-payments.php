@@ -518,7 +518,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Update Klarna session on AJAX update_checkout.
 	 */
 	public function klarna_payments_session_ajax_update() {
-		if ( is_ajax() ) { // On AJAX update_checkout, just try to update the session.
+		if ( is_ajax() && WC()->session->get( 'klarna_payments_session_id' ) ) { // On AJAX update_checkout, just try to update the session.
 			// Need to calculate these here, because WooCommerce hasn't done it yet.
 			WC()->cart->calculate_fees();
 			WC()->cart->calculate_shipping();

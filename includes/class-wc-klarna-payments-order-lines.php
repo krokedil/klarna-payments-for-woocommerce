@@ -58,6 +58,7 @@ class WC_Klarna_Payments_Order_Lines {
 		$this->process_cart();
 		$this->process_shipping();
 		$this->process_sales_tax();
+		$this->process_coupons();
 
 		return array(
 			'order_lines' => $this->order_lines,
@@ -117,7 +118,7 @@ class WC_Klarna_Payments_Order_Lines {
 	}
 
 	/**
-	 * Process sales tax for US
+	 * Process sales tax for US.
 	 */
 	public function process_sales_tax() {
 		if ( 'US' === $this->shop_country ) {
@@ -136,13 +137,42 @@ class WC_Klarna_Payments_Order_Lines {
 				'total_tax_amount'      => 0,
 			);
 
-			$this->order_lines[] = $sales_tax;
+			$this->order_lines[]    = $sales_tax;
 			$this->order_tax_amount = $sales_tax_amount;
-			$this->order_amount += $sales_tax_amount;
+			$this->order_amount    += $sales_tax_amount;
 		}
 	}
 
-	// Helpers.
+	/**
+	 * Process smart coupons.
+	 */
+	public function process_coupons() {
+		if ( ! empty( WC()->cart->get_coupons() ) ) {
+			foreach ( WC()->cart->get_coupons() as $coupon_key => $coupon ) {
+				// Smart coupons are always sent as separate line items.
+				if ( 'smart_coupon' === $coupon->discount_type ) {
+					// Add discount line item.
+					$discount = array(
+						'type'                  => 'discount',
+						'reference'             => __( 'Discount', 'klarna-payments-for-woocommerce' ),
+						'name'                  => $coupon_key,
+						'quantity'              => 1,
+						'unit_price'            => - WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100,
+						'tax_rate'              => 0,
+						'total_amount'          => - WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100,
+						'total_discount_amount' => 0,
+						'total_tax_amount'      => - WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100,
+					);
+
+					$this->order_lines[]     = $discount;
+					$this->order_tax_amount -= WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100;
+					$this->order_amount     -= WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100;
+				}
+			}
+		}
+	}
+
+		// Helpers.
 
 	/**
 	 * Get cart item name.
