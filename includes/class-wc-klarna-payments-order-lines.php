@@ -40,12 +40,23 @@ class WC_Klarna_Payments_Order_Lines {
 	public $shop_country;
 
 	/**
+	 * Send sales tax as separate item (US merchants).
+	 *
+	 * @var bool
+	 */
+	public $separate_sales_tax = false;
+
+	/**
 	 * WC_Klarna_Payments_Order_Lines constructor.
 	 *
-	 * @param bool|string $shop_country
+	 * @param bool|string $shop_country Shop country.
 	 */
 	public function __construct( $shop_country = false ) {
 		$this->shop_country = $shop_country ? $shop_country : 'US';
+
+		if ( 'US' === $this->shop_country ) {
+			$this->separate_sales_tax = true;
+		}
 	}
 
 	/**
@@ -121,7 +132,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Process sales tax for US.
 	 */
 	public function process_sales_tax() {
-		if ( 'US' === $this->shop_country ) {
+		if ( $this->separate_sales_tax ) {
 			$sales_tax_amount = round( ( WC()->cart->tax_total + WC()->cart->shipping_tax_total ) * 100 );
 
 			// Add sales tax line item.
@@ -211,7 +222,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return integer $item_tax_amount Item tax amount.
 	 */
 	public function get_item_tax_amount( $cart_item ) {
-		if ( 'US' === $this->shop_country ) {
+		if ( $this->separate_sales_tax ) {
 			$item_tax_amount = 00;
 		} else {
 			$item_tax_amount = $cart_item['line_tax'] * 100;
@@ -234,7 +245,7 @@ class WC_Klarna_Payments_Order_Lines {
 		// We manually calculate the tax percentage here.
 		if ( $product->is_taxable() && $cart_item['line_subtotal_tax'] > 0 ) {
 			// Calculate tax rate.
-			if ( 'US' === $this->shop_country ) {
+			if ( $this->separate_sales_tax ) {
 				$item_tax_rate = 00;
 			} else {
 				$item_tax_rate = round( $cart_item['line_subtotal_tax'] / $cart_item['line_subtotal'] * 100 * 100 );
@@ -257,7 +268,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return integer $item_price Cart item price.
 	 */
 	public function get_item_price( $cart_item ) {
-		if ( 'US' === $this->shop_country ) {
+		if ( $this->separate_sales_tax ) {
 			$item_subtotal = $cart_item['line_subtotal'];
 		} else {
 			$item_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
@@ -318,7 +329,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 */
 	public function get_item_discount_amount( $cart_item ) {
 		if ( $cart_item['line_subtotal'] > $cart_item['line_total'] ) {
-			if ( 'US' === $this->shop_country ) {
+			if ( $this->separate_sales_tax ) {
 				$item_discount_amount = $cart_item['line_subtotal'] - $cart_item['line_total'];
 			} else {
 				$item_discount_amount = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'] - $cart_item['line_total'] - $cart_item['line_total_tax'];
@@ -357,7 +368,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return integer $item_total_amount Cart item total amount.
 	 */
 	public function get_item_total_amount( $cart_item ) {
-		if ( 'US' === $this->shop_country ) {
+		if ( $this->separate_sales_tax ) {
 			$item_total_amount = ( $cart_item['line_total'] * 100 );
 		} else {
 			$item_total_amount = ( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 );
@@ -436,7 +447,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return integer $shipping_amount Amount for selected shipping method.
 	 */
 	public function get_shipping_amount() {
-		if ( 'US' === $this->shop_country ) {
+		if ( $this->separate_sales_tax ) {
 			$shipping_amount = (int) number_format( WC()->cart->shipping_total * 100, 0, '', '' );
 		} else {
 			$shipping_amount = (int) number_format( ( WC()->cart->shipping_total + WC()->cart->shipping_tax_total ) * 100, 0, '', '' );
@@ -454,7 +465,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return integer $shipping_tax_rate Tax rate for selected shipping method.
 	 */
 	public function get_shipping_tax_rate() {
-		if ( WC()->cart->shipping_tax_total > 0 && 'US' !== $this->shop_country ) {
+		if ( WC()->cart->shipping_tax_total > 0 && ! $this->separate_sales_tax ) {
 			$shipping_tax_rate = round( WC()->cart->shipping_tax_total / WC()->cart->shipping_total, 2 ) * 100;
 		} else {
 			$shipping_tax_rate = 00;
@@ -472,7 +483,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return integer $shipping_tax_amount Tax amount for selected shipping method.
 	 */
 	public function get_shipping_tax_amount() {
-		if ( 'US' === $this->shop_country ) {
+		if ( $this->separate_sales_tax ) {
 			$shipping_tax_amount = 0;
 		} else {
 			$shipping_tax_amount = WC()->cart->shipping_tax_total * 100;
