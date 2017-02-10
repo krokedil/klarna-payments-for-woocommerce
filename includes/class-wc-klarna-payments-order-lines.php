@@ -99,7 +99,8 @@ class WC_Klarna_Payments_Order_Lines {
 					'tax_rate'              => $this->get_item_tax_rate( $cart_item, $product ),
 					'total_amount'          => $this->get_item_total_amount( $cart_item ),
 					'total_tax_amount'      => $this->get_item_tax_amount( $cart_item ),
-					'total_discount_amount' => $this->get_item_discount_amount( $cart_item ),
+					// 'total_discount_amount' => $this->get_item_discount_amount( $cart_item ),
+					'total_discount_amount' => 0, // Changed to zero for US.
 				);
 
 				$this->order_lines[] = $klarna_item;
@@ -162,7 +163,7 @@ class WC_Klarna_Payments_Order_Lines {
 		if ( ! empty( WC()->cart->get_coupons() ) ) {
 			foreach ( WC()->cart->get_coupons() as $coupon_key => $coupon ) {
 				// Smart coupons are always sent as separate line items.
-				if ( 'smart_coupon' === $coupon->discount_type ) {
+				// if ( 'smart_coupon' === $coupon->discount_type ) {
 					// Add discount line item.
 					$discount = array(
 						'type'                  => 'discount',
@@ -173,13 +174,14 @@ class WC_Klarna_Payments_Order_Lines {
 						'tax_rate'              => 0,
 						'total_amount'          => - WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100,
 						'total_discount_amount' => 0,
-						'total_tax_amount'      => - WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100,
+						// 'total_tax_amount'      => - WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100,
+						'total_tax_amount'      => 0
 					);
 
 					$this->order_lines[]     = $discount;
-					$this->order_tax_amount -= WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100;
-					$this->order_amount     -= WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100;
-				}
+					// $this->order_tax_amount += WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100;
+					// $this->order_amount     += WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100;
+				// }
 			}
 		}
 	}
@@ -226,8 +228,9 @@ class WC_Klarna_Payments_Order_Lines {
 		if ( $this->separate_sales_tax ) {
 			$item_tax_amount = 00;
 		} else {
-			$item_tax_amount = $cart_item['line_tax'] * 100;
+			$item_tax_amount = $cart_item['line_subtotal_tax'] * 100;
 		}
+
 		return round( $item_tax_amount );
 	}
 
@@ -270,12 +273,12 @@ class WC_Klarna_Payments_Order_Lines {
 	 */
 	public function get_item_price( $cart_item ) {
 		if ( $this->separate_sales_tax ) {
-			$item_subtotal = $cart_item['line_subtotal'];
+			$item_total = $cart_item['line_subtotal'];
 		} else {
-			$item_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
+			$item_total = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
 		}
 
-		$item_price = number_format( $item_subtotal * 100, 0, '', '' ) / $cart_item['quantity'];
+		$item_price = number_format( $item_total * 100, 0, '', '' ) / $cart_item['quantity'];
 
 		return round( $item_price );
 	}
@@ -343,22 +346,6 @@ class WC_Klarna_Payments_Order_Lines {
 	}
 
 	/**
-	 * Get cart item discount rate.
-	 *
-	 * @since  1.0
-	 * @access public
-	 *
-	 * @param  array $cart_item Cart item.
-	 *
-	 * @return integer $item_discount_rate Cart item discount rate.
-	 */
-	public function get_item_discount_rate( $cart_item ) {
-		$item_discount_rate = ( 1 - ( $cart_item['line_total'] / $cart_item['line_subtotal'] ) ) * 10000;
-
-		return (int) round( $item_discount_rate );
-	}
-
-	/**
 	 * Get cart item total amount.
 	 *
 	 * @since  1.0
@@ -370,9 +357,9 @@ class WC_Klarna_Payments_Order_Lines {
 	 */
 	public function get_item_total_amount( $cart_item ) {
 		if ( $this->separate_sales_tax ) {
-			$item_total_amount = ( $cart_item['line_total'] * 100 );
+			$item_total_amount = ( $cart_item['line_subtotal'] * 100 );
 		} else {
-			$item_total_amount = ( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 );
+			$item_total_amount = ( ( $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'] ) * 100 );
 		}
 
 		return round( $item_total_amount );
