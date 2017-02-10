@@ -813,6 +813,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Other payment methods are replaced by their empty <li> element when unavailable, so we can target that <li> element
 	 * once the payment method becomes available again.
 	 *
+	 * @TODO: Test this with WC 2.7.
+	 *
 	 * @param array $elements Array of elements to update on order review update.
 	 *
 	 * @return array

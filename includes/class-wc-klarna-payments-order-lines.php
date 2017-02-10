@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Processes order lines for Klarna Payments requests.
  *
  * @TODO: Test with coupons.
+ * @TODO: Check wc_get_rounding_precision for rounding.
  */
 class WC_Klarna_Payments_Order_Lines {
 
