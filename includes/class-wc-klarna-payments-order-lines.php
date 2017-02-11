@@ -169,6 +169,7 @@ class WC_Klarna_Payments_Order_Lines {
 				} else {
 					$coupon_amount = 0;
 					$coupon_tax_amount = 0;
+
 					if ( $coupon->is_type( 'fixed_cart' ) || $coupon->is_type( 'percent' ) ) {
 						$coupon_type = 'Cart discount';
 					} elseif ( $coupon->is_type( 'fixed_product' ) || $coupon->is_type( 'percent_product' ) ) {
