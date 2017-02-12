@@ -373,7 +373,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_icon() {
-		$icon = '<a style="font-size: .83em" href="https://www.klarna.com/us/pay-over-time" title="What is Klarna?"><img src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/black.png?width=68" alt="Klarna" />What is Klarna?</a>';
+		$icon = '<a style="font-size: .83em" onclick="javascript:window.open(\'https://www.klarna.com/us/pay-over-time\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;" target="_blank" href="https://www.klarna.com/us/pay-over-time" title="What is Klarna?"><img src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/black.png?width=68" alt="Klarna" /></a>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
 	}
@@ -613,6 +613,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			echo wpautop( wptexturize( $description ) );
 		}
 
+		echo '<div><a style="font-size: .83em" onclick="javascript:window.open(\'https://www.klarna.com/us/pay-over-time\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;" target="_blank" href="https://www.klarna.com/us/pay-over-time" title="What is Klarna?">What is Klarna?</a></div>';
 		echo '<div id="klarna_container" style="margin-top:1em;"></div>';
 	}
 
