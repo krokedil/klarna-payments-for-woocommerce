@@ -68,6 +68,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $session_error = false;
 
 	/**
+	 * Klarna Payments iframe background.
+	 *
+	 * @var string
+	 */
+	public $background;
+
+	/**
 	 * Klarna Payments iframe button color.
 	 *
 	 * @var string
@@ -177,6 +184,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->logging                = 'yes' === $this->get_option( 'logging' );
 
 		// Iframe options.
+		$this->background               = $this->get_option( 'background' );
 		$this->color_button             = $this->get_option( 'color_button' );
 		$this->color_button_text        = $this->get_option( 'color_button_text' );
 		$this->color_checkbox           = $this->get_option( 'color_checkbox' );
@@ -207,6 +215,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'preserve_iframe_on_order_review_update' ) );
 		add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'iframe_options' ) );
+		if ( '' !== $this->background ) {
+			add_action( 'wp_head', array( $this, 'iframe_background' ) );
+		}
 	}
 
 	/**
@@ -290,6 +301,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'iframe_options' => array(
 				'title' => 'Iframe settings',
 				'type'  => 'title',
+			),
+			'background' => array(
+				'title'       => 'Background',
+				'type'        => 'color',
+				'default'     => '',
+				'desc_tip'    => true,
 			),
 			'color_button' => array(
 				'title'       => 'Button color',
@@ -395,6 +412,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 	/**
 	 * Create Klarna Payments session.
+	 *
+	 * @hook wp_head
 	 */
 	public function klarna_payments_session() {
 		if ( ! is_checkout() || is_order_received_page() ) {
@@ -620,7 +639,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Enqueue payment scripts.
 	 *
-	 * @access public
+	 * @hook wp_enqueue_scripts
 	 */
 	public function enqueue_scripts() {
 		if ( ! is_checkout() || is_order_received_page() ) {
@@ -649,6 +668,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Authorization token field is added to the form in JavaScript, when Klarna.Credit.authorize is completed.
 	 *
 	 * @param array $posted Posted data on WooCommerce checkout process.
+	 *
+	 * @hook woocommerce_after_checkout_validation
 	 */
 	public function check_authorization_token( $posted ) {
 		if ( 'klarna_payments' !== $posted['payment_method'] ) {
@@ -819,10 +840,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @param array $elements Array of elements to update on order review update.
 	 *
 	 * @return array
+	 *
+	 * @hook woocommerce_update_order_review_fragments
 	 */
 	function preserve_iframe_on_order_review_update( $elements ) {
-		// Update Klarna session here.
-		$this->klarna_payments_session_ajax_update();
+		$this->klarna_payments_session_ajax_update(); // Update Klarna session.
 
 		unset( $elements['.woocommerce-checkout-payment'] );
 
@@ -853,6 +875,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Order Management plugin to hook in and process pending orders.
 	 *
 	 * @link https://developers.klarna.com/en/us/kco-v3/pending-orders
+	 *
+	 * @hook woocommerce_api_wc_gateway_klarna_payments
 	 */
 	public function notification_listener() {
 		do_action( 'wc_klarna_notification_listener' );
@@ -878,6 +902,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @param array $request_args Klarna create session request arguments.
 	 *
 	 * @return mixed
+	 *
+	 * @hook wc_klarna_payments_create_session_args
 	 */
 	public function iframe_options( $request_args ) {
 		$options = array();
@@ -938,6 +964,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		return $request_args;
+	}
+
+	/**
+	 * Add <head> CSS for Klarna Payments iframe background.
+	 *
+	 * @hook wp_head
+	 */
+	public function iframe_background() {
+		if ( '' !== $this->background ) {
+			echo "<style type='text/css'>div.payment_method_klarna_payments { background: $this->background !important }</style>";
+		}
 	}
 
 }
