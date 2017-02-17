@@ -973,7 +973,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function iframe_background() {
 		if ( '' !== $this->background ) {
-			echo "<style type='text/css'>div.payment_method_klarna_payments { background: $this->background !important }</style>";
+			echo "<style type='text/css'>div#klarna_container { background: $this->background !important }</style>";
 		}
 	}
 
