@@ -494,40 +494,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// If we have a client token now, initialize Klarna Credit.
 		if ( WC()->session->get( 'klarna_payments_client_token' ) ) {
 			?>
-			<script type="text/javascript" id="klarna-credit-lib-x">
-				/* <![CDATA[ */
-				(function (w, d) {
-					var url = "https://credit.klarnacdn.net/lib/v1/api.js";
-					n = d.createElement("script");
-					c = d.getElementById("klarna-credit-lib-x");
-					n.async = !0;
-					n.src = url + "?" + (new Date()).getTime();
-					c.parentNode.replaceChild(n, c);
-				})(this, document);
-
-				var klarnaLoadedInterval = setInterval(function () {
-					var Klarna = false;
-
-					try {
-						Klarna = window.Klarna;
-					} catch (e) {
-						console.log(e)
-					}
-
-					if (Klarna && Klarna.Credit) {
-						clearInterval(klarnaLoadedInterval);
-						clearTimeout(klarnaLoadedTimeout);
-
-						var data = {client_token: "<?php echo esc_attr( WC()->session->get( 'klarna_payments_client_token' ) ); ?>"};
-						Klarna.Credit.init(data);
-					}
-				}, 100);
-
-				var klarnaLoadedTimeout = setTimeout(function () {
-					clearInterval(klarnaLoadedInterval);
-				}, 3000);
-				/* ]]> */
+			<script>
+				window.klarnaInitData = {client_token: "<?php echo esc_attr(WC()->session->get('klarna_payments_client_token')); ?>"};
+				window.klarnaAsyncCallback = function () {
+					Klarna.Credit.init(klarnaInitData);
+				};
 			</script>
+			<script src="https://credit.klarnacdn.net/lib/v1/api.js" async></script>
 			<?php
 		}
 	}
