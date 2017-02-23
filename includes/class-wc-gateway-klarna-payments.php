@@ -210,7 +210,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'wp_head', array( $this, 'klarna_payments_session' ), 10, 1 );
-		add_action( 'woocommerce_checkout_init', array( $this, 'klarna_payments_session_ajax_update' ) );
+		add_action( 'woocommerce_review_order_after_submit', array( $this, 'klarna_payments_session_ajax_update' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
