@@ -20,7 +20,7 @@ jQuery( function( $ ) {
 					blocked_el.unblock();
 				}
 
-				// When Woo replaces the element in the DOM - Do the hack and re-initialize 
+				// When Woo replaces the element in the DOM - Do the hack and re-initialize
 				klarna_payments.reinitialize().then( function() {
 
 
