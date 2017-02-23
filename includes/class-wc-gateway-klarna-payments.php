@@ -213,7 +213,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
-		add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'preserve_iframe_on_order_review_update' ) );
 		add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'iframe_options' ) );
 		if ( '' !== $this->background ) {
 			add_action( 'wp_head', array( $this, 'iframe_background' ) );
@@ -798,50 +797,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$response = wp_safe_remote_post( $request_url, $request_args );
 
 		return $response;
-	}
-
-	/**
-	 * Preserve Klarna Payments Iframe on order review update.
-	 *
-	 * Hacky, but it works, looking for a better way to handle this. Klarna Payments method never gets refreshed,
-	 * JS code is used to hide/show it based on availability.
-	 *
-	 * Other payment methods are replaced by their empty <li> element when unavailable, so we can target that <li> element
-	 * once the payment method becomes available again.
-	 *
-	 * @TODO: Test this with WC 2.7.
-	 *
-	 * @param array $elements Array of elements to update on order review update.
-	 *
-	 * @return array
-	 *
-	 * @hook woocommerce_update_order_review_fragments
-	 */
-	function preserve_iframe_on_order_review_update( $elements ) {
-		$this->klarna_payments_session_ajax_update(); // Update Klarna session.
-
-		unset( $elements['.woocommerce-checkout-payment'] );
-
-		if ( WC()->cart->needs_payment() ) {
-			$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
-			WC()->payment_gateways()->set_current_gateway( $available_gateways );
-
-			foreach ( $available_gateways as $gateway_key => $gateway ) {
-				if ( 'klarna_payments' !== $gateway_key ) {
-					if ( ! $gateway->is_available() ) {
-						$woocommerce_gateway = '<li style="display:none !important" class="payment_method_' . $gateway_key . '"></li>';
-					} else {
-						ob_start();
-						wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $gateway ) );
-						$woocommerce_gateway = ob_get_clean();
-					}
-
-					$elements[ 'li.payment_method_' . $gateway_key ] = $woocommerce_gateway;
-				}
-			}
-		}
-
-		return $elements;
 	}
 
 	/**
