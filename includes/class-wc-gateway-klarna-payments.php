@@ -743,30 +743,30 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$posted_data           = $_POST; // Input var okay.
 
 		$billing_address = array(
-			'given_name' => $posted_data['billing_first_name'],
-			'family_name' => $posted_data['billing_last_name'],
-			'email' => $posted_data['billing_email'],
-			'phone' => $posted_data['billing_phone'],
-			'street_address' => $posted_data['billing_address_1'],
-			'street_address2' => $posted_data['billing_address_2'],
-			'postal_code' => $posted_data['billing_postcode'],
-			'city' => $posted_data['billing_city'],
-			'region' => $posted_data['billing_state'],
-			'country' => $posted_data['billing_country'],
+			'given_name'      => stripslashes( $posted_data['billing_first_name'] ),
+			'family_name'     => stripslashes( $posted_data['billing_last_name'] ),
+			'email'           => stripslashes( $posted_data['billing_email'] ),
+			'phone'           => stripslashes( $posted_data['billing_phone'] ),
+			'street_address'  => stripslashes( $posted_data['billing_address_1'] ),
+			'street_address2' => stripslashes( $posted_data['billing_address_2'] ),
+			'postal_code'     => stripslashes( $posted_data['billing_postcode'] ),
+			'city'            => stripslashes( $posted_data['billing_city'] ),
+			'region'          => stripslashes( $posted_data['billing_state'] ),
+			'country'         => stripslashes( $posted_data['billing_country'] ),
 		);
 
 		if ( ! empty( $_POST['ship_to_different_address'] ) && ! wc_ship_to_billing_address_only() ) {
 			$shipping_address = array(
-				'given_name' => $posted_data['shipping_first_name'],
-				'family_name' => $posted_data['shipping_last_name'],
-				'email' => $posted_data['billing_email'],
-				'phone' => $posted_data['shipping_email'],
-				'street_address' => $posted_data['shipping_address_1'],
-				'street_address2' => $posted_data['shipping_address_2'],
-				'postal_code' => $posted_data['shipping_postcode'],
-				'city' => $posted_data['shipping_city'],
-				'region' => $posted_data['shipping_state'],
-				'country' => $posted_data['shipping_country'],
+				'given_name'      => stripslashes( $posted_data['shipping_first_name'] ),
+				'family_name'     => stripslashes( $posted_data['shipping_last_name'] ),
+				'email'           => stripslashes( $posted_data['billing_email'] ),
+				'phone'           => stripslashes( $posted_data['shipping_email'] ),
+				'street_address'  => stripslashes( $posted_data['shipping_address_1'] ),
+				'street_address2' => stripslashes( $posted_data['shipping_address_2'] ),
+				'postal_code'     => stripslashes( $posted_data['shipping_postcode'] ),
+				'city'            => stripslashes( $posted_data['shipping_city'] ),
+				'region'          => stripslashes( $posted_data['shipping_state'] ),
+				'country'         => stripslashes( $posted_data['shipping_country'] ),
 			);
 		} else {
 			$shipping_address = $billing_address;
