@@ -307,6 +307,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => 'no',
 				'desc_tip'    => true,
 			),
+			'float_what_is_klarna' => array(
+				'title'       => __( '"What is Klarna? link"', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'If checked, "What is Klarna?" will be floated right.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => 'no',
+				'desc_tip'    => true,
+			),
 
 			'iframe_options' => array(
 				'title' => 'Iframe settings',
@@ -388,14 +395,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'title'       => 'Border radius (px)',
 				'type'        => 'number',
 				'default'     => '',
-				'desc_tip'    => true,
-			),
-
-			'float_what_is_klarna' => array(
-				'title'       => __( 'If checked, "What is Klarna?" link will be floated right." link', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'description' => __( 'If checked, "What is Klarna?" link will be floated right.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => 'no',
 				'desc_tip'    => true,
 			),
 		) );
