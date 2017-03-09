@@ -215,9 +215,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'iframe_options' ) );
+		add_filter( 'woocommerce_enqueue_styles', array( $this, 'slbd' ), 99999999 );
 		if ( '' !== $this->background ) {
 			add_action( 'wp_head', array( $this, 'iframe_background' ) );
 		}
+	}
+
+	function slbd( $styles ) {
+		return $styles;
 	}
 
 	/**
