@@ -159,6 +159,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $radius_border;
 
 	/**
+	 * Float What is Klarna? link in checkout page.
+	 *
+	 * @var string
+	 */
+	public $float_what_is_klarna;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -197,6 +204,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->color_details            = $this->get_option( 'color_details' );
 		$this->color_text_secondary     = $this->get_option( 'color_text_secondary' );
 		$this->radius_border            = $this->get_option( 'radius_border' );
+
+		// What is Klarna link.
+		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 
 		if ( $this->testmode ) {
 			$this->description .= ' ' . __( '<p>TEST MODE ENABLED.</p>', 'woocommerce-gateway-klarna-payments' );
@@ -380,6 +390,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => '',
 				'desc_tip'    => true,
 			),
+
+			'float_what_is_klarna' => array(
+				'title'       => __( 'If checked, "What is Klarna?" link will be floated right." link', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'checkbox',
+				'description' => __( 'If checked, "What is Klarna?" link will be floated right.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => 'no',
+				'desc_tip'    => true,
+			),
 		) );
 	}
 
@@ -390,9 +408,18 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_icon() {
-		$icon = '<a style="font-size: .83em" onclick="javascript:window.open(\'https://www.klarna.com/us/pay-over-time\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;" target="_blank" href="https://www.klarna.com/us/pay-over-time" title="What is Klarna?"><img src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/black.png?width=68" alt="Klarna" /></a>';
+		// If default WooCommerce CSS is used, float "What is Klarna link like PayPal does it".
+		if ( $this->float_what_is_klarna ) {
+			$link_style = 'style="float: right; line-height: 52px; font-size: .83em;"';
+		} else {
+			$link_style = '';
+		}
 
-		return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
+		$icon_html = '<img src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/black.png?width=68" alt="Klarna" />';
+
+		$icon_html .= '<a ' . $link_style . 'href="https://www.klarna.com/us/pay-over-time" class="about_paypal" onclick="javascript:window.open(\'https://www.klarna.com/us/pay-over-time\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">What is Klarna?</a>';
+
+		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
 	}
 
 	/**
@@ -605,7 +632,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			echo wpautop( wptexturize( $description ) );
 		}
 
-		echo '<div><a style="font-size: .83em" onclick="javascript:window.open(\'https://www.klarna.com/us/pay-over-time\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;" target="_blank" href="https://www.klarna.com/us/pay-over-time" title="What is Klarna?">What is Klarna?</a></div>';
 		echo '<div id="klarna_container" style="margin-top:1em;"></div>';
 	}
 
