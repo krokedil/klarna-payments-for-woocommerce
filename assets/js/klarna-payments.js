@@ -20,19 +20,14 @@ jQuery( function( $ ) {
 					blocked_el.unblock();
 				}
 
-				// When Woo replaces the element in the DOM - Do the hack and re-initialize
-				klarna_payments.reinitialize().then( function() {
+				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
+				if ( 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val() ) {
+					$('#place_order').attr('disabled', true);
 
-
-					// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
-					if ( 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val() ) {
-						$('#place_order').attr('disabled', true);
-
-						if ( klarna_payments.check_required_fields() ) {
-							klarna_payments.load().then(klarna_payments.loadHandler);
-						}
+					if ( klarna_payments.check_required_fields() ) {
+						klarna_payments.load().then(klarna_payments.loadHandler);
 					}
-				});
+				}
 			});
 
 			$('form.checkout').on('change', 'input, select', function() {
@@ -173,30 +168,7 @@ jQuery( function( $ ) {
 
 			return $defer.promise();
 		},
-
-		/*
-		 * HACK to re-init Klarna Credit
-		 */
-		reinitialize: function() {
-			var $defer = $.Deferred();
-			var reloadTimeout = setTimeout(function() {
-				$defer.reject();
-			}, 5000);
-
-			$('script[src="https://credit.klarnacdn.net/lib/v1/api.js"]').remove();
-			$('iframe#klarna-credit-fullscreen').remove();
-			$('iframe#klarna-credit-device-recognition').remove();
-			window.Klarna = {};
-			window.klarnaAsyncCallback = function() {
-				Klarna.Credit.init(window.klarnaInitData);
-				$defer.resolve();
-				clearTimeout(reloadTimeout);
-			};
-			$('body').append('<script src="https://credit.klarnacdn.net/lib/v1/api.js"></script>');
-
-			return $defer.promise();
-		},
-
+		
 		check_required_fields: function() {
 			var input_value;
 			var input_flag = false;
