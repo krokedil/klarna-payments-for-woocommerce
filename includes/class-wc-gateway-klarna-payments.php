@@ -246,14 +246,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'title'       => __( 'Title', 'woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
-				'default'     => __( 'Klarna Payments', 'woocommerce' ),
+				'default'     => __( 'Pay Over Time', 'woocommerce' ),
 				'desc_tip'    => true,
 			),
 			'description' => array(
 				'title'       => __( 'Description', 'woocommerce' ),
 				'type'        => 'textarea',
 				'description' => __( 'Payment method description that the customer will see on your website.', 'woocommerce' ),
-				'default'     => __( 'Pay with Klarna Payments.', 'woocommerce' ),
+				'default'     => __( 'Get the flexibility to pay over time with Klarna!', 'woocommerce' ),
 				'desc_tip'    => true,
 			),
 			'test_merchant_id_us' => array(
@@ -308,10 +308,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'desc_tip'    => true,
 			),
 			'float_what_is_klarna' => array(
-				'title'       => __( '"What is Klarna? link"', 'woocommerce-gateway-klarna-payments' ),
+				'title'       => __( 'What is Klarna? link', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'checkbox',
 				'label'       => __( 'If checked, "What is Klarna?" will be floated right.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => 'no',
+				'default'     => 'yes',
 				'desc_tip'    => true,
 			),
 
@@ -322,7 +322,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'background' => array(
 				'title'       => 'Background',
 				'type'        => 'color',
-				'default'     => '',
+				'default'     => '#ffffff',
 				'desc_tip'    => true,
 			),
 			'color_button' => array(
