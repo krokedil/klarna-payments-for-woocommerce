@@ -88,6 +88,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		protected function __construct() {
 			add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
+			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
 		}
 
 		/**
@@ -98,6 +99,22 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->init_gateways();
 
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
+		}
+
+		/**
+		 * Show admin notice if Order Management plugin is not active.
+		 */
+		public function order_management_check() {
+			if ( ! class_exists( 'WC_Klarna_Order_Management' ) ) {
+				$current_screen = get_current_screen();
+				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
+					?>
+					<div class="notice notice-warning">
+						<p><?php _e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
+					</div>
+					<?php
+				}
+			}
 		}
 
 		/**
