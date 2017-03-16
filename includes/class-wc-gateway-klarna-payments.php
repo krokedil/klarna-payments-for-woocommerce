@@ -184,7 +184,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Get setting values.
 		$this->title                  = $this->get_option( 'title' );
 		$this->description            = $this->get_option( 'description', '' );
-		$this->enabled                = $this->get_option( 'enabled' );
+		$this->enabled                = 'yes' === $this->get_option( 'enabled' );
 		$this->testmode               = 'yes' === $this->get_option( 'testmode' );
 		$this->merchant_id            = $this->testmode ? $this->get_option( 'test_merchant_id_us' ) : $this->get_option( 'merchant_id_us', '' ); // @TODO: Test if live credentials are pulled when needed.
 		$this->shared_secret          = $this->testmode ? $this->get_option( 'test_shared_secret_us' ) : $this->get_option( 'shared_secret_us', '' );
@@ -425,6 +425,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Check if Klarna Payments should be available
 	 */
 	public function is_available() {
+		if ( ! $this->enabled ) {
+			return false;
+		}
+
 		if ( is_wp_error( $this->session_error ) ) {
 			return false;
 		}
