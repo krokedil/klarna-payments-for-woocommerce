@@ -745,6 +745,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 			wc_add_notice( $error_message, 'error' );
 
+			WC()->session->reload_checkout = true;
+
 			// Return failure if something went wrong.
 			return array(
 				'result'   => 'failure',
