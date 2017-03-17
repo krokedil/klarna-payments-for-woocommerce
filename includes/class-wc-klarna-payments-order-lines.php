@@ -233,7 +233,7 @@ class WC_Klarna_Payments_Order_Lines {
 			$item_name .= ' [' . $item_variations . ']';
 		}
 
-		return strip_tags( $item_name );
+		return (string) strip_tags( $item_name );
 	}
 
 	/**
@@ -248,11 +248,11 @@ class WC_Klarna_Payments_Order_Lines {
 	 */
 	public function get_item_tax_amount( $cart_item ) {
 		if ( $this->separate_sales_tax ) {
-			$item_tax_amount = 00;
+			$item_tax_amount = 0;
 		} else {
 			$item_tax_amount = $cart_item['line_tax'] * 100;
 		}
-		return round( $item_tax_amount );
+		return (int) $item_tax_amount;
 	}
 
 	/**
@@ -271,15 +271,15 @@ class WC_Klarna_Payments_Order_Lines {
 		if ( $product->is_taxable() && $cart_item['line_subtotal_tax'] > 0 ) {
 			// Calculate tax rate.
 			if ( $this->separate_sales_tax ) {
-				$item_tax_rate = 00;
+				$item_tax_rate = 0;
 			} else {
 				$item_tax_rate = round( $cart_item['line_subtotal_tax'] / $cart_item['line_subtotal'] * 100 * 100 );
 			}
 		} else {
-			$item_tax_rate = 00;
+			$item_tax_rate = 0;
 		}
 
-		return intval( $item_tax_rate );
+		return (int) $item_tax_rate;
 	}
 
 	/**
@@ -299,9 +299,9 @@ class WC_Klarna_Payments_Order_Lines {
 			$item_subtotal = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'];
 		}
 
-		$item_price = number_format( $item_subtotal * 100, 0, '', '' ) / $cart_item['quantity'];
+		$item_price = $item_subtotal * 100 / $cart_item['quantity'];
 
-		return round( $item_price );
+		return (int) $item_price;
 	}
 
 	/**
@@ -339,7 +339,7 @@ class WC_Klarna_Payments_Order_Lines {
 			$item_reference = $product->id;
 		}
 
-		return strval( $item_reference );
+		return (string) $item_reference;
 	}
 
 	/**
@@ -359,11 +359,13 @@ class WC_Klarna_Payments_Order_Lines {
 			} else {
 				$item_discount_amount = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'] - $cart_item['line_total'] - $cart_item['line_total_tax'];
 			}
+
+			$item_discount_amount = $item_discount_amount * 100;
 		} else {
 			$item_discount_amount = 0;
 		}
 
-		return round( $item_discount_amount * 100 );
+		return (int) $item_discount_amount;
 	}
 
 	/**
@@ -408,9 +410,9 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return integer $item_discount_rate Cart item discount rate.
 	 */
 	public function get_item_discount_rate( $cart_item ) {
-		$item_discount_rate = ( 1 - ( $cart_item['line_total'] / $cart_item['line_subtotal'] ) ) * 10000;
+		$item_discount_rate = ( 1 - ( $cart_item['line_total'] / $cart_item['line_subtotal'] ) ) * 100 * 100;
 
-		return (int) round( $item_discount_rate );
+		return (int) $item_discount_rate;
 	}
 
 	/**
@@ -430,7 +432,7 @@ class WC_Klarna_Payments_Order_Lines {
 			$item_total_amount = ( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 );
 		}
 
-		return round( $item_total_amount );
+		return (int) $item_total_amount;
 	}
 
 	/**
@@ -460,7 +462,7 @@ class WC_Klarna_Payments_Order_Lines {
 			$shipping_name = __( 'Shipping', 'woocommerce-gateway-klarna' );
 		}
 
-		return $shipping_name;
+		return (string) $shipping_name;
 	}
 
 	/**
@@ -491,7 +493,7 @@ class WC_Klarna_Payments_Order_Lines {
 			$shipping_reference = __( 'Shipping', 'woocommerce-gateway-klarna' );
 		}
 
-		return strval( $shipping_reference );
+		return (string) $shipping_reference;
 	}
 
 	/**
@@ -522,12 +524,12 @@ class WC_Klarna_Payments_Order_Lines {
 	 */
 	public function get_shipping_tax_rate() {
 		if ( WC()->cart->shipping_tax_total > 0 && ! $this->separate_sales_tax ) {
-			$shipping_tax_rate = round( WC()->cart->shipping_tax_total / WC()->cart->shipping_total, 2 ) * 100;
+			$shipping_tax_rate = round( WC()->cart->shipping_tax_total / WC()->cart->shipping_total, 2 ) * 100 * 100;
 		} else {
-			$shipping_tax_rate = 00;
+			$shipping_tax_rate = 0;
 		}
 
-		return intval( $shipping_tax_rate . '00' );
+		return (int) $shipping_tax_rate;
 	}
 
 	/**
