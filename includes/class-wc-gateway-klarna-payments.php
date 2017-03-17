@@ -314,6 +314,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => 'yes',
 				'desc_tip'    => true,
 			),
+			'send_product_urls' => array(
+				'title'       => __( 'Product URLs', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'Send product and product image URLs to Klarna', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => 'yes',
+				'desc_tip'    => true,
+			),
 
 			'iframe_options' => array(
 				'title' => 'Iframe settings',
