@@ -465,9 +465,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		WC()->cart->calculate_shipping();
 		WC()->cart->calculate_totals();
 
-		$klarna_payments_params = array();
-		$klarna_payments_params['testmode'] = $this->testmode;
-
 		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
 		$order_lines = $order_lines_processor->order_lines();
 		$request_args = array(
@@ -494,42 +491,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				WC()->session->__unset( 'klarna_payments_session_id' );
 				WC()->session->__unset( 'klarna_payments_client_token' );
 
-				$create_request_url = $this->server_base . 'credit/v1/sessions';
-				$create_response = $this->create_session_request( $create_request_url, $request_args );
-
-				if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
-					$this->session_error = $create_response;
-					wc_add_notice( 'Could not create Klarna session, please refresh the page to try again', 'error' );
-
-					WC()->session->__unset( 'klarna_payments_session_id' );
-					WC()->session->__unset( 'klarna_payments_client_token' );
-				} else { // Store session ID and client token in WC session.
-					WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
-					WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
-				}
+				$this->create_session( $request_args );
 			}
 		} else {
-			// If we dont have a session already, create one now.
-			$create_request_url = $this->server_base . 'credit/v1/sessions';
-			$create_response = $this->create_session_request( $create_request_url, $request_args );
-
-			if ( is_wp_error( $create_response ) ) { // If update session failed try to create new session.
-				$this->session_error = $create_response;
-				wc_add_notice( 'Could not create Klarna session, please refresh the page to try again', 'error' );
-
-				WC()->session->__unset( 'klarna_payments_session_id' );
-				WC()->session->__unset( 'klarna_payments_client_token' );
-			} else {
-				WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
-				WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
-			}
+			$this->create_session( $request_args );
 		}
 
 		// If we have a client token now, initialize Klarna Credit.
 		if ( WC()->session->get( 'klarna_payments_client_token' ) ) {
 			?>
 			<script>
-				window.klarnaInitData = {client_token: "<?php echo esc_attr(WC()->session->get('klarna_payments_client_token')); ?>"};
+				window.klarnaInitData = {client_token: "<?php echo esc_attr( WC()->session->get( 'klarna_payments_client_token' ) ); ?>"};
 				window.klarnaAsyncCallback = function () {
 					Klarna.Credit.init(klarnaInitData);
 				};
@@ -583,6 +555,27 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 	/**
 	 * Create Klarna Payments session.
+	 *
+	 * @param array  $request_args Klarna request arguments.
+	 */
+	public function create_session( $request_args ) {
+		$create_request_url = $this->server_base . 'credit/v1/sessions';
+		$create_response = $this->create_session_request( $create_request_url, $request_args );
+
+		if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
+			$this->session_error = $create_response;
+			wc_add_notice( 'Could not create Klarna session, please refresh the page to try again', 'error' );
+
+			WC()->session->__unset( 'klarna_payments_session_id' );
+			WC()->session->__unset( 'klarna_payments_client_token' );
+		} else { // Store session ID and client token in WC session.
+			WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
+			WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
+		}
+	}
+
+	/**
+	 * Create Klarna Payments session request.
 	 *
 	 * @param string $request_url  Klarna request URL.
 	 * @param array  $request_args Klarna request arguments.
@@ -657,6 +650,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Localize the script.
 		$klarna_payments_params = array();
 		$klarna_payments_params['testmode'] = $this->testmode;
+
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
 	}
