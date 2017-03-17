@@ -153,15 +153,10 @@ jQuery( function( $ ) {
 		authorize: function() {
 			var $defer = $.Deferred();
 			var address = klarna_payments.getAddress();
-			var orderData = $.extend({
-				purchase_country: address.billing_address.country,
-				purchase_currency: "USD",
-				locale: "en-US",
-			}, address);
 
 			klarna_payments.authorization_response = {};
 
-			Klarna.Credit.authorize( orderData, function(response) {
+			Klarna.Credit.authorize( address, function(response) {
 				klarna_payments.authorization_response = response;
 				$defer.resolve(response);
 			});
