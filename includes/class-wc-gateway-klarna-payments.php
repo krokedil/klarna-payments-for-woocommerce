@@ -51,7 +51,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @TODO: Change this when EU is also available.
 	 */
-	public $shop_country = 'US';
+	public $shop_country;
 
 	/**
 	 * Turns on logging.
@@ -216,6 +216,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		} else {
 			$this->server_base = 'https://api-na.klarna.com/';
 		}
+
+		$base_location = wc_get_base_location();
+		$this->shop_country = $base_location['country'];
 
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -462,12 +465,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		WC()->cart->calculate_shipping();
 		WC()->cart->calculate_totals();
 
-		if ( '' === WC()->customer->get_country() ) {
-			$purchase_country = $this->shop_country;
-		} else {
-			$purchase_country = WC()->customer->get_country();
-		}
-
 		$klarna_payments_params = array();
 		$klarna_payments_params['testmode'] = $this->testmode;
 
@@ -479,7 +476,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Content-Type'  => 'application/json',
 			),
 			'body' => wp_json_encode( apply_filters( 'wc_klarna_payments_session_request_body', array(
-				'purchase_country'  => $purchase_country,
+				'purchase_country'  => $this->shop_country,
 				'purchase_currency' => 'USD',
 				'locale'            => 'en-US',
 				'order_amount'      => $order_lines['order_amount'],
@@ -553,12 +550,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			WC()->cart->calculate_shipping();
 			WC()->cart->calculate_totals();
 
-			if ( '' === WC()->customer->get_country() ) {
-				$purchase_country = $this->shop_country;
-			} else {
-				$purchase_country = WC()->customer->get_country();
-			}
-
 			$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
 			$order_lines = $order_lines_processor->order_lines();
 			$request_args = array(
@@ -567,7 +558,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					'Content-Type'  => 'application/json',
 				),
 				'body' => wp_json_encode( array(
-					'purchase_country'  => $purchase_country,
+					'purchase_country'  => $this->shop_country,
 					'purchase_currency' => 'USD',
 					'locale'            => 'en-US',
 					'order_amount'      => $order_lines['order_amount'],
@@ -817,7 +808,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Content-Type'  => 'application/json',
 			),
 			'body' => wp_json_encode( array(
-				'purchase_country'    => 'US',
+				'purchase_country'    => $this->shop_country,
 				'purchase_currency'   => 'USD',
 				'locale'              => 'en-US',
 				'billing_address'     => $billing_address,

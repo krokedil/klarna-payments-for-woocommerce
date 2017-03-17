@@ -52,8 +52,8 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @param bool|string $shop_country Shop country.
 	 */
-	public function __construct( $shop_country = false ) {
-		$this->shop_country = $shop_country ? $shop_country : 'US';
+	public function __construct( $shop_country ) {
+		$this->shop_country = $shop_country;
 
 		if ( 'US' === $this->shop_country ) {
 			$this->separate_sales_tax = true;
