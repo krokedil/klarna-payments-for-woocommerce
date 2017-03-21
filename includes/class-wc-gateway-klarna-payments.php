@@ -439,6 +439,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
+		if ( 'USD' !== get_woocommerce_currency() ) {
+			return false;
+		}
+
 		if ( is_wp_error( $this->session_error ) ) {
 			return false;
 		}
@@ -460,6 +464,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
+		if ( 'USD' !== get_woocommerce_currency() ) {
+			return;
+		}
+
 		// Need to calculate these here, because WooCommerce hasn't done it yet.
 		WC()->cart->calculate_fees();
 		WC()->cart->calculate_shipping();
@@ -474,7 +482,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			),
 			'body' => wp_json_encode( apply_filters( 'wc_klarna_payments_session_request_body', array(
 				'purchase_country'  => $this->shop_country,
-				'purchase_currency' => 'USD',
+				'purchase_currency' => get_woocommerce_currency(),
 				'locale'            => 'en-US',
 				'order_amount'      => $order_lines['order_amount'],
 				'order_tax_amount'  => $order_lines['order_tax_amount'],
