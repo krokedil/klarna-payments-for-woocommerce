@@ -357,7 +357,7 @@ class WC_Klarna_Payments_Order_Lines {
 			if ( $this->separate_sales_tax ) {
 				$item_discount_amount = $cart_item['line_subtotal'] - $cart_item['line_total'];
 			} else {
-				$item_discount_amount = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'] - $cart_item['line_total'] - $cart_item['line_total_tax'];
+				$item_discount_amount = $cart_item['line_subtotal'] + $cart_item['line_subtotal_tax'] - $cart_item['line_total'] - $cart_item['line_tax'];
 			}
 
 			$item_discount_amount = $item_discount_amount * 100;
