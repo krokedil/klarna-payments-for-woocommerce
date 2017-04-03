@@ -509,6 +509,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return new WP_Error( 'currency', 'Currency not allowed for Klarna Payments' );
 		}
 
+		// If US, check if USD used
+		if ( 'USD' === get_woocommerce_currency() ) {
+			if ( 'US' !== $this->shop_country ) {
+				return new WP_Error( 'currency', 'USD must be used for US purchases' );
+			}
+		}
+
 		// If UK, check if GBP used
 		if ( 'GBP' === get_woocommerce_currency() ) {
 			if ( 'GB' !== $this->shop_country ) {
