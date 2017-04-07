@@ -5,7 +5,7 @@ jQuery( function( $ ) {
 		authorization_response: {},
 		iframe_loaded: false,
 		show_form: false,
-		// klarna_html: '',
+		environment: klarna_payments_params.environment.substring(0, 2),
 		klarna_container_selector: '#klarna_container',
 
 		start: function() {
@@ -116,19 +116,28 @@ jQuery( function( $ ) {
 						clearInterval(klarnaLoadedInterval);
 						clearTimeout(klarnaLoadedTimeout);
 
-						var address = klarna_payments.getAddress();
-
 						var options = {
 							container: klarna_payments.klarna_container_selector
 						};
 
-						Klarna.Credit.load(
-							options,
-							address,
-							function (response) {
-								$defer.resolve(response);
-							}
-						);
+						if ( 'eu' === klarna_payments.environment ) {
+							Klarna.Credit.load(
+								options,
+								function (response) {
+									$defer.resolve(response);
+								}
+							);
+						} else {
+							var address = klarna_payments.getAddress();
+
+							Klarna.Credit.load(
+								options,
+								address,
+								function (response) {
+									$defer.resolve(response);
+								}
+							);
+						}
 					}
 				}, 100);
 
