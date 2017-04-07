@@ -491,9 +491,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$link_style = '';
 		}
 
+		if ( 'us' === substr( $this->environment, 0, 2 ) ) {
+			$link_url = 'https://www.klarna.com/us/pay-over-time';
+		} else {
+			$link_url = 'https://www.klarna.com/uk/what-we-do';
+		}
+
 		$icon_html = '<img src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/black.png?width=68" alt="Klarna" />';
 
-		$icon_html .= '<a ' . $link_style . 'href="https://www.klarna.com/us/pay-over-time" onclick="javascript:window.open(\'https://www.klarna.com/us/pay-over-time\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">What is Klarna?</a>';
+		$icon_html .= '<a ' . $link_style . 'href="' . $link_url . '" onclick="javascript:window.open(\'https://www.klarna.com/us/pay-over-time\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">What is Klarna?</a>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
 	}
@@ -506,12 +512,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function country_currency_check() {
 		// Check if allowed currency
 		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies ) ) {
+			WC()->session->__unset( 'klarna_payments_session_id' );
 			return new WP_Error( 'currency', 'Currency not allowed for Klarna Payments' );
 		}
 
 		// If US, check if USD used
 		if ( 'USD' === get_woocommerce_currency() ) {
 			if ( 'US' !== $this->shop_country ) {
+				WC()->session->__unset( 'klarna_payments_session_id' );
 				return new WP_Error( 'currency', 'USD must be used for US purchases' );
 			}
 		}
@@ -519,6 +527,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// If UK, check if GBP used
 		if ( 'GBP' === get_woocommerce_currency() ) {
 			if ( 'GB' !== $this->shop_country ) {
+				WC()->session->__unset( 'klarna_payments_session_id' );
 				return new WP_Error( 'currency', 'GBP must be used for GB purchases' );
 			}
 		}
@@ -563,7 +572,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Check country and currency
 		if ( is_wp_error( $this->country_currency_check() ) ) {
-			return false;
+			return;
 		}
 
 		// Need to calculate these here, because WooCommerce hasn't done it yet.

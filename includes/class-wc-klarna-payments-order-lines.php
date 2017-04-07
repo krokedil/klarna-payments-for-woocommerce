@@ -110,6 +110,7 @@ class WC_Klarna_Payments_Order_Lines {
 				}
 
 				$this->order_lines[] = $klarna_item;
+				$this->order_tax_amount += $this->get_item_tax_amount( $cart_item );
 				$this->order_amount += $this->get_item_quantity( $cart_item ) * $this->get_item_price( $cart_item ) - $this->get_item_discount_amount( $cart_item );
 			}
 		}
@@ -132,6 +133,7 @@ class WC_Klarna_Payments_Order_Lines {
 			);
 
 			$this->order_lines[] = $shipping;
+			$this->order_tax_amount += $this->get_shipping_tax_amount();
 			$this->order_amount += $this->get_shipping_amount();
 		}
 	}
