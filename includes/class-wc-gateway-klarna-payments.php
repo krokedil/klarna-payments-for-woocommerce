@@ -228,8 +228,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 		} else {
 			// @TODO: Add other countries later
-			return;
+			// return;
 		}
+
+		$this->shared_secret = utf8_encode( $this->shared_secret );
 
 		// Iframe options.
 		$this->background               = $this->get_option( 'background' );
