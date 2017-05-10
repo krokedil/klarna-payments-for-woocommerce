@@ -494,7 +494,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		if ( 'us' === substr( $this->environment, 0, 2 ) ) {
-			$link_url = 'https://www.klarna.com/us/pay-over-time';
+			$link_url = 'https://www.klarna.com/us/business/what-is-klarna';
 		} else {
 			$link_url = 'https://www.klarna.com/uk/what-we-do';
 		}
