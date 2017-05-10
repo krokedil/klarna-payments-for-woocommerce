@@ -184,8 +184,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                   = 'klarna_payments';
-		$this->method_title         = __( 'Klarna Payments', 'woocommerce-gateway-klarna-payments' );
-		$this->method_description   = __( 'Klarna Payments is our umbrella name for Klarna\'s payment methods.', 'woocommerce-gateway-klarna-payments' );
+		$this->method_title         = __( 'Pay Over Time', 'woocommerce-gateway-klarna-payments' );
+		$this->method_description   = __( 'Get the flexibility to pay over time with Klarna!', 'woocommerce-gateway-klarna-payments' );
 		$this->has_fields           = true;
 		$this->supports             = apply_filters( 'wc_klarna_payments_supports', array( 'products' ) ); // Make this filterable.
 
@@ -205,7 +205,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->testmode               = 'yes' === $this->get_option( 'testmode' );
 		$this->logging                = 'yes' === $this->get_option( 'logging' );
 
-		// Set Klarna environment
+		// Set Klarna environment.
 		if ( 'US' === $this->shop_country ) {
 			if ( $this->testmode ) {
 				$this->environment = 'us-test';
@@ -226,10 +226,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				$this->merchant_id = $this->get_option( 'merchant_id_eu', '' );
 				$this->shared_secret = $this->get_option( 'shared_secret_eu', '' );
 			}
-		} else {
-			// @TODO: Add other countries later
-			// return;
 		}
+		// @TODO: Add other countries later.
 
 		$this->shared_secret = utf8_encode( $this->shared_secret );
 
@@ -592,7 +590,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'body' => wp_json_encode( apply_filters( 'wc_klarna_payments_session_request_body', array(
 				'purchase_country'  => $this->shop_country,
 				'purchase_currency' => get_woocommerce_currency(),
-				'locale'            => 'en-US',
+				'locale'            => $this->get_klarna_locale(),
 				'order_amount'      => $order_lines['order_amount'],
 				'order_tax_amount'  => $order_lines['order_tax_amount'],
 				'order_lines'       => $order_lines['order_lines'],
@@ -653,7 +651,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'body' => wp_json_encode( array(
 					'purchase_country'  => $this->shop_country,
 					'purchase_currency' => get_woocommerce_currency(),
-					'locale'            => 'en-US',
+					'locale'            => $this->get_klarna_locale(),
 					'order_amount'      => $order_lines['order_amount'],
 					'order_tax_amount'  => $order_lines['order_tax_amount'],
 					'order_lines'       => $order_lines['order_lines'],
@@ -922,7 +920,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'body' => wp_json_encode( array(
 				'purchase_country'    => $this->shop_country,
 				'purchase_currency'   => get_woocommerce_currency(),
-				'locale'              => 'en-US',
+				'locale'              => $this->get_klarna_locale(),
 				'billing_address'     => $billing_address,
 				'shipping_address'    => $shipping_address,
 				'order_amount'        => $order_lines['order_amount'],
@@ -1046,6 +1044,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( '' !== $this->background ) {
 			echo "<style type='text/css'>div#klarna_container { background: $this->background !important; padding: 10px; } div#klarna_container:empty { padding: 0; } </style>";
 		}
+	}
+
+	/**
+	 * Gets locale for Klarna session.
+	 *
+	 * @return mixed
+	 */
+	public function get_klarna_locale() {
+		return str_replace( '_', '-', strtolower( get_locale() ) );
 	}
 
 }

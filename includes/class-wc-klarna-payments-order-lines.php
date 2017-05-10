@@ -206,8 +206,8 @@ class WC_Klarna_Payments_Order_Lines {
 				$this->order_lines[]     = $discount;
 				$this->order_tax_amount += $coupon_tax_amount;
 				$this->order_amount     += $coupon_amount;
-			}
-		}
+			} // End foreach().
+		} // End if().
 	}
 
 	// Helpers.
