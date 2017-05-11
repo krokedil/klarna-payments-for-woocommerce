@@ -1052,7 +1052,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return mixed
 	 */
 	public function get_klarna_locale() {
-		return str_replace( '_', '-', strtolower( get_locale() ) );
+		if ( 'US' === $this->shop_country ) {
+			return 'en-us';
+		} else {
+			return 'en-gb';
+		}
 	}
 
 }
