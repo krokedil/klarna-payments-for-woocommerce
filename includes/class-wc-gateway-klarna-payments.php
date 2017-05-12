@@ -24,6 +24,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $testmode = 'no';
 
 	/**
+	 * Allow purchases from multiple countries.
+	 *
+	 * @var string
+	 */
+	public $allow_multiple_countries = 'no';
+
+	/**
 	 * Klarna payments environment (US or EU).
 	 *
 	 * @var string
@@ -52,20 +59,25 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $shared_secret = '';
 
 	/**
-	 * Klarna country.
+	 * Shop base country.
 	 *
 	 * @var string
-	 *
-	 * @TODO: Change this when EU is also available.
 	 */
 	public $shop_country;
+
+	/**
+	 * Klarna purchase country.
+	 *
+	 * @var string
+	 */
+	public $klarna_country;
 
 	/**
 	 * Allowed currencies
 	 *
 	 * @var array
 	 */
-	public $allowed_currencies = array( 'USD', 'GBP' );
+	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK' );
 
 	/**
 	 * Turns on logging.
@@ -199,37 +211,16 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->init_settings();
 
 		// Get setting values.
-		$this->title                  = $this->get_option( 'title' );
-		$this->description            = $this->get_option( 'description', '' );
-		$this->enabled                = 'yes' === $this->get_option( 'enabled' );
-		$this->testmode               = 'yes' === $this->get_option( 'testmode' );
-		$this->logging                = 'yes' === $this->get_option( 'logging' );
+		$this->title                    = $this->get_option( 'title' );
+		$this->description              = $this->get_option( 'description', '' );
+		$this->enabled                  = 'yes' === $this->get_option( 'enabled' );
+		$this->testmode                 = 'yes' === $this->get_option( 'testmode' );
+		$this->allow_multiple_countries = 'yes' === $this->get_option( 'allow_multiple_countries' );
+		$this->logging                  = 'yes' === $this->get_option( 'logging' );
 
-		// Set Klarna environment.
-		if ( 'US' === $this->shop_country ) {
-			if ( $this->testmode ) {
-				$this->environment = 'us-test';
-				$this->merchant_id = $this->get_option( 'test_merchant_id_us' );
-				$this->shared_secret = $this->get_option( 'test_shared_secret_us' );
-			} else {
-				$this->environment = 'us-live';
-				$this->merchant_id = $this->get_option( 'merchant_id_us', '' );
-				$this->shared_secret = $this->get_option( 'shared_secret_us', '' );
-			}
-		} elseif ( 'GB' === $this->shop_country ) {
-			if ( $this->testmode ) {
-				$this->environment = 'eu-test';
-				$this->merchant_id = $this->get_option( 'test_merchant_id_eu' );
-				$this->shared_secret = $this->get_option( 'test_shared_secret_eu' );
-			} else {
-				$this->environment = 'eu-live';
-				$this->merchant_id = $this->get_option( 'merchant_id_eu', '' );
-				$this->shared_secret = $this->get_option( 'shared_secret_eu', '' );
-			}
-		}
-		// @TODO: Add other countries later.
-
-		$this->shared_secret = utf8_encode( $this->shared_secret );
+		$this->set_klarna_country();
+		$this->set_environment();
+		$this->set_credentials();
 
 		// Iframe options.
 		$this->background               = $this->get_option( 'background' );
@@ -273,208 +264,45 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Sets Klarna environment based on country and testmode.
+	 */
+	public function set_environment() {
+		if ( 'US' === $this->shop_country ) {
+			if ( $this->testmode ) {
+				$this->environment = 'us-test';
+			} else {
+				$this->environment = 'us-live';
+			}
+		} else {
+			if ( $this->testmode ) {
+				$this->environment = 'eu-test';
+			} else {
+				$this->environment = 'eu-live';
+			}
+		}
+	}
+
+	/**
+	 * Sets Klarna credentials.
+	 */
+	public function set_credentials() {
+		if ( $this->testmode ) {
+			$this->merchant_id = $this->get_option( 'test_merchant_id_' . strtolower( $this->klarna_country ) );
+			$this->shared_secret = $this->get_option( 'test_shared_secret_' . strtolower( $this->klarna_country ) );
+		} else {
+			$this->merchant_id = $this->get_option( 'merchant_id_' . strtolower( $this->klarna_country ), '' );
+			$this->shared_secret = $this->get_option( 'shared_secret_' . strtolower( $this->klarna_country ), '' );
+		}
+
+		$this->shared_secret = utf8_encode( $this->shared_secret );
+	}
+
+	/**
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = apply_filters( 'wc_gateway_klarna_payments_settings', array(
-			'enabled' => array(
-				'title'       => __( 'Enable/Disable', 'woocommerce' ),
-				'label'       => __( 'Enable Klarna Payments', 'woocommerce' ),
-				'type'        => 'checkbox',
-				'description' => '',
-				'default'     => 'no',
-			),
-			'title' => array(
-				'title'       => __( 'Title', 'woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
-				'default'     => __( 'Pay Over Time', 'woocommerce' ),
-				'desc_tip'    => true,
-			),
-			'description' => array(
-				'title'       => __( 'Description', 'woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'Payment method description that the customer will see on your website.', 'woocommerce' ),
-				'default'     => __( 'Get the flexibility to pay over time with Klarna!', 'woocommerce' ),
-				'desc_tip'    => true,
-			),
-			'test_merchant_id_us' => array(
-				'title'       => __( 'Test merchant ID (US)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_shared_secret_us' => array(
-				'title'       => __( 'Test shared secret (US)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'merchant_id_us' => array(
-				'title'       => __( 'Live merchant ID (US)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'shared_secret_us' => array(
-				'title'       => __( 'Live shared secret (US)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'prescreen' => array(
-				'title'       => __( 'Prescreen', 'woocommerce-gateway-klarna-payments' ),
-				'label'       => __( 'Enable Prescreen (US merchants only)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'default'     => 'no',
-				'desc_tip'    => true,
-			),
-			'test_merchant_id_eu' => array(
-				'title'       => __( 'Test merchant ID (EU)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for EU.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_shared_secret_eu' => array(
-				'title'       => __( 'Test shared secret (EU)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for EU.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'merchant_id_eu' => array(
-				'title'       => __( 'Live merchant ID (EU)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for EU.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'shared_secret_eu' => array(
-				'title'       => __( 'Live shared secret (EU)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for EU.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'testmode' => array(
-				'title'       => __( 'Test mode', 'woocommerce-gateway-klarna-payments' ),
-				'label'       => __( 'Enable Test Mode', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'description' => __( 'Place the payment gateway in test mode using test API keys.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => 'yes',
-				'desc_tip'    => true,
-			),
-			'logging' => array(
-				'title'       => __( 'Logging', 'woocommerce-gateway-klarna-payments' ),
-				'label'       => __( 'Log debug messages', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => 'no',
-				'desc_tip'    => true,
-			),
-			'float_what_is_klarna' => array(
-				'title'       => __( 'What is Klarna? link', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'label'       => __( 'If checked, What is Klarna? will be floated right.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => 'yes',
-				'desc_tip'    => true,
-			),
-			'send_product_urls' => array(
-				'title'       => __( 'Product URLs', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'label'       => __( 'Send product and product image URLs to Klarna', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => 'yes',
-				'desc_tip'    => true,
-			),
-
-			'iframe_options' => array(
-				'title' => 'Iframe settings',
-				'type'  => 'title',
-			),
-			'background' => array(
-				'title'       => 'Background',
-				'type'        => 'color',
-				'default'     => '#ffffff',
-				'desc_tip'    => true,
-			),
-			'color_button' => array(
-				'title'       => 'Button color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'color_button_text' => array(
-				'title'       => 'Button text color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'color_checkbox' => array(
-				'title'       => 'Checkbox color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'color_checkbox_checkmark' => array(
-				'title'       => 'Checkbox checkmark color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'color_header' => array(
-				'title'       => 'Header color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'color_link' => array(
-				'title'       => 'Link color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'color_border' => array(
-				'title'       => 'Border color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'color_border_selected' => array(
-				'title'       => 'Selected border color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'color_text' => array(
-				'title'       => 'Text color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'color_details' => array(
-				'title'       => 'Details color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'color_text_secondary' => array(
-				'title'       => 'Secondary text color',
-				'type'        => 'color',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'radius_border' => array(
-				'title'       => 'Border radius (px)',
-				'type'        => 'number',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-		) );
+		include_once( WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/klarna-payments-admin-form-fields.php' );
+		$this->form_fields = Klarna_Payments_Form_Fields::fields();
 	}
 
 	/**
@@ -510,25 +338,57 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Fired before create session and update session, and inside is_available.
 	 */
 	public function country_currency_check() {
-		// Check if allowed currency
+		// Check if allowed currency.
 		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies ) ) {
 			WC()->session->__unset( 'klarna_payments_session_id' );
 			return new WP_Error( 'currency', 'Currency not allowed for Klarna Payments' );
 		}
 
-		// If US, check if USD used
+		// If US, check if USD used.
 		if ( 'USD' === get_woocommerce_currency() ) {
-			if ( 'US' !== $this->shop_country ) {
+			if ( 'US' !== $this->klarna_country ) {
 				WC()->session->__unset( 'klarna_payments_session_id' );
 				return new WP_Error( 'currency', 'USD must be used for US purchases' );
 			}
 		}
 
-		// If UK, check if GBP used
+		// If GB, check if GBP used.
 		if ( 'GBP' === get_woocommerce_currency() ) {
-			if ( 'GB' !== $this->shop_country ) {
+			if ( 'GB' !== $this->klarna_country ) {
 				WC()->session->__unset( 'klarna_payments_session_id' );
 				return new WP_Error( 'currency', 'GBP must be used for GB purchases' );
+			}
+		}
+
+		// If SE, check if SEK used.
+		if ( 'SEK' === get_woocommerce_currency() ) {
+			if ( 'SE' !== $this->klarna_country ) {
+				WC()->session->__unset( 'klarna_payments_session_id' );
+				return new WP_Error( 'currency', 'SEK must be used for SE purchases' );
+			}
+		}
+
+		// If NO, check if NOK used.
+		if ( 'NOK' === get_woocommerce_currency() ) {
+			if ( 'NO' !== $this->klarna_country ) {
+				WC()->session->__unset( 'klarna_payments_session_id' );
+				return new WP_Error( 'currency', 'NOK must be used for NO purchases' );
+			}
+		}
+
+		// If DK, check if DKK used.
+		if ( 'DKK' === get_woocommerce_currency() ) {
+			if ( 'DK' !== $this->klarna_country ) {
+				WC()->session->__unset( 'klarna_payments_session_id' );
+				return new WP_Error( 'currency', 'DKK must be used for DK purchases' );
+			}
+		}
+
+		// If UK, check if GBP used.
+		if ( 'EUR' === get_woocommerce_currency() ) {
+			if ( ! in_array( $this->klarna_country, array( 'AT', 'DE', 'NL', 'FI' ), true ) ) {
+				WC()->session->__unset( 'klarna_payments_session_id' );
+				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL and FI purchases' );
 			}
 		}
 
@@ -543,12 +403,20 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
-		// Check country and currency
+		$this->set_klarna_country();
+		$this->set_credentials();
+
+		// Check credentials.
+		if ( '' === $this->merchant_id || '' === $this->shared_secret ) {
+			return false;
+		}
+
+		// Check country and currency.
 		if ( is_wp_error( $this->country_currency_check() ) ) {
 			return false;
 		}
 
-		// Check if there was a session error
+		// Check if there was a session error.
 		if ( is_wp_error( $this->session_error ) ) {
 			return false;
 		}
@@ -590,7 +458,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'body' => wp_json_encode( apply_filters( 'wc_klarna_payments_session_request_body', array(
 				'purchase_country'  => $this->shop_country,
 				'purchase_currency' => get_woocommerce_currency(),
-				'locale'            => $this->get_klarna_locale(),
+				'locale'            => $this->get_locale_for_klarna_country(),
 				'order_amount'      => $order_lines['order_amount'],
 				'order_tax_amount'  => $order_lines['order_tax_amount'],
 				'order_lines'       => $order_lines['order_lines'],
@@ -651,7 +519,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'body' => wp_json_encode( array(
 					'purchase_country'  => $this->shop_country,
 					'purchase_currency' => get_woocommerce_currency(),
-					'locale'            => $this->get_klarna_locale(),
+					'locale'            => $this->get_locale_for_klarna_country(),
 					'order_amount'      => $order_lines['order_amount'],
 					'order_tax_amount'  => $order_lines['order_tax_amount'],
 					'order_lines'       => $order_lines['order_lines'],
@@ -675,7 +543,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Create Klarna Payments session.
 	 *
-	 * @param array  $request_args Klarna request arguments.
+	 * @param array $request_args Klarna request arguments.
 	 */
 	public function create_session( $request_args ) {
 		$create_request_url = $this->server_base . 'credit/v1/sessions';
@@ -840,6 +708,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 
 			update_post_meta( $order_id, '_wc_klarna_environment', $this->environment );
+			update_post_meta( $order_id, '_wc_klarna_country', $this->klarna_country );
 
 			WC()->session->__unset( 'klarna_payments_session_id' );
 			WC()->session->__unset( 'klarna_payments_client_token' );
@@ -864,7 +733,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'result'   => 'failure',
 				'redirect' => '',
 			);
-		}
+		} // End if().
 	}
 
 	/**
@@ -920,7 +789,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'body' => wp_json_encode( array(
 				'purchase_country'    => $this->shop_country,
 				'purchase_currency'   => get_woocommerce_currency(),
-				'locale'              => $this->get_klarna_locale(),
+				'locale'              => $this->get_locale_for_klarna_country(),
 				'billing_address'     => $billing_address,
 				'shipping_address'    => $shipping_address,
 				'order_amount'        => $order_lines['order_amount'],
@@ -1047,16 +916,43 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Gets locale for Klarna session.
+	 * Gets locale based on Klarna country.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	public function get_klarna_locale() {
-		if ( 'US' === $this->shop_country ) {
-			return 'en-us';
-		} else {
-			return 'en-gb';
+	public function get_locale_for_klarna_country() {
+		switch ( $this->klarna_country ) {
+			case 'AT':
+				return 'de-at';
+			case 'DE':
+				return 'de-de';
+			case 'DK':
+				return 'da-dk';
+			case 'GB':
+				return 'en-gb';
+			case 'FI':
+				return 'fi-fi';
+			case 'NL':
+				return 'nl-nl';
+			case 'NO':
+				return 'nb-no';
+			case 'SE':
+				return 'sv-se';
+			case 'US':
+				return 'en-us';
+			default:
+				return '';
 		}
 	}
 
+	/**
+	 * Sets Klarna country.
+	 */
+	public function set_klarna_country() {
+		if ( $this->allow_multiple_countries && WC()->customer ) {
+			$this->klarna_country = WC()->customer->get_billing_country();
+		} else {
+			$this->klarna_country = $this->shop_country;
+		}
+	}
 }
