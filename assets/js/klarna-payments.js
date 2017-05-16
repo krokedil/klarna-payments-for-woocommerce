@@ -151,7 +151,6 @@ jQuery( function( $ ) {
 		},
 
 		loadHandler: function(response) {
-			console.log(response);
 			klarna_payments.iframe_loaded = true;
 
 			if (response.show_form) {
