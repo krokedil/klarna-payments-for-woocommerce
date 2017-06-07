@@ -324,7 +324,7 @@ class Klarna_Payments_Form_Fields {
 
 			// AT credentials.
 			'at_credentials' => array(
-				'title' => 'Credentials (DK)',
+				'title' => 'Credentials (AT)',
 				'type'  => 'title',
 			),
 			'test_merchant_id_at' => array(
@@ -358,7 +358,7 @@ class Klarna_Payments_Form_Fields {
 
 			// DE credentials.
 			'de_credentials' => array(
-				'title' => 'Credentials (DK)',
+				'title' => 'Credentials (DE)',
 				'type'  => 'title',
 			),
 			'test_merchant_id_de' => array(
