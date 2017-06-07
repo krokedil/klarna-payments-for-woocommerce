@@ -196,7 +196,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                   = 'klarna_payments';
-		$this->method_title         = __( 'Pay Over Time', 'woocommerce-gateway-klarna-payments' );
+		$this->method_title         = __( 'Klarna Payments', 'woocommerce-gateway-klarna-payments' );
 		$this->method_description   = __( 'Get the flexibility to pay over time with Klarna!', 'woocommerce-gateway-klarna-payments' );
 		$this->has_fields           = true;
 		$this->supports             = apply_filters( 'wc_klarna_payments_supports', array( 'products' ) ); // Make this filterable.
@@ -286,7 +286,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$this->shared_secret = $this->get_option( 'shared_secret_' . strtolower( $this->klarna_country ), '' );
 		}
 
-		$this->shared_secret = utf8_encode( $this->shared_secret );
+		$this->shared_secret = urlencode( $this->shared_secret );
 	}
 
 	/**
