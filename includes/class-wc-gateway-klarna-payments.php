@@ -285,8 +285,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$this->merchant_id = $this->get_option( 'merchant_id_' . strtolower( $this->klarna_country ), '' );
 			$this->shared_secret = $this->get_option( 'shared_secret_' . strtolower( $this->klarna_country ), '' );
 		}
-
-		$this->shared_secret = urlencode( $this->shared_secret );
 	}
 
 	/**
@@ -560,7 +558,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 				$this->unset_session_values();
 			}
-		}
+		} // End if().
 	}
 
 	/**
@@ -614,6 +612,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array|mixed|object|WP_Error
 	 */
 	public function update_session_request( $request_url, $request_args ) {
+		// Update session is only done for US.
+		if ( 'us' !== strtolower( $this->klarna_country ) ) {
+			return 'No update';
+		}
+
 		// Make it filterable.
 		$request_args = apply_filters( 'wc_klarna_payments_update_session_args', $request_args );
 
@@ -631,7 +634,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Adds Klarna Payments container to checkout page.
 	 */
 	public function payment_fields() {
-		if ( $description = $this->get_description() ) {
+		$description = $this->get_description();
+		if ( $description ) {
 			echo wpautop( wptexturize( $description ) );
 		}
 
