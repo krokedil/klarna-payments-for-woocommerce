@@ -84,40 +84,7 @@ class Klarna_Payments_Form_Fields {
 				'desc_tip'    => true,
 			),
 
-			// EU credentials.
-			'eu_credentials' => array(
-				'title' => 'Credentials (EU)',
-				'type'  => 'title',
-			),
-			'test_merchant_id_eu' => array(
-				'title'       => __( 'Test merchant ID (EU)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for EU.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_shared_secret_eu' => array(
-				'title'       => __( 'Test shared secret (EU)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for EU.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'merchant_id_eu' => array(
-				'title'       => __( 'Live merchant ID (EU)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for EU.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'shared_secret_eu' => array(
-				'title'       => __( 'Live shared secret (EU)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for EU.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-
+			// Europe.
 			// GB credentials.
 			'gb_credentials' => array(
 				'title' => 'Credentials (GB)',
