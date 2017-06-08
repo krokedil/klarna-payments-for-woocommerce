@@ -12,6 +12,16 @@ class Klarna_Payments_Form_Fields {
 	 * Returns the fields.
 	 */
 	public static function fields() {
+		$base_location = wc_get_base_location();
+		$base_country = $base_location['country'];
+
+		if ( 'US' === $base_country ) {
+			$default_title = __( 'Pay Over Time', 'woocommerce' );
+		} else {
+			$default_title = __( 'Klarna', 'woocommerce' );
+		}
+
+
 		return apply_filters( 'wc_gateway_klarna_payments_settings', array(
 			'enabled' => array(
 				'title'       => __( 'Enable/Disable', 'woocommerce' ),
@@ -23,8 +33,8 @@ class Klarna_Payments_Form_Fields {
 			'title' => array(
 				'title'       => __( 'Title', 'woocommerce' ),
 				'type'        => 'text',
-				'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
-				'default'     => __( 'Pay Over Time', 'woocommerce' ),
+				'description' => __( 'Payment method title that the customer will see on your checkout.', 'woocommerce' ),
+				'default'     => $default_title,
 				'desc_tip'    => true,
 			),
 			'description' => array(
