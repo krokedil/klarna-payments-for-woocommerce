@@ -240,7 +240,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// What is Klarna link.
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 
-		$env_string = 'US' === $this->shop_country ? '-na' : '';
+		$env_string = 'US' === $this->klarna_country ? '-na' : '';
 		if ( $this->testmode ) {
 			$this->description .= ' ' . __( '<p>TEST MODE ENABLED.</p>', 'woocommerce-gateway-klarna-payments' );
 			$this->description  = trim( $this->description );
@@ -438,7 +438,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		WC()->cart->calculate_shipping();
 		WC()->cart->calculate_totals();
 
-		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->klarna_country );
+		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
 		$order_lines = $order_lines_processor->order_lines();
 		$request_args = array(
 			'headers' => array(
@@ -455,7 +455,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			) ) ),
 		);
 
-		if ( WC()->session->get( 'klarna_payments_session_id' ) ) { // Check if we have session ID.
+		if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
 			// Try to update the session, if it fails try to create new session.
 			$update_request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response = $this->update_session_request( $update_request_url, $request_args );
@@ -612,19 +612,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array|mixed|object|WP_Error
 	 */
 	public function update_session_request( $request_url, $request_args ) {
-		// Update session is only done for US.
-		if ( 'us' !== strtolower( $this->klarna_country ) ) {
-			return 'No update';
-		}
-
 		// Make it filterable.
 		$request_args = apply_filters( 'wc_klarna_payments_update_session_args', $request_args );
 
 		$response = wp_safe_remote_post( $request_url, $request_args );
-		$decoded = json_decode( $response['body'] );
 
 		if ( 204 === $response['response']['code'] ) {
-			return $decoded;
+			return true;
 		} else {
 			return new WP_Error( $response['response']['code'], $response['response']['message'] );
 		}
