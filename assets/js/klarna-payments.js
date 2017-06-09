@@ -5,7 +5,6 @@ jQuery( function( $ ) {
 		authorization_response: {},
 		iframe_loaded: false,
 		show_form: false,
-		country: klarna_payments_params.country,
 		klarna_container_selector: '#klarna_container',
 
 		start: function() {
@@ -120,9 +119,7 @@ jQuery( function( $ ) {
 							container: klarna_payments.klarna_container_selector
 						};
 
-						console.log(klarna_payments.country);
-
-						if ( 'us' === klarna_payments.country ) {
+						if ( 'US' === $('#billing_country').val() ) {
 							var address = klarna_payments.getAddress();
 
 							Klarna.Credit.load(

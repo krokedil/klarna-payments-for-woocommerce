@@ -657,8 +657,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Localize the script.
 		$klarna_payments_params                = array();
 		$klarna_payments_params['testmode']    = $this->testmode;
-		$klarna_payments_params['environment'] = $this->environment;
-		$klarna_payments_params['country']     = strtolower( $this->klarna_country );
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
