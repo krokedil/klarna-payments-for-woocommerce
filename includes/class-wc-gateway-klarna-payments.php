@@ -442,7 +442,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order_lines = $order_lines_processor->order_lines();
 		$request_args = array(
 			'headers' => array(
-				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . $this->shared_secret ),
+				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
 				'Content-Type'  => 'application/json',
 			),
 			'body' => wp_json_encode( apply_filters( 'wc_klarna_payments_session_request_body', array(
@@ -508,7 +508,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order_lines = $order_lines_processor->order_lines();
 		$request_args = array(
 			'headers' => array(
-				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . $this->shared_secret ),
+				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
 				'Content-Type'  => 'application/json',
 			),
 			'body' => wp_json_encode( array(
@@ -801,7 +801,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$request_url  = $this->server_base . 'credit/v1/authorizations/' . $auth_token . '/order';
 		$request_args = array(
 			'headers' => array(
-				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . $this->shared_secret ),
+				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
 				'Content-Type'  => 'application/json',
 			),
 			'body' => wp_json_encode( array(
