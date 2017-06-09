@@ -535,7 +535,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			} else { // Store session ID and client token in WC session.
 				WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
 				WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
-				WC()->session->set( 'klarna_payments_session_country', $this->klarna_country );
+				WC()->session->set( 'klarna_payments_session_country', WC()->checkout->get_value( 'billing_country' ) );
 			}
 
 			// If we have a client token now, initialize Klarna Credit.
