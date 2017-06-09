@@ -311,6 +311,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		if ( 'us' === strtolower( $this->klarna_country ) ) {
 			$link_url = 'https://www.klarna.com/us/business/what-is-klarna';
+		} elseif ( 'at' === strtolower( $this->klarna_country ) || 'de' === strtolower( $this->klarna_country ) ) {
+			$link_url = 'https://www.klarna.com';
 		} else {
 			$link_url = 'https://www.klarna.com/uk/what-we-do';
 		}
