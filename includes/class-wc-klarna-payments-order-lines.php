@@ -101,7 +101,7 @@ class WC_Klarna_Payments_Order_Lines {
 					'total_discount_amount' => $this->get_item_discount_amount( $cart_item ),
 				);
 
-				// Add images
+				// Add images.
 				$klarna_payment_settings = get_option( 'woocommerce_klarna_payments_settings' );
 				if ( 'yes' === $klarna_payment_settings['send_product_urls'] ) {
 					$klarna_item['product_url'] = $this->get_item_product_url( $product );
@@ -340,7 +340,7 @@ class WC_Klarna_Payments_Order_Lines {
 			$item_reference = $product->id;
 		}
 
-		return (string) $item_reference;
+		return substr( strval( $item_reference ), 0, 64 );
 	}
 
 	/**
