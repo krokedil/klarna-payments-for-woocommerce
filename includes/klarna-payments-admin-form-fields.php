@@ -86,13 +86,6 @@ class Klarna_Payments_Form_Fields {
 				'default'     => '',
 				'desc_tip'    => true,
 			),
-			'prescreen' => array(
-				'title'       => __( 'Prescreen', 'woocommerce-gateway-klarna-payments' ),
-				'label'       => __( 'Enable Prescreen (US merchants only)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'default'     => 'no',
-				'desc_tip'    => true,
-			),
 
 			// Europe.
 			// GB credentials.
