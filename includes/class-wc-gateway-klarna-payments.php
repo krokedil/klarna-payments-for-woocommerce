@@ -309,17 +309,20 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$link_style = '';
 		}
 
+		$what_is_klarna_text = 'What is Klarna?';
+
 		if ( 'us' === strtolower( $this->klarna_country ) ) {
 			$link_url = 'https://www.klarna.com/us/business/what-is-klarna';
 		} elseif ( 'at' === strtolower( $this->klarna_country ) || 'de' === strtolower( $this->klarna_country ) ) {
 			$link_url = 'https://www.klarna.com';
+			$what_is_klarna_text = 'Was ist Klarna?';
 		} else {
 			$link_url = 'https://www.klarna.com/uk/what-we-do';
 		}
 
 		$icon_html = '<img src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/black.png?width=68" alt="Klarna" />';
 
-		$icon_html .= '<a ' . $link_style . 'href="' . $link_url . '" onclick="javascript:window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">What is Klarna?</a>';
+		$icon_html .= '<a ' . $link_style . 'href="' . $link_url . '" onclick="javascript:window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
 	}
