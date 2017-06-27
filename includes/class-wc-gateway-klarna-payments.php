@@ -699,7 +699,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		// Place order.
-		$response = $this->place_order( $order_id, $_POST['klarna_payments_authorization_token'] );
+		$response = $this->place_order( $order_id, $_POST['klarna_payments_authorization_token'] ); // Input var okay.
 
 		// Process the response.
 		if ( ! is_wp_error( $response ) && 200 === $response['response']['code'] ) {
@@ -786,7 +786,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'country'         => stripslashes( $posted_data['billing_country'] ),
 		);
 
-		if ( ! empty( $_POST['ship_to_different_address'] ) && ! wc_ship_to_billing_address_only() ) {
+		if ( ! empty( $_POST['ship_to_different_address'] ) && ! wc_ship_to_billing_address_only() ) { // Input var okay.
 			$shipping_address = array(
 				'given_name'      => stripslashes( $posted_data['shipping_first_name'] ),
 				'family_name'     => stripslashes( $posted_data['shipping_last_name'] ),
