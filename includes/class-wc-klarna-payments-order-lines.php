@@ -175,36 +175,40 @@ class WC_Klarna_Payments_Order_Lines {
 					$coupon_tax_amount = - WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100;
 					$coupon_reference = 'Discount';
 				} else {
-					$coupon_amount = 0;
-					$coupon_tax_amount = 0;
+					if ( 'US' === $this->shop_country ) {
+						$coupon_amount     = 0;
+						$coupon_tax_amount = 0;
 
-					if ( $coupon->is_type( 'fixed_cart' ) || $coupon->is_type( 'percent' ) ) {
-						$coupon_type = 'Cart discount';
-					} elseif ( $coupon->is_type( 'fixed_product' ) || $coupon->is_type( 'percent_product' ) ) {
-						$coupon_type = 'Product discount';
-					} else {
-						$coupon_type = 'Discount';
+						if ( $coupon->is_type( 'fixed_cart' ) || $coupon->is_type( 'percent' ) ) {
+							$coupon_type = 'Cart discount';
+						} elseif ( $coupon->is_type( 'fixed_product' ) || $coupon->is_type( 'percent_product' ) ) {
+							$coupon_type = 'Product discount';
+						} else {
+							$coupon_type = 'Discount';
+						}
+
+						$coupon_reference = $coupon_type . ' (amount: ' . WC()->cart->get_coupon_discount_amount( $coupon_key ) . ', tax amount: ' . WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) . ')';
 					}
-
-					$coupon_reference = $coupon_type . ' (amount: ' . WC()->cart->get_coupon_discount_amount( $coupon_key ) . ', tax amount: ' . WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) . ')';
 				}
 
-				// Add discount line item.
-				$discount = array(
-					'type'                  => 'discount',
-					'reference'             => $coupon_reference,
-					'name'                  => $coupon_key,
-					'quantity'              => 1,
-					'unit_price'            => $coupon_amount,
-					'tax_rate'              => 0,
-					'total_amount'          => $coupon_amount,
-					'total_discount_amount' => 0,
-					'total_tax_amount'      => $coupon_tax_amount,
-				);
+				// Add separate discount line item, but only if it's a smart coupon or country is US.
+				if ( 'smart_coupon' === $coupon->discount_type || 'US' === $this->shop_country ) {
+					$discount = array(
+						'type'                  => 'discount',
+						'reference'             => $coupon_reference,
+						'name'                  => $coupon_key,
+						'quantity'              => 1,
+						'unit_price'            => $coupon_amount,
+						'tax_rate'              => 0,
+						'total_amount'          => $coupon_amount,
+						'total_discount_amount' => 0,
+						'total_tax_amount'      => $coupon_tax_amount,
+					);
 
-				$this->order_lines[]     = $discount;
-				$this->order_tax_amount += $coupon_tax_amount;
-				$this->order_amount     += $coupon_amount;
+					$this->order_lines[]    = $discount;
+					$this->order_tax_amount += $coupon_tax_amount;
+					$this->order_amount     += $coupon_amount;
+				}
 			} // End foreach().
 		} // End if().
 	}
