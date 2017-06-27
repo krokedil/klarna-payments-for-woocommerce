@@ -89,6 +89,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
+			add_filter( 'woocommerce_process_checkout_field_billing_phone', array( $this, 'maybe_filter_billing_phone' ) );
 		}
 
 		/**
@@ -201,6 +202,27 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 
 			self::$log->add( 'klarna-payments-for-woocommerce', $message );
+		}
+
+		/**
+		 * Maybe filter posted billing phone number.
+		 *
+		 * Has to be done here, because we can't hook into this filter from gateway class.
+		 * Klarna Payments phone validation is not the same as WooCommerce phone validation, so in case Klarna Payments
+		 * says a phone is OK that would not be validated by WooCommerce we need to filter it here.
+		 *
+		 * @param string $phone_value Billing phone value.
+		 *
+		 * @return mixed
+		 */
+		public function maybe_filter_billing_phone( $phone_value ) {
+			// Get rid of everything that's not what WC_Validation::is_phone requires.
+			if ( 'klarna_payments' === $_POST['payment_method'] ) { // Input var okay.
+				if ( trim( preg_replace( '/[^\s\#0-9_\-\+\/\(\)]/', '', $phone_value ) ) !== $phone_value ) {
+					$phone_value = trim( preg_replace( '/[^\s\#0-9_\-\+\/\(\)]/', '', $phone_value ) );
+				}
+			}
+			return $phone_value;
 		}
 	}
 

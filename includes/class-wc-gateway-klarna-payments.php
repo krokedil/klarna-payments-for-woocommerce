@@ -991,4 +991,5 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		WC()->session->__unset( 'klarna_payments_client_token' );
 		WC()->session->__unset( 'klarna_payments_session_country' );
 	}
+
 }
