@@ -338,8 +338,6 @@ class WC_Klarna_Payments_Order_Lines {
 	public function get_item_reference( $product ) {
 		if ( $product->get_sku() ) {
 			$item_reference = $product->get_sku();
-		} elseif ( $product->variation_id ) {
-			$item_reference = $product->variation_id;
 		} else {
 			$item_reference = $product->id;
 		}
