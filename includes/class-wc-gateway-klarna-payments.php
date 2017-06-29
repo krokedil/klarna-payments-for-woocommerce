@@ -257,6 +257,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
+		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
 		add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'iframe_options' ) );
 		if ( '' !== $this->background ) {
 			add_action( 'wp_head', array( $this, 'iframe_background' ) );
@@ -993,6 +994,19 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		WC()->session->__unset( 'klarna_payments_session_id' );
 		WC()->session->__unset( 'klarna_payments_client_token' );
 		WC()->session->__unset( 'klarna_payments_session_country' );
+	}
+
+	/**
+	 * Adds can't edit address notice to KP EU orders.
+	 *
+	 * @param WC_Order $order WooCommerce order object.
+	 */
+	public function address_notice( $order ) {
+		if ( $this->id === $order->get_payment_method() ) {
+			if ( 'US' !== $order->get_billing_country() ) {
+				echo '<div style="margin: 10px 0; padding: 10px; border: 1px solid #B33A3A; font-size: 12px">Order address should not be changed and any changes you make will not be reflected in Klarna system.</div>';
+			}
+		}
 	}
 
 }
