@@ -169,6 +169,10 @@ class WC_Klarna_Payments_Order_Lines {
 	public function process_coupons() {
 		if ( ! empty( WC()->cart->get_coupons() ) ) {
 			foreach ( WC()->cart->get_coupons() as $coupon_key => $coupon ) {
+				$coupon_reference = '';
+				$coupon_amount = 0;
+				$coupon_tax_amount = '';
+
 				// Smart coupons are processed as real line items, cart and product discounts sent for reference only.
 				if ( 'smart_coupon' === $coupon->get_discount_type() ) {
 					$coupon_amount = - WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100;
@@ -227,7 +231,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 */
 	public function get_item_name( $cart_item ) {
 		$cart_item_data = $cart_item['data'];
-		$item_name      = $cart_item_data->post->post_title;
+		$item_name      = $cart_item_data->get_title();
 
 		// Get variations as a string and remove line breaks.
 		$item_variations = rtrim( WC()->cart->get_item_data( $cart_item, true ) ); // Removes new line at the end.
@@ -339,7 +343,7 @@ class WC_Klarna_Payments_Order_Lines {
 		if ( $product->get_sku() ) {
 			$item_reference = $product->get_sku();
 		} else {
-			$item_reference = $product->id;
+			$item_reference = $product->get_id();
 		}
 
 		return substr( strval( $item_reference ), 0, 64 );
@@ -396,10 +400,14 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return string $item_product_image_url Cart item product image URL.
 	 */
 	public function get_item_image_url( $product ) {
+		$image_url = '';
+
 		if ( $product->get_image_id() > 0 ) {
 			$image_id = $product->get_image_id();
-			return wp_get_attachment_image_url( $image_id, $size = 'shop_thumbnail', false );
+			$image_url = wp_get_attachment_image_url( $image_id, 'shop_thumbnail', false );
 		}
+
+		return $image_url;
 	}
 
 	/**

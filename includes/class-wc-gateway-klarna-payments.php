@@ -323,7 +323,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$icon_html = '<img src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/black.png?width=68" alt="Klarna" />';
 
-		$icon_html .= '<a ' . $link_style . 'href="' . $link_url . '" onclick="javascript:window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
+		$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
 	}
@@ -335,7 +335,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function country_currency_check() {
 		// Check if allowed currency.
-		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies ) ) {
+		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies, true ) ) {
 			$this->unset_session_values();
 			return new WP_Error( 'currency', 'Currency not allowed for Klarna Payments' );
 		}
