@@ -105,7 +105,9 @@ class WC_Klarna_Payments_Order_Lines {
 				$klarna_payment_settings = get_option( 'woocommerce_klarna_payments_settings' );
 				if ( 'yes' === $klarna_payment_settings['send_product_urls'] ) {
 					$klarna_item['product_url'] = $this->get_item_product_url( $product );
-					$klarna_item['image_url'] = $this->get_item_image_url( $product );
+					if ( $this->get_item_image_url( $product ) ) {
+						$klarna_item['image_url'] = $this->get_item_image_url( $product );
+					}
 				}
 
 				$this->order_lines[] = $klarna_item;
@@ -400,7 +402,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return string $item_product_image_url Cart item product image URL.
 	 */
 	public function get_item_image_url( $product ) {
-		$image_url = '';
+		$image_url = false;
 
 		if ( $product->get_image_id() > 0 ) {
 			$image_id = $product->get_image_id();
