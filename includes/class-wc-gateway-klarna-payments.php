@@ -213,7 +213,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Get setting values.
 		$this->title                    = $this->get_option( 'title' );
 		$this->description              = $this->get_option( 'description', '' );
-		$this->enabled                  = 'yes' === $this->get_option( 'enabled' );
+		$this->enabled                  = $this->get_option( 'enabled' );
 		$this->testmode                 = 'yes' === $this->get_option( 'testmode' );
 		$this->allow_multiple_countries = 'yes' === $this->get_option( 'allow_multiple_countries' );
 		$this->logging                  = 'yes' === $this->get_option( 'logging' );
