@@ -65,11 +65,11 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return array
 	 */
 	public function order_lines() {
-		// @TODO: Process fees
 		$this->process_cart();
 		$this->process_shipping();
 		$this->process_sales_tax();
 		$this->process_coupons();
+		$this->process_fees();
 
 		return array(
 			'order_lines' => $this->order_lines,
@@ -218,6 +218,32 @@ class WC_Klarna_Payments_Order_Lines {
 			} // End foreach().
 		} // End if().
 	}
+
+	/**
+	 * Process fees.
+	 */
+	public function process_fees() {
+		if ( ! empty( WC()->cart->get_fees() ) ) {
+			foreach ( WC()->cart->get_fees() as $cart_fee ) {
+				$fee = array(
+					'type'                  => 'surcharge',
+					'reference'             => $cart_fee->id,
+					'name'                  => $cart_fee->name,
+					'quantity'              => 1,
+					'unit_price'            => $cart_fee->amount * 100,
+					'tax_rate'              => 0,
+					'total_amount'          => $cart_fee->amount * 100,
+					'total_discount_amount' => 0,
+					'total_tax_amount'      => 0,
+				);
+
+				$this->order_lines[]    = $fee;
+				$this->order_tax_amount += 0;
+				$this->order_amount     += $cart_fee->amount * 100;
+			}
+		}
+	}
+
 
 	// Helpers.
 
