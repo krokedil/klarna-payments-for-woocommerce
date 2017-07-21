@@ -227,7 +227,7 @@ class WC_Klarna_Payments_Order_Lines {
 			foreach ( WC()->cart->get_fees() as $cart_fee ) {
 				$fee = array(
 					'type'                  => 'surcharge',
-					'reference'             => $cart_fee->id,
+					'reference'             => 'Fee',
 					'name'                  => $cart_fee->name,
 					'quantity'              => 1,
 					'unit_price'            => $cart_fee->amount * 100,
