@@ -981,7 +981,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		if ( $this->allow_multiple_countries ) {
-			$this->klarna_country = WC()->checkout->get_value( 'billing_country' );
+			$this->klarna_country = WC()->checkout()->get_value( 'billing_country' );
 		} else {
 			$this->klarna_country = $this->shop_country;
 		}
