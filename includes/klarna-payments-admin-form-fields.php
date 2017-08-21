@@ -53,296 +53,38 @@ class Klarna_Payments_Form_Fields {
 				'desc_tip'    => true,
 			),
 
-			// US credentials.
-			'credentials_us' => array(
-				'title' => 'Credentials (US)',
-				'type'  => 'title',
-			),
-			'title_us' => array(
-				'title'       => __( 'Payment method title (US)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for US purchases.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
+			'testmode' => array(
+				'title'       => __( 'Test mode', 'woocommerce-gateway-klarna-payments' ),
+				'label'       => __( 'Enable Test Mode', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Place the payment gateway in test mode using test API keys.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => 'yes',
 				'desc_tip'    => true,
 			),
-			'merchant_id_us' => array(
-				'title'       => __( 'Live merchant ID (US)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
+			'logging' => array(
+				'title'       => __( 'Logging', 'woocommerce-gateway-klarna-payments' ),
+				'label'       => __( 'Log debug messages', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => 'no',
 				'desc_tip'    => true,
 			),
-			'shared_secret_us' => array(
-				'title'       => __( 'Live shared secret (US)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
+			'float_what_is_klarna' => array(
+				'title'       => __( 'What is Klarna? link', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'If checked, What is Klarna? will be floated right.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => 'yes',
 				'desc_tip'    => true,
 			),
-			'test_merchant_id_us' => array(
-				'title'       => __( 'Test merchant ID (US)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_shared_secret_us' => array(
-				'title'       => __( 'Test shared secret (US)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
+			'send_product_urls' => array(
+				'title'       => __( 'Product URLs', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'Send product and product image URLs to Klarna', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => 'yes',
 				'desc_tip'    => true,
 			),
 
-			// Europe.
-			// GB credentials.
-			'credentials_gb' => array(
-				'title' => 'Credentials (GB)',
-				'type'  => 'title',
-			),
-			'title_gb' => array(
-				'title'       => __( 'Payment method title (GB)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for GB purchases.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'merchant_id_gb' => array(
-				'title'       => __( 'Live merchant ID (GB)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for GB.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'shared_secret_gb' => array(
-				'title'       => __( 'Live shared secret (GB)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for GB.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_merchant_id_gb' => array(
-				'title'       => __( 'Test merchant ID (GB)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for GB.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_shared_secret_gb' => array(
-				'title'       => __( 'Test shared secret (GB)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for GB.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-
-			// SE credentials.
-			'credentials_se' => array(
-				'title' => 'Credentials (SE)',
-				'type'  => 'title',
-			),
-			'title_se' => array(
-				'title'       => __( 'Payment method title (SE)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for SE purchases.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'merchant_id_se' => array(
-				'title'       => __( 'Live merchant ID (SE)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for SE.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'shared_secret_se' => array(
-				'title'       => __( 'Live shared secret (SE)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for SE.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_merchant_id_se' => array(
-				'title'       => __( 'Test merchant ID (SE)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for EU.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_shared_secret_se' => array(
-				'title'       => __( 'Test shared secret (SE)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for SE.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-
-			// NO credentials.
-			'credentials_no' => array(
-				'title' => 'Credentials (NO)',
-				'type'  => 'title',
-			),
-			'title_no' => array(
-				'title'       => __( 'Payment method title (NO)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for NO purchases.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'merchant_id_no' => array(
-				'title'       => __( 'Live merchant ID (NO)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NO.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'shared_secret_no' => array(
-				'title'       => __( 'Live shared secret (NO)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NO.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_merchant_id_no' => array(
-				'title'       => __( 'Test merchant ID (NO)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NO.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_shared_secret_no' => array(
-				'title'       => __( 'Test shared secret (NO)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NO.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-
-			// FI credentials.
-			'credentials_fi' => array(
-				'title' => 'Credentials (FI)',
-				'type'  => 'title',
-			),
-			'title_fi' => array(
-				'title'       => __( 'Payment method title (FI)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for FI purchases.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'merchant_id_fi' => array(
-				'title'       => __( 'Live merchant ID (FI)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'shared_secret_fi' => array(
-				'title'       => __( 'Live shared secret (FI)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_merchant_id_fi' => array(
-				'title'       => __( 'Test merchant ID (FI)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_shared_secret_fi' => array(
-				'title'       => __( 'Test shared secret (FI)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-
-
-			// DK credentials.
-			'credentials_dk' => array(
-				'title' => 'Credentials (DK)',
-				'type'  => 'title',
-			),
-			'title_dk' => array(
-				'title'       => __( 'Payment method title (DK)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for DK purchases.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'merchant_id_dk' => array(
-				'title'       => __( 'Live merchant ID (DK)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'shared_secret_dk' => array(
-				'title'       => __( 'Live shared secret (DK)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_merchant_id_dk' => array(
-				'title'       => __( 'Test merchant ID (DK)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_shared_secret_dk' => array(
-				'title'       => __( 'Test shared secret (DK)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-
-			// NL credentials.
-			'credentials_nl' => array(
-				'title' => 'Credentials (NL)',
-				'type'  => 'title',
-			),
-			'title_nl' => array(
-				'title'       => __( 'Payment method title (NL)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for NL purchases.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'merchant_id_nl' => array(
-				'title'       => __( 'Live merchant ID (NL)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NL.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'shared_secret_nl' => array(
-				'title'       => __( 'Live shared secret (NL)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NL.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_merchant_id_nl' => array(
-				'title'       => __( 'Test merchant ID (NL)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NL.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'test_shared_secret_nl' => array(
-				'title'       => __( 'Test shared secret (NL)', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'text',
-				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NL.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-
-			// AT credentials.
+			// AT.
 			'credentials_at' => array(
 				'title' => 'Credentials (AT)',
 				'type'  => 'title',
@@ -383,7 +125,89 @@ class Klarna_Payments_Form_Fields {
 				'desc_tip'    => true,
 			),
 
-			// DE credentials.
+			// DK.
+			'credentials_dk' => array(
+				'title' => 'Credentials (DK)',
+				'type'  => 'title',
+			),
+			'title_dk' => array(
+				'title'       => __( 'Payment method title (DK)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'If this option is used, default payment method title will be overriden for DK purchases.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'merchant_id_dk' => array(
+				'title'       => __( 'Live merchant ID (DK)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'shared_secret_dk' => array(
+				'title'       => __( 'Live shared secret (DK)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_merchant_id_dk' => array(
+				'title'       => __( 'Test merchant ID (DK)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_shared_secret_dk' => array(
+				'title'       => __( 'Test shared secret (DK)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+
+			// FI.
+			'credentials_fi' => array(
+				'title' => 'Credentials (FI)',
+				'type'  => 'title',
+			),
+			'title_fi' => array(
+				'title'       => __( 'Payment method title (FI)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'If this option is used, default payment method title will be overriden for FI purchases.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'merchant_id_fi' => array(
+				'title'       => __( 'Live merchant ID (FI)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'shared_secret_fi' => array(
+				'title'       => __( 'Live shared secret (FI)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_merchant_id_fi' => array(
+				'title'       => __( 'Test merchant ID (FI)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_shared_secret_fi' => array(
+				'title'       => __( 'Test shared secret (FI)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+
+			// DE.
 			'credentials_de' => array(
 				'title' => 'Credentials (DE)',
 				'type'  => 'title',
@@ -424,34 +248,208 @@ class Klarna_Payments_Form_Fields {
 				'desc_tip'    => true,
 			),
 
-			'testmode' => array(
-				'title'       => __( 'Test mode', 'woocommerce-gateway-klarna-payments' ),
-				'label'       => __( 'Enable Test Mode', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'description' => __( 'Place the payment gateway in test mode using test API keys.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => 'yes',
+			// NL.
+			'credentials_nl' => array(
+				'title' => 'Credentials (NL)',
+				'type'  => 'title',
+			),
+			'title_nl' => array(
+				'title'       => __( 'Payment method title (NL)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'If this option is used, default payment method title will be overriden for NL purchases.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
 				'desc_tip'    => true,
 			),
-			'logging' => array(
-				'title'       => __( 'Logging', 'woocommerce-gateway-klarna-payments' ),
-				'label'       => __( 'Log debug messages', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => 'no',
+			'merchant_id_nl' => array(
+				'title'       => __( 'Live merchant ID (NL)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NL.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
 				'desc_tip'    => true,
 			),
-			'float_what_is_klarna' => array(
-				'title'       => __( 'What is Klarna? link', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'label'       => __( 'If checked, What is Klarna? will be floated right.', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => 'yes',
+			'shared_secret_nl' => array(
+				'title'       => __( 'Live shared secret (NL)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NL.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
 				'desc_tip'    => true,
 			),
-			'send_product_urls' => array(
-				'title'       => __( 'Product URLs', 'woocommerce-gateway-klarna-payments' ),
-				'type'        => 'checkbox',
-				'label'       => __( 'Send product and product image URLs to Klarna', 'woocommerce-gateway-klarna-payments' ),
-				'default'     => 'yes',
+			'test_merchant_id_nl' => array(
+				'title'       => __( 'Test merchant ID (NL)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NL.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_shared_secret_nl' => array(
+				'title'       => __( 'Test shared secret (NL)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NL.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+
+			// NO.
+			'credentials_no' => array(
+				'title' => 'Credentials (NO)',
+				'type'  => 'title',
+			),
+			'title_no' => array(
+				'title'       => __( 'Payment method title (NO)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'If this option is used, default payment method title will be overriden for NO purchases.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'merchant_id_no' => array(
+				'title'       => __( 'Live merchant ID (NO)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NO.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'shared_secret_no' => array(
+				'title'       => __( 'Live shared secret (NO)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NO.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_merchant_id_no' => array(
+				'title'       => __( 'Test merchant ID (NO)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NO.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_shared_secret_no' => array(
+				'title'       => __( 'Test shared secret (NO)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for NO.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+
+			// SE.
+			'credentials_se' => array(
+				'title' => 'Credentials (SE)',
+				'type'  => 'title',
+			),
+			'title_se' => array(
+				'title'       => __( 'Payment method title (SE)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'If this option is used, default payment method title will be overriden for SE purchases.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'merchant_id_se' => array(
+				'title'       => __( 'Live merchant ID (SE)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for SE.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'shared_secret_se' => array(
+				'title'       => __( 'Live shared secret (SE)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for SE.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_merchant_id_se' => array(
+				'title'       => __( 'Test merchant ID (SE)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for EU.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_shared_secret_se' => array(
+				'title'       => __( 'Test shared secret (SE)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for SE.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+
+			// UK.
+			'credentials_gb' => array(
+				'title' => 'Credentials (UK)',
+				'type'  => 'title',
+			),
+			'title_gb' => array(
+				'title'       => __( 'Payment method title (UK)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'If this option is used, default payment method title will be overriden for UK purchases.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'merchant_id_gb' => array(
+				'title'       => __( 'Live merchant ID (UK)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for UK.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'shared_secret_gb' => array(
+				'title'       => __( 'Live shared secret (UK)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for UK.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_merchant_id_gb' => array(
+				'title'       => __( 'Test merchant ID (UK)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for UK.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_shared_secret_gb' => array(
+				'title'       => __( 'Test shared secret (UK)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for UK.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+
+			// US.
+			'credentials_us' => array(
+				'title' => 'Credentials (US)',
+				'type'  => 'title',
+			),
+			'title_us' => array(
+				'title'       => __( 'Payment method title (US)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'If this option is used, default payment method title will be overriden for US purchases.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'merchant_id_us' => array(
+				'title'       => __( 'Live merchant ID (US)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'shared_secret_us' => array(
+				'title'       => __( 'Live shared secret (US)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_merchant_id_us' => array(
+				'title'       => __( 'Test merchant ID (US)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			'test_shared_secret_us' => array(
+				'title'       => __( 'Test shared secret (US)', 'woocommerce-gateway-klarna-payments' ),
+				'type'        => 'text',
+				'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'woocommerce-gateway-klarna-payments' ),
+				'default'     => '',
 				'desc_tip'    => true,
 			),
 
