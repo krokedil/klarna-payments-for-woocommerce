@@ -255,6 +255,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'wp_head', array( $this, 'klarna_payments_session' ), 10, 1 );
 		add_action( 'woocommerce_review_order_after_submit', array( $this, 'klarna_payments_session_ajax_update' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
@@ -668,6 +669,28 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
+	}
+
+	/**
+	 * Enqueue admin scripts.
+	 *
+	 * @param string $hook Admin page hook.
+	 *
+	 * @hook admin_enqueue_scripts
+	 */
+	public function admin_enqueue_scripts( $hook ) {
+		if ( 'woocommerce_page_wc-settings' !== $hook ) {
+			return;
+		}
+
+		if ( ! isset( $_GET['section'] ) || 'klarna_payments' !== $_GET['section'] ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'klarna_payments_admin',
+			plugins_url( 'assets/js/klarna-payments-admin.js', WC_KLARNA_PAYMENTS_MAIN_FILE )
+		);
 	}
 
 	/**
