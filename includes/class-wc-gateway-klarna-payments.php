@@ -218,6 +218,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->allow_multiple_countries = 'yes' === $this->get_option( 'allow_multiple_countries' );
 		$this->logging                  = 'yes' === $this->get_option( 'logging' );
 
+		// Country-based method titles.
+		$this->title_us = $this->get_option( 'title_us' );
+		$this->title_gb = $this->get_option( 'title_gb' );
+		$this->title_se = $this->get_option( 'title_se' );
+		$this->title_no = $this->get_option( 'title_no' );
+		$this->title_fi = $this->get_option( 'title_fi' );
+		$this->title_dk = $this->get_option( 'title_dk' );
+		$this->title_nl = $this->get_option( 'title_nl' );
+		$this->title_at = $this->get_option( 'title_at' );
+		$this->title_de = $this->get_option( 'title_de' );
+
 		$this->set_klarna_country();
 		$this->set_environment();
 		$this->set_credentials();
@@ -298,6 +309,64 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Get gateway title.
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public function get_title() {
+		switch ( $this->klarna_country ) {
+			case 'US' :
+				if ( '' !== $this->title_us ) {
+					$this->title = $this->title_us;
+				}
+				break;
+			case 'GB' :
+				if ( '' !== $this->title_gb ) {
+					$this->title = $this->title_gb;
+				}
+				break;
+			case 'SE' :
+				if ( '' !== $this->title_se ) {
+					$this->title = $this->title_se;
+				}
+				break;
+			case 'NO' :
+				if ( '' !== $this->title_no ) {
+					$this->title = $this->title_no;
+				}
+				break;
+			case 'FI' :
+				if ( '' !== $this->title_fi ) {
+					$this->title = $this->title_fi;
+				}
+				break;
+			case 'DK' :
+				if ( '' !== $this->title_dk ) {
+					$this->title = $this->title_dk;
+				}
+				break;
+			case 'NL' :
+				if ( '' !== $this->title_nl ) {
+					$this->title = $this->title_nl;
+				}
+				break;
+			case 'AT' :
+				if ( '' !== $this->title_at ) {
+					$this->title = $this->title_at;
+				}
+				break;
+			case 'DE' :
+				if ( '' !== $this->title_de ) {
+					$this->title = $this->title_de;
+				}
+				break;
+		} // End switch().
+
+		return apply_filters( 'woocommerce_gateway_title', $this->title, $this->id );
+	}
+
+	/**
 	 * Get gateway icon.
 	 *
 	 * @access public
@@ -323,7 +392,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		$icon_html = '<img src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/black.png?width=68" alt="Klarna" />';
-
 		$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );

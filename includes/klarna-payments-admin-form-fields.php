@@ -54,11 +54,11 @@ class Klarna_Payments_Form_Fields {
 			),
 
 			// US credentials.
-			'us_credentials' => array(
+			'credentials_us' => array(
 				'title' => 'Credentials (US)',
 				'type'  => 'title',
 			),
-			'us_title' => array(
+			'title_us' => array(
 				'title'       => __( 'Payment method title (US)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'If this option is used, default payment method title will be overriden for US purchases.', 'woocommerce-gateway-klarna-payments' ),
@@ -96,11 +96,11 @@ class Klarna_Payments_Form_Fields {
 
 			// Europe.
 			// GB credentials.
-			'gb_credentials' => array(
+			'credentials_gb' => array(
 				'title' => 'Credentials (GB)',
 				'type'  => 'title',
 			),
-			'gb_title' => array(
+			'title_gb' => array(
 				'title'       => __( 'Payment method title (GB)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'If this option is used, default payment method title will be overriden for GB purchases.', 'woocommerce-gateway-klarna-payments' ),
@@ -137,11 +137,11 @@ class Klarna_Payments_Form_Fields {
 			),
 
 			// SE credentials.
-			'se_credentials' => array(
+			'credentials_se' => array(
 				'title' => 'Credentials (SE)',
 				'type'  => 'title',
 			),
-			'se_title' => array(
+			'title_se' => array(
 				'title'       => __( 'Payment method title (SE)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'If this option is used, default payment method title will be overriden for SE purchases.', 'woocommerce-gateway-klarna-payments' ),
@@ -178,11 +178,11 @@ class Klarna_Payments_Form_Fields {
 			),
 
 			// NO credentials.
-			'no_credentials' => array(
+			'credentials_no' => array(
 				'title' => 'Credentials (NO)',
 				'type'  => 'title',
 			),
-			'no_title' => array(
+			'title_no' => array(
 				'title'       => __( 'Payment method title (NO)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'If this option is used, default payment method title will be overriden for NO purchases.', 'woocommerce-gateway-klarna-payments' ),
@@ -219,11 +219,11 @@ class Klarna_Payments_Form_Fields {
 			),
 
 			// FI credentials.
-			'fi_credentials' => array(
+			'credentials_fi' => array(
 				'title' => 'Credentials (FI)',
 				'type'  => 'title',
 			),
-			'fi_title' => array(
+			'title_fi' => array(
 				'title'       => __( 'Payment method title (FI)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'If this option is used, default payment method title will be overriden for FI purchases.', 'woocommerce-gateway-klarna-payments' ),
@@ -261,11 +261,11 @@ class Klarna_Payments_Form_Fields {
 
 
 			// DK credentials.
-			'dk_credentials' => array(
+			'credentials_dk' => array(
 				'title' => 'Credentials (DK)',
 				'type'  => 'title',
 			),
-			'dk_title' => array(
+			'title_dk' => array(
 				'title'       => __( 'Payment method title (DK)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'If this option is used, default payment method title will be overriden for DK purchases.', 'woocommerce-gateway-klarna-payments' ),
@@ -302,11 +302,11 @@ class Klarna_Payments_Form_Fields {
 			),
 
 			// NL credentials.
-			'nl_credentials' => array(
+			'credentials_nl' => array(
 				'title' => 'Credentials (NL)',
 				'type'  => 'title',
 			),
-			'nl_title' => array(
+			'title_nl' => array(
 				'title'       => __( 'Payment method title (NL)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'If this option is used, default payment method title will be overriden for NL purchases.', 'woocommerce-gateway-klarna-payments' ),
@@ -343,11 +343,11 @@ class Klarna_Payments_Form_Fields {
 			),
 
 			// AT credentials.
-			'at_credentials' => array(
+			'credentials_at' => array(
 				'title' => 'Credentials (AT)',
 				'type'  => 'title',
 			),
-			'at_title' => array(
+			'title_at' => array(
 				'title'       => __( 'Payment method title (AT)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'If this option is used, default payment method title will be overriden for AT purchases.', 'woocommerce-gateway-klarna-payments' ),
@@ -384,11 +384,11 @@ class Klarna_Payments_Form_Fields {
 			),
 
 			// DE credentials.
-			'de_credentials' => array(
+			'credentials_de' => array(
 				'title' => 'Credentials (DE)',
 				'type'  => 'title',
 			),
-			'de_title' => array(
+			'title_de' => array(
 				'title'       => __( 'Payment method title (DE)', 'woocommerce-gateway-klarna-payments' ),
 				'type'        => 'text',
 				'description' => __( 'If this option is used, default payment method title will be overriden for DE purchases.', 'woocommerce-gateway-klarna-payments' ),
