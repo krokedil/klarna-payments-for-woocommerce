@@ -948,6 +948,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_locale_for_klarna_country() {
+		if ( 'en_US' === get_locale() ) {
+			return 'en-us';
+		}
+
+		if ( 'en_GB' === get_locale() ) {
+			return 'en-gb';
+		}
+
 		switch ( $this->klarna_country ) {
 			case 'AT':
 				return 'de-at';
