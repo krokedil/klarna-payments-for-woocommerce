@@ -171,7 +171,7 @@ jQuery( function( $ ) {
 
 			return $defer.promise();
 		},
-		
+
 		check_required_fields: function() {
 			var input_value;
 			var input_flag = false;
@@ -241,7 +241,6 @@ jQuery( function( $ ) {
 		},
 
 		getAddress: function() {
-
 			var address = {
 				billing_address: {
 					given_name : $('#billing_first_name').val(),
