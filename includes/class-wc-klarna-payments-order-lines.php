@@ -2,6 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
 /**
  * WC_Klarna_Payments_Order_Lines class.
  *
@@ -72,8 +73,8 @@ class WC_Klarna_Payments_Order_Lines {
 		$this->process_fees();
 
 		return array(
-			'order_lines' => $this->order_lines,
-			'order_amount' => $this->order_amount,
+			'order_lines'      => $this->order_lines,
+			'order_amount'     => $this->order_amount,
 			'order_tax_amount' => $this->order_tax_amount,
 		);
 	}
@@ -110,9 +111,9 @@ class WC_Klarna_Payments_Order_Lines {
 					}
 				}
 
-				$this->order_lines[] = $klarna_item;
+				$this->order_lines[]    = $klarna_item;
 				$this->order_tax_amount += $this->get_item_tax_amount( $cart_item );
-				$this->order_amount += $this->get_item_quantity( $cart_item ) * $this->get_item_price( $cart_item ) - $this->get_item_discount_amount( $cart_item );
+				$this->order_amount     += $this->get_item_quantity( $cart_item ) * $this->get_item_price( $cart_item ) - $this->get_item_discount_amount( $cart_item );
 			}
 		}
 	}
@@ -133,9 +134,9 @@ class WC_Klarna_Payments_Order_Lines {
 				'total_tax_amount' => $this->get_shipping_tax_amount(),
 			);
 
-			$this->order_lines[] = $shipping;
+			$this->order_lines[]    = $shipping;
 			$this->order_tax_amount += $this->get_shipping_tax_amount();
-			$this->order_amount += $this->get_shipping_amount();
+			$this->order_amount     += $this->get_shipping_amount();
 		}
 	}
 
@@ -161,7 +162,7 @@ class WC_Klarna_Payments_Order_Lines {
 
 			$this->order_lines[]    = $sales_tax;
 			$this->order_tax_amount = $sales_tax_amount;
-			$this->order_amount    += $sales_tax_amount;
+			$this->order_amount     += $sales_tax_amount;
 		}
 	}
 
@@ -171,15 +172,15 @@ class WC_Klarna_Payments_Order_Lines {
 	public function process_coupons() {
 		if ( ! empty( WC()->cart->get_coupons() ) ) {
 			foreach ( WC()->cart->get_coupons() as $coupon_key => $coupon ) {
-				$coupon_reference = '';
-				$coupon_amount = 0;
+				$coupon_reference  = '';
+				$coupon_amount     = 0;
 				$coupon_tax_amount = '';
 
 				// Smart coupons are processed as real line items, cart and product discounts sent for reference only.
 				if ( 'smart_coupon' === $coupon->get_discount_type() ) {
-					$coupon_amount = - WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100;
+					$coupon_amount     = - WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100;
 					$coupon_tax_amount = - WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100;
-					$coupon_reference = 'Discount';
+					$coupon_reference  = 'Discount';
 				} else {
 					if ( 'US' === $this->shop_country ) {
 						$coupon_amount     = 0;
@@ -289,6 +290,7 @@ class WC_Klarna_Payments_Order_Lines {
 		} else {
 			$item_tax_amount = $cart_item['line_tax'] * 100;
 		}
+
 		return round( $item_tax_amount );
 	}
 
@@ -431,7 +433,7 @@ class WC_Klarna_Payments_Order_Lines {
 		$image_url = false;
 
 		if ( $product->get_image_id() > 0 ) {
-			$image_id = $product->get_image_id();
+			$image_id  = $product->get_image_id();
 			$image_url = wp_get_attachment_image_url( $image_id, 'shop_thumbnail', false );
 		}
 

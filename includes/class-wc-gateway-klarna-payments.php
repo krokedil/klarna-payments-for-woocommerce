@@ -218,7 +218,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->allow_multiple_countries = 'yes' === $this->get_option( 'allow_multiple_countries' );
 		$this->logging                  = 'yes' === $this->get_option( 'logging' );
 
-		// Country-based method titles.
+		// Country-based method titles and descriptions.
 		$this->title_us = $this->get_option( 'title_us' );
 		$this->title_gb = $this->get_option( 'title_gb' );
 		$this->title_se = $this->get_option( 'title_se' );
@@ -228,6 +228,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->title_nl = $this->get_option( 'title_nl' );
 		$this->title_at = $this->get_option( 'title_at' );
 		$this->title_de = $this->get_option( 'title_de' );
+		$this->description_us = $this->get_option( 'description_us' );
+		$this->description_gb = $this->get_option( 'description_gb' );
+		$this->description_se = $this->get_option( 'description_se' );
+		$this->description_no = $this->get_option( 'description_no' );
+		$this->description_fi = $this->get_option( 'description_fi' );
+		$this->description_dk = $this->get_option( 'description_dk' );
+		$this->description_nl = $this->get_option( 'description_nl' );
+		$this->description_at = $this->get_option( 'description_at' );
+		$this->description_de = $this->get_option( 'description_de' );
 
 		$this->set_klarna_country();
 		$this->set_environment();
@@ -364,6 +373,64 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		} // End switch().
 
 		return apply_filters( 'woocommerce_gateway_title', $this->title, $this->id );
+	}
+
+	/**
+	 * Get gateway description.
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public function get_description() {
+		switch ( $this->klarna_country ) {
+			case 'US' :
+				if ( '' !== $this->description_us ) {
+					$this->description = $this->description_us;
+				}
+				break;
+			case 'GB' :
+				if ( '' !== $this->description_gb ) {
+					$this->description = $this->description_gb;
+				}
+				break;
+			case 'SE' :
+				if ( '' !== $this->description_se ) {
+					$this->description = $this->description_se;
+				}
+				break;
+			case 'NO' :
+				if ( '' !== $this->description_no ) {
+					$this->description = $this->description_no;
+				}
+				break;
+			case 'FI' :
+				if ( '' !== $this->description_fi ) {
+					$this->description = $this->description_fi;
+				}
+				break;
+			case 'DK' :
+				if ( '' !== $this->description_dk ) {
+					$this->description = $this->description_dk;
+				}
+				break;
+			case 'NL' :
+				if ( '' !== $this->description_nl ) {
+					$this->description = $this->description_nl;
+				}
+				break;
+			case 'AT' :
+				if ( '' !== $this->description_at ) {
+					$this->description = $this->description_at;
+				}
+				break;
+			case 'DE' :
+				if ( '' !== $this->description_de ) {
+					$this->description = $this->description_de;
+				}
+				break;
+		} // End switch().
+
+		return apply_filters( 'woocommerce_gateway_description', $this->description, $this->id );
 	}
 
 	/**
