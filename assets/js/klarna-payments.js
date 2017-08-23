@@ -11,6 +11,10 @@ jQuery( function( $ ) {
 			// Add page visibility listener to handle tab changes.
 			klarna_payments.page_visibility_listener();
 
+			/**
+			 * When WooCommerce updates checkout
+			 * Happens on initial page load, country, state and postal code changes
+			 */
 			$('body').on('updated_checkout', function() {
 				// Unblock the payments element if blocked
 				var blocked_el = $('.woocommerce-checkout-payment');
@@ -29,17 +33,22 @@ jQuery( function( $ ) {
 				}
 			});
 
+			/**
+			 * When any of the checkout form fields changes, if Klarna Payments is the selected option
+			 */
 			$('form.checkout').on('change', 'input, select', function() {
-				if ( 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val() ) {
-					if ( klarna_payments.check_required_fields() ) {
-						$('#place_order').attr('disabled', true);
+				if ('klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
+					if ('billing_email' === $(this).attr('name') || 'billing_phone' === $(this).attr('name')) {
+						if (klarna_payments.check_required_fields()) {
+							$('#place_order').attr('disabled', true);
 
-						klarna_payments.load().then(klarna_payments.loadHandler);
+							klarna_payments.load().then(klarna_payments.loadHandler);
+						}
 					}
 				}
 
 				// When changing payment method.
-				if ( 'payment_method' === $(this).attr('name') ) {
+				if ('payment_method' === $(this).attr('name')) {
 					// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
 					if (!klarna_payments.show_form && 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
 						$('#place_order').attr('disabled', true);
@@ -52,7 +61,9 @@ jQuery( function( $ ) {
 				}
 			});
 
-			// Need to do this for form auto-fill (no change event).
+			/**
+			 * Do this every 100ms in case browser auto-fill changes form fields.
+			 */
 			var checkFormInterval = setInterval(function () {
 				if (klarna_payments.show_form) {
 					clearInterval(checkFormInterval);
