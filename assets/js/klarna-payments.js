@@ -1,4 +1,4 @@
-jQuery( function( $ ) {
+jQuery( function($) {
 	'use strict';
 
 	var klarna_payments = {
@@ -6,10 +6,47 @@ jQuery( function( $ ) {
 		iframe_loaded: false,
 		show_form: false,
 		klarna_container_selector: '#klarna_container',
+		checkout_values: {},
+
+		check_changes: function() {
+			$('#customer_details input, #customer_details select').each(function() {
+				var fieldName = $(this).attr('name');
+				var fieldValue = $(this).val();
+
+				if ( klarna_payments.checkout_values[ fieldName ] !== fieldValue ) {
+					klarna_payments.checkout_values[ fieldName ] = fieldValue;
+					$(this).trigger('change');
+				}
+			});
+		},
+
+		debounce_changes: function(func, wait, immediate) {
+			var timeout;
+			return function() {
+				var context = this, args = arguments;
+				var later = function() {
+					timeout = null;
+					if (!immediate) func.apply(context, args);
+				};
+				var callNow = immediate && !timeout;
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+				if (callNow) func.apply(context, args);
+			};
+		},
 
 		start: function() {
 			// Add page visibility listener to handle tab changes.
 			klarna_payments.page_visibility_listener();
+
+			// Store all billing and shipping values.
+			$(document).ready(function() {
+				$('#customer_details input, #customer_details select').each(function() {
+					var fieldName = $(this).attr('name');
+					var fieldValue = $(this).val();
+					klarna_payments.checkout_values[ fieldName ] = fieldValue;
+				});
+			});
 
 			/**
 			 * When WooCommerce updates checkout
@@ -26,40 +63,46 @@ jQuery( function( $ ) {
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
 				if ( 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val() ) {
 					$('#place_order').attr('disabled', true);
-
-					if ( klarna_payments.check_required_fields() ) {
-						klarna_payments.load().then(klarna_payments.loadHandler);
-					}
+					klarna_payments.load().then(klarna_payments.loadHandler);
 				}
 			});
 
 			/**
-			 * When any of the checkout form fields changes, if Klarna Payments is the selected option
+			 * When any of the checkout form fields changes, if Klarna Payments is the selected option.
 			 */
-			$('form.checkout').on('change', 'input, select', function() {
-				if ('klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
-					if ('billing_email' === $(this).attr('name') || 'billing_phone' === $(this).attr('name')) {
-						if (klarna_payments.check_required_fields()) {
-							$('#place_order').attr('disabled', true);
-
-							klarna_payments.load().then(klarna_payments.loadHandler);
-						}
-					}
-				}
-
-				// When changing payment method.
-				if ('payment_method' === $(this).attr('name')) {
-					// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
-					if (!klarna_payments.show_form && 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
-						$('#place_order').attr('disabled', true);
-					}
-
-					// Enable the form if any other payment method is selected.
-					if ('klarna_payments' !== jQuery('input[name="payment_method"]:checked').val()) {
-						$('#place_order').attr('disabled', false);
-					}
+			$('form.checkout').on('change', '.woocommerce-billing-fields input, .woocommerce-billing-fields select', function() {
+				// Make sure all WC required fields are populated.
+				if ( ! klarna_payments.check_required_fields() ) {
+					$('#place_order').attr('disabled', true);
+				} else {
+					$('#place_order').attr('disabled', false);
 				}
 			});
+
+			$('form.checkout').on('keyup', '#billing_email, #billing_phone', klarna_payments.debounce_changes(function() {
+				console.log('fire');
+				if ('klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
+					$('#place_order').attr('disabled', true);
+					klarna_payments.load().then(klarna_payments.loadHandler);
+				}
+			}, 500));
+
+			/**
+			 * When changing payment method.
+ 			 */
+			$('form.checkout').on('change', 'input[name="payment_method"]', function() {
+				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
+				if (!klarna_payments.show_form && 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
+					$('#place_order').attr('disabled', true);
+					klarna_payments.load().then(klarna_payments.loadHandler);
+				}
+
+				// Enable the form if any other payment method is selected.
+				if ('klarna_payments' !== jQuery('input[name="payment_method"]:checked').val()) {
+					$('#place_order').attr('disabled', false);
+				}
+			});
+
 
 			/**
 			 * Do this every 100ms in case browser auto-fill changes form fields.
@@ -70,15 +113,9 @@ jQuery( function( $ ) {
 				}
 
 				if ( 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val() ) {
-					if ( klarna_payments.check_required_fields() ) {
-						$('#place_order').attr('disabled', true);
-
-						clearInterval(checkFormInterval);
-
-						klarna_payments.load().then(klarna_payments.loadHandler);
-					}
+					klarna_payments.check_changes();
 				}
-			}, 100);
+			}, 200);
 
 			/**
 			 * Hooking into WooCommerce.
@@ -131,7 +168,7 @@ jQuery( function( $ ) {
 						};
 
 						if ( 'US' === $('#billing_country').val() ) {
-							var address = klarna_payments.getAddress();
+							var address = klarna_payments.get_address();
 
 							Klarna.Credit.load(
 								options,
@@ -165,13 +202,15 @@ jQuery( function( $ ) {
 
 			if (response.show_form) {
 				klarna_payments.show_form = true;
-				$('#place_order').attr('disabled', false);
+				if ( klarna_payments.check_required_fields() ) {
+					$('#place_order').attr('disabled', false);
+				}
 			}
 		},
 
 		authorize: function() {
 			var $defer = $.Deferred();
-			var address = klarna_payments.getAddress();
+			var address = klarna_payments.get_address();
 
 			klarna_payments.authorization_response = {};
 
@@ -251,7 +290,7 @@ jQuery( function( $ ) {
 			}
 		},
 
-		getAddress: function() {
+		get_address: function() {
 			var address = {
 				billing_address: {
 					given_name : $('#billing_first_name').val(),
