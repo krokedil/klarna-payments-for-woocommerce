@@ -56,7 +56,7 @@ jQuery( function($) {
 				// Unblock the payments element if blocked
 				var blocked_el = $('.woocommerce-checkout-payment');
 				var blocked_el_data = blocked_el.data();
-				if ( blocked_el.length && 1 === blocked_el_data['blockUI.isBlocked'] ) {
+				if (blocked_el.length && 1 === blocked_el_data['blockUI.isBlocked']) {
 					blocked_el.unblock();
 				}
 
@@ -72,20 +72,36 @@ jQuery( function($) {
 			 */
 			$('form.checkout').on('change', '.woocommerce-billing-fields input, .woocommerce-billing-fields select', function() {
 				// Make sure all WC required fields are populated.
-				if ( ! klarna_payments.check_required_fields() ) {
+				if (!klarna_payments.check_required_fields()) {
 					$('#place_order').attr('disabled', true);
 				} else {
 					$('#place_order').attr('disabled', false);
 				}
 			});
 
-			$('form.checkout').on('keyup', '#billing_email, #billing_phone', klarna_payments.debounce_changes(function() {
-				console.log('fire');
+			/**
+			 * Phone field changes. Has to be 5 characters or longer for KP to work.
+			 */
+			$('form.checkout').on('keyup', '#billing_phone', klarna_payments.debounce_changes(function() {
 				if ('klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
 					$('#place_order').attr('disabled', true);
-					klarna_payments.load().then(klarna_payments.loadHandler);
+					if ($(this).val().length > 4) {
+						klarna_payments.load().then(klarna_payments.loadHandler);
+					}
 				}
-			}, 500));
+			}, 750));
+
+			/**
+			 * Email field changes, check if WooCommerce says field is valid.
+			 */
+			$('form.checkout').on('keyup', '#billing_email', klarna_payments.debounce_changes(function() {
+				if ('klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
+					$('#place_order').attr('disabled', true);
+					if (!$(this).parent().hasClass('woocommerce-invalid')) {
+						klarna_payments.load().then(klarna_payments.loadHandler);
+					}
+				}
+			}, 750));
 
 			/**
 			 * When changing payment method.
