@@ -2,3 +2,5 @@
 .gitignore
 .jshintrc
 readme.dev.txt
+.kernlignore
+kernl.version
