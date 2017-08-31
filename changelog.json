@@ -1,0 +1,6 @@
+{
+  "1.0.1": {
+    "description" : "<ul><li>Automatic updates.</li></ul>",
+    "upgrade_notice" : "Update now so you can have access to automatic updates for future versions."
+  }
+}
