@@ -27,6 +27,9 @@ define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __
 
 if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
+	/**
+	 * Class WC_Klarna_Payments
+	 */
 	class WC_Klarna_Payments {
 
 		/**
@@ -89,7 +92,10 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
-			add_filter( 'woocommerce_process_checkout_field_billing_phone', array( $this, 'maybe_filter_billing_phone' ) );
+			add_filter( 'woocommerce_process_checkout_field_billing_phone', array(
+				$this,
+				'maybe_filter_billing_phone'
+			) );
 		}
 
 		/**
@@ -222,6 +228,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					$phone_value = trim( preg_replace( '/[^\s\#0-9_\-\+\/\(\)]/', '', $phone_value ) );
 				}
 			}
+
 			return $phone_value;
 		}
 	}
