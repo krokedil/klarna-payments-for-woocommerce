@@ -68,6 +68,13 @@ jQuery( function($) {
 			});
 
 			/**
+			 * Clear auth token if there's checkout error.
+			 */
+			$( document.body ).on( 'checkout_error', function() {
+				$('input[name="klarna_payments_authorization_token"]').remove();
+			});
+
+			/**
 			 * When any of the checkout form fields changes, if Klarna Payments is the selected option.
 			 */
 			$('form.checkout').on('change', '.woocommerce-billing-fields input, .woocommerce-billing-fields select', function() {
