@@ -1,18 +1,8 @@
 {
-  "1.0.2" : {
-    "description" : "<ul><li>Version 1.0.3</li><li>Something else</li></ul>",
+  "1.1.0" : {
+    "description" : "Adds automatic updates",
     "requires" : "4.7.0",
     "tested" : "4.7.3",
-    "upgrade_notice" : "Testing changelog"
-  },
-  "1.0.2" : {
-    "description" : "Version 1.0.2",
-    "requires" : "4.7.0",
-    "tested" : "4.7.3",
-    "upgrade_notice" : "Testing changelog"
-  },
-  "1.0.1": {
-    "description" : "<ul><li>Automatic updates.</li></ul>",
-    "upgrade_notice" : "Update now so you can have access to automatic updates for future versions."
+    "upgrade_notice" : "Please update"
   }
 }
