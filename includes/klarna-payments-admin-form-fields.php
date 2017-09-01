@@ -45,14 +45,6 @@ class Klarna_Payments_Form_Fields {
 				'desc_tip'    => true,
 			),
 
-			'allow_multiple_countries' => array(
-				'title'    => __( 'Offer Klarna Payments across multiple countries?', 'woocommerce-gateway-klarna-payments' ),
-				'type'     => 'checkbox',
-				'label'    => __( 'If checked, credentials for Klarna Payments will be used for each country where credentials are entered. If not checked, only the shop\'s base location country\'s credentials will be used.', 'woocommerce-gateway-klarna-payments' ),
-				'default'  => 'no',
-				'desc_tip' => true,
-			),
-
 			'testmode'              => array(
 				'title'       => __( 'Test mode', 'woocommerce-gateway-klarna-payments' ),
 				'label'       => __( 'Enable Test Mode', 'woocommerce-gateway-klarna-payments' ),

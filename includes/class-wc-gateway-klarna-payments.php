@@ -24,13 +24,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $testmode = 'no';
 
 	/**
-	 * Allow purchases from multiple countries.
-	 *
-	 * @var string
-	 */
-	public $allow_multiple_countries = 'no';
-
-	/**
 	 * Klarna payments environment (US or EU).
 	 *
 	 * @var string
@@ -215,7 +208,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->description              = $this->get_option( 'description', '' );
 		$this->enabled                  = $this->get_option( 'enabled' );
 		$this->testmode                 = 'yes' === $this->get_option( 'testmode' );
-		$this->allow_multiple_countries = 'yes' === $this->get_option( 'allow_multiple_countries' );
 		$this->logging                  = 'yes' === $this->get_option( 'logging' );
 
 		// Country-based method titles and descriptions.
@@ -1146,11 +1138,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
-		if ( $this->allow_multiple_countries ) {
-			$this->klarna_country = WC()->checkout()->get_value( 'billing_country' );
-		} else {
-			$this->klarna_country = $this->shop_country;
-		}
+		$this->klarna_country = WC()->checkout()->get_value( 'billing_country' );
 	}
 
 	/**
