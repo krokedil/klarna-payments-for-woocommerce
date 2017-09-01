@@ -322,13 +322,20 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return integer $item_tax_rate Item tax percentage formatted for Klarna.
 	 */
 	private function get_item_tax_rate( $cart_item, $product ) {
-		// We manually calculate the tax percentage here.
 		if ( $product->is_taxable() && $cart_item['line_subtotal_tax'] > 0 ) {
 			// Calculate tax rate.
 			if ( $this->separate_sales_tax ) {
 				$item_tax_rate = 0;
 			} else {
-				$item_tax_rate = round( $cart_item['line_subtotal_tax'] / $cart_item['line_subtotal'] * 100 * 100 );
+				$_tax      = new WC_Tax();
+				$tmp_rates = $_tax->get_rates( $product->get_tax_class() );
+				$vat       = array_shift( $tmp_rates );
+
+				if ( isset( $vat['rate'] ) ) {
+					$item_tax_rate = round( $vat['rate'] * 100 );
+				} else {
+					$item_tax_rate = 0;
+				}
 			}
 		} else {
 			$item_tax_rate = 0;
