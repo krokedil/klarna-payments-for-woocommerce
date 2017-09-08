@@ -17,35 +17,21 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @var $order_lines
 	 */
-	public $order_lines = array();
-
-	/**
-	 * Formatted order lines.
-	 *
-	 * @var $order_lines
-	 */
-	public $order_amount = 0;
-
-	/**
-	 * Formatted order lines.
-	 *
-	 * @var $order_lines
-	 */
-	public $order_tax_amount = 0;
+	private $order_lines = array();
 
 	/**
 	 * Shop country.
 	 *
 	 * @var string
 	 */
-	public $shop_country;
+	private $shop_country;
 
 	/**
 	 * Send sales tax as separate item (US merchants).
 	 *
 	 * @var bool
 	 */
-	public $separate_sales_tax = false;
+	private $separate_sales_tax = false;
 
 	/**
 	 * WC_Klarna_Payments_Order_Lines constructor.
@@ -73,16 +59,48 @@ class WC_Klarna_Payments_Order_Lines {
 		$this->process_fees();
 
 		return array(
-			'order_lines'      => $this->order_lines,
-			'order_amount'     => $this->order_amount,
-			'order_tax_amount' => $this->order_tax_amount,
+			'order_lines'      => $this->get_order_lines(),
+			'order_amount'     => $this->get_order_amount(),
+			'order_tax_amount' => $this->get_order_tax_amount(),
 		);
 	}
 
 	/**
-	 * Process WooCommerce cart to Klarna Payments order lines.
+	 * Get order lines formatted for Klarna API.
+	 *
+	 * @access private
+	 * @return mixed
 	 */
-	public function process_cart() {
+	private function get_order_lines() {
+		return $this->order_lines;
+	}
+
+	/**
+	 * Get order total amount for Klarna API.
+	 *
+	 * @access private
+	 * @return mixed
+	 */
+	private function get_order_amount() {
+		return round( WC()->cart->total * 100 );
+	}
+
+	/**
+	 * Get order tax amount for Klarna API.
+	 *
+	 * @access private
+	 * @return mixed
+	 */
+	private function get_order_tax_amount() {
+		return round( ( WC()->cart->tax_total + WC()->cart->shipping_tax_total ) * 100 );
+	}
+
+	/**
+	 * Process WooCommerce cart to Klarna Payments order lines.
+	 *
+	 * @access private
+	 */
+	private function process_cart() {
 		foreach ( WC()->cart->get_cart() as $cart_item ) {
 			if ( $cart_item['quantity'] ) {
 				if ( $cart_item['variation_id'] ) {
@@ -111,17 +129,17 @@ class WC_Klarna_Payments_Order_Lines {
 					}
 				}
 
-				$this->order_lines[]    = $klarna_item;
-				$this->order_tax_amount += $this->get_item_tax_amount( $cart_item );
-				$this->order_amount     += $this->get_item_quantity( $cart_item ) * $this->get_item_price( $cart_item ) - $this->get_item_discount_amount( $cart_item );
+				$this->order_lines[] = $klarna_item;
 			}
 		}
 	}
 
 	/**
 	 * Process WooCommerce shipping to Klarna Payments order lines.
+	 *
+	 * @access private
 	 */
-	public function process_shipping() {
+	private function process_shipping() {
 		if ( WC()->shipping->get_packages() && WC()->session->get( 'chosen_shipping_methods' ) ) {
 			$shipping = array(
 				'type'             => 'shipping_fee',
@@ -134,16 +152,16 @@ class WC_Klarna_Payments_Order_Lines {
 				'total_tax_amount' => $this->get_shipping_tax_amount(),
 			);
 
-			$this->order_lines[]    = $shipping;
-			$this->order_tax_amount += $this->get_shipping_tax_amount();
-			$this->order_amount     += $this->get_shipping_amount();
+			$this->order_lines[] = $shipping;
 		}
 	}
 
 	/**
 	 * Process sales tax for US.
+	 *
+	 * @access private
 	 */
-	public function process_sales_tax() {
+	private function process_sales_tax() {
 		if ( $this->separate_sales_tax ) {
 			$sales_tax_amount = round( ( WC()->cart->tax_total + WC()->cart->shipping_tax_total ) * 100 );
 
@@ -160,16 +178,16 @@ class WC_Klarna_Payments_Order_Lines {
 				'total_tax_amount'      => 0,
 			);
 
-			$this->order_lines[]    = $sales_tax;
-			$this->order_tax_amount = $sales_tax_amount;
-			$this->order_amount     += $sales_tax_amount;
+			$this->order_lines[] = $sales_tax;
 		}
 	}
 
 	/**
 	 * Process smart coupons.
+	 *
+	 * @access private
 	 */
-	public function process_coupons() {
+	private function process_coupons() {
 		if ( ! empty( WC()->cart->get_coupons() ) ) {
 			foreach ( WC()->cart->get_coupons() as $coupon_key => $coupon ) {
 				$coupon_reference  = '';
@@ -212,9 +230,7 @@ class WC_Klarna_Payments_Order_Lines {
 						'total_tax_amount'      => $coupon_tax_amount,
 					);
 
-					$this->order_lines[]    = $discount;
-					$this->order_tax_amount += $coupon_tax_amount;
-					$this->order_amount     += $coupon_amount;
+					$this->order_lines[] = $discount;
 				}
 			} // End foreach().
 		} // End if().
@@ -222,8 +238,10 @@ class WC_Klarna_Payments_Order_Lines {
 
 	/**
 	 * Process fees.
+	 *
+	 * @access private
 	 */
-	public function process_fees() {
+	private function process_fees() {
 		if ( ! empty( WC()->cart->get_fees() ) ) {
 			foreach ( WC()->cart->get_fees() as $cart_fee ) {
 				$fee = array(
@@ -238,9 +256,7 @@ class WC_Klarna_Payments_Order_Lines {
 					'total_tax_amount'      => 0,
 				);
 
-				$this->order_lines[]    = $fee;
-				$this->order_tax_amount += 0;
-				$this->order_amount     += $cart_fee->amount * 100;
+				$this->order_lines[] = $fee;
 			}
 		}
 	}
@@ -252,13 +268,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get cart item name.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @param  array $cart_item Cart item.
 	 *
 	 * @return string $item_name Cart item name.
 	 */
-	public function get_item_name( $cart_item ) {
+	private function get_item_name( $cart_item ) {
 		$cart_item_data = $cart_item['data'];
 		$item_name      = $cart_item_data->get_title();
 
@@ -278,13 +294,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Calculate item tax percentage.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @param  array $cart_item Cart item.
 	 *
 	 * @return integer $item_tax_amount Item tax amount.
 	 */
-	public function get_item_tax_amount( $cart_item ) {
+	private function get_item_tax_amount( $cart_item ) {
 		if ( $this->separate_sales_tax ) {
 			$item_tax_amount = 0;
 		} else {
@@ -298,21 +314,28 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Calculate item tax percentage.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @param  array  $cart_item Cart item.
 	 * @param  object $product Product object.
 	 *
 	 * @return integer $item_tax_rate Item tax percentage formatted for Klarna.
 	 */
-	public function get_item_tax_rate( $cart_item, $product ) {
-		// We manually calculate the tax percentage here.
+	private function get_item_tax_rate( $cart_item, $product ) {
 		if ( $product->is_taxable() && $cart_item['line_subtotal_tax'] > 0 ) {
 			// Calculate tax rate.
 			if ( $this->separate_sales_tax ) {
 				$item_tax_rate = 0;
 			} else {
-				$item_tax_rate = round( $cart_item['line_subtotal_tax'] / $cart_item['line_subtotal'] * 100 * 100 );
+				$_tax      = new WC_Tax();
+				$tmp_rates = $_tax->get_rates( $product->get_tax_class() );
+				$vat       = array_shift( $tmp_rates );
+
+				if ( isset( $vat['rate'] ) ) {
+					$item_tax_rate = round( $vat['rate'] * 100 );
+				} else {
+					$item_tax_rate = 0;
+				}
 			}
 		} else {
 			$item_tax_rate = 0;
@@ -325,13 +348,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get cart item price.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @param  array $cart_item Cart item.
 	 *
 	 * @return integer $item_price Cart item price.
 	 */
-	public function get_item_price( $cart_item ) {
+	private function get_item_price( $cart_item ) {
 		if ( $this->separate_sales_tax ) {
 			$item_subtotal = $cart_item['line_subtotal'];
 		} else {
@@ -347,13 +370,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get cart item quantity.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @param  array $cart_item Cart item.
 	 *
 	 * @return integer $item_quantity Cart item quantity.
 	 */
-	public function get_item_quantity( $cart_item ) {
+	private function get_item_quantity( $cart_item ) {
 		return $cart_item['quantity'];
 	}
 
@@ -363,13 +386,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Returns SKU or product ID.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @param  object $product Product object.
 	 *
 	 * @return string $item_reference Cart item reference.
 	 */
-	public function get_item_reference( $product ) {
+	private function get_item_reference( $product ) {
 		if ( $product->get_sku() ) {
 			$item_reference = $product->get_sku();
 		} else {
@@ -383,13 +406,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get cart item discount.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @param  array $cart_item Cart item.
 	 *
 	 * @return integer $item_discount_amount Cart item discount.
 	 */
-	public function get_item_discount_amount( $cart_item ) {
+	private function get_item_discount_amount( $cart_item ) {
 		if ( $cart_item['line_subtotal'] > $cart_item['line_total'] ) {
 			if ( $this->separate_sales_tax ) {
 				$item_discount_amount = $cart_item['line_subtotal'] - $cart_item['line_total'];
@@ -409,13 +432,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get cart item product URL.
 	 *
 	 * @since  1.1
-	 * @access public
+	 * @access private
 	 *
 	 * @param  WC_Product $product Product.
 	 *
 	 * @return string $item_product_url Cart item product URL.
 	 */
-	public function get_item_product_url( $product ) {
+	private function get_item_product_url( $product ) {
 		return $product->get_permalink();
 	}
 
@@ -423,13 +446,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get cart item product image URL.
 	 *
 	 * @since  1.1
-	 * @access public
+	 * @access private
 	 *
 	 * @param  WC_Product $product Product.
 	 *
 	 * @return string $item_product_image_url Cart item product image URL.
 	 */
-	public function get_item_image_url( $product ) {
+	private function get_item_image_url( $product ) {
 		$image_url = false;
 
 		if ( $product->get_image_id() > 0 ) {
@@ -444,13 +467,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get cart item discount rate.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @param  array $cart_item Cart item.
 	 *
 	 * @return integer $item_discount_rate Cart item discount rate.
 	 */
-	public function get_item_discount_rate( $cart_item ) {
+	private function get_item_discount_rate( $cart_item ) {
 		$item_discount_rate = ( 1 - ( $cart_item['line_total'] / $cart_item['line_subtotal'] ) ) * 100 * 100;
 
 		return round( $item_discount_rate );
@@ -460,13 +483,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get cart item total amount.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @param  array $cart_item Cart item.
 	 *
 	 * @return integer $item_total_amount Cart item total amount.
 	 */
-	public function get_item_total_amount( $cart_item ) {
+	private function get_item_total_amount( $cart_item ) {
 		if ( $this->separate_sales_tax ) {
 			$item_total_amount = ( $cart_item['line_total'] * 100 );
 		} else {
@@ -480,11 +503,11 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get shipping method name.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @return string $shipping_name Name for selected shipping method.
 	 */
-	public function get_shipping_name() {
+	private function get_shipping_name() {
 		$shipping_packages = WC()->shipping->get_packages();
 
 		foreach ( $shipping_packages as $i => $package ) {
@@ -510,11 +533,11 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get shipping reference.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @return string $shipping_reference Reference for selected shipping method.
 	 */
-	public function get_shipping_reference() {
+	private function get_shipping_reference() {
 		$shipping_packages = WC()->shipping->get_packages();
 		foreach ( $shipping_packages as $i => $package ) {
 			$chosen_method = isset( WC()->session->chosen_shipping_methods[ $i ] ) ? WC()->session->chosen_shipping_methods[ $i ] : '';
@@ -541,11 +564,11 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get shipping method amount.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @return integer $shipping_amount Amount for selected shipping method.
 	 */
-	public function get_shipping_amount() {
+	private function get_shipping_amount() {
 		if ( $this->separate_sales_tax ) {
 			$shipping_amount = number_format( WC()->cart->shipping_total * 100, 0, '', '' );
 		} else {
@@ -559,11 +582,11 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get shipping method tax rate.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @return integer $shipping_tax_rate Tax rate for selected shipping method.
 	 */
-	public function get_shipping_tax_rate() {
+	private function get_shipping_tax_rate() {
 		if ( WC()->cart->shipping_tax_total > 0 && ! $this->separate_sales_tax ) {
 			$shipping_tax_rate = round( WC()->cart->shipping_tax_total / WC()->cart->shipping_total, 2 ) * 100 * 100;
 		} else {
@@ -577,11 +600,11 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get shipping method tax amount.
 	 *
 	 * @since  1.0
-	 * @access public
+	 * @access private
 	 *
 	 * @return integer $shipping_tax_amount Tax amount for selected shipping method.
 	 */
-	public function get_shipping_tax_amount() {
+	private function get_shipping_tax_amount() {
 		if ( $this->separate_sales_tax ) {
 			$shipping_tax_amount = 0;
 		} else {
