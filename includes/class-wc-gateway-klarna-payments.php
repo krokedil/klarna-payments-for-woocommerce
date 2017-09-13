@@ -1090,36 +1090,76 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_locale_for_klarna_country() {
-		if ( 'en_US' === get_locale() ) {
-			return 'en-us';
-		}
-
-		if ( 'en_GB' === get_locale() ) {
-			return 'en-gb';
-		}
-
 		switch ( $this->klarna_country ) {
 			case 'AT':
-				return 'de-at';
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-at';
+				} else {
+					$klarna_locale = 'de-at';
+				}
+				break;
 			case 'DE':
-				return 'de-de';
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-de';
+				} else {
+					$klarna_locale = 'de-de';
+				}
+				break;
 			case 'DK':
-				return 'da-dk';
-			case 'GB':
-				return 'en-gb';
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-dk';
+				} else {
+					$klarna_locale = 'da-dk';
+				}
+				break;
 			case 'FI':
-				return 'fi-fi';
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-fi';
+				} else {
+					$klarna_locale = 'fi-fi';
+				}
+				break;
 			case 'NL':
-				return 'nl-nl';
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-nl';
+				} else {
+					$klarna_locale = 'nl-nl';
+				}
+				break;
 			case 'NO':
-				return 'nb-no';
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-no';
+				} else {
+					$klarna_locale = 'nb-no';
+				}
+				break;
 			case 'SE':
-				return 'sv-se';
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-se';
+				} else {
+					$klarna_locale = 'sv-se';
+				}
+				break;
+			case 'GB':
+				$klarna_locale = 'en-gb';
+				break;
 			case 'US':
-				return 'en-us';
+				$klarna_locale = 'en-us';
+				break;
 			default:
-				return '';
+				$klarna_locale = 'en-us';
 		}
+
+		return $klarna_locale;
+	}
+
+	/**
+	 * Checks if site locale is english.
+	 *
+	 * @return bool
+	 */
+	public function check_english_locale() {
+		return 'en_US' === get_locale() || 'en_GB' === get_locale();
 	}
 
 	/**
