@@ -1158,7 +1158,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @return bool
 	 */
-	public function check_english_locale() {
+	public function site_has_english_locale() {
 		return 'en_US' === get_locale() || 'en_GB' === get_locale();
 	}
 
