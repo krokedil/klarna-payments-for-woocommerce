@@ -721,12 +721,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$request_args = apply_filters( 'wc_klarna_payments_create_session_args', $request_args );
 
 		$response = wp_safe_remote_post( $request_url, $request_args );
-		$decoded  = json_decode( $response['body'] );
 
-		if ( 200 === $response['response']['code'] ) {
-			return $decoded;
+		if ( is_array( $response ) ) {
+			if ( 200 === $response['response']['code'] ) {
+				$decoded = json_decode( $response['body'] );
+
+				return $decoded;
+			} else {
+				return new WP_Error( $response['response']['code'], $response['response']['message'] );
+			}
 		} else {
-			return new WP_Error( $response['response']['code'], $response['response']['message'] );
+			return new WP_Error( 'kp_create_session', 'Could not create Klarna Payments session.' );
 		}
 	}
 
@@ -744,10 +749,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$response = wp_safe_remote_post( $request_url, $request_args );
 
-		if ( 204 === $response['response']['code'] ) {
-			return true;
+		if ( is_array( $response ) ) {
+			if ( 204 === $response['response']['code'] ) {
+				return true;
+			} else {
+				return new WP_Error( $response['response']['code'], $response['response']['message'] );
+			}
 		} else {
-			return new WP_Error( $response['response']['code'], $response['response']['message'] );
+			return new WP_Error( 'kp_update_session', 'Could not update Klarna Payments session.' );
 		}
 	}
 
