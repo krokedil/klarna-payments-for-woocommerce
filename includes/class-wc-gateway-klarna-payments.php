@@ -558,8 +558,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
-		// Check country and currency.
-		if ( is_wp_error( $this->country_currency_check() ) ) {
+		// See if KP is available for country / currency combo.
+		if ( ! $this->is_available() ) {
 			return;
 		}
 
