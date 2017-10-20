@@ -182,7 +182,7 @@ jQuery( function($) {
 						console.debug(e);
 					}
 
-					if (Klarna && Klarna.Credit && Klarna.Credit.initialized) {
+					if (Klarna && Klarna.Credit) {
 						clearInterval(klarnaLoadedInterval);
 						clearTimeout(klarnaLoadedTimeout);
 
