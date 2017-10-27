@@ -287,7 +287,7 @@ class WC_Klarna_Payments_Order_Lines {
 			$item_name .= ' [' . $item_variations . ']';
 		}
 
-		return (string) strip_tags( $item_name );
+		return strip_tags( $item_name );
 	}
 
 	/**
