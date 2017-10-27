@@ -5,7 +5,7 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: Krokedil
  * Author URI: https://krokedil.se/
- * Version: 1.0.1
+ * Version: 1.2.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
 */
@@ -28,9 +28,9 @@ new PluginUpdateChecker_2_0(
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '1.0.1' );
-define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.3.0' );
-define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '2.5.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '1.2.0' );
+define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.4.0' );
+define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.0.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 
@@ -103,7 +103,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
 			add_filter( 'woocommerce_process_checkout_field_billing_phone', array(
 				$this,
-				'maybe_filter_billing_phone'
+				'maybe_filter_billing_phone',
 			) );
 		}
 
@@ -198,7 +198,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		/**
 		 * Add the gateways to WooCommerce
 		 *
-		 * @since 1.0.0
+		 * @param  array $methods Array of payment methods.
+		 * @return array $methods Array of payment methods.
+		 * @since  1.0.0
 		 */
 		public function add_gateways( $methods ) {
 			$methods[] = 'WC_Gateway_Klarna_Payments';

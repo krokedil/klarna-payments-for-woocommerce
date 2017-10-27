@@ -1,0 +1,11 @@
+{
+  "1.1.0" : {
+    "description" : "Adds automatic updates",
+    "requires" : "4.7.0",
+    "tested" : "4.7.3",
+    "upgrade_notice" : "Please update"
+  },
+  "1.2.0" : {
+    "description" : "Improved error handling"
+  }
+}
