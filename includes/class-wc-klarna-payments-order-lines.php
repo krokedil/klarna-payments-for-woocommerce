@@ -244,23 +244,48 @@ class WC_Klarna_Payments_Order_Lines {
 	private function process_fees() {
 		if ( ! empty( WC()->cart->get_fees() ) ) {
 			foreach ( WC()->cart->get_fees() as $cart_fee ) {
+				if ( $cart_fee->taxable && $cart_fee->tax > 0 ) {
+					// Calculate tax rate.
+					if ( $this->separate_sales_tax ) {
+						$cart_fee_tax_rate = 0;
+						$cart_fee_tax_amount = 0;
+						$cart_fee_total = $cart_fee->total * 100;
+					} else {
+						$_tax      = new WC_Tax();
+						$tmp_rates = $_tax::get_rates( $cart_fee->tax_class );
+						$vat       = array_shift( $tmp_rates );
+
+						if ( isset( $vat['rate'] ) ) {
+							$cart_fee_tax_rate = round( $vat['rate'] * 100 );
+						} else {
+							$cart_fee_tax_rate = 0;
+						}
+
+						$cart_fee_tax_amount = $cart_fee->tax * 100;
+						$cart_fee_total = ($cart_fee->total + $cart_fee->tax) * 100;
+					}
+				} else {
+					$cart_fee_tax_rate = 0;
+					$cart_fee_tax_amount = 0;
+					$cart_fee_total = $cart_fee->total * 100;
+				}
+
 				$fee = array(
 					'type'                  => 'surcharge',
 					'reference'             => 'Fee',
 					'name'                  => $cart_fee->name,
 					'quantity'              => 1,
-					'unit_price'            => $cart_fee->amount * 100,
-					'tax_rate'              => 0,
-					'total_amount'          => $cart_fee->amount * 100,
+					'unit_price'            => $cart_fee_total,
+					'tax_rate'              => $cart_fee_tax_rate,
+					'total_amount'          => $cart_fee_total,
 					'total_discount_amount' => 0,
-					'total_tax_amount'      => 0,
+					'total_tax_amount'      => $cart_fee_tax_amount,
 				);
 
 				$this->order_lines[] = $fee;
-			}
-		}
+			} // End foreach().
+		} // End if().
 	}
-
 
 	// Helpers.
 
