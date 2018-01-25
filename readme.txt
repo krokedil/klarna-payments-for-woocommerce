@@ -19,5 +19,10 @@ Klarna offers three payment methods. Pay now, Pay later and Slice it. It offers 
 http://docs.krokedil.com/documentation/klarna-payments-woocommerce/
 
 == Changelog ==
+= 2018.01.25.  	- version 1.4.1 =
+* Fix           - Fixes WC 3.3 notices.
+* Tweak         - Stores Klarna order transaction ID as soon as possible. 
+* Tweak         - Adds "can't edit order" admin note.    
+
 = 1.0 =
 * Initial release.
