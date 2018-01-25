@@ -304,7 +304,11 @@ class WC_Klarna_Payments_Order_Lines {
 		$item_name      = $cart_item_data->get_title();
 
 		// Get variations as a string and remove line breaks.
-		$item_variations = rtrim( WC()->cart->get_item_data( $cart_item, true ) ); // Removes new line at the end.
+		if ( function_exists( 'wc_get_formatted_cart_item_data' ) ) { // WC 3.3+.
+			$item_variations = rtrim( wc_get_formatted_cart_item_data( $cart_item, true ) ); // Removes new line at the end.
+		} else {
+			$item_variations = rtrim( WC()->cart->get_item_data( $cart_item, true ) );  // Removes new line at the end.
+		}
 		$item_variations = str_replace( "\n", ', ', $item_variations ); // Replaces all other line breaks with commas.
 
 		// Add variations to name.
