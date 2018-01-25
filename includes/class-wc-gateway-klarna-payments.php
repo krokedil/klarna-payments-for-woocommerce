@@ -864,13 +864,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			if ( 'ACCEPTED' === $decoded->fraud_status ) {
 				$order->payment_complete( $decoded->order_id );
 				$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded->order_id );
-				add_post_meta( $order_id, '_wc_klarna_order_id', $decoded->order_id, true );
+				update_post_meta( $order_id, '_wc_klarna_order_id', $decoded->order_id, true );
 
 				do_action( 'wc_klarna_payments_accepted', $order_id, $decoded );
 				do_action( 'wc_klarna_accepted', $order_id, $decoded );
 			} elseif ( 'PENDING' === $decoded->fraud_status ) {
 				$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded->order_id );
-				add_post_meta( $order_id, '_wc_klarna_order_id', $decoded->order_id, true );
+				update_post_meta( $order_id, '_wc_klarna_order_id', $decoded->order_id, true );
+				update_post_meta( $order_id, '_transaction_id', $decoded->order_id, true );
 
 				do_action( 'wc_klarna_payments_pending', $order_id, $decoded );
 				do_action( 'wc_klarna_pending', $order_id, $decoded );

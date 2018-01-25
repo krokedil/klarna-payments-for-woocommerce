@@ -247,9 +247,9 @@ class WC_Klarna_Payments_Order_Lines {
 				if ( $cart_fee->taxable && $cart_fee->tax > 0 ) {
 					// Calculate tax rate.
 					if ( $this->separate_sales_tax ) {
-						$cart_fee_tax_rate = 0;
+						$cart_fee_tax_rate   = 0;
 						$cart_fee_tax_amount = 0;
-						$cart_fee_total = $cart_fee->total * 100;
+						$cart_fee_total      = $cart_fee->total * 100;
 					} else {
 						$_tax      = new WC_Tax();
 						$tmp_rates = $_tax::get_rates( $cart_fee->tax_class );
@@ -262,12 +262,12 @@ class WC_Klarna_Payments_Order_Lines {
 						}
 
 						$cart_fee_tax_amount = $cart_fee->tax * 100;
-						$cart_fee_total = ($cart_fee->total + $cart_fee->tax) * 100;
+						$cart_fee_total      = ( $cart_fee->total + $cart_fee->tax ) * 100;
 					}
 				} else {
-					$cart_fee_tax_rate = 0;
+					$cart_fee_tax_rate   = 0;
 					$cart_fee_tax_amount = 0;
-					$cart_fee_total = $cart_fee->total * 100;
+					$cart_fee_total      = $cart_fee->total * 100;
 				}
 
 				$fee = array(
@@ -341,7 +341,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @since  1.0
 	 * @access private
 	 *
-	 * @param  array  $cart_item Cart item.
+	 * @param  array $cart_item Cart item.
 	 * @param  object $product Product object.
 	 *
 	 * @return integer $item_tax_rate Item tax percentage formatted for Klarna.
