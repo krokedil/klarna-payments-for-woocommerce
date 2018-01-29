@@ -552,7 +552,7 @@ class WC_Klarna_Payments_Order_Lines {
 		}
 
 		if ( ! isset( $shipping_name ) ) {
-			$shipping_name = __( 'Shipping', 'woocommerce-gateway-klarna-payments' );
+			$shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' );
 		}
 
 		return (string) $shipping_name;
@@ -583,7 +583,7 @@ class WC_Klarna_Payments_Order_Lines {
 		}
 
 		if ( ! isset( $shipping_reference ) ) {
-			$shipping_reference = __( 'Shipping', 'woocommerce-gateway-klarna-payments' );
+			$shipping_reference = __( 'Shipping', 'klarna-payments-for-woocommerce' );
 		}
 
 		return (string) $shipping_reference;

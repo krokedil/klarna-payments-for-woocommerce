@@ -190,8 +190,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                 = 'klarna_payments';
-		$this->method_title       = __( 'Klarna Payments', 'woocommerce-gateway-klarna-payments' );
-		$this->method_description = __( 'Get the flexibility to pay over time with Klarna!', 'woocommerce-gateway-klarna-payments' );
+		$this->method_title       = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
+		$this->method_description = __( 'Get the flexibility to pay over time with Klarna!', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = true;
 		$this->supports           = apply_filters( 'wc_klarna_payments_supports', array( 'products' ) ); // Make this filterable.
 
@@ -235,7 +235,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$env_string = 'US' === $this->klarna_country ? '-na' : '';
 		if ( $this->testmode ) {
-			$this->description .= ' ' . __( '<p>TEST MODE ENABLED.</p>', 'woocommerce-gateway-klarna-payments' );
+			$this->description .= ' ' . __( '<p>TEST MODE ENABLED.</p>', 'klarna-payments-for-woocommerce' );
 			$this->description = trim( $this->description );
 
 			$this->server_base = 'https://api' . $env_string . '.playground.klarna.com/';
