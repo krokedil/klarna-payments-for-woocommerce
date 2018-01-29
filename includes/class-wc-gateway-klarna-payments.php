@@ -244,7 +244,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		// Hooks.
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
+			$this,
+			'process_admin_options'
+		) );
 		add_action( 'wp_head', array( $this, 'klarna_payments_session' ), 10, 1 );
 		add_action( 'woocommerce_review_order_after_submit', array( $this, 'klarna_payments_session_ajax_update' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -714,7 +717,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Create Klarna Payments session request.
 	 *
 	 * @param string $request_url Klarna request URL.
-	 * @param array  $request_args Klarna request arguments.
+	 * @param array $request_args Klarna request arguments.
 	 *
 	 * @return array|mixed|object|WP_Error
 	 */
@@ -741,7 +744,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Update Klarna Payments session.
 	 *
 	 * @param string $request_url Klarna request URL.
-	 * @param array  $request_args Klarna request arguments.
+	 * @param array $request_args Klarna request arguments.
 	 *
 	 * @return array|mixed|object|WP_Error
 	 */
@@ -849,54 +852,54 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @param int $order_id WooCommerce order ID.
 	 *
-	 * @return array
+	 * @return array   $result  Payment result.
 	 */
 	public function process_payment( $order_id ) {
-		$order = wc_get_order( $order_id );
+		$auth_token = sanitize_text_field( $_POST['klarna_payments_authorization_token'] ); // Input var okay.
 
-		// Place order.
-		$response = $this->place_order( $order_id, $_POST['klarna_payments_authorization_token'] ); // Input var okay.
+		$order    = wc_get_order( $order_id );
+		$response = $this->place_order( $order_id, $auth_token ); // Place order.
+
+		return $this->process_klarna_response( $response, $order );
+	}
+
+	/**
+	 * Process Klarna Payments response.
+	 *
+	 * @param array    $response Klarna API response.
+	 * @param WC_Order $order    WooCommerce order.
+	 *
+	 * @return array   $result  Payment result.
+	 */
+	public function process_klarna_response( $response, $order ) {
+		// Default the return array to failure.
+		$return_val = array(
+			'result'   => 'failure',
+			'redirect' => '',
+		);
 
 		// Process the response.
 		if ( ! is_wp_error( $response ) && 200 === $response['response']['code'] ) {
 			$decoded = json_decode( $response['body'] );
 
-			if ( 'ACCEPTED' === $decoded->fraud_status ) {
-				$order->payment_complete( $decoded->order_id );
-				$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded->order_id );
-				update_post_meta( $order_id, '_wc_klarna_order_id', $decoded->order_id, true );
+			$fraud_status = $decoded->fraud_status;
 
-				do_action( 'wc_klarna_payments_accepted', $order_id, $decoded );
-				do_action( 'wc_klarna_accepted', $order_id, $decoded );
-			} elseif ( 'PENDING' === $decoded->fraud_status ) {
-				$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded->order_id );
-				update_post_meta( $order_id, '_wc_klarna_order_id', $decoded->order_id, true );
-				update_post_meta( $order_id, '_transaction_id', $decoded->order_id, true );
-
-				do_action( 'wc_klarna_payments_pending', $order_id, $decoded );
-				do_action( 'wc_klarna_pending', $order_id, $decoded );
-			} elseif ( 'REJECTED' === $decoded->fraud_status ) {
-				$order->update_status( 'on-hold', 'Klarna order was rejected.' );
-
-				do_action( 'wc_klarna_payments_rejected', $order_id, $decoded );
-				do_action( 'wc_klarna_rejected', $order_id, $decoded );
-
-				return array(
-					'result'   => 'failure',
-					'redirect' => '',
-					'messages' => '<div class="woocommerce-error">Klarna payment rejected</div>',
-				);
+			switch ( $fraud_status ) {
+				case 'ACCEPTED':
+					$return_val = $this->process_accepted( $order, $decoded );
+					break;
+				case 'PENDING':
+					$return_val = $this->process_pending( $order, $decoded );
+					break;
+				case 'REJECTED':
+					$return_val = $this->process_rejected( $order, $decoded );
+					break;
 			}
 
-			update_post_meta( $order_id, '_wc_klarna_environment', $this->environment );
-			update_post_meta( $order_id, '_wc_klarna_country', $this->klarna_country );
+			update_post_meta( $order->get_id(), '_wc_klarna_environment', $this->environment );
+			update_post_meta( $order->get_id(), '_wc_klarna_country', $this->klarna_country );
 
 			$this->unset_session_values();
-
-			return array(
-				'result'   => 'success',
-				'redirect' => $this->get_return_url( $order ),
-			);
 		} else {
 			if ( is_wp_error( $response ) ) {
 				$error_message = $response->get_error_message();
@@ -905,21 +908,81 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 
 			wc_add_notice( $error_message, 'error' );
-
 			WC()->session->reload_checkout = true;
-
-			// Return failure if something went wrong.
-			return array(
-				'result'   => 'failure',
-				'redirect' => '',
-			);
 		} // End if().
+
+		return $return_val;
+	}
+
+	/**
+	 * Process accepted Klarna Payments order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @param stdClass $decoded Klarna order.
+	 *
+	 * @return array   $result  Payment result.
+	 */
+	public function process_accepted( $order, $decoded ) {
+		$order->payment_complete( $decoded->order_id );
+		$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded->order_id );
+		update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded->order_id, true );
+
+		do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
+		do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
+
+		return array(
+			'result'   => 'success',
+			'redirect' => $this->get_return_url( $order ),
+		);
+	}
+
+	/**
+	 * Process pending Klarna Payments order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @param stdClass $decoded Klarna order.
+	 *
+	 * @return array   $result  Payment result.
+	 */
+	public function process_pending( $order, $decoded ) {
+		$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded->order_id );
+		update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded->order_id, true );
+		update_post_meta( $order->get_id(), '_transaction_id', $decoded->order_id, true );
+
+		do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
+		do_action( 'wc_klarna_pending', $order->get_id(), $decoded );
+
+		return array(
+			'result'   => 'success',
+			'redirect' => $this->get_return_url( $order ),
+		);
+	}
+
+	/**
+	 * Process rejected Klarna Payments order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @param stdClass $decoded Klarna order.
+	 *
+	 * @return array   $result  Payment result.
+	 */
+	public function process_rejected( $order, $decoded ) {
+		$order->update_status( 'on-hold', 'Klarna order was rejected.' );
+
+		do_action( 'wc_klarna_payments_rejected', $order->get_id(), $decoded );
+		do_action( 'wc_klarna_rejected', $order->get_id(), $decoded );
+
+		return array(
+			'result'   => 'failure',
+			'redirect' => '',
+			'messages' => '<div class="woocommerce-error">Klarna payment rejected</div>',
+		);
 	}
 
 	/**
 	 * Places the order with Klarna
 	 *
-	 * @param int    $order_id WooCommerce order ID.
+	 * @param int $order_id WooCommerce order ID.
 	 * @param string $auth_token Klarna Payments authorization token.
 	 *
 	 * @return array|WP_Error
@@ -1005,9 +1068,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * This plugin doesn't handle order management, but it allows Klarna Order Management plugin to process refunds
 	 * and then return true or false.
 	 *
-	 * @param int      $order_id WooCommerce order ID.
+	 * @param int $order_id WooCommerce order ID.
 	 * @param null|int $amount Refund amount.
-	 * @param string   $reason Reason for refund.
+	 * @param string $reason Reason for refund.
 	 *
 	 * @return bool
 	 */
