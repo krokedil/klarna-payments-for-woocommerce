@@ -244,18 +244,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		// Hooks.
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
-			$this,
-			'process_admin_options'
-		) );
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'wp_head', array( $this, 'klarna_payments_session' ), 10, 1 );
 		add_action( 'woocommerce_review_order_after_submit', array( $this, 'klarna_payments_session_ajax_update' ) );
+		add_action( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
 		add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'iframe_options' ) );
+
 		if ( '' !== $this->background ) {
 			add_action( 'wp_head', array( $this, 'iframe_background' ) );
 		}
@@ -554,6 +553,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @hook wp_head
 	 */
 	public function klarna_payments_session() {
+		// @TODO: Remove, temporary edit to make sure we always have new session.
+		WC()->session->__unset( 'klarna_payments_session_id' );
+
 		if ( ! is_checkout() || is_order_received_page() ) {
 			return;
 		}
@@ -588,7 +590,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
 			// Try to update the session, if it fails try to create new session.
-			$update_request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
+			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response    = $this->update_session_request( $update_request_url, $request_args );
 
 			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
@@ -655,7 +657,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If billing country has changed we need a new session.
 		if ( WC()->checkout->get_value( 'billing_country' ) !== WC()->session->get( 'klarna_payments_session_country' ) ) {
-			$create_request_url = $this->server_base . 'credit/v1/sessions';
+			$create_request_url = $this->server_base . 'payments/v1/sessions';
 			$create_response    = $this->create_session_request( $create_request_url, $request_args );
 
 			if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
@@ -681,7 +683,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				<?php
 			}
 		} elseif ( WC()->session->get( 'klarna_payments_session_id' ) ) { // On AJAX update_checkout, just try to update the session, if Klarna country hasn't changed.
-			$update_request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
+			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response    = $this->update_session_request( $update_request_url, $request_args );
 
 			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
@@ -699,7 +701,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @param array $request_args Klarna request arguments.
 	 */
 	public function create_session( $request_args ) {
-		$create_request_url = $this->server_base . 'credit/v1/sessions';
+		$create_request_url = $this->server_base . 'payments/v1/sessions';
 		$create_response    = $this->create_session_request( $create_request_url, $request_args );
 
 		if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
@@ -710,7 +712,23 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
 			WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
 			WC()->session->set( 'klarna_payments_session_country', $this->klarna_country );
+			WC()->session->set( 'klarna_payments_categories', $create_response->payment_method_categories );
 		}
+	}
+
+	/**
+	 * Override checkout form template if Klarna Checkout is the selected payment method.
+	 */
+	public function override_kp_payment_option( $located, $template_name, $args ) {
+		if ( is_checkout() ) {
+			if ( 'checkout/payment-method.php' === $template_name ) {
+				if ( 'klarna_payments' === $args['gateway']->id ) {
+					$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
+				}
+			}
+		}
+
+		return $located;
 	}
 
 	/**
@@ -774,7 +792,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			echo wpautop( wptexturize( $description ) );
 		}
 
-		echo '<div id="klarna_container" style="margin-top:1em;"></div>';
+		// No need to display this now that each payment category has its own container.
+		// echo '<div id="klarna_container" style="margin-top:1em;"></div>';
 	}
 
 	/**
@@ -850,6 +869,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * Uses authorization token to place the order.
 	 *
+	 * @TODO: Set customer payment method as KP.
+	 *
 	 * @param int $order_id WooCommerce order ID.
 	 *
 	 * @return array   $result  Payment result.
@@ -866,8 +887,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Process Klarna Payments response.
 	 *
-	 * @param array    $response Klarna API response.
-	 * @param WC_Order $order    WooCommerce order.
+	 * @param array $response Klarna API response.
+	 * @param WC_Order $order WooCommerce order.
 	 *
 	 * @return array   $result  Payment result.
 	 */
@@ -1023,7 +1044,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$shipping_address = $billing_address;
 		}
 
-		$request_url  = $this->server_base . 'credit/v1/authorizations/' . $auth_token . '/order';
+		$request_url  = $this->server_base . 'payments/v1/authorizations/' . $auth_token . '/order';
 		$request_args = array(
 			'headers'    => array(
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
@@ -1255,6 +1276,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		WC()->session->__unset( 'klarna_payments_session_id' );
 		WC()->session->__unset( 'klarna_payments_client_token' );
 		WC()->session->__unset( 'klarna_payments_session_country' );
+		WC()->session->__unset( 'klarna_payments_categories' );
 	}
 
 	/**
