@@ -1,26 +1,17 @@
 <?php
 
 if ( is_array( WC()->session->get( 'klarna_payments_categories' ) ) ) {
-	foreach ( WC()->session->get( 'klarna_payments_categories' ) as $payment_category ) {
-		$payment_category_id   = $payment_category->identifier;
-		$payment_category_name = $payment_category->name;
-		?>
-		<li class="wc_payment_method payment_method_klarna_payments_<?php echo $payment_category_id; ?>">
-			<input id="payment_method_klarna_payments_<?php echo $payment_category_id; ?>"
-			       type="radio" class="input-radio"
-			       name="payment_method" value="klarna_payments"
-			       data-order_button_text="Place order"/>
+	$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
+	$kp                 = $available_gateways['klarna_payments'];
 
-			<label for="payment_method_klarna_payments_<?php echo $payment_category_id; ?>">
-				<?php echo $payment_category_name; ?> <img
-					src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/logo_black.png?width=75"
-					alt="Klarna">
-			</label>
-			<div
-				class="payment_box payment_method_klarna_payments_<?php echo $payment_category_id; ?>"
-				style="display:none;">
-				<div id="klarna_payments_<?php echo $payment_category_id; ?>_container" class="klarna_payments_container" data-payment_method_category="<?php echo $payment_category_id; ?>"></div>
-		</li>
-		<?php
+	foreach ( WC()->session->get( 'klarna_payments_categories' ) as $payment_category ) {
+		$payment_category_id   = 'klarna_payments_' . $payment_category->identifier;
+		$payment_category_name = $payment_category->name;
+
+		$kp        = $available_gateways['klarna_payments'];
+		$kp->id    = $payment_category_id;
+		$kp->title = $payment_category_name;
+
+		wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $kp ) );
 	}
 }

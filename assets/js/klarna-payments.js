@@ -146,7 +146,11 @@ jQuery( function($) {
 			 *
 			 * Firing Klarna.Credit.authorize(), then once it resolves, adding the hidden form field and re-submitting the form.
  			 */
-			$('form.checkout').on('checkout_place_order_klarna_payments', function() {
+			$('form.checkout').on('checkout_place_order', function() {
+				if (!klarna_payments.isKlarnaPaymentsSelected()) {
+					return true;
+				}
+
 				if ($('input[name="klarna_payments_authorization_token"]').length) {
 					return true;
 				}
@@ -237,7 +241,8 @@ jQuery( function($) {
 		},
 
 		isKlarnaPaymentsSelected: function () {
-			return 'klarna_payments' === $('input[name="payment_method"]:checked').val();
+			var selected_value = $('input[name="payment_method"]:checked').val();
+			return selected_value.indexOf('klarna_payments') !== -1;
 		},
 
 		getSelectorContainerID: function() {
@@ -245,7 +250,8 @@ jQuery( function($) {
 		},
 
 		getSelectedPaymentCategory: function() {
-			return $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').data('payment_method_category');
+			var selected_category = $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').data('payment_method_category');
+			return selected_category.replace('klarna_payments_', '');
 		},
 
 		authorize: function() {

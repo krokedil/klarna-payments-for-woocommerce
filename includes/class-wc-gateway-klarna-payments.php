@@ -246,14 +246,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'wp_head', array( $this, 'klarna_payments_session' ), 10, 1 );
-		add_action( 'woocommerce_review_order_after_submit', array( $this, 'klarna_payments_session_ajax_update' ) );
-		add_action( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
+		add_action( 'woocommerce_review_order_after_order_total', array( $this, 'klarna_payments_session_ajax_update' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
 		add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'iframe_options' ) );
+		add_filter( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
 
 		if ( '' !== $this->background ) {
 			add_action( 'wp_head', array( $this, 'iframe_background' ) );
@@ -290,64 +290,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function init_form_fields() {
 		include_once( WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/klarna-payments-admin-form-fields.php' );
 		$this->form_fields = Klarna_Payments_Form_Fields::fields();
-	}
-
-	/**
-	 * Get gateway title.
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function get_title() {
-		switch ( $this->klarna_country ) {
-			case 'US' :
-				if ( '' !== $this->get_option( 'title_us' ) ) {
-					$this->title = $this->get_option( 'title_us' );
-				}
-				break;
-			case 'GB' :
-				if ( '' !== $this->get_option( 'title_gb' ) ) {
-					$this->title = $this->get_option( 'title_gb' );
-				}
-				break;
-			case 'SE' :
-				if ( '' !== $this->get_option( 'title_se' ) ) {
-					$this->title = $this->get_option( 'title_se' );
-				}
-				break;
-			case 'NO' :
-				if ( '' !== $this->get_option( 'title_no' ) ) {
-					$this->title = $this->get_option( 'title_no' );
-				}
-				break;
-			case 'FI' :
-				if ( '' !== $this->get_option( 'title_fi' ) ) {
-					$this->title = $this->get_option( 'title_fi' );
-				}
-				break;
-			case 'DK' :
-				if ( '' !== $this->get_option( 'title_dk' ) ) {
-					$this->title = $this->get_option( 'title_dk' );
-				}
-				break;
-			case 'NL' :
-				if ( '' !== $this->get_option( 'title_nl' ) ) {
-					$this->title = $this->get_option( 'title_nl' );
-				}
-				break;
-			case 'AT' :
-				if ( '' !== $this->get_option( 'title_at' ) ) {
-					$this->title = $this->get_option( 'title_at' );
-				}
-				break;
-			case 'DE' :
-				if ( '' !== $this->get_option( 'title_de' ) ) {
-					$this->title = $this->get_option( 'title_de' );
-				}
-				break;
-		} // End switch().
-
-		return apply_filters( 'woocommerce_gateway_title', $this->title, $this->id );
 	}
 
 	/**
@@ -668,6 +610,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
 				WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
 				WC()->session->set( 'klarna_payments_session_country', WC()->checkout->get_value( 'billing_country' ) );
+				WC()->session->set( 'klarna_payments_categories', $create_response->payment_method_categories );
 			}
 
 			// If we have a client token now, initialize Klarna Credit.
@@ -790,6 +733,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$description = $this->get_description();
 		if ( $description ) {
 			echo wpautop( wptexturize( $description ) );
+
+			echo '<div id="' . $this->id . '_container" class="klarna_payments_container" data-payment_method_category="' . $this->id . '"></div>';
 		}
 
 		// No need to display this now that each payment category has its own container.

@@ -12,16 +12,6 @@ class Klarna_Payments_Form_Fields {
 	 * Returns the fields.
 	 */
 	public static function fields() {
-		$base_location = wc_get_base_location();
-		$base_country  = $base_location['country'];
-
-		if ( 'US' === $base_country ) {
-			$default_title = __( 'Pay Over Time', 'klarna-payments-for-woocommerce' );
-		} else {
-			$default_title = __( 'Klarna', 'klarna-payments-for-woocommerce' );
-		}
-
-
 		return apply_filters( 'wc_gateway_klarna_payments_settings', array(
 			'enabled'     => array(
 				'title'       => __( 'Enable/Disable', 'klarna-payments-for-woocommerce' ),
@@ -29,20 +19,6 @@ class Klarna_Payments_Form_Fields {
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no',
-			),
-			'title'       => array(
-				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'Title that the customer will see on your checkout.', 'klarna-payments-for-woocommerce' ),
-				'default'     => $default_title,
-				'desc_tip'    => true,
-			),
-			'description' => array(
-				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'Description that the customer will see on your website.', 'klarna-payments-for-woocommerce' ),
-				'default'     => __( 'Get the flexibility to pay over time with Klarna!', 'klarna-payments-for-woocommerce' ),
-				'desc_tip'    => true,
 			),
 
 			'testmode'              => array(
@@ -81,20 +57,6 @@ class Klarna_Payments_Form_Fields {
 				'title' => '<img src="' . plugins_url( 'assets/img/flags/at.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Austria',
 				'type'  => 'title',
 			),
-			'title_at'              => array(
-				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for AT purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'description_at'        => array(
-				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'If this option is used, default payment method description will be overriden for AT purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
 			'merchant_id_at'        => array(
 				'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'text',
@@ -128,20 +90,6 @@ class Klarna_Payments_Form_Fields {
 			'credentials_dk'        => array(
 				'title' => '<img src="' . plugins_url( 'assets/img/flags/dk.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Denmark',
 				'type'  => 'title',
-			),
-			'title_dk'              => array(
-				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for DK purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'description_dk'        => array(
-				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'If this option is used, default payment method description will be overriden for DK purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
 			),
 			'merchant_id_dk'        => array(
 				'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
@@ -177,20 +125,6 @@ class Klarna_Payments_Form_Fields {
 				'title' => '<img src="' . plugins_url( 'assets/img/flags/fi.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Finland',
 				'type'  => 'title',
 			),
-			'title_fi'              => array(
-				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for FI purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'description_fi'        => array(
-				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'If this option is used, default payment method description will be overriden for FI purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
 			'merchant_id_fi'        => array(
 				'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'text',
@@ -224,20 +158,6 @@ class Klarna_Payments_Form_Fields {
 			'credentials_de'        => array(
 				'title' => '<img src="' . plugins_url( 'assets/img/flags/de.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Germany',
 				'type'  => 'title',
-			),
-			'title_de'              => array(
-				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for DE purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'description_de'        => array(
-				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'If this option is used, default payment method description will be overriden for DE purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
 			),
 			'merchant_id_de'        => array(
 				'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
@@ -273,20 +193,6 @@ class Klarna_Payments_Form_Fields {
 				'title' => '<img src="' . plugins_url( 'assets/img/flags/nl.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Netherlands',
 				'type'  => 'title',
 			),
-			'title_nl'              => array(
-				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for NL purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'description_nl'        => array(
-				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'If this option is used, default payment method description will be overriden for NL purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
 			'merchant_id_nl'        => array(
 				'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'text',
@@ -320,20 +226,6 @@ class Klarna_Payments_Form_Fields {
 			'credentials_no'        => array(
 				'title' => '<img src="' . plugins_url( 'assets/img/flags/no.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Norway',
 				'type'  => 'title',
-			),
-			'title_no'              => array(
-				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for NO purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'description_no'        => array(
-				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'If this option is used, default payment method description will be overriden for NO purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
 			),
 			'merchant_id_no'        => array(
 				'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
@@ -369,20 +261,6 @@ class Klarna_Payments_Form_Fields {
 				'title' => '<img src="' . plugins_url( 'assets/img/flags/se.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Sweden',
 				'type'  => 'title',
 			),
-			'description_se'        => array(
-				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'If this option is used, default payment method description will be overriden for SE purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'title_se'              => array(
-				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for SE purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
 			'merchant_id_se'        => array(
 				'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'text',
@@ -417,20 +295,6 @@ class Klarna_Payments_Form_Fields {
 				'title' => '<img src="' . plugins_url( 'assets/img/flags/gb.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> United Kingdom',
 				'type'  => 'title',
 			),
-			'description_gb'        => array(
-				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method description will be overriden for UK purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'title_gb'              => array(
-				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'If this option is used, default payment method title will be overriden for UK purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
 			'merchant_id_gb'        => array(
 				'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'text',
@@ -464,20 +328,6 @@ class Klarna_Payments_Form_Fields {
 			'credentials_us'        => array(
 				'title' => '<img src="' . plugins_url( 'assets/img/flags/us.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> United States',
 				'type'  => 'title',
-			),
-			'title_us'              => array(
-				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'text',
-				'description' => __( 'If this option is used, default payment method title will be overriden for US purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			'description_us'        => array(
-				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'textarea',
-				'description' => __( 'If this option is used, default payment method description will be overriden for US purchases.', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-				'desc_tip'    => true,
 			),
 			'merchant_id_us'        => array(
 				'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
