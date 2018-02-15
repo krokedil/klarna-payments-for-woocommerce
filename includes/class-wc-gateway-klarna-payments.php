@@ -205,11 +205,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->init_settings();
 
 		// Get setting values.
-		$this->title       = $this->get_option( 'title' );
-		$this->description = $this->get_option( 'description', '' );
-		$this->enabled     = $this->get_option( 'enabled' );
-		$this->testmode    = 'yes' === $this->get_option( 'testmode' );
-		$this->logging     = 'yes' === $this->get_option( 'logging' );
+		$this->title    = $this->get_option( 'title' );
+		$this->enabled  = $this->get_option( 'enabled' );
+		$this->testmode = 'yes' === $this->get_option( 'testmode' );
+		$this->logging  = 'yes' === $this->get_option( 'logging' );
 
 		$this->set_klarna_country();
 		$this->set_environment();
@@ -235,18 +234,22 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$env_string = 'US' === $this->klarna_country ? '-na' : '';
 		if ( $this->testmode ) {
-			$this->description .= ' ' . __( '<p>TEST MODE ENABLED.</p>', 'klarna-payments-for-woocommerce' );
-			$this->description = trim( $this->description );
-
+			$this->description = __( '<p>TEST MODE ENABLED.</p>', 'klarna-payments-for-woocommerce' );
 			$this->server_base = 'https://api' . $env_string . '.playground.klarna.com/';
 		} else {
 			$this->server_base = 'https://api' . $env_string . '.klarna.com/';
 		}
 
 		// Hooks.
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
+			$this,
+			'process_admin_options',
+		) );
 		add_action( 'wp_head', array( $this, 'klarna_payments_session' ), 10, 1 );
-		add_action( 'woocommerce_review_order_after_order_total', array( $this, 'klarna_payments_session_ajax_update' ) );
+		add_action( 'woocommerce_review_order_after_order_total', array(
+			$this,
+			'klarna_payments_session_ajax_update',
+		) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
@@ -288,66 +291,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		include_once( WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/klarna-payments-admin-form-fields.php' );
+		include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/klarna-payments-admin-form-fields.php';
 		$this->form_fields = Klarna_Payments_Form_Fields::fields();
-	}
-
-	/**
-	 * Get gateway description.
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function get_description() {
-		switch ( $this->klarna_country ) {
-			case 'US' :
-				if ( '' !== $this->get_option( 'description_us' ) ) {
-					$this->description = $this->get_option( 'description_us' );
-				}
-				break;
-			case 'GB' :
-				if ( '' !== $this->get_option( 'description_gb' ) ) {
-					$this->description = $this->get_option( 'description_gb' );
-				}
-				break;
-			case 'SE' :
-				if ( '' !== $this->get_option( 'description_se' ) ) {
-					$this->description = $this->get_option( 'description_se' );
-				}
-				break;
-			case 'NO' :
-				if ( '' !== $this->get_option( 'description_no' ) ) {
-					$this->description = $this->get_option( 'description_no' );
-				}
-				break;
-			case 'FI' :
-				if ( '' !== $this->get_option( 'description_fi' ) ) {
-					$this->description = $this->get_option( 'description_fi' );
-				}
-				break;
-			case 'DK' :
-				if ( '' !== $this->get_option( 'description_dk' ) ) {
-					$this->description = $this->get_option( 'description_dk' );
-				}
-				break;
-			case 'NL' :
-				if ( '' !== $this->get_option( 'description_nl' ) ) {
-					$this->description = $this->get_option( 'description_nl' );
-				}
-				break;
-			case 'AT' :
-				if ( '' !== $this->get_option( 'description_at' ) ) {
-					$this->description = $this->get_option( 'description_at' );
-				}
-				break;
-			case 'DE' :
-				if ( '' !== $this->get_option( 'description_de' ) ) {
-					$this->description = $this->get_option( 'description_de' );
-				}
-				break;
-		} // End switch().
-
-		return apply_filters( 'woocommerce_gateway_description', $this->description, $this->id );
 	}
 
 	/**
@@ -495,9 +440,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @hook wp_head
 	 */
 	public function klarna_payments_session() {
-		// @TODO: Remove, temporary edit to make sure we always have new session.
-		WC()->session->__unset( 'klarna_payments_session_id' );
-
 		if ( ! is_checkout() || is_order_received_page() ) {
 			return;
 		}
@@ -677,8 +619,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Create Klarna Payments session request.
 	 *
-	 * @param string $request_url Klarna request URL.
-	 * @param array $request_args Klarna request arguments.
+	 * @param string $request_url  Klarna request URL.
+	 * @param array  $request_args Klarna request arguments.
 	 *
 	 * @return array|mixed|object|WP_Error
 	 */
@@ -704,8 +646,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Update Klarna Payments session.
 	 *
-	 * @param string $request_url Klarna request URL.
-	 * @param array $request_args Klarna request arguments.
+	 * @param string $request_url  Klarna request URL.
+	 * @param array  $request_args Klarna request arguments.
 	 *
 	 * @return array|mixed|object|WP_Error
 	 */
@@ -730,15 +672,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Adds Klarna Payments container to checkout page.
 	 */
 	public function payment_fields() {
-		$description = $this->get_description();
-		if ( $description ) {
-			echo wpautop( wptexturize( $description ) );
-
-			echo '<div id="' . $this->id . '_container" class="klarna_payments_container" data-payment_method_category="' . $this->id . '"></div>';
-		}
-
-		// No need to display this now that each payment category has its own container.
-		// echo '<div id="klarna_container" style="margin-top:1em;"></div>';
+		echo '<div id="' . $this->id . '_container" class="klarna_payments_container" data-payment_method_category="' . esc_attr( $this->id ) . '"></div>';
 	}
 
 	/**
@@ -779,7 +713,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
-		if ( ! isset( $_GET['section'] ) || 'klarna_payments' !== $_GET['section'] ) {
+		if ( ! isset( $_GET['section'] ) || 'klarna_payments' !== $_GET['section'] ) { // Input var okay.
 			return;
 		}
 
