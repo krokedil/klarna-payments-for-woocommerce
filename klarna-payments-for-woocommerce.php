@@ -90,6 +90,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
+			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
 			add_filter( 'woocommerce_process_checkout_field_billing_phone', array(
 				$this,
 				'maybe_filter_billing_phone',
@@ -104,6 +105,21 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->init_gateways();
 
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
+		}
+
+		/**
+		 * Changes payment_method in posted data to klarna_payments when one of KP methods is selected.
+		 *
+		 * @param array $data Posted data.
+		 *
+		 * @return mixed
+		 */
+		public function filter_payment_method_id( $data ) {
+			if ( strpos( $data['payment_method'], 'klarna_payments_' ) !== false ) {
+				$data['payment_method'] = 'klarna_payments';
+			}
+
+			return $data;
 		}
 
 		/**
