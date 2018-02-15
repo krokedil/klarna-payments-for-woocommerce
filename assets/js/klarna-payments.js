@@ -241,8 +241,12 @@ jQuery( function($) {
 		},
 
 		isKlarnaPaymentsSelected: function () {
-			var selected_value = $('input[name="payment_method"]:checked').val();
-			return selected_value.indexOf('klarna_payments') !== -1;
+			if ($('input[name="payment_method"]:checked').length) {
+				var selected_value = $('input[name="payment_method"]:checked').val();
+				return selected_value.indexOf('klarna_payments') !== -1;
+			}
+
+			return false;
 		},
 
 		getSelectorContainerID: function() {
