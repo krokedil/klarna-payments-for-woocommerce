@@ -53,5 +53,14 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2018.01.29.  	- version 1.4.2 =
+* Fix           - Cleans up translation strings.
+* Enhancement   - process_payment method refactoring.    
+
+= 2018.01.25.  	- version 1.4.1 =
+* Fix           - Fixes WC 3.3 notices.
+* Tweak         - Stores Klarna order transaction ID as soon as possible. 
+* Tweak         - Adds "can't edit order" admin note.    
+
 = 1.0 =
 * Initial release.

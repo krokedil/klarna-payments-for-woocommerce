@@ -247,9 +247,9 @@ class WC_Klarna_Payments_Order_Lines {
 				if ( $cart_fee->taxable && $cart_fee->tax > 0 ) {
 					// Calculate tax rate.
 					if ( $this->separate_sales_tax ) {
-						$cart_fee_tax_rate = 0;
+						$cart_fee_tax_rate   = 0;
 						$cart_fee_tax_amount = 0;
-						$cart_fee_total = $cart_fee->total * 100;
+						$cart_fee_total      = $cart_fee->total * 100;
 					} else {
 						$_tax      = new WC_Tax();
 						$tmp_rates = $_tax::get_rates( $cart_fee->tax_class );
@@ -262,12 +262,12 @@ class WC_Klarna_Payments_Order_Lines {
 						}
 
 						$cart_fee_tax_amount = $cart_fee->tax * 100;
-						$cart_fee_total = ($cart_fee->total + $cart_fee->tax) * 100;
+						$cart_fee_total      = ( $cart_fee->total + $cart_fee->tax ) * 100;
 					}
 				} else {
-					$cart_fee_tax_rate = 0;
+					$cart_fee_tax_rate   = 0;
 					$cart_fee_tax_amount = 0;
-					$cart_fee_total = $cart_fee->total * 100;
+					$cart_fee_total      = $cart_fee->total * 100;
 				}
 
 				$fee = array(
@@ -304,7 +304,11 @@ class WC_Klarna_Payments_Order_Lines {
 		$item_name      = $cart_item_data->get_title();
 
 		// Get variations as a string and remove line breaks.
-		$item_variations = rtrim( WC()->cart->get_item_data( $cart_item, true ) ); // Removes new line at the end.
+		if ( function_exists( 'wc_get_formatted_cart_item_data' ) ) { // WC 3.3+.
+			$item_variations = rtrim( wc_get_formatted_cart_item_data( $cart_item, true ) ); // Removes new line at the end.
+		} else {
+			$item_variations = rtrim( WC()->cart->get_item_data( $cart_item, true ) );  // Removes new line at the end.
+		}
 		$item_variations = str_replace( "\n", ', ', $item_variations ); // Replaces all other line breaks with commas.
 
 		// Add variations to name.
@@ -341,7 +345,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @since  1.0
 	 * @access private
 	 *
-	 * @param  array  $cart_item Cart item.
+	 * @param  array $cart_item Cart item.
 	 * @param  object $product Product object.
 	 *
 	 * @return integer $item_tax_rate Item tax percentage formatted for Klarna.
@@ -548,7 +552,7 @@ class WC_Klarna_Payments_Order_Lines {
 		}
 
 		if ( ! isset( $shipping_name ) ) {
-			$shipping_name = __( 'Shipping', 'woocommerce-gateway-klarna' );
+			$shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' );
 		}
 
 		return (string) $shipping_name;
@@ -579,7 +583,7 @@ class WC_Klarna_Payments_Order_Lines {
 		}
 
 		if ( ! isset( $shipping_reference ) ) {
-			$shipping_reference = __( 'Shipping', 'woocommerce-gateway-klarna' );
+			$shipping_reference = __( 'Shipping', 'klarna-payments-for-woocommerce' );
 		}
 
 		return (string) $shipping_reference;
