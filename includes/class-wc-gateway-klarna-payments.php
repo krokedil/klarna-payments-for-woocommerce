@@ -332,7 +332,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Add sidebar banner to the settings page.
+	 * Add sidebar to the settings page.
 	 */
 	public function admin_options() {
 		?>
@@ -761,10 +761,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		wp_enqueue_script(
 			'klarna_payments_admin',
 			plugins_url( 'assets/js/klarna-payments-admin.js', WC_KLARNA_PAYMENTS_MAIN_FILE )
-		);
-		wp_enqueue_style(
-			'klarna_payments_admin',
-			plugins_url( 'assets/css/klarna-payments-admin.css', WC_KLARNA_PAYMENTS_MAIN_FILE )
 		);
 	}
 

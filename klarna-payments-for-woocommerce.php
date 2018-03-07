@@ -92,6 +92,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
+			add_action( 'in_admin_header', array( $this, 'klarna_banner' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_css' ) );
 			add_filter( 'woocommerce_process_checkout_field_billing_phone', array(
 				$this,
 				'maybe_filter_billing_phone',
@@ -205,6 +207,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * Add the gateways to WooCommerce
 		 *
 		 * @param  array $methods Array of payment methods.
+		 *
 		 * @return array $methods Array of payment methods.
 		 * @since  1.0.0
 		 */
@@ -248,56 +251,70 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			return $phone_value;
 		}
+
+		/**
+		 * Loads admin CSS file, has to be done here instead of gateway class, because
+		 * it is required in all admin pages.
+		 */
+		public function load_admin_css() {
+			wp_enqueue_style(
+				'klarna_payments_admin',
+				plugins_url( 'assets/css/klarna-payments-admin.css', WC_KLARNA_PAYMENTS_MAIN_FILE )
+			);
+		}
+
+		/**
+		 * Loads Klarna banner in admin pages.
+		 */
+		public function klarna_banner() {
+			$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
+			$show_banner = false;
+
+			// Always show banner in testmode.
+			if ( isset( $kp_settings['testmode'] ) && 'yes' === $kp_settings['testmode'] ) {
+				$show_banner = true;
+			}
+
+			// Go through countries and check if at least one has credentials configured.
+			$countries   = array( 'at', 'dk', 'fi', 'de', 'nl', 'no', 'se', 'gb', 'us' );
+			$country_set = false;
+			foreach ( $countries as $country ) {
+				if ( '' !== $kp_settings[ 'merchant_id_' . $country ] && '' !== $kp_settings[ 'shared_secret_' . $country ] ) {
+					$country_set = true;
+				}
+			}
+
+			if ( ! $country_set ) {
+				$show_banner = true;
+			}
+
+			if ( $show_banner ) {
+				?>
+				<div id="klarna-banner">
+					<div id="kb-left">
+						<h1>Go live</h1>
+						<p>Get your store approved by Klarna, and start selling! When the installation is done,
+							Klarna will then verify the integration before the shop goes live.</p>
+						<a class="kb-button"
+						   href="https://www.klarna.com/international/business/woocommerce/?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=banner"
+						   target="_blank">Click here to go live with your store</a>
+					</div>
+					<div id="kb-right">
+						<h1>Already Part of the Klarna world?</h1>
+						<p>Klarna is entering a new world of smoooth. We would love for you to join us on the
+							ride and to do so, you will need to upgrade your Klarna products to a new
+							integration to be able to get the latest features that Klarna develop. You’ll keep
+							your current agreement along with your price settings. </p>
+						<a class="kb-button"
+						   href="https://hello.klarna.com/product-upgrade?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=banner"
+						   target="_blank">Click here to update your Klarna products</a>
+					</div>
+				</div>
+				<?php
+			}
+		}
 	}
 
 	WC_Klarna_Payments::get_instance();
 
-}
-
-add_action( 'in_admin_header', 'klarna_banner' );
-function klarna_banner() {
-	$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
-	$show_banner = false;
-
-	if ( isset( $kp_settings['testmode'] ) && 'yes' === $kp_settings['testmode'] ) {
-		$show_banner = true;
-	}
-
-	// Go through countries and check if at least one has credentials configured.
-	$countries = array( 'at', 'dk', 'fi', 'de', 'nl', 'no', 'se', 'gb', 'us' );
-	$country_configured = false;
-	foreach ( $countries as $country ) {
-		if ( '' !== $kp_settings['merchant_id_' . $country] && '' !== $kp_settings['shared_secret_' . $country] ) {
-			$country_configured = true;
-		}
-	}
-
-	if ( ! $country_configured ) {
-		$show_banner = true;
-	}
-
-	if ( $show_banner ) {
-		?>
-		<div id="klarna-banner">
-			<div id="kb-left">
-				<h1>Go live</h1>
-				<p>Get your store approved by Klarna, and start selling! When the installation is done,
-					Klarna will then verify the integration before the shop goes live.</p>
-				<a class="kb-button"
-				   href="https://www.klarna.com/international/business/woocommerce/?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=banner"
-				   target="_blank">Click here to go live with your store</a>
-			</div>
-			<div id="kb-right">
-				<h1>Already Part of the Klarna world?</h1>
-				<p>Klarna is entering a new world of smoooth. We would love for you to join us on the
-					ride and to do so, you will need to upgrade your Klarna products to a new
-					integration to be able to get the latest features that Klarna develop. You’ll keep
-					your current agreement along with your price settings. </p>
-				<a class="kb-button"
-				   href="https://hello.klarna.com/product-upgrade?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=banner"
-				   target="_blank">Click here to update your Klarna products</a>
-			</div>
-		</div>
-		<?php
-	}
 }
