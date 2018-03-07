@@ -22,6 +22,7 @@ define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.0.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
+define( 'WC_KLARNA_PAYMENTS_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 
 if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
@@ -251,4 +252,52 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 	WC_Klarna_Payments::get_instance();
 
+}
+
+add_action( 'in_admin_header', 'klarna_banner' );
+function klarna_banner() {
+	$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
+	$show_banner = false;
+
+	if ( isset( $kp_settings['testmode'] ) && 'yes' === $kp_settings['testmode'] ) {
+		$show_banner = true;
+	}
+
+	// Go through countries and check if at least one has credentials configured.
+	$countries = array( 'at', 'dk', 'fi', 'de', 'nl', 'no', 'se', 'gb', 'us' );
+	$country_configured = false;
+	foreach ( $countries as $country ) {
+		if ( '' !== $kp_settings['merchant_id_' . $country] && '' !== $kp_settings['shared_secret_' . $country] ) {
+			$country_configured = true;
+		}
+	}
+
+	if ( ! $country_configured ) {
+		$show_banner = true;
+	}
+
+	if ( $show_banner ) {
+		?>
+		<div id="klarna-banner">
+			<div id="kb-left">
+				<h1>Go live</h1>
+				<p>Get your store approved by Klarna, and start selling! When the installation is done,
+					Klarna will then verify the integration before the shop goes live.</p>
+				<a class="kb-button"
+				   href="https://www.klarna.com/international/business/woocommerce/?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=banner"
+				   target="_blank">Click here to go live with your store</a>
+			</div>
+			<div id="kb-right">
+				<h1>Already Part of the Klarna world?</h1>
+				<p>Klarna is entering a new world of smoooth. We would love for you to join us on the
+					ride and to do so, you will need to upgrade your Klarna products to a new
+					integration to be able to get the latest features that Klarna develop. You’ll keep
+					your current agreement along with your price settings. </p>
+				<a class="kb-button"
+				   href="https://hello.klarna.com/product-upgrade?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=banner"
+				   target="_blank">Click here to update your Klarna products</a>
+			</div>
+		</div>
+		<?php
+	}
 }

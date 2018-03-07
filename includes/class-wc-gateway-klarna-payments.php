@@ -332,6 +332,47 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Add sidebar banner to the settings page.
+	 */
+	public function admin_options() {
+		?>
+		<img id="klarna-settings-logo" src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/klarna_logo_black.png" width="200" />
+
+		<div id="klarna-wrapper">
+			<div id="klarna-main">
+				<?php parent::admin_options(); ?>
+			</div>
+			<div id="klarna-sidebar">
+				<div class="kb-sidebar-section">
+					<img src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/icon_reminder.png" width="64" />
+					<h3>Go live</h3>
+					<p>Before you can start selling you need your store to be approved by Klarna. When the installation is
+						done and you are ready to go live - Klarna will verify the integration before the shop goes live.</p>
+					<a class="kb-button" href="#" target="_blank">Get Klarna to verify your store</a>
+				</div>
+
+				<div class="kb-sidebar-section">
+					<div>
+						<img src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/icon_pay_now.png" width="32" />
+						<img src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/icon_pay_later.png" width="64" />
+						<img src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/icon_slice_it.png" width="48" />
+					</div>
+					<h3>Currently using Klarna?</h3>
+					<p>Pay now, Pay later and Slice it. Klarna is entering a new world of smoooth. We would love for you to
+						join us on the ride and to do so, you will need to upgrade your Klarna products to a new integration.</p>
+					<p>You will then always get the latest features that Klarna develops and you’ll keep your current
+						agreement along with your price settings.</p>
+					<a class="kb-button" href="#" target="_blank">Update your Klarna product</a>
+				</div>
+
+				<p>*Note that if you are using Klarna checkout and want to start selling with Klarna payments then you
+					need to sign up with Klarna.</p>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Check country and currency
 	 *
 	 * Fired before create session and update session, and inside is_available.
@@ -720,6 +761,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		wp_enqueue_script(
 			'klarna_payments_admin',
 			plugins_url( 'assets/js/klarna-payments-admin.js', WC_KLARNA_PAYMENTS_MAIN_FILE )
+		);
+		wp_enqueue_style(
+			'klarna_payments_admin',
+			plugins_url( 'assets/css/klarna-payments-admin.css', WC_KLARNA_PAYMENTS_MAIN_FILE )
 		);
 	}
 
