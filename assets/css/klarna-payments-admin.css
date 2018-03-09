@@ -17,11 +17,12 @@
 	padding: 30px;
 	margin: 0 20px 20px 0;
 	color: #fff;
+	position: relative;
 }
 
 #klarna-banner > div {
 	text-align: center;
-	padding: 0 30px;
+	padding: 0 60px;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -34,12 +35,20 @@
 	font-weight: bold;
 	color: #fff;
 	font-family: KlarnaHeadline, sans-serif;
+	margin-top: 0;
 }
 
 #klarna-banner p {
 	margin-bottom: 1em;
 	font-size: 14px;
 	letter-spacing: -0.2px;
+}
+
+#kb-image {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	z-index: 1;
 }
 
 a.kb-button {
@@ -61,9 +70,15 @@ a.kb-button {
 		overflow: hidden;
 	}
 
-	#klarna-banner div {
+	#klarna-banner > div {
 		float: left;
 		width: 50%;
+	}
+
+	#klarna-banner > div > * {
+		margin-left: auto;
+		margin-right: auto;
+		max-width: 500px;
 	}
 }
 

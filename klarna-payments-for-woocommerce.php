@@ -309,6 +309,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 						   href="https://hello.klarna.com/product-upgrade?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=banner"
 						   target="_blank">Click here to update your Klarna products</a>
 					</div>
+					<img id="kb-image" src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/klarna_logo_white.png" alt="Klarna logo" width="96" />
 				</div>
 				<?php
 			}
