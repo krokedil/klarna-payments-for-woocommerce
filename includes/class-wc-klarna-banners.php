@@ -24,7 +24,7 @@ if ( ! class_exists( 'WC_Klarna_Banners' ) ) {
 		public function load_admin_css() {
 			wp_enqueue_style(
 				'klarna_payments_admin',
-				plugins_url( 'assets/css/klarna-payments-admin.css', WC_KLARNA_PAYMENTS_MAIN_FILE )
+				plugins_url( 'assets/css/klarna-payments-admin.css?v=120318', WC_KLARNA_PAYMENTS_MAIN_FILE )
 			);
 		}
 
