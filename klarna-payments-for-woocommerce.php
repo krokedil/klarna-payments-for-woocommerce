@@ -22,6 +22,7 @@ define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.0.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
+define( 'WC_KLARNA_PAYMENTS_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 
 if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
@@ -193,8 +194,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				return;
 			}
 
-			include_once( WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-gateway-klarna-payments.php' );
-			include_once( WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-payments-order-lines.php' );
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-gateway-klarna-payments.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-payments-order-lines.php';
+
+			if ( is_admin() ) {
+				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-banners.php';
+			}
 
 			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateways' ) );
@@ -204,6 +209,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * Add the gateways to WooCommerce
 		 *
 		 * @param  array $methods Array of payment methods.
+		 *
 		 * @return array $methods Array of payment methods.
 		 * @since  1.0.0
 		 */
@@ -247,6 +253,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			return $phone_value;
 		}
+
 	}
 
 	WC_Klarna_Payments::get_instance();

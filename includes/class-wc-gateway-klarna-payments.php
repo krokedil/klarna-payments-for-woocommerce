@@ -332,6 +332,18 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Add sidebar to the settings page.
+	 */
+	public function admin_options() {
+		ob_start();
+		parent::admin_options();
+		$parent_options = ob_get_contents();
+		ob_end_clean();
+
+		WC_Klarna_Banners::settings_sidebar( $parent_options );
+	}
+
+	/**
 	 * Check country and currency
 	 *
 	 * Fired before create session and update session, and inside is_available.
