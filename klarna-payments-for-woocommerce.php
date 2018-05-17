@@ -203,11 +203,14 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @param string $message Log message.
 		 */
 		public static function log( $message ) {
-			if ( empty( self::$log ) ) {
-				self::$log = new WC_Logger();
-			}
+			$klarna_payments_settings = get_option( 'woocommerce_klarna_payments_settings' );
+			if ( 'yes' === $klarna_payments_settings['logging'] ) {
+				if ( empty( self::$log ) ) {
+					self::$log = new WC_Logger();
+				}
 
-			self::$log->add( 'klarna-payments-for-woocommerce', $message );
+				self::$log->add( 'klarna_payments', $message );
+			}
 		}
 
 		/**
