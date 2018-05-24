@@ -24,5 +24,5 @@ jQuery( function($) {
 
 	titles.first().before('<hr style="margin-top:2em;margin-bottom:2em" />');
 	titles.last().before('<hr style="margin-top:2em;margin-bottom:2em" />');
-	submit.before('<hr style="margin-top:2em;margin-bottom:2em" />');
+	tables.last().after('<hr style="margin-top:2em;margin-bottom:2em" />');
 });

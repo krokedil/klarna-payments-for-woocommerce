@@ -205,11 +205,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->init_settings();
 
 		// Get setting values.
-		$this->title       = $this->get_option( 'title' );
-		$this->description = $this->get_option( 'description', '' );
-		$this->enabled     = $this->get_option( 'enabled' );
-		$this->testmode    = 'yes' === $this->get_option( 'testmode' );
-		$this->logging     = 'yes' === $this->get_option( 'logging' );
+		$this->title    = $this->get_option( 'title' );
+		$this->enabled  = $this->get_option( 'enabled' );
+		$this->testmode = 'yes' === $this->get_option( 'testmode' );
+		$this->logging  = 'yes' === $this->get_option( 'logging' );
 
 		$this->set_klarna_country();
 		$this->set_environment();
@@ -235,9 +234,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$env_string = 'US' === $this->klarna_country ? '-na' : '';
 		if ( $this->testmode ) {
-			$this->description .= ' ' . __( '<p>TEST MODE ENABLED.</p>', 'klarna-payments-for-woocommerce' );
-			$this->description = trim( $this->description );
-
+			$this->description = __( '<p>TEST MODE ENABLED.</p>', 'klarna-payments-for-woocommerce' );
 			$this->server_base = 'https://api' . $env_string . '.playground.klarna.com/';
 		} else {
 			$this->server_base = 'https://api' . $env_string . '.klarna.com/';
@@ -246,16 +243,21 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
-			'process_admin_options'
+			'process_admin_options',
 		) );
 		add_action( 'wp_head', array( $this, 'klarna_payments_session' ), 10, 1 );
-		add_action( 'woocommerce_review_order_after_submit', array( $this, 'klarna_payments_session_ajax_update' ) );
+		add_action( 'woocommerce_review_order_after_order_total', array(
+			$this,
+			'klarna_payments_session_ajax_update',
+		) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
 		add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'iframe_options' ) );
+		add_filter( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
+
 		if ( '' !== $this->background ) {
 			add_action( 'wp_head', array( $this, 'iframe_background' ) );
 		}
@@ -289,124 +291,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		include_once( WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/klarna-payments-admin-form-fields.php' );
+		include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/klarna-payments-admin-form-fields.php';
 		$this->form_fields = Klarna_Payments_Form_Fields::fields();
-	}
-
-	/**
-	 * Get gateway title.
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function get_title() {
-		switch ( $this->klarna_country ) {
-			case 'US' :
-				if ( '' !== $this->get_option( 'title_us' ) ) {
-					$this->title = $this->get_option( 'title_us' );
-				}
-				break;
-			case 'GB' :
-				if ( '' !== $this->get_option( 'title_gb' ) ) {
-					$this->title = $this->get_option( 'title_gb' );
-				}
-				break;
-			case 'SE' :
-				if ( '' !== $this->get_option( 'title_se' ) ) {
-					$this->title = $this->get_option( 'title_se' );
-				}
-				break;
-			case 'NO' :
-				if ( '' !== $this->get_option( 'title_no' ) ) {
-					$this->title = $this->get_option( 'title_no' );
-				}
-				break;
-			case 'FI' :
-				if ( '' !== $this->get_option( 'title_fi' ) ) {
-					$this->title = $this->get_option( 'title_fi' );
-				}
-				break;
-			case 'DK' :
-				if ( '' !== $this->get_option( 'title_dk' ) ) {
-					$this->title = $this->get_option( 'title_dk' );
-				}
-				break;
-			case 'NL' :
-				if ( '' !== $this->get_option( 'title_nl' ) ) {
-					$this->title = $this->get_option( 'title_nl' );
-				}
-				break;
-			case 'AT' :
-				if ( '' !== $this->get_option( 'title_at' ) ) {
-					$this->title = $this->get_option( 'title_at' );
-				}
-				break;
-			case 'DE' :
-				if ( '' !== $this->get_option( 'title_de' ) ) {
-					$this->title = $this->get_option( 'title_de' );
-				}
-				break;
-		} // End switch().
-
-		return apply_filters( 'woocommerce_gateway_title', $this->title, $this->id );
-	}
-
-	/**
-	 * Get gateway description.
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function get_description() {
-		switch ( $this->klarna_country ) {
-			case 'US' :
-				if ( '' !== $this->get_option( 'description_us' ) ) {
-					$this->description = $this->get_option( 'description_us' );
-				}
-				break;
-			case 'GB' :
-				if ( '' !== $this->get_option( 'description_gb' ) ) {
-					$this->description = $this->get_option( 'description_gb' );
-				}
-				break;
-			case 'SE' :
-				if ( '' !== $this->get_option( 'description_se' ) ) {
-					$this->description = $this->get_option( 'description_se' );
-				}
-				break;
-			case 'NO' :
-				if ( '' !== $this->get_option( 'description_no' ) ) {
-					$this->description = $this->get_option( 'description_no' );
-				}
-				break;
-			case 'FI' :
-				if ( '' !== $this->get_option( 'description_fi' ) ) {
-					$this->description = $this->get_option( 'description_fi' );
-				}
-				break;
-			case 'DK' :
-				if ( '' !== $this->get_option( 'description_dk' ) ) {
-					$this->description = $this->get_option( 'description_dk' );
-				}
-				break;
-			case 'NL' :
-				if ( '' !== $this->get_option( 'description_nl' ) ) {
-					$this->description = $this->get_option( 'description_nl' );
-				}
-				break;
-			case 'AT' :
-				if ( '' !== $this->get_option( 'description_at' ) ) {
-					$this->description = $this->get_option( 'description_at' );
-				}
-				break;
-			case 'DE' :
-				if ( '' !== $this->get_option( 'description_de' ) ) {
-					$this->description = $this->get_option( 'description_de' );
-				}
-				break;
-		} // End switch().
-
-		return apply_filters( 'woocommerce_gateway_description', $this->description, $this->id );
 	}
 
 	/**
@@ -443,6 +329,18 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
+	}
+
+	/**
+	 * Add sidebar to the settings page.
+	 */
+	public function admin_options() {
+		ob_start();
+		parent::admin_options();
+		$parent_options = ob_get_contents();
+		ob_end_clean();
+
+		WC_Klarna_Banners::settings_sidebar( $parent_options );
 	}
 
 	/**
@@ -575,7 +473,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
 				'Content-Type'  => 'application/json',
 			),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION,
+			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
 			'body'       => wp_json_encode( apply_filters( 'wc_klarna_payments_session_request_body', array(
 				'purchase_country'  => $this->klarna_country,
 				'purchase_currency' => get_woocommerce_currency(),
@@ -588,7 +486,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
 			// Try to update the session, if it fails try to create new session.
-			$update_request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
+			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response    = $this->update_session_request( $update_request_url, $request_args );
 
 			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
@@ -642,7 +540,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
 				'Content-Type'  => 'application/json',
 			),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION,
+			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
 			'body'       => wp_json_encode( array(
 				'purchase_country'  => $this->klarna_country,
 				'purchase_currency' => get_woocommerce_currency(),
@@ -655,7 +553,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If billing country has changed we need a new session.
 		if ( WC()->checkout->get_value( 'billing_country' ) !== WC()->session->get( 'klarna_payments_session_country' ) ) {
-			$create_request_url = $this->server_base . 'credit/v1/sessions';
+			$create_request_url = $this->server_base . 'payments/v1/sessions';
 			$create_response    = $this->create_session_request( $create_request_url, $request_args );
 
 			if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
@@ -666,6 +564,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
 				WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
 				WC()->session->set( 'klarna_payments_session_country', WC()->checkout->get_value( 'billing_country' ) );
+				WC()->session->set( 'klarna_payments_categories', $create_response->payment_method_categories );
 			}
 
 			// If we have a client token now, initialize Klarna Credit.
@@ -681,7 +580,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				<?php
 			}
 		} elseif ( WC()->session->get( 'klarna_payments_session_id' ) ) { // On AJAX update_checkout, just try to update the session, if Klarna country hasn't changed.
-			$update_request_url = $this->server_base . 'credit/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
+			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response    = $this->update_session_request( $update_request_url, $request_args );
 
 			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
@@ -699,7 +598,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @param array $request_args Klarna request arguments.
 	 */
 	public function create_session( $request_args ) {
-		$create_request_url = $this->server_base . 'credit/v1/sessions';
+		$create_request_url = $this->server_base . 'payments/v1/sessions';
 		$create_response    = $this->create_session_request( $create_request_url, $request_args );
 
 		if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
@@ -710,14 +609,30 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
 			WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
 			WC()->session->set( 'klarna_payments_session_country', $this->klarna_country );
+			WC()->session->set( 'klarna_payments_categories', $create_response->payment_method_categories );
 		}
+	}
+
+	/**
+	 * Override checkout form template if Klarna Checkout is the selected payment method.
+	 */
+	public function override_kp_payment_option( $located, $template_name, $args ) {
+		if ( is_checkout() ) {
+			if ( 'checkout/payment-method.php' === $template_name ) {
+				if ( 'klarna_payments' === $args['gateway']->id ) {
+					$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
+				}
+			}
+		}
+
+		return $located;
 	}
 
 	/**
 	 * Create Klarna Payments session request.
 	 *
-	 * @param string $request_url Klarna request URL.
-	 * @param array $request_args Klarna request arguments.
+	 * @param string $request_url  Klarna request URL.
+	 * @param array  $request_args Klarna request arguments.
 	 *
 	 * @return array|mixed|object|WP_Error
 	 */
@@ -743,8 +658,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Update Klarna Payments session.
 	 *
-	 * @param string $request_url Klarna request URL.
-	 * @param array $request_args Klarna request arguments.
+	 * @param string $request_url  Klarna request URL.
+	 * @param array  $request_args Klarna request arguments.
 	 *
 	 * @return array|mixed|object|WP_Error
 	 */
@@ -769,12 +684,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Adds Klarna Payments container to checkout page.
 	 */
 	public function payment_fields() {
-		$description = $this->get_description();
-		if ( $description ) {
-			echo wpautop( wptexturize( $description ) );
-		}
-
-		echo '<div id="klarna_container" style="margin-top:1em;"></div>';
+		echo '<div id="' . $this->id . '_container" class="klarna_payments_container" data-payment_method_category="' . esc_attr( $this->id ) . '"></div>';
 	}
 
 	/**
@@ -815,7 +725,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
-		if ( ! isset( $_GET['section'] ) || 'klarna_payments' !== $_GET['section'] ) {
+		if ( ! isset( $_GET['section'] ) || 'klarna_payments' !== $_GET['section'] ) { // Input var okay.
 			return;
 		}
 
@@ -850,6 +760,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * Uses authorization token to place the order.
 	 *
+	 * @TODO: Set customer payment method as KP.
+	 *
 	 * @param int $order_id WooCommerce order ID.
 	 *
 	 * @return array   $result  Payment result.
@@ -866,8 +778,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Process Klarna Payments response.
 	 *
-	 * @param array    $response Klarna API response.
-	 * @param WC_Order $order    WooCommerce order.
+	 * @param array $response Klarna API response.
+	 * @param WC_Order $order WooCommerce order.
 	 *
 	 * @return array   $result  Payment result.
 	 */
@@ -1023,13 +935,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$shipping_address = $billing_address;
 		}
 
-		$request_url  = $this->server_base . 'credit/v1/authorizations/' . $auth_token . '/order';
+		$request_url  = $this->server_base . 'payments/v1/authorizations/' . $auth_token . '/order';
 		$request_args = array(
 			'headers'    => array(
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
 				'Content-Type'  => 'application/json',
 			),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION,
+			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
 			'body'       => wp_json_encode( array(
 				'purchase_country'    => $this->klarna_country,
 				'purchase_currency'   => get_woocommerce_currency(),
@@ -1255,6 +1167,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		WC()->session->__unset( 'klarna_payments_session_id' );
 		WC()->session->__unset( 'klarna_payments_client_token' );
 		WC()->session->__unset( 'klarna_payments_session_country' );
+		WC()->session->__unset( 'klarna_payments_categories' );
 	}
 
 	/**

@@ -1,3 +1,4 @@
+/* global console, Klarna */
 jQuery( function($) {
 	'use strict';
 
@@ -5,7 +6,7 @@ jQuery( function($) {
 		authorization_response: {},
 		iframe_loaded: false,
 		show_form: false,
-		klarna_container_selector: '#klarna_container',
+		klarna_container_selector: '#klarna_container_2',
 		checkout_values: {},
 
 		check_changes: function() {
@@ -61,7 +62,7 @@ jQuery( function($) {
 				}
 
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
-				if ( 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val() ) {
+				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					$('#place_order').attr('disabled', true);
 					klarna_payments.load().then(klarna_payments.loadHandler);
 				}
@@ -90,7 +91,7 @@ jQuery( function($) {
 			 * Phone field changes. Has to be 5 characters or longer for KP to work.
 			 */
 			$('form.checkout').on('keyup', '#billing_phone', klarna_payments.debounce_changes(function() {
-				if ('klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
+				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					$('#place_order').attr('disabled', true);
 					if ($(this).val().length > 4) {
 						klarna_payments.load().then(klarna_payments.loadHandler);
@@ -102,7 +103,7 @@ jQuery( function($) {
 			 * Email field changes, check if WooCommerce says field is valid.
 			 */
 			$('form.checkout').on('keyup', '#billing_email', klarna_payments.debounce_changes(function() {
-				if ('klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
+				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					$('#place_order').attr('disabled', true);
 					if (!$(this).parent().hasClass('woocommerce-invalid')) {
 						klarna_payments.load().then(klarna_payments.loadHandler);
@@ -115,13 +116,13 @@ jQuery( function($) {
  			 */
 			$('form.checkout').on('change', 'input[name="payment_method"]', function() {
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
-				if (!klarna_payments.show_form && 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val()) {
+				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					$('#place_order').attr('disabled', true);
 					klarna_payments.load().then(klarna_payments.loadHandler);
 				}
 
 				// Enable the form if any other payment method is selected.
-				if ('klarna_payments' !== jQuery('input[name="payment_method"]:checked').val()) {
+				if (!klarna_payments.isKlarnaPaymentsSelected()) {
 					$('#place_order').attr('disabled', false);
 				}
 			});
@@ -135,7 +136,7 @@ jQuery( function($) {
 					clearInterval(checkFormInterval);
 				}
 
-				if ( 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val() ) {
+				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					klarna_payments.check_changes();
 				}
 			}, 200);
@@ -145,7 +146,11 @@ jQuery( function($) {
 			 *
 			 * Firing Klarna.Credit.authorize(), then once it resolves, adding the hidden form field and re-submitting the form.
  			 */
-			$( 'form.checkout' ).on( 'checkout_place_order_klarna_payments', function() {
+			$('form.checkout').on('checkout_place_order', function() {
+				if (!klarna_payments.isKlarnaPaymentsSelected()) {
+					return true;
+				}
+
 				if ($('input[name="klarna_payments_authorization_token"]').length) {
 					return true;
 				}
@@ -170,7 +175,10 @@ jQuery( function($) {
 		},
 
 		load: function() {
-			if ($(klarna_payments.klarna_container_selector).length) {
+			var klarna_payments_container_selector_id = '#' + klarna_payments.getSelectorContainerID();
+			console.log(klarna_payments_container_selector_id);
+
+			if (klarna_payments_container_selector_id) {
 				var $defer = $.Deferred();
 
 				var klarnaLoadedInterval = setInterval(function () {
@@ -187,7 +195,8 @@ jQuery( function($) {
 						clearTimeout(klarnaLoadedTimeout);
 
 						var options = {
-							container: klarna_payments.klarna_container_selector
+							container: klarna_payments_container_selector_id,
+							payment_method_category: klarna_payments.getSelectedPaymentCategory()
 						};
 
 						if ( 'US' === $('#billing_country').val() ) {
@@ -231,16 +240,42 @@ jQuery( function($) {
 			}
 		},
 
+		isKlarnaPaymentsSelected: function () {
+			if ($('input[name="payment_method"]:checked').length) {
+				var selected_value = $('input[name="payment_method"]:checked').val();
+				return selected_value.indexOf('klarna_payments') !== -1;
+			}
+
+			return false;
+		},
+
+		getSelectorContainerID: function() {
+			return $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').attr('id');
+		},
+
+		getSelectedPaymentCategory: function() {
+			var selected_category = $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').data('payment_method_category');
+			return selected_category.replace('klarna_payments_', '');
+		},
+
 		authorize: function() {
 			var $defer = $.Deferred();
 			var address = klarna_payments.get_address();
 
 			klarna_payments.authorization_response = {};
 
-			Klarna.Credit.authorize( address, function(response) {
-				klarna_payments.authorization_response = response;
-				$defer.resolve(response);
-			});
+			try {
+				Klarna.Credit.authorize(
+					address,
+					{payment_method_category: klarna_payments.getSelectedPaymentCategory()},
+					function (response) {
+						klarna_payments.authorization_response = response;
+						$defer.resolve(response);
+					}
+				);
+			} catch (e) {
+				console.log(e);
+			}
 
 			return $defer.promise();
 		},
@@ -286,19 +321,19 @@ jQuery( function($) {
 		page_visibility_listener: function() {
 			var hidden, visibilityChange;
 
-			if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
-				hidden = "hidden";
-				visibilityChange = "visibilitychange";
-			} else if (typeof document.msHidden !== "undefined") {
-				hidden = "msHidden";
-				visibilityChange = "msvisibilitychange";
-			} else if (typeof document.webkitHidden !== "undefined") {
-				hidden = "webkitHidden";
-				visibilityChange = "webkitvisibilitychange";
+			if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
+				hidden = 'hidden';
+				visibilityChange = 'visibilitychange';
+			} else if (typeof document.msHidden !== 'undefined') {
+				hidden = 'msHidden';
+				visibilityChange = 'msvisibilitychange';
+			} else if (typeof document.webkitHidden !== 'undefined') {
+				hidden = 'webkitHidden';
+				visibilityChange = 'webkitvisibilitychange';
 			}
 
 			// Warn if the browser doesn't support addEventListener or the Page Visibility API
-			if (typeof document.addEventListener === "undefined" || typeof document[hidden] === "undefined") {
+			if (typeof document.addEventListener === 'undefined' || typeof document[hidden] === 'undefined') {
 			} else {
 				// Handle page visibility change
 				document.addEventListener(visibilityChange, handleVisibilityChange, false);
@@ -306,7 +341,7 @@ jQuery( function($) {
 
 			function handleVisibilityChange() {
 				if (! document[hidden]) {
-					if ( 'klarna_payments' === jQuery('input[name="payment_method"]:checked').val() ) {
+					if (klarna_payments.isKlarnaPaymentsSelected()) {
 						$('body').trigger('update_checkout');
 					}
 				}
