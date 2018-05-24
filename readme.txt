@@ -19,6 +19,9 @@ Klarna offers three payment methods. Pay now, Pay later and Slice it. It offers 
 http://docs.krokedil.com/documentation/klarna-payments-woocommerce/
 
 == Changelog ==
+= 2018.05.24.  	- version 1.4.3 =
+* Feature		- Added support for wp_add_privacy_policy_content (for GDPR compliance). More info: https://core.trac.wordpress.org/attachment/ticket/43473/PRIVACY-POLICY-CONTENT-HOOK.md.
+
 = 2018.01.29.  	- version 1.4.2 =
 * Fix           - Cleans up translation strings.
 * Enhancement   - process_payment method refactoring.    
