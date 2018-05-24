@@ -28,9 +28,9 @@ class WC_Klarna_GDPR {
 			$content =
 				__(
 					'When you place an order in the webstore with Klarna Payments as the choosen payment method, ' .
-					'information about the products in the order (namne, price, quantity, SKU) is sent to Klarna. ' .
-					'When the purchase is finalized Klarna sends your billing and shipping address back to the webstore. ' .
-					'This data plus an unique identifier for the purchase is then stored as billing and shipping data in the order in WooCommerce.',
+					'information about the products in the order (namne, price, quantity, SKU) is sent to Klarna ' .
+					'together with your billing and shipping address. Klarna then responds with a unique transaction ID.' .
+					'This ID is stored in the order in WooCommerce for future reference.',
 					'klarna-payments-for-woocommerce'
 				);
 			wp_add_privacy_policy_content(
