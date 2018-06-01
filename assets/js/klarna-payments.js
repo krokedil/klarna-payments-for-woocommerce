@@ -115,10 +115,11 @@ jQuery( function($) {
 			 * When changing payment method.
  			 */
 			$('form.checkout').on('change', 'input[name="payment_method"]', function() {
-				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
+				// If Klarna Payments is selected and iframe is not loaded yet, disable the form. Also collapse any unselected Klarna Payments gateways.
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					$('#place_order').attr('disabled', true);
 					klarna_payments.load().then(klarna_payments.loadHandler);
+					klarna_payments.collapseGateways();
 				}
 
 				// Enable the form if any other payment method is selected.
@@ -379,6 +380,16 @@ jQuery( function($) {
 			}
 
 			return address;
+		},
+
+		collapseGateways: function() {
+			$('input[name="payment_method"]').each( function() {
+				if ( $(this).is( ':checked' ) ){
+					$(this).siblings("div.payment_box").show();
+				} else {
+					$(this).siblings("div.payment_box").hide();
+				}
+			});
 		}
 	};
 
