@@ -261,6 +261,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( '' !== $this->background ) {
 			add_action( 'wp_head', array( $this, 'iframe_background' ) );
 		}
+		add_action( 'klarna_payments_template', array( $this, 'klarna_payments_session' ) );
 	}
 
 	/**
@@ -1180,5 +1181,4 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			echo '<div style="margin: 10px 0; padding: 10px; border: 1px solid #B33A3A; font-size: 12px">Order address should not be changed and any changes you make will not be reflected in Klarna system.</div>';
 		}
 	}
-
 }

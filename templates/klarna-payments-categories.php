@@ -1,5 +1,5 @@
 <?php
-
+do_action( 'klarna_payments_template' );
 if ( is_array( WC()->session->get( 'klarna_payments_categories' ) ) ) {
 	$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
 	$kp                 = $available_gateways['klarna_payments'];
