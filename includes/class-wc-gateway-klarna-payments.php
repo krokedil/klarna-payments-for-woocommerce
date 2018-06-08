@@ -231,8 +231,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// What is Klarna link.
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
-
+		WC_Klarna_Payments::log( 'Klarna country: ' . $this->klarna_country );
 		$env_string = 'US' === $this->klarna_country ? '-na' : '';
+		WC_Klarna_Payments::log( '$env_string: ' . $env_string );
 		if ( $this->testmode ) {
 			$this->description = __( '<p>TEST MODE ENABLED.</p>', 'klarna-payments-for-woocommerce' );
 			$this->server_base = 'https://api' . $env_string . '.playground.klarna.com/';
@@ -329,6 +330,18 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
+	}
+
+	/**
+	 * Add sidebar to the settings page.
+	 */
+	public function admin_options() {
+		ob_start();
+		parent::admin_options();
+		$parent_options = ob_get_contents();
+		ob_end_clean();
+
+		WC_Klarna_Banners::settings_sidebar( $parent_options );
 	}
 
 	/**
@@ -461,7 +474,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
 				'Content-Type'  => 'application/json',
 			),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION,
+			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
 			'body'       => wp_json_encode( apply_filters( 'wc_klarna_payments_session_request_body', array(
 				'purchase_country'  => $this->klarna_country,
 				'purchase_currency' => get_woocommerce_currency(),
@@ -528,7 +541,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
 				'Content-Type'  => 'application/json',
 			),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION,
+			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
 			'body'       => wp_json_encode( array(
 				'purchase_country'  => $this->klarna_country,
 				'purchase_currency' => get_woocommerce_currency(),
@@ -929,7 +942,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
 				'Content-Type'  => 'application/json',
 			),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION,
+			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
 			'body'       => wp_json_encode( array(
 				'purchase_country'    => $this->klarna_country,
 				'purchase_currency'   => get_woocommerce_currency(),
@@ -1141,10 +1154,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Sets Klarna country.
 	 */
 	public function set_klarna_country() {
-		if ( ! is_checkout() ) {
+		if ( ! method_exists ( 'WC_Customer', 'get_billing_country' ) ) {
 			return;
 		}
-
+		if ( WC()->customer === null ) {
+			return;
+		}
 		$this->klarna_country = apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
 	}
 
