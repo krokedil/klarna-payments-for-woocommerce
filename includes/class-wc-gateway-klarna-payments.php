@@ -231,8 +231,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// What is Klarna link.
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
-
+		WC_Klarna_Payments::log( 'Klarna country: ' . $this->klarna_country );
 		$env_string = 'US' === $this->klarna_country ? '-na' : '';
+		WC_Klarna_Payments::log( '$env_string: ' . $env_string );
 		if ( $this->testmode ) {
 			$this->description = __( '<p>TEST MODE ENABLED.</p>', 'klarna-payments-for-woocommerce' );
 			$this->server_base = 'https://api' . $env_string . '.playground.klarna.com/';
@@ -559,6 +560,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 			if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
 				$this->session_error = $create_response;
+				WC_Klarna_Payments::log( 'Could not update Klarna session. Response: ' . stripslashes_deep( json_encode( $create_response ) ) );
 				wc_add_notice( 'Could not create Klarna session, please refresh the page to try again', 'error' );
 				$this->unset_session_values();
 			} else { // Store session ID and client token in WC session.
@@ -604,6 +606,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
 			$this->session_error = $create_response;
+			WC_Klarna_Payments::log( 'Could not create Klarna session. Response: ' . stripslashes_deep( json_encode( $create_response ) ) );
 			wc_add_notice( 'Could not create Klarna session, please refresh the page to try again', 'error' );
 			$this->unset_session_values();
 		} else { // Store session ID and client token in WC session.
@@ -1154,10 +1157,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Sets Klarna country.
 	 */
 	public function set_klarna_country() {
-		if ( ! is_checkout() ) {
+		if ( ! method_exists ( 'WC_Customer', 'get_billing_country' ) ) {
 			return;
 		}
-
+		if ( WC()->customer === null ) {
+			return;
+		}
 		$this->klarna_country = apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
 	}
 
