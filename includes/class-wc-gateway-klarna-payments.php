@@ -559,6 +559,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 			if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
 				$this->session_error = $create_response;
+				WC_Klarna_Payments::log( 'Could not update Klarna session. Response: ' . stripslashes_deep( json_encode( $create_response ) ) );
 				wc_add_notice( 'Could not create Klarna session, please refresh the page to try again', 'error' );
 				$this->unset_session_values();
 			} else { // Store session ID and client token in WC session.
@@ -604,6 +605,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
 			$this->session_error = $create_response;
+			WC_Klarna_Payments::log( 'Could not create Klarna session. Response: ' . stripslashes_deep( json_encode( $create_response ) ) );
 			wc_add_notice( 'Could not create Klarna session, please refresh the page to try again', 'error' );
 			$this->unset_session_values();
 		} else { // Store session ID and client token in WC session.
