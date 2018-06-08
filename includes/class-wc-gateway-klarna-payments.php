@@ -231,9 +231,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// What is Klarna link.
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
-		WC_Klarna_Payments::log( 'Klarna country: ' . $this->klarna_country );
 		$env_string = 'US' === $this->klarna_country ? '-na' : '';
-		WC_Klarna_Payments::log( '$env_string: ' . $env_string );
 		if ( $this->testmode ) {
 			$this->description = __( '<p>TEST MODE ENABLED.</p>', 'klarna-payments-for-woocommerce' );
 			$this->server_base = 'https://api' . $env_string . '.playground.klarna.com/';
