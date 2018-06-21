@@ -190,6 +190,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                 = 'klarna_payments';
+		$this->title              = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
 		$this->method_title       = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
 		$this->method_description = __( 'Get the flexibility to pay over time with Klarna!', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = true;
@@ -205,7 +206,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->init_settings();
 
 		// Get setting values.
-		$this->title    = $this->get_option( 'title' );
+		//$this->title    = $this->get_option( 'title' );
 		$this->enabled  = $this->get_option( 'enabled' );
 		$this->testmode = 'yes' === $this->get_option( 'testmode' );
 		$this->logging  = 'yes' === $this->get_option( 'logging' );
@@ -325,7 +326,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$what_is_klarna_text = 'Was ist Klarna?';
 		}
 
-		$icon_html = '<img src="https://cdn.klarna.com/1.0/shared/image/generic/logo/en_us/basic/logo_black.png?width=75" alt="Klarna" />';
+		$icon_html = '<img src="' . $this->icon . '" alt="Klarna" />';
 		$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
