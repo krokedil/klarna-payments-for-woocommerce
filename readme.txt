@@ -53,6 +53,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2018.06.21  	- version 1.5.1 =
+* Tweak			- Payment gateway icons now fetched from Klarnas CDN.
+
 = 2018.06.08  	- version 1.5.0 =
 * Feature		- Switches to Klarnas new /payments endpoint. Displays each Klarna payment method as its own payment option in checkout.
 * Feature		- Added support for wp_add_privacy_policy_content (for GDPR compliance). More info: https://core.trac.wordpress.org/attachment/ticket/43473/PRIVACY-POLICY-CONTENT-HOOK.md.
