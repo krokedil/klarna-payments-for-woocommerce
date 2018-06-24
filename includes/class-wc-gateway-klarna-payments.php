@@ -325,8 +325,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( stripos( $locale, 'de' ) !== false ) {
 			$what_is_klarna_text = 'Was ist Klarna?';
 		}
-
-		$icon_html = '<img src="' . $this->icon . '" alt="Klarna" />';
+		$icon_width = '39';
+		$icon_html = '<img src="' . $this->icon . '" alt="Klarna" style="max-width:' . $icon_width . 'px"/>';
 		$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
