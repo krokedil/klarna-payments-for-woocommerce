@@ -14,7 +14,6 @@ if ( is_array( WC()->session->get( 'klarna_payments_categories' ) ) ) {
 		$kp->title = $payment_category_name;
 		$kp->icon  = $payment_category_icon;
 		$headers   = get_headers( $kp->icon );
-		error_log( $payment_category_icon );
 		if ( 'HTTP/1.1 404 Not Found' === $headers[0] ) {
 			switch ( $kp->id ) {
 				case 'klarna_payments_pay_later':
