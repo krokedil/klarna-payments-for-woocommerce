@@ -3,7 +3,7 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 4.9.6
+Tested up to: 4.9.7
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv3 or later
@@ -53,6 +53,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2018.07.23  	- version 1.5.2 =
+* Tweak			- Add max width to payment method icons.
+* Enhancement	- Added Klarna LEAP functionality (URL's for new customer signup & onboarding).
+* Fix			- Added fallback image for 404 on payment gateway icon URL.
+
 = 2018.06.21  	- version 1.5.1 =
 * Tweak			- Payment gateway icons now fetched from Klarnas CDN.
 
