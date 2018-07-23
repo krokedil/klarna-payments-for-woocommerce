@@ -4,13 +4,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-if ( ! class_exists( 'WC_Klarna_Banners' ) ) {
+if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 	/**
 	 * Displays merchant information in the backend.
 	 */
-	class WC_Klarna_Banners {
+	class WC_Klarna_Banners_KP {
 		/**
-		 * WC_Klarna_Banners constructor.
+		 * WC_Klarna_Banners_KP constructor.
 		 */
 		public function __construct() {
 			add_action( 'in_admin_header', array( $this, 'klarna_banner' ) );
@@ -76,7 +76,7 @@ if ( ! class_exists( 'WC_Klarna_Banners' ) ) {
 						<h1>Go live</h1>
 						<p>Before you can start to sell with Klarna you need your store to be approved by Klarna. When the installation is done and you are ready to go live, Klarna will need to verify the integration. Then you can go live with your store! If you wish to switch Klarna products then you’ll need the Klarna team to approve your store again.</p>
 						<a class="kb-button"
-						   href="<?php echo $url ?>"
+						   href="<?php echo self::get_go_live_url(); ?>"
 						   target="_blank">Go live with Klarna</a>
 					</div>
 					<div id="kb-right">
@@ -110,7 +110,7 @@ if ( ! class_exists( 'WC_Klarna_Banners' ) ) {
 						<img src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/icon_reminder.png" width="64" />
 						<h3>Go live</h3>
 						<p>Before you can start to sell with Klarna you need your store to be approved by Klarna. When the installation is done and you are ready to go live, Klarna will need to verify the integration. Then you can go live with your store! If you wish to switch Klarna products then you’ll need the Klarna team to approve your store again.</p>
-						<a class="kb-button" href="https://www.klarna.com/international/business/woocommerce/?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=kp" target="_blank">Go live with Klarna</a>
+						<a class="kb-button" href="<?php echo self::get_go_live_url(); ?>" target="_blank">Go live with Klarna</a>
 					</div>
 
 					<div class="kb-sidebar-section">
@@ -126,7 +126,28 @@ if ( ! class_exists( 'WC_Klarna_Banners' ) ) {
 
 			<?php
 		}
+
+		/**
+		 * Return correct Go live url depending on the store country.
+		 */
+		public static function get_go_live_url() {
+			// Set args for the URL
+			$country        = wc_get_base_location()['country'];
+			$plugin         = 'klarna-payments-for-woocommerce';
+			$plugin_version = WC_KLARNA_PAYMENTS_VERSION;
+			$wc_version     = defined( 'WC_VERSION' ) && WC_VERSION ? WC_VERSION : null;
+			$url_queries    = '?country='. $country .'&products=kp&plugin=' . $plugin . '&pluginVersion=' . $plugin_version . '&platform=woocommerce&platformVersion=' . $wc_version;
+
+			if ( 'US' !== $country ) {
+				$url_base = 'https://eu.portal.klarna.com/signup/';
+				$url = $url_base . $url_queries;
+			} else {
+				//$url_base = 'https://us.portal.klarna.com/signup/';
+				$url = 'https://www.klarna.com/international/business/woocommerce/?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=kp';
+			}
+			return $url;
+		}
 	}
 }
 
-new WC_Klarna_Banners();
+new WC_Klarna_Banners_KP();
