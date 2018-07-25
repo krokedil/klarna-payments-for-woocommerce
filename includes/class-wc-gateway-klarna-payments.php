@@ -945,7 +945,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Content-Type'  => 'application/json',
 			),
 			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
-			'body'       => wp_json_encode( array(
+			'body'       => wp_json_encode( apply_filters('kp_wc_api_request_args', array(
 				'purchase_country'    => $this->klarna_country,
 				'purchase_currency'   => get_woocommerce_currency(),
 				'locale'              => $this->get_locale_for_klarna_country(),
@@ -959,7 +959,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					'confirmation' => $order->get_checkout_order_received_url(),
 					'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $order_id,
 				),
-			) ),
+			), $order, $posted_data ) ),
 		);
 
 		$response = wp_safe_remote_post( $request_url, $request_args );
