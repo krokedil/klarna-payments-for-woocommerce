@@ -422,6 +422,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
+		if ( is_wc_endpoint_url( 'order-pay' ) ) {
+			return false;
+		}
+
 		$this->set_klarna_country();
 		$this->set_credentials();
 
