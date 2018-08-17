@@ -53,6 +53,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2018.08.17  	- version 1.5.4 =
+* Tweak			- Logging improvements.
+* Fix			- Version number in enqueuing of admin css file.
+
 = 2018.08.17  	- version 1.5.3 =
 * Tweak			- Added filter kp_wc_api_request_args to be able to override order data sent to Klarna.
 * Tweak			- Added filter wc_klarna_payments_available_payment_categories to be able to override wich payment methods that should be available.
