@@ -422,6 +422,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
+		if ( is_wc_endpoint_url( 'order-pay' ) ) {
+			return false;
+		}
+
 		$this->set_klarna_country();
 		$this->set_credentials();
 
@@ -560,6 +564,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
 				$this->session_error = $create_response;
 				WC_Klarna_Payments::log( 'Could not update Klarna session. Response: ' . stripslashes_deep( json_encode( $create_response ) ) );
+				WC_Klarna_Payments::log( 'Posted request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 				wc_add_notice( 'Could not create Klarna session, please refresh the page to try again', 'error' );
 				$this->unset_session_values();
 			} else { // Store session ID and client token in WC session.
@@ -945,7 +950,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Content-Type'  => 'application/json',
 			),
 			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
-			'body'       => wp_json_encode( array(
+			'body'       => wp_json_encode( apply_filters('kp_wc_api_request_args', array(
 				'purchase_country'    => $this->klarna_country,
 				'purchase_currency'   => get_woocommerce_currency(),
 				'locale'              => $this->get_locale_for_klarna_country(),
@@ -959,7 +964,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					'confirmation' => $order->get_checkout_order_received_url(),
 					'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $order_id,
 				),
-			) ),
+			), $order, $posted_data ) ),
 		);
 
 		$response = wp_safe_remote_post( $request_url, $request_args );

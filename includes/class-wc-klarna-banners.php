@@ -15,6 +15,8 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 		public function __construct() {
 			add_action( 'in_admin_header', array( $this, 'klarna_banner' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_css' ) );
+			add_action( 'wp_ajax_hide_klarna_kp_banner', array( $this, 'hide_klarna_kp_banner' ) );
+			add_action( 'wp_ajax_nopriv_hide_klarna_kp_banner', array( $this, 'hide_klarna_kp_banner' ) );
 		}
 
 		/**
@@ -68,10 +70,10 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 				$show_banner = true;
 			}
 
-			if ( $show_banner ) {
+			if ( $show_banner  && false === get_transient( 'klarna_kp_hide_banner' ) ) {
 				?>
 				<div id="kb-spacer"></div>
-				<div id="klarna-banner">
+				<div id="klarna-kp-banner">
 					<div id="kb-left">
 						<h1>Go live</h1>
 						<p>Before you can start to sell with Klarna you need your store to be approved by Klarna. When the installation is done and you are ready to go live, Klarna will need to verify the integration. Then you can go live with your store! If you wish to switch Klarna products then you’ll need the Klarna team to approve your store again.</p>
@@ -89,7 +91,29 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 					<img id="kb-image"
 						 src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/klarna_logo_white.png"
 						 alt="Klarna logo" width="110"/>
+						 <span class="kb-kp-dismiss dashicons dashicons-dismiss"></span>
 				</div>
+
+				<script type="text/javascript">
+					jQuery(document).ready(function($){
+
+						jQuery('.kb-kp-dismiss').click(function(){
+							jQuery('#klarna-kp-banner').slideUp();
+							jQuery.post(
+								ajaxurl,
+								{
+									action		: 'hide_klarna_kp_banner',
+									_wpnonce	: '<?php echo wp_create_nonce('hide-klarna-kp-banner'); ?>',
+								},
+								function(response){
+									console.log('Success hide kp banner');
+									
+								}
+							);
+											
+						});
+					});
+					</script>
 				<?php
 			}
 		}
@@ -125,6 +149,15 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 			</div>
 
 			<?php
+		}
+
+		/**
+		 * Hide Klarna banner in admin pages for.
+		 */
+		public function hide_klarna_kp_banner() {
+			set_transient( 'klarna_kp_hide_banner', '1', 6 * DAY_IN_SECONDS );
+			wp_send_json_success( 'Hide Klarna Payment banner.' );
+			wp_die();
 		}
 
 		/**
