@@ -10,7 +10,7 @@
 }
 
 /* Banner */
-#klarna-banner {
+#klarna-kp-banner {
 	background-image: url("../img/admin-banner.jpg");
 	background-position: center center;
 	background-size: 100% auto;
@@ -24,7 +24,7 @@
 	height: 20px;
 }
 
-#klarna-banner > div {
+#klarna-kp-banner > div {
 	text-align: center;
 	padding: 0 60px;
 	-webkit-box-sizing: border-box;
@@ -33,7 +33,7 @@
 	font-family: Klarna, sans-serif;
 }
 
-#klarna-banner h1 {
+#klarna-kp-banner h1 {
 	font-size: 32px;
 	line-height: 1.2;
 	font-weight: bold;
@@ -42,7 +42,7 @@
 	margin-top: 0;
 }
 
-#klarna-banner p {
+#klarna-kp-banner p {
 	margin-bottom: 1em;
 	font-size: 14px;
 	letter-spacing: -0.2px;
@@ -68,18 +68,28 @@ a.kb-button {
 	-moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+.kb-kp-dismiss {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+.kb-kp-dismiss:hover {
+	color: #eb6f93;
+	cursor: pointer;
+}
+
 
 @media (min-width: 800px) {
-	#klarna-banner {
+	#klarna-kp-banner {
 		overflow: hidden;
 	}
 
-	#klarna-banner > div {
+	#klarna-kp-banner > div {
 		float: left;
 		width: 50%;
 	}
 
-	#klarna-banner > div > * {
+	#klarna-kp-banner > div > * {
 		margin-left: auto;
 		margin-right: auto;
 		max-width: 500px;
@@ -87,7 +97,7 @@ a.kb-button {
 }
 
 @media (max-width: 799px) {
-	#klarna-banner > div {
+	#klarna-kp-banner > div {
 		margin-bottom: 40px;
 	}
 }
