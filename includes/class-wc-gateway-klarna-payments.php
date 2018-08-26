@@ -821,6 +821,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 			$this->unset_session_values();
 		} else {
+			// Log error message
+			WC_Klarna_Payments::log( 'process_payment error response: ' . stripslashes_deep( json_encode( $response ) ) );
+
 			if ( is_wp_error( $response ) ) {
 				$error_message = $response->get_error_message();
 			} else {
@@ -966,7 +969,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				),
 			), $order, $posted_data ) ),
 		);
-
+		
 		$response = wp_safe_remote_post( $request_url, $request_args );
 
 		return $response;
