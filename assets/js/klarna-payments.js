@@ -352,16 +352,16 @@ jQuery( function($) {
 		get_address: function() {
 			var address = {
 				billing_address: {
-					given_name : $('#billing_first_name').val(),
-					family_name : $('#billing_last_name').val(),
-					email : $('#billing_email').val(),
-					phone : $('#billing_phone').val(),
-					country : $('#billing_country').val(),
-					region : $('#billing_state').val(),
-					postal_code : $('input#billing_postcode').val(),
-					city : $('#billing_city').val(),
-					street_address : $('input#billing_address_1').val(),
-					street_address2 : $('input#billing_address_2').val(),
+					given_name : $(klarna_payments_params.default_checkout_fields.billing_given_name).val(),
+					family_name : $(klarna_payments_params.default_checkout_fields.billing_family_name).val(),
+					email : $(klarna_payments_params.default_checkout_fields.billing_email).val(),
+					phone : $(klarna_payments_params.default_checkout_fields.billing_phone).val(),
+					country : $(klarna_payments_params.default_checkout_fields.billing_country).val(),
+					region : $(klarna_payments_params.default_checkout_fields.billing_region).val(),
+					postal_code : $(klarna_payments_params.default_checkout_fields.billing_postal_code).val(),
+					city : $(klarna_payments_params.default_checkout_fields.billing_city).val(),
+					street_address : $(klarna_payments_params.default_checkout_fields.billing_street_address).val(),
+					street_address2 : $(klarna_payments_params.default_checkout_fields.billing_street_address2).val(),
 				},
 				shipping_address: {}
 			};
@@ -369,14 +369,14 @@ jQuery( function($) {
 			address.shipping_address = $.extend({}, address.billing_address);
 
 			if ( $( '#ship-to-different-address' ).find( 'input' ).is( ':checked' ) ) {
-				address.shipping_address.given_name = $('#shipping_first_name').val();
-				address.shipping_address.family_name = $('#shipping_last_name').val();
-				address.shipping_address.country = $('#shipping_country').val();
-				address.shipping_address.region = $('#shipping_state').val();
-				address.shipping_address.postal_code = $('input#shipping_postcode').val();
-				address.shipping_address.city = $('#shipping_city').val();
-				address.shipping_address.street_address = $('input#shipping_address_1').val();
-				address.shipping_address.street_address2 = $('input#shipping_address_2').val();
+				address.shipping_address.given_name = $(klarna_payments_params.default_checkout_fields.shipping_given_name).val();
+				address.shipping_address.family_name = $(klarna_payments_params.default_checkout_fields.shipping_family_name).val();
+				address.shipping_address.country = $(klarna_payments_params.default_checkout_fields.shipping_country).val();
+				address.shipping_address.region = $(klarna_payments_params.default_checkout_fields.shipping_region).val();
+				address.shipping_address.postal_code = $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val();
+				address.shipping_address.city = $(klarna_payments_params.default_checkout_fields.shipping_city).val();
+				address.shipping_address.street_address = $(klarna_payments_params.default_checkout_fields.shipping_street_address).val();
+				address.shipping_address.street_address2 = $(klarna_payments_params.default_checkout_fields.shipping_street_address2).val();
 			}
 
 			return address;
