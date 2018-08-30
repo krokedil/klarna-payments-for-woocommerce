@@ -190,7 +190,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                 = 'klarna_payments';
-		$this->title              = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
 		$this->method_title       = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
 		$this->method_description = __( 'Get the flexibility to pay over time with Klarna!', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = true;
@@ -206,7 +205,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->init_settings();
 
 		// Get setting values.
-		//$this->title    = $this->get_option( 'title' );
+		$this->title    = $this->get_option( 'title' );
 		$this->enabled  = $this->get_option( 'enabled' );
 		$this->testmode = 'yes' === $this->get_option( 'testmode' );
 		$this->logging  = 'yes' === $this->get_option( 'logging' );

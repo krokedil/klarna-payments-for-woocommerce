@@ -20,7 +20,13 @@ class Klarna_Payments_Form_Fields {
 				'description' => '',
 				'default'     => 'no',
 			),
-
+			'title'           		=> array(
+				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'text',
+				'description' => __( 'Payment method title.', 'klarna-payments-for-woocommerce' ),
+				'default'     => 'Klarna',
+				'desc_tip'    => true,
+			),
 			'testmode'              => array(
 				'title'       => __( 'Test mode', 'klarna-payments-for-woocommerce' ),
 				'label'       => __( 'Enable Test Mode', 'klarna-payments-for-woocommerce' ),
