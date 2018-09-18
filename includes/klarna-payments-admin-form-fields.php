@@ -376,6 +376,39 @@ class Klarna_Payments_Form_Fields {
 					'default'     => '',
 					'desc_tip'    => true,
 				),
+				// CH.
+				'credentials_ch'           => array(
+					'title' => '<img src="' . plugins_url( 'assets/img/flags/ch.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Switzerland',
+					'type'  => 'title',
+				),
+				'merchant_id_ch'           => array(
+					'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
+					'type'        => 'text',
+					'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'klarna-payments-for-woocommerce' ),
+					'default'     => '',
+					'desc_tip'    => true,
+				),
+				'shared_secret_ch'         => array(
+					'title'       => __( 'Production Password', 'klarna-payments-for-woocommerce' ),
+					'type'        => 'text',
+					'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'klarna-payments-for-woocommerce' ),
+					'default'     => '',
+					'desc_tip'    => true,
+				),
+				'test_merchant_id_ch'      => array(
+					'title'       => __( 'Test Username', 'klarna-payments-for-woocommerce' ),
+					'type'        => 'text',
+					'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'klarna-payments-for-woocommerce' ),
+					'default'     => '',
+					'desc_tip'    => true,
+				),
+				'test_shared_secret_ch'    => array(
+					'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
+					'type'        => 'text',
+					'description' => __( 'Get your API keys from your Klarna Payments merchant account for US.', 'klarna-payments-for-woocommerce' ),
+					'default'     => '',
+					'desc_tip'    => true,
+				),
 
 				'iframe_options'           => array(
 					'title' => 'Iframe settings',
