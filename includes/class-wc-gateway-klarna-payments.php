@@ -231,7 +231,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// What is Klarna link.
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
-		$env_string = 'US' === $this->klarna_country ? '-na' : '';
+		$env_string                 = 'US' === $this->klarna_country ? '-na' : '';
 		if ( $this->testmode ) {
 			$this->description = __( '<p>TEST MODE ENABLED.</p>', 'klarna-payments-for-woocommerce' );
 			$this->server_base = 'https://api' . $env_string . '.playground.klarna.com/';
@@ -240,15 +240,19 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		// Hooks.
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
-			$this,
-			'process_admin_options',
-		) );
+		add_action(
+			'woocommerce_update_options_payment_gateways_' . $this->id, array(
+				$this,
+				'process_admin_options',
+			)
+		);
 		add_action( 'wp_head', array( $this, 'klarna_payments_session' ), 10, 1 );
-		add_action( 'woocommerce_review_order_after_order_total', array(
-			$this,
-			'klarna_payments_session_ajax_update',
-		) );
+		add_action(
+			'woocommerce_review_order_after_order_total', array(
+				$this,
+				'klarna_payments_session_ajax_update',
+			)
+		);
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'woocommerce_after_checkout_validation', array( $this, 'check_authorization_token' ) );
@@ -325,7 +329,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$what_is_klarna_text = 'Was ist Klarna?';
 		}
 		$icon_width = '39';
-		$icon_html = '<img src="' . $this->icon . '" alt="Klarna" style="max-width:' . $icon_width . 'px"/>';
+		$icon_html  = '<img src="' . $this->icon . '" alt="Klarna" style="max-width:' . $icon_width . 'px"/>';
 		$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
@@ -478,14 +482,19 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Content-Type'  => 'application/json',
 			),
 			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
-			'body'       => wp_json_encode( apply_filters( 'wc_klarna_payments_session_request_body', array(
-				'purchase_country'  => $this->klarna_country,
-				'purchase_currency' => get_woocommerce_currency(),
-				'locale'            => $this->get_locale_for_klarna_country(),
-				'order_amount'      => $order_lines['order_amount'],
-				'order_tax_amount'  => $order_lines['order_tax_amount'],
-				'order_lines'       => $order_lines['order_lines'],
-			) ) ),
+			'body'       => wp_json_encode(
+				apply_filters(
+					'wc_klarna_payments_session_request_body', array(
+						'purchase_country'  => $this->klarna_country,
+						'purchase_currency' => get_woocommerce_currency(),
+						'locale'            => $this->get_locale_for_klarna_country(),
+						'order_amount'      => $order_lines['order_amount'],
+						'order_tax_amount'  => $order_lines['order_tax_amount'],
+						'order_lines'       => $order_lines['order_lines'],
+						'customer'          => $this->set_klarna_customer(),
+					)
+				)
+			),
 		);
 
 		if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
@@ -545,14 +554,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Content-Type'  => 'application/json',
 			),
 			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
-			'body'       => wp_json_encode( array(
-				'purchase_country'  => $this->klarna_country,
-				'purchase_currency' => get_woocommerce_currency(),
-				'locale'            => $this->get_locale_for_klarna_country(),
-				'order_amount'      => $order_lines['order_amount'],
-				'order_tax_amount'  => $order_lines['order_tax_amount'],
-				'order_lines'       => $order_lines['order_lines'],
-			) ),
+			'body'       => wp_json_encode(
+				array(
+					'purchase_country'  => $this->klarna_country,
+					'purchase_currency' => get_woocommerce_currency(),
+					'locale'            => $this->get_locale_for_klarna_country(),
+					'order_amount'      => $order_lines['order_amount'],
+					'order_tax_amount'  => $order_lines['order_tax_amount'],
+					'order_lines'       => $order_lines['order_lines'],
+					'customer'          => $this->set_klarna_customer(),
+				)
+			),
 		);
 
 		// If billing country has changed we need a new session.
@@ -713,30 +725,32 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		);
 
 		$default_kp_checkout_fields = array(
-			'billing_given_name'		=> '#billing_first_name',
-			'billing_family_name'		=> '#billing_last_name',
-			'billing_email'				=> '#billing_email',
-			'billing_phone'				=> '#billing_phone',
-			'billing_country'			=> '#billing_country',
-			'billing_region'			=> '#billing_state',
-			'billing_postal_code'		=> '#billing_postcode',
-			'billing_city'				=> '#billing_city',
-			'billing_street_address'	=> '#billing_address_1',
-			'billing_street_address2'	=> '#billing_address_2',
-			'shipping_given_name'		=> '#shipping_first_name',
-			'shipping_family_name'		=> '#shipping_last_name',
-			'shipping_country'			=> '#shipping_country',
-			'shipping_region'			=> '#shipping_state',
-			'shipping_postal_code'		=> '#shipping_postcode',
-			'shipping_city'				=> '#shipping_city',
-			'shipping_street_address'	=> '#shipping_address_1',
-			'shipping_street_address2'	=> '#shipping_address_2',
+			'billing_given_name'       => '#billing_first_name',
+			'billing_family_name'      => '#billing_last_name',
+			'billing_email'            => '#billing_email',
+			'billing_phone'            => '#billing_phone',
+			'billing_country'          => '#billing_country',
+			'billing_region'           => '#billing_state',
+			'billing_postal_code'      => '#billing_postcode',
+			'billing_city'             => '#billing_city',
+			'billing_street_address'   => '#billing_address_1',
+			'billing_street_address2'  => '#billing_address_2',
+			'billing_company'          => '#billing_company',
+			'shipping_given_name'      => '#shipping_first_name',
+			'shipping_family_name'     => '#shipping_last_name',
+			'shipping_country'         => '#shipping_country',
+			'shipping_region'          => '#shipping_state',
+			'shipping_postal_code'     => '#shipping_postcode',
+			'shipping_city'            => '#shipping_city',
+			'shipping_street_address'  => '#shipping_address_1',
+			'shipping_street_address2' => '#shipping_address_2',
 		);
 
 		// Localize the script.
-		$klarna_payments_params             = array();
-		$klarna_payments_params['testmode'] = $this->testmode;
+		$klarna_payments_params                            = array();
+		$klarna_payments_params['testmode']                = $this->testmode;
 		$klarna_payments_params['default_checkout_fields'] = apply_filters( 'wc_klarna_payments_default_checkout_fields', $default_kp_checkout_fields );
+		$klarna_payments_params['customer_type']           = $this->get_option( 'customer_type' );
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
@@ -807,7 +821,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Process Klarna Payments response.
 	 *
-	 * @param array $response Klarna API response.
+	 * @param array    $response Klarna API response.
 	 * @param WC_Order $order WooCommerce order.
 	 *
 	 * @return array   $result  Payment result.
@@ -926,7 +940,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Places the order with Klarna
 	 *
-	 * @param int $order_id WooCommerce order ID.
+	 * @param int    $order_id WooCommerce order ID.
 	 * @param string $auth_token Klarna Payments authorization token.
 	 *
 	 * @return array|WP_Error
@@ -936,8 +950,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
 		$order_lines           = $order_lines_processor->order_lines();
 		$posted_data           = $_POST; // Input var okay.
-
-		$billing_address = array(
+		$billing_address       = array(
 			'given_name'      => stripslashes( $posted_data['billing_first_name'] ),
 			'family_name'     => stripslashes( $posted_data['billing_last_name'] ),
 			'email'           => stripslashes( $posted_data['billing_email'] ),
@@ -949,8 +962,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'region'          => stripslashes( $posted_data['billing_state'] ),
 			'country'         => stripslashes( $posted_data['billing_country'] ),
 		);
+		if ( isset( $posted_data['billing_company'] ) && '' !== $posted_data['billing_company'] ) {
+			$billing_address['organization_name'] = stripslashes( $posted_data['billing_company'] );
+		}
 
-		if ( ! empty( $_POST['ship_to_different_address'] ) && ! wc_ship_to_billing_address_only() ) { // Input var okay.
+		if ( ! empty( $_POST['ship_to_different_address'] ) && ! wc_ship_to_billing_address_only() && 'b2c' === $this->get_option( 'customer_type' ) ) { // Input var okay.
 			$shipping_address = array(
 				'given_name'      => stripslashes( $posted_data['shipping_first_name'] ),
 				'family_name'     => stripslashes( $posted_data['shipping_last_name'] ),
@@ -974,23 +990,28 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'Content-Type'  => 'application/json',
 			),
 			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
-			'body'       => wp_json_encode( apply_filters('kp_wc_api_request_args', array(
-				'purchase_country'    => $this->klarna_country,
-				'purchase_currency'   => get_woocommerce_currency(),
-				'locale'              => $this->get_locale_for_klarna_country(),
-				'billing_address'     => $billing_address,
-				'shipping_address'    => $shipping_address,
-				'order_amount'        => $order_lines['order_amount'],
-				'order_tax_amount'    => $order_lines['order_tax_amount'],
-				'order_lines'         => $order_lines['order_lines'],
-				'merchant_reference1' => $order->get_order_number(),
-				'merchant_urls'       => array(
-					'confirmation' => $order->get_checkout_order_received_url(),
-					'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $order_id,
-				),
-			), $order, $posted_data ) ),
+			'body'       => wp_json_encode(
+				apply_filters(
+					'kp_wc_api_request_args', array(
+						'purchase_country'    => $this->klarna_country,
+						'purchase_currency'   => get_woocommerce_currency(),
+						'locale'              => $this->get_locale_for_klarna_country(),
+						'billing_address'     => $billing_address,
+						'shipping_address'    => $shipping_address,
+						'order_amount'        => $order_lines['order_amount'],
+						'order_tax_amount'    => $order_lines['order_tax_amount'],
+						'order_lines'         => $order_lines['order_lines'],
+						'customer'            => $this->set_klarna_customer(),
+						'merchant_reference1' => $order->get_order_number(),
+						'merchant_urls'       => array(
+							'confirmation' => $order->get_checkout_order_received_url(),
+							'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $order_id,
+						),
+					), $order, $posted_data
+				)
+			),
 		);
-
+		error_log( var_export( $request_args, true ) );
 		$response = wp_safe_remote_post( $request_url, $request_args );
 
 		return $response;
@@ -1012,9 +1033,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * This plugin doesn't handle order management, but it allows Klarna Order Management plugin to process refunds
 	 * and then return true or false.
 	 *
-	 * @param int $order_id WooCommerce order ID.
+	 * @param int      $order_id WooCommerce order ID.
 	 * @param null|int $amount Refund amount.
-	 * @param string $reason Reason for refund.
+	 * @param string   $reason Reason for refund.
 	 *
 	 * @return bool
 	 */
@@ -1185,7 +1206,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Sets Klarna country.
 	 */
 	public function set_klarna_country() {
-		if ( ! method_exists ( 'WC_Customer', 'get_billing_country' ) ) {
+		if ( ! method_exists( 'WC_Customer', 'get_billing_country' ) ) {
 			return;
 		}
 		if ( WC()->customer === null ) {
@@ -1213,5 +1234,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( $this->id === $order->get_payment_method() ) {
 			echo '<div style="margin: 10px 0; padding: 10px; border: 1px solid #B33A3A; font-size: 12px">Order address should not be changed and any changes you make will not be reflected in Klarna system.</div>';
 		}
+	}
+
+	/**
+	 * Adds the customer object to the request arguments.
+	 *
+	 * @return array
+	 */
+	public function set_klarna_customer() {
+		$type = ( 'b2c' === $this->get_option( 'customer_type' ) ) ? 'person' : 'organization';
+		return array(
+			'type' => $type,
+		);
 	}
 }
