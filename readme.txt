@@ -53,7 +53,7 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
-= 2018.08.30  	- version 1.6.0 =
+= 2018.09.20  	- version 1.6.0 =
 * Feature		- Added support for B2B purchases.
 * Feature		- Added support Switzerland.
 
