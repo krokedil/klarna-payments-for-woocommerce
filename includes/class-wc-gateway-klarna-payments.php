@@ -1011,7 +1011,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				)
 			),
 		);
-		$response = wp_safe_remote_post( $request_url, $request_args );
+		$response     = wp_safe_remote_post( $request_url, $request_args );
 
 		return $response;
 	}
