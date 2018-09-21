@@ -8,10 +8,10 @@
  * Version: 1.5.4
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
- * 
+ *
  * WC requires at least: 3.0
  * WC tested up to: 3.4.4
- * 
+ *
  * Copyright (c) 2017-2018 Krokedil
  *
  * This program is free software: you can redistribute it and/or modify
@@ -110,10 +110,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
-			add_filter( 'woocommerce_process_checkout_field_billing_phone', array(
-				$this,
-				'maybe_filter_billing_phone',
-			) );
+			add_filter(
+				'woocommerce_process_checkout_field_billing_phone', array(
+					$this,
+					'maybe_filter_billing_phone',
+				)
+			);
 		}
 
 		/**
@@ -215,6 +217,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-gateway-klarna-payments.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-payments-order-lines.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-gdpr.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-gateway-dummys.php';
 
 			if ( is_admin() ) {
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-banners.php';
