@@ -71,7 +71,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @var array
 	 */
-	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK' );
+	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF' );
 
 	/**
 	 * Turns on logging.
@@ -405,12 +405,21 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 		}
 
-		// If EUR country, check if EUR used.
-		if ( 'EUR' === get_woocommerce_currency() ) {
-			if ( ! in_array( $this->klarna_country, array( 'AT', 'DE', 'NL', 'FI', 'CH' ), true ) ) {
+		// If CH, check if CHF used.
+		if ( 'CHF' === get_woocommerce_currency() ) {
+			if ( 'CH' !== $this->klarna_country ) {
 				$this->unset_session_values();
 
-				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI and CH purchases' );
+				return new WP_Error( 'currency', 'CHF must be used for CH purchases' );
+			}
+		}
+
+		// If EUR country, check if EUR used.
+		if ( 'EUR' === get_woocommerce_currency() ) {
+			if ( ! in_array( $this->klarna_country, array( 'AT', 'DE', 'NL', 'FI' ), true ) ) {
+				$this->unset_session_values();
+
+				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI purchases' );
 			}
 		}
 
