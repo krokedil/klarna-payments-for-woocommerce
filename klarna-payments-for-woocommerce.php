@@ -8,10 +8,10 @@
  * Version: 1.6.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
- * 
+ *
  * WC requires at least: 3.3.0
  * WC tested up to: 3.4.5
- * 
+ *
  * Copyright (c) 2017-2018 Krokedil
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '1.6.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '1.6.1' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.3.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -110,10 +110,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
-			add_filter( 'woocommerce_process_checkout_field_billing_phone', array(
-				$this,
-				'maybe_filter_billing_phone',
-			) );
+			add_filter(
+				'woocommerce_process_checkout_field_billing_phone', array(
+					$this,
+					'maybe_filter_billing_phone',
+				)
+			);
 		}
 
 		/**
