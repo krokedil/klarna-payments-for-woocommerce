@@ -71,7 +71,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @var array
 	 */
-	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK' );
+	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF' );
 
 	/**
 	 * Turns on logging.
@@ -405,12 +405,21 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 		}
 
-		// If EUR country, check if EUR used.
-		if ( 'EUR' === get_woocommerce_currency() ) {
-			if ( ! in_array( $this->klarna_country, array( 'AT', 'DE', 'NL', 'FI', 'CH' ), true ) ) {
+		// If CH, check if CHF used.
+		if ( 'CHF' === get_woocommerce_currency() ) {
+			if ( 'CH' !== $this->klarna_country ) {
 				$this->unset_session_values();
 
-				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI and CH purchases' );
+				return new WP_Error( 'currency', 'CHF must be used for CH purchases' );
+			}
+		}
+
+		// If EUR country, check if EUR used.
+		if ( 'EUR' === get_woocommerce_currency() ) {
+			if ( ! in_array( $this->klarna_country, array( 'AT', 'DE', 'NL', 'FI' ), true ) ) {
+				$this->unset_session_values();
+
+				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI purchases' );
 			}
 		}
 
@@ -950,20 +959,22 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order_lines           = $order_lines_processor->order_lines();
 		$posted_data           = $_POST; // Input var okay.
 		$billing_address       = array(
-			'given_name'      => stripslashes( $posted_data['billing_first_name'] ),
-			'family_name'     => stripslashes( $posted_data['billing_last_name'] ),
-			'email'           => stripslashes( $posted_data['billing_email'] ),
-			'phone'           => stripslashes( $posted_data['billing_phone'] ),
-			'street_address'  => stripslashes( $posted_data['billing_address_1'] ),
-			'street_address2' => stripslashes( $posted_data['billing_address_2'] ),
-			'postal_code'     => stripslashes( $posted_data['billing_postcode'] ),
-			'city'            => stripslashes( $posted_data['billing_city'] ),
-			'region'          => stripslashes( $posted_data['billing_state'] ),
-			'country'         => stripslashes( $posted_data['billing_country'] ),
+			'given_name'        => stripslashes( $posted_data['billing_first_name'] ),
+			'family_name'       => stripslashes( $posted_data['billing_last_name'] ),
+			'email'             => stripslashes( $posted_data['billing_email'] ),
+			'phone'             => stripslashes( $posted_data['billing_phone'] ),
+			'street_address'    => stripslashes( $posted_data['billing_address_1'] ),
+			'street_address2'   => stripslashes( $posted_data['billing_address_2'] ),
+			'postal_code'       => stripslashes( $posted_data['billing_postcode'] ),
+			'city'              => stripslashes( $posted_data['billing_city'] ),
+			'region'            => stripslashes( $posted_data['billing_state'] ),
+			'country'           => stripslashes( $posted_data['billing_country'] ),
+			'organization_name' => stripslashes( $posted_data['billing_company'] ),
 		);
+		/*
 		if ( isset( $posted_data['billing_company'] ) && '' !== $posted_data['billing_company'] ) {
 			$billing_address['organization_name'] = stripslashes( $posted_data['billing_company'] );
-		}
+		}*/
 
 		if ( ! empty( $_POST['ship_to_different_address'] ) && ! wc_ship_to_billing_address_only() && 'b2c' === $this->get_option( 'customer_type' ) ) { // Input var okay.
 			$shipping_address = array(
