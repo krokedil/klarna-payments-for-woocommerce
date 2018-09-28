@@ -47,6 +47,7 @@ jQuery( function($) {
 					var fieldValue = $(this).val();
 					klarna_payments.checkout_values[ fieldName ] = fieldValue;
 				});
+
 			});
 
 			/**
@@ -250,6 +251,15 @@ jQuery( function($) {
 			return false;
 		},
 
+		setRadioButtonValues: function () {
+			$('input[name="payment_method"]').each( function( ) {
+				if( $(this).val().indexOf( 'klarna_payments' ) !== -1 ) {
+					$(this).val( 'klarna_payments' );
+				}
+			});
+			
+		},
+
 		getSelectorContainerID: function() {
 			return $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').attr('id');
 		},
@@ -394,4 +404,10 @@ jQuery( function($) {
 	};
 
 	klarna_payments.start();
+	$('body').ready( function() {
+		klarna_payments.setRadioButtonValues();
+	});
+	$('body').ajaxComplete( function() {
+		klarna_payments.setRadioButtonValues();
+	});
 });

@@ -217,7 +217,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-gateway-klarna-payments.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-payments-order-lines.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-gdpr.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-gateway-dummys.php';
 
 			if ( is_admin() ) {
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-banners.php';
