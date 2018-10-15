@@ -196,8 +196,8 @@ class WC_Klarna_Payments_Order_Lines {
 
 				// Smart coupons are processed as real line items, cart and product discounts sent for reference only.
 				if ( 'smart_coupon' === $coupon->get_discount_type() ) {
-					$coupon_amount     = - WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100;
-					$coupon_tax_amount = - WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100;
+					$coupon_amount     = - round( WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100 );
+					$coupon_tax_amount = - round( WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100 );
 					$coupon_reference  = 'Discount';
 				} else {
 					if ( 'US' === $this->shop_country ) {
@@ -249,7 +249,7 @@ class WC_Klarna_Payments_Order_Lines {
 					if ( $this->separate_sales_tax ) {
 						$cart_fee_tax_rate   = 0;
 						$cart_fee_tax_amount = 0;
-						$cart_fee_total      = $cart_fee->total * 100;
+						$cart_fee_total      = round( $cart_fee->total * 100 );
 					} else {
 						$_tax      = new WC_Tax();
 						$tmp_rates = $_tax::get_rates( $cart_fee->tax_class );
@@ -261,13 +261,13 @@ class WC_Klarna_Payments_Order_Lines {
 							$cart_fee_tax_rate = 0;
 						}
 
-						$cart_fee_tax_amount = $cart_fee->tax * 100;
-						$cart_fee_total      = ( $cart_fee->total + $cart_fee->tax ) * 100;
+						$cart_fee_tax_amount = round( $cart_fee->tax * 100 );
+						$cart_fee_total      = round( ( $cart_fee->total + $cart_fee->tax ) * 100 );
 					}
 				} else {
 					$cart_fee_tax_rate   = 0;
 					$cart_fee_tax_amount = 0;
-					$cart_fee_total      = $cart_fee->total * 100;
+					$cart_fee_total      = round( $cart_fee->total * 100 );
 				}
 
 				$fee = array(
@@ -288,7 +288,6 @@ class WC_Klarna_Payments_Order_Lines {
 	}
 
 	// Helpers.
-
 	/**
 	 * Get cart item name.
 	 *
@@ -332,7 +331,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @since  1.0
 	 * @access private
 	 *
-	 * @param  array $cart_item Cart item.
+	 * @param  array  $cart_item Cart item.
 	 * @param  object $product Product object.
 	 *
 	 * @return integer $item_tax_rate Item tax percentage formatted for Klarna.
