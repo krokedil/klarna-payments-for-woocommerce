@@ -496,7 +496,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				)
 			),
 		);
-
 		if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
 			// Try to update the session, if it fails try to create new session.
 			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
@@ -598,7 +597,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		} elseif ( WC()->session->get( 'klarna_payments_session_id' ) ) { // On AJAX update_checkout, just try to update the session, if Klarna country hasn't changed.
 			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response    = $this->update_session_request( $update_request_url, $request_args );
-
 			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
 				$this->session_error = $update_response;
 				wc_add_notice( 'Could not update Klarna session, please refresh the page to try again', 'error' );
@@ -685,11 +683,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$request_args = apply_filters( 'wc_klarna_payments_update_session_args', $request_args );
 
 		$response = wp_safe_remote_post( $request_url, $request_args );
-
 		if ( is_array( $response ) ) {
 			if ( 204 === $response['response']['code'] ) {
 				return true;
 			} else {
+				error_log( var_export( $request_args, true ) );
+				error_log( var_export( $response, true ) );
 				return new WP_Error( $response['response']['code'], $response['response']['message'] );
 			}
 		} else {
@@ -979,7 +978,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				)
 			),
 		);
-		error_log( var_export( $request_args, true ) );
 
 		$response = wp_safe_remote_post( $request_url, $request_args );
 
