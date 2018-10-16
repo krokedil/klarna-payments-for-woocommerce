@@ -687,8 +687,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			if ( 204 === $response['response']['code'] ) {
 				return true;
 			} else {
-				error_log( var_export( $request_args, true ) );
-				error_log( var_export( $response, true ) );
 				return new WP_Error( $response['response']['code'], $response['response']['message'] );
 			}
 		} else {
