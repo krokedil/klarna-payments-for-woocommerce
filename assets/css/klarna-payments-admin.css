@@ -152,3 +152,7 @@ a.kb-button {
 .kb-sidebar-section {
 	margin-bottom: 40px;
 }
+
+tr[data-gateway_id="klarna_payments_pay_later"], tr[data-gateway_id="klarna_payments_pay_now"], tr[data-gateway_id="klarna_payments_pay_over_time"] {
+	display:none;
+}
