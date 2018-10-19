@@ -53,13 +53,13 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2018.09.25  	- version 1.6.1 =
+* Fix		    - Fixed 409 error caused by missing Organization name field.
+* Fix		    - Better support for Switzerland.
 
 = 2018.09.20  	- version 1.6.0 =
 * Feature		- Added support for B2B purchases.
 * Feature		- Added support Switzerland.
-* Fix           - Add Payment method name settings field.
-* Enhancement   - Added filter wc_klarna_payments_default_checkout_fields
-* Tweak         - Loggning improvements.
 
 = 2018.08.30  	- version 1.5.4 =
 * Tweak			- Added Payment method name settings field.

@@ -71,7 +71,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @var array
 	 */
-	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK' );
+	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF' );
 
 	/**
 	 * Turns on logging.
@@ -190,7 +190,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                 = 'klarna_payments';
-		$this->title              = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
 		$this->method_title       = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
 		$this->method_description = __( 'Get the flexibility to pay over time with Klarna!', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = true;
@@ -406,12 +405,21 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 		}
 
+		// If CH, check if CHF used.
+		if ( 'CHF' === get_woocommerce_currency() ) {
+			if ( 'CH' !== $this->klarna_country ) {
+				$this->unset_session_values();
+
+				return new WP_Error( 'currency', 'CHF must be used for CH purchases' );
+			}
+		}
+
 		// If EUR country, check if EUR used.
 		if ( 'EUR' === get_woocommerce_currency() ) {
 			if ( ! in_array( $this->klarna_country, array( 'AT', 'DE', 'NL', 'FI' ), true ) ) {
 				$this->unset_session_values();
 
-				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL and FI purchases' );
+				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI purchases' );
 			}
 		}
 
@@ -492,6 +500,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 						'order_amount'      => $order_lines['order_amount'],
 						'order_tax_amount'  => $order_lines['order_tax_amount'],
 						'order_lines'       => $order_lines['order_lines'],
+						'customer'          => $this->set_klarna_customer(),
 					)
 				)
 			),
@@ -561,6 +570,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					'order_amount'      => $order_lines['order_amount'],
 					'order_tax_amount'  => $order_lines['order_tax_amount'],
 					'order_lines'       => $order_lines['order_lines'],
+					'customer'          => $this->set_klarna_customer(),
 				)
 			),
 		);
@@ -719,9 +729,33 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			true
 		);
 
+		$default_kp_checkout_fields = array(
+			'billing_given_name'       => '#billing_first_name',
+			'billing_family_name'      => '#billing_last_name',
+			'billing_email'            => '#billing_email',
+			'billing_phone'            => '#billing_phone',
+			'billing_country'          => '#billing_country',
+			'billing_region'           => '#billing_state',
+			'billing_postal_code'      => '#billing_postcode',
+			'billing_city'             => '#billing_city',
+			'billing_street_address'   => '#billing_address_1',
+			'billing_street_address2'  => '#billing_address_2',
+			'billing_company'          => '#billing_company',
+			'shipping_given_name'      => '#shipping_first_name',
+			'shipping_family_name'     => '#shipping_last_name',
+			'shipping_country'         => '#shipping_country',
+			'shipping_region'          => '#shipping_state',
+			'shipping_postal_code'     => '#shipping_postcode',
+			'shipping_city'            => '#shipping_city',
+			'shipping_street_address'  => '#shipping_address_1',
+			'shipping_street_address2' => '#shipping_address_2',
+		);
+
 		// Localize the script.
-		$klarna_payments_params             = array();
-		$klarna_payments_params['testmode'] = $this->testmode;
+		$klarna_payments_params                            = array();
+		$klarna_payments_params['testmode']                = $this->testmode;
+		$klarna_payments_params['default_checkout_fields'] = apply_filters( 'wc_klarna_payments_default_checkout_fields', $default_kp_checkout_fields );
+		$klarna_payments_params['customer_type']           = $this->get_option( 'customer_type' );
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
@@ -827,6 +861,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 			$this->unset_session_values();
 		} else {
+			// Log error message
+			WC_Klarna_Payments::log( 'process_payment error response: ' . stripslashes_deep( json_encode( $response ) ) );
+
 			if ( is_wp_error( $response ) ) {
 				$error_message = $response->get_error_message();
 			} else {
@@ -918,21 +955,25 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
 		$order_lines           = $order_lines_processor->order_lines();
 		$posted_data           = $_POST; // Input var okay.
-
-		$billing_address = array(
-			'given_name'      => stripslashes( $posted_data['billing_first_name'] ),
-			'family_name'     => stripslashes( $posted_data['billing_last_name'] ),
-			'email'           => stripslashes( $posted_data['billing_email'] ),
-			'phone'           => stripslashes( $posted_data['billing_phone'] ),
-			'street_address'  => stripslashes( $posted_data['billing_address_1'] ),
-			'street_address2' => stripslashes( $posted_data['billing_address_2'] ),
-			'postal_code'     => stripslashes( $posted_data['billing_postcode'] ),
-			'city'            => stripslashes( $posted_data['billing_city'] ),
-			'region'          => stripslashes( $posted_data['billing_state'] ),
-			'country'         => stripslashes( $posted_data['billing_country'] ),
+		$billing_address       = array(
+			'given_name'        => stripslashes( $posted_data['billing_first_name'] ),
+			'family_name'       => stripslashes( $posted_data['billing_last_name'] ),
+			'email'             => stripslashes( $posted_data['billing_email'] ),
+			'phone'             => stripslashes( $posted_data['billing_phone'] ),
+			'street_address'    => stripslashes( $posted_data['billing_address_1'] ),
+			'street_address2'   => stripslashes( $posted_data['billing_address_2'] ),
+			'postal_code'       => stripslashes( $posted_data['billing_postcode'] ),
+			'city'              => stripslashes( $posted_data['billing_city'] ),
+			'region'            => stripslashes( $posted_data['billing_state'] ),
+			'country'           => stripslashes( $posted_data['billing_country'] ),
+			'organization_name' => stripslashes( $posted_data['billing_company'] ),
 		);
+		/*
+		if ( isset( $posted_data['billing_company'] ) && '' !== $posted_data['billing_company'] ) {
+			$billing_address['organization_name'] = stripslashes( $posted_data['billing_company'] );
+		}*/
 
-		if ( ! empty( $_POST['ship_to_different_address'] ) && ! wc_ship_to_billing_address_only() ) { // Input var okay.
+		if ( ! empty( $_POST['ship_to_different_address'] ) && ! wc_ship_to_billing_address_only() && 'b2c' === $this->get_option( 'customer_type' ) ) { // Input var okay.
 			$shipping_address = array(
 				'given_name'      => stripslashes( $posted_data['shipping_first_name'] ),
 				'family_name'     => stripslashes( $posted_data['shipping_last_name'] ),
@@ -967,6 +1008,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 						'order_amount'        => $order_lines['order_amount'],
 						'order_tax_amount'    => $order_lines['order_tax_amount'],
 						'order_lines'         => $order_lines['order_lines'],
+						'customer'            => $this->set_klarna_customer(),
 						'merchant_reference1' => $order->get_order_number(),
 						'merchant_urls'       => array(
 							'confirmation' => $order->get_checkout_order_received_url(),
@@ -976,8 +1018,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				)
 			),
 		);
-
-		$response = wp_safe_remote_post( $request_url, $request_args );
+		$response     = wp_safe_remote_post( $request_url, $request_args );
 
 		return $response;
 	}
@@ -1199,5 +1240,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( $this->id === $order->get_payment_method() ) {
 			echo '<div style="margin: 10px 0; padding: 10px; border: 1px solid #B33A3A; font-size: 12px">Order address should not be changed and any changes you make will not be reflected in Klarna system.</div>';
 		}
+	}
+
+	/**
+	 * Adds the customer object to the request arguments.
+	 *
+	 * @return array
+	 */
+	public function set_klarna_customer() {
+		$type = ( 'b2c' === $this->get_option( 'customer_type' ) ) ? 'person' : 'organization';
+		return array(
+			'type' => $type,
+		);
 	}
 }
