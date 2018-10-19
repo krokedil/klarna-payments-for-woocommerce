@@ -244,7 +244,7 @@ class WC_Klarna_Payments_Order_Lines {
 	private function process_fees() {
 		if ( ! empty( WC()->cart->get_fees() ) ) {
 			foreach ( WC()->cart->get_fees() as $cart_fee ) {
-				if ( $cart_fee->taxable && $cart_fee->tax > 0 ) {
+				if ( 0 !== $cart_fee->tax ) {
 					// Calculate tax rate.
 					if ( $this->separate_sales_tax ) {
 						$cart_fee_tax_rate   = 0;
@@ -269,17 +269,16 @@ class WC_Klarna_Payments_Order_Lines {
 					$cart_fee_tax_amount = 0;
 					$cart_fee_total      = $cart_fee->total * 100;
 				}
-
 				$fee = array(
 					'type'                  => 'surcharge',
 					'reference'             => 'Fee',
 					'name'                  => $cart_fee->name,
 					'quantity'              => 1,
-					'unit_price'            => $cart_fee_total,
-					'tax_rate'              => $cart_fee_tax_rate,
-					'total_amount'          => $cart_fee_total,
+					'unit_price'            => round( $cart_fee_total ),
+					'tax_rate'              => round( $cart_fee_tax_rate ),
+					'total_amount'          => round( $cart_fee_total ),
 					'total_discount_amount' => 0,
-					'total_tax_amount'      => $cart_fee_tax_amount,
+					'total_tax_amount'      => round( $cart_fee_tax_amount ),
 				);
 
 				$this->order_lines[] = $fee;
@@ -288,7 +287,6 @@ class WC_Klarna_Payments_Order_Lines {
 	}
 
 	// Helpers.
-
 	/**
 	 * Get cart item name.
 	 *
@@ -332,7 +330,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @since  1.0
 	 * @access private
 	 *
-	 * @param  array $cart_item Cart item.
+	 * @param  array  $cart_item Cart item.
 	 * @param  object $product Product object.
 	 *
 	 * @return integer $item_tax_rate Item tax percentage formatted for Klarna.

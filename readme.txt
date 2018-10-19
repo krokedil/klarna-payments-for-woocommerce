@@ -53,6 +53,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2018.10.19  	- version 1.6.2 =
+* Enhancement 	- Changed so all payment methods have the same ID in frontend as in the factory gateway. Adds support for payment gateway based fees and similar plugins.
+* Fix 			- Fixed no tax being applied to negative fee.
+
 = 2018.09.25  	- version 1.6.1 =
 * Fix		    - Fixed 409 error caused by missing Organization name field.
 * Fix		    - Better support for Switzerland.

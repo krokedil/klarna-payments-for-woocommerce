@@ -205,7 +205,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->init_settings();
 
 		// Get setting values.
-		$this->title    = $this->get_option( 'title' );
+		// $this->title    = $this->get_option( 'title' );
 		$this->enabled  = $this->get_option( 'enabled' );
 		$this->testmode = 'yes' === $this->get_option( 'testmode' );
 		$this->logging  = 'yes' === $this->get_option( 'logging' );
@@ -505,7 +505,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				)
 			),
 		);
-
 		if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
 			// Try to update the session, if it fails try to create new session.
 			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
@@ -608,7 +607,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		} elseif ( WC()->session->get( 'klarna_payments_session_id' ) ) { // On AJAX update_checkout, just try to update the session, if Klarna country hasn't changed.
 			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 			$update_response    = $this->update_session_request( $update_request_url, $request_args );
-
 			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
 				$this->session_error = $update_response;
 				wc_add_notice( 'Could not update Klarna session, please refresh the page to try again', 'error' );
@@ -695,7 +693,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$request_args = apply_filters( 'wc_klarna_payments_update_session_args', $request_args );
 
 		$response = wp_safe_remote_post( $request_url, $request_args );
-
 		if ( is_array( $response ) ) {
 			if ( 204 === $response['response']['code'] ) {
 				return true;
@@ -1216,7 +1213,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function set_klarna_country() {
 		if ( ! method_exists( 'WC_Customer', 'get_billing_country' ) ) {
-			return;
+				return;
 		}
 		if ( WC()->customer === null ) {
 			return;
