@@ -369,7 +369,7 @@ jQuery( function($) {
 			function handleVisibilityChange() {
 				if (! document[hidden]) {
 					if (klarna_payments.isKlarnaPaymentsSelected()) {
-						$('body').trigger('update_checkout');
+						//$('body').trigger('update_checkout');
 					}
 				}
 			}

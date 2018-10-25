@@ -817,7 +817,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 		$auth_token = sanitize_text_field( $_POST['klarna_payments_authorization_token'] ); // Input var okay.
 
-		$order    = wc_get_order( $order_id );
+		$order = wc_get_order( $order_id );
 		$response = $this->place_order( $order_id, $auth_token ); // Place order.
 
 		return $this->process_klarna_response( $response, $order );
