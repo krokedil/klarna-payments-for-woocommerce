@@ -826,8 +826,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 		$auth_token = sanitize_text_field( $_POST['klarna_payments_authorization_token'] ); // Input var okay.
 
-		$order    = wc_get_order( $order_id );
-		$response = $this->place_order( $order_id, $auth_token ); // Place order.
+		$order         = wc_get_order( $order_id );
+		$response      = $this->place_order( $order_id, $auth_token ); // Place order.
+		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+		$this->set_payment_method_title( $order, $response_body );
 
 		return $this->process_klarna_response( $response, $order );
 	}
@@ -1261,5 +1263,34 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		return array(
 			'type' => $type,
 		);
+	}
+
+	/**
+	 * Set payment method title for order.
+	 *
+	 * @param array $order WooCommerce order.
+	 * @param array $klarna_place_order_response The Klarna place order response.
+	 * @return void
+	 */
+	public function set_payment_method_title( $order, $klarna_place_order_response ) {
+		$title         = $order->get_payment_method_title();
+		$klarna_method = $klarna_place_order_response['authorized_payment_method']['type'];
+		switch ( $klarna_method ) {
+			case 'invoice':
+				$klarna_method = 'Pay Later';
+				break;
+			case 'base_account':
+				$klarna_method = 'Slice It';
+				break;
+			case 'direct_debit':
+				$klarna_method = 'Direct Debit';
+				break;
+			default:
+				$klarna_method = null;
+		}
+		if ( null !== $klarna_method ) {
+			$new_title = $title . ' - ' . $klarna_method;
+			$order->set_payment_method_title( $new_title );
+		}
 	}
 }
