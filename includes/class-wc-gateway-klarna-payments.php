@@ -829,8 +829,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order         = wc_get_order( $order_id );
 		$response      = $this->place_order( $order_id, $auth_token ); // Place order.
 		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
-		$this->set_payment_method_title( $order, $response_body );
-
+		// $this->set_payment_method_title( $order, $response_body );
 		return $this->process_klarna_response( $response, $order );
 	}
 
@@ -1271,6 +1270,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @param array $order WooCommerce order.
 	 * @param array $klarna_place_order_response The Klarna place order response.
 	 * @return void
+	 * @todo Change it so that it dynamically gets information from Klarna.
 	 */
 	public function set_payment_method_title( $order, $klarna_place_order_response ) {
 		$title         = $order->get_payment_method_title();
