@@ -765,6 +765,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_payments_params['testmode']                = $this->testmode;
 		$klarna_payments_params['default_checkout_fields'] = apply_filters( 'wc_klarna_payments_default_checkout_fields', $default_kp_checkout_fields );
 		$klarna_payments_params['customer_type']           = $this->get_option( 'customer_type' );
+		$klarna_payments_params['remove_postcode_spaces']  = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
@@ -972,7 +973,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'phone'             => stripslashes( $posted_data['billing_phone'] ),
 			'street_address'    => stripslashes( $posted_data['billing_address_1'] ),
 			'street_address2'   => stripslashes( $posted_data['billing_address_2'] ),
-			'postal_code'       => stripslashes( $posted_data['billing_postcode'] ),
+			'postal_code'       => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $posted_data['billing_postcode'] ) : $posted_data['billing_postcode'] ),
 			'city'              => stripslashes( $posted_data['billing_city'] ),
 			'region'            => stripslashes( $posted_data['billing_state'] ),
 			'country'           => stripslashes( $posted_data['billing_country'] ),
@@ -991,7 +992,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'phone'           => stripslashes( $posted_data['shipping_email'] ),
 				'street_address'  => stripslashes( $posted_data['shipping_address_1'] ),
 				'street_address2' => stripslashes( $posted_data['shipping_address_2'] ),
-				'postal_code'     => stripslashes( $posted_data['shipping_postcode'] ),
+				'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $posted_data['shipping_postcode'] ) : $posted_data['shipping_postcode'] ),
 				'city'            => stripslashes( $posted_data['shipping_city'] ),
 				'region'          => stripslashes( $posted_data['shipping_state'] ),
 				'country'         => stripslashes( $posted_data['shipping_country'] ),
@@ -1029,7 +1030,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			),
 		);
 		$response     = wp_safe_remote_post( $request_url, $request_args );
-
 		return $response;
 	}
 

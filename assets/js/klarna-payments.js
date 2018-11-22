@@ -384,7 +384,7 @@ jQuery( function($) {
 					phone : $(klarna_payments_params.default_checkout_fields.billing_phone).val(),
 					country : $(klarna_payments_params.default_checkout_fields.billing_country).val(),
 					region : $(klarna_payments_params.default_checkout_fields.billing_region).val(),
-					postal_code : $(klarna_payments_params.default_checkout_fields.billing_postal_code).val(),
+					postal_code : ( klarna_payments_params.remove_postcode_spaces === 'yes' ) ? $(klarna_payments_params.default_checkout_fields.billing_postal_code).val().replace(/\s/g, '') : $(klarna_payments_params.default_checkout_fields.billing_postal_code).val(),
 					city : $(klarna_payments_params.default_checkout_fields.billing_city).val(),
 					street_address : $(klarna_payments_params.default_checkout_fields.billing_street_address).val(),
 					street_address2 : $(klarna_payments_params.default_checkout_fields.billing_street_address2).val(),
@@ -400,7 +400,7 @@ jQuery( function($) {
 				address.shipping_address.family_name = $(klarna_payments_params.default_checkout_fields.shipping_family_name).val();
 				address.shipping_address.country = $(klarna_payments_params.default_checkout_fields.shipping_country).val();
 				address.shipping_address.region = $(klarna_payments_params.default_checkout_fields.shipping_region).val();
-				address.shipping_address.postal_code = $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val();
+				address.shipping_address.postal_code = ( klarna_payments_params.remove_postcode_spaces === 'yes' ) ? $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val().replace(/\s/g, '') : $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val();
 				address.shipping_address.city = $(klarna_payments_params.default_checkout_fields.shipping_city).val();
 				address.shipping_address.street_address = $(klarna_payments_params.default_checkout_fields.shipping_street_address).val();
 				address.shipping_address.street_address2 = $(klarna_payments_params.default_checkout_fields.shipping_street_address2).val();
