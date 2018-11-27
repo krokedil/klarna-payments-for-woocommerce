@@ -56,7 +56,7 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 			$plugin         = 'klarna-payments-for-woocommerce';
 			$plugin_version = WC_KLARNA_PAYMENTS_VERSION;
 			$wc_version     = defined( 'WC_VERSION' ) && WC_VERSION ? WC_VERSION : null;
-			$url_queries    = '?country='. $country .'&products=kp&plugin=' . $plugin . '&pluginVersion=' . $plugin_version . '&platform=woocommerce&platformVersion=' . $wc_version;
+			$url_queries    = '?country=' . $country . '&products=kp&plugin=' . $plugin . '&pluginVersion=' . $plugin_version . '&platform=woocommerce&platformVersion=' . $wc_version;
 
 			if ( 'US' !== $country ) {
 				$url_base = 'https://eu.portal.klarna.com/signup/';
@@ -70,7 +70,7 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 				$show_banner = true;
 			}
 
-			if ( $show_banner  && false === get_transient( 'klarna_kp_hide_banner' ) ) {
+			if ( $show_banner && false === get_transient( 'klarna_kp_hide_banner' ) ) {
 				?>
 				<div id="kb-spacer"></div>
 				<div id="klarna-kp-banner">
@@ -86,7 +86,7 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 						<p>Pay now, Pay later and Slice it. Klarna is entering a new world of smoooth. We would love for you to join us on the ride and to do so, you will need to upgrade your Klarna products to a new integration. You will then always get the latest features that Klarna develops and you’ll keep your current agreement along with your price settings.</p>
 						<a class="kb-button"
 						   href="https://hello.klarna.com/product-upgrade?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=banner"
-						   target="_blank">Upgrade you contract with Klarna</a>
+						   target="_blank">Upgrade your contract with Klarna</a>
 					</div>
 					<img id="kb-image"
 						 src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/klarna_logo_white.png"
@@ -103,7 +103,7 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 								ajaxurl,
 								{
 									action		: 'hide_klarna_kp_banner',
-									_wpnonce	: '<?php echo wp_create_nonce('hide-klarna-kp-banner'); ?>',
+									_wpnonce	: '<?php echo wp_create_nonce( 'hide-klarna-kp-banner' ); ?>',
 								},
 								function(response){
 									console.log('Success hide kp banner');
@@ -169,13 +169,13 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 			$plugin         = 'klarna-payments-for-woocommerce';
 			$plugin_version = WC_KLARNA_PAYMENTS_VERSION;
 			$wc_version     = defined( 'WC_VERSION' ) && WC_VERSION ? WC_VERSION : null;
-			$url_queries    = '?country='. $country .'&products=kp&plugin=' . $plugin . '&pluginVersion=' . $plugin_version . '&platform=woocommerce&platformVersion=' . $wc_version;
+			$url_queries    = '?country=' . $country . '&products=kp&plugin=' . $plugin . '&pluginVersion=' . $plugin_version . '&platform=woocommerce&platformVersion=' . $wc_version;
 
 			if ( 'US' !== $country ) {
 				$url_base = 'https://eu.portal.klarna.com/signup/';
-				$url = $url_base . $url_queries;
+				$url      = $url_base . $url_queries;
 			} else {
-				//$url_base = 'https://us.portal.klarna.com/signup/';
+				// $url_base = 'https://us.portal.klarna.com/signup/';
 				$url = 'https://www.klarna.com/international/business/woocommerce/?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=kp';
 			}
 			return $url;

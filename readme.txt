@@ -3,7 +3,7 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 4.9.8
+Tested up to: 5.0
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv3 or later
@@ -48,11 +48,22 @@ Klarna Payments works for merchants in Sweden, Denmark, Finland, Norway, Germany
 For help setting up and configuring Klarna Payments for WooCommerce please refer to our [documentation](https://docs.woocommerce.com/document/klarna-payments/).
 
 = Are there any specific requirements? =
-* WooCommerce 3.0 or newer is required.
+* WooCommerce 3.3.0 or newer is required.
 * PHP 5.6 or higher is required.
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2018.11.27  	- version 1.6.3 =
+* Feature		- Added setting to hide "What is Klarna?" link.
+* Tweak			- Added filter wc_kp_remove_postcode_spaces to enable removing whitespace from postcode posted to Klarna.
+* Tweak			- Removed update order on visibility change.
+* Tweak			- Default customer type to b2c if setting is not saved in db.
+* Tweak			- Plugin WordPress 5.0 compatible.
+* Fix			- Added support for additional required fields (other than Woo standard) on checkout. Prevents Klarna iframe from showing before all fields are entered.
+* Fix			- Narrowed search for checkout field changes. Prevents some themes from entering infinite loop that loads the Klarna iframe.
+* Fix			- Made payment method title editable again.
+* Fix			- Add round to fees sent to Klarna.
+
 = 2018.10.19  	- version 1.6.2 =
 * Enhancement 	- Changed so all payment methods have the same ID in frontend as in the factory gateway. Adds support for payment gateway based fees and similar plugins.
 * Fix 			- Fixed no tax being applied to negative fee.

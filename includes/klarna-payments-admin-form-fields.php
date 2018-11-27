@@ -44,8 +44,15 @@ class Klarna_Payments_Form_Fields {
 					'default'     => 'no',
 					'desc_tip'    => true,
 				),
+				'hide_what_is_klarna'      => array(
+					'title'    => __( 'Hide What is Klarna? link', 'klarna-payments-for-woocommerce' ),
+					'type'     => 'checkbox',
+					'label'    => __( 'If checked, What is Klarna? will not be shown.', 'klarna-payments-for-woocommerce' ),
+					'default'  => 'no',
+					'desc_tip' => true,
+				),
 				'float_what_is_klarna'     => array(
-					'title'    => __( 'What is Klarna? link', 'klarna-payments-for-woocommerce' ),
+					'title'    => __( 'Float What is Klarna? link', 'klarna-payments-for-woocommerce' ),
 					'type'     => 'checkbox',
 					'label'    => __( 'If checked, What is Klarna? will be floated right.', 'klarna-payments-for-woocommerce' ),
 					'default'  => 'yes',

@@ -8,12 +8,11 @@ if ( is_array( WC()->session->get( 'klarna_payments_categories' ) ) ) {
 		$payment_category_id   = 'klarna_payments_' . $payment_category->identifier;
 		$payment_category_name = $payment_category->name;
 		$payment_category_icon = $payment_category->asset_urls->standard;
-
-		$kp        = $available_gateways['klarna_payments'];
-		$kp->id    = $payment_category_id;
-		$kp->title = $payment_category_name;
-		$kp->icon  = $payment_category_icon;
-		$headers   = get_headers( $kp->icon );
+		$kp                    = $available_gateways['klarna_payments'];
+		$kp->id                = $payment_category_id;
+		$kp->title             = $payment_category_name;
+		$kp->icon              = $payment_category_icon;
+		$headers               = get_headers( $kp->icon );
 		if ( 'HTTP/1.1 404 Not Found' === $headers[0] ) {
 			switch ( $kp->id ) {
 				case 'klarna_payments_pay_later':

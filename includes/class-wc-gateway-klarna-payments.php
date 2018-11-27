@@ -185,6 +185,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public $float_what_is_klarna;
 
+
+	/**
+	 * Hide what is Klarna? link in checkout page.
+	 *
+	 * @var string
+	 */
+	public $hide_what_is_klarna;
 	/**
 	 * Constructor
 	 */
@@ -205,7 +212,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->init_settings();
 
 		// Get setting values.
-		// $this->title    = $this->get_option( 'title' );
+		$this->title    = $this->get_option( 'title' );
 		$this->enabled  = $this->get_option( 'enabled' );
 		$this->testmode = 'yes' === $this->get_option( 'testmode' );
 		$this->logging  = 'yes' === $this->get_option( 'logging' );
@@ -230,6 +237,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->radius_border            = $this->get_option( 'radius_border' );
 
 		// What is Klarna link.
+		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 		$env_string                 = 'US' === $this->klarna_country ? '-na' : '';
 		if ( $this->testmode ) {
@@ -306,32 +314,33 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_icon() {
-		// If default WooCommerce CSS is used, float "What is Klarna link like PayPal does it".
-		if ( $this->float_what_is_klarna ) {
-			$link_style = 'style="float: right; line-height: 52px; font-size: .83em;"';
-		} else {
-			$link_style = '';
-		}
-
-		$what_is_klarna_text = 'What is Klarna?';
-
-		if ( 'us' === strtolower( $this->klarna_country ) ) {
-			$link_url = 'https://www.klarna.com/us/business/what-is-klarna';
-		} elseif ( 'at' === strtolower( $this->klarna_country ) || 'de' === strtolower( $this->klarna_country ) ) {
-			$link_url = 'https://www.klarna.com';
-		} else {
-			$link_url = 'https://www.klarna.com/uk/what-we-do';
-		}
-
-		// Change text for Germany
-		$locale = get_locale();
-		if ( stripos( $locale, 'de' ) !== false ) {
-			$what_is_klarna_text = 'Was ist Klarna?';
-		}
 		$icon_width = '39';
 		$icon_html  = '<img src="' . $this->icon . '" alt="Klarna" style="max-width:' . $icon_width . 'px"/>';
-		$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
+		if ( ! $this->hide_what_is_klarna ) {
+			// If default WooCommerce CSS is used, float "What is Klarna link like PayPal does it".
+			if ( $this->float_what_is_klarna ) {
+				$link_style = 'style="float: right; line-height: 52px; font-size: .83em;"';
+			} else {
+				$link_style = '';
+			}
 
+			$what_is_klarna_text = 'What is Klarna?';
+
+			if ( 'us' === strtolower( $this->klarna_country ) ) {
+				$link_url = 'https://www.klarna.com/us/business/what-is-klarna';
+			} elseif ( 'at' === strtolower( $this->klarna_country ) || 'de' === strtolower( $this->klarna_country ) ) {
+				$link_url = 'https://www.klarna.com';
+			} else {
+				$link_url = 'https://www.klarna.com/uk/what-we-do';
+			}
+
+			// Change text for Germany
+			$locale = get_locale();
+			if ( stripos( $locale, 'de' ) !== false ) {
+				$what_is_klarna_text = 'Was ist Klarna?';
+			}
+			$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
+		}
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
 	}
 
@@ -752,10 +761,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		);
 
 		// Localize the script.
-		$klarna_payments_params                            = array();
-		$klarna_payments_params['testmode']                = $this->testmode;
-		$klarna_payments_params['default_checkout_fields'] = apply_filters( 'wc_klarna_payments_default_checkout_fields', $default_kp_checkout_fields );
-		$klarna_payments_params['customer_type']           = $this->get_option( 'customer_type' );
+		$klarna_payments_params                                    = array();
+		$klarna_payments_params['testmode']                        = $this->testmode;
+		$klarna_payments_params['default_checkout_fields']         = apply_filters( 'wc_klarna_payments_default_checkout_fields', $default_kp_checkout_fields );
+		$klarna_payments_params['customer_type']                   = $this->get_option( 'customer_type' );
+		$klarna_payments_params['remove_postcode_spaces']          = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
+		$klarna_payments_params['failed_field_validation_text']    = __( ' is a required field.', 'woocommerce' );
+		$klarna_payments_params['failed_checkbox_validation_text'] = __( 'Make sure all required checkboxes are checked.', 'klarna-payments-for-woocommerce' );
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
@@ -817,9 +829,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 		$auth_token = sanitize_text_field( $_POST['klarna_payments_authorization_token'] ); // Input var okay.
 
-		$order    = wc_get_order( $order_id );
-		$response = $this->place_order( $order_id, $auth_token ); // Place order.
-
+		$order         = wc_get_order( $order_id );
+		$response      = $this->place_order( $order_id, $auth_token ); // Place order.
+		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+		// $this->set_payment_method_title( $order, $response_body );
 		return $this->process_klarna_response( $response, $order );
 	}
 
@@ -962,7 +975,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'phone'             => stripslashes( $posted_data['billing_phone'] ),
 			'street_address'    => stripslashes( $posted_data['billing_address_1'] ),
 			'street_address2'   => stripslashes( $posted_data['billing_address_2'] ),
-			'postal_code'       => stripslashes( $posted_data['billing_postcode'] ),
+			'postal_code'       => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $posted_data['billing_postcode'] ) : $posted_data['billing_postcode'] ),
 			'city'              => stripslashes( $posted_data['billing_city'] ),
 			'region'            => stripslashes( $posted_data['billing_state'] ),
 			'country'           => stripslashes( $posted_data['billing_country'] ),
@@ -981,7 +994,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'phone'           => stripslashes( $posted_data['shipping_email'] ),
 				'street_address'  => stripslashes( $posted_data['shipping_address_1'] ),
 				'street_address2' => stripslashes( $posted_data['shipping_address_2'] ),
-				'postal_code'     => stripslashes( $posted_data['shipping_postcode'] ),
+				'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $posted_data['shipping_postcode'] ) : $posted_data['shipping_postcode'] ),
 				'city'            => stripslashes( $posted_data['shipping_city'] ),
 				'region'          => stripslashes( $posted_data['shipping_state'] ),
 				'country'         => stripslashes( $posted_data['shipping_country'] ),
@@ -1019,7 +1032,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			),
 		);
 		$response     = wp_safe_remote_post( $request_url, $request_args );
-
 		return $response;
 	}
 
@@ -1248,9 +1260,39 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	public function set_klarna_customer() {
-		$type = ( 'b2c' === $this->get_option( 'customer_type' ) ) ? 'person' : 'organization';
+		$type = ( 'b2c' === $this->get_option( 'customer_type', 'b2c' ) ) ? 'person' : 'organization';
 		return array(
 			'type' => $type,
 		);
+	}
+
+	/**
+	 * Set payment method title for order.
+	 *
+	 * @param array $order WooCommerce order.
+	 * @param array $klarna_place_order_response The Klarna place order response.
+	 * @return void
+	 * @todo Change it so that it dynamically gets information from Klarna.
+	 */
+	public function set_payment_method_title( $order, $klarna_place_order_response ) {
+		$title         = $order->get_payment_method_title();
+		$klarna_method = $klarna_place_order_response['authorized_payment_method']['type'];
+		switch ( $klarna_method ) {
+			case 'invoice':
+				$klarna_method = 'Pay Later';
+				break;
+			case 'base_account':
+				$klarna_method = 'Slice It';
+				break;
+			case 'direct_debit':
+				$klarna_method = 'Direct Debit';
+				break;
+			default:
+				$klarna_method = null;
+		}
+		if ( null !== $klarna_method ) {
+			$new_title = $title . ' - ' . $klarna_method;
+			$order->set_payment_method_title( $new_title );
+		}
 	}
 }

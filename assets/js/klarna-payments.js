@@ -10,10 +10,9 @@ jQuery( function($) {
 		checkout_values: {},
 
 		check_changes: function() {
-			$('#customer_details input, #customer_details select').each(function() {
+			$('.woocommerce-billing-fields input, .woocommerce-billing-fields select, .woocommerce-shipping-fields input, .woocommerce-shipping-fields select').each(function() {
 				var fieldName = $(this).attr('name');
 				var fieldValue = $(this).val();
-
 				if ( klarna_payments.checkout_values[ fieldName ] !== fieldValue ) {
 					klarna_payments.checkout_values[ fieldName ] = fieldValue;
 					$(this).trigger('change');
@@ -172,21 +171,57 @@ jQuery( function($) {
 				if ($('input[name="klarna_payments_authorization_token"]').length) {
 					return true;
 				}
-
-				klarna_payments.authorize().done( function(response) {
-					if ('authorization_token' in response) {
-						$('input[name="klarna_payments_authorization_token"]').remove();
-						$('form.checkout').append('<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit();
-					}
-
-					if (false === response.show_form) {
-						// Hide Klarna Payments (for now, do not do this).
-						/*
-						$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
-						$('li.payment_method_klarna_payments').hide()
-						*/
+				var required_fields_set = true;
+				var failed_fields = [];
+				$('.validate-required').find('input').each(function( nr, field ) {
+					if( $(field).attr('type') !== 'hidden' && $(field).attr('id').indexOf( 'shipping' ) < 0 && $(field).attr('id').indexOf( 'account' ) < 0 ) {
+						if( $(field).is(':checkbox') ) {
+							if( $(field).is(":checked") !== true ) {
+								required_fields_set = false;
+								failed_fields.push( $(field).attr('id') );
+								$(field).parents('p.form-row').addClass( 'woocommerce-invalid' );
+							}
+						} else if( $(field).val() === '' ) {
+							required_fields_set = false;
+							failed_fields.push( $(field).attr('id') );
+							$(field).parents('p.form-row').addClass( 'woocommerce-invalid' );
+						}
 					}
 				});
+				if( required_fields_set ) {
+					klarna_payments.authorize().done( function(response) {
+						if ('authorization_token' in response) {
+							$('input[name="klarna_payments_authorization_token"]').remove();
+							$('form.checkout').append('<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit();
+						}
+
+						if (false === response.show_form) {
+							// Hide Klarna Payments (for now, do not do this).
+							/*
+							$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
+							$('li.payment_method_klarna_payments').hide()
+							*/
+						}
+					});
+				} else {
+					$('ul.woocommerce-error').remove();
+					$('form.checkout').prepend( '<ul class="woocommerce-error" role="alert"></ul>' );
+					var checkbox = false;
+					$.each( failed_fields, function( key, value ) {
+						if( $( '#' + value ).is(':checkbox') && checkbox === false ) {
+							checkbox = true;
+							$('ul.woocommerce-error').append( '<li>' + klarna_payments_params.failed_checkbox_validation_text + '</li>' );
+						} else if( ! $( '#' + value ).is(':checkbox' ) ) {
+							var field_name = $( '#' + value ).attr( 'name' );
+							var field_label = $('label[for="' +  field_name +'"]').text().replace( '*', '' );
+							$('ul.woocommerce-error').append( '<li><strong>' + field_label + '</strong>' + klarna_payments_params.failed_field_validation_text + '</li>' );
+						}
+					});
+					var etop = $('form.checkout').offset().top;
+					$('html, body').animate({
+						scrollTop: etop
+					}, 1000);
+				}
 
 				return false;
 			});
@@ -369,7 +404,7 @@ jQuery( function($) {
 			function handleVisibilityChange() {
 				if (! document[hidden]) {
 					if (klarna_payments.isKlarnaPaymentsSelected()) {
-						$('body').trigger('update_checkout');
+						//$('body').trigger('update_checkout');
 					}
 				}
 			}
@@ -384,7 +419,7 @@ jQuery( function($) {
 					phone : $(klarna_payments_params.default_checkout_fields.billing_phone).val(),
 					country : $(klarna_payments_params.default_checkout_fields.billing_country).val(),
 					region : $(klarna_payments_params.default_checkout_fields.billing_region).val(),
-					postal_code : $(klarna_payments_params.default_checkout_fields.billing_postal_code).val(),
+					postal_code : ( klarna_payments_params.remove_postcode_spaces === 'yes' ) ? $(klarna_payments_params.default_checkout_fields.billing_postal_code).val().replace(/\s/g, '') : $(klarna_payments_params.default_checkout_fields.billing_postal_code).val(),
 					city : $(klarna_payments_params.default_checkout_fields.billing_city).val(),
 					street_address : $(klarna_payments_params.default_checkout_fields.billing_street_address).val(),
 					street_address2 : $(klarna_payments_params.default_checkout_fields.billing_street_address2).val(),
@@ -400,7 +435,7 @@ jQuery( function($) {
 				address.shipping_address.family_name = $(klarna_payments_params.default_checkout_fields.shipping_family_name).val();
 				address.shipping_address.country = $(klarna_payments_params.default_checkout_fields.shipping_country).val();
 				address.shipping_address.region = $(klarna_payments_params.default_checkout_fields.shipping_region).val();
-				address.shipping_address.postal_code = $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val();
+				address.shipping_address.postal_code = ( klarna_payments_params.remove_postcode_spaces === 'yes' ) ? $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val().replace(/\s/g, '') : $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val();
 				address.shipping_address.city = $(klarna_payments_params.default_checkout_fields.shipping_city).val();
 				address.shipping_address.street_address = $(klarna_payments_params.default_checkout_fields.shipping_street_address).val();
 				address.shipping_address.street_address2 = $(klarna_payments_params.default_checkout_fields.shipping_street_address2).val();
