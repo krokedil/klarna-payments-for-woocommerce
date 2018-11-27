@@ -213,8 +213,9 @@ jQuery( function($) {
 							checkbox = true;
 							$('ul.woocommerce-error').append( '<li>' + klarna_payments_params.failed_checkbox_validation_text + '</li>' );
 						} else if( ! $( '#' + value ).is(':checkbox' ) ) {
-							var field_lable = $('#' + value).closest('label').text().replace( '*', '' );
-							$('ul.woocommerce-error').append( '<li><strong>' + field_lable + '</strong>' + klarna_payments_params.failed_field_validation_text + '</li>' );
+							var field_name = $( '#' + value ).attr( 'name' );
+							var field_label = $('label[for="' +  field_name +'"]').text().replace( '*', '' );
+							$('ul.woocommerce-error').append( '<li><strong>' + field_label + '</strong>' + klarna_payments_params.failed_field_validation_text + '</li>' );
 						}
 					});
 					var etop = $('form.checkout').offset().top;
