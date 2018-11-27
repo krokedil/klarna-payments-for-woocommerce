@@ -761,11 +761,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		);
 
 		// Localize the script.
-		$klarna_payments_params                            = array();
-		$klarna_payments_params['testmode']                = $this->testmode;
-		$klarna_payments_params['default_checkout_fields'] = apply_filters( 'wc_klarna_payments_default_checkout_fields', $default_kp_checkout_fields );
-		$klarna_payments_params['customer_type']           = $this->get_option( 'customer_type' );
-		$klarna_payments_params['remove_postcode_spaces']  = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
+		$klarna_payments_params                                    = array();
+		$klarna_payments_params['testmode']                        = $this->testmode;
+		$klarna_payments_params['default_checkout_fields']         = apply_filters( 'wc_klarna_payments_default_checkout_fields', $default_kp_checkout_fields );
+		$klarna_payments_params['customer_type']                   = $this->get_option( 'customer_type' );
+		$klarna_payments_params['remove_postcode_spaces']          = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
+		$klarna_payments_params['failed_field_validation_text']    = __( ' is a required field.', 'woocommerce' );
+		$klarna_payments_params['failed_checkbox_validation_text'] = __( 'Make sure all required checkboxes are checked.', 'klarna-payments-for-woocommerce' );
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
