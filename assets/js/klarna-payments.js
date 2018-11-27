@@ -10,10 +10,9 @@ jQuery( function($) {
 		checkout_values: {},
 
 		check_changes: function() {
-			$('#customer_details input, #customer_details select').each(function() {
+			$('.woocommerce-billing-fields input, .woocommerce-billing-fields select, .woocommerce-shipping-fields input, .woocommerce-shipping-fields select').each(function() {
 				var fieldName = $(this).attr('name');
 				var fieldValue = $(this).val();
-
 				if ( klarna_payments.checkout_values[ fieldName ] !== fieldValue ) {
 					klarna_payments.checkout_values[ fieldName ] = fieldValue;
 					$(this).trigger('change');
