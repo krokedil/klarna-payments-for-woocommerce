@@ -15,7 +15,6 @@ jQuery( function($) {
 				var fieldValue = $(this).val();
 				if ( klarna_payments.checkout_values[ fieldName ] !== fieldValue ) {
 					klarna_payments.checkout_values[ fieldName ] = fieldValue;
-					$(this).trigger('change');
 				}
 			});
 		},
@@ -312,11 +311,11 @@ jQuery( function($) {
 		},
 
 		getSelectorContainerID: function() {
-			return $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').attr('id');
+			return $('input[name="payment_method"]:checked').parents('.wc_payment_method').find('.klarna_payments_container').attr('id');
 		},
 
 		getSelectedPaymentCategory: function() {
-			var selected_category = $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').data('payment_method_category');
+			var selected_category = $('input[name="payment_method"]:checked').parents('.wc_payment_method').find('.klarna_payments_container').data('payment_method_category');
 			return selected_category.replace('klarna_payments_', '');
 		},
 
