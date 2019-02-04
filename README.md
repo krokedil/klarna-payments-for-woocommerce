@@ -4,4 +4,4 @@ Official repository for Klarna Payments for WooCommerce plugin. This plugin prov
 
 ## Documentation
 
-[Klarna Payments for WooCommerce documentation](http://docs.krokedil.com/documentation/klarna-payments-woocommerce/)
+[Klarna Payments for WooCommerce documentation](https://docs.woocommerce.com/document/klarna-payments/)

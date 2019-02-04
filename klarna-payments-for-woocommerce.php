@@ -1,10 +1,10 @@
 <?php
 /*
  * Plugin Name: Klarna Payments for WooCommerce
- * Plugin URI: http://docs.krokedil.com/documentation/klarna-payments-woocommerce/
+ * Plugin URI: https://krokedil.com/klarna-payments/
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
- * Author URI: https://krokedil.se/
+ * Author URI: https://krokedil.com/
  * Version: 1.6.3
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
@@ -171,8 +171,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$plugin_links = array(
 				'<a href="' . $setting_link . '">' . __( 'Settings', 'klarna-payments-for-woocommerce' ) . '</a>',
-				'<a href="https://krokedil.se/">' . __( 'Docs', 'klarna-payments-for-woocommerce' ) . '</a>',
-				'<a href="http://krokedil.se/">' . __( 'Support', 'klarna-payments-for-woocommerce' ) . '</a>',
+				'<a href="https://docs.woocommerce.com/document/klarna-payments/">' . __( 'Docs', 'klarna-payments-for-woocommerce' ) . '</a>',
+				'<a href="https://krokedil.com/support/">' . __( 'Support', 'klarna-payments-for-woocommerce' ) . '</a>',
 			);
 
 			return array_merge( $plugin_links, $links );
