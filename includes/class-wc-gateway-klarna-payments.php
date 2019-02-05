@@ -536,7 +536,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					Klarna.Credit.init(klarnaInitData);
 				};
 			</script>
-			<script src="https://credit.klarnacdn.net/lib/v1/api.js" async></script>
+			<script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
 			<?php
 		}
 	}
@@ -610,7 +610,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 						Klarna.Credit.init(klarnaInitData);
 					};
 				</script>
-				<script src="https://credit.klarnacdn.net/lib/v1/api.js" async></script>
+				<script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
 				<?php
 			}
 		} elseif ( WC()->session->get( 'klarna_payments_session_id' ) ) { // On AJAX update_checkout, just try to update the session, if Klarna country hasn't changed.
