@@ -181,7 +181,7 @@ jQuery( function($) {
 								failed_fields.push( $(field).attr('id') );
 								$(field).parents('p.form-row').addClass( 'woocommerce-invalid' );
 							}
-						} else if( $(field).val() === '' ) {
+						} else if( $(field).val() === '' && $(field).parents('#payment').length < 0 ) {
 							required_fields_set = false;
 							failed_fields.push( $(field).attr('id') );
 							$(field).parents('p.form-row').addClass( 'woocommerce-invalid' );
