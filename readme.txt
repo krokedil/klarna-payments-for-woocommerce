@@ -3,7 +3,7 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.0
+Tested up to: 5.0.3
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv3 or later
@@ -53,6 +53,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2019.02.06  	- version 1.6.4 =
+* Tweak			- Removed validation of required fields in the Payment method area. Caused an issue with Authorize.net payment gateway.
+* Tweak         - Removed the disable on the Place order button since it is no longer needed to catch invalid fields.
+* Tweak         - Changed JS library endpoint.
+* Tweak         - Added extended description to the payment method title to clarify what it does.
+
 = 2018.11.27  	- version 1.6.3 =
 * Feature		- Added setting to hide "What is Klarna?" link.
 * Tweak			- Added filter wc_kp_remove_postcode_spaces to enable removing whitespace from postcode posted to Klarna.

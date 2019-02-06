@@ -5,14 +5,14 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 1.6.3
+ * Version: 1.6.4
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 3.3.0
- * WC tested up to: 3.5.1
+ * WC tested up to: 3.5.4
  *
- * Copyright (c) 2017-2018 Krokedil
+ * Copyright (c) 2017-2019 Krokedil
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '1.6.3' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '1.6.4' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.3.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -111,7 +111,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
 			add_filter(
-				'woocommerce_process_checkout_field_billing_phone', array(
+				'woocommerce_process_checkout_field_billing_phone',
+				array(
 					$this,
 					'maybe_filter_billing_phone',
 				)

@@ -63,7 +63,7 @@ jQuery( function($) {
 
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
-					$('#place_order').attr('disabled', true);
+					//$('#place_order').attr('disabled', true);
 					klarna_payments.load().then(klarna_payments.loadHandler);
 				}
 
@@ -84,7 +84,7 @@ jQuery( function($) {
 			$('form.checkout').on('change', '.woocommerce-billing-fields input, .woocommerce-billing-fields select', function() {
 				// Make sure all WC required fields are populated.
 				if (!klarna_payments.check_required_fields()) {
-					$('#place_order').attr('disabled', true);
+					//$('#place_order').attr('disabled', true);
 				} else {
 					$('#place_order').attr('disabled', false);
 				}
@@ -95,7 +95,7 @@ jQuery( function($) {
 			 */
 			$('form.checkout').on('keyup', '#billing_phone', klarna_payments.debounce_changes(function() {
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
-					$('#place_order').attr('disabled', true);
+					//$('#place_order').attr('disabled', true);
 					if ($(this).val().length > 4) {
 						klarna_payments.load().then(klarna_payments.loadHandler);
 					}
@@ -107,7 +107,7 @@ jQuery( function($) {
 			 */
 			$('form.checkout').on('keyup', '#billing_email', klarna_payments.debounce_changes(function() {
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
-					$('#place_order').attr('disabled', true);
+					//$('#place_order').attr('disabled', true);
 					if (!$(this).parent().hasClass('woocommerce-invalid')) {
 						klarna_payments.load().then(klarna_payments.loadHandler);
 					}
@@ -130,7 +130,7 @@ jQuery( function($) {
 			$('form.checkout').on('change', 'input[name="payment_method"]', function() {
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form. Also collapse any unselected Klarna Payments gateways.
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
-					$('#place_order').attr('disabled', true);
+					//$('#place_order').attr('disabled', true);
 					klarna_payments.load().then(klarna_payments.loadHandler);
 					klarna_payments.collapseGateways();
 				}
@@ -181,7 +181,7 @@ jQuery( function($) {
 								failed_fields.push( $(field).attr('id') );
 								$(field).parents('p.form-row').addClass( 'woocommerce-invalid' );
 							}
-						} else if( $(field).val() === '' ) {
+						} else if( $(field).val() === '' && $(field).parents('#payment').length < 0 ) {
 							required_fields_set = false;
 							failed_fields.push( $(field).attr('id') );
 							$(field).parents('p.form-row').addClass( 'woocommerce-invalid' );

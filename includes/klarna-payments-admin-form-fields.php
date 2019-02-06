@@ -24,7 +24,7 @@ class Klarna_Payments_Form_Fields {
 				'title'                    => array(
 					'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
 					'type'        => 'text',
-					'description' => __( 'Payment method title.', 'klarna-payments-for-woocommerce' ),
+					'description' => __( 'Payment method title. Changes what the payment method is called on the order recieved page aswell as the email that is sent to the customer.', 'klarna-payments-for-woocommerce' ),
 					'default'     => 'Klarna',
 					'desc_tip'    => true,
 				),
