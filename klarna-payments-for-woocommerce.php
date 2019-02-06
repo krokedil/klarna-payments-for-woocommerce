@@ -12,7 +12,7 @@
  * WC requires at least: 3.3.0
  * WC tested up to: 3.5.4
  *
- * Copyright (c) 2017-2018 Krokedil
+ * Copyright (c) 2017-2019 Krokedil
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -111,7 +111,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
 			add_filter(
-				'woocommerce_process_checkout_field_billing_phone', array(
+				'woocommerce_process_checkout_field_billing_phone',
+				array(
 					$this,
 					'maybe_filter_billing_phone',
 				)
