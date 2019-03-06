@@ -316,7 +316,9 @@ jQuery( function($) {
 		},
 
 		getSelectedPaymentCategory: function() {
-			var selected_category = $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').data('payment_method_category');
+			var id = $('input[name="payment_method"]:checked').attr( 'id' );
+			var selected_category = $( '.' + id ).find('.klarna_payments_container').data('payment_method_category');
+			//var selected_category = $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').data('payment_method_category');
 			return selected_category.replace('klarna_payments_', '');
 		},
 
