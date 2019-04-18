@@ -972,23 +972,20 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order_lines           = $order_lines_processor->order_lines();
 		$posted_data           = $_POST; // Input var okay.
 		$billing_address       = array(
-			'given_name'        => stripslashes( $posted_data['billing_first_name'] ),
-			'family_name'       => stripslashes( $posted_data['billing_last_name'] ),
-			'email'             => stripslashes( $posted_data['billing_email'] ),
-			'phone'             => stripslashes( $posted_data['billing_phone'] ),
-			'street_address'    => stripslashes( $posted_data['billing_address_1'] ),
-			'street_address2'   => stripslashes( $posted_data['billing_address_2'] ),
-			'postal_code'       => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $posted_data['billing_postcode'] ) : $posted_data['billing_postcode'] ),
-			'city'              => stripslashes( $posted_data['billing_city'] ),
-			'region'            => stripslashes( $posted_data['billing_state'] ),
-			'country'           => stripslashes( $posted_data['billing_country'] ),
-			'organization_name' => stripslashes( $posted_data['billing_company'] ),
+			'given_name'      => stripslashes( $posted_data['billing_first_name'] ),
+			'family_name'     => stripslashes( $posted_data['billing_last_name'] ),
+			'email'           => stripslashes( $posted_data['billing_email'] ),
+			'phone'           => stripslashes( $posted_data['billing_phone'] ),
+			'street_address'  => stripslashes( $posted_data['billing_address_1'] ),
+			'street_address2' => stripslashes( $posted_data['billing_address_2'] ),
+			'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $posted_data['billing_postcode'] ) : $posted_data['billing_postcode'] ),
+			'city'            => stripslashes( $posted_data['billing_city'] ),
+			'region'          => stripslashes( $posted_data['billing_state'] ),
+			'country'         => stripslashes( $posted_data['billing_country'] ),
 		);
-		/*
-		if ( isset( $posted_data['billing_company'] ) && '' !== $posted_data['billing_company'] ) {
+		if ( 'b2b' === $this->get_option( 'customer_type' ) ) {
 			$billing_address['organization_name'] = stripslashes( $posted_data['billing_company'] );
-		}*/
-
+		}
 		if ( ! empty( $_POST['ship_to_different_address'] ) && ! wc_ship_to_billing_address_only() && 'b2c' === $this->get_option( 'customer_type' ) ) { // Input var okay.
 			$shipping_address = array(
 				'given_name'      => stripslashes( $posted_data['shipping_first_name'] ),
