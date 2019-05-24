@@ -636,7 +636,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function create_session( $request_args ) {
 		$create_request_url = $this->server_base . 'payments/v1/sessions';
 		$create_response    = $this->create_session_request( $create_request_url, $request_args );
-
+		
 		if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
 			$this->session_error = $create_response;
 			WC_Klarna_Payments::log( 'Could not update Klarna session. Response: ' . stripslashes_deep( json_encode( $create_response ) ) . '. Posted request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
@@ -1176,6 +1176,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			case 'FI':
 				if ( $this->site_has_english_locale() ) {
 					$klarna_locale = 'en-fi';
+				} elseif ( 'sv_se' === strtolower( get_locale() ) ) {
+					$klarna_locale = 'sv-fi';
 				} else {
 					$klarna_locale = 'fi-fi';
 				}
