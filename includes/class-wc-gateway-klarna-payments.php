@@ -636,7 +636,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function create_session( $request_args ) {
 		$create_request_url = $this->server_base . 'payments/v1/sessions';
 		$create_response    = $this->create_session_request( $create_request_url, $request_args );
-		
+
 		if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
 			$this->session_error = $create_response;
 			WC_Klarna_Payments::log( 'Could not update Klarna session. Response: ' . stripslashes_deep( json_encode( $create_response ) ) . '. Posted request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
@@ -685,7 +685,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 				return $decoded;
 			} else {
-				return new WP_Error( $response['response']['code'], $response['response']['message'] );
+				return new WP_Error( $response['response']['code'], $response['body'] );
 			}
 		} else {
 			return new WP_Error( 'kp_create_session', 'Could not create Klarna Payments session.' );
@@ -709,7 +709,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			if ( 204 === $response['response']['code'] ) {
 				return true;
 			} else {
-				return new WP_Error( $response['response']['code'], $response['response']['message'] );
+				return new WP_Error( $response['response']['code'], $response['body'] );
 			}
 		} else {
 			return new WP_Error( 'kp_update_session', 'Could not update Klarna Payments session.' );
