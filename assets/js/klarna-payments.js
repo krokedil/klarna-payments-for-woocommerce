@@ -317,6 +317,7 @@ jQuery( function($) {
 
 		getSelectedPaymentCategory: function() {
 			var selected_category = $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').data('payment_method_category');
+			console.log( selected_category );
 			return selected_category.replace('klarna_payments_', '');
 		},
 
@@ -423,7 +424,7 @@ jQuery( function($) {
 					city : $(klarna_payments_params.default_checkout_fields.billing_city).val(),
 					street_address : $(klarna_payments_params.default_checkout_fields.billing_street_address).val(),
 					street_address2 : $(klarna_payments_params.default_checkout_fields.billing_street_address2).val(),
-					organization_name : $(klarna_payments_params.default_checkout_fields.billing_company).val(),
+					organization_name : ( 'b2b' === klarna_payments_params.customer_type ) ? $(klarna_payments_params.default_checkout_fields.billing_company).val() : '',
 				},
 				shipping_address: {}
 			};
