@@ -1159,6 +1159,25 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					$klarna_locale = 'de-at';
 				}
 				break;
+			case 'BE':
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-be';
+				} elseif ( 'fr-be' === strtolower( get_locale() ) ) {
+					$klarna_locale = 'fr-be';
+				} else {
+					$klarna_locale = 'nl-be';
+				}
+				break;
+			case 'CA':
+				$klarna_locale = 'en-ca';
+				break;
+			case 'CH':
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-ch';
+				} else {
+					$klarna_locale = 'de-ch';
+				}
+				break;
 			case 'DE':
 				if ( $this->site_has_english_locale() ) {
 					$klarna_locale = 'en-de';
@@ -1173,6 +1192,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					$klarna_locale = 'da-dk';
 				}
 				break;
+			case 'ES':
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-es';
+				} else {
+					$klarna_locale = 'es-es';
+				}
+				break;
 			case 'FI':
 				if ( $this->site_has_english_locale() ) {
 					$klarna_locale = 'en-fi';
@@ -1180,6 +1206,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					$klarna_locale = 'sv-fi';
 				} else {
 					$klarna_locale = 'fi-fi';
+				}
+				break;
+			case 'IT':
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-it';
+				} else {
+					$klarna_locale = 'it-it';
 				}
 				break;
 			case 'NL':
@@ -1194,6 +1227,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					$klarna_locale = 'en-no';
 				} else {
 					$klarna_locale = 'nb-no';
+				}
+				break;
+			case 'PL':
+				if ( $this->site_has_english_locale() ) {
+					$klarna_locale = 'en-pl';
+				} else {
+					$klarna_locale = 'pl-pl';
 				}
 				break;
 			case 'SE':
