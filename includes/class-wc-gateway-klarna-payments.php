@@ -1162,7 +1162,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			case 'BE':
 				if ( $this->site_has_english_locale() ) {
 					$klarna_locale = 'en-be';
-				} elseif ( 'fr-be' === strtolower( get_locale() ) ) {
+				} elseif ( 'fr_be' === strtolower( get_locale() ) ) {
 					$klarna_locale = 'fr-be';
 				} else {
 					$klarna_locale = 'nl-be';
