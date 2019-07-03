@@ -117,6 +117,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					'maybe_filter_billing_phone',
 				)
 			);
+
+			add_action( 'wp_ajax_wc_kp_place_order', array( $this, 'place_order' ) );
+			add_action( 'wp_ajax_nopriv_wc_kp_place_order', array( $this, 'place_order' ) );
 		}
 
 		/**
@@ -278,6 +281,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 
 			return $phone_value;
+		}
+
+		public function place_order() {
+			$kp = new WC_Gateway_Klarna_Payments();
+
+			$kp->place_order();
 		}
 
 	}

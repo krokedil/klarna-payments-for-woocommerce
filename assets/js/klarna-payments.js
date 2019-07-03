@@ -46,7 +46,6 @@ jQuery( function($) {
 					var fieldValue = $(this).val();
 					klarna_payments.checkout_values[ fieldName ] = fieldValue;
 				});
-
 			});
 
 			/**
@@ -161,9 +160,9 @@ jQuery( function($) {
 			/**
 			 * Hooking into WooCommerce.
 			 *
-			 * Firing Klarna.Credit.authorize(), then once it resolves, adding the hidden form field and re-submitting the form.
+			 * Firing Klarna.Payments.authorize(), then once it resolves, adding the hidden form field and re-submitting the form.
  			 */
-			$('form.checkout').on('checkout_place_order', function() {
+			/*$('form.checkout').on('checkout_place_order', function() {
 				if (!klarna_payments.isKlarnaPaymentsSelected()) {
 					return true;
 				}
@@ -197,10 +196,8 @@ jQuery( function($) {
 
 						if (false === response.show_form) {
 							// Hide Klarna Payments (for now, do not do this).
-							/*
-							$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
-							$('li.payment_method_klarna_payments').hide()
-							*/
+							//$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
+							//$('li.payment_method_klarna_payments').hide()
 						}
 					});
 				} else {
@@ -224,7 +221,7 @@ jQuery( function($) {
 				}
 
 				return false;
-			});
+			});*/
 		},
 
 		load: function() {
@@ -243,7 +240,7 @@ jQuery( function($) {
 						console.debug(e);
 					}
 
-					if (Klarna && Klarna.Credit) {
+					if (Klarna && Klarna.Payments) {
 						clearInterval(klarnaLoadedInterval);
 						clearTimeout(klarnaLoadedTimeout);
 
@@ -255,7 +252,7 @@ jQuery( function($) {
 						if ( 'US' === $('#billing_country').val() ) {
 							var address = klarna_payments.get_address();
 
-							Klarna.Credit.load(
+							Klarna.Payments.load(
 								options,
 								address,
 								function (response) {
@@ -263,7 +260,7 @@ jQuery( function($) {
 								}
 							);
 						} else {
-							Klarna.Credit.load(
+							Klarna.Payments.load(
 								options,
 								function (response) {
 									$defer.resolve(response);
@@ -328,9 +325,9 @@ jQuery( function($) {
 			klarna_payments.authorization_response = {};
 
 			try {
-				Klarna.Credit.authorize(
+				Klarna.Payments.authorize(
 					address,
-					{payment_method_category: klarna_payments.getSelectedPaymentCategory()},
+					{payment_method_category: klarna_payments.getSelectedPaymentCategory(), auto_finalize: false},
 					function (response) {
 						klarna_payments.authorization_response = response;
 						$defer.resolve(response);
@@ -463,12 +460,41 @@ jQuery( function($) {
 			} else {
 				jQuery('#customer_details .col-2').show();
 			}
+		},
+
+		handleHashChange: function( event ) {
+			var currentHash = location.hash;
+			var splittedHash = currentHash.split("=");
+			var json =  JSON.parse( atob( splittedHash[1] ) );
+            if( splittedHash[0] === "#kp" ){
+                var response = JSON.parse( atob( splittedHash[1] ) );
+				klarna_payments.authorize().done( function( response ) {
+					if ('authorization_token' in response) {
+						$.ajax(
+							klarna_payments_params.ajaxurl,
+							{
+								type: "POST",
+								dataType: "json",
+								async: true,
+								data: {
+									action: "wc_kp_place_order",
+									order_id: json.order_id,
+									auth_token: klarna_payments.authorization_response.authorization_token,
+								},
+								complete: function (response) {
+									window.location.href = response.responseJSON.data;
+								}
+							}
+						);
+					}
+				});
+			}
 		}
 	};
-
 	klarna_payments.start();
 	$('body').ready( function() {
 		klarna_payments.setRadioButtonValues();
+		window.addEventListener("hashchange", klarna_payments.handleHashChange);
 	});
 	$('body').ajaxComplete( function() {
 		klarna_payments.setRadioButtonValues();

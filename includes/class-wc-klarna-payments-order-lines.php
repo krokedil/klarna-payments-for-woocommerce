@@ -51,9 +51,9 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @return array
 	 */
-	public function order_lines() {
+	public function order_lines( $order_id = false ) {
 		$this->process_cart();
-		$this->process_shipping();
+		$this->process_shipping( $order_id );
 		$this->process_sales_tax();
 		$this->process_coupons();
 		$this->process_fees();
@@ -139,20 +139,44 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @access private
 	 */
-	private function process_shipping() {
-		if ( WC()->shipping->get_packages() && WC()->session->get( 'chosen_shipping_methods' ) ) {
+	private function process_shipping( $order_id = false ) {
+		if ( ! $order_id ) {
+			if ( WC()->shipping->get_packages() && WC()->session->get( 'chosen_shipping_methods' ) ) {
+				$shipping = array(
+					'type'             => 'shipping_fee',
+					'reference'        => $this->get_shipping_reference(),
+					'name'             => $this->get_shipping_name(),
+					'quantity'         => 1,
+					'unit_price'       => $this->get_shipping_amount(),
+					'tax_rate'         => $this->get_shipping_tax_rate(),
+					'total_amount'     => $this->get_shipping_amount(),
+					'total_tax_amount' => $this->get_shipping_tax_amount(),
+				);
+
+				$this->order_lines[] = $shipping;
+			}
+		} else {
+			$order    = wc_get_order( $order_id );
 			$shipping = array(
 				'type'             => 'shipping_fee',
-				'reference'        => $this->get_shipping_reference(),
-				'name'             => $this->get_shipping_name(),
+				'reference'        => 1,
+				'name'             => $order->get_shipping_method(),
 				'quantity'         => 1,
-				'unit_price'       => $this->get_shipping_amount(),
-				'tax_rate'         => $this->get_shipping_tax_rate(),
-				'total_amount'     => $this->get_shipping_amount(),
-				'total_tax_amount' => $this->get_shipping_tax_amount(),
+				'unit_price'       => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
+				'tax_rate'         => ( '0' !== $order->get_total_tax() ) ? $this->get_order_line_tax_rate( $order ) : 0,
+				'total_amount'     => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
+				'total_tax_amount' => $order->get_shipping_tax() * 100,
 			);
 
 			$this->order_lines[] = $shipping;
+		}
+	}
+
+	public function get_order_line_tax_rate( $order ) {
+		$tax_items = $order->get_items( 'tax' );
+		foreach ( $tax_items as $tax_item ) {
+			$rate_id = $tax_item->get_rate_id();
+			return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 );
 		}
 	}
 
