@@ -52,11 +52,17 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return array
 	 */
 	public function order_lines( $order_id = false ) {
-		$this->process_cart();
-		$this->process_shipping( $order_id );
-		$this->process_sales_tax();
-		$this->process_coupons();
-		$this->process_fees();
+		if( ! $order_id ) {
+			$this->process_cart();
+			$this->process_shipping();
+			$this->process_sales_tax();
+			$this->process_coupons();
+			$this->process_fees();
+		} else {
+			$this->get_order_items( $order_id );
+			$this->get_order_shipping( $order_id );
+		}
+		
 
 		return array(
 			'order_lines'      => $this->get_order_lines(),
@@ -139,33 +145,17 @@ class WC_Klarna_Payments_Order_Lines {
 	 *
 	 * @access private
 	 */
-	private function process_shipping( $order_id = false ) {
-		if ( ! $order_id ) {
-			if ( WC()->shipping->get_packages() && WC()->session->get( 'chosen_shipping_methods' ) ) {
-				$shipping = array(
-					'type'             => 'shipping_fee',
-					'reference'        => $this->get_shipping_reference(),
-					'name'             => $this->get_shipping_name(),
-					'quantity'         => 1,
-					'unit_price'       => $this->get_shipping_amount(),
-					'tax_rate'         => $this->get_shipping_tax_rate(),
-					'total_amount'     => $this->get_shipping_amount(),
-					'total_tax_amount' => $this->get_shipping_tax_amount(),
-				);
-
-				$this->order_lines[] = $shipping;
-			}
-		} else {
-			$order    = wc_get_order( $order_id );
+	private function process_shipping() {
+		if ( WC()->shipping->get_packages() && WC()->session->get( 'chosen_shipping_methods' ) ) {
 			$shipping = array(
 				'type'             => 'shipping_fee',
-				'reference'        => 1,
-				'name'             => $order->get_shipping_method(),
+				'reference'        => $this->get_shipping_reference(),
+				'name'             => $this->get_shipping_name(),
 				'quantity'         => 1,
-				'unit_price'       => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
-				'tax_rate'         => ( '0' !== $order->get_total_tax() ) ? $this->get_order_line_tax_rate( $order ) : 0,
-				'total_amount'     => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
-				'total_tax_amount' => $order->get_shipping_tax() * 100,
+				'unit_price'       => $this->get_shipping_amount(),
+				'tax_rate'         => $this->get_shipping_tax_rate(),
+				'total_amount'     => $this->get_shipping_amount(),
+				'total_tax_amount' => $this->get_shipping_tax_amount(),
 			);
 
 			$this->order_lines[] = $shipping;
@@ -310,6 +300,58 @@ class WC_Klarna_Payments_Order_Lines {
 		} // End if().
 	}
 
+	private function get_order_items( $order_id = false ) {
+		$order = wc_get_order( $order_id );
+		foreach ( $order->get_items() as $order_item ) {
+			if ( $order_item->get_quantity() ) {
+				if ( $order_item->get_variation_id() ) {
+					$product = wc_get_product( $order_item->get_variation_id() );
+				} else {
+					$product = wc_get_product( $order_item->get_product_id() );
+				}
+
+				$klarna_item = array(
+					'reference'             => 1,
+					'name'                  => $order_item->get_name(),
+					'quantity'              => $order_item->get_quantity(),
+					'unit_price'            => round( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() / $order_item->get_quantity() ) * 100 ),
+					'tax_rate'              => ( '0' !== $order_item->get_total_tax() ) ? $this->get_order_line_tax_rate( $order ) : 0,
+					'total_amount'          => round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ),
+					'total_tax_amount'      => $order_item->get_total_tax() * 100,
+					'total_discount_amount' => $order_item->get_total() * 100,
+				);
+
+				// Add images.
+				$klarna_payment_settings = get_option( 'woocommerce_klarna_payments_settings' );
+				if ( 'yes' === $klarna_payment_settings['send_product_urls'] ) {
+					$klarna_item['product_url'] = $this->get_item_product_url( $product );
+					if ( $this->get_item_image_url( $product ) ) {
+						$klarna_item['image_url'] = $this->get_item_image_url( $product );
+					}
+				}
+
+				$this->order_lines[] = $klarna_item;
+				
+			}
+		}
+	}
+
+	private function get_order_shipping( $order_id = false ) {
+		$order    = wc_get_order( $order_id );
+		$shipping = array(
+			'type'             => 'shipping_fee',
+			'reference'        => 1,
+			'name'             => $order->get_shipping_method(),
+			'quantity'         => 1,
+			'unit_price'       => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
+			'tax_rate'         => ( '0' !== $order->get_total_tax() ) ? $this->get_order_line_tax_rate( $order ) : 0,
+			'total_amount'     => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
+			'total_tax_amount' => $order->get_shipping_tax() * 100,
+		);
+
+		$this->order_lines[] = $shipping;
+	}
+	
 	// Helpers.
 	/**
 	 * Get cart item name.
