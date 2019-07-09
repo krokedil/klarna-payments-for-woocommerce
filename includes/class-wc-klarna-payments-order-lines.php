@@ -61,6 +61,7 @@ class WC_Klarna_Payments_Order_Lines {
 		} else {
 			$this->get_order_items( $order_id );
 			$this->get_order_shipping( $order_id );
+			$this->get_order_sales_tax( $order_id );
 		}
 		
 
@@ -350,6 +351,28 @@ class WC_Klarna_Payments_Order_Lines {
 		);
 
 		$this->order_lines[] = $shipping;
+	}
+
+	private function get_order_sales_tax( $order_id = false ) {
+		$order = wc_get_order( $order_id );
+		if ( $this->separate_sales_tax ) {
+			$sales_tax_amount = round( ( $order->get_total_tax() + $order->get_shipping_tax() ) * 100 );
+
+			// Add sales tax line item.
+			$sales_tax = array(
+				'type'                  => 'sales_tax',
+				'reference'             => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
+				'name'                  => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
+				'quantity'              => 1,
+				'unit_price'            => $sales_tax_amount,
+				'tax_rate'              => 0,
+				'total_amount'          => $sales_tax_amount,
+				'total_discount_amount' => 0,
+				'total_tax_amount'      => 0,
+			);
+
+			$this->order_lines[] = $sales_tax;
+		}
 	}
 	
 	// Helpers.
