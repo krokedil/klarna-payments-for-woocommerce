@@ -679,15 +679,22 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Make it filterable.
 		$request_args = apply_filters( 'wc_klarna_payments_create_session_args', $request_args );
 
-		$response = wp_safe_remote_post( $request_url, $request_args );
+		$response	   = wp_safe_remote_post( $request_url, $request_args );
+		$code          = wp_remote_retrieve_response_code( $response );
+		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+		$session_id    = $response_body['session_id'] ? $response_body['session_id'] : NULL;
+
+		// Log the request.
+		$log = WC_Klarna_Payments::format_log( $session_id, 'POST', 'Klarna Payments create session request.', $request_args, json_decode( wp_remote_retrieve_body( $response ), true ), $code );
+		WC_Klarna_Payments::log( $log );
 
 		if ( is_array( $response ) ) {
-			if ( 200 === $response['response']['code'] ) {
+			if ( 200 === $code ) {
 				$decoded = json_decode( $response['body'] );
 
 				return $decoded;
 			} else {
-				return new WP_Error( $response['response']['code'], $response['body'] );
+				return new WP_Error( $code, $response['body'] );
 			}
 		} else {
 			return new WP_Error( 'kp_create_session', 'Could not create Klarna Payments session.' );
@@ -706,12 +713,16 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Make it filterable.
 		$request_args = apply_filters( 'wc_klarna_payments_update_session_args', $request_args );
 
-		$response = wp_safe_remote_post( $request_url, $request_args );
+		$response      = wp_safe_remote_post( $request_url, $request_args );
+		$code          = wp_remote_retrieve_response_code( $response );
+
+		WC_Klarna_Payments::log( 'Klarna Payments update session request. Status code: ' . $code . ' ' . json_encode( array() ) );
+		
 		if ( is_array( $response ) ) {
-			if ( 204 === $response['response']['code'] ) {
+			if ( 204 === $code ) {
 				return true;
 			} else {
-				return new WP_Error( $response['response']['code'], $response['body'] );
+				return new WP_Error( $code, $response['body'] );
 			}
 		} else {
 			return new WP_Error( 'kp_update_session', 'Could not update Klarna Payments session.' );
