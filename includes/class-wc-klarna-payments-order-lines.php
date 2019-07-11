@@ -58,19 +58,25 @@ class WC_Klarna_Payments_Order_Lines {
 			$this->process_sales_tax();
 			$this->process_coupons();
 			$this->process_fees();
+
+			return array(
+				'order_lines'      => $this->get_order_lines(),
+				'order_amount'     => $this->get_order_amount(),
+				'order_tax_amount' => $this->get_order_tax_amount(),
+			);
 		} else {
 			$this->get_order_items( $order_id );
 			$this->get_order_shipping( $order_id );
 			$this->get_order_sales_tax( $order_id );
 			$this->process_coupons();
 			$this->get_order_fees( $order_id );
+
+			return array(
+				'order_lines'      => $this->get_order_lines(),
+				'order_amount'     => $this->get_order_amount_via_order( $order_id ),
+				'order_tax_amount' => $this->get_order_tax_amount_via_order( $order_id ),
+			);
 		}
-		
-		return array(
-			'order_lines'      => $this->get_order_lines(),
-			'order_amount'     => $this->get_order_amount(),
-			'order_tax_amount' => $this->get_order_tax_amount(),
-		);
 	}
 
 	/**
@@ -101,6 +107,28 @@ class WC_Klarna_Payments_Order_Lines {
 	 */
 	private function get_order_tax_amount() {
 		return round( ( WC()->cart->tax_total + WC()->cart->shipping_tax_total ) * 100 );
+	}
+
+	/**
+	 * Get order total amount via order for Klarna API.
+	 *
+	 * @access private
+	 * @return mixed
+	 */
+	private function get_order_amount_via_order( $order_id = false ) {
+		$order = wc_get_order( $order_id );
+		return round( $order->get_total() * 100 );
+	}
+
+	/**
+	 * Get order tax amount via order for Klarna API.
+	 *
+	 * @access private
+	 * @return mixed
+	 */
+	private function get_order_tax_amount_via_order( $order_id = false ) {
+		$order = wc_get_order( $order_id );
+		return round( ( $order->get_total_tax() ) * 100 );
 	}
 
 	/**
