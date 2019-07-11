@@ -1038,7 +1038,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			),
 		);
 		$response      = wp_safe_remote_post( $request_url, $request_args );
-		$response_body = json_decode( wp_remote_retrieve_body( $response ) );
+		$code          = wp_remote_retrieve_response_code( $response );
+		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+		$payment_id = $response_body['order_id'] ? $response_body['order_id'] : NULL;
+	
+		// Log the request.
+		$log = WC_Klarna_Payments::format_log( $payment_id, 'POST', 'Klarna Payments create order request.', $request_args, json_decode( wp_remote_retrieve_body( $response ), true ), $code );
+		WC_Klarna_Payments::log( $log );
+
 		if ( isset( $response_body->order_id ) ) {
 			$order->payment_complete( $response_body->order_id );
 			wp_send_json_success( $response_body->redirect_url );
