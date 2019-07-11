@@ -63,9 +63,9 @@ class WC_Klarna_Payments_Order_Lines {
 			$this->get_order_shipping( $order_id );
 			$this->get_order_sales_tax( $order_id );
 			$this->process_coupons();
+			$this->get_order_fees( $order_id );
 		}
 		
-
 		return array(
 			'order_lines'      => $this->get_order_lines(),
 			'order_amount'     => $this->get_order_amount(),
@@ -374,6 +374,52 @@ class WC_Klarna_Payments_Order_Lines {
 
 			$this->order_lines[] = $sales_tax;
 		}
+	}
+
+	private function get_order_fees( $order_id = false ) {
+		$order = wc_get_order( $order_id );
+		if ( ! empty( $order->get_fees() ) ) {
+			foreach ( $order->get_fees() as $order_fee ) {
+				if ( 0 !== $order_fee->get_total_tax() ) {
+					// Calculate tax rate.
+					if ( $this->separate_sales_tax ) {
+						$order_fee_tax_rate   = 0;
+						$order_fee_tax_amount = 0;
+						$order_fee_total      = round( $order_fee->get_total() * 100 );
+					} else {
+						$_tax      = new WC_Tax();
+						$tmp_rates = $_tax::get_rates( $order_fee->get_tax_class() );
+						$vat       = array_shift( $tmp_rates );
+
+						if ( isset( $vat['rate'] ) ) {
+							$order_fee_tax_rate = round( $vat['rate'] * 100 );
+						} else {
+							$order_fee_tax_rate = 0;
+						}
+
+						$order_fee_tax_amount = round( $order_fee->get_total_tax() * 100 );
+						$order_fee_total      = round( ( $order_fee->get_total() + $order_fee->get_total_tax() ) * 100 );
+					}
+				} else {
+					$order_fee_tax_rate   = 0;
+					$order_fee_tax_amount = 0;
+					$order_fee_total      = round( $order_fee->get_total() * 100 );
+				}
+				$fee = array(
+					'type'                  => 'surcharge',
+					'reference'             => 'Fee',
+					'name'                  => $order_fee->get_name(),
+					'quantity'              => 1,
+					'unit_price'            => round( $order_fee_total ),
+					'tax_rate'              => round( $order_fee_tax_rate ),
+					'total_amount'          => round( $order_fee_total ),
+					'total_discount_amount' => 0,
+					'total_tax_amount'      => round( $order_fee_tax_amount ),
+				);
+
+				$this->order_lines[] = $fee;
+			} // End foreach().
+		} // End if().
 	}
 	
 	// Helpers.
