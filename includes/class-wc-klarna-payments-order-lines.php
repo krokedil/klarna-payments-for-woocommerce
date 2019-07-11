@@ -47,7 +47,7 @@ class WC_Klarna_Payments_Order_Lines {
 	}
 
 	/**
-	 * Gets formatted order lines from WooCommerce cart.
+	 * Gets formatted order lines from WooCommerce cart or from WooCommerce order if order exists.
 	 *
 	 * @return array
 	 */
@@ -330,6 +330,12 @@ class WC_Klarna_Payments_Order_Lines {
 		} // End if().
 	}
 
+	/**
+	 * Get order items for Klarna API
+	 *
+	 * @param boolean $order_id
+	 * @return void
+	 */
 	private function get_order_items( $order_id = false ) {
 		$order = wc_get_order( $order_id );
 		foreach ( $order->get_items() as $order_item ) {
@@ -366,6 +372,12 @@ class WC_Klarna_Payments_Order_Lines {
 		}
 	}
 
+	/**
+	 * Get order shipping for Klarna API
+	 *
+	 * @param boolean $order_id
+	 * @return void
+	 */
 	private function get_order_shipping( $order_id = false ) {
 		$order    = wc_get_order( $order_id );
 		$shipping = array(
@@ -382,6 +394,12 @@ class WC_Klarna_Payments_Order_Lines {
 		$this->order_lines[] = $shipping;
 	}
 
+	/**
+	 * Get order sales tax for Klarna API
+	 *
+	 * @param boolean $order_id
+	 * @return void
+	 */
 	private function get_order_sales_tax( $order_id = false ) {
 		$order = wc_get_order( $order_id );
 		if ( $this->separate_sales_tax ) {
@@ -404,6 +422,12 @@ class WC_Klarna_Payments_Order_Lines {
 		}
 	}
 
+	/**
+	 * Get order fees for Klarna API
+	 *
+	 * @param boolean $order_id
+	 * @return void
+	 */
 	private function get_order_fees( $order_id = false ) {
 		$order = wc_get_order( $order_id );
 		if ( ! empty( $order->get_fees() ) ) {
