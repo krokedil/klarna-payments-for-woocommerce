@@ -685,7 +685,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$session_id    = $response_body['session_id'] ? $response_body['session_id'] : NULL;
 
 		// Log the request.
-		$log = WC_Klarna_Payments::format_log( $session_id, 'POST', 'Klarna Payments create session request.', $response_body, $code );
+		$log = WC_Klarna_Payments::format_log( $session_id, 'POST', 'Klarna Payments create session request.', $request_args, $response_body, $code );
 		WC_Klarna_Payments::log( $log );
 
 		if ( is_array( $response ) ) {
