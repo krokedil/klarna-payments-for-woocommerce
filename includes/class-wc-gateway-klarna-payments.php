@@ -715,8 +715,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$response      = wp_safe_remote_post( $request_url, $request_args );
 		$code          = wp_remote_retrieve_response_code( $response );
-		
-		WC_Klarna_Payments::log( 'Klarna Payments update session request. Response: ' . stripslashes_deep( json_encode( $response ) ) );
+		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+	
+		WC_Klarna_Payments::log( 'Klarna Payments update session request. Status Code: ' . $code . ' Response: ' . stripslashes_deep( json_encode( $response_body ) ) );
 
 		if ( is_array( $response ) ) {
 			if ( 204 === $code ) {
