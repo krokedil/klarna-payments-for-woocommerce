@@ -682,7 +682,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$response	   = wp_safe_remote_post( $request_url, $request_args );
 		$code          = wp_remote_retrieve_response_code( $response );
 		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
-		$session_id    = $response_body['session_id'] ? $response_body['session_id'] : NULL;
+		$session_id    = isset( $response_body['session_id'] ) ? $response_body['session_id'] : null;
 
 		// Log the request.
 		$log = WC_Klarna_Payments::format_log( $session_id, 'POST', 'Klarna Payments create session request.', $request_args, $response_body, $code );
@@ -715,10 +715,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$response      = wp_safe_remote_post( $request_url, $request_args );
 		$code          = wp_remote_retrieve_response_code( $response );
-		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
-
-		WC_Klarna_Payments::log( 'Klarna Payments update session request. Status code: ' . $code . ' ' . $response_body );
 		
+		WC_Klarna_Payments::log( 'Klarna Payments update session request. Response: ' . stripslashes_deep( json_encode( $response ) ) );
+
 		if ( is_array( $response ) ) {
 			if ( 204 === $code ) {
 				return true;
