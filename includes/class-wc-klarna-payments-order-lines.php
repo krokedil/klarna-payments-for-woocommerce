@@ -192,11 +192,13 @@ class WC_Klarna_Payments_Order_Lines {
 		}
 	}
 
-	public function get_order_line_tax_rate( $order ) {
+	public function get_order_line_tax_rate( $order, $order_item = false ) {
 		$tax_items = $order->get_items( 'tax' );
 		foreach ( $tax_items as $tax_item ) {
 			$rate_id = $tax_item->get_rate_id();
-			return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 );
+			if ( $rate_id === key( $order_item->get_taxes()['total'] ) ) {
+				return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 );
+			}
 		}
 	}
 
@@ -351,7 +353,7 @@ class WC_Klarna_Payments_Order_Lines {
 					'name'                  => $order_item->get_name(),
 					'quantity'              => $order_item->get_quantity(),
 					'unit_price'            => round( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() / $order_item->get_quantity() ) * 100 ),
-					'tax_rate'              => ( '0' !== $order_item->get_total_tax() ) ? $this->get_order_line_tax_rate( $order ) : 0,
+					'tax_rate'              => ( '0' !== $order_item->get_total_tax() ) ? $this->get_order_line_tax_rate( $order, $order_item ) : 0,
 					'total_amount'          => round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ),
 					'total_tax_amount'      => round( $order_item->get_total_tax() * 100 ),
 					'total_discount_amount' => round( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() - $order_item->get_total() - $order_item->get_total_tax() ) * 100 ),
@@ -385,7 +387,7 @@ class WC_Klarna_Payments_Order_Lines {
 			'name'             => $order->get_shipping_method(),
 			'quantity'         => 1,
 			'unit_price'       => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
-			'tax_rate'         => ( '0' !== $order->get_total_tax() ) ? $this->get_order_line_tax_rate( $order ) : 0,
+			'tax_rate'         => ( '0' !== $order->get_total_tax() ) ? $this->get_order_line_tax_rate( $order, current( $order->get_items( 'shipping' ) ) ) : 0,
 			'total_amount'     => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
 			'total_tax_amount' => $order->get_shipping_tax() * 100,
 		);
