@@ -679,7 +679,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Make it filterable.
 		$request_args = apply_filters( 'wc_klarna_payments_create_session_args', $request_args );
 
-		$response	   = wp_safe_remote_post( $request_url, $request_args );
+		$response      = wp_safe_remote_post( $request_url, $request_args );
 		$code          = wp_remote_retrieve_response_code( $response );
 		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
 		$session_id    = isset( $response_body['session_id'] ) ? $response_body['session_id'] : null;
@@ -716,7 +716,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$response      = wp_safe_remote_post( $request_url, $request_args );
 		$code          = wp_remote_retrieve_response_code( $response );
 		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
-	
+
 		WC_Klarna_Payments::log( 'Klarna Payments update session request. Status Code: ' . $code . ' Response: ' . stripslashes_deep( json_encode( $response_body ) ) );
 
 		if ( is_array( $response ) ) {
@@ -1052,18 +1052,18 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$response      = wp_safe_remote_post( $request_url, $request_args );
 		$code          = wp_remote_retrieve_response_code( $response );
 		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
-		$payment_id = $response_body['order_id'] ? $response_body['order_id'] : NULL;
-	
+		$payment_id    = $response_body['order_id'] ? $response_body['order_id'] : null;
+
 		// Log the request.
 		$log = WC_Klarna_Payments::format_log( $payment_id, 'POST', 'Klarna Payments create order request.', $request_args, $response_body, $code );
 		WC_Klarna_Payments::log( $log );
 
-		if ( isset( $response_body->order_id ) ) {
-			$order->payment_complete( $response_body->order_id );
-			wp_send_json_success( $response_body->redirect_url );
+		if ( isset( $response_body['order_id'] ) ) {
+			$order->payment_complete( $response_body['order_id'] );
+			wp_send_json_success( $response_body['redirect_url'] );
 			wp_die();
 		} else {
-			wp_send_json_error( $order->get_cancel_order_url() );
+			wp_send_json_error( $order->get_cancel_order_url_raw() );
 			wp_die();
 		}
 	}

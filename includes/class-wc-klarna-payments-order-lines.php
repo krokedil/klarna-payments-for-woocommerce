@@ -52,7 +52,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return array
 	 */
 	public function order_lines( $order_id = false ) {
-		if( ! $order_id ) {
+		if ( ! $order_id ) {
 			$this->process_cart();
 			$this->process_shipping();
 			$this->process_sales_tax();
@@ -367,7 +367,6 @@ class WC_Klarna_Payments_Order_Lines {
 				}
 
 				$this->order_lines[] = $klarna_item;
-				
 			}
 		}
 	}
@@ -473,7 +472,7 @@ class WC_Klarna_Payments_Order_Lines {
 			} // End foreach().
 		} // End if().
 	}
-	
+
 	// Helpers.
 	/**
 	 * Get cart item name.
