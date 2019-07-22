@@ -47,22 +47,36 @@ class WC_Klarna_Payments_Order_Lines {
 	}
 
 	/**
-	 * Gets formatted order lines from WooCommerce cart.
+	 * Gets formatted order lines from WooCommerce cart or from WooCommerce order if order exists.
 	 *
 	 * @return array
 	 */
-	public function order_lines() {
-		$this->process_cart();
-		$this->process_shipping();
-		$this->process_sales_tax();
-		$this->process_coupons();
-		$this->process_fees();
+	public function order_lines( $order_id = false ) {
+		if ( ! $order_id ) {
+			$this->process_cart();
+			$this->process_shipping();
+			$this->process_sales_tax();
+			$this->process_coupons();
+			$this->process_fees();
 
-		return array(
-			'order_lines'      => $this->get_order_lines(),
-			'order_amount'     => $this->get_order_amount(),
-			'order_tax_amount' => $this->get_order_tax_amount(),
-		);
+			return array(
+				'order_lines'      => $this->get_order_lines(),
+				'order_amount'     => $this->get_order_amount(),
+				'order_tax_amount' => $this->get_order_tax_amount(),
+			);
+		} else {
+			$this->get_order_items( $order_id );
+			$this->get_order_shipping( $order_id );
+			$this->get_order_sales_tax( $order_id );
+			$this->process_coupons();
+			$this->get_order_fees( $order_id );
+
+			return array(
+				'order_lines'      => $this->get_order_lines(),
+				'order_amount'     => $this->get_order_amount_via_order( $order_id ),
+				'order_tax_amount' => $this->get_order_tax_amount_via_order( $order_id ),
+			);
+		}
 	}
 
 	/**
@@ -93,6 +107,28 @@ class WC_Klarna_Payments_Order_Lines {
 	 */
 	private function get_order_tax_amount() {
 		return round( ( WC()->cart->tax_total + WC()->cart->shipping_tax_total ) * 100 );
+	}
+
+	/**
+	 * Get order total amount via order for Klarna API.
+	 *
+	 * @access private
+	 * @return mixed
+	 */
+	private function get_order_amount_via_order( $order_id = false ) {
+		$order = wc_get_order( $order_id );
+		return round( $order->get_total() * 100 );
+	}
+
+	/**
+	 * Get order tax amount via order for Klarna API.
+	 *
+	 * @access private
+	 * @return mixed
+	 */
+	private function get_order_tax_amount_via_order( $order_id = false ) {
+		$order = wc_get_order( $order_id );
+		return round( ( $order->get_total_tax() ) * 100 );
 	}
 
 	/**
@@ -153,6 +189,16 @@ class WC_Klarna_Payments_Order_Lines {
 			);
 
 			$this->order_lines[] = $shipping;
+		}
+	}
+
+	public function get_order_line_tax_rate( $order, $order_item = false ) {
+		$tax_items = $order->get_items( 'tax' );
+		foreach ( $tax_items as $tax_item ) {
+			$rate_id = $tax_item->get_rate_id();
+			if ( $rate_id === key( $order_item->get_taxes()['total'] ) ) {
+				return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 );
+			}
 		}
 	}
 
@@ -279,6 +325,148 @@ class WC_Klarna_Payments_Order_Lines {
 					'total_amount'          => round( $cart_fee_total ),
 					'total_discount_amount' => 0,
 					'total_tax_amount'      => round( $cart_fee_tax_amount ),
+				);
+
+				$this->order_lines[] = $fee;
+			} // End foreach().
+		} // End if().
+	}
+
+	/**
+	 * Get order items for Klarna API
+	 *
+	 * @param boolean $order_id
+	 * @return void
+	 */
+	private function get_order_items( $order_id = false ) {
+		$order = wc_get_order( $order_id );
+		foreach ( $order->get_items() as $order_item ) {
+			if ( $order_item->get_quantity() ) {
+				if ( $order_item->get_variation_id() ) {
+					$product = wc_get_product( $order_item->get_variation_id() );
+				} else {
+					$product = wc_get_product( $order_item->get_product_id() );
+				}
+				$klarna_item = array(
+					'reference'             => $this->get_item_reference( $product ),
+					'name'                  => $order_item->get_name(),
+					'quantity'              => $order_item->get_quantity(),
+					'unit_price'            => round( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() / $order_item->get_quantity() ) * 100 ),
+					'tax_rate'              => ( '0' !== $order_item->get_total_tax() ) ? $this->get_order_line_tax_rate( $order, $order_item ) : 0,
+					'total_amount'          => round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ),
+					'total_tax_amount'      => round( $order_item->get_total_tax() * 100 ),
+					'total_discount_amount' => round( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() - $order_item->get_total() - $order_item->get_total_tax() ) * 100 ),
+				);
+
+				// Add images.
+				$klarna_payment_settings = get_option( 'woocommerce_klarna_payments_settings' );
+				if ( 'yes' === $klarna_payment_settings['send_product_urls'] ) {
+					$klarna_item['product_url'] = $this->get_item_product_url( $product );
+					if ( $this->get_item_image_url( $product ) ) {
+						$klarna_item['image_url'] = $this->get_item_image_url( $product );
+					}
+				}
+
+				$this->order_lines[] = $klarna_item;
+			}
+		}
+	}
+
+	/**
+	 * Get order shipping for Klarna API
+	 *
+	 * @param boolean $order_id
+	 * @return void
+	 */
+	private function get_order_shipping( $order_id = false ) {
+		$order    = wc_get_order( $order_id );
+		$shipping = array(
+			'type'             => 'shipping_fee',
+			'reference'        => 1,
+			'name'             => ( '' !== $order->get_shipping_method() ) ? $order->get_shipping_method() : $shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' ),
+			'quantity'         => 1,
+			'unit_price'       => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
+			'tax_rate'         => ( '0' !== $order->get_shipping_tax() ) ? $this->get_order_line_tax_rate( $order, current( $order->get_items( 'shipping' ) ) ) : 0,
+			'total_amount'     => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
+			'total_tax_amount' => $order->get_shipping_tax() * 100,
+		);
+
+		$this->order_lines[] = $shipping;
+	}
+
+	/**
+	 * Get order sales tax for Klarna API
+	 *
+	 * @param boolean $order_id
+	 * @return void
+	 */
+	private function get_order_sales_tax( $order_id = false ) {
+		$order = wc_get_order( $order_id );
+		if ( $this->separate_sales_tax ) {
+			$sales_tax_amount = round( ( $order->get_total_tax() + $order->get_shipping_tax() ) * 100 );
+
+			// Add sales tax line item.
+			$sales_tax = array(
+				'type'                  => 'sales_tax',
+				'reference'             => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
+				'name'                  => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
+				'quantity'              => 1,
+				'unit_price'            => $sales_tax_amount,
+				'tax_rate'              => 0,
+				'total_amount'          => $sales_tax_amount,
+				'total_discount_amount' => 0,
+				'total_tax_amount'      => 0,
+			);
+
+			$this->order_lines[] = $sales_tax;
+		}
+	}
+
+	/**
+	 * Get order fees for Klarna API
+	 *
+	 * @param boolean $order_id
+	 * @return void
+	 */
+	private function get_order_fees( $order_id = false ) {
+		$order = wc_get_order( $order_id );
+		if ( ! empty( $order->get_fees() ) ) {
+			foreach ( $order->get_fees() as $order_fee ) {
+				if ( 0 !== $order_fee->get_total_tax() ) {
+					// Calculate tax rate.
+					if ( $this->separate_sales_tax ) {
+						$order_fee_tax_rate   = 0;
+						$order_fee_tax_amount = 0;
+						$order_fee_total      = round( $order_fee->get_total() * 100 );
+					} else {
+						$_tax      = new WC_Tax();
+						$tmp_rates = $_tax::get_rates( $order_fee->get_tax_class() );
+						$vat       = array_shift( $tmp_rates );
+
+						if ( isset( $vat['rate'] ) ) {
+							$order_fee_tax_rate = round( $vat['rate'] * 100 );
+						} else {
+							$order_fee_tax_rate = 0;
+						}
+
+						$order_fee_tax_amount = round( $order_fee->get_total_tax() * 100 );
+						$order_fee_total      = round( ( $order_fee->get_total() + $order_fee->get_total_tax() ) * 100 );
+					}
+				} else {
+					$order_fee_tax_rate   = 0;
+					$order_fee_tax_amount = 0;
+					$order_fee_total      = round( $order_fee->get_total() * 100 );
+				}
+				$fee = array(
+					'type'                  => 'surcharge',
+					'reference'             => 'Fee',
+					'name'                  => $order_fee->get_name(),
+					'quantity'              => 1,
+					'unit_price'            => round( $order_fee_total ),
+					'tax_rate'              => round( $order_fee_tax_rate ),
+					'total_amount'          => round( $order_fee_total ),
+					'total_discount_amount' => 0,
+					'total_tax_amount'      => round( $order_fee_tax_amount ),
 				);
 
 				$this->order_lines[] = $fee;

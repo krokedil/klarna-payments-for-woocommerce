@@ -36,9 +36,6 @@ jQuery( function($) {
 		},
 
 		start: function() {
-			// Add page visibility listener to handle tab changes.
-			klarna_payments.page_visibility_listener();
-
 			// Store all billing and shipping values.
 			$(document).ready(function() {
 				$('#customer_details input, #customer_details select').each(function() {
@@ -46,7 +43,6 @@ jQuery( function($) {
 					var fieldValue = $(this).val();
 					klarna_payments.checkout_values[ fieldName ] = fieldValue;
 				});
-
 			});
 
 			/**
@@ -76,18 +72,6 @@ jQuery( function($) {
 			 */
 			$( document.body ).on( 'checkout_error', function() {
 				$('input[name="klarna_payments_authorization_token"]').remove();
-			});
-
-			/**
-			 * When any of the checkout form fields changes, if Klarna Payments is the selected option.
-			 */
-			$('form.checkout').on('change', '.woocommerce-billing-fields input, .woocommerce-billing-fields select', function() {
-				// Make sure all WC required fields are populated.
-				if (!klarna_payments.check_required_fields()) {
-					//$('#place_order').attr('disabled', true);
-				} else {
-					$('#place_order').attr('disabled', false);
-				}
 			});
 
 			/**
@@ -144,87 +128,6 @@ jQuery( function($) {
 				klarna_payments.maybeHideShippingAddress();
 			});
 
-
-			/**
-			 * Do this every 100ms in case browser auto-fill changes form fields.
-			 */
-			var checkFormInterval = setInterval(function () {
-				if (klarna_payments.show_form) {
-					clearInterval(checkFormInterval);
-				}
-
-				if (klarna_payments.isKlarnaPaymentsSelected()) {
-					klarna_payments.check_changes();
-				}
-			}, 200);
-
-			/**
-			 * Hooking into WooCommerce.
-			 *
-			 * Firing Klarna.Credit.authorize(), then once it resolves, adding the hidden form field and re-submitting the form.
- 			 */
-			$('form.checkout').on('checkout_place_order', function() {
-				if (!klarna_payments.isKlarnaPaymentsSelected()) {
-					return true;
-				}
-
-				if ($('input[name="klarna_payments_authorization_token"]').length) {
-					return true;
-				}
-				var required_fields_set = true;
-				var failed_fields = [];
-				$('.validate-required').find('input').each(function( nr, field ) {
-					if( $(field).attr('type') !== 'hidden' && $(field).attr('id').indexOf( 'shipping' ) < 0 && $(field).attr('id').indexOf( 'account' ) < 0 ) {
-						if( $(field).is(':checkbox') ) {
-							if( $(field).is(":checked") !== true ) {
-								required_fields_set = false;
-								failed_fields.push( $(field).attr('id') );
-								$(field).parents('p.form-row').addClass( 'woocommerce-invalid' );
-							}
-						} else if( $(field).val() === '' && $(field).parents('#payment').length < 0 ) {
-							required_fields_set = false;
-							failed_fields.push( $(field).attr('id') );
-							$(field).parents('p.form-row').addClass( 'woocommerce-invalid' );
-						}
-					}
-				});
-				if( required_fields_set ) {
-					klarna_payments.authorize().done( function(response) {
-						if ('authorization_token' in response) {
-							$('input[name="klarna_payments_authorization_token"]').remove();
-							$('form.checkout').append('<input type="hidden" name="klarna_payments_authorization_token" value="' + klarna_payments.authorization_response.authorization_token + '" />').submit();
-						}
-
-						if (false === response.show_form) {
-							// Hide Klarna Payments (for now, do not do this).
-							/*
-							$('li.payment_method_klarna_payments input[type="radio"]').attr('disabled', true)
-							$('li.payment_method_klarna_payments').hide()
-							*/
-						}
-					});
-				} else {
-					$('ul.woocommerce-error').remove();
-					$('form.checkout').prepend( '<ul class="woocommerce-error" role="alert"></ul>' );
-					var checkbox = false;
-					$.each( failed_fields, function( key, value ) {
-						if( $( '#' + value ).is(':checkbox') && checkbox === false ) {
-							checkbox = true;
-							$('ul.woocommerce-error').append( '<li>' + klarna_payments_params.failed_checkbox_validation_text + '</li>' );
-						} else if( ! $( '#' + value ).is(':checkbox' ) ) {
-							var field_name = $( '#' + value ).attr( 'name' );
-							var field_label = $('label[for="' +  field_name +'"]').text().replace( '*', '' );
-							$('ul.woocommerce-error').append( '<li><strong>' + field_label + '</strong>' + klarna_payments_params.failed_field_validation_text + '</li>' );
-						}
-					});
-					var etop = $('form.checkout').offset().top;
-					$('html, body').animate({
-						scrollTop: etop
-					}, 1000);
-				}
-
-				return false;
-			});
 		},
 
 		load: function() {
@@ -243,7 +146,7 @@ jQuery( function($) {
 						console.debug(e);
 					}
 
-					if (Klarna && Klarna.Credit) {
+					if (Klarna && Klarna.Payments) {
 						clearInterval(klarnaLoadedInterval);
 						clearTimeout(klarnaLoadedTimeout);
 
@@ -255,7 +158,7 @@ jQuery( function($) {
 						if ( 'US' === $('#billing_country').val() ) {
 							var address = klarna_payments.get_address();
 
-							Klarna.Credit.load(
+							Klarna.Payments.load(
 								options,
 								address,
 								function (response) {
@@ -263,7 +166,7 @@ jQuery( function($) {
 								}
 							);
 						} else {
-							Klarna.Credit.load(
+							Klarna.Payments.load(
 								options,
 								function (response) {
 									$defer.resolve(response);
@@ -287,9 +190,6 @@ jQuery( function($) {
 
 			if (response.show_form) {
 				klarna_payments.show_form = true;
-				if ( klarna_payments.check_required_fields() ) {
-					$('#place_order').attr('disabled', false);
-				}
 			}
 		},
 
@@ -328,9 +228,9 @@ jQuery( function($) {
 			klarna_payments.authorization_response = {};
 
 			try {
-				Klarna.Credit.authorize(
+				Klarna.Payments.authorize(
 					address,
-					{payment_method_category: klarna_payments.getSelectedPaymentCategory()},
+					{payment_method_category: klarna_payments.getSelectedPaymentCategory(), auto_finalize: false},
 					function (response) {
 						klarna_payments.authorization_response = response;
 						$defer.resolve(response);
@@ -341,74 +241,6 @@ jQuery( function($) {
 			}
 
 			return $defer.promise();
-		},
-
-		check_required_fields: function() {
-			var input_value;
-			var input_flag = false;
-
-			if ( $( '#ship-to-different-address' ).find( 'input' ).is( ':checked' ) ) {
-				$('.woocommerce-billing-fields .validate-required[id^="billing"], .woocommerce-shipping-fields .validate-required[id^="shipping"]').each(function() {
-					if ( $(this).find('select').length ) {
-						input_value = $(this).find('select').val();
-					} else {
-						input_value = $(this).find('input').val();
-					}
-
-					if ('' === input_value || undefined === input_value) {
-						input_flag = true;
-					}
-				});
-			} else {
-				$('.woocommerce-billing-fields .validate-required[id^="billing"]').each(function() {
-					if ( $(this).find('select').length ) {
-						input_value = $(this).find('select').val();
-					} else {
-						input_value = $(this).find('input').val();
-					}
-
-					if ('' === input_value || undefined === input_value) {
-						input_flag = true;
-					}
-				});
-			}
-
-			if ( input_flag ) {
-				klarna_payments.show_form = false;
-				return false;
-			} else {
-				return true;
-			}
-		},
-
-		page_visibility_listener: function() {
-			var hidden, visibilityChange;
-
-			if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
-				hidden = 'hidden';
-				visibilityChange = 'visibilitychange';
-			} else if (typeof document.msHidden !== 'undefined') {
-				hidden = 'msHidden';
-				visibilityChange = 'msvisibilitychange';
-			} else if (typeof document.webkitHidden !== 'undefined') {
-				hidden = 'webkitHidden';
-				visibilityChange = 'webkitvisibilitychange';
-			}
-
-			// Warn if the browser doesn't support addEventListener or the Page Visibility API
-			if (typeof document.addEventListener === 'undefined' || typeof document[hidden] === 'undefined') {
-			} else {
-				// Handle page visibility change
-				document.addEventListener(visibilityChange, handleVisibilityChange, false);
-			}
-
-			function handleVisibilityChange() {
-				if (! document[hidden]) {
-					if (klarna_payments.isKlarnaPaymentsSelected()) {
-						//$('body').trigger('update_checkout');
-					}
-				}
-			}
 		},
 
 		get_address: function() {
@@ -463,12 +295,41 @@ jQuery( function($) {
 			} else {
 				jQuery('#customer_details .col-2').show();
 			}
+		},
+
+		handleHashChange: function( event ) {
+			var currentHash = location.hash;
+			var splittedHash = currentHash.split("=");
+			var json =  JSON.parse( atob( splittedHash[1] ) );
+            if( splittedHash[0] === "#kp" ){
+                var response = JSON.parse( atob( splittedHash[1] ) );
+				klarna_payments.authorize().done( function( response ) {
+					if ('authorization_token' in response) {
+						$.ajax(
+							klarna_payments_params.ajaxurl,
+							{
+								type: "POST",
+								dataType: "json",
+								async: true,
+								data: {
+									action: "wc_kp_place_order",
+									order_id: json.order_id,
+									auth_token: klarna_payments.authorization_response.authorization_token,
+								},
+								complete: function (response) {
+									window.location.href = response.responseJSON.data;
+								}
+							}
+						);
+					}
+				});
+			}
 		}
 	};
-
 	klarna_payments.start();
 	$('body').ready( function() {
 		klarna_payments.setRadioButtonValues();
+		window.addEventListener("hashchange", klarna_payments.handleHashChange);
 	});
 	$('body').ajaxComplete( function() {
 		klarna_payments.setRadioButtonValues();
