@@ -351,7 +351,7 @@ class WC_Klarna_Payments_Order_Lines {
 					'reference'             => $this->get_item_reference( $product ),
 					'name'                  => $order_item->get_name(),
 					'quantity'              => $order_item->get_quantity(),
-					'unit_price'            => round( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() / $order_item->get_quantity() ) * 100 ),
+					'unit_price'            => round( ( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() ) / $order_item->get_quantity() ) * 100 ),
 					'tax_rate'              => ( '0' !== $order_item->get_total_tax() ) ? $this->get_order_line_tax_rate( $order, $order_item ) : 0,
 					'total_amount'          => round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ),
 					'total_tax_amount'      => round( $order_item->get_total_tax() * 100 ),
