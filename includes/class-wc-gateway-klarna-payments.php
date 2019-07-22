@@ -850,14 +850,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'time'     => time(),
 		);
 
+		update_post_meta( $order_id, '_wc_klarna_environment', $this->environment );
+		update_post_meta( $order_id, '_wc_klarna_country', $this->klarna_country );
+
 		// Add #kp hash to checkout url so we can do a finalize call to Klarna.
 		return array(
 			'result'   => 'success',
 			'redirect' => wc_get_checkout_url() . '#kp=' . base64_encode( wp_json_encode( $response ) ),
 		);
-
-		update_post_meta( $order->get_id(), '_wc_klarna_environment', $this->environment );
-		update_post_meta( $order->get_id(), '_wc_klarna_country', $this->klarna_country );
 		// return $this->process_klarna_response( $response, $order );
 	}
 
