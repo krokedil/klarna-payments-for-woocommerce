@@ -856,6 +856,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'redirect' => wc_get_checkout_url() . '#kp=' . base64_encode( wp_json_encode( $response ) ),
 		);
 
+		update_post_meta( $order->get_id(), '_wc_klarna_environment', $this->environment );
+		update_post_meta( $order->get_id(), '_wc_klarna_country', $this->klarna_country );
 		// return $this->process_klarna_response( $response, $order );
 	}
 
@@ -922,9 +924,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array   $result  Payment result.
 	 */
 	public function process_accepted( $order, $decoded ) {
-		$order->payment_complete( $decoded->order_id );
-		$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded->order_id );
-		update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded->order_id, true );
+		$order->payment_complete( $decoded['order_id'] );
+		$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
+		update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
 
 		do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
 		do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
@@ -944,9 +946,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array   $result  Payment result.
 	 */
 	public function process_pending( $order, $decoded ) {
-		$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded->order_id );
-		update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded->order_id, true );
-		update_post_meta( $order->get_id(), '_transaction_id', $decoded->order_id, true );
+		$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded['order_id'] );
+		update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
+		update_post_meta( $order->get_id(), '_transaction_id', $decoded['order_id'], true );
 
 		do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
 		do_action( 'wc_klarna_pending', $order->get_id(), $decoded );
@@ -1062,13 +1064,24 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$log = WC_Klarna_Payments::format_log( $payment_id, 'POST', 'Klarna Payments create order request.', $request_args, $response_body, $code );
 		WC_Klarna_Payments::log( $log );
 
-		if ( isset( $response_body['order_id'] ) ) {
-			$order->payment_complete( $response_body['order_id'] );
-			wp_send_json_success( $response_body['redirect_url'] );
-			wp_die();
-		} else {
-			wp_send_json_error( $order->get_cancel_order_url_raw() );
-			wp_die();
+		$fraud_status = $response_body['fraud_status'];
+
+		switch ( $fraud_status ) {
+			case 'ACCEPTED':
+				$return_val = $this->process_accepted( $order, $response_body );
+				wp_send_json_success( $response_body['redirect_url'] );
+				wp_die();
+				break;
+			case 'PENDING':
+				$return_val = $this->process_pending( $order, $response_body );
+				wp_send_json_success( $response_body['redirect_url'] );
+				wp_die();
+				break;
+			case 'REJECTED':
+				$return_val = $this->process_rejected( $order, $response_body );
+				wp_send_json_error( $order->get_cancel_order_url_raw() );
+				wp_die();
+				break;
 		}
 	}
 
