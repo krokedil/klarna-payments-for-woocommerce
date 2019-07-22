@@ -1006,18 +1006,22 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( 'b2b' === $this->get_option( 'customer_type' ) ) {
 			$billing_address['organization_name'] = stripslashes( $order->get_billing_company() );
 		}
-		$shipping_address = array(
-			'given_name'      => stripslashes( $order->get_shipping_first_name() ),
-			'family_name'     => stripslashes( $order->get_shipping_last_name() ),
-			'email'           => stripslashes( $order->get_billing_email() ),
-			'phone'           => stripslashes( $order->get_billing_phone() ),
-			'street_address'  => stripslashes( $order->get_shipping_address_1() ),
-			'street_address2' => stripslashes( $order->get_shipping_address_2() ),
-			'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $order->get_shipping_postcode() ) : $order->get_shipping_postcode() ),
-			'city'            => stripslashes( $order->get_shipping_city() ),
-			'region'          => stripslashes( $order->get_shipping_state() ),
-			'country'         => stripslashes( $order->get_shipping_country() ),
-		);
+		if ( '' !== $order->get_shipping_first_name() && 'b2c' === $this->get_option( 'customer_type' ) && ! wc_ship_to_billing_address_only() ) {
+			$shipping_address = array(
+				'given_name'      => stripslashes( $order->get_shipping_first_name() ),
+				'family_name'     => stripslashes( $order->get_shipping_last_name() ),
+				'email'           => stripslashes( $order->get_billing_email() ),
+				'phone'           => stripslashes( $order->get_billing_phone() ),
+				'street_address'  => stripslashes( $order->get_shipping_address_1() ),
+				'street_address2' => stripslashes( $order->get_shipping_address_2() ),
+				'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $order->get_shipping_postcode() ) : $order->get_shipping_postcode() ),
+				'city'            => stripslashes( $order->get_shipping_city() ),
+				'region'          => stripslashes( $order->get_shipping_state() ),
+				'country'         => stripslashes( $order->get_shipping_country() ),
+			);
+		} else {
+			$shipping_address = $billing_address;
+		}
 
 		$request_url   = $this->server_base . 'payments/v1/authorizations/' . $auth_token . '/order';
 		$request_args  = array(

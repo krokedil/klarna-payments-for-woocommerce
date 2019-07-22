@@ -347,7 +347,6 @@ class WC_Klarna_Payments_Order_Lines {
 				} else {
 					$product = wc_get_product( $order_item->get_product_id() );
 				}
-
 				$klarna_item = array(
 					'reference'             => $this->get_item_reference( $product ),
 					'name'                  => $order_item->get_name(),
@@ -384,10 +383,10 @@ class WC_Klarna_Payments_Order_Lines {
 		$shipping = array(
 			'type'             => 'shipping_fee',
 			'reference'        => 1,
-			'name'             => $order->get_shipping_method(),
+			'name'             => ( '' !== $order->get_shipping_method() ) ? $order->get_shipping_method() : $shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' ),
 			'quantity'         => 1,
 			'unit_price'       => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
-			'tax_rate'         => ( '0' !== $order->get_total_tax() ) ? $this->get_order_line_tax_rate( $order, current( $order->get_items( 'shipping' ) ) ) : 0,
+			'tax_rate'         => ( '0' !== $order->get_shipping_tax() ) ? $this->get_order_line_tax_rate( $order, current( $order->get_items( 'shipping' ) ) ) : 0,
 			'total_amount'     => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
 			'total_tax_amount' => $order->get_shipping_tax() * 100,
 		);
