@@ -3,7 +3,7 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.2.1
+Tested up to: 5.2.4
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv3 or later
@@ -53,6 +53,13 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2019.07.22  	- version 1.8.0 =
+* Feature		- Full rewrite of the order flow. Should now be more compatible with other plugin and themes.
+* Feature		- Improved debug logging.
+* Feature		- Added support for a lot more locales.
+* Tweak         - Updated title description for Klarna Payments settings.
+* Misc			- Cleaned up JS code. Removed unused functionality.
+
 = 2019.06.11  	- version 1.7.0 =
 * Feature       - Added new Klarna Add-ons page.
 * Feature       - Added Klarna On-site Messaging & Klarna order management as available add-ons.
