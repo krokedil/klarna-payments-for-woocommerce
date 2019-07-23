@@ -5,7 +5,7 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 1.7.0
+ * Version: 1.8.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '1.7.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '1.8.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.3.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -117,6 +117,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					'maybe_filter_billing_phone',
 				)
 			);
+
+			add_action( 'wp_ajax_wc_kp_place_order', array( $this, 'place_order' ) );
+			add_action( 'wp_ajax_nopriv_wc_kp_place_order', array( $this, 'place_order' ) );
 		}
 
 		/**
@@ -245,17 +248,70 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		/**
 		 * Instantiate WC_Logger class.
 		 *
-		 * @param string $message Log message.
+		 * @param string $data Log message.
 		 */
-		public static function log( $message ) {
+		public static function log( $data ) {
 			$klarna_payments_settings = get_option( 'woocommerce_klarna_payments_settings' );
 			if ( 'yes' === $klarna_payments_settings['logging'] ) {
+				$message = self::format_data( $data );
 				if ( empty( self::$log ) ) {
 					self::$log = new WC_Logger();
 				}
 
-				self::$log->add( 'klarna_payments', $message );
+				self::$log->add( 'klarna_payments', wp_json_encode( $message ) );
 			}
+		}
+
+		/**
+		 * Formats the log data to prevent json error.
+		 *
+		 * @param string $data Json string of data.
+		 * @return array
+		 */
+		public static function format_data( $data ) {
+			if ( isset( $data['request']['body'] ) ) {
+				$request_body            = json_decode( $data['request']['body'], true );
+				$data['request']['body'] = $request_body;
+			}
+			return $data;
+		}
+
+		/**
+		 * Formats the log data to be logged.
+		 *
+		 * @param string $payment_id The "Klarna Payments" Payment ID.
+		 * @param string $method The method.
+		 * @param string $title The title for the log.
+		 * @param array  $request_args The request args.
+		 * @param array  $response The response.
+		 * @param string $code The status code.
+		 * @return array
+		 */
+		public static function format_log( $payment_id, $method, $title, $request_args, $response, $code ) {
+			// Unset the snippet to prevent issues in the response.
+			if ( isset( $response['snippet'] ) ) {
+				unset( $response['snippet'] );
+			}
+			// Unset the snippet to prevent issues in the request body.
+			if ( isset( $request_args['body'] ) ) {
+				$request_body = json_decode( $request_args['body'], true );
+				if ( isset( $request_body['snippet'] ) && $request_body['snippet'] ) {
+					unset( $request_body['snippet'] );
+					$request_args['body'] = wp_json_encode( $request_body );
+				}
+			}
+			return array(
+				'id'             => $payment_id,
+				'type'           => $method,
+				'title'          => $title,
+				'request'        => $request_args,
+				'response'       => array(
+					'body' => $response,
+					'code' => $code,
+				),
+				'timestamp'      => date( 'Y-m-d H:i:s' ),
+				'plugin_version' => WC_KLARNA_PAYMENTS_VERSION,
+			);
 		}
 
 		/**
@@ -278,6 +334,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 
 			return $phone_value;
+		}
+
+		public function place_order() {
+			$kp = new WC_Gateway_Klarna_Payments();
+
+			$kp->place_order();
 		}
 
 	}
