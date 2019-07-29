@@ -406,7 +406,7 @@ class WC_Klarna_Payments_Order_Lines {
 	private function get_order_sales_tax( $order_id = false ) {
 		$order = wc_get_order( $order_id );
 		if ( $this->separate_sales_tax ) {
-			$sales_tax_amount = round( ( $order->get_total_tax() + $order->get_shipping_tax() ) * 100 );
+			$sales_tax_amount = round( ( $order->get_total_tax() ) * 100 );
 
 			// Add sales tax line item.
 			$sales_tax = array(
