@@ -193,6 +193,9 @@ class WC_Klarna_Payments_Order_Lines {
 	}
 
 	public function get_order_line_tax_rate( $order, $order_item = false ) {
+		if ( $this->separate_sales_tax ) {
+			return 0;
+		}
 		$tax_items = $order->get_items( 'tax' );
 		foreach ( $tax_items as $tax_item ) {
 			$rate_id = $tax_item->get_rate_id();
@@ -351,11 +354,11 @@ class WC_Klarna_Payments_Order_Lines {
 					'reference'             => $this->get_item_reference( $product ),
 					'name'                  => $order_item->get_name(),
 					'quantity'              => $order_item->get_quantity(),
-					'unit_price'            => round( ( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() ) / $order_item->get_quantity() ) * 100 ),
+					'unit_price'            => $this->get_order_item_unit_price( $order_item ),
 					'tax_rate'              => ( '0' !== $order_item->get_total_tax() ) ? $this->get_order_line_tax_rate( $order, $order_item ) : 0,
-					'total_amount'          => round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ),
-					'total_tax_amount'      => round( $order_item->get_total_tax() * 100 ),
-					'total_discount_amount' => round( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() - $order_item->get_total() - $order_item->get_total_tax() ) * 100 ),
+					'total_amount'          => $this->get_order_item_total_amount( $order_item ),
+					'total_tax_amount'      => $this->get_order_item_total_tax( $order_item ),
+					'total_discount_amount' => $this->get_order_item_discount_amount( $order_item ),
 				);
 
 				// Add images.
@@ -385,10 +388,10 @@ class WC_Klarna_Payments_Order_Lines {
 			'reference'        => 1,
 			'name'             => ( '' !== $order->get_shipping_method() ) ? $order->get_shipping_method() : $shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' ),
 			'quantity'         => 1,
-			'unit_price'       => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
+			'unit_price'       => $this->get_order_shipping_unit_price( $order ),
 			'tax_rate'         => ( '0' !== $order->get_shipping_tax() ) ? $this->get_order_line_tax_rate( $order, current( $order->get_items( 'shipping' ) ) ) : 0,
-			'total_amount'     => round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 ),
-			'total_tax_amount' => $order->get_shipping_tax() * 100,
+			'total_amount'     => $this->get_order_shipping_unit_price( $order ),
+			'total_tax_amount' => $this->get_order_shipping_tax_amount( $order ),
 		);
 
 		$this->order_lines[] = $shipping;
@@ -403,7 +406,7 @@ class WC_Klarna_Payments_Order_Lines {
 	private function get_order_sales_tax( $order_id = false ) {
 		$order = wc_get_order( $order_id );
 		if ( $this->separate_sales_tax ) {
-			$sales_tax_amount = round( ( $order->get_total_tax() + $order->get_shipping_tax() ) * 100 );
+			$sales_tax_amount = round( ( $order->get_total_tax() ) * 100 );
 
 			// Add sales tax line item.
 			$sales_tax = array(
@@ -816,4 +819,78 @@ class WC_Klarna_Payments_Order_Lines {
 		return round( $shipping_tax_amount );
 	}
 
+	/**
+	 * Returns the order items unit price.
+	 *
+	 * @param object $order_item
+	 * @return int
+	 */
+	private function get_order_item_unit_price( $order_item ) {
+		if ( $this->separate_sales_tax ) {
+			return round( ( ( $order_item->get_subtotal() ) / $order_item->get_quantity() ) * 100 );
+		}
+		return round( ( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() ) / $order_item->get_quantity() ) * 100 );
+	}
+
+	/**
+	 * Returns the order item total amount.
+	 *
+	 * @param object $order_item
+	 * @return int
+	 */
+	private function get_order_item_total_amount( $order_item ) {
+		if ( $this->separate_sales_tax ) {
+			return round( $order_item->get_total() * 100 );
+		}
+		return round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 );
+	}
+
+	/**
+	 * Returns the order item total tax amount.
+	 *
+	 * @param object $order_item
+	 * @return int
+	 */
+	private function get_order_item_total_tax( $order_item ) {
+		if ( $this->separate_sales_tax ) {
+			return 0;
+		}
+		return round( $order_item->get_total_tax() * 100 );
+	}
+
+	private function get_order_item_discount_amount( $order_item ) {
+		if ( $order_item === null ) {
+			return 0;
+		}
+		if ( $this->separate_sales_tax ) {
+			return round( ( $order_item->get_subtotal() - $order_item->get_total() ) * 100 );
+		}
+		return round( ( $order_item->get_subtotal() + $order_item->get_subtotal_tax() - $order_item->get_total() - $order_item->get_total_tax() ) * 100 );
+	}
+
+	/**
+	 * Get the order shipping unit price
+	 *
+	 * @param object $order
+	 * @return int
+	 */
+	private function get_order_shipping_unit_price( $order ) {
+		if ( $this->separate_sales_tax ) {
+			return round( $order->get_shipping_total() * 100 );
+		}
+		return round( ( $order->get_shipping_total() + $order->get_shipping_tax() ) * 100 );
+	}
+
+	/**
+	 * Get the order shipping tax amount
+	 *
+	 * @param object $order
+	 * @return int
+	 */
+	private function get_order_shipping_tax_amount( $order ) {
+		if ( $this->separate_sales_tax ) {
+			return 0;
+		}
+		return $order->get_shipping_tax() * 100;
+	}
 }

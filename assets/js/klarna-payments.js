@@ -212,11 +212,13 @@ jQuery( function($) {
 		},
 
 		getSelectorContainerID: function() {
-			return $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').attr('id');
+			var containerID = $('input[name="payment_method"]:checked').attr('id').replace('payment_method_', '');
+
+			return containerID + '_container';
 		},
 
 		getSelectedPaymentCategory: function() {
-			var selected_category = $('input[name="payment_method"]:checked').parent().find('.klarna_payments_container').data('payment_method_category');
+			var selected_category = $('input[name="payment_method"]:checked').attr('id').replace('payment_method_', '');
 			console.log( selected_category );
 			return selected_category.replace('klarna_payments_', '');
 		},

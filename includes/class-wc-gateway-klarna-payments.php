@@ -1082,6 +1082,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				wp_send_json_error( $order->get_cancel_order_url_raw() );
 				wp_die();
 				break;
+			default:
+				wp_send_json_error( $order->get_cancel_order_url_raw() );
+				wp_die();
+				break;
 		}
 	}
 
