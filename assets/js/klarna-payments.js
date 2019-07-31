@@ -323,6 +323,20 @@ jQuery( function($) {
 								}
 							}
 						);
+					} else {
+						$.ajax(
+							klarna_payments_params.ajaxurl,
+							{
+								type: "POST",
+								dataType: "json",
+								async: true,
+								data: {
+									action: "wc_kp_auth_failed",
+									order_id: json.order_id,
+								},
+							}
+						);
+						$('form.woocommerce-checkout').removeClass( 'processing' ).unblock();
 					}
 				});
 			}

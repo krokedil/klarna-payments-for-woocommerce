@@ -5,7 +5,7 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 1.8.1
+ * Version: 1.8.2
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '1.8.1' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '1.8.2' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.3.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -120,6 +120,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			add_action( 'wp_ajax_wc_kp_place_order', array( $this, 'place_order' ) );
 			add_action( 'wp_ajax_nopriv_wc_kp_place_order', array( $this, 'place_order' ) );
+			add_action( 'wp_ajax_wc_kp_auth_failed', array( $this, 'auth_failed' ) );
+			add_action( 'wp_ajax_nopriv_wc_kp_auth_failed', array( $this, 'auth_failed' ) );
 		}
 
 		/**
@@ -336,10 +338,34 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			return $phone_value;
 		}
 
+		/**
+		 * Places the order with Klarna.
+		 *
+		 * @return void
+		 */
 		public function place_order() {
 			$kp = new WC_Gateway_Klarna_Payments();
 
 			$kp->place_order();
+
+			wp_send_json_success();
+			wp_die();
+		}
+
+		/**
+		 * Adds a order note on a failed auth call to KP.
+		 *
+		 * @return void
+		 */
+		public function auth_failed() {
+			$order_id = $_POST['order_id'];
+
+			$order = wc_get_order( $order_id );
+
+			$order->add_order_note( __( 'Klarna Payments Authorization failed.', 'klarna-payments-for-woocommerce' ) );
+
+			wp_send_json_success();
+			wp_die();
 		}
 
 	}
