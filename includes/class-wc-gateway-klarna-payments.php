@@ -271,9 +271,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'iframe_options' ) );
 		add_filter( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
 
-		add_action( 'wp_ajax_wc_kp_place_order', array( $this, 'place_order' ) );
-		add_action( 'wp_ajax_nopriv_wc_kp_place_order', array( $this, 'place_order' ) );
-
 		if ( '' !== $this->background ) {
 			add_action( 'wp_head', array( $this, 'iframe_background' ) );
 		}
