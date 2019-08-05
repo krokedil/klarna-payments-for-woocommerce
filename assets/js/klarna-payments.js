@@ -302,9 +302,10 @@ jQuery( function($) {
 		handleHashChange: function( event ) {
 			var currentHash = location.hash;
 			var splittedHash = currentHash.split("=");
-			var json =  JSON.parse( atob( splittedHash[1] ) );
+
             if( splittedHash[0] === "#kp" ){
-                var response = JSON.parse( atob( splittedHash[1] ) );
+                var json = JSON.parse( atob( splittedHash[1] ) );
+
 				klarna_payments.authorize().done( function( response ) {
 					if ('authorization_token' in response) {
 						$.ajax(
