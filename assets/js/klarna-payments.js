@@ -249,17 +249,17 @@ jQuery( function($) {
 		get_address: function() {
 			var address = {
 				billing_address: {
-					given_name : addresses.billing.given_name,
-					family_name : addresses.billing.family_name,
-					email : addresses.billing.email,
-					phone : addresses.billing.phone,
-					country : addresses.billing.country,
-					region : addresses.billing.region,
-					postal_code : addresses.billing.postal_code,
-					city : addresses.billing.city,
-					street_address : addresses.billing.street_address,
-					street_address2 : addresses.billing.street_address2,
-					organization_name : ( 'b2b' === klarna_payments_params.customer_type ) ? addresses.billing.organization_name : '',
+					given_name : klarna_payments.addresses.billing.given_name,
+					family_name : klarna_payments.addresses.billing.family_name,
+					email : klarna_payments.addresses.billing.email,
+					phone : klarna_payments.addresses.billing.phone,
+					country : klarna_payments.addresses.billing.country,
+					region : klarna_payments.addresses.billing.region,
+					postal_code : klarna_payments.addresses.billing.postal_code,
+					city : klarna_payments.addresses.billing.city,
+					street_address : klarna_payments.addresses.billing.street_address,
+					street_address2 : klarna_payments.addresses.billing.street_address2,
+					organization_name : ( 'b2b' === klarna_payments_params.customer_type ) ? klarna_payments.addresses.billing.organization_name : '',
 				},
 				shipping_address: {}
 			};
@@ -267,14 +267,14 @@ jQuery( function($) {
 			address.shipping_address = $.extend({}, address.billing_address);
 
 			if ( $( '#ship-to-different-address' ).find( 'input' ).is( ':checked' ) ) {
-				address.shipping_address.given_name = addresses.shipping.given_name;
-				address.shipping_address.family_name = addresses.shipping.family_name;
-				address.shipping_address.country = addresses.shipping.country;
-				address.shipping_address.region = addresses.shipping.region;
-				address.shipping_address.postal_code = addresses.shipping.postal_code;
-				address.shipping_address.city = addresses.shipping.city;
-				address.shipping_address.street_address = addresses.shipping.street_address;
-				address.shipping_address.street_address2 = addresses.shipping.street_address2;
+				address.shipping_address.given_name = klarna_payments.addresses.shipping.given_name;
+				address.shipping_address.family_name = klarna_payments.addresses.shipping.family_name;
+				address.shipping_address.country = klarna_payments.addresses.shipping.country;
+				address.shipping_address.region = klarna_payments.addresses.shipping.region;
+				address.shipping_address.postal_code = klarna_payments.addresses.shipping.postal_code;
+				address.shipping_address.city = klarna_payments.addresses.shipping.city;
+				address.shipping_address.street_address = klarna_payments.addresses.shipping.street_address;
+				address.shipping_address.street_address2 = klarna_payments.addresses.shipping.street_address2;
 			}
 
 			return address;
@@ -306,7 +306,7 @@ jQuery( function($) {
 
             if( splittedHash[0] === "#kp" ){
                 var json = JSON.parse( atob( splittedHash[1] ) );
-				klarna_payments.address = json.addresses
+				klarna_payments.addresses = json.addresses
 				klarna_payments.authorize().done( function( response ) {
 					if ('authorization_token' in response) {
 						$.ajax(
