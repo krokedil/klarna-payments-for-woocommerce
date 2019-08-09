@@ -233,7 +233,7 @@ jQuery( function($) {
 			try {
 				Klarna.Payments.authorize(
 					address,
-					{payment_method_category: klarna_payments.getSelectedPaymentCategory(), auto_finalize: false},
+					{payment_method_category: klarna_payments.getSelectedPaymentCategory()},
 					function (response) {
 						klarna_payments.authorization_response = response;
 						$defer.resolve(response);
