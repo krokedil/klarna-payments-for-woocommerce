@@ -1004,7 +1004,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					'kp_wc_api_request_args',
 					array(
 						'purchase_country'    => $this->klarna_country,
-						'purchase_currency'   => get_woocommerce_currency(),
+						'purchase_currency'   => $order->get_currency(),
 						'locale'              => $this->get_locale_for_klarna_country(),
 						'billing_address'     => $addresses['billing'],
 						'shipping_address'    => $addresses['shipping'],
