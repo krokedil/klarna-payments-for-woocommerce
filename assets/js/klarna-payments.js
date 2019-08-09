@@ -8,6 +8,7 @@ jQuery( function($) {
 		show_form: false,
 		klarna_container_selector: '#klarna_container_2',
 		checkout_values: {},
+		addresses: {},
 
 		check_changes: function() {
 			$('.woocommerce-billing-fields input, .woocommerce-billing-fields select, .woocommerce-shipping-fields input, .woocommerce-shipping-fields select').each(function() {
@@ -248,17 +249,17 @@ jQuery( function($) {
 		get_address: function() {
 			var address = {
 				billing_address: {
-					given_name : $(klarna_payments_params.default_checkout_fields.billing_given_name).val(),
-					family_name : $(klarna_payments_params.default_checkout_fields.billing_family_name).val(),
-					email : $(klarna_payments_params.default_checkout_fields.billing_email).val(),
-					phone : $(klarna_payments_params.default_checkout_fields.billing_phone).val(),
-					country : $(klarna_payments_params.default_checkout_fields.billing_country).val(),
-					region : $(klarna_payments_params.default_checkout_fields.billing_region).val(),
-					postal_code : ( klarna_payments_params.remove_postcode_spaces === 'yes' ) ? $(klarna_payments_params.default_checkout_fields.billing_postal_code).val().replace(/\s/g, '') : $(klarna_payments_params.default_checkout_fields.billing_postal_code).val(),
-					city : $(klarna_payments_params.default_checkout_fields.billing_city).val(),
-					street_address : $(klarna_payments_params.default_checkout_fields.billing_street_address).val(),
-					street_address2 : $(klarna_payments_params.default_checkout_fields.billing_street_address2).val(),
-					organization_name : ( 'b2b' === klarna_payments_params.customer_type ) ? $(klarna_payments_params.default_checkout_fields.billing_company).val() : '',
+					given_name : addresses.billing.given_name,
+					family_name : addresses.billing.family_name,
+					email : addresses.billing.email,
+					phone : addresses.billing.phone,
+					country : addresses.billing.country,
+					region : addresses.billing.region,
+					postal_code : addresses.billing.postal_code,
+					city : addresses.billing.city,
+					street_address : addresses.billing.street_address,
+					street_address2 : addresses.billing.street_address2,
+					organization_name : ( 'b2b' === klarna_payments_params.customer_type ) ? addresses.billing.organization_name : '',
 				},
 				shipping_address: {}
 			};
@@ -266,14 +267,14 @@ jQuery( function($) {
 			address.shipping_address = $.extend({}, address.billing_address);
 
 			if ( $( '#ship-to-different-address' ).find( 'input' ).is( ':checked' ) ) {
-				address.shipping_address.given_name = $(klarna_payments_params.default_checkout_fields.shipping_given_name).val();
-				address.shipping_address.family_name = $(klarna_payments_params.default_checkout_fields.shipping_family_name).val();
-				address.shipping_address.country = $(klarna_payments_params.default_checkout_fields.shipping_country).val();
-				address.shipping_address.region = $(klarna_payments_params.default_checkout_fields.shipping_region).val();
-				address.shipping_address.postal_code = ( klarna_payments_params.remove_postcode_spaces === 'yes' ) ? $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val().replace(/\s/g, '') : $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val();
-				address.shipping_address.city = $(klarna_payments_params.default_checkout_fields.shipping_city).val();
-				address.shipping_address.street_address = $(klarna_payments_params.default_checkout_fields.shipping_street_address).val();
-				address.shipping_address.street_address2 = $(klarna_payments_params.default_checkout_fields.shipping_street_address2).val();
+				address.shipping_address.given_name = addresses.shipping.given_name;
+				address.shipping_address.family_name = addresses.shipping.family_name;
+				address.shipping_address.country = addresses.shipping.country;
+				address.shipping_address.region = addresses.shipping.region;
+				address.shipping_address.postal_code = addresses.shipping.postal_code;
+				address.shipping_address.city = addresses.shipping.city;
+				address.shipping_address.street_address = addresses.shipping.street_address;
+				address.shipping_address.street_address2 = addresses.shipping.street_address2;
 			}
 
 			return address;
@@ -305,7 +306,7 @@ jQuery( function($) {
 
             if( splittedHash[0] === "#kp" ){
                 var json = JSON.parse( atob( splittedHash[1] ) );
-
+				klarna_payments.address = json.addresses
 				klarna_payments.authorize().done( function( response ) {
 					if ('authorization_token' in response) {
 						$.ajax(
