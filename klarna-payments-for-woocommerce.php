@@ -362,7 +362,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$order = wc_get_order( $order_id );
 
-			$order->add_order_note( __( 'Klarna Payments Authorization failed.', 'klarna-payments-for-woocommerce' ) );
+			$order->add_order_note( __( 'Payment rejected by klarna.', 'klarna-payments-for-woocommerce' ) );
 
 			wp_send_json_success();
 			wp_die();
