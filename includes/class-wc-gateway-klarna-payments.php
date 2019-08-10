@@ -843,8 +843,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 
 		$response = array(
-			'order_id' => $order_id,
-			'time'     => time(),
+			'order_id'  => $order_id,
+			'addresses' => $this->get_address_from_order( $order_id ),
+			'time'      => time(),
 		);
 
 		update_post_meta( $order_id, '_wc_klarna_environment', $this->environment );
@@ -855,7 +856,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'result'   => 'success',
 			'redirect' => wc_get_checkout_url() . '#kp=' . base64_encode( wp_json_encode( $response ) ),
 		);
-		// return $this->process_klarna_response( $response, $order );
 	}
 
 	/**
@@ -990,37 +990,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
 		$order_lines           = $order_lines_processor->order_lines( $order_id );
 
-		$billing_address = array(
-			'given_name'      => stripslashes( $order->get_billing_first_name() ),
-			'family_name'     => stripslashes( $order->get_billing_last_name() ),
-			'email'           => stripslashes( $order->get_billing_email() ),
-			'phone'           => stripslashes( $order->get_billing_phone() ),
-			'street_address'  => stripslashes( $order->get_billing_address_1() ),
-			'street_address2' => stripslashes( $order->get_billing_address_2() ),
-			'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $order->get_billing_postcode() ) : $order->get_billing_postcode() ),
-			'city'            => stripslashes( $order->get_billing_city() ),
-			'region'          => stripslashes( $order->get_billing_state() ),
-			'country'         => stripslashes( $order->get_billing_country() ),
-		);
-		if ( 'b2b' === $this->get_option( 'customer_type' ) ) {
-			$billing_address['organization_name'] = stripslashes( $order->get_billing_company() );
-		}
-		if ( '' !== $order->get_shipping_first_name() && 'b2c' === $this->get_option( 'customer_type' ) && ! wc_ship_to_billing_address_only() ) {
-			$shipping_address = array(
-				'given_name'      => stripslashes( $order->get_shipping_first_name() ),
-				'family_name'     => stripslashes( $order->get_shipping_last_name() ),
-				'email'           => stripslashes( $order->get_billing_email() ),
-				'phone'           => stripslashes( $order->get_billing_phone() ),
-				'street_address'  => stripslashes( $order->get_shipping_address_1() ),
-				'street_address2' => stripslashes( $order->get_shipping_address_2() ),
-				'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $order->get_shipping_postcode() ) : $order->get_shipping_postcode() ),
-				'city'            => stripslashes( $order->get_shipping_city() ),
-				'region'          => stripslashes( $order->get_shipping_state() ),
-				'country'         => stripslashes( $order->get_shipping_country() ),
-			);
-		} else {
-			$shipping_address = $billing_address;
-		}
+		$addresses = $this->get_address_from_order( $order_id );
 
 		$request_url   = $this->server_base . 'payments/v1/authorizations/' . $auth_token . '/order';
 		$request_args  = array(
@@ -1034,10 +1004,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					'kp_wc_api_request_args',
 					array(
 						'purchase_country'    => $this->klarna_country,
-						'purchase_currency'   => get_woocommerce_currency(),
+						'purchase_currency'   => $order->get_currency(),
 						'locale'              => $this->get_locale_for_klarna_country(),
-						'billing_address'     => $billing_address,
-						'shipping_address'    => $shipping_address,
+						'billing_address'     => $addresses['billing'],
+						'shipping_address'    => $addresses['shipping'],
 						'order_amount'        => $order_lines['order_amount'],
 						'order_tax_amount'    => $order_lines['order_tax_amount'],
 						'order_lines'         => $order_lines['order_lines'],
@@ -1387,5 +1357,45 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$new_title = $title . ' - ' . $klarna_method;
 			$order->set_payment_method_title( $new_title );
 		}
+	}
+
+	public function get_address_from_order( $order_id ) {
+		$order           = wc_get_order( $order_id );
+		$billing_address = array(
+			'given_name'      => stripslashes( $order->get_billing_first_name() ),
+			'family_name'     => stripslashes( $order->get_billing_last_name() ),
+			'email'           => stripslashes( $order->get_billing_email() ),
+			'phone'           => stripslashes( $order->get_billing_phone() ),
+			'street_address'  => stripslashes( $order->get_billing_address_1() ),
+			'street_address2' => stripslashes( $order->get_billing_address_2() ),
+			'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $order->get_billing_postcode() ) : $order->get_billing_postcode() ),
+			'city'            => stripslashes( $order->get_billing_city() ),
+			'region'          => stripslashes( $order->get_billing_state() ),
+			'country'         => stripslashes( $order->get_billing_country() ),
+		);
+		if ( 'b2b' === $this->get_option( 'customer_type' ) ) {
+			$billing_address['organization_name'] = stripslashes( $order->get_billing_company() );
+		}
+		if ( '' !== $order->get_shipping_first_name() && 'b2c' === $this->get_option( 'customer_type' ) && ! wc_ship_to_billing_address_only() ) {
+			$shipping_address = array(
+				'given_name'      => stripslashes( $order->get_shipping_first_name() ),
+				'family_name'     => stripslashes( $order->get_shipping_last_name() ),
+				'email'           => stripslashes( $order->get_billing_email() ),
+				'phone'           => stripslashes( $order->get_billing_phone() ),
+				'street_address'  => stripslashes( $order->get_shipping_address_1() ),
+				'street_address2' => stripslashes( $order->get_shipping_address_2() ),
+				'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $order->get_shipping_postcode() ) : $order->get_shipping_postcode() ),
+				'city'            => stripslashes( $order->get_shipping_city() ),
+				'region'          => stripslashes( $order->get_shipping_state() ),
+				'country'         => stripslashes( $order->get_shipping_country() ),
+			);
+		} else {
+			$shipping_address = $billing_address;
+		}
+
+		return array(
+			'billing'  => $billing_address,
+			'shipping' => $shipping_address,
+		);
 	}
 }

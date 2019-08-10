@@ -8,6 +8,7 @@ jQuery( function($) {
 		show_form: false,
 		klarna_container_selector: '#klarna_container_2',
 		checkout_values: {},
+		addresses: {},
 
 		check_changes: function() {
 			$('.woocommerce-billing-fields input, .woocommerce-billing-fields select, .woocommerce-shipping-fields input, .woocommerce-shipping-fields select').each(function() {
@@ -103,7 +104,7 @@ jQuery( function($) {
 			 */
 			$('form.checkout').on('keyup', '#billing_company', klarna_payments.debounce_changes(function() {
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
-					$('#place_order').attr('disabled', true);
+					//$('#place_order').attr('disabled', true);
 						klarna_payments.load().then(klarna_payments.loadHandler);
 				}
 			}, 750));
@@ -232,7 +233,7 @@ jQuery( function($) {
 			try {
 				Klarna.Payments.authorize(
 					address,
-					{payment_method_category: klarna_payments.getSelectedPaymentCategory(), auto_finalize: false},
+					{payment_method_category: klarna_payments.getSelectedPaymentCategory()},
 					function (response) {
 						klarna_payments.authorization_response = response;
 						$defer.resolve(response);
@@ -248,17 +249,17 @@ jQuery( function($) {
 		get_address: function() {
 			var address = {
 				billing_address: {
-					given_name : $(klarna_payments_params.default_checkout_fields.billing_given_name).val(),
-					family_name : $(klarna_payments_params.default_checkout_fields.billing_family_name).val(),
-					email : $(klarna_payments_params.default_checkout_fields.billing_email).val(),
-					phone : $(klarna_payments_params.default_checkout_fields.billing_phone).val(),
-					country : $(klarna_payments_params.default_checkout_fields.billing_country).val(),
-					region : $(klarna_payments_params.default_checkout_fields.billing_region).val(),
-					postal_code : ( klarna_payments_params.remove_postcode_spaces === 'yes' ) ? $(klarna_payments_params.default_checkout_fields.billing_postal_code).val().replace(/\s/g, '') : $(klarna_payments_params.default_checkout_fields.billing_postal_code).val(),
-					city : $(klarna_payments_params.default_checkout_fields.billing_city).val(),
-					street_address : $(klarna_payments_params.default_checkout_fields.billing_street_address).val(),
-					street_address2 : $(klarna_payments_params.default_checkout_fields.billing_street_address2).val(),
-					organization_name : ( 'b2b' === klarna_payments_params.customer_type ) ? $(klarna_payments_params.default_checkout_fields.billing_company).val() : '',
+					given_name : klarna_payments.addresses.billing.given_name,
+					family_name : klarna_payments.addresses.billing.family_name,
+					email : klarna_payments.addresses.billing.email,
+					phone : klarna_payments.addresses.billing.phone,
+					country : klarna_payments.addresses.billing.country,
+					region : klarna_payments.addresses.billing.region,
+					postal_code : klarna_payments.addresses.billing.postal_code,
+					city : klarna_payments.addresses.billing.city,
+					street_address : klarna_payments.addresses.billing.street_address,
+					street_address2 : klarna_payments.addresses.billing.street_address2,
+					organization_name : ( 'b2b' === klarna_payments_params.customer_type ) ? klarna_payments.addresses.billing.organization_name : '',
 				},
 				shipping_address: {}
 			};
@@ -266,14 +267,14 @@ jQuery( function($) {
 			address.shipping_address = $.extend({}, address.billing_address);
 
 			if ( $( '#ship-to-different-address' ).find( 'input' ).is( ':checked' ) ) {
-				address.shipping_address.given_name = $(klarna_payments_params.default_checkout_fields.shipping_given_name).val();
-				address.shipping_address.family_name = $(klarna_payments_params.default_checkout_fields.shipping_family_name).val();
-				address.shipping_address.country = $(klarna_payments_params.default_checkout_fields.shipping_country).val();
-				address.shipping_address.region = $(klarna_payments_params.default_checkout_fields.shipping_region).val();
-				address.shipping_address.postal_code = ( klarna_payments_params.remove_postcode_spaces === 'yes' ) ? $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val().replace(/\s/g, '') : $(klarna_payments_params.default_checkout_fields.shipping_postal_code).val();
-				address.shipping_address.city = $(klarna_payments_params.default_checkout_fields.shipping_city).val();
-				address.shipping_address.street_address = $(klarna_payments_params.default_checkout_fields.shipping_street_address).val();
-				address.shipping_address.street_address2 = $(klarna_payments_params.default_checkout_fields.shipping_street_address2).val();
+				address.shipping_address.given_name = klarna_payments.addresses.shipping.given_name;
+				address.shipping_address.family_name = klarna_payments.addresses.shipping.family_name;
+				address.shipping_address.country = klarna_payments.addresses.shipping.country;
+				address.shipping_address.region = klarna_payments.addresses.shipping.region;
+				address.shipping_address.postal_code = klarna_payments.addresses.shipping.postal_code;
+				address.shipping_address.city = klarna_payments.addresses.shipping.city;
+				address.shipping_address.street_address = klarna_payments.addresses.shipping.street_address;
+				address.shipping_address.street_address2 = klarna_payments.addresses.shipping.street_address2;
 			}
 
 			return address;
@@ -305,7 +306,7 @@ jQuery( function($) {
 
             if( splittedHash[0] === "#kp" ){
                 var json = JSON.parse( atob( splittedHash[1] ) );
-
+				klarna_payments.addresses = json.addresses
 				klarna_payments.authorize().done( function( response ) {
 					if ('authorization_token' in response) {
 						$.ajax(
