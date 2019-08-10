@@ -53,6 +53,13 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2019.08.10  	- version 1.8.3 =
+* Enhancement	- We now use order data for authorization calls. This prevents issues with difference in formating of adress details between create order and authorization.
+* Enhancement	- Changed the text added to the order note to "Payment rejected by Klarna" on a failed authorization calls.
+* Fix			- Fixed issue with Sofort, removed a flag that was not needed to be sent with the authorization call.
+* Fix			- Fixed an issue where billing_company field could softblock the checkout.
+* Fix			- Get currency from the order instead of the WooCommerce default.
+
 = 2019.07.31  	- version 1.8.2 =
 * Fix			- Added handling for failed authorization calls.
 
