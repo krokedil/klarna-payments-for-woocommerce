@@ -104,7 +104,7 @@ jQuery( function($) {
 			 */
 			$('form.checkout').on('keyup', '#billing_company', klarna_payments.debounce_changes(function() {
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
-					$('#place_order').attr('disabled', true);
+					//$('#place_order').attr('disabled', true);
 						klarna_payments.load().then(klarna_payments.loadHandler);
 				}
 			}, 750));
