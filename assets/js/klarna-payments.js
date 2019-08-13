@@ -157,7 +157,7 @@ jQuery( function($) {
 						};
 
 						if ( 'US' === $('#billing_country').val() ) {
-							var address = klarna_payments.get_address();
+							var address = klarna_payments.get_address_from_checkout_form();
 
 							Klarna.Payments.load(
 								options,
@@ -275,6 +275,40 @@ jQuery( function($) {
 				address.shipping_address.city = klarna_payments.addresses.shipping.city;
 				address.shipping_address.street_address = klarna_payments.addresses.shipping.street_address;
 				address.shipping_address.street_address2 = klarna_payments.addresses.shipping.street_address2;
+			}
+
+			return address;
+		},
+
+		get_address_from_checkout_form: function() {
+			var address = {
+				billing_address: {
+					given_name : klarna_payments.checkout_values.billing_first_name,
+					family_name : klarna_payments.checkout_values.billing_last_name,
+					email : klarna_payments.checkout_values.billing_email,
+					phone : klarna_payments.checkout_values.billing_phone,
+					country : klarna_payments.checkout_values.billing_country,
+					region : klarna_payments.checkout_values.billing_state,
+					postal_code : klarna_payments.checkout_values.billing_postcode,
+					city : klarna_payments.checkout_values.billing_city,
+					street_address : klarna_payments.checkout_values.billing_address_1,
+					street_address2 : klarna_payments.checkout_values.billing_address_2,
+					organization_name : ( 'b2b' === klarna_payments_params.customer_type ) ? klarna_payments.checkout_values.billing_company : '',
+				},
+				shipping_address: {}
+			};
+
+			address.shipping_address = $.extend({}, address.billing_address);
+
+			if ( $( '#ship-to-different-address' ).find( 'input' ).is( ':checked' ) ) {
+				address.shipping_address.given_name = klarna_payments.checkout_values.shipping_first_name;
+				address.shipping_address.family_name = klarna_payments.checkout_values.shipping_last_name;
+				address.shipping_address.country = klarna_payments.checkout_values.shipping_country;
+				address.shipping_address.region = klarna_payments.checkout_values.shipping_state;
+				address.shipping_address.postal_code = klarna_payments.checkout_values.shipping_postcode;
+				address.shipping_address.city = klarna_payments.checkout_values.shipping_city;
+				address.shipping_address.street_address = klarna_payments.checkout_values.shipping_address_1;
+				address.shipping_address.street_address2 = klarna_payments.checkout_values.shipping_address_2;
 			}
 
 			return address;
