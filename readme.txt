@@ -3,7 +3,7 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.2.4
+Tested up to: 5.2.2
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv3 or later
@@ -53,6 +53,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2019.08.13  	- version 1.8.4 =
+* Fix           - Send address data to Klarna from checkout form on load call for US stores. Plugin rewrite caused payment method iframe not to be displayed for US stores.
+
 = 2019.08.10  	- version 1.8.3 =
 * Enhancement	- We now use order data for authorization calls. This prevents issues with difference in formating of adress details between create order and authorization.
 * Enhancement	- Changed the text added to the order note to "Payment rejected by Klarna" on a failed authorization calls.
