@@ -243,8 +243,8 @@ class WC_Klarna_Payments_Order_Lines {
 				$coupon_amount     = 0;
 				$coupon_tax_amount = '';
 
-				// Smart coupons are processed as real line items, cart and product discounts sent for reference only.
-				if ( 'smart_coupon' === $coupon->get_discount_type() ) {
+				// Smart coupons and store credit are processed as real line items, cart and product discounts sent for reference only.
+				if ( 'smart_coupon' === $coupon->get_discount_type() || 'store_credit' === $coupon->get_discount_type() ) {
 					$coupon_amount     = - round( WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100 );
 					$coupon_tax_amount = - round( WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100 );
 					$coupon_reference  = 'Discount';
@@ -265,8 +265,8 @@ class WC_Klarna_Payments_Order_Lines {
 					}
 				}
 
-				// Add separate discount line item, but only if it's a smart coupon or country is US.
-				if ( 'smart_coupon' === $coupon->get_discount_type() || 'US' === $this->shop_country ) {
+				// Add separate discount line item, but only if it's a smart coupon, store credit or country is US.
+				if ( 'smart_coupon' === $coupon->get_discount_type() || 'store_credit' === $coupon->get_discount_type() || 'US' === $this->shop_country ) {
 					$discount = array(
 						'type'                  => 'discount',
 						'reference'             => $coupon_reference,
