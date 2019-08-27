@@ -385,7 +385,7 @@ class WC_Klarna_Payments_Order_Lines {
 		$order    = wc_get_order( $order_id );
 		$shipping = array(
 			'type'             => 'shipping_fee',
-			'reference'        => 1,
+			'reference'        => $this->get_order_shipping_reference( $order ),
 			'name'             => ( '' !== $order->get_shipping_method() ) ? $order->get_shipping_method() : $shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' ),
 			'quantity'         => 1,
 			'unit_price'       => $this->get_order_shipping_unit_price( $order ),
@@ -892,5 +892,19 @@ class WC_Klarna_Payments_Order_Lines {
 			return 0;
 		}
 		return $order->get_shipping_tax() * 100;
+	}
+
+	/**
+	 * Get the order shipping reference
+	 *
+	 * @param object $order
+	 * @return void
+	 */
+	private function get_order_shipping_reference( $order ) {
+		$order_shipping_items = $order->get_items( 'shipping' );
+		foreach ( $order_shipping_items as $order_shipping_item ) {
+			$order_shipping_reference = $order_shipping_item->get_method_id() . ':' . $order_shipping_item->get_instance_id();
+		}
+		return $order_shipping_reference;
 	}
 }
