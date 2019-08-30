@@ -269,7 +269,7 @@ class WC_Klarna_Payments_Order_Lines {
 				if ( 'smart_coupon' === $coupon->get_discount_type() || 'store_credit' === $coupon->get_discount_type() || 'US' === $this->shop_country ) {
 					$discount = array(
 						'type'                  => 'discount',
-						'reference'             => $coupon_reference,
+						'reference'             => substr( strval( $coupon_reference ), 0, 64 ),
 						'name'                  => $coupon_key,
 						'quantity'              => 1,
 						'unit_price'            => $coupon_amount,
@@ -762,7 +762,7 @@ class WC_Klarna_Payments_Order_Lines {
 			$shipping_reference = __( 'Shipping', 'klarna-payments-for-woocommerce' );
 		}
 
-		return (string) $shipping_reference;
+		return substr( strval( $shipping_reference ), 0, 64 );
 	}
 
 	/**
@@ -898,13 +898,13 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get the order shipping reference
 	 *
 	 * @param object $order
-	 * @return void
+	 * @return string $order_shipping_reference Reference for selected shipping method
 	 */
 	private function get_order_shipping_reference( $order ) {
 		$order_shipping_items = $order->get_items( 'shipping' );
 		foreach ( $order_shipping_items as $order_shipping_item ) {
 			$order_shipping_reference = $order_shipping_item->get_method_id() . ':' . $order_shipping_item->get_instance_id();
 		}
-		return $order_shipping_reference;
+		return substr( strval( $order_shipping_reference ), 0, 64 );
 	}
 }
