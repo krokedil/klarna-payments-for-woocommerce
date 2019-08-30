@@ -905,6 +905,11 @@ class WC_Klarna_Payments_Order_Lines {
 		foreach ( $order_shipping_items as $order_shipping_item ) {
 			$order_shipping_reference = $order_shipping_item->get_method_id() . ':' . $order_shipping_item->get_instance_id();
 		}
+
+		if ( ! isset( $order_shipping_reference ) ) {
+			$order_shipping_reference = __( 'Shipping', 'klarna-payments-for-woocommerce' );
+		}
+
 		return substr( strval( $order_shipping_reference ), 0, 64 );
 	}
 }
