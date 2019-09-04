@@ -354,12 +354,23 @@ jQuery( function($) {
 									order_id: json.order_id,
 									auth_token: klarna_payments.authorization_response.authorization_token,
 								},
+								success: function (response) {
+									// Log the success.
+									console.log('kp_place_order sucess');
+									console.log(response);
+								},
+								error: function (response) {
+									// Log the error.
+									console.log('kp_place_order error');
+									console.log(response);
+								},
 								complete: function (response) {
 									window.location.href = response.responseJSON.data;
 								}
 							}
 						);
 					} else {
+						console.log('No authorization_token in response');
 						$.ajax(
 							klarna_payments_params.ajaxurl,
 							{

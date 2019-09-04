@@ -243,8 +243,8 @@ class WC_Klarna_Payments_Order_Lines {
 				$coupon_amount     = 0;
 				$coupon_tax_amount = '';
 
-				// Smart coupons are processed as real line items, cart and product discounts sent for reference only.
-				if ( 'smart_coupon' === $coupon->get_discount_type() ) {
+				// Smart coupons and store credit are processed as real line items, cart and product discounts sent for reference only.
+				if ( 'smart_coupon' === $coupon->get_discount_type() || 'store_credit' === $coupon->get_discount_type() ) {
 					$coupon_amount     = - round( WC()->cart->get_coupon_discount_amount( $coupon_key ) * 100 );
 					$coupon_tax_amount = - round( WC()->cart->get_coupon_discount_tax_amount( $coupon_key ) * 100 );
 					$coupon_reference  = 'Discount';
@@ -265,11 +265,11 @@ class WC_Klarna_Payments_Order_Lines {
 					}
 				}
 
-				// Add separate discount line item, but only if it's a smart coupon or country is US.
-				if ( 'smart_coupon' === $coupon->get_discount_type() || 'US' === $this->shop_country ) {
+				// Add separate discount line item, but only if it's a smart coupon, store credit or country is US.
+				if ( 'smart_coupon' === $coupon->get_discount_type() || 'store_credit' === $coupon->get_discount_type() || 'US' === $this->shop_country ) {
 					$discount = array(
 						'type'                  => 'discount',
-						'reference'             => $coupon_reference,
+						'reference'             => substr( strval( $coupon_reference ), 0, 64 ),
 						'name'                  => $coupon_key,
 						'quantity'              => 1,
 						'unit_price'            => $coupon_amount,
@@ -385,7 +385,7 @@ class WC_Klarna_Payments_Order_Lines {
 		$order    = wc_get_order( $order_id );
 		$shipping = array(
 			'type'             => 'shipping_fee',
-			'reference'        => 1,
+			'reference'        => $this->get_order_shipping_reference( $order ),
 			'name'             => ( '' !== $order->get_shipping_method() ) ? $order->get_shipping_method() : $shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' ),
 			'quantity'         => 1,
 			'unit_price'       => $this->get_order_shipping_unit_price( $order ),
@@ -762,7 +762,7 @@ class WC_Klarna_Payments_Order_Lines {
 			$shipping_reference = __( 'Shipping', 'klarna-payments-for-woocommerce' );
 		}
 
-		return (string) $shipping_reference;
+		return substr( strval( $shipping_reference ), 0, 64 );
 	}
 
 	/**
@@ -892,5 +892,24 @@ class WC_Klarna_Payments_Order_Lines {
 			return 0;
 		}
 		return $order->get_shipping_tax() * 100;
+	}
+
+	/**
+	 * Get the order shipping reference
+	 *
+	 * @param object $order
+	 * @return string $order_shipping_reference Reference for selected shipping method
+	 */
+	private function get_order_shipping_reference( $order ) {
+		$order_shipping_items = $order->get_items( 'shipping' );
+		foreach ( $order_shipping_items as $order_shipping_item ) {
+			$order_shipping_reference = $order_shipping_item->get_method_id() . ':' . $order_shipping_item->get_instance_id();
+		}
+
+		if ( ! isset( $order_shipping_reference ) ) {
+			$order_shipping_reference = __( 'Shipping', 'klarna-payments-for-woocommerce' );
+		}
+
+		return substr( strval( $order_shipping_reference ), 0, 64 );
 	}
 }

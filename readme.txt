@@ -53,6 +53,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2019.08.13  	- version 1.9.0 =
+* Feature       - Added support for WooCommerce Store Credit plugin.
+* Tweak         - Added console logging for Authorize ajax call.
+* Tweak         - Changed shipping reference logic for order data sent to Klarna. To be better compatible with future versions of Klarna Order Management plugin.
+* Fix           - Limit reference field sent to Klarna to 64 characters.
+
 = 2019.08.13  	- version 1.8.4 =
 * Fix           - Send address data to Klarna from checkout form on load call for US stores. Plugin rewrite caused payment method iframe not to be displayed for US stores.
 
