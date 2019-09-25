@@ -382,19 +382,21 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @return void
 	 */
 	private function get_order_shipping( $order_id = false ) {
-		$order    = wc_get_order( $order_id );
-		$shipping = array(
-			'type'             => 'shipping_fee',
-			'reference'        => $this->get_order_shipping_reference( $order ),
-			'name'             => ( '' !== $order->get_shipping_method() ) ? $order->get_shipping_method() : $shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' ),
-			'quantity'         => 1,
-			'unit_price'       => $this->get_order_shipping_unit_price( $order ),
-			'tax_rate'         => ( '0' !== $order->get_shipping_tax() ) ? $this->get_order_line_tax_rate( $order, current( $order->get_items( 'shipping' ) ) ) : 0,
-			'total_amount'     => $this->get_order_shipping_unit_price( $order ),
-			'total_tax_amount' => $this->get_order_shipping_tax_amount( $order ),
-		);
+		$order = wc_get_order( $order_id );
+		if ( $order->get_shipping_method() ) {
+			$shipping = array(
+				'type'             => 'shipping_fee',
+				'reference'        => $this->get_order_shipping_reference( $order ),
+				'name'             => ( '' !== $order->get_shipping_method() ) ? $order->get_shipping_method() : $shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' ),
+				'quantity'         => 1,
+				'unit_price'       => $this->get_order_shipping_unit_price( $order ),
+				'tax_rate'         => ( '0' !== $order->get_shipping_tax() ) ? $this->get_order_line_tax_rate( $order, current( $order->get_items( 'shipping' ) ) ) : 0,
+				'total_amount'     => $this->get_order_shipping_unit_price( $order ),
+				'total_tax_amount' => $this->get_order_shipping_tax_amount( $order ),
+			);
 
-		$this->order_lines[] = $shipping;
+			$this->order_lines[] = $shipping;
+		}
 	}
 
 	/**
