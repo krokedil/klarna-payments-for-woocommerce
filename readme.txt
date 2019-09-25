@@ -53,6 +53,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2019.09.25  	- version 1.9.1 =
+* Fix           - Added check to only add shipping to order lines if shipping is needed for the order.
+
 = 2019.08.13  	- version 1.9.0 =
 * Feature       - Added support for WooCommerce Store Credit plugin.
 * Tweak         - Added console logging for Authorize ajax call.
