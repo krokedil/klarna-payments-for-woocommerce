@@ -379,6 +379,7 @@ jQuery( function($) {
 								async: true,
 								data: {
 									action: "wc_kp_auth_failed",
+									show_form: response.show_form,
 									order_id: json.order_id,
 								},
 							}

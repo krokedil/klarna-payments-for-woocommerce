@@ -358,11 +358,15 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @return void
 		 */
 		public function auth_failed() {
-			$order_id = $_POST['order_id'];
-
+			$order_id  = $_POST['order_id'];
+			$show_form = $_POST['show_form']; 
 			$order = wc_get_order( $order_id );
 
-			$order->add_order_note( __( 'Payment rejected by klarna.', 'klarna-payments-for-woocommerce' ) );
+			if ( 'true' === $show_form ) {
+				$order->add_order_note( __( 'Customer aborted purchase with klarna.', 'klarna-payments-for-woocommerce' ) );
+			} else {
+				$order->add_order_note( __( 'Payment rejected by klarna.', 'klarna-payments-for-woocommerce' ) );
+			}
 
 			wp_send_json_success();
 			wp_die();
