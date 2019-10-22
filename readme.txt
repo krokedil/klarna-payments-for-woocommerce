@@ -53,6 +53,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2019.10.22  	- version 1.9.2 =
+* Enhancement   - Added separate error message to order if customer leaves the iframe by them selves.
+
 = 2019.09.25  	- version 1.9.1 =
 * Fix           - Added check to only add shipping to order lines if shipping is needed for the order.
 
