@@ -5,7 +5,7 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 1.9.1
+ * Version: 1.9.2
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '1.9.1' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '1.9.2' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.3.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -358,11 +358,15 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @return void
 		 */
 		public function auth_failed() {
-			$order_id = $_POST['order_id'];
-
+			$order_id  = $_POST['order_id'];
+			$show_form = $_POST['show_form']; 
 			$order = wc_get_order( $order_id );
 
-			$order->add_order_note( __( 'Payment rejected by klarna.', 'klarna-payments-for-woocommerce' ) );
+			if ( 'true' === $show_form ) {
+				$order->add_order_note( __( 'Customer aborted purchase with klarna.', 'klarna-payments-for-woocommerce' ) );
+			} else {
+				$order->add_order_note( __( 'Payment rejected by klarna.', 'klarna-payments-for-woocommerce' ) );
+			}
 
 			wp_send_json_success();
 			wp_die();
