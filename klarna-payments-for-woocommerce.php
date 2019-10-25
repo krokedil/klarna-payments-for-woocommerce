@@ -223,6 +223,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-order-lines.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-customer-data.php';
 
+			// Includes.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/kp-functions.php';
+
 			if ( is_admin() ) {
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-klarna-for-woocommerce-addons.php';
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-banners.php';
