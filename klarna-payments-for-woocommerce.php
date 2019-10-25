@@ -1,5 +1,5 @@
-<?php
-/*
+<?php // phpcs:ignore
+/**
  * Plugin Name: Klarna Payments for WooCommerce
  * Plugin URI: https://krokedil.com/klarna-payments/
  * Description: Provides Klarna Payments as payment method to WooCommerce.
@@ -26,7 +26,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -228,7 +228,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function maybe_filter_billing_phone( $phone_value ) {
 			// Get rid of everything that's not what WC_Validation::is_phone requires.
-			if ( 'klarna_payments' === $_POST['payment_method'] ) { // Input var okay.
+			if ( 'klarna_payments' === $_POST['payment_method'] ) { // phpcs:ignore
 				if ( trim( preg_replace( '/[^\s\#0-9_\-\+\/\(\)]/', '', $phone_value ) ) !== $phone_value ) {
 					$phone_value = trim( preg_replace( '/[^\s\#0-9_\-\+\/\(\)]/', '', $phone_value ) );
 				}
@@ -257,9 +257,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @return void
 		 */
 		public function auth_failed() {
+			// @codingStandardsIgnoreStart
 			$order_id  = $_POST['order_id'];
 			$show_form = $_POST['show_form'];
 			$order     = wc_get_order( $order_id );
+			// @codingStandardsIgnoreEnd
 
 			if ( 'true' === $show_form ) {
 				$order->add_order_note( __( 'Customer aborted purchase with klarna.', 'klarna-payments-for-woocommerce' ) );
