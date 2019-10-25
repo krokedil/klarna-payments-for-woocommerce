@@ -1,6 +1,6 @@
 <?php
 /**
- * Create invoice request class
+ * Create Session request class
  *
  * @package Payer_B2B/Classes/Put/Requests
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Create invoice request class
+ * Create Session request class
  */
 class KP_Create_Session extends KP_Requests {
 	/**
@@ -41,6 +41,7 @@ class KP_Create_Session extends KP_Requests {
 				'Authorization' => $this->calculate_auth(),
 				'Content-Type'  => 'application/json',
 			),
+			'method'     => 'POST',
 			'user-agent' => $this->user_agent,
 			'body'       => $this->get_request_body( $order_id ),
 		);
