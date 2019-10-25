@@ -16,12 +16,10 @@ class KP_Requests {
 	/**
 	 * Class constructor.
 	 *
-	 * @param int  $order_id The WooCommerce order id.
-	 * @param bool $auth If the request is a auth or not.
+	 * @param int $order_id The WooCommerce order id.
 	 */
-	public function __construct( $order_id, $auth = false ) {
+	public function __construct( $order_id ) {
 		$this->order_id = $order_id;
-		$this->auth     = $auth;
 		$this->set_environment_variables();
 	}
 
