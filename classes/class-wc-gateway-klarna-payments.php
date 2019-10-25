@@ -310,7 +310,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Initialise Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = include WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/klarna-payments-admin-form-fields.php';
+		$this->form_fields = include WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/kp-form-fields.php';
 	}
 
 	/**

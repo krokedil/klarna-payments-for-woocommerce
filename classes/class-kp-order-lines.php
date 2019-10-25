@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @TODO: Test with coupons.
  */
-class WC_Klarna_Payments_Order_Lines {
+class KP_Order_Lines {
 
 	/**
 	 * Formatted order lines.

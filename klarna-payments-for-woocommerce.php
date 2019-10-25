@@ -207,12 +207,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-gateway-klarna-payments.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-klarna-payments-order-lines.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-klarna-gdpr.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-order-lines.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-gdpr.php';
 
 			if ( is_admin() ) {
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-klarna-for-woocommerce-addons.php';
-				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-klarna-banners-kp.php';
+				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-banners.php';
 			}
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateways' ) );
 		}

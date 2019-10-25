@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @category Class
  * @author   Krokedil
  */
-class WC_Klarna_GDPR {
+class KP_GDPR {
 	/**
 	 * Class constructor.
 	 */
@@ -48,4 +48,4 @@ class WC_Klarna_GDPR {
 		}
 	}
 }
-new WC_Klarna_GDPR();
+new KP_GDPR();

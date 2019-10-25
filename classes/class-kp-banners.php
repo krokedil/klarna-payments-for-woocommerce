@@ -13,7 +13,7 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 	/**
 	 * Displays merchant information in the backend.
 	 */
-	class WC_Klarna_Banners_KP {
+	class KP_Banners {
 		/**
 		 * WC_Klarna_Banners_KP constructor.
 		 */
@@ -188,4 +188,4 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 	}
 }
 
-new WC_Klarna_Banners_KP();
+new KP_Banners();
