@@ -390,7 +390,6 @@ jQuery( function($) {
 			}
 		}
 	};
-	console.log( klarna_payments_params );
 	klarna_payments.start();
 	$('body').ready( function() {
 		klarna_payments.setRadioButtonValues();
