@@ -42,11 +42,13 @@ class KP_Requests {
 	 */
 	public function set_environment_variables() {
 		// Set variables.
+		$this->set_klarna_country();
+		$this->set_credentials();
 		$this->kp_settings = get_option( 'woocommerce_payer_b2b_invoice_settings' );
 		$this->testmode    = $this->kp_settings['testmode'];
 		$this->user_agent  = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil';
-		$this->set_klarna_country();
-		$this->set_credentials();
+		$order_lines_class = new KP_Order_Lines( $this->klarna_country );
+		$this->order_lines = $order_lines_class->order_lines( $this->order_id );
 		$this->environment();
 	}
 
