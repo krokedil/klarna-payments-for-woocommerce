@@ -24,67 +24,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $client_token;
 
 	/**
-	 * Sets Klarna Payments in test mode.
-	 *
-	 * @var string
-	 */
-	public $testmode = 'no';
-
-	/**
-	 * Klarna payments environment (US or EU).
-	 *
-	 * @var string
-	 */
-	public $environment = '';
-
-	/**
-	 * Klarna payments server base url.
-	 *
-	 * @var string
-	 */
-	public $server_base = '';
-
-	/**
-	 * Klarna merchant ID.
-	 *
-	 * @var string
-	 */
-	public $merchant_id = '';
-
-	/**
-	 * Klarna shared secret.
-	 *
-	 * @var string
-	 */
-	public $shared_secret = '';
-
-	/**
-	 * Shop base country.
-	 *
-	 * @var string
-	 */
-	public $shop_country;
-
-	/**
-	 * Klarna purchase country.
-	 *
-	 * @var string
-	 */
-	public $klarna_country;
-
-	/**
 	 * Allowed currencies
 	 *
 	 * @var array
 	 */
 	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF' );
-
-	/**
-	 * Turns on logging.
-	 *
-	 * @var bool
-	 */
-	public $logging = false;
 
 	/**
 	 * Klarna Payments create session error.
@@ -191,13 +135,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public $float_what_is_klarna;
 
-
 	/**
 	 * Hide what is Klarna? link in checkout page.
 	 *
 	 * @var string
 	 */
 	public $hide_what_is_klarna;
+
 	/**
 	 * Constructor
 	 */
@@ -241,21 +185,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 
 		// Hooks.
-		add_action(
-			'woocommerce_update_options_payment_gateways_' . $this->id,
-			array(
-				$this,
-				'process_admin_options',
-			)
-		);
-		add_action( 'wp_head', array( $this, 'klarna_payments_session' ), 10, 1 );
-		add_action(
-			'woocommerce_review_order_after_order_total',
-			array(
-				$this,
-				'klarna_payments_session_ajax_update',
-			)
-		);
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
@@ -437,152 +367,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Create Klarna Payments session.
-	 *
-	 * @hook wp_head
-	 */
-	public function klarna_payments_session() {
-		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
-		$order_lines           = $order_lines_processor->order_lines();
-		if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
-			// Try to update the session, if it fails try to create new session.
-			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
-			$update_response    = $this->update_session_request( $update_request_url, $request_args );
-
-			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
-				$this->unset_session_values();
-				$this->create_session( $request_args );
-			}
-		} else {
-			$this->create_session( $request_args );
-		}
-
-		// If we have a client token now, initialize Klarna Credit.
-		if ( WC()->session->get( 'klarna_payments_client_token' ) ) {
-			// @codingStandardsIgnoreStart
-			// @TODO Maybe change this to not be inline included.
-			?>
-			<script>
-				window.klarnaInitData = {client_token: "<?php echo esc_attr( WC()->session->get( 'klarna_payments_client_token' ) ); ?>"};
-				window.klarnaAsyncCallback = function () {
-					Klarna.Payments.init(klarnaInitData);
-				};
-			</script>
-			<script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
-			<?php
-			// @codingStandardsIgnoreEnd
-		}
-	}
-
-
-	/**
-	 * Update Klarna session on AJAX update_checkout.
-	 */
-	public function klarna_payments_session_ajax_update() {
-		if ( ! $this->country_currency_check() ) {
-			return;
-		}
-
-		if ( ! is_ajax() ) {
-			return;
-		}
-
-		if ( ! $this->is_available() ) {
-			return;
-		}
-
-		// Need to calculate these here, because WooCommerce hasn't done it yet.
-		WC()->cart->calculate_fees();
-		WC()->cart->calculate_shipping();
-		WC()->cart->calculate_totals();
-
-		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
-		$order_lines           = $order_lines_processor->order_lines();
-		$request_args          = array(
-			'headers'    => array(
-				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
-				'Content-Type'  => 'application/json',
-			),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
-			'body'       => wp_json_encode(
-				array(
-					'purchase_country'  => $this->klarna_country,
-					'purchase_currency' => get_woocommerce_currency(),
-					'locale'            => $this->get_locale_for_klarna_country(),
-					'order_amount'      => $order_lines['order_amount'],
-					'order_tax_amount'  => $order_lines['order_tax_amount'],
-					'order_lines'       => $order_lines['order_lines'],
-					'customer'          => $this->set_klarna_customer(),
-				)
-			),
-		);
-
-		// If billing country has changed we need a new session.
-		if ( WC()->checkout->get_value( 'billing_country' ) !== WC()->session->get( 'klarna_payments_session_country' ) ) {
-			$create_request_url = $this->server_base . 'payments/v1/sessions';
-			$create_response    = $this->create_session_request( $create_request_url, $request_args );
-
-			if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
-				$this->session_error = $create_response;
-				WC_Klarna_Payments::log( 'Could not update Klarna session. Response: ' . stripslashes_deep( wp_json_encode( $create_response ) ) . '. Posted request args: ' . stripslashes_deep( wp_json_encode( $request_args ) ) );
-				wc_add_notice( 'Could not create Klarna session, please refresh the page to try again', 'error' );
-				$this->unset_session_values();
-			} else { // Store session ID and client token in WC session.
-				WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
-				WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
-				WC()->session->set( 'klarna_payments_session_country', WC()->checkout->get_value( 'billing_country' ) );
-				WC()->session->set( 'klarna_payments_categories', $create_response->payment_method_categories );
-			}
-
-			// If we have a client token now, initialize Klarna Credit.
-			// @codingStandardsIgnoreStart
-			// @TODO Maybe change this to not be inline included.
-			if ( WC()->session->get( 'klarna_payments_client_token' ) ) {
-				?>
-				<script>
-					window.klarnaInitData = {client_token: "<?php echo esc_attr( WC()->session->get( 'klarna_payments_client_token' ) ); ?>"};
-					window.klarnaAsyncCallback = function () {
-						Klarna.Credit.init(klarnaInitData);
-					};
-				</script>
-				<script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
-				<?php
-				// @codingStandardsIgnoreEnd
-			}
-		} elseif ( WC()->session->get( 'klarna_payments_session_id' ) ) { // On AJAX update_checkout, just try to update the session, if Klarna country hasn't changed.
-			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
-			$update_response    = $this->update_session_request( $update_request_url, $request_args );
-			if ( is_wp_error( $update_response ) ) { // If update session failed try to create new session.
-				$this->session_error = $update_response;
-				wc_add_notice( 'Could not update Klarna session, please refresh the page to try again', 'error' );
-
-				$this->unset_session_values();
-			}
-		} // End if().
-	}
-
-	/**
-	 * Create Klarna Payments session.
-	 *
-	 * @param array $request_args Klarna request arguments.
-	 */
-	public function create_session( $request_args ) {
-		$create_request_url = $this->server_base . 'payments/v1/sessions';
-		$create_response    = $this->create_session_request( $create_request_url, $request_args );
-		if ( is_wp_error( $create_response ) ) { // Create failed, make Klarna Payments unavailable.
-			$this->session_error = $create_response;
-			WC_Klarna_Payments::log( 'Could not update Klarna session. Response: ' . stripslashes_deep( wp_json_encode( $create_response ) ) . '. Posted request args: ' . stripslashes_deep( wp_json_encode( $request_args ) ) );
-			wc_add_notice( 'Could not create Klarna session, please refresh the page to try again', 'error' );
-			$this->unset_session_values();
-		} else { // Store session ID and client token in WC session.
-			WC()->session->set( 'klarna_payments_session_id', $create_response->session_id );
-			WC()->session->set( 'klarna_payments_client_token', $create_response->client_token );
-			WC()->session->set( 'klarna_payments_session_country', $this->klarna_country );
-			WC()->session->set( 'klarna_payments_categories', $create_response->payment_method_categories );
-		}
 	}
 
 	/**
@@ -899,87 +683,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Places the order with Klarna
-	 *
-	 * @return void
-	 */
-	public function place_order() {
-		// @codingStandardsIgnoreStart
-		$order_id   = $_POST['order_id'];
-		$auth_token = $_POST['auth_token'];
-		// @codingStandardsIgnoreEnd
-
-		$order                 = wc_get_order( $order_id );
-		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
-		$order_lines           = $order_lines_processor->order_lines( $order_id );
-
-		$addresses = $this->get_address_from_order( $order_id );
-
-		$request_url   = $this->server_base . 'payments/v1/authorizations/' . $auth_token . '/order';
-		$request_args  = array(
-			'headers'    => array(
-				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
-				'Content-Type'  => 'application/json',
-			),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
-			'body'       => wp_json_encode(
-				apply_filters(
-					'kp_wc_api_request_args',
-					array(
-						'purchase_country'    => $this->klarna_country,
-						'purchase_currency'   => $order->get_currency(),
-						'locale'              => $this->get_locale_for_klarna_country(),
-						'billing_address'     => $addresses['billing'],
-						'shipping_address'    => $addresses['shipping'],
-						'order_amount'        => $order_lines['order_amount'],
-						'order_tax_amount'    => $order_lines['order_tax_amount'],
-						'order_lines'         => $order_lines['order_lines'],
-						'customer'            => $this->set_klarna_customer(),
-						'merchant_reference1' => $order->get_order_number(),
-						'merchant_urls'       => array(
-							'confirmation' => $order->get_checkout_order_received_url(),
-							'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $order_id,
-						),
-					),
-					$order
-				)
-			),
-		);
-		$response      = wp_safe_remote_post( $request_url, $request_args );
-		$code          = wp_remote_retrieve_response_code( $response );
-		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
-		$payment_id    = $response_body['order_id'] ? $response_body['order_id'] : null;
-
-		// Log the request.
-		$log = WC_Klarna_Payments::format_log( $payment_id, 'POST', 'Klarna Payments create order request.', $request_args, $response_body, $code );
-		WC_Klarna_Payments::log( $log );
-
-		$fraud_status = $response_body['fraud_status'];
-
-		switch ( $fraud_status ) {
-			case 'ACCEPTED':
-				$return_val = $this->process_accepted( $order, $response_body );
-				wp_send_json_success( $response_body['redirect_url'] );
-				wp_die();
-				break;
-			case 'PENDING':
-				$return_val = $this->process_pending( $order, $response_body );
-				wp_send_json_success( $response_body['redirect_url'] );
-				wp_die();
-				break;
-			case 'REJECTED':
-				$return_val = $this->process_rejected( $order, $response_body );
-				wp_send_json_error( $order->get_cancel_order_url_raw() );
-				wp_die();
-				break;
-			default:
-				wp_send_json_error( $order->get_cancel_order_url_raw() );
-				wp_die();
-				break;
-		}
-	}
-
-	/**
 	 * Notification listener for Pending orders. This plugin doesn't handle pending orders, but it does allow Klarna
 	 * Order Management plugin to hook in and process pending orders.
 	 *
@@ -1135,52 +838,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$new_title = $title . ' - ' . $klarna_method;
 			$order->set_payment_method_title( $new_title );
 		}
-	}
-
-	/**
-	 * Gets the address data from an order.
-	 *
-	 * @param int $order_id WooCommerce order id.
-	 * @return array
-	 */
-	public function get_address_from_order( $order_id ) {
-		$order           = wc_get_order( $order_id );
-		$billing_address = array(
-			'given_name'      => stripslashes( $order->get_billing_first_name() ),
-			'family_name'     => stripslashes( $order->get_billing_last_name() ),
-			'email'           => stripslashes( $order->get_billing_email() ),
-			'phone'           => stripslashes( $order->get_billing_phone() ),
-			'street_address'  => stripslashes( $order->get_billing_address_1() ),
-			'street_address2' => stripslashes( $order->get_billing_address_2() ),
-			'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $order->get_billing_postcode() ) : $order->get_billing_postcode() ),
-			'city'            => stripslashes( $order->get_billing_city() ),
-			'region'          => stripslashes( $order->get_billing_state() ),
-			'country'         => stripslashes( $order->get_billing_country() ),
-		);
-		if ( 'b2b' === $this->get_option( 'customer_type' ) ) {
-			$billing_address['organization_name'] = stripslashes( $order->get_billing_company() );
-		}
-		if ( '' !== $order->get_shipping_first_name() && 'b2c' === $this->get_option( 'customer_type' ) && ! wc_ship_to_billing_address_only() ) {
-			$shipping_address = array(
-				'given_name'      => stripslashes( $order->get_shipping_first_name() ),
-				'family_name'     => stripslashes( $order->get_shipping_last_name() ),
-				'email'           => stripslashes( $order->get_billing_email() ),
-				'phone'           => stripslashes( $order->get_billing_phone() ),
-				'street_address'  => stripslashes( $order->get_shipping_address_1() ),
-				'street_address2' => stripslashes( $order->get_shipping_address_2() ),
-				'postal_code'     => stripslashes( ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? str_replace( ' ', '', $order->get_shipping_postcode() ) : $order->get_shipping_postcode() ),
-				'city'            => stripslashes( $order->get_shipping_city() ),
-				'region'          => stripslashes( $order->get_shipping_state() ),
-				'country'         => stripslashes( $order->get_shipping_country() ),
-			);
-		} else {
-			$shipping_address = $billing_address;
-		}
-
-		return array(
-			'billing'  => $billing_address,
-			'shipping' => $shipping_address,
-		);
 	}
 }
 
