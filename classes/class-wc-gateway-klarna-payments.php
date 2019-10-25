@@ -218,14 +218,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->init_settings();
 
 		// Get setting values.
-		$this->title    = $this->get_option( 'title' );
-		$this->enabled  = $this->get_option( 'enabled' );
-		$this->testmode = 'yes' === $this->get_option( 'testmode' );
-		$this->logging  = 'yes' === $this->get_option( 'logging' );
-
-		$this->set_klarna_country();
-		$this->set_environment();
-		$this->set_credentials();
+		$this->title   = $this->get_option( 'title' );
+		$this->enabled = $this->get_option( 'enabled' );
 
 		// Iframe options.
 		$this->background               = $this->get_option( 'background' );
@@ -245,13 +239,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// What is Klarna link.
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
-		$env_string                 = 'US' === $this->klarna_country ? '-na' : '';
-		if ( $this->testmode ) {
-			$this->description = __( '<p>TEST MODE ENABLED.</p>', 'klarna-payments-for-woocommerce' );
-			$this->server_base = 'https://api' . $env_string . '.playground.klarna.com/';
-		} else {
-			$this->server_base = 'https://api' . $env_string . '.klarna.com/';
-		}
 
 		// Hooks.
 		add_action(
@@ -280,30 +267,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			add_action( 'wp_head', array( $this, 'iframe_background' ) );
 		}
 		add_action( 'klarna_payments_template', array( $this, 'klarna_payments_session' ) );
-	}
-
-	/**
-	 * Sets Klarna environment based on country and testmode.
-	 */
-	public function set_environment() {
-		if ( $this->testmode ) {
-			$this->environment = 'test';
-		} else {
-			$this->environment = 'live';
-		}
-	}
-
-	/**
-	 * Sets Klarna credentials.
-	 */
-	public function set_credentials() {
-		if ( $this->testmode ) {
-			$this->merchant_id   = $this->get_option( 'test_merchant_id_' . strtolower( $this->klarna_country ) );
-			$this->shared_secret = $this->get_option( 'test_shared_secret_' . strtolower( $this->klarna_country ) );
-		} else {
-			$this->merchant_id   = $this->get_option( 'merchant_id_' . strtolower( $this->klarna_country ), '' );
-			$this->shared_secret = $this->get_option( 'shared_secret_' . strtolower( $this->klarna_country ), '' );
-		}
 	}
 
 	/**
@@ -453,7 +416,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
-		$this->set_klarna_country();
 		$this->set_credentials();
 
 		// Check credentials.
@@ -1278,19 +1240,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function site_has_english_locale() {
 		return 'en_US' === get_locale() || 'en_GB' === get_locale();
-	}
-
-	/**
-	 * Sets Klarna country.
-	 */
-	public function set_klarna_country() {
-		if ( ! method_exists( 'WC_Customer', 'get_billing_country' ) ) {
-				return;
-		}
-		if ( WC()->customer === null ) {
-			return;
-		}
-		$this->klarna_country = apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
 	}
 
 	/**
