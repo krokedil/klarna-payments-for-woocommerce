@@ -179,13 +179,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->color_details            = $this->get_option( 'color_details' );
 		$this->color_text_secondary     = $this->get_option( 'color_text_secondary' );
 		$this->radius_border            = $this->get_option( 'radius_border' );
+		$this->testmode                 = $this->get_option( 'testmode' );
 
 		// What is Klarna link.
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 
 		// Maybe create Klarna Payents Session.
-		if ( $this->is_available ) {
+		if ( $this->is_available() ) {
 			add_action( 'wp_head', 'kp_maybe_create_session' );
 			add_action( 'woocommerce_review_order_after_order_total', 'kp_maybe_create_session' );
 		}
@@ -231,9 +232,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 			$what_is_klarna_text = 'What is Klarna?';
 
-			if ( 'us' === strtolower( $this->klarna_country ) ) {
+			if ( 'us' === strtolower( kp_get_klarna_country() ) ) {
 				$link_url = 'https://www.klarna.com/us/business/what-is-klarna';
-			} elseif ( 'at' === strtolower( $this->klarna_country ) || 'de' === strtolower( $this->klarna_country ) ) {
+			} elseif ( 'at' === strtolower( kp_get_klarna_country() ) || 'de' === strtolower( kp_get_klarna_country() ) ) {
 				$link_url = 'https://www.klarna.com';
 			} else {
 				$link_url = 'https://www.klarna.com/uk/what-we-do';
@@ -268,15 +269,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function country_currency_check() {
 		// Check if allowed currency.
 		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies, true ) ) {
-			$this->unset_session_values();
+			kp_unset_session_values();
 
 			return new WP_Error( 'currency', 'Currency not allowed for Klarna Payments' );
 		}
 
 		// If US, check if USD used.
 		if ( 'USD' === get_woocommerce_currency() ) {
-			if ( 'US' !== $this->klarna_country ) {
-				$this->unset_session_values();
+			if ( 'US' !== kp_get_klarna_country() ) {
+				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'USD must be used for US purchases' );
 			}
@@ -284,8 +285,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If GB, check if GBP used.
 		if ( 'GBP' === get_woocommerce_currency() ) {
-			if ( 'GB' !== $this->klarna_country ) {
-				$this->unset_session_values();
+			if ( 'GB' !== kp_get_klarna_country() ) {
+				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'GBP must be used for GB purchases' );
 			}
@@ -293,8 +294,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If SE, check if SEK used.
 		if ( 'SEK' === get_woocommerce_currency() ) {
-			if ( 'SE' !== $this->klarna_country ) {
-				$this->unset_session_values();
+			if ( 'SE' !== kp_get_klarna_country() ) {
+				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'SEK must be used for SE purchases' );
 			}
@@ -302,8 +303,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If NO, check if NOK used.
 		if ( 'NOK' === get_woocommerce_currency() ) {
-			if ( 'NO' !== $this->klarna_country ) {
-				$this->unset_session_values();
+			if ( 'NO' !== kp_get_klarna_country() ) {
+				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'NOK must be used for NO purchases' );
 			}
@@ -311,8 +312,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If DK, check if DKK used.
 		if ( 'DKK' === get_woocommerce_currency() ) {
-			if ( 'DK' !== $this->klarna_country ) {
-				$this->unset_session_values();
+			if ( 'DK' !== kp_get_klarna_country() ) {
+				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'DKK must be used for DK purchases' );
 			}
@@ -320,8 +321,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If CH, check if CHF used.
 		if ( 'CHF' === get_woocommerce_currency() ) {
-			if ( 'CH' !== $this->klarna_country ) {
-				$this->unset_session_values();
+			if ( 'CH' !== kp_get_klarna_country() ) {
+				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'CHF must be used for CH purchases' );
 			}
@@ -329,8 +330,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If EUR country, check if EUR used.
 		if ( 'EUR' === get_woocommerce_currency() ) {
-			if ( ! in_array( $this->klarna_country, array( 'AT', 'DE', 'NL', 'FI' ), true ) ) {
-				$this->unset_session_values();
+			if ( ! in_array( kp_get_klarna_country(), array( 'AT', 'DE', 'NL', 'FI' ), true ) ) {
+				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI purchases' );
 			}
@@ -343,18 +344,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Check if Klarna Payments should be available
 	 */
 	public function is_available() {
+		if ( ! is_checkout() ) {
+			return false;
+		}
 		if ( 'yes' !== $this->enabled ) {
 			return false;
 		}
 
 		if ( is_wc_endpoint_url( 'order-pay' ) ) {
-			return false;
-		}
-
-		$this->set_credentials();
-
-		// Check credentials.
-		if ( '' === $this->merchant_id || '' === $this->shared_secret ) {
 			return false;
 		}
 
@@ -365,10 +362,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Check if there was a session error.
 		if ( is_wp_error( $this->session_error ) ) {
-			return false;
-		}
-
-		if ( '' === $this->merchant_id || '' === $this->shared_secret ) {
 			return false;
 		}
 
@@ -462,7 +455,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Adds Klarna Payments container to checkout page.
 	 */
 	public function payment_fields() {
-		echo esc_html( '<div id="' . $this->id . '_container" class="klarna_payments_container" data-payment_method_category="' . $this->id . '"></div>' );
+		echo '<div id="' . esc_html( $this->id ) . '_container" class="klarna_payments_container" data-payment_method_category="' . esc_html( $this->id ) . '"></div>';
 	}
 
 	/**
@@ -560,7 +553,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		);
 
 		update_post_meta( $order_id, '_wc_klarna_environment', $this->environment );
-		update_post_meta( $order_id, '_wc_klarna_country', $this->klarna_country );
+		update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country() );
 
 		// Add #kp hash to checkout url so we can do a finalize call to Klarna.
 		return array(
@@ -603,9 +596,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 
 			update_post_meta( $order->get_id(), '_wc_klarna_environment', $this->environment );
-			update_post_meta( $order->get_id(), '_wc_klarna_country', $this->klarna_country );
+			update_post_meta( $order->get_id(), '_wc_klarna_country', kp_get_klarna_country() );
 
-			$this->unset_session_values();
+			kp_unset_session_values();
 		} else {
 			// Log error message.
 			WC_Klarna_Payments::log( 'process_payment error response: ' . stripslashes_deep( wp_json_encode( $response ) ) );
@@ -793,16 +786,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( '' !== $this->background ) {
 			echo esc_html( "<style type='text/css'>div#klarna_container { background: $this->background !important; padding: 10px; } div#klarna_container:empty { padding: 0; } </style>" );
 		}
-	}
-
-	/**
-	 * Unsets Klarna Payments sessions values.
-	 */
-	public function unset_session_values() {
-		WC()->session->__unset( 'klarna_payments_session_id' );
-		WC()->session->__unset( 'klarna_payments_client_token' );
-		WC()->session->__unset( 'klarna_payments_session_country' );
-		WC()->session->__unset( 'klarna_payments_categories' );
 	}
 
 	/**
