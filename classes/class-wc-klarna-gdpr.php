@@ -1,4 +1,10 @@
 <?php
+/**
+ * Adds a privacy declaration text for Klarna Payments.
+ *
+ * @package WC_Klarna_Payments/Classes
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -25,6 +31,7 @@ class WC_Klarna_GDPR {
 	 */
 	public function privacy_declarations() {
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
+			// @codingStandardsIgnoreStart
 			$content =
 				__(
 					'When you place an order in the webstore with Klarna Payments as the choosen payment method, ' .
@@ -33,6 +40,7 @@ class WC_Klarna_GDPR {
 					'This ID is stored in the order in WooCommerce for future reference.',
 					'klarna-payments-for-woocommerce'
 				);
+			// @codingStandardsIgnoreEnd
 			wp_add_privacy_policy_content(
 				'Klarna Payments for WooCommerce',
 				wp_kses_post( wpautop( $content ) )
