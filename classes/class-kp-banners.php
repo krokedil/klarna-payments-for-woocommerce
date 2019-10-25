@@ -132,7 +132,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 
 			<div id="klarna-wrapper">
 				<div id="klarna-main">
-					<?php echo esc_html( $parent_options ); ?>
+					<?php echo $parent_options; // phpcs:ignore ?>
 				</div>
 				<div id="klarna-sidebar">
 					<div class="kb-sidebar-section">
