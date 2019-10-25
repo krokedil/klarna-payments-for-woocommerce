@@ -20,7 +20,7 @@ class KP_Update_Session extends KP_Requests {
 	 */
 	public function request() {
 		$request_url  = $this->environment . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
-		$request_args = apply_filters( 'wc_klarna_payments_update_session_args', $this->get_request_args( $this->order_id ) );
+		$request_args = apply_filters( 'wc_klarna_payments_update_session_args', $this->get_request_args() );
 		$response     = wp_remote_request( $request_url, $request_args );
 		$code         = wp_remote_retrieve_response_code( $response );
 
@@ -32,10 +32,9 @@ class KP_Update_Session extends KP_Requests {
 	/**
 	 * Gets the request args for the API call.
 	 *
-	 * @param int $order_id WooCommerce order id.
 	 * @return array
 	 */
-	public function get_request_args( $order_id ) {
+	public function get_request_args() {
 		return array(
 			'headers'    => array(
 				'Authorization' => $this->calculate_auth(),
@@ -43,17 +42,16 @@ class KP_Update_Session extends KP_Requests {
 			),
 			'method'     => 'POST',
 			'user-agent' => $this->user_agent,
-			'body'       => $this->get_request_body( $order_id ),
+			'body'       => $this->get_request_body(),
 		);
 	}
 
 	/**
 	 * Gets the request body for the API call.
 	 *
-	 * @param int $order_id WooCommerce order id.
 	 * @return string
 	 */
-	public function get_request_body( $order_id ) {
+	public function get_request_body() {
 		return wp_json_encode(
 			array(
 				'purchase_country'  => $this->klarna_country,

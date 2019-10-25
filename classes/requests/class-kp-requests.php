@@ -18,7 +18,7 @@ class KP_Requests {
 	 *
 	 * @param int $order_id The WooCommerce order id.
 	 */
-	public function __construct( $order_id ) {
+	public function __construct( $order_id = false ) {
 		$this->order_id = $order_id;
 		$this->set_environment_variables();
 	}
