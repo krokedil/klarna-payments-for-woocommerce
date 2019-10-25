@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
+if ( ! class_exists( 'KP_Banners' ) ) {
 	/**
 	 * Displays merchant information in the backend.
 	 */
