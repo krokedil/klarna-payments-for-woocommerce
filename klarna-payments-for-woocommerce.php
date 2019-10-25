@@ -218,7 +218,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-update-session.php';
 
 			// Request helpers.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/kp-request-helper-functions..php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/kp-request-helper-functions.php';
 
 			if ( is_admin() ) {
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-klarna-for-woocommerce-addons.php';
