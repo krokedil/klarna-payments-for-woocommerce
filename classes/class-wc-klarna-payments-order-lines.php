@@ -1,4 +1,10 @@
 <?php
+/**
+ * Handles order lines for Klarna Payments.
+ *
+ * @package WC_Klarna_Payments/Classes
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -49,6 +55,7 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Gets formatted order lines from WooCommerce cart or from WooCommerce order if order exists.
 	 *
+	 * @param int $order_id WooCommerce order id.
 	 * @return array
 	 */
 	public function order_lines( $order_id = false ) {
@@ -113,6 +120,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get order total amount via order for Klarna API.
 	 *
 	 * @access private
+	 * @param int $order_id WooCommerce order id.
 	 * @return mixed
 	 */
 	private function get_order_amount_via_order( $order_id = false ) {
@@ -124,6 +132,7 @@ class WC_Klarna_Payments_Order_Lines {
 	 * Get order tax amount via order for Klarna API.
 	 *
 	 * @access private
+	 * @param int $order_id WooCommerce order id.
 	 * @return mixed
 	 */
 	private function get_order_tax_amount_via_order( $order_id = false ) {
@@ -192,6 +201,13 @@ class WC_Klarna_Payments_Order_Lines {
 		}
 	}
 
+	/**
+	 * Gets the tax rate for the order line.AMFReader
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @param int      $order_item WooCommerce order item.
+	 * @return int
+	 */
 	public function get_order_line_tax_rate( $order, $order_item = false ) {
 		if ( $this->separate_sales_tax ) {
 			return 0;
@@ -199,7 +215,7 @@ class WC_Klarna_Payments_Order_Lines {
 		$tax_items = $order->get_items( 'tax' );
 		foreach ( $tax_items as $tax_item ) {
 			$rate_id = $tax_item->get_rate_id();
-			if ( $rate_id === key( $order_item->get_taxes()['total'] ) ) {
+			if ( key( $order_item->get_taxes()['total'] ) === $rate_id ) {
 				return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 );
 			}
 		}
@@ -338,7 +354,7 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Get order items for Klarna API
 	 *
-	 * @param boolean $order_id
+	 * @param int $order_id WooCommerce order id.
 	 * @return void
 	 */
 	private function get_order_items( $order_id = false ) {
@@ -378,7 +394,7 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Get order shipping for Klarna API
 	 *
-	 * @param boolean $order_id
+	 * @param int $order_id WooCommerce order id.
 	 * @return void
 	 */
 	private function get_order_shipping( $order_id = false ) {
@@ -402,7 +418,7 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Get order sales tax for Klarna API
 	 *
-	 * @param boolean $order_id
+	 * @param int $order_id WooCommerce order id.
 	 * @return void
 	 */
 	private function get_order_sales_tax( $order_id = false ) {
@@ -430,7 +446,7 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Get order fees for Klarna API
 	 *
-	 * @param boolean $order_id
+	 * @param int $order_id WooCommerce order id.
 	 * @return void
 	 */
 	private function get_order_fees( $order_id = false ) {
@@ -487,7 +503,6 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @access private
 	 *
 	 * @param  array $cart_item Cart item.
-	 *
 	 * @return string $item_name Cart item name.
 	 */
 	private function get_item_name( $cart_item ) {
@@ -504,7 +519,6 @@ class WC_Klarna_Payments_Order_Lines {
 	 * @access private
 	 *
 	 * @param  array $cart_item Cart item.
-	 *
 	 * @return integer $item_tax_amount Item tax amount.
 	 */
 	private function get_item_tax_amount( $cart_item ) {
@@ -824,7 +838,7 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Returns the order items unit price.
 	 *
-	 * @param object $order_item
+	 * @param WC_Order_Item $order_item WooCommerce order item.
 	 * @return int
 	 */
 	private function get_order_item_unit_price( $order_item ) {
@@ -837,7 +851,7 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Returns the order item total amount.
 	 *
-	 * @param object $order_item
+	 * @param WC_Order_Item $order_item WooCommerce order item.
 	 * @return int
 	 */
 	private function get_order_item_total_amount( $order_item ) {
@@ -850,7 +864,7 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Returns the order item total tax amount.
 	 *
-	 * @param object $order_item
+	 * @param WC_Order_Item $order_item WooCommerce order item.
 	 * @return int
 	 */
 	private function get_order_item_total_tax( $order_item ) {
@@ -860,8 +874,15 @@ class WC_Klarna_Payments_Order_Lines {
 		return round( $order_item->get_total_tax() * 100 );
 	}
 
+
+	/**
+	 * Returns the order item total tax amount.
+	 *
+	 * @param WC_Order_Item $order_item WooCommerce order item.
+	 * @return int
+	 */
 	private function get_order_item_discount_amount( $order_item ) {
-		if ( $order_item === null ) {
+		if ( null === $order_item ) {
 			return 0;
 		}
 		if ( $this->separate_sales_tax ) {
@@ -873,7 +894,7 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Get the order shipping unit price
 	 *
-	 * @param object $order
+	 * @param WC_Order $order WooCommerce order.
 	 * @return int
 	 */
 	private function get_order_shipping_unit_price( $order ) {
@@ -886,7 +907,7 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Get the order shipping tax amount
 	 *
-	 * @param object $order
+	 * @param WC_Order $order WooCommerce order.
 	 * @return int
 	 */
 	private function get_order_shipping_tax_amount( $order ) {
@@ -899,8 +920,8 @@ class WC_Klarna_Payments_Order_Lines {
 	/**
 	 * Get the order shipping reference
 	 *
-	 * @param object $order
-	 * @return string $order_shipping_reference Reference for selected shipping method
+	 * @param WC_Order $order WooCommerce order.
+	 * @return string $order_shipping_reference
 	 */
 	private function get_order_shipping_reference( $order ) {
 		$order_shipping_items = $order->get_items( 'shipping' );
