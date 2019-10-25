@@ -1,4 +1,10 @@
 <?php
+/**
+ * Template file for payment methods.
+ *
+ * @package WC_Klarna_Payments/Templates
+ */
+
 do_action( 'klarna_payments_template' );
 if ( is_array( WC()->session->get( 'klarna_payments_categories' ) ) ) {
 	$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
