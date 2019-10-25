@@ -42,14 +42,13 @@ class KP_Requests {
 	 */
 	public function set_environment_variables() {
 		// Set variables.
-		$this->set_klarna_country();
-		$this->set_credentials();
 		$this->kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
 		$this->testmode    = $this->kp_settings['testmode'];
 		$this->user_agent  = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil';
-		$order_lines_class = new KP_Order_Lines( $this->klarna_country );
+		$order_lines_class = new KP_Order_Lines( kp_get_klarna_country() );
 		$this->order_lines = $order_lines_class->order_lines( $this->order_id );
-		$this->environment();
+		$this->set_credentials();
+		$this->set_environment();
 	}
 
 	/**
@@ -65,6 +64,7 @@ class KP_Requests {
 		if ( wp_remote_retrieve_response_code( $response ) < 200 || wp_remote_retrieve_response_code( $response ) > 299 ) {
 			$data          = 'URL: ' . $request_url . ' - ' . wp_json_encode( $request_args );
 			$error_message = '';
+			error_log( var_export( $response, true ) );
 			// Get the error messages.
 			if ( null !== json_decode( $response['body'], true ) ) {
 				$error         = json_decode( $response['body'], true );
@@ -76,28 +76,15 @@ class KP_Requests {
 	}
 
 	/**
-	 * Sets Klarna country.
-	 */
-	public function set_klarna_country() {
-		if ( ! method_exists( 'WC_Customer', 'get_billing_country' ) ) {
-				return;
-		}
-		if ( WC()->customer === null ) {
-			return;
-		}
-		$this->klarna_country = apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
-	}
-
-	/**
 	 * Sets Klarna credentials.
 	 */
 	public function set_credentials() {
 		if ( $this->testmode ) {
-			$this->merchant_id   = $this->get_option( 'test_merchant_id_' . strtolower( $this->klarna_country ) );
-			$this->shared_secret = $this->get_option( 'test_shared_secret_' . strtolower( $this->klarna_country ) );
+			$this->merchant_id   = $this->kp_settings[ 'test_merchant_id_' . strtolower( kp_get_klarna_country() ) ];
+			$this->shared_secret = $this->kp_settings[ 'test_shared_secret_' . strtolower( kp_get_klarna_country() ) ];
 		} else {
-			$this->merchant_id   = $this->get_option( 'merchant_id_' . strtolower( $this->klarna_country ), '' );
-			$this->shared_secret = $this->get_option( 'shared_secret_' . strtolower( $this->klarna_country ), '' );
+			$this->merchant_id   = $this->kp_settings[ 'merchant_id_' . strtolower( kp_get_klarna_country() ) ];
+			$this->shared_secret = $this->kp_settings[ 'shared_secret_' . strtolower( kp_get_klarna_country() ) ];
 		}
 	}
 
@@ -105,7 +92,7 @@ class KP_Requests {
 	 * Sets the environment.
 	 */
 	public function set_environment() {
-		$env_string = 'US' === $this->klarna_country ? '-na' : '';
+		$env_string = 'US' === kp_get_klarna_country() ? '-na' : '';
 		if ( $this->testmode ) {
 			$this->environment = 'https://api' . $env_string . '.playground.klarna.com/';
 		} else {

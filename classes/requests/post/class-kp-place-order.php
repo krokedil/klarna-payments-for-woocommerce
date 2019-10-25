@@ -61,7 +61,7 @@ class KP_Place_Order extends KP_Requests {
 			apply_filters(
 				'kp_wc_api_request_args',
 				array(
-					'purchase_country'    => $this->klarna_country,
+					'purchase_country'    => kp_get_klarna_country(),
 					'purchase_currency'   => $order->get_currency(),
 					'locale'              => get_locale_for_klarna_country(),
 					'billing_address'     => KP_Customer_Data::get_billing_address( $order_id, $this->kp_settings['customer_type'] ),

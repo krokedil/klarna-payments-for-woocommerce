@@ -54,9 +54,9 @@ class KP_Update_Session extends KP_Requests {
 	public function get_request_body() {
 		return wp_json_encode(
 			array(
-				'purchase_country'  => $this->klarna_country,
+				'purchase_country'  => kp_get_klarna_country(),
 				'purchase_currency' => get_woocommerce_currency(),
-				'locale'            => get_locale_for_klarna_country(),
+				'locale'            => get_locale_for_klarna_country( kp_get_klarna_country() ),
 				'order_amount'      => $this->order_lines['order_amount'],
 				'order_tax_amount'  => $this->order_lines['order_tax_amount'],
 				'order_lines'       => $this->order_lines['order_lines'],
