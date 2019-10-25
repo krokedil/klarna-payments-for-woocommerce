@@ -44,7 +44,7 @@ class KP_Requests {
 		// Set variables.
 		$this->set_klarna_country();
 		$this->set_credentials();
-		$this->kp_settings = get_option( 'woocommerce_payer_b2b_invoice_settings' );
+		$this->kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
 		$this->testmode    = $this->kp_settings['testmode'];
 		$this->user_agent  = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil';
 		$order_lines_class = new KP_Order_Lines( $this->klarna_country );
