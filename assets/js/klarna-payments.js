@@ -344,15 +344,15 @@ jQuery( function($) {
 				klarna_payments.authorize().done( function( response ) {
 					if ('authorization_token' in response) {
 						$.ajax(
-							klarna_payments_params.ajaxurl,
+							klarna_payments_params.place_order_url,
 							{
 								type: "POST",
 								dataType: "json",
 								async: true,
 								data: {
-									action: "wc_kp_place_order",
 									order_id: json.order_id,
 									auth_token: klarna_payments.authorization_response.authorization_token,
+									nonce: klarna_payments_params.place_order_nonce,
 								},
 								success: function (response) {
 									// Log the success.
@@ -390,6 +390,7 @@ jQuery( function($) {
 			}
 		}
 	};
+	console.log( klarna_payments_params );
 	klarna_payments.start();
 	$('body').ready( function() {
 		klarna_payments.setRadioButtonValues();

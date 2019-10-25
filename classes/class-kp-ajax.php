@@ -43,10 +43,41 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 *
 		 * @return void
 		 */
-		public static function place_order() {
-			$kp = new WC_Gateway_Klarna_Payments();
+		public static function kp_wc_place_order() {
+			if ( ! wp_verify_nonce( $_POST['nonce'], 'kp_wc_place_order' ) ) { // phpcs:ignore
+				wp_send_json_error( 'bad_nonce' );
+				exit;
+			}
 
-			$kp->place_order();
+			$order    = wc_get_order( $_POST['order_id'] ); // phpcs:ignore
+			$request  = new KP_Place_Order( $_POST['order_id'] ); // phpcs:ignore
+			$response = $request->request( $_POST['auth_token'] ); // phpcs:ignore
+			if ( is_wp_error( $response ) ) {
+				wp_send_json_error( kp_extract_error_message( $response ) );
+				wp_die();
+			}
+			$fraud_status = $response['fraud_status'];
+			switch ( $fraud_status ) {
+				case 'ACCEPTED':
+					$return_val = kp_process_accepted( $order, $response );
+					wp_send_json_success( $response['redirect_url'] );
+					wp_die();
+					break;
+				case 'PENDING':
+					$return_val = kp_process_pending( $order, $response );
+					wp_send_json_success( $response['redirect_url'] );
+					wp_die();
+					break;
+				case 'REJECTED':
+					$return_val = kp_process_rejected( $order, $response );
+					wp_send_json_error( $order->get_cancel_order_url_raw() );
+					wp_die();
+					break;
+				default:
+					wp_send_json_error( $order->get_cancel_order_url_raw() );
+					wp_die();
+					break;
+			}
 
 			wp_send_json_success();
 			wp_die();
@@ -57,7 +88,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 *
 		 * @return void
 		 */
-		public static function auth_failed() {
+		public static function kp_wc_auth_failed() {
 			// @codingStandardsIgnoreStart
 			$order_id  = $_POST['order_id'];
 			$show_form = $_POST['show_form'];
@@ -75,4 +106,4 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		}
 	}
 }
-new KP_AJAX();
+KP_AJAX::init();

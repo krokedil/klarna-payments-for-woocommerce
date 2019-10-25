@@ -180,6 +180,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->color_text_secondary     = $this->get_option( 'color_text_secondary' );
 		$this->radius_border            = $this->get_option( 'radius_border' );
 		$this->testmode                 = $this->get_option( 'testmode' );
+		$this->customer_type            = $this->get_option( 'customer_type' );
 
 		// What is Klarna link.
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
@@ -502,11 +503,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_payments_params                                    = array();
 		$klarna_payments_params['testmode']                        = $this->testmode;
 		$klarna_payments_params['default_checkout_fields']         = apply_filters( 'wc_klarna_payments_default_checkout_fields', $default_kp_checkout_fields );
-		$klarna_payments_params['customer_type']                   = $this->get_option( 'customer_type' );
+		$klarna_payments_params['customer_type']                   = $this->customer_type;
 		$klarna_payments_params['remove_postcode_spaces']          = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
 		$klarna_payments_params['failed_field_validation_text']    = __( ' is a required field.', 'woocommerce' );
 		$klarna_payments_params['failed_checkbox_validation_text'] = __( 'Make sure all required checkboxes are checked.', 'klarna-payments-for-woocommerce' );
 		$klarna_payments_params['ajaxurl']                         = admin_url( 'admin-ajax.php' );
+		$klarna_payments_params['place_order_url']                 = WC_AJAX::get_endpoint( 'kp_wc_place_order' );
+		$klarna_payments_params['place_order_nonce']               = wp_create_nonce( 'kp_wc_place_order' );
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
 	}
@@ -548,11 +551,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$response = array(
 			'order_id'  => $order_id,
-			'addresses' => $this->get_address_from_order( $order_id ),
+			'addresses' => array(
+				'billing'  => KP_Customer_Data::get_billing_address( $order_id, $this->customer_type ),
+				'shipping' => KP_Customer_Data::get_shipping_address( $order_id, $this->customer_type ),
+			),
 			'time'      => time(),
 		);
-
-		update_post_meta( $order_id, '_wc_klarna_environment', $this->environment );
 		update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country() );
 
 		// Add #kp hash to checkout url so we can do a finalize call to Klarna.

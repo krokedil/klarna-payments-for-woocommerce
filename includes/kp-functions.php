@@ -223,3 +223,64 @@ function kp_get_klarna_country() {
 	}
 	return apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
 }
+
+/**
+ * Process accepted Klarna Payments order.
+ *
+ * @param WC_Order $order WooCommerce order.
+ * @param array    $decoded Klarna order.
+ *
+ * @return array   $result  Payment result.
+ */
+function kp_process_accepted( $order, $decoded ) {
+	$kp_gateway = new WC_Gateway_Klarna_Payments();
+	$order->payment_complete( $decoded['order_id'] );
+	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
+	update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
+	do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
+	do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
+	return array(
+		'result'   => 'success',
+		'redirect' => $kp_gateway->get_return_url( $order ),
+	);
+}
+
+/**
+ * Process pending Klarna Payments order.
+ *
+ * @param WC_Order $order WooCommerce order.
+ * @param array    $decoded Klarna order.
+ *
+ * @return array   $result  Payment result.
+ */
+function kp_process_pending( $order, $decoded ) {
+	$kp_gateway = new WC_Gateway_Klarna_Payments();
+	$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded['order_id'] );
+	update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
+	update_post_meta( $order->get_id(), '_transaction_id', $decoded['order_id'], true );
+	do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
+	do_action( 'wc_klarna_pending', $order->get_id(), $decoded );
+	return array(
+		'result'   => 'success',
+		'redirect' => $kp_gateway->get_return_url( $order ),
+	);
+}
+
+/**
+ * Process rejected Klarna Payments order.
+ *
+ * @param WC_Order $order WooCommerce order.
+ * @param array    $decoded Klarna order.
+ *
+ * @return array   $result  Payment result.
+ */
+function kp_process_rejected( $order, $decoded ) {
+	$order->update_status( 'on-hold', 'Klarna order was rejected.' );
+	do_action( 'wc_klarna_payments_rejected', $order->get_id(), $decoded );
+	do_action( 'wc_klarna_rejected', $order->get_id(), $decoded );
+	return array(
+		'result'   => 'failure',
+		'redirect' => '',
+		'messages' => '<div class="woocommerce-error">Klarna payment rejected</div>',
+	);
+}

@@ -50,6 +50,7 @@ class KP_Customer_Data {
 	 * @return array
 	 */
 	public static function get_shipping_address( $order_id, $customer_type ) {
+		$order = wc_get_order( $order_id );
 		if ( '' !== $order->get_shipping_first_name() && 'b2c' === $customer_type && ! wc_ship_to_billing_address_only() ) {
 			$shipping_address = array(
 				'given_name'      => stripslashes( $order->get_shipping_first_name() ),
