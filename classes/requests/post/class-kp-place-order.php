@@ -74,7 +74,7 @@ class KP_Place_Order extends KP_Requests {
 					'merchant_reference1' => $order->get_order_number(),
 					'merchant_urls'       => array(
 						'confirmation' => $order->get_checkout_order_received_url(),
-						'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $order_id,
+						'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $this->order_id,
 					),
 				),
 				$order

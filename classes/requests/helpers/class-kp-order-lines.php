@@ -366,7 +366,6 @@ class KP_Order_Lines {
 	 */
 	private function get_order_shipping( $order_id = false ) {
 		$order = wc_get_order( $order_id );
-		error_log( 'shipping checking' );
 		if ( $order->get_shipping_method() ) {
 			$shipping = array(
 				'type'             => 'shipping_fee',
@@ -378,8 +377,6 @@ class KP_Order_Lines {
 				'total_amount'     => $this->get_order_shipping_unit_price( $order ),
 				'total_tax_amount' => $this->get_order_shipping_tax_amount( $order ),
 			);
-			error_log( 'shipping added' );
-			error_log( var_export( $shipping, true ) );
 			$this->order_lines[] = $shipping;
 		}
 	}
