@@ -219,7 +219,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-klarna-for-woocommerce-addons.php';
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-banners.php';
 			}
-			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateways' ) );
 		}
 
 		/**
