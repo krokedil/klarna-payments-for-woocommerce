@@ -184,6 +184,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 
+		// Maybe create Klarna Payents Session.
+		if ( $this->is_available ) {
+			add_action( 'wp_head', 'kp_maybe_create_session' );
+			add_action( 'woocommerce_review_order_after_order_total', 'kp_maybe_create_session' );
+		}
+
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -196,7 +202,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( '' !== $this->background ) {
 			add_action( 'wp_head', array( $this, 'iframe_background' ) );
 		}
-		add_action( 'klarna_payments_template', array( $this, 'klarna_payments_session' ) );
+		add_action( 'klarna_payments_template', 'kp_maybe_create_session' );
 	}
 
 	/**

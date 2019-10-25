@@ -12,6 +12,15 @@
  * @return void|string
  */
 function kp_maybe_create_session( $klarna_country ) {
+	if ( ! is_checkout() || is_order_received_page() ) {
+		return;
+	}
+
+	// Need to calculate these here, because WooCommerce hasn't done it yet.
+	WC()->cart->calculate_fees();
+	WC()->cart->calculate_shipping();
+	WC()->cart->calculate_totals();
+
 	if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
 		// Try to update the session, if it fails try to create new session.
 		$request  = new KP_Update_Session();
@@ -41,7 +50,7 @@ function kp_maybe_create_session( $klarna_country ) {
 	}
 
 	// If we have a client token now, initialize Klarna Credit.
-	if ( WC()->session->get( 'klarna_payments_client_token' ) && is_ajax() ) {
+	if ( WC()->session->get( 'klarna_payments_client_token' ) ) {
 		// @codingStandardsIgnoreStart
 		// @TODO Maybe change this to not be inline included.
 		?>
