@@ -445,43 +445,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @hook wp_head
 	 */
 	public function klarna_payments_session() {
-		if ( ! is_checkout() || is_order_received_page() ) {
-			return;
-		}
-
-		// See if KP is available for country / currency combo.
-		if ( ! $this->is_available() ) {
-			return;
-		}
-
-		// Need to calculate these here, because WooCommerce hasn't done it yet.
-		WC()->cart->calculate_fees();
-		WC()->cart->calculate_shipping();
-		WC()->cart->calculate_totals();
-
 		$order_lines_processor = new WC_Klarna_Payments_Order_Lines( $this->shop_country );
 		$order_lines           = $order_lines_processor->order_lines();
-		$request_args          = array(
-			'headers'    => array(
-				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
-				'Content-Type'  => 'application/json',
-			),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
-			'body'       => wp_json_encode(
-				apply_filters(
-					'wc_klarna_payments_session_request_body',
-					array(
-						'purchase_country'  => $this->klarna_country,
-						'purchase_currency' => get_woocommerce_currency(),
-						'locale'            => $this->get_locale_for_klarna_country(),
-						'order_amount'      => $order_lines['order_amount'],
-						'order_tax_amount'  => $order_lines['order_tax_amount'],
-						'order_lines'       => $order_lines['order_lines'],
-						'customer'          => $this->set_klarna_customer(),
-					)
-				)
-			),
-		);
 		if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
 			// Try to update the session, if it fails try to create new session.
 			$update_request_url = $this->server_base . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
@@ -1122,126 +1087,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Gets locale based on Klarna country.
-	 *
-	 * @return string
-	 */
-	public function get_locale_for_klarna_country() {
-		switch ( $this->klarna_country ) {
-			case 'AT':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-at';
-				} else {
-					$klarna_locale = 'de-at';
-				}
-				break;
-			case 'BE':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-be';
-				} elseif ( 'fr_be' === strtolower( get_locale() ) ) {
-					$klarna_locale = 'fr-be';
-				} else {
-					$klarna_locale = 'nl-be';
-				}
-				break;
-			case 'CA':
-				$klarna_locale = 'en-ca';
-				break;
-			case 'CH':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-ch';
-				} else {
-					$klarna_locale = 'de-ch';
-				}
-				break;
-			case 'DE':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-de';
-				} else {
-					$klarna_locale = 'de-de';
-				}
-				break;
-			case 'DK':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-dk';
-				} else {
-					$klarna_locale = 'da-dk';
-				}
-				break;
-			case 'ES':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-es';
-				} else {
-					$klarna_locale = 'es-es';
-				}
-				break;
-			case 'FI':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-fi';
-				} elseif ( 'sv_se' === strtolower( get_locale() ) ) {
-					$klarna_locale = 'sv-fi';
-				} else {
-					$klarna_locale = 'fi-fi';
-				}
-				break;
-			case 'IT':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-it';
-				} else {
-					$klarna_locale = 'it-it';
-				}
-				break;
-			case 'NL':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-nl';
-				} else {
-					$klarna_locale = 'nl-nl';
-				}
-				break;
-			case 'NO':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-no';
-				} else {
-					$klarna_locale = 'nb-no';
-				}
-				break;
-			case 'PL':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-pl';
-				} else {
-					$klarna_locale = 'pl-pl';
-				}
-				break;
-			case 'SE':
-				if ( $this->site_has_english_locale() ) {
-					$klarna_locale = 'en-se';
-				} else {
-					$klarna_locale = 'sv-se';
-				}
-				break;
-			case 'GB':
-				$klarna_locale = 'en-gb';
-				break;
-			case 'US':
-				$klarna_locale = 'en-us';
-				break;
-			default:
-				$klarna_locale = 'en-us';
-		}
-
-		return $klarna_locale;
-	}
-
-	/**
-	 * Checks if site locale is english.
-	 *
-	 * @return bool
-	 */
-	public function site_has_english_locale() {
-		return 'en_US' === get_locale() || 'en_GB' === get_locale();
-	}
-
-	/**
 	 * Unsets Klarna Payments sessions values.
 	 */
 	public function unset_session_values() {
@@ -1260,18 +1105,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( $this->id === $order->get_payment_method() ) {
 			echo '<div style="margin: 10px 0; padding: 10px; border: 1px solid #B33A3A; font-size: 12px">Order address should not be changed and any changes you make will not be reflected in Klarna system.</div>';
 		}
-	}
-
-	/**
-	 * Adds the customer object to the request arguments.
-	 *
-	 * @return array
-	 */
-	public function set_klarna_customer() {
-		$type = ( 'b2c' === $this->get_option( 'customer_type', 'b2c' ) ) ? 'person' : 'organization';
-		return array(
-			'type' => $type,
-		);
 	}
 
 	/**
