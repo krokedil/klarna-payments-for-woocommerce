@@ -44,6 +44,7 @@ class KP_Requests {
 		// Set variables.
 		$this->kp_settings = get_option( 'woocommerce_payer_b2b_invoice_settings' );
 		$this->testmode    = $this->kp_settings['testmode'];
+		$this->user_agent  = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil';
 		$this->set_klarna_country();
 		$this->set_credentials();
 		$this->environment();

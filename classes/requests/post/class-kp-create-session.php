@@ -26,7 +26,7 @@ class KP_Create_Session extends KP_Requests {
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
 
-		return array();
+		return $formated_response;
 	}
 
 	/**
@@ -38,10 +38,10 @@ class KP_Create_Session extends KP_Requests {
 	public function get_request_args( $order_id ) {
 		return array(
 			'headers'    => array(
-				'Authorization' => 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ),
+				'Authorization' => $this->calculate_auth(),
 				'Content-Type'  => 'application/json',
 			),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
+			'user-agent' => $this->user_agent,
 			'body'       => $this->get_request_body( $order_id ),
 		);
 	}
