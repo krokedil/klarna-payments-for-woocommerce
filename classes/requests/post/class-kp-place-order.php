@@ -35,7 +35,6 @@ class KP_Place_Order extends KP_Requests {
 	/**
 	 * Gets the request args for the API call.
 	 *
-	 * @param int $order_id WooCommerce order id.
 	 * @return array
 	 */
 	public function get_request_args() {
@@ -53,7 +52,6 @@ class KP_Place_Order extends KP_Requests {
 	/**
 	 * Gets the request body for the API call.
 	 *
-	 * @param int $order_id WooCommerce order id.
 	 * @return string
 	 */
 	public function get_request_body() {
