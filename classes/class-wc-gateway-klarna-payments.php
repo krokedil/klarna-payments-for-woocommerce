@@ -510,6 +510,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_payments_params['ajaxurl']                         = admin_url( 'admin-ajax.php' );
 		$klarna_payments_params['place_order_url']                 = WC_AJAX::get_endpoint( 'kp_wc_place_order' );
 		$klarna_payments_params['place_order_nonce']               = wp_create_nonce( 'kp_wc_place_order' );
+		$klarna_payments_params['auth_failed_url']                 = WC_AJAX::get_endpoint( 'kp_wc_auth_failed' );
+		$klarna_payments_params['auth_failed_nonce']               = wp_create_nonce( 'kp_wc_auth_failed' );
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
 	}
@@ -548,7 +550,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array   $result  Payment result.
 	 */
 	public function process_payment( $order_id ) {
-
 		$response = array(
 			'order_id'  => $order_id,
 			'addresses' => array(

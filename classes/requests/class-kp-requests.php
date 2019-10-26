@@ -63,12 +63,12 @@ class KP_Requests {
 		// Check the status code.
 		if ( wp_remote_retrieve_response_code( $response ) < 200 || wp_remote_retrieve_response_code( $response ) > 299 ) {
 			$data          = 'URL: ' . $request_url . ' - ' . wp_json_encode( $request_args );
-			$error_message = '';
-			error_log( var_export( $response, true ) );
+			$error_message = ' ';
 			// Get the error messages.
 			if ( null !== json_decode( $response['body'], true ) ) {
-				$error         = json_decode( $response['body'], true );
-				$error_message = $error_message . ' ' . $error['message'];
+				foreach ( json_decode( $response['body'], true )['error_messages'] as $error ) {
+					$error_message = $error_message . ' ' . $error;
+				}
 			}
 			return new WP_Error( wp_remote_retrieve_response_code( $response ), $response['response']['message'] . $error_message, $data );
 		}

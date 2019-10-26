@@ -83,7 +83,10 @@ function kp_unset_session_values() {
  * @return string
  */
 function kp_extract_error_message( $response ) {
-	return 'Error';
+	$code    = $response->get_error_code();
+	$message = $response->get_error_message();
+	$text    = __( 'Klarna Payments API Error: ', 'klarna-payments-for-woocommerce' ) . '%s %s';
+	return sprintf( $text, $code, $message );
 }
 
 /**

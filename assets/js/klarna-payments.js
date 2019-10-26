@@ -372,15 +372,15 @@ jQuery( function($) {
 					} else {
 						console.log('No authorization_token in response');
 						$.ajax(
-							klarna_payments_params.ajaxurl,
+							klarna_payments_params.auth_failed_url,
 							{
 								type: "POST",
 								dataType: "json",
 								async: true,
 								data: {
-									action: "wc_kp_auth_failed",
 									show_form: response.show_form,
 									order_id: json.order_id,
+									nonce: klarna_payments_params.auth_failed_nonce
 								},
 							}
 						);

@@ -89,16 +89,19 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return void
 		 */
 		public static function kp_wc_auth_failed() {
+			if ( ! wp_verify_nonce( $_POST['nonce'], 'kp_wc_auth_failed' ) ) { // phpcs:ignore
+				wp_send_json_error( 'bad_nonce' );
+				exit;
+			}
 			// @codingStandardsIgnoreStart
 			$order_id  = $_POST['order_id'];
 			$show_form = $_POST['show_form'];
 			$order     = wc_get_order( $order_id );
 			// @codingStandardsIgnoreEnd
-
 			if ( 'true' === $show_form ) {
-				$order->add_order_note( __( 'Customer aborted purchase with klarna.', 'klarna-payments-for-woocommerce' ) );
+				$order->add_order_note( __( 'Customer aborted purchase with Klarna.', 'klarna-payments-for-woocommerce' ) );
 			} else {
-				$order->add_order_note( __( 'Payment rejected by klarna.', 'klarna-payments-for-woocommerce' ) );
+				$order->add_order_note( __( 'Payment rejected by Klarna.', 'klarna-payments-for-woocommerce' ) );
 			}
 
 			wp_send_json_success();
