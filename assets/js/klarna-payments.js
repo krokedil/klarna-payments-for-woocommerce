@@ -406,9 +406,13 @@ jQuery( function($) {
 						nonce: klarna_payments_params.update_session_nonce,
 					},
 					success: function (response) {
-						klarna_payments_params.client_token = response.data;
 						// Log the success.
 						console.log(response);
+						if ( response.success ) {
+							klarna_payments_params.client_token = response.data;
+						} else {
+							klarna_payments.printErrorMessage( response.data );
+						}
 					},
 					error: function (response) {
 						// Log the error.
@@ -421,6 +425,15 @@ jQuery( function($) {
 		initKlarnaCredit: function ( client_token ) {
 			window.klarnaInitData = {client_token: client_token};
 			Klarna.Payments.init(klarnaInitData);
+		},
+
+		printErrorMessage: function( message ) {
+			$('#klarna-payments-error-notice').remove();
+			$('form.checkout').prepend( '<div id="klarna-payments-error-notice" class="woocommerce-NoticeGroup"><ul class="woocommerce-error" role="alert"><li>' +  message + '</li></ul></div>' );
+				var etop = $('form.checkout').offset().top;
+				$('html, body').animate({
+					scrollTop: etop
+				}, 1000);
 		}
 	};
 	klarna_payments.start();
