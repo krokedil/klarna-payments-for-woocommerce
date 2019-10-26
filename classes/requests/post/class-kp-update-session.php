@@ -21,11 +21,22 @@ class KP_Update_Session extends KP_Requests {
 	public function request() {
 		$request_url  = $this->environment . 'payments/v1/sessions/' . WC()->session->get( 'klarna_payments_session_id' );
 		$request_args = apply_filters( 'wc_klarna_payments_update_session_args', $this->get_request_args() );
-		$response     = wp_remote_request( $request_url, $request_args );
-		$code         = wp_remote_retrieve_response_code( $response );
+
+		// Check if we need to update.
+		if ( WC()->session->get( 'kp_update_md5' ) && WC()->session->get( 'kp_update_md5' ) === md5( wp_json_encode( $request_args ) ) ) {
+			return false;
+		}
+		WC()->session->set( 'kp_update_md5', md5( wp_json_encode( $request_args ) ) );
+
+		$response = wp_remote_request( $request_url, $request_args );
+		$code     = wp_remote_retrieve_response_code( $response );
+		$body     = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		// Log request.
+		$log = KP_Logger::format_log( $body['session_id'], 'POST', 'KP Update Session', $request_args, $response, $code );
+		KP_Logger::log( $log );
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
-
 		return $formated_response;
 	}
 

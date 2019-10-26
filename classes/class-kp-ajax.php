@@ -123,11 +123,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			WC()->cart->calculate_fees();
 			WC()->cart->calculate_shipping();
 			WC()->cart->calculate_totals();
-			$request  = new KP_Update_Session();
-			$response = $request->request();
-			if ( is_wp_error( $response ) ) {
-				kp_unset_session_values();
-				wp_send_json_error( kp_extract_error_message( $response ) );
+
+			$kp_session = kp_maybe_create_session( WC()->customer->get_billing_country() );
+
+			if ( ! is_array( $kp_session ) ) {
+				wp_send_json_error( kp_extract_error_message( $kp_session ) );
 				wp_die();
 			}
 			wp_send_json_success( WC()->session->get( 'klarna_payments_client_token' ) );

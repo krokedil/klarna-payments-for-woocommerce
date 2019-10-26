@@ -24,11 +24,14 @@ class KP_Place_Order extends KP_Requests {
 		$request_args = apply_filters( 'wc_klarna_payments_place_order_args', $this->get_request_args() );
 		$response     = wp_remote_request( $request_url, $request_args );
 		$code         = wp_remote_retrieve_response_code( $response );
+		$body         = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		// Log request.
+		$log = KP_Logger::format_log( $body['order_id'], 'POST', 'KP Place Order', $request_args, $response, $code );
+		KP_Logger::log( $log );
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
-
 		update_post_meta( $this->order_id, '_wc_klarna_environment', $this->environment );
-
 		return $formated_response;
 	}
 

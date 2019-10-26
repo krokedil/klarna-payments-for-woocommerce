@@ -23,6 +23,11 @@ class KP_Create_Session extends KP_Requests {
 		$request_args = apply_filters( 'wc_klarna_payments_create_session_args', $this->get_request_args() );
 		$response     = wp_remote_request( $request_url, $request_args );
 		$code         = wp_remote_retrieve_response_code( $response );
+		$body         = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		// Log request.
+		$log = KP_Logger::format_log( $body['session_id'], 'POST', 'KP Create Session', $request_args, $response, $code );
+		KP_Logger::log( $log );
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
 		return $formated_response;
