@@ -46,6 +46,10 @@ jQuery( function($) {
 				});
 			});
 
+			$('body').on('update_checkout', function() {
+				klarna_payments.updateSession();
+			});
+
 			/**
 			 * When WooCommerce updates checkout
 			 * Happens on initial page load, country, state and postal code changes
@@ -61,6 +65,7 @@ jQuery( function($) {
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					//$('#place_order').attr('disabled', true);
+					klarna_payments.initKlarnaCredit( klarna_payments_params.client_token );
 					klarna_payments.load().then(klarna_payments.loadHandler);
 				}
 
@@ -388,6 +393,34 @@ jQuery( function($) {
 					}
 				});
 			}
+		},
+
+		updateSession: function() {
+			$.ajax(
+				klarna_payments_params.update_session_url,
+				{
+					type: "POST",
+					dataType: "json",
+					async: true,
+					data: {
+						nonce: klarna_payments_params.update_session_nonce,
+					},
+					success: function (response) {
+						klarna_payments_params.client_token = response.data;
+						// Log the success.
+						console.log(response);
+					},
+					error: function (response) {
+						// Log the error.
+						console.log(response);
+					},
+				}
+			);
+		},
+
+		initKlarnaCredit: function ( client_token ) {
+			window.klarnaInitData = {client_token: client_token};
+			Klarna.Payments.init(klarnaInitData);
 		}
 	};
 	klarna_payments.start();

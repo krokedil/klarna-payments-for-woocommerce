@@ -189,7 +189,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Maybe create Klarna Payents Session.
 		if ( $this->is_available() ) {
 			add_action( 'wp_head', 'kp_maybe_create_session' );
-			add_action( 'woocommerce_review_order_after_order_total', 'kp_maybe_create_session' );
 		}
 
 		// Hooks.
@@ -512,8 +511,16 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_payments_params['place_order_nonce']               = wp_create_nonce( 'kp_wc_place_order' );
 		$klarna_payments_params['auth_failed_url']                 = WC_AJAX::get_endpoint( 'kp_wc_auth_failed' );
 		$klarna_payments_params['auth_failed_nonce']               = wp_create_nonce( 'kp_wc_auth_failed' );
+		$klarna_payments_params['update_session_url']              = WC_AJAX::get_endpoint( 'kp_wc_update_session' );
+		$klarna_payments_params['update_session_nonce']            = wp_create_nonce( 'kp_wc_update_session' );
+		if ( WC()->session->get( 'klarna_payments_client_token' ) ) {
+			$klarna_payments_params['client_token'] = WC()->session->get( 'klarna_payments_client_token' );
+		}
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
+
+		wp_register_script( 'klarnapayments', 'https://x.klarnacdn.net/kp/lib/v1/api.js', null, null, true );
+		wp_enqueue_script( 'klarnapayments' );
 	}
 
 	/**

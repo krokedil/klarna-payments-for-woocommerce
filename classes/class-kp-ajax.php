@@ -25,8 +25,9 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function add_ajax_events() {
 			$ajax_events = array(
-				'kp_wc_place_order' => true,
-				'kp_wc_auth_failed' => true,
+				'kp_wc_place_order'    => true,
+				'kp_wc_auth_failed'    => true,
+				'kp_wc_update_session' => true,
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -105,6 +106,31 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			}
 
 			wp_send_json_success();
+			wp_die();
+		}
+
+		/**
+		 * Updates the Klarna Payments session.
+		 *
+		 * @return void
+		 */
+		public static function kp_wc_update_session() {
+			if ( ! wp_verify_nonce( $_POST['nonce'], 'kp_wc_update_session' ) ) { // phpcs:ignore
+				wp_send_json_error( 'bad_nonce' );
+				exit;
+			}
+			// Need to calculate these here, because WooCommerce hasn't done it yet.
+			WC()->cart->calculate_fees();
+			WC()->cart->calculate_shipping();
+			WC()->cart->calculate_totals();
+			$request  = new KP_Update_Session();
+			$response = $request->request();
+			if ( is_wp_error( $response ) ) {
+				kp_unset_session_values();
+				wp_send_json_error( kp_extract_error_message( $response ) );
+				wp_die();
+			}
+			wp_send_json_success( WC()->session->get( 'klarna_payments_client_token' ) );
 			wp_die();
 		}
 	}

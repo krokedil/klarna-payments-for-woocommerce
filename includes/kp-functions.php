@@ -48,22 +48,6 @@ function kp_maybe_create_session( $klarna_country ) {
 		WC()->session->set( 'klarna_payments_session_country', $klarna_country );
 		WC()->session->set( 'klarna_payments_categories', $response['payment_method_categories'] );
 	}
-
-	// If we have a client token now, initialize Klarna Credit.
-	if ( WC()->session->get( 'klarna_payments_client_token' ) ) {
-		// @codingStandardsIgnoreStart
-		// @TODO Maybe change this to not be inline included.
-		?>
-		<script>
-			window.klarnaInitData = {client_token: "<?php echo esc_attr( WC()->session->get( 'klarna_payments_client_token' ) ); ?>"};
-			window.klarnaAsyncCallback = function () {
-				Klarna.Payments.init(klarnaInitData);
-			};
-		</script>
-		<script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
-		<?php
-		// @codingStandardsIgnoreEnd
-	}
 }
 
 /**
