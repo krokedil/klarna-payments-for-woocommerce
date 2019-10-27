@@ -40,7 +40,9 @@ function kp_maybe_create_session( $klarna_country = false ) {
 			WC()->session->set( 'klarna_payments_client_token', $create_response['client_token'] );
 			WC()->session->set( 'klarna_payments_session_country', $klarna_country );
 			WC()->session->set( 'klarna_payments_categories', $create_response['payment_method_categories'] );
+			return $response;
 		}
+		return $response;
 	} else {
 		$request  = new KP_Create_Session();
 		$response = $request->request();
@@ -51,6 +53,7 @@ function kp_maybe_create_session( $klarna_country = false ) {
 		WC()->session->set( 'klarna_payments_client_token', $response['client_token'] );
 		WC()->session->set( 'klarna_payments_session_country', $klarna_country );
 		WC()->session->set( 'klarna_payments_categories', $response['payment_method_categories'] );
+		return $response;
 	}
 }
 
