@@ -25,6 +25,8 @@ class KP_Create_Session extends KP_Requests {
 		$code         = wp_remote_retrieve_response_code( $response );
 		$body         = json_decode( wp_remote_retrieve_body( $response ), true );
 
+		WC()->session->set( 'kp_update_md5', md5( wp_json_encode( $request_args ) ) );
+
 		// Log request.
 		$log = KP_Logger::format_log( $body['session_id'], 'POST', 'KP Create Session', $request_args, $response, $code );
 		KP_Logger::log( $log );

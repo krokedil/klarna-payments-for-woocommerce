@@ -513,9 +513,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_payments_params['auth_failed_nonce']               = wp_create_nonce( 'kp_wc_auth_failed' );
 		$klarna_payments_params['update_session_url']              = WC_AJAX::get_endpoint( 'kp_wc_update_session' );
 		$klarna_payments_params['update_session_nonce']            = wp_create_nonce( 'kp_wc_update_session' );
-		if ( WC()->session->get( 'klarna_payments_client_token' ) ) {
-			$klarna_payments_params['client_token'] = WC()->session->get( 'klarna_payments_client_token' );
-		}
+
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
 
@@ -796,7 +794,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function iframe_background() {
 		if ( '' !== $this->background ) {
-			echo esc_html( "<style type='text/css'>div#klarna_container { background: $this->background !important; padding: 10px; } div#klarna_container:empty { padding: 0; } </style>" );
+			echo "<style type='text/css'>div#klarna_container { background:" . esc_html( $this->background ) . ' !important; padding: 10px; } div#klarna_container:empty { padding: 0; } </style>';
 		}
 	}
 

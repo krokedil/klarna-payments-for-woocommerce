@@ -64,9 +64,7 @@ jQuery( function($) {
 
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
-					//$('#place_order').attr('disabled', true);
-					klarna_payments.initKlarnaCredit( klarna_payments_params.client_token );
-					klarna_payments.load().then(klarna_payments.loadHandler);
+					klarna_payments.updateSession();
 				}
 
 				// Check if we need to hide the shipping fields
@@ -413,7 +411,10 @@ jQuery( function($) {
 						// Log the success.
 						console.log(response);
 						if ( response.success ) {
+							$('#klarna-payments-error-notice').remove();
 							klarna_payments_params.client_token = response.data;
+							klarna_payments.initKlarnaCredit( klarna_payments_params.client_token );
+							klarna_payments.load().then(klarna_payments.loadHandler);
 						} else {
 							// Show error message if we have one.
 							if ( response.data ) {

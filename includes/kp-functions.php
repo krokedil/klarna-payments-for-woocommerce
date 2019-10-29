@@ -12,19 +12,13 @@
  * @return void|string
  */
 function kp_maybe_create_session( $klarna_country = false ) {
-	if ( ! is_checkout() || is_order_received_page() ) {
-		return;
-	}
-
 	if ( ! $klarna_country ) {
 		$klarna_country = WC()->checkout->get_value( 'billing_country' );
 	}
-
 	// Need to calculate these here, because WooCommerce hasn't done it yet.
 	WC()->cart->calculate_fees();
 	WC()->cart->calculate_shipping();
 	WC()->cart->calculate_totals();
-
 	if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
 		// Try to update the session, if it fails try to create new session.
 		$request  = new KP_Update_Session();
@@ -65,6 +59,7 @@ function kp_unset_session_values() {
 	WC()->session->__unset( 'klarna_payments_client_token' );
 	WC()->session->__unset( 'klarna_payments_session_country' );
 	WC()->session->__unset( 'klarna_payments_categories' );
+	WC()->session->__unset( 'kp_update_md5' );
 }
 
 /**
