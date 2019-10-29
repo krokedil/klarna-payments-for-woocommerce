@@ -186,11 +186,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 
-		// Maybe create Klarna Payents Session.
-		if ( $this->is_available() ) {
-			add_action( 'wp_head', 'kp_maybe_create_session' );
-		}
-
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -466,6 +461,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function enqueue_scripts() {
 		if ( ! is_checkout() || is_order_received_page() ) {
 			return;
+		}
+
+		// Maybe create KP Session.
+		if ( $this->is_available() ) {
+			kp_maybe_create_session();
 		}
 
 		wp_register_script(
