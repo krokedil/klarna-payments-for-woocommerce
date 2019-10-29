@@ -15,132 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @extends WC_Payment_Gateway
  */
 class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
-
-	/**
-	 * Client token retrieved from Klarna when session is created.
-	 *
-	 * @var string
-	 */
-	public $client_token;
-
 	/**
 	 * Allowed currencies
 	 *
 	 * @var array
 	 */
 	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF' );
-
-	/**
-	 * Klarna Payments create session error.
-	 *
-	 * @var bool|WP_Error
-	 */
-	public $session_error = false;
-
-	/**
-	 * Klarna Payments iframe background.
-	 *
-	 * @var string
-	 */
-	public $background;
-
-	/**
-	 * Klarna Payments iframe button color.
-	 *
-	 * @var string
-	 */
-	public $color_button;
-
-	/**
-	 * Klarna Payments iframe button text color.
-	 *
-	 * @var string
-	 */
-	public $color_button_text;
-
-	/**
-	 * Klarna Payments iframe checkbox color.
-	 *
-	 * @var string
-	 */
-	public $color_checkbox;
-
-	/**
-	 * Klarna Payments iframe checkbox checkmark color.
-	 *
-	 * @var string
-	 */
-	public $color_checkbox_checkmark;
-
-	/**
-	 * Klarna Payments iframe header color.
-	 *
-	 * @var string
-	 */
-	public $color_header;
-
-	/**
-	 * Klarna Payments iframe link color.
-	 *
-	 * @var string
-	 */
-	public $color_link;
-
-	/**
-	 * Klarna Payments iframe border color.
-	 *
-	 * @var string
-	 */
-	public $color_border;
-
-	/**
-	 * Klarna Payments iframe selected border color.
-	 *
-	 * @var string
-	 */
-	public $color_border_selected;
-
-	/**
-	 * Klarna Payments iframe text color.
-	 *
-	 * @var string
-	 */
-	public $color_text;
-
-	/**
-	 * Klarna Payments iframe details color.
-	 *
-	 * @var string
-	 */
-	public $color_details;
-
-	/**
-	 * Klarna Payments iframe secondary text color.
-	 *
-	 * @var string
-	 */
-	public $color_text_secondary;
-
-	/**
-	 * Klarna Payments radius border.
-	 *
-	 * @var string
-	 */
-	public $radius_border;
-
-	/**
-	 * Float What is Klarna? link in checkout page.
-	 *
-	 * @var string
-	 */
-	public $float_what_is_klarna;
-
-	/**
-	 * Hide what is Klarna? link in checkout page.
-	 *
-	 * @var string
-	 */
-	public $hide_what_is_klarna;
 
 	/**
 	 * Constructor
@@ -355,11 +235,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
-		// Check if there was a session error.
-		if ( is_wp_error( $this->session_error ) ) {
-			return false;
-		}
-
 		return true;
 	}
 
@@ -499,20 +374,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		);
 
 		// Localize the script.
-		$klarna_payments_params                                    = array();
-		$klarna_payments_params['testmode']                        = $this->testmode;
-		$klarna_payments_params['default_checkout_fields']         = apply_filters( 'wc_klarna_payments_default_checkout_fields', $default_kp_checkout_fields );
-		$klarna_payments_params['customer_type']                   = $this->customer_type;
-		$klarna_payments_params['remove_postcode_spaces']          = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
-		$klarna_payments_params['failed_field_validation_text']    = __( ' is a required field.', 'woocommerce' );
-		$klarna_payments_params['failed_checkbox_validation_text'] = __( 'Make sure all required checkboxes are checked.', 'klarna-payments-for-woocommerce' );
-		$klarna_payments_params['ajaxurl']                         = admin_url( 'admin-ajax.php' );
-		$klarna_payments_params['place_order_url']                 = WC_AJAX::get_endpoint( 'kp_wc_place_order' );
-		$klarna_payments_params['place_order_nonce']               = wp_create_nonce( 'kp_wc_place_order' );
-		$klarna_payments_params['auth_failed_url']                 = WC_AJAX::get_endpoint( 'kp_wc_auth_failed' );
-		$klarna_payments_params['auth_failed_nonce']               = wp_create_nonce( 'kp_wc_auth_failed' );
-		$klarna_payments_params['update_session_url']              = WC_AJAX::get_endpoint( 'kp_wc_update_session' );
-		$klarna_payments_params['update_session_nonce']            = wp_create_nonce( 'kp_wc_update_session' );
+		$klarna_payments_params                           = array();
+		$klarna_payments_params['testmode']               = $this->testmode;
+		$klarna_payments_params['customer_type']          = $this->customer_type;
+		$klarna_payments_params['remove_postcode_spaces'] = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
+		$klarna_payments_params['ajaxurl']                = admin_url( 'admin-ajax.php' );
+		$klarna_payments_params['place_order_url']        = WC_AJAX::get_endpoint( 'kp_wc_place_order' );
+		$klarna_payments_params['place_order_nonce']      = wp_create_nonce( 'kp_wc_place_order' );
+		$klarna_payments_params['auth_failed_url']        = WC_AJAX::get_endpoint( 'kp_wc_auth_failed' );
+		$klarna_payments_params['auth_failed_nonce']      = wp_create_nonce( 'kp_wc_auth_failed' );
+		$klarna_payments_params['update_session_url']     = WC_AJAX::get_endpoint( 'kp_wc_update_session' );
+		$klarna_payments_params['update_session_nonce']   = wp_create_nonce( 'kp_wc_update_session' );
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
@@ -569,125 +441,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		return array(
 			'result'   => 'success',
 			'redirect' => wc_get_checkout_url() . '#kp=' . base64_encode( wp_json_encode( $response ) ),
-		);
-	}
-
-	/**
-	 * Process Klarna Payments response.
-	 *
-	 * @param array    $response Klarna API response.
-	 * @param WC_Order $order WooCommerce order.
-	 *
-	 * @return array   $result  Payment result.
-	 */
-	public function process_klarna_response( $response, $order ) {
-		// Default the return array to failure.
-		$return_val = array(
-			'result'   => 'failure',
-			'redirect' => '',
-		);
-
-		// Process the response.
-		if ( ! is_wp_error( $response ) && 200 === $response['response']['code'] ) {
-			$decoded = json_decode( $response['body'] );
-
-			$fraud_status = $decoded->fraud_status;
-
-			switch ( $fraud_status ) {
-				case 'ACCEPTED':
-					$return_val = $this->process_accepted( $order, $decoded );
-					break;
-				case 'PENDING':
-					$return_val = $this->process_pending( $order, $decoded );
-					break;
-				case 'REJECTED':
-					$return_val = $this->process_rejected( $order, $decoded );
-					break;
-			}
-
-			update_post_meta( $order->get_id(), '_wc_klarna_environment', $this->environment );
-			update_post_meta( $order->get_id(), '_wc_klarna_country', kp_get_klarna_country() );
-
-			kp_unset_session_values();
-		} else {
-			// Log error message.
-			WC_Klarna_Payments::log( 'process_payment error response: ' . stripslashes_deep( wp_json_encode( $response ) ) );
-
-			if ( is_wp_error( $response ) ) {
-				$error_message = $response->get_error_message();
-			} else {
-				$error_message = 'Klarna error failed. ' . $response['response']['code'] . ' - ' . $response['response']['message'] . '.';
-			}
-
-			wc_add_notice( $error_message, 'error' );
-			WC()->session->reload_checkout = true;
-		} // End if().
-
-		return $return_val;
-	}
-
-	/**
-	 * Process accepted Klarna Payments order.
-	 *
-	 * @param WC_Order $order WooCommerce order.
-	 * @param stdClass $decoded Klarna order.
-	 *
-	 * @return array   $result  Payment result.
-	 */
-	public function process_accepted( $order, $decoded ) {
-		$order->payment_complete( $decoded['order_id'] );
-		$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
-		update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
-
-		do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
-		do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
-
-		return array(
-			'result'   => 'success',
-			'redirect' => $this->get_return_url( $order ),
-		);
-	}
-
-	/**
-	 * Process pending Klarna Payments order.
-	 *
-	 * @param WC_Order $order WooCommerce order.
-	 * @param stdClass $decoded Klarna order.
-	 *
-	 * @return array   $result  Payment result.
-	 */
-	public function process_pending( $order, $decoded ) {
-		$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded['order_id'] );
-		update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
-		update_post_meta( $order->get_id(), '_transaction_id', $decoded['order_id'], true );
-
-		do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
-		do_action( 'wc_klarna_pending', $order->get_id(), $decoded );
-
-		return array(
-			'result'   => 'success',
-			'redirect' => $this->get_return_url( $order ),
-		);
-	}
-
-	/**
-	 * Process rejected Klarna Payments order.
-	 *
-	 * @param WC_Order $order WooCommerce order.
-	 * @param stdClass $decoded Klarna order.
-	 *
-	 * @return array   $result  Payment result.
-	 */
-	public function process_rejected( $order, $decoded ) {
-		$order->update_status( 'on-hold', 'Klarna order was rejected.' );
-
-		do_action( 'wc_klarna_payments_rejected', $order->get_id(), $decoded );
-		do_action( 'wc_klarna_rejected', $order->get_id(), $decoded );
-
-		return array(
-			'result'   => 'failure',
-			'redirect' => '',
-			'messages' => '<div class="woocommerce-error">Klarna payment rejected</div>',
 		);
 	}
 
