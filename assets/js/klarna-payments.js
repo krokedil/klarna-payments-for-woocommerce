@@ -47,7 +47,9 @@ jQuery( function($) {
 			});
 
 			$('body').on('update_checkout', function() {
-				klarna_payments.updateSession();
+				if (klarna_payments.isKlarnaPaymentsSelected()) {
+					klarna_payments.updateSession();
+				}
 			});
 
 			/**
