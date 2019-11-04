@@ -1,11 +1,11 @@
-<?php
-/*
+<?php // phpcs:ignore
+/**
  * Plugin Name: Klarna Payments for WooCommerce
  * Plugin URI: https://krokedil.com/klarna-payments/
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 1.9.2
+ * Version: 2.0.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
@@ -26,7 +26,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ *
+ * @package WC_Klarna_Payments
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '1.9.2' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '2.0.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.3.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -55,13 +57,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @var $instance
 		 */
 		private static $instance;
-
-		/**
-		 * Reference to logging class.
-		 *
-		 * @var $log
-		 */
-		private static $log;
 
 		/**
 		 * Returns the *Singleton* instance of this class.
@@ -109,19 +104,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
+			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
-			add_filter(
-				'woocommerce_process_checkout_field_billing_phone',
-				array(
-					$this,
-					'maybe_filter_billing_phone',
-				)
-			);
+			add_filter( 'woocommerce_process_checkout_field_billing_phone', array( $this, 'maybe_filter_billing_phone' ) );
 
-			add_action( 'wp_ajax_wc_kp_place_order', array( $this, 'place_order' ) );
-			add_action( 'wp_ajax_nopriv_wc_kp_place_order', array( $this, 'place_order' ) );
-			add_action( 'wp_ajax_wc_kp_auth_failed', array( $this, 'auth_failed' ) );
-			add_action( 'wp_ajax_nopriv_wc_kp_auth_failed', array( $this, 'auth_failed' ) );
+			// Load text domain.
+			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 		}
 
 		/**
@@ -129,9 +117,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function init() {
 			// Init the gateway itself.
-			$this->init_gateways();
-
-			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
+			$this->include_files();
 		}
 
 		/**
@@ -158,7 +144,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
 					<div class="notice notice-warning">
-						<p><?php _e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
+						<p><?php echo esc_html( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
 					</div>
 					<?php
 				}
@@ -211,109 +197,38 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		}
 
 		/**
-		 * Initialize the gateway. Called very early - in the context of the plugins_loaded action
+		 * Includes the files needed for the plugin
 		 *
-		 * @since 1.0.0
+		 * @since 2.0.0
 		 */
-		public function init_gateways() {
+		public function include_files() {
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
 			}
 
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-gateway-klarna-payments.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-payments-order-lines.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-gdpr.php';
+			// Classes.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-gateway-klarna-payments.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-gdpr.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-ajax.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-logger.php';
+
+			// Requests.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-session.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-update-session.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-place-order.php';
+
+			// Request helpers.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-order-lines.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-customer-data.php';
+
+			// Includes.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/kp-functions.php';
 
 			if ( is_admin() ) {
-				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/admin/class-klarna-for-woocommerce-addons.php';
-				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/class-wc-klarna-banners.php';
+				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-klarna-for-woocommerce-addons.php';
+				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-banners.php';
 			}
-
-			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
-			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_gateways' ) );
-		}
-
-		/**
-		 * Add the gateways to WooCommerce
-		 *
-		 * @param  array $methods Array of payment methods.
-		 *
-		 * @return array $methods Array of payment methods.
-		 * @since  1.0.0
-		 */
-		public function add_gateways( $methods ) {
-			$methods[] = 'WC_Gateway_Klarna_Payments';
-
-			return $methods;
-		}
-
-		/**
-		 * Instantiate WC_Logger class.
-		 *
-		 * @param string $data Log message.
-		 */
-		public static function log( $data ) {
-			$klarna_payments_settings = get_option( 'woocommerce_klarna_payments_settings' );
-			if ( 'yes' === $klarna_payments_settings['logging'] ) {
-				$message = self::format_data( $data );
-				if ( empty( self::$log ) ) {
-					self::$log = new WC_Logger();
-				}
-
-				self::$log->add( 'klarna_payments', wp_json_encode( $message ) );
-			}
-		}
-
-		/**
-		 * Formats the log data to prevent json error.
-		 *
-		 * @param string $data Json string of data.
-		 * @return array
-		 */
-		public static function format_data( $data ) {
-			if ( isset( $data['request']['body'] ) ) {
-				$request_body            = json_decode( $data['request']['body'], true );
-				$data['request']['body'] = $request_body;
-			}
-			return $data;
-		}
-
-		/**
-		 * Formats the log data to be logged.
-		 *
-		 * @param string $payment_id The "Klarna Payments" Payment ID.
-		 * @param string $method The method.
-		 * @param string $title The title for the log.
-		 * @param array  $request_args The request args.
-		 * @param array  $response The response.
-		 * @param string $code The status code.
-		 * @return array
-		 */
-		public static function format_log( $payment_id, $method, $title, $request_args, $response, $code ) {
-			// Unset the snippet to prevent issues in the response.
-			if ( isset( $response['snippet'] ) ) {
-				unset( $response['snippet'] );
-			}
-			// Unset the snippet to prevent issues in the request body.
-			if ( isset( $request_args['body'] ) ) {
-				$request_body = json_decode( $request_args['body'], true );
-				if ( isset( $request_body['snippet'] ) && $request_body['snippet'] ) {
-					unset( $request_body['snippet'] );
-					$request_args['body'] = wp_json_encode( $request_body );
-				}
-			}
-			return array(
-				'id'             => $payment_id,
-				'type'           => $method,
-				'title'          => $title,
-				'request'        => $request_args,
-				'response'       => array(
-					'body' => $response,
-					'code' => $code,
-				),
-				'timestamp'      => date( 'Y-m-d H:i:s' ),
-				'plugin_version' => WC_KLARNA_PAYMENTS_VERSION,
-			);
 		}
 
 		/**
@@ -329,7 +244,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function maybe_filter_billing_phone( $phone_value ) {
 			// Get rid of everything that's not what WC_Validation::is_phone requires.
-			if ( 'klarna_payments' === $_POST['payment_method'] ) { // Input var okay.
+			if ( 'klarna_payments' === $_POST['payment_method'] ) { // phpcs:ignore
 				if ( trim( preg_replace( '/[^\s\#0-9_\-\+\/\(\)]/', '', $phone_value ) ) !== $phone_value ) {
 					$phone_value = trim( preg_replace( '/[^\s\#0-9_\-\+\/\(\)]/', '', $phone_value ) );
 				}
@@ -337,43 +252,17 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			return $phone_value;
 		}
-
-		/**
-		 * Places the order with Klarna.
-		 *
-		 * @return void
-		 */
-		public function place_order() {
-			$kp = new WC_Gateway_Klarna_Payments();
-
-			$kp->place_order();
-
-			wp_send_json_success();
-			wp_die();
-		}
-
-		/**
-		 * Adds a order note on a failed auth call to KP.
-		 *
-		 * @return void
-		 */
-		public function auth_failed() {
-			$order_id  = $_POST['order_id'];
-			$show_form = $_POST['show_form']; 
-			$order = wc_get_order( $order_id );
-
-			if ( 'true' === $show_form ) {
-				$order->add_order_note( __( 'Customer aborted purchase with klarna.', 'klarna-payments-for-woocommerce' ) );
-			} else {
-				$order->add_order_note( __( 'Payment rejected by klarna.', 'klarna-payments-for-woocommerce' ) );
-			}
-
-			wp_send_json_success();
-			wp_die();
-		}
-
 	}
-
 	WC_Klarna_Payments::get_instance();
 
+	/**
+	 * Main instance WC_Klarna_Payments.
+	 *
+	 * Returns the main instance of WC_Klarna_Payments.
+	 *
+	 * @return WC_Klarna_Payments
+	 */
+	function KP_WC() { // phpcs:ignore
+		return WC_Klarna_Payments::get_instance();
+	}
 }

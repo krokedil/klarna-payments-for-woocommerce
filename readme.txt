@@ -53,6 +53,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2019.11.04  	- version 2.0.0 =
+* Enhancement   - Complete rewrite of the plugin structure.
+* Enhancement   - Less requests being sent to Klarna for each purchase.
+* Enhancement   - Added Canada as a supported country with CAD as the currency.
+
 = 2019.10.22  	- version 1.9.2 =
 * Enhancement   - Added separate error message to order if customer leaves the iframe by them selves.
 
