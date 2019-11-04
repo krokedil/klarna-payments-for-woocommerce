@@ -411,6 +411,39 @@ $settings = array(
 		'default'     => '',
 		'desc_tip'    => true,
 	),
+	// CA.
+	'credentials_ca'           => array(
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/ca.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Canada',
+		'type'  => 'title',
+	),
+	'merchant_id_ca'           => array(
+		'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for Canada.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'shared_secret_ca'         => array(
+		'title'       => __( 'Production Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for Canada.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_merchant_id_ca'      => array(
+		'title'       => __( 'Test Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for Canada.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_shared_secret_ca'    => array(
+		'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for Canada.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
 
 	'iframe_options'           => array(
 		'title' => 'Iframe settings',

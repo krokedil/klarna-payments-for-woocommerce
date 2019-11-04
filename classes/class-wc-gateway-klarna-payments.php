@@ -20,7 +20,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @var array
 	 */
-	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF' );
+	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF', 'CAD' );
 
 	/**
 	 * Constructor
@@ -209,6 +209,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI purchases' );
+			}
+		}
+
+		// If CAD country, check if CAD used.
+		if ( 'CAD' === get_woocommerce_currency() ) {
+			if ( 'CA' !== kp_get_klarna_country() ) {
+				kp_unset_session_values();
+
+				return new WP_Error( 'currency', 'CAD must be used for CA purchases' );
 			}
 		}
 
