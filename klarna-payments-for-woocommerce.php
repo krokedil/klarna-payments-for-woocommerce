@@ -5,7 +5,7 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 1.9.2
+ * Version: 2.0.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
