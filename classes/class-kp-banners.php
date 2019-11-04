@@ -1,14 +1,19 @@
 <?php
+/**
+ * Adds the Klarna banner to WordPress Admin
+ *
+ * @package WC_Klarna_Payments/Classes
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
-if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
+if ( ! class_exists( 'KP_Banners' ) ) {
 	/**
 	 * Displays merchant information in the backend.
 	 */
-	class WC_Klarna_Banners_KP {
+	class KP_Banners {
 		/**
 		 * WC_Klarna_Banners_KP constructor.
 		 */
@@ -51,7 +56,7 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 				}
 			}
 
-			// Set args for the URL
+			// Set args for the URL.
 			$country        = wc_get_base_location()['country'];
 			$plugin         = 'klarna-payments-for-woocommerce';
 			$plugin_version = WC_KLARNA_PAYMENTS_VERSION;
@@ -78,20 +83,20 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 						<h1>Go live</h1>
 						<p>Before you can start to sell with Klarna you need your store to be approved by Klarna. When the installation is done and you are ready to go live, Klarna will need to verify the integration. Then you can go live with your store! If you wish to switch Klarna products then you’ll need the Klarna team to approve your store again.</p>
 						<a class="kb-button"
-						   href="<?php echo self::get_go_live_url(); ?>"
-						   target="_blank">Go live with Klarna</a>
+						href="<?php echo esc_html( self::get_go_live_url() ); ?>"
+						target="_blank">Go live with Klarna</a>
 					</div>
 					<div id="kb-right">
 						<h1>Currently using Klarna?</h1>
 						<p>Pay now, Pay later and Slice it. Klarna is entering a new world of smoooth. We would love for you to join us on the ride and to do so, you will need to upgrade your Klarna products to a new integration. You will then always get the latest features that Klarna develops and you’ll keep your current agreement along with your price settings.</p>
 						<a class="kb-button"
-						   href="https://hello.klarna.com/product-upgrade?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=banner"
-						   target="_blank">Upgrade your contract with Klarna</a>
+						href="https://hello.klarna.com/product-upgrade?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=banner"
+						target="_blank">Upgrade your contract with Klarna</a>
 					</div>
 					<img id="kb-image"
-						 src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/klarna_logo_white.png"
-						 alt="Klarna logo" width="110"/>
-						 <span class="kb-kp-dismiss dashicons dashicons-dismiss"></span>
+						src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/klarna_logo_white.png"
+						alt="Klarna logo" width="110"/>
+						<span class="kb-kp-dismiss dashicons dashicons-dismiss"></span>
 				</div>
 
 				<script type="text/javascript">
@@ -103,14 +108,12 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 								ajaxurl,
 								{
 									action		: 'hide_klarna_kp_banner',
-									_wpnonce	: '<?php echo wp_create_nonce( 'hide-klarna-kp-banner' ); ?>',
+									_wpnonce	: '<?php echo wp_create_nonce( 'hide-klarna-kp-banner' ); // phpcs:ignore ?>',
 								},
 								function(response){
 									console.log('Success hide kp banner');
-									
 								}
 							);
-											
 						});
 					});
 					</script>
@@ -119,7 +122,9 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 		}
 
 		/**
-		 * @param $parent_options
+		 * Adds sidebar to setting page settings.
+		 *
+		 * @param string $parent_options The parent options.
 		 */
 		public static function settings_sidebar( $parent_options ) {
 			?>
@@ -127,14 +132,14 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 
 			<div id="klarna-wrapper">
 				<div id="klarna-main">
-					<?php echo $parent_options; ?>
+					<?php echo $parent_options; // phpcs:ignore ?>
 				</div>
 				<div id="klarna-sidebar">
 					<div class="kb-sidebar-section">
 						<img src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/icon_reminder.png" width="64" />
 						<h3>Go live</h3>
 						<p>Before you can start to sell with Klarna you need your store to be approved by Klarna. When the installation is done and you are ready to go live, Klarna will need to verify the integration. Then you can go live with your store! If you wish to switch Klarna products then you’ll need the Klarna team to approve your store again.</p>
-						<a class="kb-button" href="<?php echo self::get_go_live_url(); ?>" target="_blank">Go live with Klarna</a>
+						<a class="kb-button" href="<?php echo esc_html( self::get_go_live_url() ); ?>" target="_blank">Go live with Klarna</a>
 					</div>
 
 					<div class="kb-sidebar-section">
@@ -164,7 +169,7 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 		 * Return correct Go live url depending on the store country.
 		 */
 		public static function get_go_live_url() {
-			// Set args for the URL
+			// Set args for the URL.
 			$country        = wc_get_base_location()['country'];
 			$plugin         = 'klarna-payments-for-woocommerce';
 			$plugin_version = WC_KLARNA_PAYMENTS_VERSION;
@@ -183,4 +188,4 @@ if ( ! class_exists( 'WC_Klarna_Banners_KP' ) ) {
 	}
 }
 
-new WC_Klarna_Banners_KP();
+new KP_Banners();

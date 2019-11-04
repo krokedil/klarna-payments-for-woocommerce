@@ -46,6 +46,12 @@ jQuery( function($) {
 				});
 			});
 
+			$('body').on('update_checkout', function() {
+				if (klarna_payments.isKlarnaPaymentsSelected()) {
+					klarna_payments.updateSession();
+				}
+			});
+
 			/**
 			 * When WooCommerce updates checkout
 			 * Happens on initial page load, country, state and postal code changes
@@ -60,8 +66,7 @@ jQuery( function($) {
 
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form.
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
-					//$('#place_order').attr('disabled', true);
-					klarna_payments.load().then(klarna_payments.loadHandler);
+					klarna_payments.updateSession();
 				}
 
 				// Check if we need to hide the shipping fields
@@ -82,6 +87,7 @@ jQuery( function($) {
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					//$('#place_order').attr('disabled', true);
 					if ($(this).val().length > 4) {
+						klarna_payments.initKlarnaCredit( klarna_payments_params.client_token );
 						klarna_payments.load().then(klarna_payments.loadHandler);
 					}
 				}
@@ -94,6 +100,7 @@ jQuery( function($) {
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					//$('#place_order').attr('disabled', true);
 					if (!$(this).parent().hasClass('woocommerce-invalid')) {
+						klarna_payments.initKlarnaCredit( klarna_payments_params.client_token );
 						klarna_payments.load().then(klarna_payments.loadHandler);
 					}
 				}
@@ -105,6 +112,7 @@ jQuery( function($) {
 			$('form.checkout').on('keyup', '#billing_company', klarna_payments.debounce_changes(function() {
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					//$('#place_order').attr('disabled', true);
+						klarna_payments.initKlarnaCredit( klarna_payments_params.client_token );
 						klarna_payments.load().then(klarna_payments.loadHandler);
 				}
 			}, 750));
@@ -116,6 +124,7 @@ jQuery( function($) {
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form. Also collapse any unselected Klarna Payments gateways.
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					//$('#place_order').attr('disabled', true);
+					klarna_payments.initKlarnaCredit( klarna_payments_params.client_token );
 					klarna_payments.load().then(klarna_payments.loadHandler);
 					klarna_payments.collapseGateways();
 				}
@@ -344,15 +353,15 @@ jQuery( function($) {
 				klarna_payments.authorize().done( function( response ) {
 					if ('authorization_token' in response) {
 						$.ajax(
-							klarna_payments_params.ajaxurl,
+							klarna_payments_params.place_order_url,
 							{
 								type: "POST",
 								dataType: "json",
 								async: true,
 								data: {
-									action: "wc_kp_place_order",
 									order_id: json.order_id,
 									auth_token: klarna_payments.authorization_response.authorization_token,
+									nonce: klarna_payments_params.place_order_nonce,
 								},
 								success: function (response) {
 									// Log the success.
@@ -372,15 +381,15 @@ jQuery( function($) {
 					} else {
 						console.log('No authorization_token in response');
 						$.ajax(
-							klarna_payments_params.ajaxurl,
+							klarna_payments_params.auth_failed_url,
 							{
 								type: "POST",
 								dataType: "json",
 								async: true,
 								data: {
-									action: "wc_kp_auth_failed",
 									show_form: response.show_form,
 									order_id: json.order_id,
+									nonce: klarna_payments_params.auth_failed_nonce
 								},
 							}
 						);
@@ -388,6 +397,53 @@ jQuery( function($) {
 					}
 				});
 			}
+		},
+
+		updateSession: function() {
+			$.ajax(
+				klarna_payments_params.update_session_url,
+				{
+					type: "POST",
+					dataType: "json",
+					async: true,
+					data: {
+						nonce: klarna_payments_params.update_session_nonce,
+					},
+					success: function (response) {
+						// Log the success.
+						console.log(response);
+						if ( response.success ) {
+							$('#klarna-payments-error-notice').remove();
+							klarna_payments_params.client_token = response.data;
+							klarna_payments.initKlarnaCredit( klarna_payments_params.client_token );
+							klarna_payments.load().then(klarna_payments.loadHandler);
+						} else {
+							// Show error message if we have one.
+							if ( response.data ) {
+								klarna_payments.printErrorMessage( response.data );
+							}
+						}
+					},
+					error: function (response) {
+						// Log the error.
+						console.log(response);
+					},
+				}
+			);
+		},
+
+		initKlarnaCredit: function ( client_token ) {
+			window.klarnaInitData = {client_token: client_token};
+			Klarna.Payments.init(klarnaInitData);
+		},
+
+		printErrorMessage: function( message ) {
+			$('#klarna-payments-error-notice').remove();
+			$('form.checkout').prepend( '<div id="klarna-payments-error-notice" class="woocommerce-NoticeGroup"><ul class="woocommerce-error" role="alert"><li>' +  message + '</li></ul></div>' );
+				var etop = $('form.checkout').offset().top;
+				$('html, body').animate({
+					scrollTop: etop
+				}, 1000);
 		}
 	};
 	klarna_payments.start();
