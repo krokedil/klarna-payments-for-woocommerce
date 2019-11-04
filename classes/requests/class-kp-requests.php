@@ -43,7 +43,7 @@ class KP_Requests {
 	public function set_environment_variables() {
 		// Set variables.
 		$this->kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
-		$this->testmode    = $this->kp_settings['testmode'];
+		$this->testmode    = ( 'yes' !== $this->kp_settings['testmode'] ) ? false : true;
 		$this->user_agent  = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil';
 		$order_lines_class = new KP_Order_Lines( kp_get_klarna_country() );
 		$this->order_lines = $order_lines_class->order_lines( $this->order_id );
