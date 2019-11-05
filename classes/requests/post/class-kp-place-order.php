@@ -5,9 +5,8 @@
  * @package Payer_B2B/Classes/Put/Requests
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Update Session request class.

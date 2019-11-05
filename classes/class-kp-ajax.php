@@ -5,9 +5,7 @@
  * @package WC_Klarna_Payments/Classes
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'KP_AJAX' ) ) {
 	/**

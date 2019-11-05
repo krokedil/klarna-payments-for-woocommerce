@@ -5,9 +5,9 @@
  * @package WC_Klarna_Payments/Includes
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $settings = array(
 	'enabled'                  => array(
 		'title'       => __( 'Enable/Disable', 'klarna-payments-for-woocommerce' ),

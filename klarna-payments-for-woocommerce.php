@@ -30,9 +30,7 @@
  * @package WC_Klarna_Payments
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Required minimums and constants
@@ -41,7 +39,7 @@ define( 'WC_KLARNA_PAYMENTS_VERSION', '2.0.1' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.3.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
-define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
+define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', dirname( __FILE__ ) );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 
 if ( ! class_exists( 'WC_Klarna_Payments' ) ) {

@@ -5,9 +5,8 @@
  * @package WC_Klarna_Payments/Classes
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'KP_Banners' ) ) {
 	/**

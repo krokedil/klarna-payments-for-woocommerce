@@ -1,7 +1,7 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 	/**
@@ -104,7 +104,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 													<?php else : ?>
 														<span class="checkout-addon-status"></span>
 														<span class="checkout-addon-action"><?php echo self::get_addon_action_button( $item ); ?></span>
-													<?php endif; ?>	
+													<?php endif; ?>
 												</div>
 											</div>
 										</div>

@@ -5,6 +5,9 @@
  * @package WC_Klarna_Payments/Includes
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Maybe creates or updates Klarna Payments session.
  *
