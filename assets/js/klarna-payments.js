@@ -124,8 +124,7 @@ jQuery( function($) {
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form. Also collapse any unselected Klarna Payments gateways.
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					//$('#place_order').attr('disabled', true);
-					klarna_payments.initKlarnaCredit( klarna_payments_params.client_token );
-					klarna_payments.load().then(klarna_payments.loadHandler);
+					klarna_payments.updateSession();
 					klarna_payments.collapseGateways();
 				}
 
