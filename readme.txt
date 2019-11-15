@@ -53,6 +53,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2019.11.15  	- version 2.0.3 =
+* Fix			- Fixed a rare issue with client token being invalid if changing country from a non valid Klarna Payments country to a valid one and Klarna Payments was not the default payment method.
+
 = 2019.11.07  	- version 2.0.2 =
 * Fix			- Fixed an issue where Client tokens where not set correctly if KP was not set as the default gateway.
 
