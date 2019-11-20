@@ -79,7 +79,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 					wp_die();
 					break;
 			}
-
+			kp_unset_session_values();
 			wp_send_json_success();
 			wp_die();
 		}

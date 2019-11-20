@@ -367,7 +367,7 @@ class KP_Order_Lines {
 	private function get_order_shipping( $order_id = false ) {
 		$order = wc_get_order( $order_id );
 		if ( $order->get_shipping_method() ) {
-			$shipping = array(
+			$shipping            = array(
 				'type'             => 'shipping_fee',
 				'reference'        => $this->get_order_shipping_reference( $order ),
 				'name'             => ( '' !== $order->get_shipping_method() ) ? $order->get_shipping_method() : $shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' ),
@@ -836,7 +836,7 @@ class KP_Order_Lines {
 		if ( $this->separate_sales_tax ) {
 			return 0;
 		}
-		return $order->get_shipping_tax() * 100;
+		return round( $order->get_shipping_tax() * 100 );
 	}
 
 	/**
