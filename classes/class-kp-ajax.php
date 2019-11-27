@@ -61,25 +61,29 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			switch ( $fraud_status ) {
 				case 'ACCEPTED':
 					$return_val = kp_process_accepted( $order, $response );
+					kp_unset_session_values();
 					wp_send_json_success( $response['redirect_url'] );
 					wp_die();
 					break;
 				case 'PENDING':
 					$return_val = kp_process_pending( $order, $response );
+					kp_unset_session_values();
 					wp_send_json_success( $response['redirect_url'] );
 					wp_die();
 					break;
 				case 'REJECTED':
 					$return_val = kp_process_rejected( $order, $response );
+					kp_unset_session_values();
 					wp_send_json_error( $order->get_cancel_order_url_raw() );
+					kp_unset_session_values();
 					wp_die();
 					break;
 				default:
+					kp_unset_session_values();
 					wp_send_json_error( $order->get_cancel_order_url_raw() );
 					wp_die();
 					break;
 			}
-			kp_unset_session_values();
 			wp_send_json_success();
 			wp_die();
 		}
@@ -125,7 +129,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			WC()->cart->calculate_totals();
 
 			$kp_session = kp_maybe_create_session( WC()->customer->get_billing_country() );
-			if ( ! is_array( $kp_session ) && false !== $kp_session ) {
+			if ( ! is_array( $kp_session ) && ! empty( $kp_session ) ) {
 				wp_send_json_error( $kp_session );
 				wp_die();
 			}

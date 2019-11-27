@@ -53,6 +53,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2019.11.27  	- version 2.0.4 =
+* Fix           - Better logic for handling null responses on update session API calls.
+* Fix           - Switched the default for customer type to be Person instead of Business.
+
 = 2019.11.20  	- version 2.0.3 =
 * Fix			- Fixed a rare issue with client token being invalid if changing country from a non valid Klarna Payments country to a valid one and Klarna Payments was not the default payment method.
 * Fix           - Fixed an issue with sessions not being cleared

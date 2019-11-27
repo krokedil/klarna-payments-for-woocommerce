@@ -30,10 +30,10 @@ function kp_maybe_create_session( $klarna_country = false ) {
 			if ( is_wp_error( $response ) ) {
 				return kp_extract_error_message( $response );
 			}
-			WC()->session->set( 'klarna_payments_session_id', $create_response['session_id'] );
-			WC()->session->set( 'klarna_payments_client_token', $create_response['client_token'] );
+			WC()->session->set( 'klarna_payments_session_id', $response['session_id'] );
+			WC()->session->set( 'klarna_payments_client_token', $response['client_token'] );
 			WC()->session->set( 'klarna_payments_session_country', $klarna_country );
-			WC()->session->set( 'klarna_payments_categories', $create_response['payment_method_categories'] );
+			WC()->session->set( 'klarna_payments_categories', $response['payment_method_categories'] );
 			return $response;
 		}
 		return $response;
@@ -194,7 +194,7 @@ function get_locale_for_klarna_country( $klarna_country ) {
  * @return array
  */
 function get_klarna_customer( $customer_type ) {
-	$type = ( 'b2c' === $customer_type ) ? 'person' : 'organization';
+	$type = ( 'b2b' === $customer_type ) ? 'organization' : 'person';
 	return array(
 		'type' => $type,
 	);
