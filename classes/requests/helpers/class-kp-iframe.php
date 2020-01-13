@@ -33,8 +33,6 @@ class KP_IFrame {
 		'color_details',
 		'color_text_secondary',
 		'radius_border',
-		'testmode',
-		'customer_type',
 	);
 
 	/**
