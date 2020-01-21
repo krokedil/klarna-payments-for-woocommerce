@@ -92,7 +92,20 @@ class KP_Requests {
 	 * Sets the environment.
 	 */
 	public function set_environment() {
-		$env_string = in_array( kp_get_klarna_country(), array( 'US', 'CA' ), true ) ? '-na' : '';
+		switch ( kp_get_klarna_country() ) {
+			case 'US':
+				$env_string = '-na';
+				break;
+			case 'CA':
+				$env_string = '-na';
+				break;
+			case 'AU':
+				$env_string = '-oc';
+				break;
+			default:
+				$env_string = '';
+				break;
+		}
 		if ( $this->testmode ) {
 			$this->environment = 'https://api' . $env_string . '.playground.klarna.com/';
 		} else {

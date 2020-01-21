@@ -20,7 +20,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @var array
 	 */
-	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF', 'CAD' );
+	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF', 'CAD', 'AUD' );
 
 	/**
 	 * Constructor
@@ -218,6 +218,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'CAD must be used for CA purchases' );
+			}
+		}
+
+		// If AUD country, check if AUD used.
+		if ( 'AUD' === get_woocommerce_currency() ) {
+			if ( 'AU' !== kp_get_klarna_country() ) {
+				kp_unset_session_values();
+
+				return new WP_Error( 'currency', 'AUD must be used for AU purchases' );
 			}
 		}
 
