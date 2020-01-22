@@ -74,7 +74,7 @@ $settings = array(
 	),
 	// AU.
 	'credentials_au'           => array(
-		'title' => '<img src="' . plugins_url( 'assets/img/flags/au.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Austria',
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/au.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Australia',
 		'type'  => 'title',
 	),
 	'merchant_id_au'           => array(
