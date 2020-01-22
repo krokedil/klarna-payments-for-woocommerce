@@ -67,6 +67,7 @@ class KP_Create_Session extends KP_Requests {
 				'order_tax_amount'  => $this->order_lines['order_tax_amount'],
 				'order_lines'       => $this->order_lines['order_lines'],
 				'customer'          => get_klarna_customer( $this->kp_settings['customer_type'] ),
+				'options'           => $this->iframe_options->get_kp_color_options(),
 			)
 		);
 	}

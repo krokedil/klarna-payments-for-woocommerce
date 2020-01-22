@@ -45,23 +45,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->title   = $this->get_option( 'title' );
 		$this->enabled = $this->get_option( 'enabled' );
 
-		// Iframe options.
-		$this->background               = $this->get_option( 'background' );
-		$this->color_button             = $this->get_option( 'color_button' );
-		$this->color_button_text        = $this->get_option( 'color_button_text' );
-		$this->color_checkbox           = $this->get_option( 'color_checkbox' );
-		$this->color_checkbox_checkmark = $this->get_option( 'color_checkbox_checkmark' );
-		$this->color_header             = $this->get_option( 'color_header' );
-		$this->color_link               = $this->get_option( 'color_link' );
-		$this->color_border             = $this->get_option( 'color_border' );
-		$this->color_border_selected    = $this->get_option( 'color_border_selected' );
-		$this->color_text               = $this->get_option( 'color_text' );
-		$this->color_details            = $this->get_option( 'color_details' );
-		$this->color_text_secondary     = $this->get_option( 'color_text_secondary' );
-		$this->radius_border            = $this->get_option( 'radius_border' );
-		$this->testmode                 = $this->get_option( 'testmode' );
-		$this->customer_type            = $this->get_option( 'customer_type' );
-
 		// What is Klarna link.
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
@@ -72,12 +55,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
-		add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'iframe_options' ) );
 		add_filter( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
-
-		if ( '' !== $this->background ) {
-			add_action( 'wp_head', array( $this, 'iframe_background' ) );
-		}
 		add_action( 'klarna_payments_template', 'kp_maybe_create_session' );
 	}
 
@@ -393,8 +371,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Localize the script.
 		$klarna_payments_params                           = array();
-		$klarna_payments_params['testmode']               = $this->testmode;
-		$klarna_payments_params['customer_type']          = $this->customer_type;
+		$klarna_payments_params['testmode']               = $this->get_option( 'testmode' );
+		$klarna_payments_params['customer_type']          = $this->get_option( 'customer_type' );
 		$klarna_payments_params['remove_postcode_spaces'] = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
 		$klarna_payments_params['ajaxurl']                = admin_url( 'admin-ajax.php' );
 		$klarna_payments_params['place_order_url']        = WC_AJAX::get_endpoint( 'kp_wc_place_order' );
@@ -489,86 +467,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		return apply_filters( 'wc_klarna_payments_process_refund', false, $order_id, $amount, $reason );
 	}
 
-	/**
-	 * Add display options to create session request.
-	 *
-	 * @param array $request_args Klarna create session request arguments.
-	 *
-	 * @return mixed
-	 *
-	 * @hook wc_klarna_payments_create_session_args
-	 */
-	public function iframe_options( $request_args ) {
-		$options = array();
-
-		if ( '' !== $this->color_button ) {
-			$options['color_button'] = $this->color_button;
-		}
-
-		if ( '' !== $this->color_button_text ) {
-			$options['color_button_text'] = $this->color_button_text;
-		}
-
-		if ( '' !== $this->color_checkbox ) {
-			$options['color_checkbox'] = $this->color_checkbox;
-		}
-
-		if ( '' !== $this->color_checkbox_checkmark ) {
-			$options['color_checkbox_checkmark'] = $this->color_checkbox_checkmark;
-		}
-
-		if ( '' !== $this->color_header ) {
-			$options['color_header'] = $this->color_header;
-		}
-
-		if ( '' !== $this->color_link ) {
-			$options['color_link'] = $this->color_link;
-		}
-
-		if ( '' !== $this->color_border ) {
-			$options['color_border'] = $this->color_border;
-		}
-
-		if ( '' !== $this->color_border_selected ) {
-			$options['color_border_selected'] = $this->color_border_selected;
-		}
-
-		if ( '' !== $this->color_text ) {
-			$options['color_text'] = $this->color_text;
-		}
-
-		if ( '' !== $this->color_details ) {
-			$options['color_details'] = $this->color_details;
-		}
-
-		if ( '' !== $this->color_text_secondary ) {
-			$options['color_text_secondary'] = $this->color_text_secondary;
-		}
-
-		if ( '' !== $this->radius_border ) {
-			$options['radius_border'] = $this->radius_border . 'px';
-		}
-
-		if ( ! empty( $options ) ) {
-			$decoded_body          = json_decode( $request_args['body'] );
-			$decoded_body->options = $options;
-
-			$request_args['body'] = wp_json_encode( $decoded_body );
-		}
-
-		return $request_args;
-	}
-
-	/**
-	 * Add <head> CSS for Klarna Payments iframe background.
-	 *
-	 * @hook wp_head
-	 */
-	public function iframe_background() {
-		if ( '' !== $this->background ) {
-			echo "<style type='text/css'>div#klarna_container { background:" . esc_html( $this->background ) . ' !important; padding: 10px; } div#klarna_container:empty { padding: 0; } </style>';
-		}
-	}
 
 	/**
 	 * Adds can't edit address notice to KP EU orders.
