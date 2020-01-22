@@ -42,11 +42,12 @@ class KP_Requests {
 	 */
 	public function set_environment_variables() {
 		// Set variables.
-		$this->kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
-		$this->testmode    = ( 'yes' !== $this->kp_settings['testmode'] ) ? false : true;
-		$this->user_agent  = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil';
-		$order_lines_class = new KP_Order_Lines( kp_get_klarna_country() );
-		$this->order_lines = $order_lines_class->order_lines( $this->order_id );
+		$this->kp_settings    = get_option( 'woocommerce_klarna_payments_settings' );
+		$this->iframe_options = new KP_IFrame( $this->kp_settings );
+		$this->testmode       = ( 'yes' !== $this->kp_settings['testmode'] ) ? false : true;
+		$this->user_agent     = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil';
+		$order_lines_class    = new KP_Order_Lines( kp_get_klarna_country() );
+		$this->order_lines    = $order_lines_class->order_lines( $this->order_id );
 		$this->set_credentials();
 		$this->set_environment();
 	}
@@ -92,7 +93,20 @@ class KP_Requests {
 	 * Sets the environment.
 	 */
 	public function set_environment() {
-		$env_string = in_array( kp_get_klarna_country(), array( 'US', 'CA' ), true ) ? '-na' : '';
+		switch ( kp_get_klarna_country() ) {
+			case 'US':
+				$env_string = '-na';
+				break;
+			case 'CA':
+				$env_string = '-na';
+				break;
+			case 'AU':
+				$env_string = '-oc';
+				break;
+			default:
+				$env_string = '';
+				break;
+		}
 		if ( $this->testmode ) {
 			$this->environment = 'https://api' . $env_string . '.playground.klarna.com/';
 		} else {

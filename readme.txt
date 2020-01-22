@@ -53,6 +53,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2020.01.22  	- version 2.0.5 =
+* Fix           - Fixed so we are now sending iFrame options on update calls.
+* Feature		- Added support for Australia.
+
 = 2019.11.27  	- version 2.0.4 =
 * Fix           - Better logic for handling null responses on update session API calls.
 * Fix           - Switched the default for customer type to be Person instead of Business.
