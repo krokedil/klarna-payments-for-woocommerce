@@ -42,8 +42,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->init_settings();
 
 		// Get setting values.
-		$this->title   = $this->get_option( 'title' );
-		$this->enabled = $this->get_option( 'enabled' );
+		$this->title         = $this->get_option( 'title' );
+		$this->enabled       = $this->get_option( 'enabled' );
+		$this->customer_type = $this->get_option( 'customer_type' );
 
 		// What is Klarna link.
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
