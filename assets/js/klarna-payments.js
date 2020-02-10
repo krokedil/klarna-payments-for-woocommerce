@@ -351,6 +351,7 @@ jQuery( function($) {
 				klarna_payments.addresses = json.addresses
 				klarna_payments.authorize().done( function( response ) {
 					if ('authorization_token' in response) {
+						$('body').trigger( 'kp_auth_success' );
 						$.ajax(
 							klarna_payments_params.place_order_url,
 							{
@@ -378,6 +379,7 @@ jQuery( function($) {
 							}
 						);
 					} else {
+						$('body').trigger( 'kp_auth_failed' );
 						console.log('No authorization_token in response');
 						$.ajax(
 							klarna_payments_params.auth_failed_url,
