@@ -61,6 +61,11 @@ class KP_Requests {
 	 * @return object|array
 	 */
 	public function process_response( $response, $request_args = array(), $request_url = '' ) {
+		// If response is a WP_Error, then return response.
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
 		// Check the status code.
 		if ( wp_remote_retrieve_response_code( $response ) < 200 || wp_remote_retrieve_response_code( $response ) > 299 ) {
 			$data          = 'URL: ' . $request_url . ' - ' . wp_json_encode( $request_args );
