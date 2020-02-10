@@ -91,7 +91,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			} elseif ( 'at' === strtolower( kp_get_klarna_country() ) || 'de' === strtolower( kp_get_klarna_country() ) ) {
 				$link_url = 'https://www.klarna.com';
 			} else {
-				$link_url = 'https://www.klarna.com/uk/what-we-do';
+				$link_url = 'https://www.klarna.com/business';
 			}
 
 			// Change text for Germany.
