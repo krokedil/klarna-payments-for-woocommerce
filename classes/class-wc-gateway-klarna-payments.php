@@ -85,14 +85,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 
 			$what_is_klarna_text = 'What is Klarna?';
-
-			if ( 'us' === strtolower( kp_get_klarna_country() ) ) {
-				$link_url = 'https://www.klarna.com/us/business/what-is-klarna';
-			} elseif ( 'at' === strtolower( kp_get_klarna_country() ) || 'de' === strtolower( kp_get_klarna_country() ) ) {
-				$link_url = 'https://www.klarna.com';
-			} else {
-				$link_url = 'https://www.klarna.com/business';
-			}
+			$link_url            = 'https://www.klarna.com';
 
 			// Change text for Germany.
 			$locale = get_locale();
