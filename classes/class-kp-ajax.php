@@ -50,9 +50,12 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				exit;
 			}
 
-			$order    = wc_get_order( $_POST['order_id'] ); // phpcs:ignore
-			$request  = new KP_Place_Order( $_POST['order_id'] ); // phpcs:ignore
-			$response = $request->request( $_POST['auth_token'] ); // phpcs:ignore
+			$order_id   = sanitize_key( $_POST['order_id'] ); // phpcs:ignore
+			$auth_token = sanitize_key( $_POST['auth_token'] ); // phpcs:ignore
+
+			$order    = wc_get_order( $order_id );
+			$request  = new KP_Place_Order( $order_id );
+			$response = $request->request( $auth_token );
 			if ( is_wp_error( $response ) ) {
 				wp_send_json_error( kp_extract_error_message( $response ) );
 				wp_die();
