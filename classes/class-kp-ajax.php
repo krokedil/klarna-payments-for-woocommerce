@@ -45,6 +45,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return void
 		 */
 		public static function kp_wc_place_order() {
+			if ( ! isset( $_POST['order_id'] ) && ! isset( $_POST['auth_token'] ) ) { // phpcs:ignore
+				wp_send_json_error( 'missing_data' );
+				exit;
+			}
+
 			$order    = wc_get_order( $_POST['order_id'] ); // phpcs:ignore
 			$request  = new KP_Place_Order( $_POST['order_id'] ); // phpcs:ignore
 			$response = $request->request( $_POST['auth_token'] ); // phpcs:ignore
