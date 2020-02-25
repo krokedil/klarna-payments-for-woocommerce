@@ -45,14 +45,17 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return void
 		 */
 		public static function kp_wc_place_order() {
-			if ( ! wp_verify_nonce( $_POST['nonce'], 'kp_wc_place_order' ) ) { // phpcs:ignore
-				wp_send_json_error( 'bad_nonce' );
+			if ( ! isset( $_POST['order_id'] ) && ! isset( $_POST['auth_token'] ) ) { // phpcs:ignore
+				wp_send_json_error( 'missing_data' );
 				exit;
 			}
 
-			$order    = wc_get_order( $_POST['order_id'] ); // phpcs:ignore
-			$request  = new KP_Place_Order( $_POST['order_id'] ); // phpcs:ignore
-			$response = $request->request( $_POST['auth_token'] ); // phpcs:ignore
+			$order_id   = sanitize_key( $_POST['order_id'] ); // phpcs:ignore
+			$auth_token = sanitize_key( $_POST['auth_token'] ); // phpcs:ignore
+
+			$order    = wc_get_order( $order_id );
+			$request  = new KP_Place_Order( $order_id );
+			$response = $request->request( $auth_token );
 			if ( is_wp_error( $response ) ) {
 				wp_send_json_error( kp_extract_error_message( $response ) );
 				wp_die();
