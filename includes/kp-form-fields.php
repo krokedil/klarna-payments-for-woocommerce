@@ -60,6 +60,13 @@ $settings = array(
 		'default'  => 'yes',
 		'desc_tip' => true,
 	),
+	'add_to_email'             => array(
+		'title'    => __( 'Add Klarna Urls to order email', 'klarna-payments-for-woocommerce' ),
+		'type'     => 'checkbox',
+		'label'    => __( 'This will add Klarna urls to the order emails that are sent. You can read more about this here: ', 'klarna-payments-for-woocommerce' ) . '<a href="https://developers.klarna.com/resources/klarna-score/order-confirmation-email/" target="_blank">Klarna URLs</a>',
+		'default'  => 'no',
+		'desc_tip' => true,
+	),
 	'customer_type'            => array(
 		'title'       => __( 'Customer type', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'select',
