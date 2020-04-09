@@ -53,7 +53,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
-= 2020.02.25  	- version 2.0.5 =
+= 2020.04.09  	- version 2.0.7 =
+* Fix			- Added security checks to the Klarna Addons page to prevent unauthorized changes to plugins.
+
+= 2020.02.25  	- version 2.0.6 =
 * Fix           - Fixed an issue with nonce calculation when creating an account on the checkout page after an order is placed.
 * Fix			- Fixed an issue regarding how we handle a WP_Error, could cause a critical error for some users.
 * Feature		- Added a setting to add Klarna information to the order confirmation email sent to a customer.
