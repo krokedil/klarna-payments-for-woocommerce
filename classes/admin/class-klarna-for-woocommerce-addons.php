@@ -48,6 +48,11 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 				wp_register_style( 'klarna-checkout-addons', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/css/checkout-addons.css', false, WC_KLARNA_PAYMENTS_VERSION );
 				wp_enqueue_style( 'klarna-checkout-addons' );
 				wp_register_script( 'klarna-checkout-addons', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/js/klarna-for-woocommerce-addons.js', true, WC_KLARNA_PAYMENTS_VERSION );
+				$params = array(
+					'change_addon_status_nonce' => wp_create_nonce( 'change_klarna_addon_status' ),
+				);
+
+				wp_localize_script( 'klarna-checkout-addons', 'kp_addons_params', $params );
 				wp_enqueue_script( 'klarna-checkout-addons' );
 			}
 		}
@@ -73,9 +78,9 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 				<h1><?php esc_html_e( 'Klarna Add-ons', 'klarna-checkout-for-woocommerce' ); ?></h1>
 			</div>
 			</div>
-			<?php if ( $addon_content->start ) : ?>
-				<?php foreach ( $addon_content->start as $start ) : ?>
-					<?php if ( isset( $start->plugin_id ) && in_array( $start->plugin_id, array( 'klarna_payments', 'both' ) ) ) : ?>
+				<?php if ( $addon_content->start ) : ?>
+					<?php foreach ( $addon_content->start as $start ) : ?>
+						<?php if ( isset( $start->plugin_id ) && in_array( $start->plugin_id, array( 'klarna_payments', 'both' ) ) ) : ?>
 						<div class="checkout-addons-banner-block checkout-addons-wrap wrap <?php echo esc_html( $start->class ); ?>">
 							<h2><?php echo esc_html( $start->title ); ?></h2>
 							<?php echo self::get_dynamic_content( $start->content ); ?>
@@ -85,7 +90,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 			<?php endif; ?>
 
 			<div id="checkout-addons-body" class="checkout-addons-body checkout-addons-wrap wrap">
-			<?php if ( $addon_content->sections ) : ?>
+				<?php if ( $addon_content->sections ) : ?>
 					<?php foreach ( $addon_content->sections as $section ) : ?>
 						<?php if ( isset( $section->plugin_id ) && in_array( $section->plugin_id, array( 'klarna_payments', 'both' ) ) ) : ?>
 							<div id="<?php echo esc_html( $section->class ); ?>" class="<?php echo esc_html( $section->class ); ?>">
@@ -115,7 +120,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</div>
-			<?php
+				<?php
 			} elseif ( isset( $_GET['tab'] ) && $_GET['tab'] === 'settings' ) {
 				do_action( 'klarna_addons_settings_tab', ( isset( $_GET['section'] ) ) ? $_GET['section'] : null );
 				?>
@@ -205,9 +210,23 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		 * Ajax request callback function
 		 */
 		public function change_klarna_addon_status() {
+			// Check nonce.
+			if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'change_klarna_addon_status' ) ) {
+				wp_send_json_error( 'bad_nonce' );
+				exit;
+			}
+
 			$status      = $_REQUEST['plugin_status'];
 			$action      = $_REQUEST['plugin_action'];
 			$plugin_slug = $_REQUEST['plugin_slug'];
+
+			// Check if the user can install plugins or manage plugins.
+			if ( ( ! current_user_can( 'install_plugins' ) && 'install' === $action )
+				|| ( ! current_user_can( 'update_plugins' ) && in_array( $action, array( 'activate', 'deactivate' ), true ) )
+			) {
+				wp_send_json_error( "You are not allowed to $action plugins" );
+				exit;
+			}
 			// $plugin_folder_and_filename = $plugin_slug . '/' . $plugin_slug . '.php';
 			$plugin = WP_PLUGIN_DIR . '/' . $plugin_slug;
 
