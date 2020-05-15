@@ -3,7 +3,7 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.2.2
+Tested up to: 5.4
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv3 or later
@@ -53,6 +53,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2020.05.15    version 2.0.8 = 
+* Fix           - Modified redirect url set in process_payment function to improve checkout flow.
+
 = 2020.04.09  	- version 2.0.7 =
 * Fix			- Added security checks to the Klarna Addons page to prevent unauthorized changes to plugins.
 
