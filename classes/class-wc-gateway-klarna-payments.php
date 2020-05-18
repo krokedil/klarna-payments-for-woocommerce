@@ -431,7 +431,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Add #kp hash to checkout url so we can do a finalize call to Klarna.
 		return array(
 			'result'   => 'success',
-			'redirect' => wc_get_checkout_url() . '#kp=' . base64_encode( wp_json_encode( $response ) ),
+			'redirect' => '#kp=' . base64_encode( wp_json_encode( $response ) ),
 		);
 	}
 
