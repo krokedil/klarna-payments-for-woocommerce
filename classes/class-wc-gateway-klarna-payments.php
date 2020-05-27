@@ -380,7 +380,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
 
-		wp_register_script( 'klarnapayments', 'https://x.klarnacdn.net/kp/lib/v1/api.js', null, null, true );
+		wp_register_script( 'klarnapayments', 'https://x.klarnacdn.net/kp/lib/v1/api.js', null, null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
 		wp_enqueue_script( 'klarnapayments' );
 	}
 
@@ -402,7 +402,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		wp_enqueue_script(
 			'klarna_payments_admin',
-			plugins_url( 'assets/js/klarna-payments-admin.js', WC_KLARNA_PAYMENTS_MAIN_FILE )
+			plugins_url( 'assets/js/klarna-payments-admin.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
+			array(),
+			WC_KLARNA_PAYMENTS_VERSION,
+			false
 		);
 	}
 
@@ -431,7 +434,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Add #kp hash to checkout url so we can do a finalize call to Klarna.
 		return array(
 			'result'   => 'success',
-			'redirect' => '#kp=' . base64_encode( wp_json_encode( $response ) ),
+			'redirect' => '#kp=' . base64_encode( wp_json_encode( $response ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to hide some data from the frontend.
 		);
 	}
 

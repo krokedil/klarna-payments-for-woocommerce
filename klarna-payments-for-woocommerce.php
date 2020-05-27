@@ -143,7 +143,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
 					<div class="notice notice-warning">
-						<p><?php echo esc_html( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
+						<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
 					</div>
 					<?php
 				}

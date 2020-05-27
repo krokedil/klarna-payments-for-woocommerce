@@ -83,7 +83,7 @@ class KP_Logger {
 				'body' => $response,
 				'code' => $code,
 			),
-			'timestamp'      => date( 'Y-m-d H:i:s' ),
+			'timestamp'      => date( 'Y-m-d H:i:s' ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
 			'plugin_version' => WC_KLARNA_PAYMENTS_VERSION,
 		);
 	}
