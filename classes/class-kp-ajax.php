@@ -45,13 +45,13 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return void
 		 */
 		public static function kp_wc_place_order() {
-			if ( ! isset( $_POST['order_id'] ) && ! isset( $_POST['auth_token'] ) ) { // phpcs:ignore
+			$order_id   = filter_input( INPUT_POST, 'order_id', FILTER_SANITIZE_STRING );
+			$auth_token = filter_input( INPUT_POST, 'auth_token', FILTER_SANITIZE_STRING );
+
+			if ( ! empty( $order_id ) && ! empty( $auth_token ) ) {
 				wp_send_json_error( 'missing_data' );
 				exit;
 			}
-
-			$order_id   = sanitize_key( $_POST['order_id'] ); // phpcs:ignore
-			$auth_token = sanitize_key( $_POST['auth_token'] ); // phpcs:ignore
 
 			$order    = wc_get_order( $order_id );
 			$request  = new KP_Place_Order( $order_id );
@@ -97,7 +97,8 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return void
 		 */
 		public static function kp_wc_auth_failed() {
-			if ( ! wp_verify_nonce( $_POST['nonce'], 'kp_wc_auth_failed' ) ) { // phpcs:ignore
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( wp_unslash( $_POST['nonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'kp_wc_auth_failed' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 				exit;
 			}
@@ -122,7 +123,8 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return void
 		 */
 		public static function kp_wc_update_session() {
-			if ( ! wp_verify_nonce( $_POST['nonce'], 'kp_wc_update_session' ) ) { // phpcs:ignore
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( wp_unslash( $_POST['nonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'kp_wc_update_session' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 				exit;
 			}

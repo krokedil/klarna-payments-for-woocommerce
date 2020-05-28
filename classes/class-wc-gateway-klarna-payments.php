@@ -396,7 +396,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
-		if ( ! isset( $_GET['section'] ) || 'klarna_payments' !== $_GET['section'] ) { // phpcs:ignore
+		$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_STRING );
+		if ( empty( $section ) || 'klarna_payments' !== $section ) {
 			return;
 		}
 
