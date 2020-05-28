@@ -48,7 +48,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			$order_id   = filter_input( INPUT_POST, 'order_id', FILTER_SANITIZE_STRING );
 			$auth_token = filter_input( INPUT_POST, 'auth_token', FILTER_SANITIZE_STRING );
 
-			if ( ! empty( $order_id ) && ! empty( $auth_token ) ) {
+			if ( empty( $order_id ) || empty( $auth_token ) ) {
 				wp_send_json_error( 'missing_data' );
 				exit;
 			}
