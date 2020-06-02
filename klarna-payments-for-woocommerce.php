@@ -10,9 +10,9 @@
  * Domain Path: /languages
  *
  * WC requires at least: 3.3.0
- * WC tested up to: 4.1.0
+ * WC tested up to: 4.2.0
  *
- * Copyright (c) 2017-2019 Krokedil
+ * Copyright (c) 2017-2020 Krokedil
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
