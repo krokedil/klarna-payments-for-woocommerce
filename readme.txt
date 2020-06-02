@@ -56,7 +56,7 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 = 2020.06.02    - version 2.0.9 = 
 * Enhancement   - Removed fallback icons for payment methods. Could cause a timeout when we tried to verify a URL endpoint.
 * Enhancement   - Updated all API requests to have a default timeout of 10 seconds.
-* Enhacement    - Force payment category to be an array in the template. Prevents issues when updating from a 1.x version to 2.x.
+* Enhancement    - Force payment category to be an array in the template. Prevents issues when updating from a 1.x version to 2.x.
 * Fix           - Prevent errors on failed requests.
 * Fix           - Removed the clearing of a snippet before logging requests. Caused errors for some people.
 
