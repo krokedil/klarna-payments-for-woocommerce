@@ -9,7 +9,7 @@
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
- * WC requires at least: 3.3.0
+ * WC requires at least: 3.4.0
  * WC tested up to: 4.2.0
  *
  * Copyright (c) 2017-2020 Krokedil
