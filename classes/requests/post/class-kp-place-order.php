@@ -25,9 +25,10 @@ class KP_Place_Order extends KP_Requests {
 		$response     = wp_remote_request( $request_url, $request_args );
 		$code         = wp_remote_retrieve_response_code( $response );
 		$body         = json_decode( wp_remote_retrieve_body( $response ), true );
+		$order_id     = isset( $body['order_id'] ) ? $body['order_id'] : '';
 
 		// Log request.
-		$log = KP_Logger::format_log( $body['order_id'], 'POST', 'KP Place Order', $request_args, $response, $code );
+		$log = KP_Logger::format_log( $order_id, 'POST', 'KP Place Order', $request_args, $response, $code );
 		KP_Logger::log( $log );
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
