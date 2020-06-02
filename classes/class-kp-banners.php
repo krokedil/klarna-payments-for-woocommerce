@@ -31,7 +31,9 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 		public function load_admin_css() {
 			wp_enqueue_style(
 				'klarna_payments_admin',
-				plugins_url( 'assets/css/klarna-payments-admin.css?v=120320182111', WC_KLARNA_PAYMENTS_MAIN_FILE )
+				plugins_url( 'assets/css/klarna-payments-admin.css?v=120320182111', WC_KLARNA_PAYMENTS_MAIN_FILE ),
+				array(),
+				WC_KLARNA_PAYMENTS_VERSION
 			);
 		}
 
@@ -180,7 +182,6 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 				$url_base = 'https://eu.portal.klarna.com/signup/';
 				$url      = $url_base . $url_queries;
 			} else {
-				// $url_base = 'https://us.portal.klarna.com/signup/';
 				$url = 'https://www.klarna.com/international/business/woocommerce/?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=kp';
 			}
 			return $url;

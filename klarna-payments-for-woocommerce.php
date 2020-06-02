@@ -5,14 +5,14 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 2.0.8
+ * Version: 2.0.9
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
- * WC requires at least: 3.3.0
- * WC tested up to: 4.1.0
+ * WC requires at least: 3.4.0
+ * WC tested up to: 4.2.0
  *
- * Copyright (c) 2017-2019 Krokedil
+ * Copyright (c) 2017-2020 Krokedil
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,9 +37,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '2.0.8' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '2.0.9' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
-define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.3.0' );
+define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
@@ -143,7 +143,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
 					<div class="notice notice-warning">
-						<p><?php echo esc_html( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
+						<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
 					</div>
 					<?php
 				}

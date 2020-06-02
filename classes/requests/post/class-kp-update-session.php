@@ -28,12 +28,13 @@ class KP_Update_Session extends KP_Requests {
 		}
 		WC()->session->set( 'kp_update_md5', md5( wp_json_encode( $request_args ) ) );
 
-		$response = wp_remote_request( $request_url, $request_args );
-		$code     = wp_remote_retrieve_response_code( $response );
-		$body     = json_decode( wp_remote_retrieve_body( $response ), true );
+		$response   = wp_remote_request( $request_url, $request_args );
+		$code       = wp_remote_retrieve_response_code( $response );
+		$body       = json_decode( wp_remote_retrieve_body( $response ), true );
+		$session_id = isset( $body['session_id'] ) ? $body['session_id'] : '';
 
 		// Log request.
-		$log = KP_Logger::format_log( $body['session_id'], 'POST', 'KP Update Session', $request_args, $response, $code );
+		$log = KP_Logger::format_log( $session_id, 'POST', 'KP Update Session', $request_args, $response, $code );
 		KP_Logger::log( $log );
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
@@ -54,6 +55,7 @@ class KP_Update_Session extends KP_Requests {
 			'method'     => 'POST',
 			'user-agent' => $this->user_agent,
 			'body'       => $this->get_request_body(),
+			'timeout'    => 10,
 		);
 	}
 

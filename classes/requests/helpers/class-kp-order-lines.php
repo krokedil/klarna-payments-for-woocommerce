@@ -272,8 +272,8 @@ class KP_Order_Lines {
 					);
 					$this->order_lines[] = $discount;
 				}
-			} // End foreach().
-		} // End if().
+			}
+		}
 	}
 	/**
 	 * Process fees.
@@ -318,8 +318,8 @@ class KP_Order_Lines {
 					'total_tax_amount'      => round( $cart_fee_tax_amount ),
 				);
 				$this->order_lines[] = $fee;
-			} // End foreach().
-		} // End if().
+			}
+		}
 	}
 	/**
 	 * Get order items for Klarna API
@@ -450,8 +450,8 @@ class KP_Order_Lines {
 					'total_tax_amount'      => round( $order_fee_tax_amount ),
 				);
 				$this->order_lines[] = $fee;
-			} // End foreach().
-		} // End if().
+			}
+		}
 	}
 	// Helpers.
 	/**
@@ -467,7 +467,7 @@ class KP_Order_Lines {
 	private function get_item_name( $cart_item ) {
 		$cart_item_data = $cart_item['data'];
 		$item_name      = $cart_item_data->get_name();
-		return strip_tags( $item_name );
+		return wp_strip_all_tags( $item_name );
 	}
 	/**
 	 * Calculate item tax percentage.
