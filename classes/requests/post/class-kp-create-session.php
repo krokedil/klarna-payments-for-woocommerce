@@ -50,6 +50,7 @@ class KP_Create_Session extends KP_Requests {
 			'method'     => 'POST',
 			'user-agent' => $this->user_agent,
 			'body'       => $this->get_request_body(),
+			'timeout'    => 10,
 		);
 	}
 
