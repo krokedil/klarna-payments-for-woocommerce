@@ -108,6 +108,9 @@ class KP_Requests {
 			case 'AU':
 				$env_string = '-oc';
 				break;
+			case 'NZ':
+				$env_string = '-oc';
+				break;
 			default:
 				$env_string = '';
 				break;
