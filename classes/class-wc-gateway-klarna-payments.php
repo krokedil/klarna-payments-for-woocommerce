@@ -105,6 +105,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		parent::admin_options();
 		$parent_options = ob_get_contents();
 		ob_end_clean();
+		KP_Settings_Saved::maybe_show_errors();
 		KP_Banners::settings_sidebar( $parent_options );
 	}
 
