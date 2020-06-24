@@ -20,7 +20,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @var array
 	 */
-	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF', 'CAD', 'AUD' );
+	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF', 'CAD', 'AUD', 'NZD' );
 
 	/**
 	 * Constructor
@@ -177,10 +177,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If EUR country, check if EUR used.
 		if ( 'EUR' === get_woocommerce_currency() ) {
-			if ( ! in_array( kp_get_klarna_country(), array( 'AT', 'DE', 'NL', 'FI' ), true ) ) {
+			if ( ! in_array( kp_get_klarna_country(), array( 'AT', 'DE', 'NL', 'FI', 'ES', 'IT', 'BE', 'FR' ), true ) ) {
 				kp_unset_session_values();
 
-				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI purchases' );
+				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI, ES, IT, BE, FR purchases' );
 			}
 		}
 
@@ -199,6 +199,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'AUD must be used for AU purchases' );
+			}
+		}
+
+		// If AUD country, check if AUD used.
+		if ( 'NZD' === get_woocommerce_currency() ) {
+			if ( 'NZ' !== kp_get_klarna_country() ) {
+				kp_unset_session_values();
+
+				return new WP_Error( 'currency', 'NZD must be used for NZ purchases' );
 			}
 		}
 

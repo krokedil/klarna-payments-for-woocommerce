@@ -64,7 +64,7 @@ class KP_Create_Session extends KP_Requests {
 			array(
 				'purchase_country'  => kp_get_klarna_country(),
 				'purchase_currency' => get_woocommerce_currency(),
-				'locale'            => get_locale_for_klarna_country( kp_get_klarna_country() ),
+				'locale'            => substr( str_replace( '_', '-', get_locale() ), 0, 5 ),
 				'order_amount'      => $this->order_lines['order_amount'],
 				'order_tax_amount'  => $this->order_lines['order_tax_amount'],
 				'order_lines'       => $this->order_lines['order_lines'],
