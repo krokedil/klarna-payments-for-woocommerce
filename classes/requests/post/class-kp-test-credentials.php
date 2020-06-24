@@ -39,6 +39,8 @@ class KP_Test_Credentials {
 	 * Gets the request body for the API call.
 	 *
 	 * @return string
+	 * @param array  $country The needed country params.
+	 * @param string $cc The country code.
 	 */
 	public function get_request_body( $country, $cc ) {
 		return wp_json_encode(
@@ -64,6 +66,8 @@ class KP_Test_Credentials {
 	 *
 	 * @param string $username The username to use.
 	 * @param string $password The password to use.
+	 * @param array  $country The needed country params.
+	 * @param string $cc The country code.
 	 * @return array
 	 */
 	protected function get_request_args( $username, $password, $country, $cc ) {
