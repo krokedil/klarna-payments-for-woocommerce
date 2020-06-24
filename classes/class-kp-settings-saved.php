@@ -125,7 +125,7 @@ class KP_Settings_Saved {
 				$username = $options[ 'merchant_id_' . $lc_cc ];
 				$password = $options[ 'shared_secret_' . $lc_cc ];
 
-				$test_response = ( new KP_Request_Test_Credentials() )->request( $username, $password, false, $country, $cc );
+				$test_response = ( new KP_Test_Credentials() )->request( $username, $password, false, $country, $cc );
 				$this->process_test_response( $test_response, self::PROD, $cc );
 			}
 
@@ -134,7 +134,7 @@ class KP_Settings_Saved {
 				$username = $options[ 'test_merchant_id_' . $lc_cc ];
 				$password = $options[ 'test_shared_secret_' . $lc_cc ];
 
-				$test_response = ( new KP_Request_Test_Credentials() )->request( $username, $password, true, $country, $cc );
+				$test_response = ( new KP_Test_Credentials() )->request( $username, $password, true, $country, $cc );
 				$this->process_test_response( $test_response, self::TEST, $cc );
 			}
 
