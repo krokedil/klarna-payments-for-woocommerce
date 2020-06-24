@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Create KP Order
  */
-class KP_Request_Test_Credentials {
+class KP_Test_Credentials {
 	/**
 	 * Makes the request.
 	 *
@@ -58,7 +58,6 @@ class KP_Request_Test_Credentials {
 			)
 		);
 	}
-
 
 	/**
 	 * Gets the request args for the API call.
