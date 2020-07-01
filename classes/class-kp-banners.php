@@ -58,21 +58,6 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 				}
 			}
 
-			// Set args for the URL.
-			$country        = wc_get_base_location()['country'];
-			$plugin         = 'klarna-payments-for-woocommerce';
-			$plugin_version = WC_KLARNA_PAYMENTS_VERSION;
-			$wc_version     = defined( 'WC_VERSION' ) && WC_VERSION ? WC_VERSION : null;
-			$url_queries    = '?country=' . $country . '&products=kp&plugin=' . $plugin . '&pluginVersion=' . $plugin_version . '&platform=woocommerce&platformVersion=' . $wc_version;
-
-			if ( 'US' !== $country ) {
-				$url_base = 'https://eu.portal.klarna.com/signup/';
-			} else {
-				$url_base = 'https://us.portal.klarna.com/signup/';
-			}
-
-			$url = $url_base . $url_queries;
-
 			if ( ! $country_set ) {
 				$show_banner = true;
 			}
@@ -101,7 +86,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 						</div>
 						<div id="kb-button-go-live-frame">
 							<a id="kb-button-go-live" class="kb-button"
-								href="<?php echo esc_attr( self::get_go_live_url() ); ?>"
+								href="<?php echo esc_attr( self::get_playground_credentials_url() ); ?>"
 								target="_blank">Get playground credentials
 							</a>
 						</div>
@@ -219,6 +204,15 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 				$url = 'https://www.klarna.com/international/business/woocommerce/?utm_source=woo-backend&utm_medium=referral&utm_campaign=woo&utm_content=kp';
 			}
 			return $url;
+		}
+
+		/**
+		 * Returns the URL to the Klarna developers page for getting test credentials.
+		 *
+		 * @return string
+		 */
+		public static function get_playground_credentials_url() {
+			return 'https://developers.klarna.com/documentation/testing-environment/';
 		}
 	}
 }
