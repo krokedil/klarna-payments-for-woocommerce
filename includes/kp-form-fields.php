@@ -145,36 +145,36 @@ $settings = array(
 		'default'     => '',
 		'desc_tip'    => true,
 	),
-	// DK.
-	'credentials_dk'           => array(
-		'title' => '<img src="' . plugins_url( 'assets/img/flags/dk.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Denmark',
+	// BE.
+	'credentials_be'           => array(
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/be.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Belgium',
 		'type'  => 'title',
 	),
-	'merchant_id_dk'           => array(
+	'merchant_id_be'           => array(
 		'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'klarna-payments-for-woocommerce' ),
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for BE.', 'klarna-payments-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 	),
-	'shared_secret_dk'         => array(
+	'shared_secret_be'         => array(
 		'title'       => __( 'Production Password', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'klarna-payments-for-woocommerce' ),
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for BE.', 'klarna-payments-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 	),
-	'test_merchant_id_dk'      => array(
+	'test_merchant_id_be'      => array(
 		'title'       => __( 'Test Username', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'klarna-payments-for-woocommerce' ),
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for BE.', 'klarna-payments-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 	),
-	'test_shared_secret_dk'    => array(
+	'test_shared_secret_be'    => array(
 		'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'klarna-payments-for-woocommerce' ),
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for BE.', 'klarna-payments-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 	),
@@ -211,36 +211,36 @@ $settings = array(
 		'default'     => '',
 		'desc_tip'    => true,
 	),
-	// FI.
-	'credentials_fi'           => array(
-		'title' => '<img src="' . plugins_url( 'assets/img/flags/fi.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Finland',
+	// DK.
+	'credentials_dk'           => array(
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/dk.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Denmark',
 		'type'  => 'title',
 	),
-	'merchant_id_fi'           => array(
+	'merchant_id_dk'           => array(
 		'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'klarna-payments-for-woocommerce' ),
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'klarna-payments-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 	),
-	'shared_secret_fi'         => array(
+	'shared_secret_dk'         => array(
 		'title'       => __( 'Production Password', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'klarna-payments-for-woocommerce' ),
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'klarna-payments-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 	),
-	'test_merchant_id_fi'      => array(
+	'test_merchant_id_dk'      => array(
 		'title'       => __( 'Test Username', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'klarna-payments-for-woocommerce' ),
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'klarna-payments-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 	),
-	'test_shared_secret_fi'    => array(
+	'test_shared_secret_dk'    => array(
 		'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'klarna-payments-for-woocommerce' ),
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for DK.', 'klarna-payments-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 	),
@@ -274,6 +274,105 @@ $settings = array(
 		'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
 		'description' => __( 'Get your API keys from your Klarna Payments merchant account for DE.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	// FI.
+	'credentials_fi'           => array(
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/fi.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Finland',
+		'type'  => 'title',
+	),
+	'merchant_id_fi'           => array(
+		'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'shared_secret_fi'         => array(
+		'title'       => __( 'Production Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_merchant_id_fi'      => array(
+		'title'       => __( 'Test Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_shared_secret_fi'    => array(
+		'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FI.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	// FR.
+	'credentials_fr'           => array(
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/fr.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> France',
+		'type'  => 'title',
+	),
+	'merchant_id_fr'           => array(
+		'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FR.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'shared_secret_fr'         => array(
+		'title'       => __( 'Production Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FR.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_merchant_id_fr'      => array(
+		'title'       => __( 'Test Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FR.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_shared_secret_fr'    => array(
+		'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for FR.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	// IT.
+	'credentials_it'           => array(
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/it.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Italy',
+		'type'  => 'title',
+	),
+	'merchant_id_it'           => array(
+		'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for IT.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'shared_secret_it'         => array(
+		'title'       => __( 'Production Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for IT.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_merchant_id_it'      => array(
+		'title'       => __( 'Test Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for IT.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_shared_secret_it'    => array(
+		'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for IT.', 'klarna-payments-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 	),
@@ -343,6 +442,39 @@ $settings = array(
 		'default'     => '',
 		'desc_tip'    => true,
 	),
+	// NO.
+	'credentials_nz'           => array(
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/nz.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> New Zealand',
+		'type'  => 'title',
+	),
+	'merchant_id_nz'           => array(
+		'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for NZ.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'shared_secret_nz'         => array(
+		'title'       => __( 'Production Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for NZ.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_merchant_id_nz'      => array(
+		'title'       => __( 'Test Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for NZ.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_shared_secret_nz'    => array(
+		'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for NZ.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
 	// SE.
 	'credentials_se'           => array(
 		'title' => '<img src="' . plugins_url( 'assets/img/flags/se.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Sweden',
@@ -373,6 +505,39 @@ $settings = array(
 		'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
 		'description' => __( 'Get your API keys from your Klarna Payments merchant account for SE.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	// Spain/ES.
+	'credentials_es'           => array(
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/es.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Spain',
+		'type'  => 'title',
+	),
+	'merchant_id_es'           => array(
+		'title'       => __( 'Production Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for ES.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'shared_secret_es'         => array(
+		'title'       => __( 'Production Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for ES.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_merchant_id_es'      => array(
+		'title'       => __( 'Test Username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for ES.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+	),
+	'test_shared_secret_es'    => array(
+		'title'       => __( 'Test Password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API keys from your Klarna Payments merchant account for ES.', 'klarna-payments-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => true,
 	),
