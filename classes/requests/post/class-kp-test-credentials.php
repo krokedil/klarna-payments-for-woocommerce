@@ -112,7 +112,7 @@ class KP_Test_Credentials {
 		}
 		// Check the status code, if its not between 200 and 299 then its an error.
 		if ( wp_remote_retrieve_response_code( $response ) < 200 || wp_remote_retrieve_response_code( $response ) > 299 ) {
-			$error_message = wp_json_encode( $response['response']['headers'] );
+			$error_message = wp_json_encode( $response['response'] );
 			return new WP_Error( wp_remote_retrieve_response_code( $response ), $error_message, $response['body'] );
 		}
 		return json_decode( wp_remote_retrieve_body( $response ), true );
