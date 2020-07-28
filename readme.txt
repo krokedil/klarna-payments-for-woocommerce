@@ -53,6 +53,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2020.07.28    - version 2.1.1 = 
+- Fix           - Fixed support for Finish locale again.
+
 = 2020.07.02    - version 2.1.0 = 
 * Feature       - Check if credentials are correct on saving them. If they are not an error message will be displayed with more information.
 * Feature       - Added new countries to the plugin. We have now added support for BE, ES, IT, FR, NZ.
