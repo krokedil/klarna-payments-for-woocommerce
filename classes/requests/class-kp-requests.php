@@ -130,4 +130,22 @@ class KP_Requests {
 	public function calculate_auth() {
 		return 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
 	}
+
+	/**
+	 * Formats the locale to match Klarnas api.
+	 *
+	 * @return string
+	 */
+	public function get_klarna_locale() {
+		$locale = get_locale();
+		// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formated to fi_fi.
+		switch ( $locale ) {
+			case 'fi':
+				$locale = 'fi_fi';
+				break;
+			default:
+				break;
+		}
+		return substr( str_replace( '_', '-', $locale ), 0, 5 );
+	}
 }

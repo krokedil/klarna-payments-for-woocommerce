@@ -67,7 +67,7 @@ class KP_Place_Order extends KP_Requests {
 				array(
 					'purchase_country'    => kp_get_klarna_country(),
 					'purchase_currency'   => $order->get_currency(),
-					'locale'              => substr( str_replace( '_', '-', get_locale() ), 0, 5 ),
+					'locale'              => $this->get_klarna_locale(),
 					'billing_address'     => KP_Customer_Data::get_billing_address( $this->order_id, $this->kp_settings['customer_type'] ),
 					'shipping_address'    => KP_Customer_Data::get_shipping_address( $this->order_id, $this->kp_settings['customer_type'] ),
 					'order_amount'        => $this->order_lines['order_amount'],
