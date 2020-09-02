@@ -51,6 +51,30 @@ class KP_Logger {
 	}
 
 	/**
+	 * Gets the stack for the request.
+	 *
+	 * @return array
+	 */
+	public static function get_stack() {
+		$debug_data = debug_backtrace(); // phpcs:ignore WordPress.PHP.DevelopmentFunctions -- Data is not used for display.
+		$stack      = array();
+		foreach ( $debug_data as $data ) {
+			$extra_data = '';
+			if ( ! in_array( $data['function'], array( 'get_stack', 'format_log' ), true ) ) {
+				if ( in_array( $data['function'], array( 'do_action', 'apply_filters' ), true ) ) {
+					if ( isset( $data['object'] ) ) {
+						$priority   = $data['object']->current_priority();
+						$name       = key( $data['object']->current() );
+						$extra_data = $name . ' : ' . $priority;
+					}
+				}
+			}
+			$stack[] = $data['function'] . $extra_data;
+		}
+		return $stack;
+	}
+
+	/**
 	 * Formats the log data to be logged.
 	 *
 	 * @param string $payment_id The "Klarna Payments" Payment ID.
@@ -72,6 +96,7 @@ class KP_Logger {
 				'code' => $code,
 			),
 			'timestamp'      => date( 'Y-m-d H:i:s' ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
+			'stack'          => self::get_stack(),
 			'plugin_version' => WC_KLARNA_PAYMENTS_VERSION,
 		);
 	}
