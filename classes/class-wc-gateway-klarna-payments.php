@@ -57,7 +57,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
 		add_filter( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
-		add_action( 'klarna_payments_template', 'kp_maybe_create_session' );
 	}
 
 	/**
@@ -336,11 +335,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function enqueue_scripts() {
 		if ( ! is_checkout() || is_order_received_page() || is_cart() ) {
 			return;
-		}
-
-		// Maybe create KP Session.
-		if ( $this->is_available() ) {
-			kp_maybe_create_session();
 		}
 
 		wp_register_script(

@@ -12,6 +12,10 @@
  * @return void|string
  */
 function kp_maybe_create_session( $klarna_country = false ) {
+	if ( ! is_checkout() || is_order_received_page() ) {
+		return;
+	}
+
 	if ( ! $klarna_country ) {
 		$klarna_country = WC()->checkout->get_value( 'billing_country' );
 	}
