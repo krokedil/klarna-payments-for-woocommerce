@@ -305,15 +305,6 @@ class KP_Order_Lines {
 		}
 	}
 
-
-
-
-
-
-
-
-
-
 	/**
 	 * Process fees.
 	 *
