@@ -41,6 +41,14 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 		 * Loads Klarna banner in admin pages.
 		 */
 		public function klarna_banner() {
+			global $pagenow;
+
+			// Only display the banner on WP admin dashboard page or KCO settings page.
+			$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_STRING );
+			if ( 'index.php' !== $pagenow && ! ( ! empty( $section ) && 'klarna_payments' === $section ) ) {
+				return;
+			}
+
 			$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
 			$show_banner = false;
 
@@ -62,7 +70,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 				$show_banner = true;
 			}
 
-			if ( $show_banner && false === get_transient( 'klarna_hide_banner' ) ) {
+			if ( $show_banner && false === get_transient( 'klarna_kp_hide_banner' ) ) {
 				?>
 				<div id="kb-spacer"></div>
 
@@ -115,7 +123,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 						jQuery.post(
 							ajaxurl,
 							{
-								action		: 'hide_klarna_banner',
+								action		: 'hide_klarna_kp_banner',
 								_wpnonce	: '<?php echo wp_create_nonce( 'hide-klarna-banner' ); // phpcs:ignore?>',
 							},
 							function(response){
