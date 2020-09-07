@@ -53,6 +53,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2020.09.07    - version 2.1.2 = 
+* Enhancement   - Added compatibility with the plugin WooCommerce Gift Cards. https://woocommerce.com/products/gift-cards/
+* Fix           - Fixed so you can now hide the Klarna banner from the admin pages.
+* Fix           - Klarna banner no longer shows on all admin pages. Only the Dashboard and the Klarna Payments settings page.
+
 = 2020.07.28    - version 2.1.1 = 
 * Fix           - Fixed support for Finish locale again.
 
