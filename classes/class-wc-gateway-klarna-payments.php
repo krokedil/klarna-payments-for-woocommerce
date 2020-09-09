@@ -334,7 +334,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @hook wp_enqueue_scripts
 	 */
 	public function enqueue_scripts() {
-		if ( ! is_checkout() || is_order_received_page() || is_cart() ) {
+		if ( ! is_checkout() && ( is_order_received_page() || is_cart() ) ) {
 			return;
 		}
 
