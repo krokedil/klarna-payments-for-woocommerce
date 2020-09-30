@@ -34,7 +34,7 @@ services:
         define( 'SCRIPT_DEBUG', true );
     volumes:
       - "./:/var/www/html/wp-content/plugins/klarna-payments-for-woocommerce"
-      - ./wp:/var/www/html
+      - ./.wp:/var/www/html
 
   wordpress-cli:
     depends_on:
@@ -56,7 +56,7 @@ services:
       '
     volumes:
       - "./:/var/www/html/wp-content/plugins/klarna-payments-for-woocommerce"
-      - ./wp:/var/www/html
+      - ./.wp:/var/www/html
 
 volumes:
   db:
