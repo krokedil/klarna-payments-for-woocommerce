@@ -72,12 +72,14 @@ class KP_Test_Credentials {
 	 */
 	protected function get_request_args( $username, $password, $country, $cc ) {
 		return array(
-			'headers' => array(
+			'headers'    => array(
 				'Authorization' => 'Basic ' . base64_encode( $username . ':' . htmlspecialchars_decode( $password ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
 				'Content-Type'  => 'application/json',
 			),
-			'method'  => 'POST',
-			'body'    => $this->get_request_body( $country, $cc ),
+			'method'     => 'POST',
+			'body'       => $this->get_request_body( $country, $cc ),
+			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - WooCommerce: ' . WC()->version . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
+			'timeout'    => 10,
 		);
 	}
 

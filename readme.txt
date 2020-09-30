@@ -53,6 +53,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2020.09.30    - version 2.1.3 = 
+* Enhancement   - Added proper user-agent to test-credentials check requests.
+* Fix           - Fixed an issue with saving the incorrect value as the Klarna envrionment used. Caused Live orders to show as test orders in the Klarna Order management meta box.
+
 = 2020.09.07    - version 2.1.2 = 
 * Enhancement   - Added compatibility with the plugin WooCommerce Gift Cards. https://woocommerce.com/products/gift-cards/
 * Fix           - Fixed so you can now hide the Klarna banner from the admin pages.
