@@ -32,7 +32,7 @@ class KP_Place_Order extends KP_Requests {
 		KP_Logger::log( $log );
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
-		update_post_meta( $this->order_id, '_wc_klarna_environment', $this->environment );
+		update_post_meta( $this->order_id, '_wc_klarna_environment', $this->testmode ? 'test' : 'live' );
 		return $formated_response;
 	}
 
