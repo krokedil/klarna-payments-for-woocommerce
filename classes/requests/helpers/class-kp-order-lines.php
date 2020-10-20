@@ -86,6 +86,7 @@ class KP_Order_Lines {
 	 * @return mixed
 	 */
 	private function get_order_lines() {
+		// error_log( var_export( $this->order_lines, true ) );
 		return $this->order_lines;
 	}
 	/**
@@ -303,6 +304,31 @@ class KP_Order_Lines {
 				$this->order_lines[] = $gift_card;
 			}
 		}
+
+		/**
+		* PW Gift Cards compatibility.
+		*/
+		if ( class_exists( 'PW_Gift_Card' ) ) {
+			$gift_card_data = WC()->session->get( 'pw-gift-card-data' );
+
+			foreach ( $gift_card_data['gift_cards'] as $pw_code => $pw_amount ) {
+				$gift_card_mount = $pw_amount * ( -100 );
+
+				$gift_card = array(
+					'type'                  => 'gift_card',
+					'reference'             => $pw_code,
+					'name'                  => __( 'Gift card', 'klarna-payments-for-woocommerce' ),
+					'quantity'              => 1,
+					'tax_rate'              => 0,
+					'total_discount_amount' => 0,
+					'total_tax_amount'      => 0,
+					'unit_price'            => $gift_card_mount,
+					'total_amount'          => $gift_card_mount,
+				);
+
+				$this->order_lines[] = $gift_card;
+			}
+		};
 	}
 
 	/**
