@@ -96,7 +96,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 			}
 		} else {
-			$icon_html = '<img src="' . WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' . '" alt="Klarna" style="max-width:39px;"/>';
+			$icon_html = '<img src="' . WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg" alt="Klarna" style="max-width:39px;"/>';
 		}
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
 	}
