@@ -57,6 +57,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			$request  = new KP_Place_Order( $order_id );
 			$response = $request->request( $auth_token );
 			if ( is_wp_error( $response ) ) {
+				wc_add_notice( kp_extract_error_message( $response ), 'error' );
 				wp_send_json_error( kp_extract_error_message( $response ) );
 				wp_die();
 			}
