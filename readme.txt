@@ -13,7 +13,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 == DESCRIPTION ==
 
-*Choose the payment that you want, Pay Now, Pay Later or Slice It. No credit card numbers, no passwords, no worries.*
+*As opposed to Klarna Checkout, Payments are standalone payment methods. Complement your existing checkout experience with a Klarna hosted widget (e.g., Pay Later, Financing or Installments).*
 
 Choose the Klarna features you want – and only the features you want – to reduce purchase stress and improve your user experience. We have several financing and direct payment options to meet your needs, and they’re all easily integrated into your existing buying journey.
 
