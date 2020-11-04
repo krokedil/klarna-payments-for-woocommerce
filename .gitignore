@@ -16,5 +16,7 @@ wp-content/plugins/hello.php
 /readme.html
 /sitemap.xml
 /sitemap.xml.gz
+/node_modules
 
 SyncToy_41f30428-8c8e-4927-9b86-4847bfc96e42.dat
+package-lock.json
