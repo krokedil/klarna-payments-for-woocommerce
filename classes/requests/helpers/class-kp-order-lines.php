@@ -70,7 +70,7 @@ class KP_Order_Lines {
 			$this->get_order_items( $order_id );
 			$this->get_order_shipping( $order_id );
 			$this->get_order_sales_tax( $order_id );
-			$this->process_coupons();
+			$this->get_order_coupons( $order_id );
 			$this->get_order_fees( $order_id );
 			return array(
 				'order_lines'      => $this->get_order_lines(),
@@ -886,5 +886,66 @@ class KP_Order_Lines {
 		}
 
 		return substr( strval( $order_shipping_reference ), 0, 64 );
+	}
+
+	/**
+	 * Get the order coupons
+	 *
+	 * @param int $order_id WooCommerce order id.
+	 * @return int
+	 */
+	private function get_order_coupons( $order_id ) {
+		$order   = wc_get_order( $order_id );
+		$coupons = $order->get_items( 'coupon' );
+
+		if ( empty( $coupons ) ) {
+			return;
+		}
+
+		/**
+		 * Loop through the coupons.
+		 *
+		 * @var WC_Order_Item_Coupon $coupon A WooCommerce coupon order item.
+		 */
+		foreach ( $coupons as $coupon ) {
+			$coupon_reference  = '';
+			$coupon_amount     = 0;
+			$coupon_tax_amount = '';
+			$discount_type     = $coupon->get_meta( 'coupon_data' )['discount_type'];
+			if ( 'smart_coupon' === $discount_type ) {
+				$coupon_amount     = - round( $coupon->get_discount() * 100 );
+				$coupon_tax_amount = - round( $coupon->get_discount_tax() * 100 );
+				$coupon_reference  = 'Discount';
+			} else {
+				if ( 'US' === $this->shop_country ) {
+					$coupon_amount     = 0;
+					$coupon_tax_amount = 0;
+					if ( in_array( $discount_type, array( 'fixed_cart', 'percent' ), true ) ) {
+						$coupon_type = 'Cart discount';
+					} elseif ( in_array( $discount_type, array( 'fixed_product', 'percent_product' ), true ) ) {
+						$coupon_type = 'Product discount';
+					} else {
+						$coupon_type = 'Discount';
+					}
+					$coupon_reference = $coupon_type . ' (amount: ' . $coupon->get_discount() . ', tax amount: ' . $coupon->get_discount_tax() . ')';
+				}
+			}
+
+			// Add separate discount line item, but only if it's a smart coupon, store credit or country is US.
+			if ( 'smart_coupon' === $discount_type || 'store_credit' === $discount_type || 'US' === $this->shop_country ) {
+				$discount            = array(
+					'type'                  => 'discount',
+					'reference'             => substr( strval( $coupon_reference ), 0, 64 ),
+					'name'                  => $coupon->get_code(),
+					'quantity'              => 1,
+					'unit_price'            => $coupon_amount,
+					'tax_rate'              => 0,
+					'total_amount'          => $coupon_amount,
+					'total_discount_amount' => 0,
+					'total_tax_amount'      => $coupon_tax_amount,
+				);
+				$this->order_lines[] = $discount;
+			}
+		}
 	}
 }
