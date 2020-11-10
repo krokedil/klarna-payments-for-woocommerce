@@ -3,10 +3,10 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.4.1
+Tested up to: 5.5.1
 Requires PHP: 5.6
 WC requires at least: 3.4.0
-WC tested up to: 4.5.2
+WC tested up to: 4.7.0
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -55,6 +55,13 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2020.11.10    - version 2.1.4 =
+* Enhancement   - Added compatibility for Smart Coupons.
+* Enhancement   - Improved coupon handling on the checkout.
+* Enhancement   - Add a default icon if we are not on the checkout page and have an icon set from Klarna.
+* Fix           - Fixed an issue with sending the wrong country code for the UK when testing credentials after saving settings.
+* Fix           - Fixed an issue that caused the customer to be redirected to a 404 page on an error in the checkout.
+
 = 2020.09.30    - version 2.1.3 = 
 * Enhancement   - Added proper user-agent to test-credentials check requests.
 * Fix           - Fixed an issue with saving the incorrect value as the Klarna environment used. Caused Live orders to show as test orders in the Klarna Order management meta box.

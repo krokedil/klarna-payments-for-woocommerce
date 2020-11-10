@@ -45,7 +45,7 @@ class KP_Test_Credentials {
 	public function get_request_body( $country, $cc ) {
 		return wp_json_encode(
 			array(
-				'purchase_country'  => $cc,
+				'purchase_country'  => strtoupper( $cc ),
 				'purchase_currency' => $country['currency'],
 				'locale'            => 'en-US',
 				'order_amount'      => 100,

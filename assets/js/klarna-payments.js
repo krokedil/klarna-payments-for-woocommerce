@@ -365,7 +365,7 @@ jQuery( function($) {
 								},
 								success: function (response) {
 									// Log the success.
-									console.log('kp_place_order sucess');
+									console.log('kp_place_order success');
 									console.log(response);
 								},
 								error: function (response) {
@@ -374,7 +374,13 @@ jQuery( function($) {
 									console.log(response);
 								},
 								complete: function (response) {
-									window.location.href = response.responseJSON.data;
+									if( response.responseJSON.success === true ) {
+										window.location.href = response.responseJSON.data;
+									} else {
+										$('form.checkout').removeClass('processing').unblock();
+										$('form.checkout').find( '.input-text, select, input:checkbox' ).trigger( 'validate' ).blur();
+										$('form.checkout').trigger('update_checkout');
+									}
 								}
 							}
 						);
