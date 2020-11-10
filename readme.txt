@@ -55,6 +55,13 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2020.11.10    - version 2.1.4 =
+* Fix           - Fixed an issue with sending the wrong country code for the UK when testing credentials after saving settings.
+* Fix           - Fixed an issue that caused the customer to be redirected to a 404 page on an error in the checkout.
+* Enhancement   - Added compatibility for Smart Coupons.
+* Enhancement   - Improved coupon handling on the checkout.
+* Enhancement   - Add a default icon if we are not on the checkout page and have an icon set from Klarna.
+
 = 2020.09.30    - version 2.1.3 = 
 * Enhancement   - Added proper user-agent to test-credentials check requests.
 * Fix           - Fixed an issue with saving the incorrect value as the Klarna envrionment used. Caused Live orders to show as test orders in the Klarna Order management meta box.
