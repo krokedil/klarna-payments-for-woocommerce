@@ -16,11 +16,11 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../classes/class-kp-ajax.php:113
+#: ../classes/class-kp-ajax.php:114
 msgid "Authorization rejected by Klarna."
 msgstr ""
 
-#: ../classes/class-kp-ajax.php:111
+#: ../classes/class-kp-ajax.php:112
 msgid "Customer aborted purchase with Klarna."
 msgstr ""
 
@@ -146,91 +146,27 @@ msgid "B2B"
 msgstr ""
 
 #: ../includes/kp-form-fields.php:88, ../includes/kp-form-fields.php:121, ../includes/kp-form-fields.php:154, ../includes/kp-form-fields.php:187, ../includes/kp-form-fields.php:220, ../includes/kp-form-fields.php:253, ../includes/kp-form-fields.php:286, ../includes/kp-form-fields.php:319, ../includes/kp-form-fields.php:352, ../includes/kp-form-fields.php:385, ../includes/kp-form-fields.php:418, ../includes/kp-form-fields.php:451, ../includes/kp-form-fields.php:484, ../includes/kp-form-fields.php:517, ../includes/kp-form-fields.php:550, ../includes/kp-form-fields.php:583, ../includes/kp-form-fields.php:616
-msgid "Production Username"
+msgid "Production Klarna API username"
 msgstr ""
 
-#: ../includes/kp-form-fields.php:90, ../includes/kp-form-fields.php:97, ../includes/kp-form-fields.php:104, ../includes/kp-form-fields.php:111
-msgid "Get your API keys from your Klarna Payments merchant account for AU."
+#: ../includes/kp-form-fields.php:90, ../includes/kp-form-fields.php:104, ../includes/kp-form-fields.php:123, ../includes/kp-form-fields.php:137, ../includes/kp-form-fields.php:156, ../includes/kp-form-fields.php:170, ../includes/kp-form-fields.php:189, ../includes/kp-form-fields.php:203, ../includes/kp-form-fields.php:222, ../includes/kp-form-fields.php:236, ../includes/kp-form-fields.php:255, ../includes/kp-form-fields.php:269, ../includes/kp-form-fields.php:288, ../includes/kp-form-fields.php:302, ../includes/kp-form-fields.php:321, ../includes/kp-form-fields.php:335, ../includes/kp-form-fields.php:354, ../includes/kp-form-fields.php:368, ../includes/kp-form-fields.php:387, ../includes/kp-form-fields.php:401, ../includes/kp-form-fields.php:420, ../includes/kp-form-fields.php:434, ../includes/kp-form-fields.php:453, ../includes/kp-form-fields.php:467, ../includes/kp-form-fields.php:486, ../includes/kp-form-fields.php:500, ../includes/kp-form-fields.php:519, ../includes/kp-form-fields.php:533, ../includes/kp-form-fields.php:552, ../includes/kp-form-fields.php:566, ../includes/kp-form-fields.php:585, ../includes/kp-form-fields.php:599, ../includes/kp-form-fields.php:618, ../includes/kp-form-fields.php:632
+msgid "Use the API username you downloaded in the Klarna Merchant Portal. Don’t use your email address."
 msgstr ""
 
 #: ../includes/kp-form-fields.php:95, ../includes/kp-form-fields.php:128, ../includes/kp-form-fields.php:161, ../includes/kp-form-fields.php:194, ../includes/kp-form-fields.php:227, ../includes/kp-form-fields.php:260, ../includes/kp-form-fields.php:293, ../includes/kp-form-fields.php:326, ../includes/kp-form-fields.php:359, ../includes/kp-form-fields.php:392, ../includes/kp-form-fields.php:425, ../includes/kp-form-fields.php:458, ../includes/kp-form-fields.php:491, ../includes/kp-form-fields.php:524, ../includes/kp-form-fields.php:557, ../includes/kp-form-fields.php:590, ../includes/kp-form-fields.php:623
-msgid "Production Password"
+msgid "Production Klarna API password"
+msgstr ""
+
+#: ../includes/kp-form-fields.php:97, ../includes/kp-form-fields.php:111, ../includes/kp-form-fields.php:130, ../includes/kp-form-fields.php:144, ../includes/kp-form-fields.php:163, ../includes/kp-form-fields.php:177, ../includes/kp-form-fields.php:196, ../includes/kp-form-fields.php:210, ../includes/kp-form-fields.php:229, ../includes/kp-form-fields.php:243, ../includes/kp-form-fields.php:262, ../includes/kp-form-fields.php:276, ../includes/kp-form-fields.php:295, ../includes/kp-form-fields.php:309, ../includes/kp-form-fields.php:328, ../includes/kp-form-fields.php:342, ../includes/kp-form-fields.php:361, ../includes/kp-form-fields.php:375, ../includes/kp-form-fields.php:394, ../includes/kp-form-fields.php:408, ../includes/kp-form-fields.php:427, ../includes/kp-form-fields.php:441, ../includes/kp-form-fields.php:460, ../includes/kp-form-fields.php:474, ../includes/kp-form-fields.php:493, ../includes/kp-form-fields.php:507, ../includes/kp-form-fields.php:526, ../includes/kp-form-fields.php:540, ../includes/kp-form-fields.php:559, ../includes/kp-form-fields.php:573, ../includes/kp-form-fields.php:592, ../includes/kp-form-fields.php:606, ../includes/kp-form-fields.php:625, ../includes/kp-form-fields.php:639
+msgid "Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address."
 msgstr ""
 
 #: ../includes/kp-form-fields.php:102, ../includes/kp-form-fields.php:135, ../includes/kp-form-fields.php:168, ../includes/kp-form-fields.php:201, ../includes/kp-form-fields.php:234, ../includes/kp-form-fields.php:267, ../includes/kp-form-fields.php:300, ../includes/kp-form-fields.php:333, ../includes/kp-form-fields.php:366, ../includes/kp-form-fields.php:399, ../includes/kp-form-fields.php:432, ../includes/kp-form-fields.php:465, ../includes/kp-form-fields.php:498, ../includes/kp-form-fields.php:531, ../includes/kp-form-fields.php:564, ../includes/kp-form-fields.php:597, ../includes/kp-form-fields.php:630
-msgid "Test Username"
+msgid "Test Klarna API username"
 msgstr ""
 
 #: ../includes/kp-form-fields.php:109, ../includes/kp-form-fields.php:142, ../includes/kp-form-fields.php:175, ../includes/kp-form-fields.php:208, ../includes/kp-form-fields.php:241, ../includes/kp-form-fields.php:274, ../includes/kp-form-fields.php:307, ../includes/kp-form-fields.php:340, ../includes/kp-form-fields.php:373, ../includes/kp-form-fields.php:406, ../includes/kp-form-fields.php:439, ../includes/kp-form-fields.php:472, ../includes/kp-form-fields.php:505, ../includes/kp-form-fields.php:538, ../includes/kp-form-fields.php:571, ../includes/kp-form-fields.php:604, ../includes/kp-form-fields.php:637
-msgid "Test Password"
-msgstr ""
-
-#: ../includes/kp-form-fields.php:123, ../includes/kp-form-fields.php:130, ../includes/kp-form-fields.php:137, ../includes/kp-form-fields.php:144
-msgid "Get your API keys from your Klarna Payments merchant account for AT."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:156, ../includes/kp-form-fields.php:163, ../includes/kp-form-fields.php:170, ../includes/kp-form-fields.php:177
-msgid "Get your API keys from your Klarna Payments merchant account for BE."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:189, ../includes/kp-form-fields.php:196, ../includes/kp-form-fields.php:203, ../includes/kp-form-fields.php:210
-msgid "Get your API keys from your Klarna Payments merchant account for Canada."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:222, ../includes/kp-form-fields.php:229, ../includes/kp-form-fields.php:236, ../includes/kp-form-fields.php:243
-msgid "Get your API keys from your Klarna Payments merchant account for DK."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:255, ../includes/kp-form-fields.php:262, ../includes/kp-form-fields.php:269, ../includes/kp-form-fields.php:276
-msgid "Get your API keys from your Klarna Payments merchant account for DE."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:288, ../includes/kp-form-fields.php:295, ../includes/kp-form-fields.php:302, ../includes/kp-form-fields.php:309
-msgid "Get your API keys from your Klarna Payments merchant account for FI."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:321, ../includes/kp-form-fields.php:328, ../includes/kp-form-fields.php:335, ../includes/kp-form-fields.php:342
-msgid "Get your API keys from your Klarna Payments merchant account for FR."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:354, ../includes/kp-form-fields.php:361, ../includes/kp-form-fields.php:368, ../includes/kp-form-fields.php:375
-msgid "Get your API keys from your Klarna Payments merchant account for IT."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:387, ../includes/kp-form-fields.php:394, ../includes/kp-form-fields.php:401, ../includes/kp-form-fields.php:408
-msgid "Get your API keys from your Klarna Payments merchant account for NL."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:420, ../includes/kp-form-fields.php:427, ../includes/kp-form-fields.php:434, ../includes/kp-form-fields.php:441
-msgid "Get your API keys from your Klarna Payments merchant account for NO."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:453, ../includes/kp-form-fields.php:460, ../includes/kp-form-fields.php:467, ../includes/kp-form-fields.php:474
-msgid "Get your API keys from your Klarna Payments merchant account for NZ."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:486, ../includes/kp-form-fields.php:493, ../includes/kp-form-fields.php:507
-msgid "Get your API keys from your Klarna Payments merchant account for SE."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:500
-msgid "Get your API keys from your Klarna Payments merchant account for EU."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:519, ../includes/kp-form-fields.php:526, ../includes/kp-form-fields.php:533, ../includes/kp-form-fields.php:540
-msgid "Get your API keys from your Klarna Payments merchant account for ES."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:552, ../includes/kp-form-fields.php:559, ../includes/kp-form-fields.php:566, ../includes/kp-form-fields.php:573
-msgid "Get your API keys from your Klarna Payments merchant account for Switzerland."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:585, ../includes/kp-form-fields.php:592, ../includes/kp-form-fields.php:599, ../includes/kp-form-fields.php:606
-msgid "Get your API keys from your Klarna Payments merchant account for UK."
-msgstr ""
-
-#: ../includes/kp-form-fields.php:618, ../includes/kp-form-fields.php:625, ../includes/kp-form-fields.php:632, ../includes/kp-form-fields.php:639
-msgid "Get your API keys from your Klarna Payments merchant account for US."
+msgid "Test Klarna API password"
 msgstr ""
 
 #: ../includes/kp-functions.php:74
