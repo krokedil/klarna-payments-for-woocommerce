@@ -65,7 +65,7 @@ class KP_IFrame {
 		if ( is_checkout() ) {
 			$this->kp_settings = $kp_settings;
 			$this->init();
-			if ( array_key_exists( 'background', $this->kp_color_options ) ) {
+			if ( isset( $this->kp_color_options['background'] ) ) {
 				add_action( 'wp_head', array( $this, 'iframe_background' ) );
 			}
 		}
