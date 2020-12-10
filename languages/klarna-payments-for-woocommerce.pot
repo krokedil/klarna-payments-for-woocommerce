@@ -49,6 +49,10 @@ msgstr ""
 msgid "Get the flexibility to pay over time with Klarna!"
 msgstr ""
 
+#: ../classes/class-wc-gateway-klarna-payments.php:88
+msgid "What is Klarna?"
+msgstr ""
+
 #: ../classes/requests/helpers/class-kp-order-lines.php:218, ../classes/requests/helpers/class-kp-order-lines.php:219, ../classes/requests/helpers/class-kp-order-lines.php:426, ../classes/requests/helpers/class-kp-order-lines.php:427
 msgid "Sales Tax"
 msgstr ""

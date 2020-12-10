@@ -85,7 +85,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					$link_style = '';
 				}
 
-				$what_is_klarna_text = 'What is Klarna?';
+				$what_is_klarna_text = __( 'What is Klarna?', 'klarna-payments-for-woocommerce' );
 				$link_url            = 'https://www.klarna.com';
 
 				// Change text for Germany.
