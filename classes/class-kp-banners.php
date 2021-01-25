@@ -152,10 +152,8 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 					<?php echo $parent_options; // phpcs:ignore?>
 				</div>
 
-				
 				<div id="krokdocs-sidebar">
-					
-					<div class="krokdocs-sidebar-section" >
+					<div class="krokdocs-sidebar-section">
 						<h1 id="krokdocs-sidebar-title">Get started</h1>
 							<div class="krokdocs-sidebar-content">
 								<p id="krokdocs-sidebar-main-text">
