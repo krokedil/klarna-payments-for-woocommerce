@@ -16,10 +16,12 @@ class KP_Requests {
 	/**
 	 * Class constructor.
 	 *
-	 * @param int $order_id The WooCommerce order id.
+	 * @param int    $order_id The WooCommerce order id.
+	 * @param string $country The country for the request.
 	 */
-	public function __construct( $order_id = false ) {
+	public function __construct( $order_id = false, $country = '' ) {
 		$this->order_id = $order_id;
+		$this->country = empty( $country ) ? kp_get_klarna_country() : $country;
 		$this->set_environment_variables();
 	}
 
@@ -46,7 +48,7 @@ class KP_Requests {
 		$this->iframe_options = new KP_IFrame( $this->kp_settings );
 		$this->testmode       = ( 'yes' !== $this->kp_settings['testmode'] ) ? false : true;
 		$this->user_agent     = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - WooCommerce: ' . WC()->version . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil';
-		$order_lines_class    = new KP_Order_Lines( kp_get_klarna_country() );
+		$order_lines_class    = new KP_Order_Lines( $this->country );
 		$this->order_lines    = $order_lines_class->order_lines( $this->order_id );
 		$this->set_credentials();
 		$this->set_environment();
@@ -86,11 +88,11 @@ class KP_Requests {
 	 */
 	public function set_credentials() {
 		if ( $this->testmode ) {
-			$this->merchant_id   = $this->kp_settings[ 'test_merchant_id_' . strtolower( kp_get_klarna_country() ) ];
-			$this->shared_secret = $this->kp_settings[ 'test_shared_secret_' . strtolower( kp_get_klarna_country() ) ];
+			$this->merchant_id   = $this->kp_settings[ 'test_merchant_id_' . strtolower( $this->country ) ];
+			$this->shared_secret = $this->kp_settings[ 'test_shared_secret_' . strtolower( $this->country ) ];
 		} else {
-			$this->merchant_id   = $this->kp_settings[ 'merchant_id_' . strtolower( kp_get_klarna_country() ) ];
-			$this->shared_secret = $this->kp_settings[ 'shared_secret_' . strtolower( kp_get_klarna_country() ) ];
+			$this->merchant_id   = $this->kp_settings[ 'merchant_id_' . strtolower( $this->country ) ];
+			$this->shared_secret = $this->kp_settings[ 'shared_secret_' . strtolower( $this->country ) ];
 		}
 	}
 
@@ -98,7 +100,7 @@ class KP_Requests {
 	 * Sets the environment.
 	 */
 	public function set_environment() {
-		switch ( kp_get_klarna_country() ) {
+		switch ( $this->country ) {
 			case 'US':
 				$env_string = '-na';
 				break;
