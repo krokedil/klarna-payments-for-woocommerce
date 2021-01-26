@@ -31,7 +31,7 @@ class KP_Callbacks {
 			return;
 		}
 
-		wp_schedule_single_event( time() + 10, 'kp_wc_authorization', array( $data ) );
+		wp_schedule_single_event( time() + 120, 'kp_wc_authorization', array( $data ) );
 	}
 
 	/**
