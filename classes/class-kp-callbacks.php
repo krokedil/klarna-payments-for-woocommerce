@@ -65,24 +65,37 @@ class KP_Callbacks {
 		$order      = wc_get_order( $order_id );
 		$country    = $order->get_billing_country();
 
+		// Dont do anything if the order has been processed.
+		if ( $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+			return;
+		}
+
 		$request  = new KP_Place_Order( $order_id, $country );
 		$response = $request->request( $auth_token );
 		if ( is_wp_error( $response ) ) {
-			// add order note here.
+			/**
+			 * @var WP_Error $response The error response.
+			 */
+			$order->add_order_note( __ ( 'Failed to complete the order during the authentication callback.', 'klarna-payments-for-woocommerce' ) . $response->get_error_message() );
 			return;
 		}
 
 		$fraud_status = $response['fraud_status'];
 		switch ( $fraud_status ) {
 			case 'ACCEPTED':
-				// Add an order note here.
 				kp_process_accepted( $order, $response );
+				$order->add_order_note( __ ( 'The Klarna order was successfully completed by the authorization callback', 'klarna-payments-for-woocommerce' ) );
 				break;
 			case 'PENDING':
+				kp_process_pending( $order, $response );
+				$order->add_order_note( __ ( 'The Klarna order is pending approval by Klarna', 'klarna-payments-for-woocommerce' ));
+				break;
 			case 'REJECTED':
-			default:
-				// Add an order note here.
 				kp_process_rejected( $order, $response );
+				$order->add_order_note( __ ( 'The Klarna order was rejected during the authorization by Klarna', 'klarna-payments-for-woocommerce' ) );
+				break;
+			default:
+				$order->add_order_note( __ ( 'Failed to complete the order during the authentication callback.', 'klarna-payments-for-woocommerce' ) );
 				break;
 		}
 
