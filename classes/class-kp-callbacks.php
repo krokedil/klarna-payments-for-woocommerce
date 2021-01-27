@@ -13,6 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class for handling callbacks.
  */
 class KP_Callbacks {
+	/**
+	 * Class constructor.
+	 */
 	public function __construct() {
 		add_action( 'woocommerce_api_kp_wc_authorization', array( $this, 'authorization_cb' ) );
 		add_action( 'kp_wc_authorization', array( $this, 'kp_wc_authorization' ), 10, 2 );
@@ -24,7 +27,7 @@ class KP_Callbacks {
 	 * @return void
 	 */
 	public function authorization_cb() {
-		$data = json_decode( file_get_contents('php://input'), true );
+		$data = json_decode( file_get_contents( 'php://input' ), true );
 
 		// If the data is empty, return.
 		if ( empty( $data ) ) {
@@ -76,7 +79,7 @@ class KP_Callbacks {
 			/**
 			 * @var WP_Error $response The error response.
 			 */
-			$order->add_order_note( __ ( 'Failed to complete the order during the authentication callback.', 'klarna-payments-for-woocommerce' ) . $response->get_error_message() );
+			$order->add_order_note( __( 'Failed to complete the order during the authentication callback.', 'klarna-payments-for-woocommerce' ) . $response->get_error_message() );
 			return;
 		}
 
@@ -84,18 +87,18 @@ class KP_Callbacks {
 		switch ( $fraud_status ) {
 			case 'ACCEPTED':
 				kp_process_accepted( $order, $response );
-				$order->add_order_note( __ ( 'The Klarna order was successfully completed by the authorization callback', 'klarna-payments-for-woocommerce' ) );
+				$order->add_order_note( __( 'The Klarna order was successfully completed by the authorization callback', 'klarna-payments-for-woocommerce' ) );
 				break;
 			case 'PENDING':
 				kp_process_pending( $order, $response );
-				$order->add_order_note( __ ( 'The Klarna order is pending approval by Klarna', 'klarna-payments-for-woocommerce' ));
+				$order->add_order_note( __( 'The Klarna order is pending approval by Klarna', 'klarna-payments-for-woocommerce' ));
 				break;
 			case 'REJECTED':
 				kp_process_rejected( $order, $response );
-				$order->add_order_note( __ ( 'The Klarna order was rejected during the authorization by Klarna', 'klarna-payments-for-woocommerce' ) );
+				$order->add_order_note( __( 'The Klarna order was rejected during the authorization by Klarna', 'klarna-payments-for-woocommerce' ) );
 				break;
 			default:
-				$order->add_order_note( __ ( 'Failed to complete the order during the authentication callback.', 'klarna-payments-for-woocommerce' ) );
+				$order->add_order_note( __( 'Failed to complete the order during the authentication callback.', 'klarna-payments-for-woocommerce' ) );
 				break;
 		}
 

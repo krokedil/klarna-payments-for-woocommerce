@@ -21,7 +21,7 @@ class KP_Requests {
 	 */
 	public function __construct( $order_id = false, $country = '' ) {
 		$this->order_id = $order_id;
-		$this->country = empty( $country ) ? kp_get_klarna_country() : $country;
+		$this->country  = empty( $country ) ? kp_get_klarna_country() : $country;
 		$this->set_environment_variables();
 	}
 

@@ -81,21 +81,21 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 
 			Menu::add_plugin_item(
 				array(
-					'id'         => 'klarna-checkout-for-woocommerce-add-ons',
-					'parent'     => 'klarna-checkout-for-woocommerce',
-					'title'      => __( 'Add-ons', 'klarna-checkout-for-woocommerce' ),
-					'url'        => 'checkout-addons&tab=addons',
-					'order'      => 0,
+					'id'     => 'klarna-checkout-for-woocommerce-add-ons',
+					'parent' => 'klarna-checkout-for-woocommerce',
+					'title'  => __( 'Add-ons', 'klarna-checkout-for-woocommerce' ),
+					'url'    => 'checkout-addons&tab=addons',
+					'order'  => 0,
 				)
 			);
 
 			Menu::add_plugin_item(
 				array(
-					'id'         => 'klarna-checkout-for-woocommerce-settings',
-					'parent'     => 'klarna-checkout-for-woocommerce',
-					'title'      => __( 'Settings', 'klarna-checkout-for-woocommerce' ),
-					'url'        => 'checkout-addons&tab=settings',
-					'order'      => 1,
+					'id'     => 'klarna-checkout-for-woocommerce-settings',
+					'parent' => 'klarna-checkout-for-woocommerce',
+					'title'  => __( 'Settings', 'klarna-checkout-for-woocommerce' ),
+					'url'    => 'checkout-addons&tab=settings',
+					'order'  => 1,
 				)
 			);
 		}
@@ -202,7 +202,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		/**
 		 * Get addon action button helper function.
 		 *
-		 * @param array $item The addon item.
+		 * @param object $item The addon item.
 		 **/
 		public static function get_addon_action_button( $item ) {
 			if ( current_user_can( 'activate_plugins' ) ) {
@@ -406,7 +406,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		/**
 		 * Get featured for the addons screen
 		 *
-		 * @return array of objects
+		 * @return object of objects
 		 */
 		public static function get_addons() {
 			$addons = get_transient( 'wc_kco_addons' );
