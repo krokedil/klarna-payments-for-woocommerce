@@ -1,8 +1,8 @@
 <?php
 /**
- * Create KCO Order
+ * Create KP session
  *
- * @package Klarna_Checkout/Classes/Request/Checkout/Post
+ * @package WC_Klarna_Payments/Classes/Post/Requests
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

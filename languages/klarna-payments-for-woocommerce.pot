@@ -1,4 +1,4 @@
-# Copyright (C) 2020 klarna-payments-for-woocommerce
+# Copyright (C) 2021 klarna-payments-for-woocommerce
 # This file is distributed under the same license as the klarna-payments-for-woocommerce package.
 msgid ""
 msgstr ""
@@ -24,6 +24,22 @@ msgstr ""
 msgid "Customer aborted purchase with Klarna."
 msgstr ""
 
+#: ../classes/class-kp-callbacks.php:85, ../classes/class-kp-callbacks.php:104
+msgid "Failed to complete the order during the authentication callback."
+msgstr ""
+
+#: ../classes/class-kp-callbacks.php:93
+msgid "The Klarna order was successfully completed by the authorization callback"
+msgstr ""
+
+#: ../classes/class-kp-callbacks.php:97
+msgid "The Klarna order is pending approval by Klarna"
+msgstr ""
+
+#: ../classes/class-kp-callbacks.php:101
+msgid "The Klarna order was rejected during the authorization by Klarna"
+msgstr ""
+
 #: ../classes/class-kp-email.php:36
 msgid "Klarna"
 msgstr ""
@@ -47,6 +63,10 @@ msgstr ""
 
 #: ../classes/class-wc-gateway-klarna-payments.php:31
 msgid "Get the flexibility to pay over time with Klarna!"
+msgstr ""
+
+#: ../classes/class-wc-gateway-klarna-payments.php:88
+msgid "What is Klarna?"
 msgstr ""
 
 #: ../classes/requests/helpers/class-kp-order-lines.php:218, ../classes/requests/helpers/class-kp-order-lines.php:219, ../classes/requests/helpers/class-kp-order-lines.php:426, ../classes/requests/helpers/class-kp-order-lines.php:427

@@ -2,7 +2,7 @@
 /**
  * Update Session request class.
  *
- * @package Payer_B2B/Classes/Put/Requests
+ * @package WC_Klarna_Payments/Classes/Post/Requests
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -65,7 +65,7 @@ class KP_Place_Order extends KP_Requests {
 			apply_filters(
 				'kp_wc_api_request_args',
 				array(
-					'purchase_country'    => kp_get_klarna_country(),
+					'purchase_country'    => $this->country,
 					'purchase_currency'   => $order->get_currency(),
 					'locale'              => $this->get_klarna_locale(),
 					'billing_address'     => KP_Customer_Data::get_billing_address( $this->order_id, $this->kp_settings['customer_type'] ),

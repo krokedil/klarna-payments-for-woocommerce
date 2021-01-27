@@ -3,6 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use \Automattic\WooCommerce\Admin\Features\Navigation\Menu;
+
 if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 	/**
 	 * Klarna_Checkout_For_WooCommerce_Addons class.
@@ -64,6 +66,38 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		 **/
 		public function add_menu() {
 			$submenu = add_submenu_page( 'woocommerce', __( 'Klarna Add-ons', 'klarna-checkout-for-woocommerce' ), __( 'Klarna Add-ons', 'klarna-checkout-for-woocommerce' ), 'manage_woocommerce', 'checkout-addons', array( $this, 'options_page' ) );
+
+			if ( ! class_exists( '\Automattic\WooCommerce\Admin\Features\Navigation\Menu' ) ) {
+				return;
+			}
+
+			Menu::add_plugin_category(
+				array(
+					'id'         => 'klarna-checkout-for-woocommerce',
+					'title'      => __( 'Klarna', 'klarna-checkout-for-woocommerce' ),
+					'capability' => 'manage_woocommerce',
+				)
+			);
+
+			Menu::add_plugin_item(
+				array(
+					'id'     => 'klarna-checkout-for-woocommerce-add-ons',
+					'parent' => 'klarna-checkout-for-woocommerce',
+					'title'  => __( 'Add-ons', 'klarna-checkout-for-woocommerce' ),
+					'url'    => 'checkout-addons&tab=addons',
+					'order'  => 0,
+				)
+			);
+
+			Menu::add_plugin_item(
+				array(
+					'id'     => 'klarna-checkout-for-woocommerce-settings',
+					'parent' => 'klarna-checkout-for-woocommerce',
+					'title'  => __( 'Settings', 'klarna-checkout-for-woocommerce' ),
+					'url'    => 'checkout-addons&tab=settings',
+					'order'  => 1,
+				)
+			);
 		}
 
 		/**
@@ -72,64 +106,70 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		public function options_page() {
 			$tab     = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 			$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_STRING );
-			$this->add_page_tabs( $tab );
-			if ( empty( $tab ) || 'addons' === $tab ) {
-				$addon_content = self::get_addons();
-				?>
-				<div id="checkout-addons-heading" class="checkout-addons-heading">
-				<div class="checkout-addons-wrap">
-				<h1><?php esc_html_e( 'Klarna Add-ons', 'klarna-checkout-for-woocommerce' ); ?></h1>
-			</div>
-			</div>
-				<?php if ( $addon_content->start ) : ?>
-					<?php foreach ( $addon_content->start as $start ) : ?>
-						<?php if ( isset( $start->plugin_id ) && in_array( $start->plugin_id, array( 'klarna_payments', 'both' ), true ) ) : ?>
-						<div class="checkout-addons-banner-block checkout-addons-wrap wrap <?php echo esc_html( $start->class ); ?>">
-							<h2><?php echo esc_html( $start->title ); ?></h2>
-							<?php echo self::get_dynamic_content( $start->content ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-						</div>
-					<?php endif; ?>
-				<?php endforeach; ?>
-			<?php endif; ?>
-
-			<div id="checkout-addons-body" class="checkout-addons-body checkout-addons-wrap wrap">
-				<?php if ( $addon_content->sections ) : ?>
-					<?php foreach ( $addon_content->sections as $section ) : ?>
-						<?php if ( isset( $section->plugin_id ) && in_array( $section->plugin_id, array( 'klarna_payments', 'both' ), true ) ) : ?>
-							<div id="<?php echo esc_html( $section->class ); ?>" class="<?php echo esc_html( $section->class ); ?>">
-								<div class="list">
-									<?php foreach ( $section->items as $item ) : ?>
-										<div class="checkout-addon <?php echo esc_html( $item->class ); ?>">
-											<?php if ( $item->image ) : ?>
-												<img src="<?php echo esc_attr( $item->image ); ?>" alt="<?php echo esc_html( $item->title ); ?>" class="checkout-addon-icon"/>
-											<?php endif; ?>
-											<h3 class="checkout-addon-title"><?php echo esc_html( $item->title ); ?></h3>
-											<p class="checkout-addon-excerpt"><?php echo esc_textarea( $item->description ); ?></p>
-											<div class="checkout-addon-footer">
-												<div class="inside-wrapper">
-													<?php if ( $item->href ) : ?>
-														<span class="checkout-addon-action"><?php echo self::get_addon_action_button( $item ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-													<?php else : ?>
-														<span class="checkout-addon-status"></span>
-														<span class="checkout-addon-action"><?php echo self::get_addon_action_button( $item ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-													<?php endif; ?>	
-												</div>
-											</div>
-										</div>
-									<?php endforeach; ?>
+			?>
+				<div class="wrap woocommerce">
+					<?php $this->add_page_tabs( $tab ); ?>
+					<?php
+					if ( empty( $tab ) || 'addons' === $tab ) {
+						$addon_content = self::get_addons();
+						?>
+							<div id="checkout-addons-heading" class="checkout-addons-heading">
+								<div class="checkout-addons-wrap">
+									<h1><?php esc_html_e( 'Klarna Add-ons', 'klarna-checkout-for-woocommerce' ); ?></h1>
 								</div>
 							</div>
-						<?php endif; ?>
-					<?php endforeach; ?>
-				<?php endif; ?>
-			</div>
-				<?php
-			} elseif ( 'settings' === $tab ) {
-				do_action( 'klarna_addons_settings_tab', $section );
-				?>
-				<p><?php esc_html_e( 'Please install an add-on to be able to see the settings.', 'klarna-checkout-for-woocommerce' ); ?></p>
-				<?php
-			}
+							<?php if ( $addon_content->start ) : ?>
+								<?php foreach ( $addon_content->start as $start ) : ?>
+									<?php if ( isset( $start->plugin_id ) && in_array( $start->plugin_id, array( 'klarna_payments', 'both' ), true ) ) : ?>
+										<div class="checkout-addons-banner-block checkout-addons-wrap <?php echo esc_html( $start->class ); ?>">
+											<h2><?php echo esc_html( $start->title ); ?></h2>
+											<?php echo self::get_dynamic_content( $start->content ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+										</div>
+									<?php endif; ?>
+								<?php endforeach; ?>
+							<?php endif; ?>
+
+							<div id="checkout-addons-body" class="checkout-addons-body checkout-addons-wrap wrap">
+								<?php if ( $addon_content->sections ) : ?>
+									<?php foreach ( $addon_content->sections as $section ) : ?>
+										<?php if ( isset( $section->plugin_id ) && in_array( $section->plugin_id, array( 'klarna_payments', 'both' ), true ) ) : ?>
+											<div id="<?php echo esc_html( $section->class ); ?>" class="<?php echo esc_html( $section->class ); ?>">
+												<div class="list">
+													<?php foreach ( $section->items as $item ) : ?>
+														<div class="checkout-addon <?php echo esc_html( $item->class ); ?>">
+															<?php if ( $item->image ) : ?>
+																<img src="<?php echo esc_attr( $item->image ); ?>" alt="<?php echo esc_html( $item->title ); ?>" class="checkout-addon-icon"/>
+															<?php endif; ?>
+															<h3 class="checkout-addon-title"><?php echo esc_html( $item->title ); ?></h3>
+															<p class="checkout-addon-excerpt"><?php echo esc_textarea( $item->description ); ?></p>
+															<div class="checkout-addon-footer">
+																<div class="inside-wrapper">
+																	<?php if ( $item->href ) : ?>
+																		<span class="checkout-addon-action"><?php echo self::get_addon_action_button( $item ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+																	<?php else : ?>
+																		<span class="checkout-addon-status"></span>
+																		<span class="checkout-addon-action"><?php echo self::get_addon_action_button( $item ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+																	<?php endif; ?>	
+																</div>
+															</div>
+														</div>
+													<?php endforeach; ?>
+												</div>
+											</div>
+										<?php endif; ?>
+									<?php endforeach; ?>
+								<?php endif; ?>
+							</div>
+						<?php
+					} elseif ( 'settings' === $tab ) {
+						do_action( 'klarna_addons_settings_tab', $section );
+						?>
+						<p><?php esc_html_e( 'Please install an add-on to be able to see the settings.', 'klarna-checkout-for-woocommerce' ); ?></p>
+						<?php
+					}
+					?>
+				</div>
+			<?php
 		}
 
 		/**
@@ -162,7 +202,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		/**
 		 * Get addon action button helper function.
 		 *
-		 * @param array $item The addon item.
+		 * @param object $item The addon item.
 		 **/
 		public static function get_addon_action_button( $item ) {
 			if ( current_user_can( 'activate_plugins' ) ) {
@@ -366,7 +406,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		/**
 		 * Get featured for the addons screen
 		 *
-		 * @return array of objects
+		 * @return object of objects
 		 */
 		public static function get_addons() {
 			$addons = get_transient( 'wc_kco_addons' );

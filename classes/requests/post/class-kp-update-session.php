@@ -2,7 +2,7 @@
 /**
  * Update Session request class.
  *
- * @package Payer_B2B/Classes/Put/Requests
+ * @package WC_Klarna_Payments/Classes/Post/Requests
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -75,6 +75,9 @@ class KP_Update_Session extends KP_Requests {
 				'order_lines'       => $this->order_lines['order_lines'],
 				'customer'          => get_klarna_customer( $this->kp_settings['customer_type'] ),
 				'options'           => $this->iframe_options->get_kp_color_options(),
+				'merchant_urls'     => array(
+					'authorization' => home_url( '/wc-api/KP_WC_AUTHORIZATION' ),
+				),
 			)
 		);
 	}

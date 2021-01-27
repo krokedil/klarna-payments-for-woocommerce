@@ -85,7 +85,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					$link_style = '';
 				}
 
-				$what_is_klarna_text = 'What is Klarna?';
+				$what_is_klarna_text = __( 'What is Klarna?', 'klarna-payments-for-woocommerce' );
 				$link_url            = 'https://www.klarna.com';
 
 				// Change text for Germany.
@@ -445,7 +445,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'time'      => time(),
 		);
 		update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country() );
-
+		update_post_meta( $order_id, '_kp_session_id', WC()->session->get( 'klarna_payments_session_id' ) );
 		// Add #kp hash to checkout url so we can do a finalize call to Klarna.
 		return array(
 			'result'   => 'success',

@@ -3,7 +3,7 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.5.1
+Tested up to: 5.6.0
 Requires PHP: 5.6
 WC requires at least: 3.4.0
 WC tested up to: 4.7.0
@@ -55,6 +55,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.01.27    - version 2.2.0 =
+* Feature       - Added support for Klarnas authentication callback. After a purchase is authenticated we schedule a check after 2 minutes to possibly complete an order where the customer was not properly returned to the checkout page from the 3DS step.
+* Enhancement   - Klarna Addons now have better support for WooCommerce Admins navigation feature. Thank you to Joshua Flowers ( github joshuatf )!
+* Enhancement   - Added additional links to support and documentation on the settings page for the payment method.
+* Enhancement   - Added translation for the "What is Klarna?" string.
+
 = 2020.11.10    - version 2.1.4 =
 * Enhancement   - Added compatibility for Smart Coupons.
 * Enhancement   - Improved coupon handling on the checkout.
