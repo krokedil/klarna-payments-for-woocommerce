@@ -23,7 +23,7 @@ class KP_Callbacks {
 
 	/**
 	 * Process the authorization callback from Klarna.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function authorization_cb() {
@@ -39,7 +39,8 @@ class KP_Callbacks {
 
 	/**
 	 * Handle the authorization callback from Klarna. Maybe complete a order.
-	 * 
+	 *
+	 * @param array $data The data for the auth callback.
 	 * @return void
 	 */
 	public function kp_wc_authorization( $data ) {
@@ -49,9 +50,9 @@ class KP_Callbacks {
 			'post_status' => array_keys( wc_get_order_statuses() ),
 			'meta_key'    => '_kp_session_id', // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
 			'meta_value'  => $data['session_id'], // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
-			'date_query' => array(
+			'date_query'  => array(
 				array(
-					'after'     => '5 minute ago',
+					'after'  => '5 minute ago',
 					'column' => 'post_date',
 				),
 			),
@@ -77,6 +78,8 @@ class KP_Callbacks {
 		$response = $request->request( $auth_token );
 		if ( is_wp_error( $response ) ) {
 			/**
+			 * WordPress error handling.
+			 *
 			 * @var WP_Error $response The error response.
 			 */
 			$order->add_order_note( __( 'Failed to complete the order during the authentication callback.', 'klarna-payments-for-woocommerce' ) . $response->get_error_message() );
@@ -91,7 +94,7 @@ class KP_Callbacks {
 				break;
 			case 'PENDING':
 				kp_process_pending( $order, $response );
-				$order->add_order_note( __( 'The Klarna order is pending approval by Klarna', 'klarna-payments-for-woocommerce' ));
+				$order->add_order_note( __( 'The Klarna order is pending approval by Klarna', 'klarna-payments-for-woocommerce' ) );
 				break;
 			case 'REJECTED':
 				kp_process_rejected( $order, $response );
