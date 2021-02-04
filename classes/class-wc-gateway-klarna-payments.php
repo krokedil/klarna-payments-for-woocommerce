@@ -57,7 +57,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
 		add_filter( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
-		add_action( 'klarna_payments_template', 'kp_maybe_create_session' );
+		//add_action( 'klarna_payments_template', 'kp_maybe_create_session_cart' );
 	}
 
 	/**
@@ -231,7 +231,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		if ( is_wc_endpoint_url( 'order-pay' ) ) {
-			return false;
+			return true;
 		}
 
 		// Check country and currency.
@@ -342,9 +342,38 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
+		// Localize the script.
+		$klarna_payments_params                           = array();
+		$klarna_payments_params['testmode']               = $this->get_option( 'testmode' );
+		$klarna_payments_params['customer_type']          = $this->get_option( 'customer_type' );
+		$klarna_payments_params['remove_postcode_spaces'] = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
+		$klarna_payments_params['ajaxurl']                = admin_url( 'admin-ajax.php' );
+		$klarna_payments_params['place_order_url']        = WC_AJAX::get_endpoint( 'kp_wc_place_order' );
+		$klarna_payments_params['place_order_nonce']      = wp_create_nonce( 'kp_wc_place_order' );
+		$klarna_payments_params['auth_failed_url']        = WC_AJAX::get_endpoint( 'kp_wc_auth_failed' );
+		$klarna_payments_params['auth_failed_nonce']      = wp_create_nonce( 'kp_wc_auth_failed' );
+		$klarna_payments_params['update_session_url']     = WC_AJAX::get_endpoint( 'kp_wc_update_session' );
+		$klarna_payments_params['update_session_nonce']   = wp_create_nonce( 'kp_wc_update_session' );
+		$klarna_payments_params['order_pay_page']         = false;
+
 		// Maybe create KP Session.
 		if ( $this->is_available() ) {
-			kp_maybe_create_session();
+			
+			if ( is_wc_endpoint_url( 'order-pay' ) ) {
+				$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
+				$order_id = wc_get_order_id_by_order_key( $key );
+				kp_create_session_order( $order_id );
+				$klarna_payments_params['client_token']   = get_post_meta( $order_id, '_klarna_payments_client_token', true );
+				$klarna_payments_params['order_pay_page'] = true;
+				$klarna_payments_params['order_id']       = $order_id;
+				$klarna_payments_params['addresses']      = array(
+					'billing'  => KP_Customer_Data::get_billing_address( $order_id, $this->customer_type ),
+					'shipping' => KP_Customer_Data::get_shipping_address( $order_id, $this->customer_type ),
+				);
+			} else {
+				kp_maybe_create_session_cart();
+				$klarna_payments_params['client_token'] = WC()->session->get( 'klarna_payments_client_token' );
+			}
 		}
 
 		wp_register_script(
@@ -376,20 +405,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'shipping_street_address'  => '#shipping_address_1',
 			'shipping_street_address2' => '#shipping_address_2',
 		);
-
-		// Localize the script.
-		$klarna_payments_params                           = array();
-		$klarna_payments_params['testmode']               = $this->get_option( 'testmode' );
-		$klarna_payments_params['customer_type']          = $this->get_option( 'customer_type' );
-		$klarna_payments_params['remove_postcode_spaces'] = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
-		$klarna_payments_params['ajaxurl']                = admin_url( 'admin-ajax.php' );
-		$klarna_payments_params['place_order_url']        = WC_AJAX::get_endpoint( 'kp_wc_place_order' );
-		$klarna_payments_params['place_order_nonce']      = wp_create_nonce( 'kp_wc_place_order' );
-		$klarna_payments_params['auth_failed_url']        = WC_AJAX::get_endpoint( 'kp_wc_auth_failed' );
-		$klarna_payments_params['auth_failed_nonce']      = wp_create_nonce( 'kp_wc_auth_failed' );
-		$klarna_payments_params['update_session_url']     = WC_AJAX::get_endpoint( 'kp_wc_update_session' );
-		$klarna_payments_params['update_session_nonce']   = wp_create_nonce( 'kp_wc_update_session' );
-		$klarna_payments_params['client_token']           = WC()->session->get( 'klarna_payments_client_token' );
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );

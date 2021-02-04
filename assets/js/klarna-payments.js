@@ -120,11 +120,16 @@ jQuery( function($) {
 			/**
 			 * When changing payment method.
  			 */
-			$('form.checkout').on('change', 'input[name="payment_method"]', function() {
+			$('body').on('change', 'input[name="payment_method"]', function() {
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form. Also collapse any unselected Klarna Payments gateways.
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					//$('#place_order').attr('disabled', true);
-					klarna_payments.updateSession();
+					if( ! klarna_payments_params ) {
+						klarna_payments.updateSession();
+					} else {
+						klarna_payments.initKlarnaCredit( klarna_payments_params.client_token );
+						klarna_payments.load().then(klarna_payments.loadHandler);
+					}
 					klarna_payments.collapseGateways();
 				}
 
@@ -348,61 +353,9 @@ jQuery( function($) {
 
             if( splittedHash[0] === "#kp" ){
                 var json = JSON.parse( atob( splittedHash[1] ) );
+				var order_id = json.order_id
 				klarna_payments.addresses = json.addresses
-				klarna_payments.authorize().done( function( response ) {
-					if ('authorization_token' in response) {
-						$('body').trigger( 'kp_auth_success' );
-						$.ajax(
-							klarna_payments_params.place_order_url,
-							{
-								type: "POST",
-								dataType: "json",
-								async: true,
-								data: {
-									order_id: json.order_id,
-									auth_token: klarna_payments.authorization_response.authorization_token,
-									nonce: klarna_payments_params.place_order_nonce,
-								},
-								success: function (response) {
-									// Log the success.
-									console.log('kp_place_order success');
-									console.log(response);
-								},
-								error: function (response) {
-									// Log the error.
-									console.log('kp_place_order error');
-									console.log(response);
-								},
-								complete: function (response) {
-									if( response.responseJSON.success === true ) {
-										window.location.href = response.responseJSON.data;
-									} else {
-										$('form.checkout').removeClass('processing').unblock();
-										$('form.checkout').find( '.input-text, select, input:checkbox' ).trigger( 'validate' ).blur();
-										$('form.checkout').trigger('update_checkout');
-									}
-								}
-							}
-						);
-					} else {
-						$('body').trigger( 'kp_auth_failed' );
-						console.log('No authorization_token in response');
-						$.ajax(
-							klarna_payments_params.auth_failed_url,
-							{
-								type: "POST",
-								dataType: "json",
-								async: true,
-								data: {
-									show_form: response.show_form,
-									order_id: json.order_id,
-									nonce: klarna_payments_params.auth_failed_nonce
-								},
-							}
-						);
-						$('form.woocommerce-checkout').removeClass( 'processing' ).unblock();
-					}
-				});
+				klarna_payments.authorizeKlarnaOrder( order_id );
 			}
 		},
 
@@ -451,7 +404,73 @@ jQuery( function($) {
 				$('html, body').animate({
 					scrollTop: etop
 				}, 1000);
+		},
+
+		authorizeKlarnaOrder: function( order_id ) {
+			klarna_payments.authorize().done( function( response ) {
+				if ('authorization_token' in response) {
+					$('body').trigger( 'kp_auth_success' );
+					$.ajax(
+						klarna_payments_params.place_order_url,
+						{
+							type: "POST",
+							dataType: "json",
+							async: true,
+							data: {
+								order_id: order_id,
+								auth_token: klarna_payments.authorization_response.authorization_token,
+								nonce: klarna_payments_params.place_order_nonce,
+							},
+							success: function (response) {
+								// Log the success.
+								console.log('kp_place_order success');
+								console.log(response);
+							},
+							error: function (response) {
+								// Log the error.
+								console.log('kp_place_order error');
+								console.log(response);
+							},
+							complete: function (response) {
+								if( response.responseJSON.success === true ) {
+									window.location.href = response.responseJSON.data;
+								} else {
+									$('form.checkout').removeClass('processing').unblock();
+									$('form.checkout').find( '.input-text, select, input:checkbox' ).trigger( 'validate' ).blur();
+									$('form.checkout').trigger('update_checkout');
+								}
+							}
+						}
+					);
+				} else {
+					$('body').trigger( 'kp_auth_failed' );
+					console.log('No authorization_token in response');
+					$.ajax(
+						klarna_payments_params.auth_failed_url,
+						{
+							type: "POST",
+							dataType: "json",
+							async: true,
+							data: {
+								show_form: response.show_form,
+								order_id: json.order_id,
+								nonce: klarna_payments_params.auth_failed_nonce
+							},
+						}
+					);
+					$('form.woocommerce-checkout').removeClass( 'processing' ).unblock();
+				}
+			});
+		},
+
+		klarnaPayForOrder: function( event ) {
+			if( klarna_payments.isKlarnaPaymentsSelected ) {
+				event.preventDefault();
+				klarna_payments.addresses = klarna_payments_params.addresses;
+				klarna_payments.authorizeKlarnaOrder( klarna_payments_params.order_id );
+			}
 		}
+		
 	};
 	klarna_payments.start();
 	$('body').ready( function() {
@@ -460,5 +479,8 @@ jQuery( function($) {
 	});
 	$('body').ajaxComplete( function() {
 		klarna_payments.setRadioButtonValues();
+	});
+	$('body').on( 'submit', 'form#order_review', function( e ) {
+		klarna_payments.klarnaPayForOrder( e );
 	});
 });
