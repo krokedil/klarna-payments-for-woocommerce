@@ -57,7 +57,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
 		add_filter( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
-		//add_action( 'klarna_payments_template', 'kp_maybe_create_session_cart' );
+		add_action( 'klarna_payments_template', 'kp_maybe_create_session_cart' );
 	}
 
 	/**
@@ -117,8 +117,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Check country and currency
 	 *
 	 * Fired before create session and update session, and inside is_available.
+	 * @param WC_Order|bool $order The WooCommerce order.
 	 */
-	public function country_currency_check() {
+	public function country_currency_check( $order = false ) {
 		// Check if allowed currency.
 		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies, true ) ) {
 			kp_unset_session_values();
@@ -128,7 +129,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If US, check if USD used.
 		if ( 'USD' === get_woocommerce_currency() ) {
-			if ( 'US' !== kp_get_klarna_country() ) {
+			if ( 'US' !== kp_get_klarna_country( $order ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'USD must be used for US purchases' );
@@ -137,7 +138,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If GB, check if GBP used.
 		if ( 'GBP' === get_woocommerce_currency() ) {
-			if ( 'GB' !== kp_get_klarna_country() ) {
+			if ( 'GB' !== kp_get_klarna_country( $order ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'GBP must be used for GB purchases' );
@@ -146,7 +147,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If SE, check if SEK used.
 		if ( 'SEK' === get_woocommerce_currency() ) {
-			if ( 'SE' !== kp_get_klarna_country() ) {
+			if ( 'SE' !== kp_get_klarna_country( $order ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'SEK must be used for SE purchases' );
@@ -155,7 +156,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If NO, check if NOK used.
 		if ( 'NOK' === get_woocommerce_currency() ) {
-			if ( 'NO' !== kp_get_klarna_country() ) {
+			if ( 'NO' !== kp_get_klarna_country( $order ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'NOK must be used for NO purchases' );
@@ -164,7 +165,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If DK, check if DKK used.
 		if ( 'DKK' === get_woocommerce_currency() ) {
-			if ( 'DK' !== kp_get_klarna_country() ) {
+			if ( 'DK' !== kp_get_klarna_country( $order ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'DKK must be used for DK purchases' );
@@ -173,7 +174,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If CH, check if CHF used.
 		if ( 'CHF' === get_woocommerce_currency() ) {
-			if ( 'CH' !== kp_get_klarna_country() ) {
+			if ( 'CH' !== kp_get_klarna_country( $order ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'CHF must be used for CH purchases' );
@@ -182,7 +183,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If EUR country, check if EUR used.
 		if ( 'EUR' === get_woocommerce_currency() ) {
-			if ( ! in_array( kp_get_klarna_country(), array( 'AT', 'DE', 'NL', 'FI', 'ES', 'IT', 'BE', 'FR' ), true ) ) {
+			if ( ! in_array( kp_get_klarna_country( $order ), array( 'AT', 'DE', 'NL', 'FI', 'ES', 'IT', 'BE', 'FR' ), true ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI, ES, IT, BE, FR purchases' );
@@ -191,7 +192,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If CAD country, check if CAD used.
 		if ( 'CAD' === get_woocommerce_currency() ) {
-			if ( 'CA' !== kp_get_klarna_country() ) {
+			if ( 'CA' !== kp_get_klarna_country( $order ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'CAD must be used for CA purchases' );
@@ -200,7 +201,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If AUD country, check if AUD used.
 		if ( 'AUD' === get_woocommerce_currency() ) {
-			if ( 'AU' !== kp_get_klarna_country() ) {
+			if ( 'AU' !== kp_get_klarna_country( $order ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'AUD must be used for AU purchases' );
@@ -209,7 +210,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If AUD country, check if AUD used.
 		if ( 'NZD' === get_woocommerce_currency() ) {
-			if ( 'NZ' !== kp_get_klarna_country() ) {
+			if ( 'NZ' !== kp_get_klarna_country( $order ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'NZD must be used for NZ purchases' );
@@ -231,6 +232,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		if ( is_wc_endpoint_url( 'order-pay' ) ) {
+			$order_id = absint( get_query_var( 'order-pay' ) );
+			$order = wc_get_order( $order_id );
+			if ( is_wp_error( $this->country_currency_check( $order ) ) ) {
+				return false;
+			}
+
 			return true;
 		}
 

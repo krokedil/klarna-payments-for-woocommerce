@@ -61,23 +61,23 @@ function kp_maybe_create_session_cart( $klarna_country = false ) {
 function kp_create_session_order( $order_id, $klarna_country = false ) {
 	$order = wc_get_order( $order_id );
 	if ( ! $klarna_country ) {
-		$klarna_country = $order->get_billing_country();
+		$klarna_country = kp_get_klarna_country( $order );
 	}
 
 	$klarna_payments_session_id = get_post_meta( $order_id, '_klarna_payments_session_id', true );
 
 	if( $klarna_payments_session_id ) {
-		$request  = new KP_Update_Session( $order_id );
+		$request  = new KP_Update_Session( $order_id, $klarna_country );
 		$response = $request->request( $order_id );
 		if ( is_wp_error( $response ) ) {
-			$request  = new KP_Create_Session( $order_id );
+			$request  = new KP_Create_Session( $order_id, $klarna_country );
 			$response = $request->request();
 			if ( is_wp_error( $response ) ) {
 				return kp_extract_error_message( $response );
 			}
 		}
 	} else {
-		$request  = new KP_Create_Session( $order_id );
+		$request  = new KP_Create_Session( $order_id, $klarna_country );
 		$response = $request->request();
 		if ( is_wp_error( $response ) ) {
 			return kp_extract_error_message( $response );
@@ -128,8 +128,14 @@ function get_klarna_customer( $customer_type ) {
 
 /**
  * Gets Klarna country.
+ * 
+ * @param WC_Order|false $order The WooCommerce order.
  */
-function kp_get_klarna_country() {
+function kp_get_klarna_country( $order = false ) {
+	if ( ! empty( $order ) ) {
+		return apply_filters( 'wc_klarna_payments_country', $order->get_billing_country() );
+	}
+
 	if ( ! method_exists( 'WC_Customer', 'get_billing_country' ) ) {
 			return;
 	}
