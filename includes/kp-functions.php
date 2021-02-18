@@ -15,10 +15,6 @@ function kp_maybe_create_session_cart( $klarna_country = false ) {
 	if ( ! $klarna_country ) {
 		$klarna_country = WC()->checkout->get_value( 'billing_country' );
 	}
-	// Need to calculate these here, because WooCommerce hasn't done it yet.
-	WC()->cart->calculate_fees();
-	WC()->cart->calculate_shipping();
-	WC()->cart->calculate_totals();
 	if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
 		// Try to update the session, if it fails try to create new session.
 		$request  = new KP_Update_Session();
@@ -54,7 +50,7 @@ function kp_maybe_create_session_cart( $klarna_country = false ) {
 /**
  * Creates a Klarna Payments session if needed for an order.
  *
- * @param int $order_id The WooCommerce order id.
+ * @param int         $order_id The WooCommerce order id.
  * @param string|bool $klarna_country
  * @return void
  */
@@ -66,7 +62,7 @@ function kp_create_session_order( $order_id, $klarna_country = false ) {
 
 	$klarna_payments_session_id = get_post_meta( $order_id, '_klarna_payments_session_id', true );
 
-	if( $klarna_payments_session_id ) {
+	if ( $klarna_payments_session_id ) {
 		$request  = new KP_Update_Session( $order_id, $klarna_country );
 		$response = $request->request( $order_id );
 		if ( is_wp_error( $response ) ) {
@@ -128,7 +124,7 @@ function get_klarna_customer( $customer_type ) {
 
 /**
  * Gets Klarna country.
- * 
+ *
  * @param WC_Order|false $order The WooCommerce order.
  */
 function kp_get_klarna_country( $order = false ) {
