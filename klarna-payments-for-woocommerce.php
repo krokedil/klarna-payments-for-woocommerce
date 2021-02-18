@@ -5,12 +5,12 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 2.2.0
+ * Version: 2.3.0-rc.1
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 3.4.0
- * WC tested up to: 4.9.0
+ * WC tested up to: 5.0.0
  *
  * Copyright (c) 2017-2020 Krokedil
  *
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '2.2.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '2.3.0-rc.1' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
