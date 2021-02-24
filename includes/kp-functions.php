@@ -55,8 +55,8 @@ function kp_maybe_create_session_cart( $klarna_country = false ) {
  * Creates a Klarna Payments session if needed for an order.
  *
  * @param int         $order_id The WooCommerce order id.
- * @param string|bool $klarna_country
- * @return void
+ * @param string|bool $klarna_country The Klarna country.
+ * @return void|WP_Error
  */
 function kp_create_session_order( $order_id, $klarna_country = false ) {
 	$order = wc_get_order( $order_id );
