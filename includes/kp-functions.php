@@ -54,7 +54,7 @@ function kp_maybe_create_session_cart( $klarna_country = false ) {
 /**
  * Creates a Klarna Payments session if needed for an order.
  *
- * @param int $order_id The WooCommerce order id.
+ * @param int         $order_id The WooCommerce order id.
  * @param string|bool $klarna_country
  * @return void
  */
@@ -66,7 +66,7 @@ function kp_create_session_order( $order_id, $klarna_country = false ) {
 
 	$klarna_payments_session_id = get_post_meta( $order_id, '_klarna_payments_session_id', true );
 
-	if( $klarna_payments_session_id ) {
+	if ( $klarna_payments_session_id ) {
 		$request  = new KP_Update_Session( $order_id, $klarna_country );
 		$response = $request->request( $order_id );
 		if ( is_wp_error( $response ) ) {
@@ -86,6 +86,7 @@ function kp_create_session_order( $order_id, $klarna_country = false ) {
 	update_post_meta( $order_id, '_kp_session_id', $response['session_id'] );
 	update_post_meta( $order_id, '_klarna_payments_client_token', $response['client_token'] );
 	update_post_meta( $order_id, '_klarna_payments_categories', $response['payment_method_categories'] );
+	update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country( $order ) );
 
 }
 
@@ -128,7 +129,7 @@ function get_klarna_customer( $customer_type ) {
 
 /**
  * Gets Klarna country.
- * 
+ *
  * @param WC_Order|false $order The WooCommerce order.
  */
 function kp_get_klarna_country( $order = false ) {
