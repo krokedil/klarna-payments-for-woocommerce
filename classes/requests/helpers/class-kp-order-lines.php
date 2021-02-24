@@ -196,7 +196,7 @@ class KP_Order_Lines {
 		if ( $this->separate_sales_tax ) {
 			return 0;
 		}
-$tax_items = $order->get_items( 'tax' );
+		$tax_items = $order->get_items( 'tax' );
 		foreach ( $tax_items as $tax_item ) {
 			$rate_id = $tax_item->get_rate_id();
 			foreach ( $order_item->get_taxes()['total'] as $key => $value ) {
