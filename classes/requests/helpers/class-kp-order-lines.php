@@ -199,10 +199,16 @@ class KP_Order_Lines {
 		$tax_items = $order->get_items( 'tax' );
 		foreach ( $tax_items as $tax_item ) {
 			$rate_id = $tax_item->get_rate_id();
-			if ( key( $order_item->get_taxes()['total'] ) === $rate_id ) {
-				return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 );
+			foreach ( $order_item->get_taxes()['total'] as $key => $value ) {
+				if ( '' !== $value ) {
+					if ( $rate_id === $key ) {
+						return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 );
+					}
+				}
 			}
 		}
+		// If we get here, there is no tax set for the order item. Return zero.
+		return 0;
 	}
 	/**
 	 * Process sales tax for US.
