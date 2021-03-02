@@ -69,11 +69,11 @@ msgstr ""
 msgid "What is Klarna?"
 msgstr ""
 
-#: ../classes/requests/helpers/class-kp-order-lines.php:218, ../classes/requests/helpers/class-kp-order-lines.php:219, ../classes/requests/helpers/class-kp-order-lines.php:426, ../classes/requests/helpers/class-kp-order-lines.php:427
+#: ../classes/requests/helpers/class-kp-order-lines.php:224, ../classes/requests/helpers/class-kp-order-lines.php:225, ../classes/requests/helpers/class-kp-order-lines.php:432, ../classes/requests/helpers/class-kp-order-lines.php:433
 msgid "Sales Tax"
 msgstr ""
 
-#: ../classes/requests/helpers/class-kp-order-lines.php:403, ../classes/requests/helpers/class-kp-order-lines.php:711, ../classes/requests/helpers/class-kp-order-lines.php:737, ../classes/requests/helpers/class-kp-order-lines.php:885
+#: ../classes/requests/helpers/class-kp-order-lines.php:409, ../classes/requests/helpers/class-kp-order-lines.php:717, ../classes/requests/helpers/class-kp-order-lines.php:743, ../classes/requests/helpers/class-kp-order-lines.php:891
 msgid "Shipping"
 msgstr ""
 
@@ -189,7 +189,7 @@ msgstr ""
 msgid "Test Klarna API password"
 msgstr ""
 
-#: ../includes/kp-functions.php:74
+#: ../includes/kp-functions.php:113
 msgid "Klarna Payments API Error: "
 msgstr ""
 
