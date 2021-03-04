@@ -445,6 +445,7 @@ jQuery( function($) {
 				} else {
 					$('body').trigger( 'kp_auth_failed' );
 					console.log('No authorization_token in response');
+					$('form.woocommerce-checkout').removeClass( 'processing' ).unblock();
 					$.ajax(
 						klarna_payments_params.auth_failed_url,
 						{
@@ -458,7 +459,6 @@ jQuery( function($) {
 							},
 						}
 					);
-					$('form.woocommerce-checkout').removeClass( 'processing' ).unblock();
 				}
 			});
 		},
