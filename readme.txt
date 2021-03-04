@@ -55,6 +55,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.03.04    - version 2.3.1 =
+* Fix           - Fixed an issue with the checkout not being unblocked when Klarna rejected a purchase.
+
 = 2021.03.02    - version 2.3.0 =
 * Feature       - Added support for Pay for order links. You can now send payment links for orders that are created in the Admin page to customers and they can complete them through Klarna Payments. This can also be used to send previously unsuccessful orders to the customers again to have them retry the same purchase again.
 
