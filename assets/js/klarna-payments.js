@@ -64,6 +64,11 @@ jQuery( function($) {
 
 				// Check if we need to hide the shipping fields
 				klarna_payments.maybeHideShippingAddress();
+
+				if (klarna_payments.isKlarnaPaymentsSelected()) {
+					klarna_payments.initKlarnaCredit();
+					klarna_payments.load().then(klarna_payments.loadHandler);
+				}
 			});
 
 			/**
@@ -400,6 +405,7 @@ jQuery( function($) {
 				} else {
 					$('body').trigger( 'kp_auth_failed' );
 					console.log('No authorization_token in response');
+					$('form.woocommerce-checkout').removeClass( 'processing' ).unblock();
 					$.ajax(
 						klarna_payments_params.auth_failed_url,
 						{
@@ -413,7 +419,6 @@ jQuery( function($) {
 							},
 						}
 					);
-					$('form.woocommerce-checkout').removeClass( 'processing' ).unblock();
 				}
 			});
 		},
