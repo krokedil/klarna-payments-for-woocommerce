@@ -464,7 +464,7 @@ jQuery( function($) {
 		},
 
 		klarnaPayForOrder: function( event ) {
-			if( klarna_payments.isKlarnaPaymentsSelected ) {
+			if( klarna_payments.isKlarnaPaymentsSelected() ) {
 				event.preventDefault();
 				klarna_payments.addresses = klarna_payments_params.addresses;
 				klarna_payments.authorizeKlarnaOrder( klarna_payments_params.order_id );
