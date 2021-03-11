@@ -31,6 +31,12 @@ class KP_Order_Lines {
 	 */
 	private $shop_country;
 	/**
+	 * Order ID.
+	 *
+	 * @var int
+	 */
+	private $order_id = false;
+	/**
 	 * Send sales tax as separate item (US merchants).
 	 *
 	 * @var bool
@@ -55,6 +61,7 @@ class KP_Order_Lines {
 	 * @return array
 	 */
 	public function order_lines( $order_id = false ) {
+		$this->$order_id = $order_id;
 		if ( ! $order_id ) {
 			$this->process_cart();
 			$this->process_shipping();
@@ -86,7 +93,7 @@ class KP_Order_Lines {
 	 * @return mixed
 	 */
 	private function get_order_lines() {
-		return $this->order_lines;
+		return apply_filters('kp_wc_api_order_lines', $this->order_lines, $this->order_id);
 	}
 	/**
 	 * Get order total amount for Klarna API.
