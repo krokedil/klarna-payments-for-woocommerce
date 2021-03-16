@@ -55,6 +55,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.03.16    - version 2.4.0 =
+* Enhancement   - Change how and when we do calculations and send data to Klarna. Before we did this on the JS event "updated_checkout". This has been changed to rather do it after WooCommerce does their calculations, using the action "woocommerce_after_calculate_totals".
+* Feature       - Added support for the plugin Checkout Addons due to the above change.
+* Feature       - Added a filter on the order lines sent to Klarna, "kp_wc_api_order_lines". Thank you Ernesto Ruge (github the-infinity).
+* Fix           - Removed unsupported color settings for the Klarna Payments iframe.
+
 = 2021.03.09    - version 2.3.2 =
 * Fix           - Fixed an issue with the checkout freezing trying to pay for an order and not using a Klarna payments method.
 
