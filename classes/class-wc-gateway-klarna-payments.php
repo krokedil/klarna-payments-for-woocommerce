@@ -366,7 +366,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Maybe create KP Session.
 		if ( $this->is_available() ) {
-
 			if ( is_wc_endpoint_url( 'order-pay' ) ) {
 				$key      = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
 				$order_id = wc_get_order_id_by_order_key( $key );

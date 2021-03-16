@@ -93,7 +93,7 @@ class KP_Order_Lines {
 	 * @return mixed
 	 */
 	private function get_order_lines() {
-		return apply_filters('kp_wc_api_order_lines', $this->order_lines, $this->order_id);
+		return apply_filters( 'kp_wc_api_order_lines', $this->order_lines, $this->order_id );
 	}
 	/**
 	 * Get order total amount for Klarna API.

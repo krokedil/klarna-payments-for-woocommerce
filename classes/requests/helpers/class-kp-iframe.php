@@ -20,18 +20,10 @@ class KP_IFrame {
 	 * @var array
 	 */
 	protected $kp_color_keys = array(
-		'background',
-		'color_button',
-		'color_button_text',
-		'color_checkbox',
-		'color_checkbox_checkmark',
-		'color_header',
-		'color_link',
 		'color_border',
 		'color_border_selected',
 		'color_text',
 		'color_details',
-		'color_text_secondary',
 		'radius_border',
 	);
 
@@ -85,15 +77,6 @@ class KP_IFrame {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Add <head> CSS for Klarna Payments iframe background.
-	 *
-	 * @hook wp_head
-	 */
-	public function iframe_background() {
-		echo "<style type='text/css'>div#klarna_container { background:" . esc_html( $this->get_color_option( 'background' ) ) . ' !important; padding: 10px; } div#klarna_container:empty { padding: 0; } </style>';
 	}
 
 	/**
