@@ -516,8 +516,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Set payment method title for order.
 	 *
-	 * @param array $order WooCommerce order.
-	 * @param array $klarna_place_order_response The Klarna place order response.
+	 * @param WC_Order $order WooCommerce order.
+	 * @param array    $klarna_place_order_response The Klarna place order response.
 	 * @return void
 	 * @todo Change it so that it dynamically gets information from Klarna.
 	 */

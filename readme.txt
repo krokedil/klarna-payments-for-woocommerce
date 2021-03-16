@@ -3,10 +3,10 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.6.0
+Tested up to: 5.6.2
 Requires PHP: 5.6
 WC requires at least: 3.4.0
-WC tested up to: 4.7.0
+WC tested up to: 5.1.0
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -55,7 +55,13 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
-= 2021.02.11    - version 2.3.0 =
+= 2021.03.09    - version 2.3.2 =
+* Fix           - Fixed an issue with the checkout freezing trying to pay for an order and not using a Klarna payments method.
+
+= 2021.03.04    - version 2.3.1 =
+* Fix           - Fixed an issue with the checkout not being unblocked when Klarna rejected a purchase.
+
+= 2021.03.02    - version 2.3.0 =
 * Feature       - Added support for Pay for order links. You can now send payment links for orders that are created in the Admin page to customers and they can complete them through Klarna Payments. This can also be used to send previously unsuccessful orders to the customers again to have them retry the same purchase again.
 
 = 2021.01.27    - version 2.2.0 =
