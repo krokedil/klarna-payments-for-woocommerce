@@ -117,6 +117,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Check country and currency
 	 *
 	 * Fired before create session and update session, and inside is_available.
+	 *
 	 * @param WC_Order|bool $order The WooCommerce order.
 	 */
 	public function country_currency_check( $order = false ) {
@@ -233,7 +234,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		if ( is_wc_endpoint_url( 'order-pay' ) ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
-			$order = wc_get_order( $order_id );
+			$order    = wc_get_order( $order_id );
 			if ( is_wp_error( $this->country_currency_check( $order ) ) ) {
 				return false;
 			}
@@ -365,9 +366,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Maybe create KP Session.
 		if ( $this->is_available() ) {
-			
 			if ( is_wc_endpoint_url( 'order-pay' ) ) {
-				$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
+				$key      = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
 				$order_id = wc_get_order_id_by_order_key( $key );
 				kp_create_session_order( $order_id );
 				$klarna_payments_params['client_token']   = get_post_meta( $order_id, '_klarna_payments_client_token', true );

@@ -7,8 +7,8 @@
 
 do_action( 'klarna_payments_template' );
 if ( is_wc_endpoint_url( 'order-pay' ) ) {
-	$key = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
-	$order_id = wc_get_order_id_by_order_key( $key );
+	$key                = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
+	$order_id           = wc_get_order_id_by_order_key( $key );
 	$payment_categories = get_post_meta( $order_id, '_klarna_payments_categories', true );
 } else {
 	$payment_categories = WC()->session->get( 'klarna_payments_categories' );
