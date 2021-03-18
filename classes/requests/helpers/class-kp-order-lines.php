@@ -61,7 +61,7 @@ class KP_Order_Lines {
 	 * @return array
 	 */
 	public function order_lines( $order_id = false ) {
-		$this->$order_id = $order_id;
+		$this->order_id = $order_id;
 		if ( ! $order_id ) {
 			$this->process_cart();
 			$this->process_shipping();
