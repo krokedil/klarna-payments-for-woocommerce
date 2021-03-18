@@ -49,7 +49,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 				return;
 			}
 
-			$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
+			$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 			$show_banner = false;
 
 			// Always show banner in testmode.

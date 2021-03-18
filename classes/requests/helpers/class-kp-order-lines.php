@@ -161,7 +161,7 @@ class KP_Order_Lines {
 					'total_discount_amount' => $this->get_item_discount_amount( $cart_item ),
 				);
 				// Add images.
-				$klarna_payment_settings = get_option( 'woocommerce_klarna_payments_settings' );
+				$klarna_payment_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 				if ( 'yes' === $klarna_payment_settings['send_product_urls'] ) {
 					$klarna_item['product_url'] = $this->get_item_product_url( $product );
 					if ( $this->get_item_image_url( $product ) ) {
@@ -390,7 +390,7 @@ class KP_Order_Lines {
 					'total_discount_amount' => $this->get_order_item_discount_amount( $order_item ),
 				);
 				// Add images.
-				$klarna_payment_settings = get_option( 'woocommerce_klarna_payments_settings' );
+				$klarna_payment_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 				if ( 'yes' === $klarna_payment_settings['send_product_urls'] ) {
 					$klarna_item['product_url'] = $this->get_item_product_url( $product );
 					if ( $this->get_item_image_url( $product ) ) {
