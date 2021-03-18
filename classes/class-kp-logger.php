@@ -26,7 +26,7 @@ class KP_Logger {
 	 * @param string $data The data string.
 	 */
 	public static function log( $data ) {
-		$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
+		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 		if ( 'yes' === $kp_settings['logging'] ) {
 			$message = self::format_data( $data );
 			if ( empty( self::$log ) ) {

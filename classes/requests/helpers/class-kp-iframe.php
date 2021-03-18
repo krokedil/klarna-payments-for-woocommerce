@@ -68,7 +68,7 @@ class KP_IFrame {
 	 * @return void
 	 */
 	protected function init() {
-		// only settings with value.
+		// Only settings with value.
 		$kp_settings_filter = array_filter( $this->kp_settings, array( $this, 'has_value' ) );
 		foreach ( $kp_settings_filter as $setting_key => $setting_value ) {
 			foreach ( $this->kp_color_keys as $color_key ) {

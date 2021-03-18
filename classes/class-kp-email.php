@@ -30,7 +30,7 @@ if ( ! class_exists( 'KP_Email' ) ) {
 		 */
 		public function add_klarna_data_to_mail( $order ) {
 			$gateway_used = $order->get_payment_method();
-			$settings     = get_option( 'woocommerce_klarna_payments_settings' );
+			$settings     = get_option( 'woocommerce_klarna_payments_settings', array() );
 			$add_to_email = 'yes' === $settings['add_to_email'] ? true : false;
 			if ( 'klarna_payments' === $gateway_used && $add_to_email ) {
 				$klarna_cs_url  = '<a href="https://www.klarna.com/customer-service">' . esc_html__( 'Klarna', 'klarna-payments-for-woocommerce' ) . '</a>';

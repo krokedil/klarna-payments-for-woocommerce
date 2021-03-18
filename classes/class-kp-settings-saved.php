@@ -40,7 +40,7 @@ class KP_Settings_Saved {
 	 */
 	public function check_api_credentials() {
 		// Get settings from KCO.
-		$options = get_option( 'woocommerce_klarna_payments_settings' );
+		$options = get_option( 'woocommerce_klarna_payments_settings', array() );
 
 		// If not enabled bail.
 		if ( $options && 'yes' !== $options['enabled'] ) {

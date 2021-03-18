@@ -44,7 +44,7 @@ class KP_Requests {
 	 */
 	public function set_environment_variables() {
 		// Set variables.
-		$this->kp_settings    = get_option( 'woocommerce_klarna_payments_settings' );
+		$this->kp_settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
 		$this->iframe_options = new KP_IFrame( $this->kp_settings );
 		$this->testmode       = ( 'yes' !== $this->kp_settings['testmode'] ) ? false : true;
 		$this->user_agent     = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - WooCommerce: ' . WC()->version . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil';
