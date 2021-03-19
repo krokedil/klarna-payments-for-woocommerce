@@ -55,6 +55,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.03.19    - version 2.4.2 =
+* Fix           - Fixed an incorrectly named variable causing an error on some pages.
+
 = 2021.03.18    - version 2.4.1 =
 * Fix           - Fixed a critical error when the settings for Klarna Payments has not been saved properly.
 
