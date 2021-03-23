@@ -12,6 +12,12 @@
  * @return void|string
  */
 function kp_maybe_create_session_cart( $klarna_country = false ) {
+	// Maybe calculate totals. Only once on a page load.
+	if ( ! is_ajax() && 0 >= did_action( 'woocommerce_before_calculate_totals' ) ) {
+		WC()->cart->calculate_fees();
+		WC()->cart->calculate_shipping();
+		WC()->cart->calculate_totals();
+	}
 	if ( ! $klarna_country ) {
 		$klarna_country = WC()->checkout->get_value( 'billing_country' );
 	}
