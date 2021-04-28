@@ -27,6 +27,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			$ajax_events = array(
 				'kp_wc_place_order' => true,
 				'kp_wc_auth_failed' => true,
+				'kp_wc_log_js'      => true,
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -113,6 +114,25 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				$order->add_order_note( __( 'Authorization rejected by Klarna.', 'klarna-payments-for-woocommerce' ) );
 			}
 
+			wp_send_json_success();
+			wp_die();
+		}
+
+		/**
+		 * Logs messages from the JavaScript to the server log.
+		 *
+		 * @return void
+		 */
+		public static function kp_wc_log_js() {
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'kp_wc_log_js' ) ) {
+				wp_send_json_error( 'bad_nonce' );
+				exit;
+			}
+			$posted_message    = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
+			$klarna_session_id = WC()->session->get( 'klarna_payments_session_id' );
+			$message           = "Frontend JS $klarna_session_id: $posted_message";
+			KP_Logger::log( $message );
 			wp_send_json_success();
 			wp_die();
 		}

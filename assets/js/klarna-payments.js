@@ -339,18 +339,6 @@ jQuery( function($) {
 			}
 		},
 
-		handleHashChange: function( event ) {
-			var currentHash = location.hash;
-			var splittedHash = currentHash.split("=");
-
-            if( splittedHash[0] === "#kp" ){
-                var json = JSON.parse( atob( splittedHash[1] ) );
-				var order_id = json.order_id
-				klarna_payments.addresses = json.addresses
-				klarna_payments.authorizeKlarnaOrder( order_id );
-			}
-		},
-
 		initKlarnaCredit: function ( client_token ) {
 			var client_token = klarna_payments.getClientToken();
 			window.klarnaInitData = {client_token: client_token};
@@ -367,8 +355,10 @@ jQuery( function($) {
 		},
 
 		authorizeKlarnaOrder: function( order_id ) {
+			console.log( 8 );
 			klarna_payments.authorize().done( function( response ) {
 				if ('authorization_token' in response) {
+					console.log( 9 );
 					$('body').trigger( 'kp_auth_success' );
 					$.ajax(
 						klarna_payments_params.place_order_url,
@@ -382,16 +372,19 @@ jQuery( function($) {
 								nonce: klarna_payments_params.place_order_nonce,
 							},
 							success: function (response) {
+								console.log( 10 );
 								// Log the success.
 								console.log('kp_place_order success');
 								console.log(response);
 							},
 							error: function (response) {
+								console.log( 11 );
 								// Log the error.
 								console.log('kp_place_order error');
 								console.log(response);
 							},
 							complete: function (response) {
+								console.log( 12 );
 								if( response.responseJSON.success === true ) {
 									window.location.href = response.responseJSON.data;
 								} else {
@@ -433,18 +426,104 @@ jQuery( function($) {
 
 		getClientToken: function() {
 			return $('#kp_client_token').val();
-		}
+		},
+
+		orderSubmit: function( event ) {
+			if( klarna_payments.isKlarnaPaymentsSelected() ) {
+				event.preventDefault();
+				$('form.checkout').addClass('processing');
+				$( '.woocommerce-checkout-review-order-table' ).block({
+					message: null,
+					overlayCSS: {
+						background: '#fff',
+						opacity: 0.6
+					}
+				});
+				$.ajax({
+					type: 'POST',
+					url: klarna_payments_params.submit_order,
+					data: $('form.checkout').serialize(),
+					dataType: 'json',
+					success: function( data ) {
+						try {
+							if ( 'success' === data.result ) {
+								klarna_payments.logToFile( 'Successfully placed order. Starting authorization with Klarna' );	
+								klarna_payments.addresses = data.addresses
+								klarna_payments.authorizeKlarnaOrder( data.order_id );
+							} else {
+								throw 'Result failed';
+							}
+						} catch ( err ) {
+							if ( data.messages )  {
+								klarna_payments.logToFile( 'Checkout error | ' + data.messages );
+								klarna_payments.failOrder( 'submission', data.messages );
+							} else {
+								klarna_payments.logToFile( 'Checkout error | ' + err );
+								klarna_payments.failOrder( 'submission', '<div class="woocommerce-error">' + 'Checkout error' + '</div>' );
+							}
+						}
+					},
+					error: function( data ) {
+						klarna_payments.logToFile( 'AJAX error | ' + data );
+						klarna_payments.failOrder( 'ajax-error', data );
+					}
+				});
+			}
+		},
+
+		/**
+		 * Fails the order with Klarna on a checkout error and timeout.
+		 * @param {string} event 
+		 */
+		failOrder: function( event, error_message ) {
+			// Re-enable the form.
+			$( 'body' ).trigger( 'updated_checkout' );
+			$( 'form.checkout' ).removeClass( 'processing' );
+			$( 'form.checkout' ).unblock();
+			$( '.woocommerce-checkout-review-order-table' ).unblock();
+
+			// Print error messages, and trigger checkout_error, and scroll to notices.
+			$( '.woocommerce-NoticeGroup-checkout, .woocommerce-error, .woocommerce-message' ).remove();
+			$( 'form.checkout' ).prepend( '<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout">' + error_message + '</div>' ); // eslint-disable-line max-len
+			$( 'form.checkout' ).removeClass( 'processing' ).unblock();
+			$( 'form.checkout' ).find( '.input-text, select, input:checkbox' ).trigger( 'validate' ).blur();
+			$( document.body ).trigger( 'checkout_error' , [ error_message ] );
+			$( 'html, body' ).animate( {
+				scrollTop: ( $( 'form.checkout' ).offset().top - 100 )
+			}, 1000 );
+		},
+
+		/**
+		 * Logs the message to the klarna payments log in WooCommerce.
+		 * @param {string} message 
+		 */
+		logToFile: function( message ) {
+			$.ajax(
+				{
+					url: klarna_payments_params.log_to_file_url,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						message: message,
+						nonce: klarna_payments_params.log_to_file_nonce
+					}
+				}
+			);
+		},
 		
 	};
 	klarna_payments.start();
 	$('body').ready( function() {
 		klarna_payments.setRadioButtonValues();
-		window.addEventListener("hashchange", klarna_payments.handleHashChange);
 	});
 	$('body').ajaxComplete( function() {
 		klarna_payments.setRadioButtonValues();
 	});
 	$('body').on( 'submit', 'form#order_review', function( e ) {
 		klarna_payments.klarnaPayForOrder( e );
+	});
+
+	$('body').on( 'click', 'button#place_order', function( e ) {
+		klarna_payments.orderSubmit( e );
 	});
 });
