@@ -425,7 +425,11 @@ jQuery( function($) {
 		},
 
 		getClientToken: function() {
-			return $('#kp_client_token').val();
+			if( $('#kp_client_token').length > 0 ) {
+				return $('#kp_client_token').val();
+			} else {
+				return klarna_payments_params.client_token;
+			}
 		},
 
 		orderSubmit: function( event ) {
