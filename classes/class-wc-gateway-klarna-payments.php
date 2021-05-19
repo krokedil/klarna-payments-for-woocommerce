@@ -362,6 +362,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_payments_params['auth_failed_nonce']      = wp_create_nonce( 'kp_wc_auth_failed' );
 		$klarna_payments_params['update_session_url']     = WC_AJAX::get_endpoint( 'kp_wc_update_session' );
 		$klarna_payments_params['update_session_nonce']   = wp_create_nonce( 'kp_wc_update_session' );
+		$klarna_payments_params['log_to_file_url']        = WC_AJAX::get_endpoint( 'kp_wc_log_js' );
+		$klarna_payments_params['log_to_file_nonce']      = wp_create_nonce( 'kp_wc_log_js' );
 		$klarna_payments_params['order_pay_page']         = false;
 
 		// Maybe create KP Session.
@@ -380,6 +382,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			} else {
 				kp_maybe_create_session_cart();
 				$klarna_payments_params['client_token'] = WC()->session->get( 'klarna_payments_client_token' );
+				$klarna_payments_params['submit_order'] = WC_AJAX::get_endpoint( 'checkout' );
 			}
 		}
 
@@ -458,20 +461,16 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array   $result  Payment result.
 	 */
 	public function process_payment( $order_id ) {
-		$response = array(
+		update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country() );
+		update_post_meta( $order_id, '_kp_session_id', WC()->session->get( 'klarna_payments_session_id' ) );
+		// Add #kp hash to checkout url so we can do a finalize call to Klarna.
+		return array(
+			'result'    => 'success',
 			'order_id'  => $order_id,
 			'addresses' => array(
 				'billing'  => KP_Customer_Data::get_billing_address( $order_id, $this->customer_type ),
 				'shipping' => KP_Customer_Data::get_shipping_address( $order_id, $this->customer_type ),
 			),
-			'time'      => time(),
-		);
-		update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country() );
-		update_post_meta( $order_id, '_kp_session_id', WC()->session->get( 'klarna_payments_session_id' ) );
-		// Add #kp hash to checkout url so we can do a finalize call to Klarna.
-		return array(
-			'result'   => 'success',
-			'redirect' => '#kp=' . base64_encode( wp_json_encode( $response ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to hide some data from the frontend.
 		);
 	}
 
