@@ -355,10 +355,8 @@ jQuery( function($) {
 		},
 
 		authorizeKlarnaOrder: function( order_id ) {
-			console.log( 8 );
 			klarna_payments.authorize().done( function( response ) {
 				if ('authorization_token' in response) {
-					console.log( 9 );
 					$('body').trigger( 'kp_auth_success' );
 					$.ajax(
 						klarna_payments_params.place_order_url,
@@ -372,19 +370,16 @@ jQuery( function($) {
 								nonce: klarna_payments_params.place_order_nonce,
 							},
 							success: function (response) {
-								console.log( 10 );
 								// Log the success.
 								console.log('kp_place_order success');
 								console.log(response);
 							},
 							error: function (response) {
-								console.log( 11 );
 								// Log the error.
 								console.log('kp_place_order error');
 								console.log(response);
 							},
 							complete: function (response) {
-								console.log( 12 );
 								if( response.responseJSON.success === true ) {
 									window.location.href = response.responseJSON.data;
 								} else {
