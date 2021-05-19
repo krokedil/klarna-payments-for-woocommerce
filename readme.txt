@@ -55,6 +55,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.05.19    - version 2.4.4 =
+* Enhancement   - Remove the need for URL fragments/hashtag URL when completing the checkout process.
+
 = 2021.03.23    - version 2.4.3 =
 * Fix           - Fixed an issue causing us to send a create session before totals had been calculated. This did not break anything, but caused a request to Klarna to fail in the background.
 
