@@ -18,6 +18,12 @@ function kp_maybe_create_session_cart( $klarna_country = false ) {
 		WC()->cart->calculate_shipping();
 		WC()->cart->calculate_totals();
 	}
+
+	// If the cart is empty, do nothing.
+	if ( empty( WC()->cart->get_cart() ) ) {
+		return;
+	}
+
 	if ( ! $klarna_country ) {
 		$klarna_country = WC()->checkout->get_value( 'billing_country' );
 	}
