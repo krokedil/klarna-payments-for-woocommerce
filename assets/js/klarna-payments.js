@@ -463,8 +463,12 @@ jQuery( function($) {
 						}
 					},
 					error: function( data ) {
-						klarna_payments.logToFile( 'AJAX error | ' + data );
-						klarna_payments.failOrder( 'ajax-error', data );
+						try {
+							klarna_payments.logToFile( 'AJAX error | ' + JSON.stringify(data) );
+						} catch( e ) {
+							klarna_payments.logToFile( 'AJAX error | Failed to parse error message.' );
+						}
+						klarna_payments.failOrder( 'ajax-error', '<div class="woocommerce-error">Internal Server Error</div>' );
 					}
 				});
 			}
