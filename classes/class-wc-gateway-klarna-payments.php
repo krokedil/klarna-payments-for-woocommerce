@@ -391,7 +391,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		wp_register_script(
 			'klarna_payments',
 			plugins_url( 'assets/js/klarna-payments.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
-			array( 'jquery' ),
+			array( 'jquery', 'wc-checkout', 'jquery-blockui' ),
 			WC_KLARNA_PAYMENTS_VERSION,
 			true
 		);
