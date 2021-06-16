@@ -515,14 +515,16 @@ jQuery( function($) {
 	$('body').ready( function() {
 		klarna_payments.setRadioButtonValues();
 	});
+
 	$('body').ajaxComplete( function() {
 		klarna_payments.setRadioButtonValues();
 	});
-	$('body').on( 'submit', 'form#order_review', function( e ) {
-		klarna_payments.klarnaPayForOrder( e );
-	});
 
 	$('body').on( 'click', 'button#place_order', function( e ) {
-		klarna_payments.orderSubmit( e );
+		if( "true" === klarna_payments_params.pay_for_order ) {
+			klarna_payments.klarnaPayForOrder( e );
+		} else {
+			klarna_payments.orderSubmit( e );
+		}
 	});
 });
