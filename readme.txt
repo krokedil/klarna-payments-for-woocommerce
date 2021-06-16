@@ -55,6 +55,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.06.16    - version 2.5.0 =
+* Feature       - Added support to have Klarna Payments working on a combined cart and checkout page.
+* Fix           - Fixed an issue with pay for order causing it to not work.
+* Fix           - Included wc-checkout and jquery-blockui as dependencies for our JavaScript file. If blockui was missing from the checkout page it could cause a JavaScript error.
+
 = 2021.05.19    - version 2.4.4 =
 * Enhancement   - Remove the need for URL fragments/hashtag URL when completing the checkout process.
 
