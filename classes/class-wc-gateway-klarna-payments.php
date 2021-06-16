@@ -379,10 +379,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					'billing'  => KP_Customer_Data::get_billing_address( $order_id, $this->customer_type ),
 					'shipping' => KP_Customer_Data::get_shipping_address( $order_id, $this->customer_type ),
 				);
+				$klarna_payments_params['pay_for_order']  = 'true';
 			} else {
 				kp_maybe_create_session_cart();
-				$klarna_payments_params['client_token'] = WC()->session->get( 'klarna_payments_client_token' );
-				$klarna_payments_params['submit_order'] = WC_AJAX::get_endpoint( 'checkout' );
+				$klarna_payments_params['client_token']  = WC()->session->get( 'klarna_payments_client_token' );
+				$klarna_payments_params['submit_order']  = WC_AJAX::get_endpoint( 'checkout' );
+				$klarna_payments_params['pay_for_order'] = 'false';
 			}
 		}
 
