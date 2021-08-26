@@ -97,7 +97,7 @@ class KP_Settings_Saved {
 			),
 			'PL' => array(
 				'region'   => 'eu',
-				'currency' => 'PLN',
+				'currency' => 'PL',
 			),
 			'SE' => array(
 				'region'   => 'eu',

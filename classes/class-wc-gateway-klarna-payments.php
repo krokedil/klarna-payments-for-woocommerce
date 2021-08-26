@@ -184,7 +184,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If PL, check if PLN used.
 		if ( 'PLN' === get_woocommerce_currency() ) {
-			if ( 'PLN' !== kp_get_klarna_country( $order ) ) {
+			if ( 'PL' !== kp_get_klarna_country( $order ) ) {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'PLN must be used for PL purchases' );
