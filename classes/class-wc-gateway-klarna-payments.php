@@ -182,6 +182,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 		}
 
+		// If PL, check if PLN used.
+		if ( 'PLN' === get_woocommerce_currency() ) {
+			if ( 'PLN' !== kp_get_klarna_country( $order ) ) {
+				kp_unset_session_values();
+
+				return new WP_Error( 'currency', 'PLN must be used for PL purchases' );
+			}
+		}
+
 		// If EUR country, check if EUR used.
 		if ( 'EUR' === get_woocommerce_currency() ) {
 			if ( ! in_array( kp_get_klarna_country( $order ), array( 'AT', 'DE', 'NL', 'FI', 'ES', 'IT', 'BE', 'FR' ), true ) ) {
