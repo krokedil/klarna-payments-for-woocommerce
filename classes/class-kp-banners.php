@@ -58,7 +58,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			}
 
 			// Go through countries and check if at least one has credentials configured.
-			$countries   = array( 'at', 'dk', 'fi', 'de', 'nl', 'no', 'se', 'gb', 'us' );
+			$countries   = array( 'at', 'dk', 'fi', 'de', 'nl', 'no', 'pl', 'se', 'gb', 'us' );
 			$country_set = false;
 			foreach ( $countries as $country ) {
 				if ( '' !== $kp_settings[ 'merchant_id_' . $country ] && '' !== $kp_settings[ 'shared_secret_' . $country ] ) {
