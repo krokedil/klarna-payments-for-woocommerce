@@ -58,7 +58,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			}
 
 			// Go through countries and check if at least one has credentials configured.
-			$countries   = array( 'at', 'au', 'be', 'ca', 'ch', 'de', 'dk', 'de', 'es', 'fi', 'fr', 'gb', 'it', 'nl', 'no', 'nz', 'pl', 'se', 'uk', 'us' );
+			$countries = array( 'at', 'au', 'be', 'ca', 'ch', 'de', 'dk', 'de', 'es', 'fi', 'fr', 'gb', 'it', 'nl', 'no', 'nz', 'pl', 'se', 'uk', 'us' );
 
 			$country_set = false;
 			foreach ( $countries as $country ) {
