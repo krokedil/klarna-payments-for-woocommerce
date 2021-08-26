@@ -20,7 +20,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @var array
 	 */
-	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF', 'CAD', 'AUD', 'NZD' );
+	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF', 'CAD', 'AUD', 'NZD', 'PLN' );
 
 	/**
 	 * Constructor
@@ -179,6 +179,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				kp_unset_session_values();
 
 				return new WP_Error( 'currency', 'CHF must be used for CH purchases' );
+			}
+		}
+
+		// If PL, check if PLN used.
+		if ( 'PLN' === get_woocommerce_currency() ) {
+			if ( 'PL' !== kp_get_klarna_country( $order ) ) {
+				kp_unset_session_values();
+
+				return new WP_Error( 'currency', 'PLN must be used for PL purchases' );
 			}
 		}
 
