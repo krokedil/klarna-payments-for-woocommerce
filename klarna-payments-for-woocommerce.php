@@ -72,6 +72,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		}
 
 		/**
+		 * *Singleton* clone.
 		 *
 		 * @return void
 		 */
@@ -79,6 +80,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		}
 
 		/**
+		 * *Singleton* wakeup.
 		 *
 		 * @return void
 		 */
