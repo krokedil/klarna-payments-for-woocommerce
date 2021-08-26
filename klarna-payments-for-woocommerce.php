@@ -72,7 +72,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		}
 
 		/**
-		 * 
+		 *
 		 * @return void
 		 */
 		public function __clone() {
