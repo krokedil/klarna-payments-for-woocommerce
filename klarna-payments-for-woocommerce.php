@@ -199,14 +199,27 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function check_permalinks() {
 
-			if ( ! get_user_meta( get_current_user_id(), 'dismissed_kco_check_permalinks_notice', true ) ) {
+			if ( ! get_user_meta( get_current_user_id(), 'dismissed_kp_check_permalinks_notice', true ) ) {
 				$permalinks = get_option( 'permalink_structure' );
 				if ( empty( $permalinks ) ) {
 					?>
-				<div class="kco-message notice woocommerce-message notice-error">
-				<a class="woocommerce-message-close notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kco_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
-					<?php echo wp_kses_post( wpautop( '<p>' . __( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. You can find information on how to enable it <a href="https://wordpress.org/support/article/using-permalinks/" target="_new">on WordPress website</a>.', 'klarna-payments-for-woocommerce' ) . '</p>' ) ); ?>
-				</div>
+				<div class="kp-message notice woocommerce-message notice-error">
+				<a class="woocommerce-message-close notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
+					<?php
+
+					echo wp_kses_post(
+						wpautop(
+							'<p>' . sprintf(
+								__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
+								esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
+							)
+						),
+						array(
+							'a' => array( 'href' => array() ),
+						) . '</p>'
+					);
+					?>
+					</div>
 					<?php
 				}
 			}
