@@ -100,8 +100,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		protected function __construct() {
 			add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
-			add_action( 'plugins_loaded', array( $this, 'init' ) );
+			add_action( 'admin_notices', array( $this, 'check_permalinks' ) );
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
+			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
 
@@ -190,6 +191,24 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				echo "<div class='" . esc_attr( $notice['class'] ) . "'><p>";
 				echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) );
 				echo '</p></div>';
+			}
+		}
+
+		/**
+		 * Check if pretty permalinks are used.
+		 */
+		public function check_permalinks() {
+
+			if ( ! get_user_meta( get_current_user_id(), 'dismissed_kco_check_permalinks_notice', true ) ) {
+				$permalinks = get_option( 'permalink_structure' );
+				if ( empty( $permalinks ) ) {
+					?>
+				<div class="kco-message notice woocommerce-message notice-error">
+				<a class="woocommerce-message-close notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kco_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
+					<?php echo wp_kses_post( wpautop( '<p>' . __( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. You can find information on how to enable it <a href="https://wordpress.org/support/article/using-permalinks/" target="_new">on WordPress website</a>.', 'klarna-payments-for-woocommerce' ) . '</p>' ) ); ?>
+				</div>
+					<?php
+				}
 			}
 		}
 
