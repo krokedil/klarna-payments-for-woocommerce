@@ -304,7 +304,7 @@ class KP_Order_Lines {
 				$gift_card = array(
 					'type'                  => 'gift_card',
 					'reference'             => $gift_card_code,
-					'name'                  => __( 'Gift card', 'klarna-checkout-for-woocommerce' ),
+					'name'                  => __( 'Gift card', 'klarna-payments-for-woocommerce' ),
 					'quantity'              => 1,
 					'tax_rate'              => 0,
 					'total_discount_amount' => 0,
@@ -314,6 +314,32 @@ class KP_Order_Lines {
 				);
 
 				$this->order_lines[] = $gift_card;
+			}
+		}
+
+		/**
+		 * Yith Gift Cards compatibility.
+		 */
+		if ( class_exists( 'YITH_YWGC_Cart_Checkout' ) ) {
+			if ( isset( WC()->cart->applied_gift_cards ) ) {
+				foreach ( WC()->cart->applied_gift_cards as $gift_card_code ) {
+					$gift_card_amount = isset( WC()->cart->applied_gift_cards_amounts[ $gift_card_code ] ) ?
+						- WC()->cart->applied_gift_cards_amounts[ $gift_card_code ] * 100 : 0;
+
+					$gift_card = array(
+						'type'                  => 'gift_card',
+						'reference'             => $gift_card_code,
+						'name'                  => __( 'Gift card', 'klarna-payments-for-woocommerce' ),
+						'quantity'              => 1,
+						'tax_rate'              => 0,
+						'total_discount_amount' => 0,
+						'total_tax_amount'      => 0,
+						'unit_price'            => $gift_card_amount,
+						'total_amount'          => $gift_card_amount,
+					);
+
+					$this->order_lines[] = $gift_card;
+				}
 			}
 		}
 	}
