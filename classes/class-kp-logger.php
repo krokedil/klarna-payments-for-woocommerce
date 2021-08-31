@@ -34,6 +34,10 @@ class KP_Logger {
 			}
 			self::$log->add( 'klarna_payments', wp_json_encode( $message ) );
 		}
+
+		if ( isset( $data['response']['code'] ) && ( $data['response']['code'] < 200 || $data['response']['code'] > 299 ) ) {
+			self::log_to_db( $data );
+		}
 	}
 
 	/**
@@ -74,5 +78,23 @@ class KP_Logger {
 			'timestamp'      => date( 'Y-m-d H:i:s' ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
 			'plugin_version' => WC_KLARNA_PAYMENTS_VERSION,
 		);
+	}
+
+	/**
+	 * Logs an event in the WP DB.
+	 *
+	 * @param array $data The data to be logged.
+	 */
+	public static function log_to_db( $data ) {
+		$logs = get_option( 'krokedil_debuglog_kp', array() );
+
+		if ( ! empty( $logs ) ) {
+			$logs = json_decode( $logs );
+		}
+
+		$logs   = array_slice( $logs, -14 );
+		$logs[] = $data;
+		$logs   = wp_json_encode( $logs );
+		update_option( 'krokedil_debuglog_kp', $logs );
 	}
 }
