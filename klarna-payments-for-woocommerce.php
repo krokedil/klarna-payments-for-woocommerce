@@ -5,12 +5,12 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 2.5.1
+ * Version: 2.6.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 3.4.0
- * WC tested up to: 5.4.0
+ * WC tested up to: 5.6.0
  *
  * Copyright (c) 2017-2021 Krokedil
  *
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '2.5.1' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '2.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -72,21 +72,19 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		}
 
 		/**
-		 * Private clone method to prevent cloning of the instance of the
-		 * *Singleton* instance.
+		 * *Singleton* clone.
 		 *
 		 * @return void
 		 */
-		private function __clone() {
+		public function __clone() {
 		}
 
 		/**
-		 * Private unserialize method to prevent unserializing of the *Singleton*
-		 * instance.
+		 * *Singleton* wakeup.
 		 *
 		 * @return void
 		 */
-		private function __wakeup() {
+		public function __wakeup() {
 		}
 
 		/**
@@ -102,8 +100,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		protected function __construct() {
 			add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
-			add_action( 'plugins_loaded', array( $this, 'init' ) );
+			add_action( 'admin_notices', array( $this, 'check_permalinks' ) );
 			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
+			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
 
@@ -196,6 +195,38 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		}
 
 		/**
+		 * Check if pretty permalinks are used.
+		 */
+		public function check_permalinks() {
+
+			if ( ! get_user_meta( get_current_user_id(), 'dismissed_kp_check_permalinks_notice', true ) ) {
+				$permalinks = get_option( 'permalink_structure' );
+				if ( empty( $permalinks ) ) {
+					?>
+				<div class="kp-message notice woocommerce-message notice-error">
+				<a class="woocommerce-message-close notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
+					<?php
+
+					echo wp_kses_post(
+						wpautop(
+							'<p>' . sprintf(
+								// translators: URL to docs.
+								__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
+								esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
+							)
+						),
+						array(
+							'a' => array( 'href' => array() ),
+						) . '</p>'
+					);
+					?>
+					</div>
+					<?php
+				}
+			}
+		}
+
+		/**
 		 * Includes the files needed for the plugin
 		 *
 		 * @since 2.0.0
@@ -214,6 +245,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-settings-saved.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-callbacks.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-checkout.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 
 			// Requests.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests.php';

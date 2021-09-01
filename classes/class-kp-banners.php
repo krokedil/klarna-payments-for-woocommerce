@@ -58,7 +58,8 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			}
 
 			// Go through countries and check if at least one has credentials configured.
-			$countries   = array( 'at', 'dk', 'fi', 'de', 'nl', 'no', 'se', 'gb', 'us' );
+			$countries = array( 'at', 'au', 'be', 'ca', 'ch', 'de', 'dk', 'de', 'es', 'fi', 'fr', 'gb', 'it', 'nl', 'no', 'nz', 'pl', 'se', 'uk', 'us' );
+
 			$country_set = false;
 			foreach ( $countries as $country ) {
 				if ( '' !== $kp_settings[ 'merchant_id_' . $country ] && '' !== $kp_settings[ 'shared_secret_' . $country ] ) {
@@ -177,37 +178,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 									src="https://krokedil.se/wp-content/uploads/2020/05/webb_logo_400px.png">
 								</div>
 					</div>
-				</div>				
-
-				<div id="klarna-sidebar">
-
-					<div class="kb-sidebar-section" >
-						<h1 id="kb-sidebar-title">The future proof integration</h1>
-							<div class="kb-sidebar-content">
-								<p id="kb-sidebar-main-text">
-									Klarna is entering the new world of smooth. We would love for you to join us on the ride and to do so you'll need
-									to upgrade your Klarna integration to the latest one.
-								<br>
-								<br>
-									By upgrading your current version to Klarna's latest platform you will always get the
-									latest features that Klarna develops
-								</p>
-								<div id="sidebar-link-holder">
-								<a id="kb-sidebar-button-left" class="kb-sidebar-button"
-									href="<?php echo esc_attr( self::get_go_live_url() ); ?>"
-									target="_blank">Get started
-								</a>
-								</div>
-							</div>
-
-								<div id="kb-sidebar-bottom-holder">
-									<p id="kb-sidebar-logo-follow-up-text">
-										Pay later with
-									</p>
-									<img id="kb-sidebar-klarna-logo-left"
-									src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/klarna_logo_white.png">
-								</div>
-					</div>
+				</div>
 			</div>
 			<div class="save-separator"></div>
 			<?php
