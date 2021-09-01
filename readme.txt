@@ -3,10 +3,10 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.7.0
+Tested up to: 5.8.0
 Requires PHP: 5.6
 WC requires at least: 3.4.0
-WC tested up to: 5.1.0
+WC tested up to: 5.6.0
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -55,6 +55,14 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.09.01    - version 2.6.0 =
+* Feature       - Added support for the Polish market.
+* Feature       - We will now save the last 15 requests to Klarna that had an API error and display them on the WooCommerce status page. This should help with getting error messages when you need to debug issues without going through the logs. These will also be in the status report that you can send to us for support tickets.
+* Enhancement   - Added a warning message if you are not using pretty permalinks for your permalinks setting in WooCommerce.
+* Enhancement   - Added translations for multiple languages for the text that is printed in Emails to customers when using Klarna as a payment method.
+* Fix           - Removed a banner from the settings page that was added incorrectly.
+* Fix           - Fixed compatibility issues with PHP 8.0 that would cause some error notices in the logs.
+
 = 2021.06.16    - version 2.5.1 =
 * Fix           - Fixed the logging of AJAX errors. Should no longer be logged as [object, Object].
 
