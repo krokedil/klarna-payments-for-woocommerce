@@ -210,6 +210,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					echo wp_kses_post(
 						wpautop(
 							'<p>' . sprintf(
+								// translators: URL to docs.
 								__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
 								esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
 							)
