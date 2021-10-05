@@ -62,7 +62,10 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 
 			$country_set = false;
 			foreach ( $countries as $country ) {
-				if ( '' !== $kp_settings[ 'merchant_id_' . $country ] && '' !== $kp_settings[ 'shared_secret_' . $country ] ) {
+				$merchant_id   = 'merchant_id_' . $country;
+				$shared_secret = 'shared_secret_' . $country;
+
+				if ( isset( $kp_settings[ $merchant_id ] ) && '' !== $kp_settings[ $merchant_id ] && isset( $kp_settings[ $shared_secret ] ) && '' !== $kp_settings[ $shared_secret ] ) {
 					$country_set = true;
 				}
 			}
