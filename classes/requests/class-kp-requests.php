@@ -88,11 +88,17 @@ class KP_Requests {
 	 */
 	public function set_credentials() {
 		if ( $this->testmode ) {
-			$this->merchant_id   = $this->kp_settings[ 'test_merchant_id_' . strtolower( $this->country ) ];
-			$this->shared_secret = $this->kp_settings[ 'test_shared_secret_' . strtolower( $this->country ) ];
+			$merchant_id   = 'test_merchant_id_' . strtolower( $this->country );
+			$shared_secret = 'test_shared_secret_' . strtolower( $this->country );
+
+			$this->merchant_id   = isset( $this->kp_settings[ $merchant_id ] ) ? $this->kp_settings[ $merchant_id ] : '';
+			$this->shared_secret = isset( $this->kp_settings[ $shared_secret ] ) ? $this->kp_settings[ $shared_secret ] : '';
 		} else {
-			$this->merchant_id   = $this->kp_settings[ 'merchant_id_' . strtolower( $this->country ) ];
-			$this->shared_secret = $this->kp_settings[ 'shared_secret_' . strtolower( $this->country ) ];
+			$merchant_id   = 'merchant_id_' . strtolower( $this->country );
+			$shared_secret = 'shared_secret_' . strtolower( $this->country );
+
+			$this->merchant_id   = isset( $this->kp_settings[ $merchant_id ] ) ? $this->kp_settings[ $merchant_id ] : '';
+			$this->shared_secret = isset( $this->kp_settings[ $shared_secret ] ) ? $this->kp_settings[ $shared_secret ] : '';
 		}
 	}
 
