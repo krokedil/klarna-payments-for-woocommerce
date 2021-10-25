@@ -281,3 +281,10 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		return WC_Klarna_Payments::get_instance();
 	}
 }
+
+
+sprintf( 
+	__('%1$s. <a href="%3$s" target="_blank"><u>%2$s</u></a>'),
+	__( 'Failed to load content.', 'shortcodes-ultimate' ),
+	__( 'Open link', 'shortcodes-ultimate' ),
+'%url%' );
