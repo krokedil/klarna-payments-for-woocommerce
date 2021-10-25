@@ -3,11 +3,12 @@ import API from "../api/API";
 import setup from "../api/setup";
 import urls from "../helpers/urls";
 import utils from "../helpers/utils";
+import kpUtils from "../helpers/kpUtils";
 import tests from "../config/tests.json"
 import data from "../config/data.json";
 
 const options = {
-	"headless": false,
+	"headless": true,
 	"defaultViewport": null,
 	"args": [
 		"--disable-infobars",
@@ -27,6 +28,7 @@ describe("Test name", () => {
 	beforeAll(async () => {
 		try {
 			json = await setup.setupStore(json);
+			utils.setOptions();
 		} catch (e) {
 			console.log(e);
 		}
@@ -57,28 +59,33 @@ describe("Test name", () => {
 
 				// --------------- SETTINGS --------------- //
 				await utils.setPricesIncludesTax({value: args.inclusiveTax});
-				// @TODO - Modify any other settings here as needed.
 
 				// --------------- ADD PRODUCTS TO CART --------------- //
 				await utils.addMultipleProductsToCart(page, args.products, json);
-				await page.waitForTimeout(1 * timeOutTime);
+				await page.waitForTimeout(2 * timeOutTime);
 
 				// --------------- GO TO CHECKOUT --------------- //
 				await page.goto(urls.CHECKOUT);
+				await page.waitForTimeout(2 * timeOutTime);
+
+				await kpUtils.setPaymentMethod(page, "pay_later");
 				await page.waitForTimeout(timeOutTime);
-				// @TODO - Select your payment method.
 
 				// --------------- COUPON HANDLER --------------- //
 				await utils.applyCoupons(page, args.coupons);
 
 				// --------------- PLACE ORDER  --------------- //
-				// @TODO - Custom code here to place the actual order.
+				await kpUtils.fillWcForm(page, args.customerType);
+
+				await page.waitForTimeout(2 * timeOutTime);
+
+				let kpIframe = await page.frames().find((frame) => frame.name() === "klarna-pay-later-fullscreen");;
+				await kpUtils.processKpIframe(page, kpIframe);
 			} catch(e) {
 				console.log("Error placing order", e)
 			}
 
 			// --------------- POST PURCHASE CHECKS --------------- //
-			
 			await page.waitForTimeout(5 * timeOutTime);
 			const value = await page.$eval(".entry-title", (e) => e.textContent);
 			expect(value).toBe("Order received");

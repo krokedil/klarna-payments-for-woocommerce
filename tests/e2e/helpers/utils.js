@@ -2,6 +2,22 @@ import API from "../api/API";
 import urls from "./urls";
 
 const timeOutTime = 2500;
+const KPSettingsArray = {
+	woocommerce_klarna_payments_settings: {
+		enabled: "yes",
+		title: "Klarna",
+		description: "Klarna Payments for WooCommerce Test",
+		testmode: "yes",
+		logging: "yes",
+		hide_what_is_klarna: "no",
+		float_what_is_klarna: "yes",
+		send_product_urls: "yes",
+		add_to_email: "no",
+		customer_type: "b2c",
+		test_merchant_id_se: process.env.API_KEY,
+		test_shared_secret_se: process.env.API_SECRET,
+	},
+};
 
 const login = async (page, username, password) => {
 	await page.type("#username", username);
@@ -68,6 +84,9 @@ const setPricesIncludesTax = async (value) => {
 	await API.pricesIncludeTax(value);
 };
 
+const setOptions = async () => {
+	await API.updateOptions(KPSettingsArray);
+};
 
 export default {
 	login,
@@ -75,4 +94,5 @@ export default {
 	addSingleProductToCart,
 	addMultipleProductsToCart,
 	setPricesIncludesTax,
+	setOptions
 };
