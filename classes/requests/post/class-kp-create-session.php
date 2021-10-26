@@ -29,7 +29,7 @@ class KP_Create_Session extends KP_Requests {
 		WC()->session->set( 'kp_update_md5', md5( wp_json_encode( $request_args ) ) );
 
 		// Log request.
-		$log = KP_Logger::format_log( $session_id, 'POST', 'KP Create Session', $request_args, $response, $code );
+		$log = KP_Logger::format_log( $session_id, 'POST', 'KP Create Session', $request_args, $response, $code, $request_url );
 		KP_Logger::log( $log );
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );

@@ -28,7 +28,7 @@ class KP_Place_Order extends KP_Requests {
 		$order_id     = isset( $body['order_id'] ) ? $body['order_id'] : '';
 
 		// Log request.
-		$log = KP_Logger::format_log( $order_id, 'POST', 'KP Place Order', $request_args, $response, $code );
+		$log = KP_Logger::format_log( $order_id, 'POST', 'KP Place Order', $request_args, $response, $code, $request_url );
 		KP_Logger::log( $log );
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
