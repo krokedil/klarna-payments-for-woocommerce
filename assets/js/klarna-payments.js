@@ -137,11 +137,17 @@ jQuery( function($) {
 		},
 
 		load: function() {
+			var $defer = $.Deferred();
+
+			// Dont run load during checkout completion.
+			if( $('form.checkout').hasClass('processing') ) {
+				return $defer.reject();
+			}
+
 			var klarna_payments_container_selector_id = '#' + klarna_payments.getSelectorContainerID();
 			console.log(klarna_payments_container_selector_id);
 
 			if (klarna_payments_container_selector_id) {
-				var $defer = $.Deferred();
 
 				var klarnaLoadedInterval = setInterval(function () {
 					var Klarna = false;
