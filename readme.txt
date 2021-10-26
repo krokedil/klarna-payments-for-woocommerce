@@ -6,7 +6,7 @@ Requires at least: 4.0
 Tested up to: 5.8.0
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 5.6.0
+WC tested up to: 5.8.0
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -55,6 +55,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.10.26    - version 2.6.1 =
+* Fix           - Prevent any load events from happening during the checkout completion stage.
+* Fix           - Fixed some undefined index errors.
+* Tweak         - Change the Klarna documentation URL in the email setting.
+
 = 2021.09.01    - version 2.6.0 =
 * Feature       - Added support for the Polish market.
 * Feature       - We will now save the last 15 requests to Klarna that had an API error and display them on the WooCommerce status page. This should help with getting error messages when you need to debug issues without going through the logs. These will also be in the status report that you can send to us for support tickets.
