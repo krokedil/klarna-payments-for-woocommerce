@@ -30,7 +30,7 @@ class KP_Test_Credentials {
 		$code              = wp_remote_retrieve_response_code( $response );
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
 		// Log the request.
-		$log = KP_Logger::format_log( null, 'POST', 'KP test credentials', $request_args, json_decode( wp_remote_retrieve_body( $response ), true ), $code );
+		$log = KP_Logger::format_log( null, 'POST', 'KP test credentials', $request_args, json_decode( wp_remote_retrieve_body( $response ), true ), $code, $request_url );
 		KP_Logger::log( $log );
 		return $formated_response;
 	}

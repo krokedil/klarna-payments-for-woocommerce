@@ -39,6 +39,11 @@ class KP_Customer_Data {
 		if ( 'b2b' === $customer_type ) {
 			$billing_address['organization_name'] = stripslashes( $order->get_billing_company() );
 		}
+
+		if ( ! empty( $billing_address['region'] ) && isset( WC()->countries->get_states( $billing_address['country'] )[ $billing_address['region'] ] ) ) {
+			$billing_address['region'] = WC()->countries->get_states( $billing_address['country'] )[ $billing_address['region'] ];
+		}
+
 		return $billing_address;
 	}
 
@@ -64,6 +69,10 @@ class KP_Customer_Data {
 				'region'          => stripslashes( $order->get_shipping_state() ),
 				'country'         => stripslashes( $order->get_shipping_country() ),
 			);
+
+			if ( ! empty( $shipping_address['region'] ) && isset( WC()->countries->get_states( $shipping_address['country'] )[ $shipping_address['region'] ] ) ) {
+				$shipping_address['region'] = WC()->countries->get_states( $shipping_address['country'] )[ $shipping_address['region'] ];
+			}
 		} else {
 			$shipping_address = self::get_billing_address( $order_id, $customer_type );
 		}

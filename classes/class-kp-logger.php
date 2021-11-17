@@ -63,14 +63,16 @@ class KP_Logger {
 	 * @param array  $request_args The request args.
 	 * @param array  $response The response.
 	 * @param string $code The status code.
+	 * @param string $request_url The request URL for the request.
 	 * @return array
 	 */
-	public static function format_log( $payment_id, $method, $title, $request_args, $response, $code ) {
+	public static function format_log( $payment_id, $method, $title, $request_args, $response, $code, $request_url = null ) {
 		return array(
 			'id'             => $payment_id,
 			'type'           => $method,
 			'title'          => $title,
 			'request'        => $request_args,
+			'request_url'    => $request_url,
 			'response'       => array(
 				'body' => $response,
 				'code' => $code,

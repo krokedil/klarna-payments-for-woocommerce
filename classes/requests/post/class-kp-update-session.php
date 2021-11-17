@@ -34,7 +34,7 @@ class KP_Update_Session extends KP_Requests {
 		$session_id = isset( $body['session_id'] ) ? $body['session_id'] : '';
 
 		// Log request.
-		$log = KP_Logger::format_log( $session_id, 'POST', 'KP Update Session', $request_args, $response, $code );
+		$log = KP_Logger::format_log( $session_id, 'POST', 'KP Update Session', $request_args, $response, $code, $request_url );
 		KP_Logger::log( $log );
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
