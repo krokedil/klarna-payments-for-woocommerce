@@ -193,10 +193,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// If EUR country, check if EUR used.
 		if ( 'EUR' === get_woocommerce_currency() ) {
-			if ( ! in_array( kp_get_klarna_country( $order ), array( 'AT', 'DE', 'NL', 'FI', 'ES', 'IE', 'IT', 'BE', 'FR' ), true ) ) {
+			if ( ! in_array( kp_get_klarna_country( $order ), array( 'AT', 'BE', 'DE', 'ES', 'FI', 'FR', 'IE', 'IT', 'NL', 'PT' ), true ) ) {
 				kp_unset_session_values();
 
-				return new WP_Error( 'currency', 'EUR must be used for AT, DE, NL, FI, ES, IE, IT, BE, FR purchases' );
+				return new WP_Error( 'currency', 'EUR must be used for AT, BE, DE, ES, FI, FR, IE, IT, NL and PT purchases' );
 			}
 		}
 
