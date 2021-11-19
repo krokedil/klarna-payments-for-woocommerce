@@ -161,7 +161,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 						<h1 id="krokdocs-sidebar-title">Get started</h1>
 							<div class="krokdocs-sidebar-content">
 								<p id="krokdocs-sidebar-main-text">
-									<a href="https://docs.krokedil.com/category/156-get-started" target="_blank">Documentation</a> <br/>
+									<a href="https://docs.krokedil.com/klarna-payments-for-woocommerce/" target="_blank">Documentation</a> <br/>
 									<a href="https://krokedil.com/product/klarna-payments-for-woocommerce/" target="_blank">Plugin site</a>
 								</p>
 						<h1 id="krokdocs-sidebar-title">Support</h1>

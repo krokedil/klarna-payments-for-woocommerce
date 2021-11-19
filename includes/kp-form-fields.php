@@ -343,6 +343,39 @@ $settings = array(
 		'default'     => '',
 		'desc_tip'    => false,
 	),
+	// IE.
+	'credentials_ie'        => array(
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/ie.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Ireland',
+		'type'  => 'title',
+	),
+	'merchant_id_ie'        => array(
+		'title'       => __( 'Production Klarna API username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Use the API username you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => false,
+	),
+	'shared_secret_ie'      => array(
+		'title'       => __( 'Production Klarna API password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => false,
+	),
+	'test_merchant_id_ie'   => array(
+		'title'       => __( 'Test Klarna API username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Use the API username you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => false,
+	),
+	'test_shared_secret_ie' => array(
+		'title'       => __( 'Test Klarna API password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => false,
+	),
 	// IT.
 	'credentials_it'        => array(
 		'title' => '<img src="' . plugins_url( 'assets/img/flags/it.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Italy',
@@ -502,6 +535,39 @@ $settings = array(
 		'desc_tip'    => false,
 	),
 	'test_shared_secret_pl' => array(
+		'title'       => __( 'Test Klarna API password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => false,
+	),
+	// PT.
+	'credentials_pt'        => array(
+		'title' => '<img src="' . plugins_url( 'assets/img/flags/pt.svg', WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> Portugal',
+		'type'  => 'title',
+	),
+	'merchant_id_pt'        => array(
+		'title'       => __( 'Production Klarna API username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Use the API username you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => false,
+	),
+	'shared_secret_pt'      => array(
+		'title'       => __( 'Production Klarna API password', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => false,
+	),
+	'test_merchant_id_pt'   => array(
+		'title'       => __( 'Test Klarna API username', 'klarna-payments-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Use the API username you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => false,
+	),
+	'test_shared_secret_pt' => array(
 		'title'       => __( 'Test Klarna API password', 'klarna-payments-for-woocommerce' ),
 		'type'        => 'text',
 		'description' => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
