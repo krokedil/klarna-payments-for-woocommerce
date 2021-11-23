@@ -47,8 +47,8 @@ $kp_form_auto_countries = array(
  */
 function kp_form_country_title( $country_name, $flag_path ) {
 	return array(
-		'type'  => 'title',
 		'title' => '<img src="' . plugins_url( $flag_path, WC_KLARNA_PAYMENTS_MAIN_FILE ) . '" height="12" /> ' . $country_name,
+		'type'  => 'title',
 	);
 }
 
