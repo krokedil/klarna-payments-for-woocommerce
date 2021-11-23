@@ -55,6 +55,13 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.11.17    - version 2.7.0 =
+* Feature       - Add support for Ireland.
+* Feature       - Add support for Portugal.
+* Enhancement   - Add support for YITH Giftcards.
+* Enhancement   - Add the request URL to the log for the plugin log. Thank you Maksim Kuzmin (github KuzMaxOriginal)
+* Fix           - Fixed a notice on a permalinks check. Thank you Maksim Kuzmin (github KuzMaxOriginal)
+
 = 2021.10.26    - version 2.6.1 =
 * Fix           - Prevent any load events from happening during the checkout completion stage.
 * Fix           - Fixed some undefined index errors.
