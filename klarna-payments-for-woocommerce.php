@@ -5,12 +5,12 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 2.6.0
+ * Version: 2.7.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 3.4.0
- * WC tested up to: 5.6.0
+ * WC tested up to: 5.9.0
  *
  * Copyright (c) 2017-2021 Krokedil
  *
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '2.6.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '2.7.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -214,10 +214,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 								__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
 								esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
 							)
-						),
-						array(
-							'a' => array( 'href' => array() ),
-						) . '</p>'
+						)
 					);
 					?>
 					</div>

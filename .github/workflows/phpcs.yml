@@ -1,0 +1,29 @@
+name: "CI"
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - master
+    paths:
+      - "**.php"
+      - "phpcs.xml"
+      - ".github/workflows/phpcs.yml"
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install PHP_CodeSniffer
+        run: |
+          composer update
+          ./vendor/bin/phpcs --version
+
+      - uses: thenabeel/action-phpcs@v8
+        with:
+          files: "**.php"
+          phpcs_path: ./vendor/bin/phpcs
+          standard: phpcs.ruleset.xml
