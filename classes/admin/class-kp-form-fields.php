@@ -22,7 +22,7 @@ class KP_Form_Fields {
 	 *
 	 * @var array $kp_form_auto_countries
 	 */
-	private static $kp_form_auto_countries = array(
+	public static $kp_form_auto_countries = array(
 		'Australia'      => 'au',
 		'Austria'        => 'at',
 		'Belgium'        => 'be',
