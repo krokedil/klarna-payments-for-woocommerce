@@ -473,3 +473,29 @@ input.bad_credential {
 #wpfooter{
 	position: unset !important;
 }
+
+
+#klarna-payments-countries-body{
+	display: flex;
+	flex-direction: row;
+}
+
+#klarna-payments-countries-row-1{
+	width: 35%;
+	display: flex;
+	flex-direction: column;
+}
+
+#klarna-payments-countries-row-1 > *{
+text-justify: center;
+width:100%;
+}
+
+#klarna-payments-countries-row-2{
+	display: flex;
+	flex-direction: column;
+}
+
+#klarna-payments-countries-row-2 > *{
+	width:100%;
+}
