@@ -436,6 +436,11 @@ jQuery( function($) {
 		orderSubmit: function( event ) {
 			if( klarna_payments.isKlarnaPaymentsSelected() ) {
 				event.preventDefault();
+
+				if( $('form.checkout').is('.processing') ) {
+					return false;
+				}
+
 				$('form.checkout').addClass('processing');
 				$( '.woocommerce-checkout-review-order-table' ).block({
 					message: null,
