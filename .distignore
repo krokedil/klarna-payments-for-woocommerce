@@ -18,3 +18,5 @@ readme.dev.txt
 phpcs.ruleset.xml
 phpunit-docker.xml
 phpunit.xml
+
+/languages/*-backup-*.po
