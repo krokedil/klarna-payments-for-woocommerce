@@ -55,6 +55,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.12.07    - version 2.7.1 =
+* Enhancement   - Countries that you have entered credentials for now show up on the status page.
+* Enhancement   - We will now warn you if you have put Klarna into test mode without having any test credentials filled in.
+* Enhancement   - Added an option to permanently remove the go-live banner on the admin page.
+* Fix           - Fixed an issue that could let customers press the place order button multiple times that could cause double orders.
+
 = 2021.11.17    - version 2.7.0 =
 * Feature       - Add support for Ireland.
 * Feature       - Add support for Portugal.
