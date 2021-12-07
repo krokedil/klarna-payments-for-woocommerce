@@ -73,15 +73,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 		$test_list_of_countries = array();
 
 	foreach ( get_option( 'woocommerce_klarna_payments_settings', array() ) as $key => $value ) {
-		if ( $value != '' ) {
-			// erll( 'Settings key with value', $key . ' -> ' . $value );
-
+		if ( '' !== $value ) {
 			if ( preg_match( '/test_merchant_id/i', $key ) ) {
-				erll( 'Key: ', $key );
-					array_push( $list_of_countries, ( strtoupper( substr( $key, -2 ) ) ) );
+				array_push( $list_of_countries, ( strtoupper( substr( $key, -2 ) ) ) );
 			} elseif ( preg_match( '/merchant_id/i', $key ) ) {
-				erll( 'Key: ', $key );
-					array_push( $test_list_of_countries, ( strtoupper( substr( $key, -2 ) ) ) );
+				array_push( $test_list_of_countries, ( strtoupper( substr( $key, -2 ) ) ) );
 			}
 		}
 	}
@@ -111,7 +107,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<td>
 						<?php
 						if ( ( isset( $list_of_countries ) ) && ( count( $list_of_countries ) > 0 ) ) {
-							esc_html_e( implode( ',', $list_of_countries ) );
+							echo esc_html( implode( ',', $list_of_countries ) );
 						} else {
 							esc_html_e( 'No countries selected' );
 						}
@@ -120,7 +116,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<td>
 						<?php
 						if ( ( isset( $test_list_of_countries ) ) && ( count( $test_list_of_countries ) > 0 ) ) {
-							esc_html_e( implode( ',', $list_of_countries ) );
+							echo esc_html( implode( ',', $list_of_countries ) );
 						} else {
 							esc_html_e( 'No countries selected' );
 						}
