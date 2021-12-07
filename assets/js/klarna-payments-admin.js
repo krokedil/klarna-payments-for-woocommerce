@@ -28,7 +28,6 @@ jQuery(function ($) {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-
 	// On page start, check if Testmode is enabled
 	const testmode_checkbox = document.getElementById('woocommerce_klarna_payments_testmode');
 	testmode_checkbox.addEventListener('change', () => {
@@ -43,53 +42,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Handle Merchant ID input fields logic
 	test_merchat_ids.forEach(element => {
-
-		element.addEventListener('input', () => {
-
+		element.addEventListener('change', () => {
 			if (element.value != '') {
 				if (!test_id_array.includes(element.id.slice(-2))) {
 					test_id_array.push(element.id.slice(-2))
 				}
-
 				checkButtonValues();
-
 			} else {
 				for (var i = test_id_array.length - 1; i >= 0; i--) {
 					if (test_id_array[i] === element.id.slice(-2)) {
 						test_id_array.splice(i, 1);
 					}
 				}
-
 				checkButtonValues();
-
 			}
 		})
 
 		if (element.value != '') {
 			test_id_array.push(element.id.slice(-2))
 		}
-
 	});
 
 	// Handle Shared Secret Key input fields logic
 	test_shared_secrets.forEach(element => {
-
-		element.addEventListener('input', () => {
-
+		element.addEventListener('change', () => {
 			if (element.value != '') {
 				if (!test_secret_array.includes(element.id.slice(-2))) {
 					test_secret_array.push(element.id.slice(-2))
 				}
-
 				checkButtonValues();
-
 			} else {
 				for (var i = test_secret_array.length - 1; i >= 0; i--) {
 					if (test_secret_array[i] === element.id.slice(-2)) {
 						test_secret_array.splice(i, 1);
 					}
 				}
-
 				checkButtonValues();
 			}
 		})
@@ -101,11 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Show/Hide Submit button logic
 	const checkButtonValues = () => {
-
 		if (testmode_checkbox.checked == true) {
-
 			const found = test_id_array.some(r => test_secret_array.includes(r))
-
 			if (found !== true) {
 				alert('Please insert both test credentials for at least one country')
 				save_button = document.getElementsByName('save');
@@ -114,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				save_button = document.getElementsByName('save');
 				save_button[0].removeAttribute('disabled');
 			}
-
 		} else {
 			save_button = document.getElementsByName('save');
 			save_button[0].removeAttribute('disabled');
