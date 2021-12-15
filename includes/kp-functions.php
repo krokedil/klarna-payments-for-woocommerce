@@ -145,7 +145,7 @@ function kp_get_klarna_country( $order = false ) {
 		return apply_filters( 'wc_klarna_payments_country', $order->get_billing_country() );
 	}
 
-	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer->get_billing_country() ) ) {
+	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer ) && ! empty( WC()->customer->get_billing_country() ) ) {
 		return apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
 	}
 	$base_location = wc_get_base_location();
