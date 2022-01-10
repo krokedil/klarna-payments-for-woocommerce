@@ -39,7 +39,7 @@ class KP_Create_Session extends KP_Requests {
 			$payment_method_categories[] = array(
 				'identifier' => 'klarna_payments',
 				'name' => $formated_response['descriptor']['tagline'],
-				'assets_url' => $formated_response['descriptor']['asset']['default'],
+				'assets_url' => $formated_response['descriptor']['assets']['default'],
 			);
 		} else if ( isset( $formated_response['payment_method_categories'] ) && ! empty( $formated_response['payment_method_categories'] ) ) {
 			foreach ( $formated_response['payment_method_categories'] as $key => $value ) {
