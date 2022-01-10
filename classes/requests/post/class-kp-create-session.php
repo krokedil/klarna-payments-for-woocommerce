@@ -33,6 +33,26 @@ class KP_Create_Session extends KP_Requests {
 		KP_Logger::log( $log );
 
 		$formated_response = $this->process_response( $response, $request_args, $request_url );
+
+		$payment_method_categories = array();
+		if ( isset( $formated_response['descriptor'] ) && ! empty( $formated_response['descriptor'] ) ) {
+			$payment_method_categories[] = array(
+				'identifier' => 'klarna_payments',
+				'name' => $formated_response['descriptor']['tagline'],
+				'assets_url' => $formated_response['descriptor']['asset']['default'],
+			);
+		} else if ( isset( $formated_response['payment_method_categories'] ) && ! empty( $formated_response['payment_method_categories'] ) ) {
+			foreach ( $formated_response['payment_method_categories'] as $key => $value ) {
+				$payment_method_categories[] = array(
+					'identifier' => $value['identifier'],
+					'name' => $value['name'],
+					'assets_url' => $value['asset_urls']['standard'],
+				);
+			}
+		}
+
+		$formated_response['payment_method_categories'] = $payment_method_categories;
+
 		return $formated_response;
 	}
 

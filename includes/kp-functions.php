@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin function file.
  *
@@ -52,6 +51,7 @@ function kp_maybe_create_session_cart( $klarna_country = false ) {
 		if ( is_wp_error( $response ) ) {
 			return kp_extract_error_message( $response );
 		}
+
 		WC()->session->set( 'klarna_payments_session_id', $response['session_id'] );
 		WC()->session->set( 'klarna_payments_client_token', $response['client_token'] );
 		WC()->session->set( 'klarna_payments_session_country', $klarna_country );

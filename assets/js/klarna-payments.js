@@ -164,7 +164,7 @@ jQuery( function($) {
 
 						var options = {
 							container: klarna_payments_container_selector_id,
-							payment_method_category: klarna_payments.getSelectedPaymentCategory()
+							payment_method_category: klarna_payments.getSelectedPaymentCategory() === "klarna_payments" ? "" : klarna_payments.getSelectedPaymentCategory()
 						};
 
 						if ( 'US' === $('#billing_country').val() ) {
@@ -244,7 +244,7 @@ jQuery( function($) {
 			try {
 				Klarna.Payments.authorize(
 					address,
-					{payment_method_category: klarna_payments.getSelectedPaymentCategory()},
+					{payment_method_category: klarna_payments.getSelectedPaymentCategory() === "klarna_payments" ? "" : klarna_payments.getSelectedPaymentCategory()},
 					function (response) {
 						klarna_payments.authorization_response = response;
 						$defer.resolve(response);
