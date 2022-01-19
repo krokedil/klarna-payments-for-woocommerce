@@ -55,6 +55,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.01.19    - version 2.8.1 =
+* Fix           - Fixed a potential fatal error when the create session request does not return a OK response.
+
 = 2021.01.19    - version 2.8.0 =
 * Feature       - Add support for Mexico.
 * Fix           - Fixerd an issue causing the wrong payment method name to be set in some cases when using pay for order.
