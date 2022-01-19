@@ -32,97 +32,97 @@ class KP_Form_Fields {
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'be'  => array(
+		'be' => array(
 			'name'     => 'Belgium',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'ca'  => array(
+		'ca' => array(
 			'name'     => 'Canada',
 			'currency' => 'CAD',
 			'endpoint' => '-na',
 		),
-		'dk'  => array(
+		'dk' => array(
 			'name'     => 'Denmark',
 			'currency' => 'DKK',
 			'endpoint' => '',
 		),
-		'de'  => array(
+		'de' => array(
 			'name'     => 'Germany',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'fi'   => array(
+		'fi' => array(
 			'name'     => 'Finland',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'fr'  => array(
+		'fr' => array(
 			'name'     => 'France',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'ie'   => array(
+		'ie' => array(
 			'name'     => 'Ireland',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'it'   => array(
+		'it' => array(
 			'name'     => 'Italy',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'nl'   => array(
+		'nl' => array(
 			'name'     => 'Netherlands',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'no'   => array(
+		'no' => array(
 			'name'     => 'Norway',
 			'currency' => 'NOK',
 			'endpoint' => '',
 		),
-		'nz'   => array(
+		'nz' => array(
 			'name'     => 'New Zealand',
 			'currency' => 'NZD',
 			'endpoint' => '-oc',
 		),
-		'mx'   => array(
+		'mx' => array(
 			'name'     => 'Mexico',
 			'currency' => 'MXN',
 			'endpoint' => '-na',
 		),
-		'pl'   => array(
+		'pl' => array(
 			'name'     => 'Poland',
 			'currency' => 'PLN',
 			'endpoint' => '',
 		),
-		'pt'   => array(
+		'pt' => array(
 			'name'     => 'Portugal',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'es'   => array(
+		'es' => array(
 			'name'     => 'Spain',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'se'   => array(
+		'se' => array(
 			'name'     => 'Sweden',
 			'currency' => 'SEK',
 			'endpoint' => '',
 		),
-		'ch'   => array(
+		'ch' => array(
 			'name'     => 'Switzerland',
 			'currency' => 'CHF',
 			'endpoint' => '',
 		),
-		'gb'   => array(
+		'gb' => array(
 			'name'     => 'United Kingdom',
 			'currency' => 'GBP',
 			'endpoint' => '',
 		),
-		'us'   => array(
+		'us' => array(
 			'name'     => 'United States',
 			'currency' => 'USD',
 			'endpoint' => '-na',
@@ -310,7 +310,7 @@ class KP_Form_Fields {
 
 		$countries = array();
 		foreach ( self::$kp_form_auto_countries as $cc => $values ) {
-			$countries = array_merge( $countries, self::kp_form_country_section( $cc, $values['name'] ) );
+			$countries = array_merge( $countries, self::kp_form_country_section( $values['name'], $cc ) );
 		}
 
 		$settings = array_merge( $settings, $countries );
