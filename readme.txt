@@ -6,7 +6,7 @@ Requires at least: 4.0
 Tested up to: 5.8.2
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 5.9.0
+WC tested up to: 6.1.0
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -55,6 +55,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * A SSL Certificate is required.
 
 == Changelog ==
+= 2021.01.19    - version 2.8.0 =
+* Feature       - Add support for Mexico.
+* Feature       - Add support for One Klarna.
+* Fix           - Fixerd an issue causing the wrong payment method name to be set in some cases when using pay for order.
+* Fix           - Fixed a error notice if the WooCommerce customer object is not set.
+
 = 2021.12.07    - version 2.7.1 =
 * Enhancement   - Countries that you have entered credentials for now show up on the status page.
 * Enhancement   - We will now warn you if you have put Klarna into test mode without having any test credentials filled in.
