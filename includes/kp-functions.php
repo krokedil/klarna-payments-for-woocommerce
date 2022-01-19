@@ -51,6 +51,7 @@ function kp_maybe_create_session_cart( $klarna_country = false ) {
 		if ( is_wp_error( $response ) ) {
 			return kp_extract_error_message( $response );
 		}
+
 		WC()->session->set( 'klarna_payments_session_id', $response['session_id'] );
 		WC()->session->set( 'klarna_payments_client_token', $response['client_token'] );
 		WC()->session->set( 'klarna_payments_session_country', $klarna_country );
@@ -95,7 +96,6 @@ function kp_create_session_order( $order_id, $klarna_country = false ) {
 	update_post_meta( $order_id, '_klarna_payments_client_token', $response['client_token'] );
 	update_post_meta( $order_id, '_klarna_payments_categories', $response['payment_method_categories'] );
 	update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country( $order ) );
-
 }
 
 /**
@@ -145,7 +145,7 @@ function kp_get_klarna_country( $order = false ) {
 		return apply_filters( 'wc_klarna_payments_country', $order->get_billing_country() );
 	}
 
-	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer->get_billing_country() ) ) {
+	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer ) && ! empty( WC()->customer->get_billing_country() ) ) {
 		return apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
 	}
 	$base_location = wc_get_base_location();
@@ -167,6 +167,8 @@ function kp_process_accepted( $order, $decoded ) {
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
 	update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
+	update_post_meta( $order->get_id(), '_payment_method', 'klarna_payments' );
+	update_post_meta( $order->get_id(), '_payment_method_title', 'Klarna' );
 	do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
 	return array(

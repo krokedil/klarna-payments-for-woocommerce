@@ -58,15 +58,15 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			}
 
 			// Go through countries and check if at least one has credentials configured.
-			$countries = array( 'at', 'au', 'be', 'ca', 'ch', 'de', 'dk', 'de', 'es', 'fi', 'fr', 'gb', 'it', 'nl', 'no', 'nz', 'pl', 'se', 'uk', 'us' );
-
+			// Uses the same base data as the form generator, from the class KP_Form_Fields.
 			$country_set = false;
-			foreach ( $countries as $country ) {
-				$merchant_id   = 'merchant_id_' . $country;
-				$shared_secret = 'shared_secret_' . $country;
+			foreach ( KP_Form_Fields::$kp_form_auto_countries as $cc => $values ) {
+				$merchant_id   = 'merchant_id_' . $cc;
+				$shared_secret = 'shared_secret_' . $cc;
 
 				if ( isset( $kp_settings[ $merchant_id ] ) && '' !== $kp_settings[ $merchant_id ] && isset( $kp_settings[ $shared_secret ] ) && '' !== $kp_settings[ $shared_secret ] ) {
 					$country_set = true;
+					break;
 				}
 			}
 
