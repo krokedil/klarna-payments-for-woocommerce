@@ -80,7 +80,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			if ( ! $this->hide_what_is_klarna ) {
 				// If default WooCommerce CSS is used, float "What is Klarna link like PayPal does it".
 				if ( $this->float_what_is_klarna ) {
-					$link_style = 'style="float: right; line-height: 52px; font-size: .83em;"';
+					$link_style = 'style="float: right; margin-right:10px; font-size: .83em;"';
 				} else {
 					$link_style = '';
 				}
@@ -128,9 +128,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return new WP_Error( 'currency', 'Currency not allowed for Klarna Payments' );
 		}
 
-		$country_values = KP_Form_Fields::$kp_form_auto_countries[ strtolower( kp_get_klarna_country( $order ) ) ];
+		$country_values    = KP_Form_Fields::$kp_form_auto_countries[ strtolower( kp_get_klarna_country( $order ) ) ];
 		$required_currency = $country_values['currency'];
-		$country_name = $country_values['name'];
+		$country_name      = $country_values['name'];
 		if ( get_woocommerce_currency() !== $required_currency ) {
 			kp_unset_session_values();
 			return new WP_Error( 'currency', "{$required_currency} must be used for {$country_name} purchases" );
