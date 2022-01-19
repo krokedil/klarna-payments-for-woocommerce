@@ -57,7 +57,6 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 == Changelog ==
 = 2021.01.19    - version 2.8.0 =
 * Feature       - Add support for Mexico.
-* Feature       - Add support for One Klarna.
 * Fix           - Fixerd an issue causing the wrong payment method name to be set in some cases when using pay for order.
 * Fix           - Fixed a error notice if the WooCommerce customer object is not set.
 
