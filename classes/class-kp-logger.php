@@ -97,6 +97,6 @@ class KP_Logger {
 		$logs   = array_slice( $logs, -14 );
 		$logs[] = $data;
 		$logs   = wp_json_encode( $logs );
-		update_option( 'krokedil_debuglog_kp', $logs );
+		update_option( 'krokedil_debuglog_kp', $logs, false );
 	}
 }
