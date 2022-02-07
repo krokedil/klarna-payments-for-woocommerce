@@ -73,11 +73,26 @@ class KP_IFrame {
 		foreach ( $kp_settings_filter as $setting_key => $setting_value ) {
 			foreach ( $this->kp_color_keys as $color_key ) {
 				if ( $setting_key === $color_key ) {
-					$this->kp_color_options[ $color_key ] = $setting_value;
+					$this->kp_color_options[ $color_key ] = self::add_hash_to_color($setting_value);
 				}
 			}
 		}
 	}
+
+	/**
+	 * Adds hash to color hex.
+	 *
+	 * @param string $hex Hex color code.
+	 * @return string
+	 */
+	private static function add_hash_to_color( $hex ) {
+		if ( '' !== $hex ) {
+			$hex = str_replace( '#', '', $hex );
+			$hex = '#' . $hex;
+		}
+		return $hex;
+	}
+
 
 	/**
 	 * Test two string for equality
@@ -117,6 +132,6 @@ class KP_IFrame {
 	 * @return array
 	 */
 	public function get_kp_settings() {
-		return $this->get_kp_settings;
+		return $this->kp_settings;
 	}
 }
