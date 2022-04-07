@@ -95,6 +95,10 @@ class KP_Settings_Saved {
 				'region'   => 'oc',
 				'currency' => 'NZD',
 			),
+			'MX' => array(
+				'region'   => 'na',
+				'currency' => 'MXN',
+			),
 			'PL' => array(
 				'region'   => 'eu',
 				'currency' => 'PLN',
