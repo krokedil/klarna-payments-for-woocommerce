@@ -42,6 +42,11 @@ class KP_Form_Fields {
 			'currency' => 'CAD',
 			'endpoint' => '-na',
 		),
+		'cz' => array(
+			'name'     => 'Czech Republic',
+			'currency' => 'CZK',
+			'endpoint' => '',
+		),
 		'dk' => array(
 			'name'     => 'Denmark',
 			'currency' => 'DKK',
@@ -59,6 +64,11 @@ class KP_Form_Fields {
 		),
 		'fr' => array(
 			'name'     => 'France',
+			'currency' => 'EUR',
+			'endpoint' => '',
+		),
+		'gr' => array(
+			'name'     => 'Greece',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
