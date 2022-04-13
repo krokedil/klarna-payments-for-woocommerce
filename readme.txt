@@ -3,10 +3,10 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.8.2
+Tested up to: 5.9.3
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 6.1.0
+WC tested up to: 6.3.1
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -51,6 +51,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2021.04.13    - version 2.9.0 =
+* Feature       - Added support for Greece and Czech Republic.
+* Enhancement   - The debug log messages that are saved on errors to the database are no longer autoloaded by us, and will only be loaded when asked for directly.
+* Fix           - Fixed an issue with the Mexico support.
+* Fix           - Fixed an issue that could occur where some plugins would strip the hashtag from the hex color in the settings, causing an error.
+
 = 2021.01.19    - version 2.8.1 =
 * Fix           - Fixed a potential fatal error when the create session request does not return a OK response.
 
