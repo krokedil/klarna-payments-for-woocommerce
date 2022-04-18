@@ -398,6 +398,13 @@ jQuery( function($) {
 					);
 				} else {
 					$('body').trigger( 'kp_auth_failed' );
+
+					// Re-enable the form.
+					$( 'body' ).trigger( 'updated_checkout' );
+					$( 'form.checkout' ).removeClass( 'processing' );
+					$( 'form.checkout' ).unblock();
+					$( '.woocommerce-checkout-review-order-table' ).unblock();
+
 					console.log('No authorization_token in response');
 					$('form.woocommerce-checkout').removeClass( 'processing' ).unblock();
 					$.ajax(
@@ -449,6 +456,7 @@ jQuery( function($) {
 						opacity: 0.6
 					}
 				});
+
 				$.ajax({
 					type: 'POST',
 					url: klarna_payments_params.submit_order,
@@ -490,6 +498,7 @@ jQuery( function($) {
 		 * @param {string} event 
 		 */
 		failOrder: function( event, error_message ) {
+
 			// Re-enable the form.
 			$( 'body' ).trigger( 'updated_checkout' );
 			$( 'form.checkout' ).removeClass( 'processing' );
