@@ -128,7 +128,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return new WP_Error( 'currency', 'Currency not allowed for Klarna Payments' );
 		}
 
-		$country_values    = KP_Form_Fields::$kp_form_auto_countries[ strtolower( kp_get_klarna_country( $order ) ) ];
+		$country = strtolower( kp_get_klarna_country( $order ) );
+		if ( ! isset( KP_Form_Fields::$kp_form_auto_countries [ $country ] ) ) {
+			kp_unset_session_values();
+
+			return new WP_Error( 'country', "Country ({$country}) is not supported by Klarna Payments." );
+
+		}
+
+		$country_values    = KP_Form_Fields::$kp_form_auto_countries[ $country ];
 		$required_currency = $country_values['currency'];
 		$country_name      = $country_values['name'];
 		if ( get_woocommerce_currency() !== $required_currency ) {
