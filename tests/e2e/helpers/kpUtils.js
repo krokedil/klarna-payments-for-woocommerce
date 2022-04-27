@@ -1,8 +1,11 @@
+import { ConsoleMessage } from "puppeteer";
+
 const timeOutTime = 2500;
 
-const setPaymentMethod = async (page, paymentMethod) => {
-	let input = await page.$(`input[id=payment_method_klarna_payments_${paymentMethod}]`);
-	await input.evaluate(i => i.click());
+const setPaymentMethod = async (klarnaIframe, paymentMethod) => {
+	let input = await klarnaIframe.$(`input[id="radio-${paymentMethod}"]`);
+	await input.focus();
+	await input.click();
 }
 
 const fillWcForm = async (page, customer_type) => {
@@ -62,20 +65,30 @@ const fillWcForm = async (page, customer_type) => {
 	}
 
 	if ( await page.$("#place_order") ) {
-		let input = await page.$("#place_order");
-		await input.evaluate(i => i.click());
+
+		let input = await page.$('button[name="woocommerce_checkout_place_order"]');
+
+		await page.waitForTimeout(0.5 * timeOutTime);
+		await input.focus();
+		await page.waitForTimeout(0.5 * timeOutTime);
+		await input.click();
 	}
 }
 
 const processKpIframe = async (page, kpIframe) => {
-	if ( await kpIframe.$("#purchase-approval-form-national-identification-number") ) {
-		let inputField = await kpIframe.$("#purchase-approval-form-national-identification-number");
+
+	await kpIframe.waitForTimeout(timeOutTime);
+
+	if ( await kpIframe.$("#invoice_kp-purchase-approval-form-national-identification-number") ) {
+
+		let inputField = await kpIframe.$("#invoice_kp-purchase-approval-form-national-identification-number");
 		await inputField.click({clickCount: 3});
 		await inputField.type("19770111-6050");
 	}
 
-	if ( await kpIframe.$("#purchase-approval-form-continue-button") ) {
-		let button = await kpIframe.$("#purchase-approval-form-continue-button");
+	if ( await kpIframe.$("#invoice_kp-purchase-approval-form-continue-button") ) {
+
+		let button = await kpIframe.$("#invoice_kp-purchase-approval-form-continue-button");
 		await button.click();
 	}
 }
