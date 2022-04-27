@@ -51,6 +51,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2021.04.27    - version 2.9.1 =
+* Fix           - Make sure that the checkout is fully unlocked after the Klarna popup window is closed by a customer.
+* Fix           - Check if a country is supported before getting the currency. Fixes a undefined index error message.
+
 = 2021.04.13    - version 2.9.0 =
 * Feature       - Added support for Greece and Czech Republic.
 * Enhancement   - The debug log messages that are saved on errors to the database are no longer autoloaded by us, and will only be loaded when asked for directly.
