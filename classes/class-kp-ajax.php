@@ -50,7 +50,6 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 
 			if ( empty( $order_id ) || empty( $auth_token ) ) {
 				wp_send_json_error( 'missing_data' );
-				exit;
 			}
 
 			$order    = wc_get_order( $order_id );
@@ -59,37 +58,30 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			if ( is_wp_error( $response ) ) {
 				wc_add_notice( kp_extract_error_message( $response ), 'error' );
 				wp_send_json_error( kp_extract_error_message( $response ) );
-				wp_die();
 			}
 			$fraud_status = $response['fraud_status'];
 			switch ( $fraud_status ) {
 				case 'ACCEPTED':
-					$return_val = kp_process_accepted( $order, $response );
+					kp_process_accepted( $order, $response );
 					kp_unset_session_values();
 					wp_send_json_success( $response['redirect_url'] );
-					wp_die();
 					break;
 				case 'PENDING':
-					$return_val = kp_process_pending( $order, $response );
+					kp_process_pending( $order, $response );
 					kp_unset_session_values();
 					wp_send_json_success( $response['redirect_url'] );
-					wp_die();
 					break;
 				case 'REJECTED':
-					$return_val = kp_process_rejected( $order, $response );
+					kp_process_rejected( $order, $response );
 					kp_unset_session_values();
 					wp_send_json_error( $order->get_cancel_order_url_raw() );
-					kp_unset_session_values();
-					wp_die();
 					break;
 				default:
 					kp_unset_session_values();
 					wp_send_json_error( $order->get_cancel_order_url_raw() );
-					wp_die();
 					break;
 			}
 			wp_send_json_success();
-			wp_die();
 		}
 
 		/**
@@ -101,7 +93,6 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( wp_unslash( $_POST['nonce'] ) ) : '';
 			if ( ! wp_verify_nonce( $nonce, 'kp_wc_auth_failed' ) ) {
 				wp_send_json_error( 'bad_nonce' );
-				exit;
 			}
 			// @codingStandardsIgnoreStart
 			$order_id  = $_POST['order_id'];
@@ -115,7 +106,6 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			}
 
 			wp_send_json_success();
-			wp_die();
 		}
 
 		/**
@@ -127,14 +117,12 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
 			if ( ! wp_verify_nonce( $nonce, 'kp_wc_log_js' ) ) {
 				wp_send_json_error( 'bad_nonce' );
-				exit;
 			}
 			$posted_message    = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
 			$klarna_session_id = WC()->session->get( 'klarna_payments_session_id' );
 			$message           = "Frontend JS $klarna_session_id: $posted_message";
 			KP_Logger::log( $message );
 			wp_send_json_success();
-			wp_die();
 		}
 	}
 }
