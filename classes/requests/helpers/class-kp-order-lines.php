@@ -803,7 +803,7 @@ class KP_Order_Lines {
 	 */
 	private function get_shipping_tax_rate() {
 		if ( WC()->cart->shipping_tax_total > 0 && ! $this->separate_sales_tax ) {
-			$shipping_tax_rate = round( WC()->cart->shipping_tax_total / WC()->cart->shipping_total, 2 ) * 100 * 100;
+			$shipping_tax_rate = round( WC()->cart->shipping_tax_total / WC()->cart->shipping_total, 3 ) * 100 * 100;
 		} else {
 			$shipping_tax_rate = 0;
 		}
