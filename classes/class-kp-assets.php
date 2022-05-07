@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Used for inserting JavaScript and CSS files, conditionally.
  *
@@ -10,8 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * KP_Assets class.
+ */
 class KP_Assets {
-
 
 	/**
 	 * Class constructor.
@@ -54,7 +55,8 @@ class KP_Assets {
 
 		wp_enqueue_style( 'klarna_express_button_styles' );
 
-		wp_register_script( 'klarna_express_button_library', 'https://x.klarnacdn.net/express-button/v1/lib.js', array(), null );
+		// phpcs:ignore -- The version must NOT be added.
+		wp_register_script( 'klarna_express_button_library', 'https://x.klarnacdn.net/express-button/v1/lib.js', array(), null, false );
 		wp_enqueue_script( 'klarna_express_button_library' );
 
 		wp_register_script(
@@ -143,7 +145,7 @@ class KP_Assets {
 			'NZ',
 		);
 
-		if ( ! in_array( $country_code, $supported_countries ) ) {
+		if ( ! in_array( $country_code, $supported_countries, true ) ) {
 			return;
 		}
 
@@ -165,7 +167,8 @@ class KP_Assets {
 			$style .= esc_attr( "height:{$height}px;" );
 		}
 
-		echo sprintf( "<klarna-express-button data-locale='$locale' data-theme='$theme' data-shape='$shape' data-label='$label' %s></klarna-express-button>", ! empty( $style ) ? "style='$style'" : '' );
+		// phpcs:ignore -- The variables has already been escaped.
+		echo "<klarna-express-button data-locale='$locale' data-theme='$theme' data-shape='$shape' data-label='$label'" . ( ! empty( $style ) ? "style='$style'" : '' ) . '></klarna-express-button>';
 	}
 
 }
