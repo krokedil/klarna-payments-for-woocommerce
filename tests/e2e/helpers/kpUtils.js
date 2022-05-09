@@ -3,12 +3,34 @@ import { ConsoleMessage } from "puppeteer";
 const timeOutTime = 2500;
 
 const setPaymentMethod = async (klarnaIframe, paymentMethod) => {
-	let input = await klarnaIframe.$(`input[id="radio-${paymentMethod}"]`);
-	await input.focus();
-	await input.click();
+
+	if(paymentMethod === 'pay_later') {
+		let input = await klarnaIframe.$('#radio-pay_later');
+		input.click({clickCount: 3})
+	}
+}
+
+const selectShippingMethod = async (page, shippingMethod) => {
+
+	let searchString
+
+	if (shippingMethod === 'free_shipping') {
+		searchString = 'input[value*="free_shipping"]'
+	} else if (shippingMethod === 'flat_rate') {
+		searchString = 'input[value*="flat_rate"]'
+	}
+
+	let shippingMethodSelector = await page.$(searchString)
+
+	if (shippingMethodSelector) {
+		await shippingMethodSelector.focus()
+		await shippingMethodSelector.click()
+	}
+
 }
 
 const fillWcForm = async (page, customer_type) => {
+
 	if(customer_type === "company") {
 		if ( await page.$("#billing_company") ) {
 			let inputField = await page.$("#billing_company");
@@ -64,15 +86,7 @@ const fillWcForm = async (page, customer_type) => {
 		await input.evaluate(i => i.click());
 	}
 
-	if ( await page.$("#place_order") ) {
 
-		let input = await page.$('button[name="woocommerce_checkout_place_order"]');
-
-		await page.waitForTimeout(0.5 * timeOutTime);
-		await input.focus();
-		await page.waitForTimeout(0.5 * timeOutTime);
-		await input.click();
-	}
 }
 
 const processKpIframe = async (page, kpIframe) => {
@@ -94,6 +108,7 @@ const processKpIframe = async (page, kpIframe) => {
 }
 export default {
 	setPaymentMethod,
+	selectShippingMethod,
 	fillWcForm,
 	processKpIframe
 }

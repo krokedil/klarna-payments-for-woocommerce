@@ -68,23 +68,25 @@ describe("Test name", () => {
 
 				// --------------- ADD PRODUCTS TO CART --------------- //
 				await utils.addMultipleProductsToCart(page, args.products, json);
-				await page.waitForTimeout(2 * timeOutTime);
+				await page.waitForTimeout(2*timeOutTime);
 
 				// --------------- GO TO CHECKOUT --------------- //
-
 				await page.goto(urls.CHECKOUT);
-				await page.waitForTimeout(timeOutTime);
 
-				let paymentSelector = await page.$('label[for="payment_method_klarna_payments_klarna_payments"]')
-				await paymentSelector.click()
+				// --------------- SELECT SHIPPING METHOD ------- //
 
 				await page.waitForTimeout(timeOutTime);
+				await kpUtils.selectShippingMethod(page, args.shippingMethod)
+				// --------------- SELECT KP -------------------- //
+				let paymentSelector = await page.$("label[for='payment_method_klarna_payments_klarna_payments']")
+
+				if(paymentSelector) {
+					await paymentSelector.click({clickCount: 3})
+				}
+
+				await page.waitForTimeout( timeOutTime);
 
 				let klarnaIframe =await page.frames().find((frame) => frame.name() === "klarna-payments-main");
-
-				await page.waitForTimeout(timeOutTime);
-				await kpUtils.setPaymentMethod(klarnaIframe, "pay_later");
-				await page.waitForTimeout(timeOutTime);
 
 				await page.waitForTimeout(0.5 * timeOutTime);
 
@@ -93,8 +95,19 @@ describe("Test name", () => {
 
 				// --------------- PLACE ORDER  --------------- //
 				await kpUtils.fillWcForm(page, args.customerType);
+
 				await page.waitForTimeout(2 * timeOutTime);
 
+				let input = await klarnaIframe.$('input[id="radio-pay_later"]');
+				input.click({clickCount: 3})
+
+				await page.waitForTimeout(timeOutTime);
+
+				if ( await page.$("#place_order") ) {
+					let placeOrder = await page.$("button[name='woocommerce_checkout_place_order']");
+					await placeOrder.click({clickCount: 3})
+				}
+				
 				let kpIframe = await page.frames().find((frame) => frame.name() === "klarna-payments-fullscreen");
 
 				await kpUtils.processKpIframe(page, kpIframe);
