@@ -25,7 +25,7 @@ class KP_Assets {
 	}
 
 	/**
-	 * Conditionally enqueue the scripts requried for Express Button.
+	 * Conditionally enqueue the scripts and styles required for Express Button.
 	 *
 	 * @return void
 	 */
@@ -46,33 +46,9 @@ class KP_Assets {
 			return;
 		}
 
-		wp_register_style(
-			'klarna_express_button_styles',
-			plugins_url( 'assets/css/klarna-express-button.css', WC_KLARNA_PAYMENTS_MAIN_FILE ),
-			array(),
-			WC_KLARNA_PAYMENTS_VERSION,
-		);
+		$this->enqueue_express_button_scripts();
+		$this->enqueue_express_button_styles();
 
-		wp_enqueue_style( 'klarna_express_button_styles' );
-
-		// phpcs:ignore -- The version must NOT be added.
-		wp_register_script( 'klarna_express_button_library', 'https://x.klarnacdn.net/express-button/v1/lib.js', array(), null, false );
-		wp_enqueue_script( 'klarna_express_button_library' );
-
-		wp_register_script(
-			'klarna_express_button',
-			plugins_url( 'assets/js/klarna-express-button.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
-			array( 'klarna_express_button_library' ),
-			WC_KLARNA_PAYMENTS_VERSION,
-			true
-		);
-
-		$klarna_payments_express_button_params = array(
-			'express_button_url'   => WC_AJAX::get_endpoint( 'kp_wc_express_button' ),
-			'express_button_nonce' => wp_create_nonce( 'kp_wc_express_button' ),
-		);
-		wp_localize_script( 'klarna_express_button', 'klarna_payments_express_button_params', $klarna_payments_express_button_params );
-		wp_enqueue_script( 'klarna_express_button' );
 	}
 
 	/**
@@ -167,8 +143,53 @@ class KP_Assets {
 			$style .= esc_attr( "height:{$height}px;" );
 		}
 
-		// phpcs:ignore -- The variables has already been escaped.
+		// phpcs:ignore -- The variables are already escaped.
 		echo "<klarna-express-button data-locale='$locale' data-theme='$theme' data-shape='$shape' data-label='$label'" . ( ! empty( $style ) ? "style='$style'" : '' ) . '></klarna-express-button>';
+	}
+
+	/**
+	 * The scripts required for Express Button (also see _styles).
+	 *
+	 * @return void
+	 */
+	private function enqueue_express_button_scripts() {
+
+		// phpcs:ignore -- The version should NOT be added.
+		wp_register_script( 'klarna_express_button_library', 'https://x.klarnacdn.net/express-button/v1/lib.js', array(), null, false );
+		wp_enqueue_script( 'klarna_express_button_library' );
+
+		wp_register_script(
+			'klarna_express_button',
+			plugins_url( 'assets/js/klarna-express-button.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
+			array( 'klarna_express_button_library' ),
+			WC_KLARNA_PAYMENTS_VERSION,
+			true
+		);
+
+		$klarna_payments_express_button_params = array(
+			'express_button_url'   => WC_AJAX::get_endpoint( 'kp_wc_express_button' ),
+			'express_button_nonce' => wp_create_nonce( 'kp_wc_express_button' ),
+		);
+		wp_localize_script( 'klarna_express_button', 'klarna_payments_express_button_params', $klarna_payments_express_button_params );
+		wp_enqueue_script( 'klarna_express_button' );
+	}
+
+	/**
+	 * The styles required for Express Button (also see _scripts).
+	 *
+	 * @return void
+	 */
+	private function enqueue_express_button_styles() {
+
+		wp_register_style(
+			'klarna_express_button_styles',
+			plugins_url( 'assets/css/klarna-express-button.css', WC_KLARNA_PAYMENTS_MAIN_FILE ),
+			array(),
+			WC_KLARNA_PAYMENTS_VERSION,
+		);
+
+		wp_enqueue_style( 'klarna_express_button_styles' );
+
 	}
 
 }

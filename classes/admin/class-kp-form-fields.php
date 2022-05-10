@@ -376,7 +376,7 @@ class KP_Form_Fields {
 			$settings,
 			array(
 				'express_options'     => array(
-					'title' => 'Express Checkout (aka Express Button)',
+					'title' => 'Express Checkout (Express Button)',
 					'type'  => 'title',
 				),
 				'express_enabled'     => array(
@@ -387,10 +387,11 @@ class KP_Form_Fields {
 
 				),
 				'express_data_theme'  => array(
-					'title'   => __( 'Theme', 'klarna-payments-for-woocommerce' ),
-					'type'    => 'select',
-					'default' => 'default',
-					'options' => array(
+					'title'       => __( 'Theme', 'klarna-payments-for-woocommerce' ),
+					'description' => __( 'The color of the button.', 'klarna-payments-for-woocommerce' ),
+					'type'        => 'select',
+					'default'     => 'default',
+					'options'     => array(
 						'default' => __( 'Default', 'klarna-payments-for-woocommerce' ),
 						'dark'    => __( 'Dark', 'klarna-payments-for-woocommerce' ),
 						'light'   => __( 'Light', 'klarna-payments-for-woocommerce' ),
@@ -418,16 +419,14 @@ class KP_Form_Fields {
 				'express_data_width'  => array(
 					'title'       => __( 'Button width', 'klarna-payments-for-woocommerce' ),
 					'type'        => 'text',
-					'defualt'     => '',
-					'desc_tip'    => __( 'Leave blank for default width.', 'klarna-payments-for-woocommerce' ),
-					'placeholder' => __( 'A value between 145 and 500 (measured in px)', 'klarna-payments-for-woocommerce' ),
+					'default'     => '',
+					'description' => __( 'A value between 145 and 500 (measured in pixels). Leave blank for default width.', 'klarna-payments-for-woocommerce' ),
 				),
 				'express_data_height' => array(
 					'title'       => __( 'Button height', 'klarna-payments-for-woocommerce' ),
 					'type'        => 'text',
 					'defualt'     => '',
-					'desc_tip'    => __( 'Leave blank for default height.', 'klarna-payments-for-woocommerce' ),
-					'placeholder' => __( 'A value between 35 and 60 (measured in px)', 'klarna-payments-for-woocommerce' ),
+					'description' => __( 'A value between 145 and 500 (measured in pixels). Leave blank for default height.', 'klarna-payments-for-woocommerce' ),
 				),
 			)
 		);
