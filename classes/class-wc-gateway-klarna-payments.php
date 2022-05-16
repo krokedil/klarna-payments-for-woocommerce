@@ -151,9 +151,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Check if Klarna Payments should be available
 	 */
 	public function is_available() {
-		if ( ! is_checkout() ) {
-			return false;
-		}
 		if ( 'yes' !== $this->enabled ) {
 			return false;
 		}
