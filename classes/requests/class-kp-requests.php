@@ -131,14 +131,14 @@ class KP_Requests {
 	 */
 	public function get_klarna_locale() {
 		$locale = get_locale();
-		// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formated to fi_fi.
+		// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formated to fi-fi.
 		switch ( $locale ) {
 			case 'fi':
-				$locale = 'fi_fi';
-				break;
+				return 'fi-fi';
+			case 'el':
+				return 'el-GR';
 			default:
-				break;
+				return substr( str_replace( '_', '-', $locale ), 0, 5 );
 		}
-		return substr( str_replace( '_', '-', $locale ), 0, 5 );
 	}
 }
