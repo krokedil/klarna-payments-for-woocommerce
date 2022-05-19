@@ -426,7 +426,7 @@ class KP_Form_Fields {
 					'title'       => __( 'Button height', 'klarna-payments-for-woocommerce' ),
 					'type'        => 'text',
 					'defualt'     => '',
-					'description' => __( 'A value between 145 and 500 (measured in pixels). Leave blank for default height.', 'klarna-payments-for-woocommerce' ),
+					'description' => __( 'A value between 35 and 60 (measured in pixels). Leave blank for default height.', 'klarna-payments-for-woocommerce' ),
 				),
 			)
 		);
