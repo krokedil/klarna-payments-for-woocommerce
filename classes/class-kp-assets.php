@@ -22,6 +22,7 @@ class KP_Assets {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_express_button' ) );
 		add_action( 'script_loader_tag', array( $this, 'express_button_script_tag' ), 10, 2 );
 		add_action( 'woocommerce_proceed_to_checkout', array( $this, 'express_button_placement' ) );
+		add_action( 'woocommerce_widget_shopping_cart_buttons', array( $this, 'express_button_placement' ), 15 );
 	}
 
 	/**
@@ -30,9 +31,6 @@ class KP_Assets {
 	 * @return void
 	 */
 	public function enqueue_express_button() {
-		if ( ! is_cart() ) {
-			return;
-		}
 
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
 		if ( 'yes' !== $kp_settings['express_enabled'] || 'yes' !== $kp_settings['enabled'] ) {
@@ -130,17 +128,22 @@ class KP_Assets {
 		$label = esc_attr( $kp_settings['express_data_label'] );
 
 		/* This is the supported button size (refer to Klarna documentation for Express Button). */
-		$width  = intval( $kp_settings['express_data_width'] );
-		$width  = ( 145 <= $width && 500 >= $width ) ? $width : '';
-		$height = intval( $kp_settings['express_data_height'] );
-		$height = ( 35 <= $width && 60 >= $height ) ? $height : '';
-
 		$style = '';
-		if ( ! empty( $width ) ) {
-			$style .= esc_attr( "width:{$width}px;" );
-		}
-		if ( ! empty( $height ) ) {
-			$style .= esc_attr( "height:{$height}px;" );
+		if ( is_cart() ) {
+			$width  = intval( $kp_settings['express_data_width'] );
+			$width  = ( 145 <= $width && 500 >= $width ) ? $width : '';
+			$height = intval( $kp_settings['express_data_height'] );
+			$height = ( 35 <= $width && 60 >= $height ) ? $height : '';
+
+			if ( ! empty( $width ) ) {
+				$style .= esc_attr( "width:{$width}px;" );
+			}
+			if ( ! empty( $height ) ) {
+				$style .= esc_attr( "height:{$height}px;" );
+			}
+		} else {
+			/* The custom button sizes should not apply to the mini-cart, instead we use the following: */
+			$style .= 'width:100%;';
 		}
 
 		// phpcs:ignore -- The variables are already escaped.
