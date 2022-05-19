@@ -8,7 +8,7 @@ import tests from "../config/tests.json"
 import data from "../config/data.json";
 
 const options = {
-	"headless": true,
+	"headless": false,
 	"defaultViewport": null,
 	"args": [
 		"--disable-infobars",
@@ -24,11 +24,15 @@ let context;
 let timeOutTime = 2500;
 let json = data;
 
+
+
 describe("Test name", () => {
 	beforeAll(async () => {
 		try {
+
 			json = await setup.setupStore(json);
 			utils.setOptions();
+
 		} catch (e) {
 			console.log(e);
 		}
@@ -48,8 +52,10 @@ describe("Test name", () => {
 	}),
 
 	test.each(tests)(
+
 		"$name",
 		async (args) => {
+
 			try {
 				// --------------- GUEST/LOGGED IN --------------- //
 				if(args.loggedIn) {
@@ -62,14 +68,27 @@ describe("Test name", () => {
 
 				// --------------- ADD PRODUCTS TO CART --------------- //
 				await utils.addMultipleProductsToCart(page, args.products, json);
-				await page.waitForTimeout(2 * timeOutTime);
+				await page.waitForTimeout(2*timeOutTime);
 
 				// --------------- GO TO CHECKOUT --------------- //
 				await page.goto(urls.CHECKOUT);
-				await page.waitForTimeout(2 * timeOutTime);
 
-				await kpUtils.setPaymentMethod(page, "pay_later");
+				// --------------- SELECT SHIPPING METHOD ------- //
+
 				await page.waitForTimeout(timeOutTime);
+				await kpUtils.selectShippingMethod(page, args.shippingMethod)
+				// --------------- SELECT KP -------------------- //
+				let paymentSelector = await page.$("label[for='payment_method_klarna_payments_klarna_payments']")
+
+				if(paymentSelector) {
+					await paymentSelector.click({clickCount: 3})
+				}
+
+				await page.waitForTimeout( timeOutTime);
+
+				let klarnaIframe =await page.frames().find((frame) => frame.name() === "klarna-payments-main");
+
+				await page.waitForTimeout(0.5 * timeOutTime);
 
 				// --------------- COUPON HANDLER --------------- //
 				await utils.applyCoupons(page, args.coupons);
@@ -79,17 +98,28 @@ describe("Test name", () => {
 
 				await page.waitForTimeout(2 * timeOutTime);
 
-				let kpIframe = await page.frames().find((frame) => frame.name() === "klarna-pay-later-fullscreen");;
+				let input = await klarnaIframe.$('input[id="radio-pay_later"]');
+				input.click({clickCount: 3})
+
+				await page.waitForTimeout(timeOutTime);
+
+				if ( await page.$("#place_order") ) {
+					let placeOrder = await page.$("button[name='woocommerce_checkout_place_order']");
+					await placeOrder.click({clickCount: 3})
+				}
+				
+				let kpIframe = await page.frames().find((frame) => frame.name() === "klarna-payments-fullscreen");
+
 				await kpUtils.processKpIframe(page, kpIframe);
+
 			} catch(e) {
 				console.log("Error placing order", e)
 			}
 
 			// --------------- POST PURCHASE CHECKS --------------- //
-			await page.waitForTimeout(5 * timeOutTime);
+			await page.waitForTimeout(3 * timeOutTime);
 			const value = await page.$eval(".entry-title", (e) => e.textContent);
 			expect(value).toBe("Order received");
 
-			// @TODO - Run any other needed checks here against your tests extra checks.
-	}, 190000);
+	}, 250000);
 });
