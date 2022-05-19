@@ -20,8 +20,9 @@ class KP_Requests {
 	 * @param string $country The country for the request.
 	 */
 	public function __construct( $order_id = false, $country = '' ) {
-		$this->order_id = $order_id;
-		$this->country  = empty( $country ) ? kp_get_klarna_country() : $country;
+		$this->order_id       = $order_id;
+		$this->country        = empty( $country ) ? kp_get_klarna_country() : $country;
+		$this->country_params = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $this->country ) ] ?? null;
 		$this->set_environment_variables();
 	}
 
@@ -106,23 +107,7 @@ class KP_Requests {
 	 * Sets the environment.
 	 */
 	public function set_environment() {
-		switch ( $this->country ) {
-			case 'US':
-				$env_string = '-na';
-				break;
-			case 'CA':
-				$env_string = '-na';
-				break;
-			case 'AU':
-				$env_string = '-oc';
-				break;
-			case 'NZ':
-				$env_string = '-oc';
-				break;
-			default:
-				$env_string = '';
-				break;
-		}
+		$env_string = $this->country_params['endpoint'] ?? '';
 		if ( $this->testmode ) {
 			$this->environment = 'https://api' . $env_string . '.playground.klarna.com/';
 		} else {
@@ -146,14 +131,14 @@ class KP_Requests {
 	 */
 	public function get_klarna_locale() {
 		$locale = get_locale();
-		// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formated to fi_fi.
+		// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formated to fi-fi.
 		switch ( $locale ) {
 			case 'fi':
-				$locale = 'fi_fi';
-				break;
+				return 'fi-fi';
+			case 'el':
+				return 'el-GR';
 			default:
-				break;
+				return substr( str_replace( '_', '-', $locale ), 0, 5 );
 		}
-		return substr( str_replace( '_', '-', $locale ), 0, 5 );
 	}
 }

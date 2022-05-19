@@ -24,7 +24,7 @@ if ( is_array( $payment_categories ) ) {
 		}
 		$payment_category_id   = 'klarna_payments_' . $payment_category['identifier'];
 		$payment_category_name = $payment_category['name'];
-		$payment_category_icon = $payment_category['asset_urls']['standard'];
+		$payment_category_icon = $payment_category['assets_url'];
 		$kp                    = $available_gateways['klarna_payments'];
 		$kp->id                = $payment_category_id;
 		$kp->title             = $payment_category_name;

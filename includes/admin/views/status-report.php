@@ -17,7 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<h2><?php esc_html_e( 'Klarna Payments', 'klarna-payments-for-woocommerce' ); ?><?php echo wc_help_tip( esc_html__( 'Klarna Payments System Status.', 'klarna-payments-for-woocommerce' ) ); /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></h2>
 		</th>
 	</tr>
-
 	<?php
 	$db_logs = get_option( 'krokedil_debuglog_kp', array() );
 	if ( ! empty( $db_logs ) ) {
@@ -35,7 +34,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<tbody>
 		<?php
 		foreach ( $db_logs as $log ) {
-
 			$timestamp      = isset( $log['timestamp'] ) ? $log['timestamp'] : '';
 			$log_title      = isset( $log['title'] ) ? $log['title'] : '';
 			$code           = isset( $log['response']['code'] ) ? $log['response']['code'] : '';
@@ -65,5 +63,49 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php
 	}
 	?>
-		</tbody>
-	</table>
+	</tbody>
+</table>
+<?php
+	$list_of_countries      = array();
+	$test_list_of_countries = array();
+
+foreach ( get_option( 'woocommerce_klarna_payments_settings', array() ) as $key => $value ) {
+	if ( '' !== $value ) {
+		if ( preg_match( '/test_merchant_id/i', $key ) ) {
+			array_push( $test_list_of_countries, ( strtoupper( substr( $key, -2 ) ) ) );
+		} elseif ( preg_match( '/merchant_id/i', $key ) ) {
+			array_push( $list_of_countries, ( strtoupper( substr( $key, -2 ) ) ) );
+		}
+	}
+}
+$live_countries = esc_html( 'No countries selected' );
+$test_countries = esc_html( 'No countries selected' );
+if ( ( isset( $list_of_countries ) ) && ( count( $list_of_countries ) > 0 ) ) {
+	$live_countries = ( implode( ' ', $list_of_countries ) );
+}
+if ( ( isset( $test_list_of_countries ) ) && ( count( $test_list_of_countries ) > 0 ) ) {
+	$test_countries = ( implode( ' ', $test_list_of_countries ) );
+}
+
+?>
+<table class="wc_status_table widefat" autofocus>
+	<thead>
+		<tr>
+			<th colspan="6" data-export-label="Klarna Countries">
+				<h2><?php esc_html_e( 'Klarna Payments Countries', 'klarna-payments-for-woocommerce' ); ?><?php echo wc_help_tip( esc_html__( 'Klarna Payments Countries System Status.', 'klarna-payments-for-woocommerce' ) ); /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></h2>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><strong><?php esc_html_e( 'Production Countries', 'klarna-payments-for-woocommerce' ); ?></strong></td>
+			<td><span style="display: none;"><?php echo esc_html( $live_countries ); ?></span></td>
+			<td><?php echo esc_html( $live_countries ); ?></td>
+		</tr>
+		<tr>
+			<td><strong><?php esc_html_e( 'Test Countries', 'klarna-payments-for-woocommerce' ); ?></strong></td>
+			<td><span style="display: none;"><?php echo esc_html( $test_countries ); ?></span></td>
+			<td><?php echo esc_html( $test_countries ); ?></td>
+		</tr>
+	</tbody>
+</table>

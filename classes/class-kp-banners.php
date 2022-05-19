@@ -58,15 +58,15 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			}
 
 			// Go through countries and check if at least one has credentials configured.
-			$countries = array( 'at', 'au', 'be', 'ca', 'ch', 'de', 'dk', 'de', 'es', 'fi', 'fr', 'gb', 'it', 'nl', 'no', 'nz', 'pl', 'se', 'uk', 'us' );
-
+			// Uses the same base data as the form generator, from the class KP_Form_Fields.
 			$country_set = false;
-			foreach ( $countries as $country ) {
-				$merchant_id   = 'merchant_id_' . $country;
-				$shared_secret = 'shared_secret_' . $country;
+			foreach ( KP_Form_Fields::$kp_form_auto_countries as $cc => $values ) {
+				$merchant_id   = 'merchant_id_' . $cc;
+				$shared_secret = 'shared_secret_' . $cc;
 
 				if ( isset( $kp_settings[ $merchant_id ] ) && '' !== $kp_settings[ $merchant_id ] && isset( $kp_settings[ $shared_secret ] ) && '' !== $kp_settings[ $shared_secret ] ) {
 					$country_set = true;
+					break;
 				}
 			}
 
@@ -75,6 +75,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			}
 
 			if ( $show_banner && false === get_transient( 'klarna_kp_hide_banner' ) ) {
+
 				?>
 				<div id="kb-spacer"></div>
 
@@ -123,15 +124,19 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 				jQuery(document).ready(function($){
 
 					jQuery('.kb-dismiss').click(function(){
+
+						let permanent = confirm( "<?php echo( esc_html__( 'Hide Go Live banner permanently?\nPress Cancel to have it show up again in a few days.' ) ); ?>" );
+
 						jQuery('#klarna-banner').slideUp();
 						jQuery.post(
 							ajaxurl,
 							{
 								action		: 'hide_klarna_kp_banner',
+								permanent	: permanent,
 								_wpnonce	: '<?php echo wp_create_nonce( 'hide-klarna-banner' ); // phpcs:ignore?>',
 							},
 							function(response){
-								console.log('Success hide Klarna banner');
+								console.log( response.data );
 							}
 						);
 					});
@@ -191,8 +196,15 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 		 * Hide Klarna banner in admin pages for.
 		 */
 		public function hide_klarna_kp_banner() {
-			set_transient( 'klarna_kp_hide_banner', '1', 6 * DAY_IN_SECONDS );
-			wp_send_json_success( 'Hide Klarna Payment banner.' );
+			$permanent = ( array_key_exists( 'permanent', $_POST ) && 'true' === $_POST['permanent'] ); //phpcs:ignore WordPress.Security.NonceVerification.Missing -- It is my understanding that WP checks the nonce before triggering the action?
+			if ( $permanent ) {
+				set_transient( 'klarna_kp_hide_banner', '1' );
+				wp_send_json_success( 'Klarna Payment Go Live banner hidden *for ever*.' );
+			} else {
+				$hide_days = 6;
+				set_transient( 'klarna_kp_hide_banner', '1', $hide_days * DAY_IN_SECONDS );
+				wp_send_json_success( "Klarna Payment Go Live banner hidden for ${hide_days} days." );
+			}
 			wp_die();
 		}
 

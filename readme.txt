@@ -3,10 +3,10 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.8.2
+Tested up to: 5.9.3
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 5.9.0
+WC tested up to: 6.3.1
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -40,21 +40,41 @@ __Klarna Payments__ removes the headaches of payments, for both consumers and me
 1. Upload plugin folder to to the "/wp-content/plugins/" directory.
 2. Activate the plugin through the "Plugins" menu in WordPress.
 3. Go WooCommerce Settings –> Payment Gateways and configure your Klarna Payments settings.
-4. Read more about the configuration process in the [plugin documentation](https://docs.krokedil.com/collection/126-klarna-payments/).
+4. Read more about the configuration process in the [plugin documentation](https://docs.krokedil.com/klarna-payments-for-woocommerce/).
 
 == Frequently Asked Questions ==
 = Which countries does this payment gateway support? =
 Klarna Payments works for merchants in Sweden, Denmark, Finland, Norway, Germany, Austria, the Netherlands, UK and United States.
 
 = Where can I find Klarna Payments for WooCommerce documentation? =
-For help setting up and configuring Klarna Payments for WooCommerce please refer to our [documentation](https://docs.krokedil.com/collection/126-klarna-payments/).
+For help setting up and configuring Klarna Payments for WooCommerce please refer to our [documentation](https://docs.krokedil.com/klarna-payments-for-woocommerce/).
 
-= Are there any specific requirements? =
-* WooCommerce 3.3.0 or newer is required.
-* PHP 5.6 or higher is required.
-* A SSL Certificate is required.
 
 == Changelog ==
+= 2021.04.27    - version 2.9.1 =
+* Fix           - Make sure that the checkout is fully unlocked after the Klarna popup window is closed by a customer.
+* Fix           - Check if a country is supported before getting the currency. Fixes a undefined index error message.
+
+= 2021.04.13    - version 2.9.0 =
+* Feature       - Added support for Greece and Czech Republic.
+* Enhancement   - The debug log messages that are saved on errors to the database are no longer autoloaded by us, and will only be loaded when asked for directly.
+* Fix           - Fixed an issue with the Mexico support.
+* Fix           - Fixed an issue that could occur where some plugins would strip the hashtag from the hex color in the settings, causing an error.
+
+= 2021.01.19    - version 2.8.1 =
+* Fix           - Fixed a potential fatal error when the create session request does not return a OK response.
+
+= 2021.01.19    - version 2.8.0 =
+* Feature       - Add support for Mexico.
+* Fix           - Fixerd an issue causing the wrong payment method name to be set in some cases when using pay for order.
+* Fix           - Fixed a error notice if the WooCommerce customer object is not set.
+
+= 2021.12.07    - version 2.7.1 =
+* Enhancement   - Countries that you have entered credentials for now show up on the status page.
+* Enhancement   - We will now warn you if you have put Klarna into test mode without having any test credentials filled in.
+* Enhancement   - Added an option to permanently remove the go-live banner on the admin page.
+* Fix           - Fixed an issue that could let customers press the place order button multiple times that could cause double orders.
+
 = 2021.11.17    - version 2.7.0 =
 * Feature       - Add support for Ireland.
 * Feature       - Add support for Portugal.

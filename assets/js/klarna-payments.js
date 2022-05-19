@@ -164,7 +164,7 @@ jQuery( function($) {
 
 						var options = {
 							container: klarna_payments_container_selector_id,
-							payment_method_category: klarna_payments.getSelectedPaymentCategory()
+							payment_method_category: klarna_payments.getSelectedPaymentCategory() === "klarna_payments" ? "" : klarna_payments.getSelectedPaymentCategory()
 						};
 
 						if ( 'US' === $('#billing_country').val() ) {
@@ -244,7 +244,7 @@ jQuery( function($) {
 			try {
 				Klarna.Payments.authorize(
 					address,
-					{payment_method_category: klarna_payments.getSelectedPaymentCategory()},
+					{payment_method_category: klarna_payments.getSelectedPaymentCategory() === "klarna_payments" ? "" : klarna_payments.getSelectedPaymentCategory()},
 					function (response) {
 						klarna_payments.authorization_response = response;
 						$defer.resolve(response);
@@ -398,6 +398,13 @@ jQuery( function($) {
 					);
 				} else {
 					$('body').trigger( 'kp_auth_failed' );
+
+					// Re-enable the form.
+					$( 'body' ).trigger( 'updated_checkout' );
+					$( 'form.checkout' ).removeClass( 'processing' );
+					$( 'form.checkout' ).unblock();
+					$( '.woocommerce-checkout-review-order-table' ).unblock();
+
 					console.log('No authorization_token in response');
 					$('form.woocommerce-checkout').removeClass( 'processing' ).unblock();
 					$.ajax(
@@ -436,6 +443,11 @@ jQuery( function($) {
 		orderSubmit: function( event ) {
 			if( klarna_payments.isKlarnaPaymentsSelected() ) {
 				event.preventDefault();
+
+				if( $('form.checkout').is('.processing') ) {
+					return false;
+				}
+
 				$('form.checkout').addClass('processing');
 				$( '.woocommerce-checkout-review-order-table' ).block({
 					message: null,
@@ -444,6 +456,7 @@ jQuery( function($) {
 						opacity: 0.6
 					}
 				});
+
 				$.ajax({
 					type: 'POST',
 					url: klarna_payments_params.submit_order,
@@ -485,6 +498,7 @@ jQuery( function($) {
 		 * @param {string} event 
 		 */
 		failOrder: function( event, error_message ) {
+
 			// Re-enable the form.
 			$( 'body' ).trigger( 'updated_checkout' );
 			$( 'form.checkout' ).removeClass( 'processing' );

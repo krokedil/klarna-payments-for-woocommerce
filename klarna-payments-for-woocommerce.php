@@ -5,14 +5,14 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 2.7.0
+ * Version: 2.9.1
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 3.4.0
- * WC tested up to: 5.9.0
+ * WC tested up to: 6.4.1
  *
- * Copyright (c) 2017-2021 Krokedil
+ * Copyright (c) 2017-2022 Krokedil
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,8 +37,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '2.7.0' );
-define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '5.6.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '2.9.1' );
+define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.0.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
@@ -234,6 +234,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 
 			// Classes.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php';  // This is loaded very early becasue we'll need these settings right away.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-gateway-klarna-payments.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-gdpr.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-ajax.php';
