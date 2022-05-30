@@ -3,10 +3,10 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 5.9.3
+Tested up to: 6.0
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 6.3.1
+WC tested up to: 6.5.1
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -51,6 +51,14 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2021.05.30    - version 2.10.0 =
+* Feature       - Add support for Greece locale (el_GR).
+* Fix           - Fix incorrect shipping tax sometimes happening on non-integer VATs (thank you Avaroth!).
+* Fix           - Fix "Internal server error" sometimes happening when the store's country and customer's country do not match region-wise.
+* Fix           - Fix undefined index happening due to unsupported countries.
+* Fix           - Fix issue where you could not switch between KP and KCO when both plugins were enabled in the checkout at the same time.
+* Enhancement   - Klarna Payments is now available on the admin page which should improve compatibility with some third-party plugins.
+
 = 2021.04.27    - version 2.9.1 =
 * Fix           - Make sure that the checkout is fully unlocked after the Klarna popup window is closed by a customer.
 * Fix           - Check if a country is supported before getting the currency. Fixes a undefined index error message.
