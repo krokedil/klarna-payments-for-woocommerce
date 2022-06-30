@@ -32,6 +32,10 @@ class KP_Assets {
 	 */
 	public function enqueue_express_button() {
 
+		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
+			return;
+		}
+
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
 		if ( 'yes' !== $kp_settings['express_enabled'] || 'yes' !== $kp_settings['enabled'] ) {
 			return;
