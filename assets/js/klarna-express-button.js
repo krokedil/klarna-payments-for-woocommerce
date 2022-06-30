@@ -11,7 +11,7 @@ jQuery(function ($) {
 	* In this case, we have to force re-paint the button. This is most likely happening because the window object
 	* uses cached data instead of dynamically refetching the klarna-express-button.
 	*/
-	$(document.body).on('added_to_cart removed_from_cart', function () {
+	$(document.body).on('updated_cart_totals added_to_cart removed_from_cart', function () {
 		Klarna.ExpressButton.refreshButtons();
 	});
 
