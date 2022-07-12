@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2022.07.12    - version 2.11.0 =
+* Enhancement   - Enhanced the checkout experience.
+
 = 2021.05.30    - version 2.10.0 =
 * Feature       - Add support for Greece locale (el_GR).
 * Fix           - Fix incorrect shipping tax sometimes happening on non-integer VATs (thank you Avaroth!).
