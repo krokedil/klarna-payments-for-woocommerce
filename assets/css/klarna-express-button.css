@@ -1,0 +1,9 @@
+klarna-express-button {
+	margin-bottom: 1.0em;
+}
+
+@media (max-width: 500px) {
+	#klarna-express-button-0 {
+		width: 100%;
+	}
+}

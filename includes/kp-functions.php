@@ -145,9 +145,15 @@ function kp_get_klarna_country( $order = false ) {
 		return apply_filters( 'wc_klarna_payments_country', $order->get_billing_country() );
 	}
 
+	$country = wc_get_customer_default_location()['country'];
+	if ( ! empty( $country ) ) {
+		return apply_filters( 'wc_klarna_payments_countr', $country );
+	}
+
 	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer ) && ! empty( WC()->customer->get_billing_country() ) ) {
 		return apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
 	}
+
 	$base_location = wc_get_base_location();
 	$country       = $base_location['country'];
 
@@ -215,4 +221,24 @@ function kp_process_rejected( $order, $decoded ) {
 		'redirect' => '',
 		'messages' => '<div class="woocommerce-error">Klarna payment rejected</div>',
 	);
+}
+
+
+/**
+ * Formats the locale to match Klarnas api.
+ *
+ * @return string
+ */
+function kp_get_locale() {
+	$locale = get_locale();
+	// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formated to fi_fi.
+	switch ( $locale ) {
+		case 'fi':
+			$locale = 'fi_fi';
+			break;
+		default:
+			break;
+	}
+
+	return substr( str_replace( '_', '-', $locale ), 0, 5 );
 }

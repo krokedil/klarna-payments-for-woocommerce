@@ -371,6 +371,68 @@ class KP_Form_Fields {
 			)
 		);
 
+		/* Klarna Express Checkout (aka Express Button). */
+		if ( apply_filters( 'kp_enable_express_button', false ) ) {
+			$settings = array_merge(
+				$settings,
+				array(
+					'express_options'     => array(
+						'title' => 'Express Checkout (Express Button)',
+						'type'  => 'title',
+					),
+					'express_enabled'     => array(
+						'title'   => __( 'Show Express Button on cart page', 'klarna-payments-for-woocommerce' ),
+						'type'    => 'checkbox',
+						'label'   => __( 'Enable', 'klarna-payments-for-woocommerce' ),
+						'default' => 'no',
+
+					),
+					'express_data_theme'  => array(
+						'title'       => __( 'Theme', 'klarna-payments-for-woocommerce' ),
+						'description' => __( 'The color of the button.', 'klarna-payments-for-woocommerce' ),
+						'type'        => 'select',
+						'default'     => 'default',
+						'options'     => array(
+							'default' => __( 'Default', 'klarna-payments-for-woocommerce' ),
+							'dark'    => __( 'Dark', 'klarna-payments-for-woocommerce' ),
+							'light'   => __( 'Light', 'klarna-payments-for-woocommerce' ),
+						),
+					),
+					'express_data_shape'  => array(
+						'title'   => __( 'Shape', 'klarna-payments-for-woocommerce' ),
+						'type'    => 'select',
+						'default' => 'default',
+						'options' => array(
+							'default' => __( 'Default', 'klarna-payments-for-woocommerce' ),
+							'rect'    => __( 'Rectangular', 'klarna-payments-for-woocommerce' ),
+							'pill'    => __( 'Pill', 'klarna-payments-for-woocommerce' ),
+						),
+					),
+					'express_data_label'  => array(
+						'title'   => __( 'Label', 'klarna-payments-for-woocommerce' ),
+						'type'    => 'select',
+						'default' => 'default',
+						'options' => array(
+							'default' => __( 'Default', 'klarna-payments-for-woocommerce' ),
+							'klarna'  => __( 'Klarna', 'klarna-payments-for-woocommerce' ),
+						),
+					),
+					'express_data_width'  => array(
+						'title'       => __( 'Button width', 'klarna-payments-for-woocommerce' ),
+						'type'        => 'text',
+						'default'     => '',
+						'description' => __( 'A value between 145 and 500 (measured in pixels). Leave blank for default width.', 'klarna-payments-for-woocommerce' ),
+					),
+					'express_data_height' => array(
+						'title'       => __( 'Button height', 'klarna-payments-for-woocommerce' ),
+						'type'        => 'text',
+						'defualt'     => '',
+						'description' => __( 'A value between 35 and 60 (measured in pixels). Leave blank for default height.', 'klarna-payments-for-woocommerce' ),
+					),
+				)
+			);
+		}
+
 		return $settings;
 	}
 

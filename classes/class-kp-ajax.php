@@ -25,9 +25,10 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function add_ajax_events() {
 			$ajax_events = array(
-				'kp_wc_place_order' => true,
-				'kp_wc_auth_failed' => true,
-				'kp_wc_log_js'      => true,
+				'kp_wc_place_order'    => true,
+				'kp_wc_auth_failed'    => true,
+				'kp_wc_log_js'         => true,
+				'kp_wc_express_button' => true,
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -123,6 +124,48 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			$message           = "Frontend JS $klarna_session_id: $posted_message";
 			KP_Logger::log( $message );
 			wp_send_json_success();
+		}
+
+		/**
+		 * Populate the customer object with data received from Klarna.
+		 *
+		 * @return void
+		 */
+		public static function kp_wc_express_button() {
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'kp_wc_express_button' ) ) {
+				wp_send_json_error( 'bad_nonce' );
+			}
+
+			$customer = filter_var_array( $_POST['message'], FILTER_SANITIZE_STRING );
+			if ( ! $customer ) {
+				wp_send_json_error( 'Failed to filter the message.', $customer );
+			}
+
+			WC()->customer->set_billing_first_name( $customer['first_name'] );
+			WC()->customer->set_billing_last_name( $customer['last_name'] );
+			WC()->customer->set_billing_email( $customer['email'] );
+			WC()->customer->set_billing_phone( $customer['phone'] );
+			WC()->customer->set_billing_address( $customer['address']['street_address'] );
+			WC()->customer->set_billing_address_2( $customer['address']['street_address2'] );
+			WC()->customer->set_billing_postcode( $customer['address']['postal_code'] );
+			WC()->customer->set_billing_city( $customer['address']['city'] );
+			WC()->customer->set_billing_state( $customer['address']['region'] );
+			WC()->customer->set_billing_country( $customer['address']['country'] );
+
+			WC()->customer->set_shipping_first_name( $customer['first_name'] );
+			WC()->customer->set_shipping_last_name( $customer['last_name'] );
+			WC()->customer->set_shipping_phone( $customer['phone'] );
+			WC()->customer->set_shipping_address( $customer['address']['street_address'] );
+			WC()->customer->set_shipping_address_2( $customer['address']['street_address2'] );
+			WC()->customer->set_shipping_postcode( $customer['address']['postal_code'] );
+			WC()->customer->set_shipping_city( $customer['address']['city'] );
+			WC()->customer->set_shipping_state( $customer['address']['region'] );
+			WC()->customer->set_shipping_country( $customer['address']['country'] );
+
+			WC()->session->set( 'chosen_payment_method', 'klarna_payments' );
+
+			wp_send_json_success( wc_get_checkout_url() );
 		}
 	}
 }
