@@ -6,7 +6,7 @@ Requires at least: 4.0
 Tested up to: 6.0
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 6.5.1
+WC tested up to: 6.6.1
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -51,6 +51,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2022.07.12    - version 2.11.0 =
+* Enhancement   - Enhanced the checkout experience.
+* Tweak         - Improved compatibility with third-party theme (thanks @swarnat!)
+
 = 2021.05.30    - version 2.10.0 =
 * Feature       - Add support for Greece locale (el_GR).
 * Fix           - Fix incorrect shipping tax sometimes happening on non-integer VATs (thank you Avaroth!).

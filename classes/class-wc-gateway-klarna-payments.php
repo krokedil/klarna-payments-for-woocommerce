@@ -323,28 +323,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			true
 		);
 
-		$default_kp_checkout_fields = array(
-			'billing_given_name'       => '#billing_first_name',
-			'billing_family_name'      => '#billing_last_name',
-			'billing_email'            => '#billing_email',
-			'billing_phone'            => '#billing_phone',
-			'billing_country'          => '#billing_country',
-			'billing_region'           => '#billing_state',
-			'billing_postal_code'      => '#billing_postcode',
-			'billing_city'             => '#billing_city',
-			'billing_street_address'   => '#billing_address_1',
-			'billing_street_address2'  => '#billing_address_2',
-			'billing_company'          => '#billing_company',
-			'shipping_given_name'      => '#shipping_first_name',
-			'shipping_family_name'     => '#shipping_last_name',
-			'shipping_country'         => '#shipping_country',
-			'shipping_region'          => '#shipping_state',
-			'shipping_postal_code'     => '#shipping_postcode',
-			'shipping_city'            => '#shipping_city',
-			'shipping_street_address'  => '#shipping_address_1',
-			'shipping_street_address2' => '#shipping_address_2',
-		);
-
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
 

@@ -544,7 +544,7 @@ jQuery( function($) {
 		klarna_payments.setRadioButtonValues();
 	});
 
-	$('body').on( 'click', 'button#place_order', function( e ) {
+	$('body').on( 'click', 'input#place_order, button#place_order', function( e ) {
 		if( "true" === klarna_payments_params.pay_for_order ) {
 			klarna_payments.klarnaPayForOrder( e );
 		} else {

@@ -55,7 +55,6 @@ describe("Test name", () => {
 
 		"$name",
 		async (args) => {
-
 			try {
 				// --------------- GUEST/LOGGED IN --------------- //
 				if(args.loggedIn) {
@@ -78,7 +77,6 @@ describe("Test name", () => {
 				await page.waitForTimeout(timeOutTime);
 				await kpUtils.selectShippingMethod(page, args.shippingMethod)
 				// --------------- SELECT KP -------------------- //
-				let paymentSelector = await page.$("label[for='payment_method_klarna_payments_klarna_payments']")
 
 				if(paymentSelector) {
 					await paymentSelector.click({clickCount: 3})
@@ -86,30 +84,33 @@ describe("Test name", () => {
 
 				await page.waitForTimeout( timeOutTime);
 
-				let klarnaIframe =await page.frames().find((frame) => frame.name() === "klarna-payments-main");
-
-				await page.waitForTimeout(0.5 * timeOutTime);
-
 				// --------------- COUPON HANDLER --------------- //
 				await utils.applyCoupons(page, args.coupons);
 
 				// --------------- PLACE ORDER  --------------- //
 				await kpUtils.fillWcForm(page, args.customerType);
 
-				await page.waitForTimeout(2 * timeOutTime);
+				await page.waitForTimeout( timeOutTime);
 
-				let input = await klarnaIframe.$('input[id="radio-pay_later"]');
-				input.click({clickCount: 3})
+				let paymentSelector = await page.$('label[for="payment_method_klarna_payments_pay_later"]')
 
-				await page.waitForTimeout(timeOutTime);
+				if (paymentSelector) {
+					console.log('Situation --------------- 1');
+					await paymentSelector.click({clickCount: 3})
+				} else {
+					console.log('Situation --------------- 2');
+				}
+
+				await page.waitForTimeout( 2 * timeOutTime);
 
 				if ( await page.$("#place_order") ) {
 					let placeOrder = await page.$("button[name='woocommerce_checkout_place_order']");
 					await placeOrder.click({clickCount: 3})
 				}
-				
-				let kpIframe = await page.frames().find((frame) => frame.name() === "klarna-payments-fullscreen");
 
+				await page.waitForTimeout(2 * timeOutTime);
+
+				let kpIframe = await page.frames().find((frame) => frame.name() === "klarna-pay-later-fullscreen");
 				await kpUtils.processKpIframe(page, kpIframe);
 
 			} catch(e) {
