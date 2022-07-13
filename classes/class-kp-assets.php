@@ -192,7 +192,7 @@ class KP_Assets {
 			'klarna_express_button_styles',
 			plugins_url( 'assets/css/klarna-express-button.css', WC_KLARNA_PAYMENTS_MAIN_FILE ),
 			array(),
-			WC_KLARNA_PAYMENTS_VERSION,
+			WC_KLARNA_PAYMENTS_VERSION
 		);
 
 		wp_enqueue_style( 'klarna_express_button_styles' );
