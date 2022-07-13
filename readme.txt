@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2022.07.13    - version 2.11.1 =
+* Fix - Fixed an issue that would cause a critical error on versions of PHP older than 7.3. The WooCommerce team [strongly recommends](https://woocommerce.com/document/update-php-wordpress/) upgrading to PHP 7.4 for better performance and security.
+
 = 2022.07.12    - version 2.11.0 =
 * Enhancement   - Enhanced the checkout experience.
 * Tweak         - Improved compatibility with third-party theme (thanks @swarnat!)
