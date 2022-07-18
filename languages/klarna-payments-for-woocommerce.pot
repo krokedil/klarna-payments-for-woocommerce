@@ -8,7 +8,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Krokedil <info@krokedil.se>\n"
 "Last-Translator: Krokedil <info@krokedil.se>\n"
-"POT-Creation-Date: 2022-07-12 10:14+0000\n"
+"POT-Creation-Date: 2022-07-15 19:37+0000\n"
 "Report-Msgid-Bugs-To: http://krokedil.se\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -17,24 +17,24 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../klarna-payments-for-woocommerce.php:162
+#: ../klarna-payments-for-woocommerce.php:163
 msgid "Settings"
 msgstr ""
 
-#: ../klarna-payments-for-woocommerce.php:163
+#: ../klarna-payments-for-woocommerce.php:164
 msgid "Docs"
 msgstr ""
 
-#: ../klarna-payments-for-woocommerce.php:164
+#: ../klarna-payments-for-woocommerce.php:165
 msgid "Support"
 msgstr ""
 
 #. translators: URL to docs.
-#: ../klarna-payments-for-woocommerce.php:212
+#: ../klarna-payments-for-woocommerce.php:214
 msgid "It looks as if you don't have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href=\"%1$s\">Learn more</a>"
 msgstr ""
 
-#: ../klarna-payments-for-woocommerce.php:213
+#: ../klarna-payments-for-woocommerce.php:215
 msgid "https://wordpress.org/support/article/using-permalinks/"
 msgstr ""
 
