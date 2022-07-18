@@ -6,7 +6,7 @@ Requires at least: 4.0
 Tested up to: 6.0
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 6.6.1
+WC tested up to: 6.7
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2022.07.18    - version 2.11.2 =
+* Fix           - Fix purchase country not being updated when the billing country is changed on the checkout page.
+
 = 2022.07.13    - version 2.11.1 =
 * Fix - Fixed an issue that would cause a critical error on versions of PHP older than 7.3. The WooCommerce team [strongly recommends](https://woocommerce.com/document/update-php-wordpress/) upgrading to PHP 7.4 for better performance and security.
 
