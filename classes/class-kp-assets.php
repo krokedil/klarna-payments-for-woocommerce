@@ -31,7 +31,6 @@ class KP_Assets {
 	 * @return void
 	 */
 	public function enqueue_express_button() {
-
 		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
 			return;
 		}
@@ -61,6 +60,9 @@ class KP_Assets {
 	 * @return string
 	 */
 	public function express_button_script_tag( $tag, $handle ) {
+		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
+			return;
+		}
 
 		if ( 'klarna_express_button_library' !== $handle ) {
 			return $tag;
@@ -87,6 +89,10 @@ class KP_Assets {
 	 * @return void
 	 */
 	public function express_button_placement() {
+		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
+			return;
+		}
+
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
 
 		/* We're guaranteed to be on the cart page, so we don't have to check for is_cart. */
@@ -160,6 +166,9 @@ class KP_Assets {
 	 * @return void
 	 */
 	private function enqueue_express_button_scripts() {
+		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
+			return;
+		}
 
 		// phpcs:ignore -- The version should NOT be added.
 		wp_register_script( 'klarna_express_button_library', 'https://x.klarnacdn.net/express-button/v1/lib.js', array(), null, false );
@@ -187,6 +196,9 @@ class KP_Assets {
 	 * @return void
 	 */
 	private function enqueue_express_button_styles() {
+		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
+			return;
+		}
 
 		wp_register_style(
 			'klarna_express_button_styles',
