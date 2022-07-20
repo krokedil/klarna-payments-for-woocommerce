@@ -12,6 +12,11 @@
  * @return void|string
  */
 function kp_maybe_create_session_cart( $klarna_country = false ) {
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+	if ( ! isset( $settings['enabled'] ) || 'yes' !== $settings['enabled'] ) {
+		return;
+	}
+
 	// Maybe calculate totals. Only once on a page load.
 	if ( ! is_ajax() && 0 >= did_action( 'woocommerce_before_calculate_totals' ) ) {
 		WC()->cart->calculate_fees();
