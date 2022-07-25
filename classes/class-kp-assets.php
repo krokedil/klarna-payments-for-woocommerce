@@ -61,7 +61,7 @@ class KP_Assets {
 	 */
 	public function express_button_script_tag( $tag, $handle ) {
 		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
-			return;
+			return $tag;
 		}
 
 		if ( 'klarna_express_button_library' !== $handle ) {
