@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2022.07.25    - version 2.11.3 =
+* Fix           - Fix undefined index.
+
 = 2022.07.18    - version 2.11.2 =
 * Fix           - Fix purchase country not being updated when the billing country is changed on the checkout page.
 
