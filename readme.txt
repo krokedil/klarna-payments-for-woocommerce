@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2022.07.25    - version 2.11.4 =
+* Fix           - Fix bug that prevent scripts from properly loading, making the checkout appear to freeze.
+
 = 2022.07.25    - version 2.11.3 =
 * Fix           - Fix undefined index.
 
