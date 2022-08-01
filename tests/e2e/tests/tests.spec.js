@@ -6,6 +6,7 @@ import utils from "../helpers/utils";
 import kpUtils from "../helpers/kpUtils";
 import tests from "../config/tests.json"
 import data from "../config/data.json";
+import orderManagement from "../helpers/orderManagement";
 
 const options = {
 	"headless": false,
@@ -23,7 +24,7 @@ let browser;
 let context;
 let timeOutTime = 2500;
 let json = data;
-
+let orderID
 
 
 describe("Test name", () => {
@@ -95,10 +96,7 @@ describe("Test name", () => {
 				let paymentSelector = await page.$('label[for="payment_method_klarna_payments_pay_later"]')
 
 				if (paymentSelector) {
-					console.log('Situation --------------- 1');
 					await paymentSelector.click({clickCount: 3})
-				} else {
-					console.log('Situation --------------- 2');
 				}
 
 				await page.waitForTimeout( 2 * timeOutTime);
@@ -122,5 +120,12 @@ describe("Test name", () => {
 			const value = await page.$eval(".entry-title", (e) => e.textContent);
 			expect(value).toBe("Order received");
 
+			let checkoutURL = await page.evaluate(() => window.location.href)
+			orderID = await checkoutURL.split('/')[5]
+
+			if(args.orderManagement != '') {
+				await orderManagement.OrderManagementAction(page, orderID, args.orderManagement)
+			}
+			
 	}, 250000);
 });

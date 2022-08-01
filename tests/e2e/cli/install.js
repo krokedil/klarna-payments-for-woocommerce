@@ -2,7 +2,7 @@ require("dotenv").config();
 const waitOn = require("wait-on");
 const { execSync } = require("child_process");
 
-const { SITEHOST, PORT, PLUGIN_NAME } = process.env;
+const { SITEHOST, PORT, PLUGIN_NAME, KOM } = process.env;
 
 const executeCommand = (command) => {
 	const dockerRunCLI = "docker-compose run --rm wordpress-cli";
@@ -14,6 +14,12 @@ const executeCommand = (command) => {
 const wpInstallCommand = (params) => {
 	const { title, admin, pass, email, url } = params;
 	return `wp core install --title="${title}" --admin_user=${admin} --admin_password=${pass} --admin_email=${email} --skip-email --url=${url}`;
+};
+
+const installKom = () => {
+	if (KOM === 'yes') {
+		executeCommand(`wp plugin install klarna-order-management-for-woocommerce --activate`);
+	}
 };
 
 const installWP = () => {
@@ -52,6 +58,7 @@ waitOn({
 		installWC();
 		installTheme();
 		importDb();
+		installKom();
 		activatePlugin();
 	} catch (error) {
 		console.log(error);
