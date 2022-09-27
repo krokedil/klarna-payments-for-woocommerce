@@ -55,7 +55,7 @@ class KP_Checkout {
 		$this->html_client_token( $session_token );
 		$html = ob_get_clean();
 
-		$fragments['#kp-client-token'] = $html;
+		$fragments['#kp_client_token'] = $html;
 		return $fragments;
 	}
 

@@ -277,6 +277,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		if ( ! isset( $settings['enabled'] ) || 'yes' !== $settings['enabled'] ) {
+			return;
+		}
+
 		// Localize the script.
 		$klarna_payments_params                           = array();
 		$klarna_payments_params['testmode']               = $this->get_option( 'testmode' );
