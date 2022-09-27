@@ -3,10 +3,10 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 6.0
+Tested up to: 6.0.2
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 6.7
+WC tested up to: 6.9.4
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -51,6 +51,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2022.09.27    - version 2.11.5 =
+* Fix           - Fix the token fragment not being updated under certain conditions (thanks !@clifgriffin).
+* Tweak         - It should no longer be any issue when KP and KCO are enabled simultaneously on the checkout.
+
 = 2022.07.25    - version 2.11.4 =
 * Fix           - Fix bug that prevent scripts from properly loading, making the checkout appear to freeze.
 
