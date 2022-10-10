@@ -44,7 +44,7 @@ __Klarna Payments__ removes the headaches of payments, for both consumers and me
 
 == Frequently Asked Questions ==
 = Which countries does this payment gateway support? =
-Klarna Payments works for merchants in Sweden, Denmark, Finland, Norway, Germany, Austria, the Netherlands, UK and United States.
+Klarna Payments works for merchants in Australia, Austria, Belgium, Canada, Czech Republic, Denmark, Finland, France, Germany, Greece, Ireland (Republic of Ireland), Italy, Netherlands, New Zealand, Norway, Poland, Portugal, Spain, Sweden, Switzerland, United Kingdom and United States.
 
 = Where can I find Klarna Payments for WooCommerce documentation? =
 For help setting up and configuring Klarna Payments for WooCommerce please refer to our [documentation](https://docs.krokedil.com/klarna-payments-for-woocommerce/).
