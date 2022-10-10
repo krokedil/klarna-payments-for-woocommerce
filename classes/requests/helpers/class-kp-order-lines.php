@@ -209,7 +209,7 @@ class KP_Order_Lines {
 			foreach ( $order_item->get_taxes()['total'] as $key => $value ) {
 				if ( '' !== $value ) {
 					if ( $rate_id === $key ) {
-						return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 );
+						return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 ?? 0 );
 					}
 				}
 			}
@@ -436,7 +436,7 @@ class KP_Order_Lines {
 	private function get_order_shipping( $order_id = false ) {
 		$order = wc_get_order( $order_id );
 		if ( $order->get_shipping_method() ) {
-			$shipping            = array(
+			$shipping = array(
 				'type'             => 'shipping_fee',
 				'reference'        => $this->get_order_shipping_reference( $order ),
 				'name'             => ( '' !== $order->get_shipping_method() ) ? $order->get_shipping_method() : $shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' ),
