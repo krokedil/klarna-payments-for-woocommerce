@@ -108,7 +108,7 @@ class KP_Assets {
 		}
 
 		$country_code = strtoupper( $purchase_country );
-		$locale       = esc_attr( apply_filters( 'kp_express_button_locale', preg_replace( '/-.*/', "-{$country_code}", kp_get_locale() ) ) );
+		$locale       = esc_attr( apply_filters( 'kp_express_button_locale', kp_get_locale() ) );
 
 		$supported_countries = array(
 			'US',
