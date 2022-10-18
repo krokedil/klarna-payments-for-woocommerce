@@ -241,5 +241,5 @@ function kp_get_locale() {
 			break;
 	}
 
-	return substr( str_replace( '_', '-', $locale ), 0, 5 );
+	return apply_filters( 'kp_locale', substr( str_replace( '_', '-', $locale ), 0, 5 ) );
 }
