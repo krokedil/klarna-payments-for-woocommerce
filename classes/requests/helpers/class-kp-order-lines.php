@@ -346,7 +346,7 @@ class KP_Order_Lines {
 		/**
 		 * PW WooCommerce Gift Cards.
 		 */
-		if ( ! empty( WC()->session->get( 'pw-gift-card-data' ) ) ) {
+		if ( isset( WC()->session ) && ! empty( WC()->session->get( 'pw-gift-card-data' ) ) ) {
 			$pw_gift_cards = WC()->session->get( 'pw-gift-card-data' );
 			foreach ( $pw_gift_cards['gift_cards'] as $code => $value ) {
 				$coupon_amount = intval( $value * -100 );
