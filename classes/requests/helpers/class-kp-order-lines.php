@@ -1014,7 +1014,7 @@ class KP_Order_Lines {
 			$pw_gift_cards = WC()->session->get( 'pw-gift-card-data' );
 			foreach ( $pw_gift_cards['gift_cards'] as $code => $value ) {
 				$coupon_amount = intval( $value * -100 );
-				$gift_card_sku = apply_filters( 'kp_pw_gift_card_sku', esc_html__( 'gift_card', 'klarna-payments-for-woocommerce' ), $code );
+				$gift_card_sku = apply_filters( 'klarna_pw_gift_card_sku', esc_html__( 'gift_card', 'klarna-payments-for-woocommerce' ), $code );
 				$gift_card     = array(
 					'type'                  => 'gift_card',
 					'reference'             => $gift_card_sku,
