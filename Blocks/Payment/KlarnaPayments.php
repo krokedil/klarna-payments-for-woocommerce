@@ -41,6 +41,24 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 				$registry->register( new static() );
 			}
 		);
+
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_style' ) );
+	}
+
+	/**
+	 * Enqueues the style needed for the payment block.
+	 *
+	 * @return void
+	 */
+	public static function enqueue_style() {
+		wp_register_style(
+			'kp-checkout-block',
+			plugins_url( 'build/klarna-payments-block.css', __FILE__ ),
+			array(),
+			WC_KLARNA_PAYMENTS_VERSION
+		);
+
+		wp_enqueue_style( 'kp-checkout-block' );
 	}
 
 	/**
@@ -75,8 +93,9 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 */
 	public function get_payment_method_data() {
 		return array(
-			'title'   => $this->get_setting( 'title' ),
-			'iconurl' => apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
+			'title'       => $this->get_setting( 'title' ),
+			'description' => $this->get_setting( 'description' ),
+			'iconurl'     => apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
 		);
 	}
 }
