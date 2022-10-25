@@ -254,10 +254,17 @@ class KP_Form_Fields {
 				'default'     => 'no',
 			),
 			'title'                => array(
-				'title'       => __( 'Title (not applicable to checkout)', 'klarna-payments-for-woocommerce' ),
+				'title'       => __( 'Title', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Payment method title. Changes what the payment method is called on the order recieved page aswell as the email that is sent to the customer.', 'klarna-payments-for-woocommerce' ),
 				'default'     => 'Klarna',
+				'desc_tip'    => true,
+			),
+			'description'          => array(
+				'title'       => __( 'Description', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'textarea',
+				'description' => __( 'Payment method description.', 'klarna-payments-for-woocommerce' ),
+				'default'     => '',
 				'desc_tip'    => true,
 			),
 			'testmode'             => array(
