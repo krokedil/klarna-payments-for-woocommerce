@@ -367,6 +367,43 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array   $result  Payment result.
 	 */
 	public function process_payment( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		// Check if the order was created using WooCommerce blocks.
+		if ( $order && $order->is_created_via( 'store-api' ) ) {
+			// Register filter for the create session call to add customer details to the request.
+			add_filter( 'wc_klarna_payments_create_session_args', 'kp_send_customer_data_with_session', 10, 2 );
+
+			// Create a session for the order.
+			$session = kp_create_session_order( $order_id );
+
+			if ( is_wp_error( $session ) ) {
+				wc_add_notice( 'Failed to create a session with Klarna.', 'error' );
+				return array(
+					'result' => 'error',
+				);
+			}
+
+			$session_id = $session['session_id'];
+
+			// Create a HPP url.
+			$hpp = kp_create_hpp_url( $session_id, $order_id );
+
+			if ( is_wp_error( $hpp ) ) {
+				wc_add_notice( 'Failed to create a HPP session with Klarna.', 'error' );
+				return array(
+					'result' => 'error',
+				);
+			}
+
+			$hpp_redirect = $hpp['redirect_url'];
+
+			return array(
+				'result'   => 'success',
+				'redirect' => $hpp_redirect,
+			);
+		}
+
 		update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country() );
 		update_post_meta( $order_id, '_kp_session_id', WC()->session->get( 'klarna_payments_session_id' ) );
 		// Add #kp hash to checkout url so we can do a finalize call to Klarna.
