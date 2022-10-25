@@ -1,100 +1,55 @@
 <?php
 /**
- * Create Session request class
+ * Class for the request to create a session.
  *
- * @package WC_Klarna_Payments/Classes/Post/Requests
+ * @package WC_Klarna_Payments/Classes/Requests/POST
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Create Session request class
+ * KP_Create_Session class.
  */
-class KP_Create_Session extends KP_Requests {
+class KP_Create_Session extends KP_Requests_Post {
 	/**
-	 * Makes the request.
+	 * Class constructor.
 	 *
-	 * @return array
+	 * @param array $arguments The request arguments.
 	 */
-	public function request() {
-		$request_url  = $this->environment . 'payments/v1/sessions';
-		$request_args = apply_filters( 'wc_klarna_payments_create_session_args', $this->get_request_args(), $this->order_id );
-		$response     = wp_remote_request( $request_url, $request_args );
-		$code         = wp_remote_retrieve_response_code( $response );
-		$body         = json_decode( wp_remote_retrieve_body( $response ), true );
-		$session_id   = isset( $body['session_id'] ) ? $body['session_id'] : '';
+	public function __construct( $arguments ) {
+		parent::__construct( $arguments );
 
-		WC()->session->set( 'kp_update_md5', md5( wp_json_encode( $request_args ) ) );
-
-		// Log request.
-		$log = KP_Logger::format_log( $session_id, 'POST', 'KP Create Session', $request_args, $response, $code, $request_url );
-		KP_Logger::log( $log );
-
-		$formated_response = $this->process_response( $response, $request_args, $request_url );
-
-		if ( ! is_wp_error( $formated_response ) ) {
-			$payment_method_categories = array();
-			if ( isset( $formated_response['descriptor'] ) && ! empty( $formated_response['descriptor'] ) ) {
-				$payment_method_categories[] = array(
-					'identifier' => 'klarna_payments',
-					'name'       => $formated_response['descriptor']['tagline'],
-					'assets_url' => $formated_response['descriptor']['asset_urls']['standard'],
-				);
-			} elseif ( isset( $formated_response['payment_method_categories'] ) && ! empty( $formated_response['payment_method_categories'] ) ) {
-				foreach ( $formated_response['payment_method_categories'] as $key => $value ) {
-					$payment_method_categories[] = array(
-						'identifier' => $value['identifier'],
-						'name'       => $value['name'],
-						'assets_url' => $value['asset_urls']['standard'],
-					);
-				}
-			}
-			$formated_response['payment_method_categories'] = $payment_method_categories;
-		}
-
-		return $formated_response;
+		$this->log_title      = 'Create session';
+		$this->request_filter = 'wc_klarna_payments_create_session_args';
 	}
 
 	/**
-	 * Gets the request args for the API call.
-	 *
-	 * @return array
-	 */
-	public function get_request_args() {
-		return array(
-			'headers'    => array(
-				'Authorization' => $this->calculate_auth(),
-				'Content-Type'  => 'application/json',
-			),
-			'method'     => 'POST',
-			'user-agent' => $this->user_agent,
-			'body'       => $this->get_request_body(),
-			'timeout'    => 10,
-		);
-	}
-
-	/**
-	 * Gets the request body for the API call.
+	 * Get the request url.
 	 *
 	 * @return string
 	 */
-	public function get_request_body() {
-		return wp_json_encode(
-			array(
-				'purchase_country'  => kp_get_klarna_country(),
-				'purchase_currency' => get_woocommerce_currency(),
-				'locale'            => $this->get_klarna_locale(),
-				'order_amount'      => $this->order_lines['order_amount'],
-				'order_tax_amount'  => $this->order_lines['order_tax_amount'],
-				'order_lines'       => $this->order_lines['order_lines'],
-				'customer'          => get_klarna_customer( $this->kp_settings['customer_type'] ),
-				'options'           => $this->iframe_options->get_kp_color_options(),
-				'merchant_urls'     => array(
-					'authorization' => home_url( '/wc-api/KP_WC_AUTHORIZATION' ),
-				),
-			)
+	protected function get_request_url() {
+		return $this->environment . 'payments/v1/sessions';
+	}
+
+	/**
+	 * Get the body for the request.
+	 *
+	 * @return array
+	 */
+	protected function get_body() {
+		return array(
+			'purchase_country'  => kp_get_klarna_country(),
+			'purchase_currency' => get_woocommerce_currency(),
+			'locale'            => $this->get_klarna_locale(),
+			'order_amount'      => '', // $this->order_lines['order_amount'], - TODO
+			'order_tax_amount'  => '', // $this->order_lines['order_tax_amount'], - TODO
+			'order_lines'       => '', // $this->order_lines['order_lines'], - TODO
+			'customer'          => get_klarna_customer( $this->kp_settings['customer_type'] ),
+			'options'           => $this->iframe_options->get_kp_color_options(),
+			'merchant_urls'     => array(
+				'authorization' => home_url( '/wc-api/KP_WC_AUTHORIZATION' ),
+			),
 		);
 	}
 }

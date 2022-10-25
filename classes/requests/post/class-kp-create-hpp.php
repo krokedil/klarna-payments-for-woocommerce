@@ -1,70 +1,46 @@
 <?php
 /**
- * Update Session request class.
+ * Class for the request to create a HPP order.
  *
- * @package WC_Klarna_Payments/Classes/Post/Requests
+ * @package WC_Klarna_Payments/Classes/Requests/POST
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Update Session request class.
+ * KP_Create_HPP class.
  */
-class KP_Create_HPP extends KP_Requests {
+class KP_Create_HPP extends KP_Requests_Post {
 	/**
-	 * Makes the request.
+	 * Class constructor.
 	 *
-	 * @param string $session_id The Klarna Payment session id.
-	 * @param int    $order_id The WooCommerce order id.
-	 * @return array
+	 * @param array $arguments The request arguments.
 	 */
-	public function request( $session_id, $order_id ) {
-		$request_url  = $this->environment . 'hpp/v1/sessions';
-		$request_args = apply_filters( 'wc_klarna_payments_create_hpp_args', $this->get_request_args( $session_id, $order_id ) );
+	public function __construct( $arguments ) {
+		parent::__construct( $arguments );
 
-		$response = wp_remote_request( $request_url, $request_args );
-		$code     = wp_remote_retrieve_response_code( $response );
-
-		// Log request.
-		$log = KP_Logger::format_log( $session_id, 'POST', 'KP Create HPP', $request_args, $response, $code, $request_url );
-		KP_Logger::log( $log );
-
-		$formated_response = $this->process_response( $response, $request_args, $request_url );
-		return $formated_response;
+		$this->log_title      = 'Create HPP';
+		$this->request_filter = 'wc_klarna_payments_create_hpp_args';
 	}
 
 	/**
-	 * Gets the request args for the API call.
+	 * Get the request url.
 	 *
-	 * @param string $session_id The Klarna Payment session id.
-	 * @param int    $order_id The WooCommerce order id.
-	 * @return array
-	 */
-	public function get_request_args( $session_id, $order_id ) {
-		return array(
-			'headers'    => array(
-				'Authorization' => $this->calculate_auth(),
-				'Content-Type'  => 'application/json',
-			),
-			'method'     => 'POST',
-			'user-agent' => $this->user_agent,
-			'body'       => $this->get_request_body( $session_id, $order_id ),
-			'timeout'    => 10,
-		);
-	}
-
-	/**
-	 * Gets the request body for the API call.
-	 *
-	 * @param string $session_id The Klarna Payment session id.
-	 * @param int    $order_id The WooCommerce order id.
 	 * @return string
 	 */
-	public function get_request_body( $session_id, $order_id ) {
-		$order = wc_get_order( $order_id );
+	protected function get_request_url() {
+		return $this->environment . 'hpp/v1/sessions';
+	}
 
+	/**
+	 * Get the body for the request.
+	 *
+	 * @return array
+	 */
+	protected function get_body() {
+		$base_url    = $this->get_api_url_base();
+		$session_id  = $this->arguments['session_id'];
+		$order       = wc_get_order( $this->arguments['order_id'] );
 		$success_url = add_query_arg(
 			array(
 				'sid'                 => '{{session_id}}',
@@ -73,17 +49,15 @@ class KP_Create_HPP extends KP_Requests {
 			$order->get_checkout_order_received_url()
 		);
 
-		return wp_json_encode(
-			array(
-				'payment_session_url' => $this->environment . 'payments/v1/sessions/' . $session_id,
-				'merchant_urls'       => array(
-					'success' => $success_url,
-					'cancel'  => wc_get_checkout_url(),
-					'back'    => wc_get_checkout_url(),
-					'failure' => wc_get_checkout_url(),
-					'error'   => wc_get_checkout_url(),
-				),
-			)
+		return array(
+			'payment_session_url' => "{$base_url}payments/v1/sessions/$session_id",
+			'merchant_urls'       => array(
+				'success' => $success_url,
+				'cancel'  => wc_get_checkout_url(), // TODO - Handle messages?
+				'back'    => wc_get_checkout_url(),
+				'failure' => wc_get_checkout_url(), // TODO - Handle messages?
+				'error'   => wc_get_checkout_url(), // TODO - Handle messages?
+			),
 		);
 	}
 }
