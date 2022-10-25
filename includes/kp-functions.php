@@ -101,6 +101,8 @@ function kp_create_session_order( $order_id, $klarna_country = false ) {
 	update_post_meta( $order_id, '_klarna_payments_client_token', $response['client_token'] );
 	update_post_meta( $order_id, '_klarna_payments_categories', $response['payment_method_categories'] );
 	update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country( $order ) );
+
+	return $response;
 }
 
 /**
@@ -242,4 +244,44 @@ function kp_get_locale() {
 	}
 
 	return apply_filters( 'kp_locale', substr( str_replace( '_', '-', $locale ), 0, 5 ) );
+}
+
+/**
+ * Creates a Klarna Payment HPP redirect url with Klarna.
+ *
+ * @param string $session_id The Klarna Payments session to use for the HPP request.
+ * @param int    $order_id The WooCommerce order id to use for the HPP request.
+ * @return array
+ */
+function kp_create_hpp_url( $session_id, $order_id ) {
+	$request  = new KP_Create_HPP( $order_id );
+	$response = $request->request( $session_id, $order_id );
+
+	return $response;
+}
+
+/**
+ * Adds customer data to the create session call to KP. Used by payment block.
+ *
+ * @param array $request_args The request arguments.
+ * @param int   $order_id The WooCommerce order id.
+ * @return array
+ */
+function kp_send_customer_data_with_session( $request_args, $order_id ) {
+	if ( null === $order_id ) {
+		return $request_args;
+	}
+
+	$body     = json_decode( $request_args['body'], true );
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+	$billing_address  = KP_Customer_Data::get_billing_address( $order_id, $settings['customer_type'] ?? 'b2c' );
+	$shipping_address = KP_Customer_Data::get_shipping_address( $order_id, $settings['customer_type'] ?? 'b2c' );
+
+	$body['billing_address']  = $billing_address;
+	$body['shipping_address'] = $shipping_address;
+
+	$request_args['body'] = wp_json_encode( $body );
+
+	return $request_args;
 }
