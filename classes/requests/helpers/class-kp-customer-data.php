@@ -5,9 +5,7 @@
  * @package WC_Klarna_Payments/Classes/Requests/Helpers
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * WC_Klarna_Payments_Order_Lines class.
