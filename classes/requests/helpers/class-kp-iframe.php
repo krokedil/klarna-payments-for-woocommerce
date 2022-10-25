@@ -2,12 +2,10 @@
 /**
  * Klarna IFrame options class file.
  *
- * @package KP_IFrame/Classes
+ * @package WC_Klarna_Payments/Classes/Requests/Helpers
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * KP_IFrame class.
@@ -73,7 +71,7 @@ class KP_IFrame {
 		foreach ( $kp_settings_filter as $setting_key => $setting_value ) {
 			foreach ( $this->kp_color_keys as $color_key ) {
 				if ( $setting_key === $color_key ) {
-					$this->kp_color_options[ $color_key ] = self::add_hash_to_color($setting_value);
+					$this->kp_color_options[ $color_key ] = self::add_hash_to_color( $setting_value );
 				}
 			}
 		}
