@@ -20,7 +20,7 @@ class KP_Create_Session extends KP_Requests {
 	 */
 	public function request() {
 		$request_url  = $this->environment . 'payments/v1/sessions';
-		$request_args = apply_filters( 'wc_klarna_payments_create_session_args', $this->get_request_args() );
+		$request_args = apply_filters( 'wc_klarna_payments_create_session_args', $this->get_request_args(), $this->order_id );
 		$response     = wp_remote_request( $request_url, $request_args );
 		$code         = wp_remote_retrieve_response_code( $response );
 		$body         = json_decode( wp_remote_retrieve_body( $response ), true );
