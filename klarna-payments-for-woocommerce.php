@@ -30,9 +30,13 @@
  * @package WC_Klarna_Payments
  */
 
+namespace KlarnaPayments;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 
 /**
  * Required minimums and constants
@@ -116,6 +120,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public function init() {
 			// Init the gateway itself.
 			$this->include_files();
+
+			$this->register_payment_block();
 		}
 
 		/**
@@ -253,6 +259,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-place-order.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-iframe.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-test-credentials.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-hpp.php';
 
 			// Request helpers.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-order-lines.php';
@@ -264,6 +271,18 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			if ( is_admin() ) {
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-klarna-for-woocommerce-addons.php';
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-banners.php';
+			}
+		}
+
+		/**
+		 * Registers the Klarna payments block with WooCommerce.
+		 *
+		 * @return void
+		 */
+		public function register_payment_block() {
+			if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
+				require_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/Blocks/Payment/KlarnaPayments.php';
+				KlarnaPayments::register();
 			}
 		}
 	}
