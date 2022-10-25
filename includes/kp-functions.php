@@ -285,3 +285,28 @@ function kp_send_customer_data_with_session( $request_args, $order_id ) {
 
 	return $request_args;
 }
+
+/**
+ * Prints error message to the frotend on api errors.
+ *
+ * @param WP_Error $wp_error The error response.
+ * @return void
+ */
+function kp_print_error_message( $wp_error ) {
+	$error_message = $wp_error->get_error_message();
+
+	if ( is_array( $error_message ) ) {
+		// Rather than assuming the first element is a string, we'll force a string conversion instead.
+		$error_message = implode( ' ', $error_message );
+	}
+
+	if ( is_ajax() ) {
+		if ( function_exists( 'wc_add_notice' ) ) {
+			wc_add_notice( $error_message, 'error' );
+		}
+	} else {
+		if ( function_exists( 'wc_print_notice' ) ) {
+			wc_print_notice( $error_message, 'error' );
+		}
+	}
+}
