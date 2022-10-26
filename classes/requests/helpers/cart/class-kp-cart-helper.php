@@ -45,7 +45,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	 * @return int
 	 */
 	public static function get_kp_order_tax_amount() {
-		return self::format_number( self::$cart->get_total_tax( 'kp_total_tax' ) );
+		return self::format_number( self::$cart->get_total_tax() );
 	}
 
 	/**
@@ -89,7 +89,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the product image url.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return string|null
 	 */
 	public static function get_image( $cart_item ) {
@@ -99,7 +99,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the merchant data.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return array
 	 */
 	public static function get_merchant_data( $cart_item ) {
@@ -109,7 +109,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the product name from the order line.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return string
 	 */
 	public static function get_name( $cart_item ) {
@@ -119,7 +119,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the product identifiers.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return array
 	 */
 	public static function get_identifiers( $cart_item ) {
@@ -129,7 +129,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the product url.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return string|null
 	 */
 	public static function get_url( $cart_item ) {
@@ -139,7 +139,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the quantity of the order line.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return int
 	 */
 	public static function get_quantity( $cart_item ) {
@@ -149,7 +149,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the quantity type of the order line.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return string
 	 */
 	public static function get_quantity_unit( $cart_item ) {
@@ -159,7 +159,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the Reference of the order line.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return string
 	 */
 	public static function get_reference( $cart_item ) {
@@ -169,7 +169,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Get the tax rate for any order line item, except coupons.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return int
 	 */
 	public static function get_tax_rate( $cart_item ) {
@@ -179,7 +179,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Get the total amount for any order line item, except coupons.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return int
 	 */
 	public static function get_total_amount( $cart_item ) {
@@ -189,7 +189,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Get the total discount amount for any order line item.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return int
 	 */
 	public static function get_total_discount_amount( $cart_item ) {
@@ -199,7 +199,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the tax amount for any order line item, except coupons.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return int
 	 */
 	public static function get_total_tax_amount( $cart_item ) {
@@ -209,7 +209,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the type of the order item.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return string
 	 */
 	public static function get_type( $cart_item ) {
@@ -219,7 +219,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Returns the unit price for any order line item, except coupons.
 	 *
-	 * @param array $cart_item The order item from WooCommerce.
+	 * @param array|object $cart_item The order item from WooCommerce.
 	 * @return int
 	 */
 	public static function get_unit_price( $cart_item ) {
@@ -229,7 +229,7 @@ class KP_Cart_Helper extends KP_Order_Lines {
 	/**
 	 * Get the subscription object for the order line. NOT YET SUPPORTED.
 	 *
-	 * @param array_Product $cart_item The WooCommerce order item.
+	 * @param array|object|WC_Product|WC_Shipping_Rate $cart_item The WooCommerce order item.
 	 * @return array
 	 */
 	public static function get_subscription( $cart_item ) {

@@ -49,9 +49,9 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		 **/
 		public function enqueue_css( $hook ) {
 			if ( 'woocommerce_page_checkout-addons' === $hook || 'settings_page_specter-admin' === $hook ) {
-				wp_register_style( 'klarna-checkout-addons', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/css/checkout-addons.css', false, WC_KLARNA_PAYMENTS_VERSION );
+				wp_register_style( 'klarna-checkout-addons', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/css/checkout-addons.css', array(), WC_KLARNA_PAYMENTS_VERSION );
 				wp_enqueue_style( 'klarna-checkout-addons' );
-				wp_register_script( 'klarna-checkout-addons', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/js/klarna-for-woocommerce-addons.js', true, WC_KLARNA_PAYMENTS_VERSION, false );
+				wp_register_script( 'klarna-checkout-addons', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/js/klarna-for-woocommerce-addons.js', array(), WC_KLARNA_PAYMENTS_VERSION, false );
 				$params = array(
 					'change_addon_status_nonce' => wp_create_nonce( 'change_klarna_addon_status' ),
 				);
@@ -112,6 +112,10 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 					<?php
 					if ( empty( $tab ) || 'addons' === $tab ) {
 						$addon_content = self::get_addons();
+						// If we dont have any addon_content to display. Return to avoid errors.
+						if ( null === $addon_content ) {
+							return;
+						}
 						?>
 							<div id="checkout-addons-heading" class="checkout-addons-heading">
 								<div class="checkout-addons-wrap">
@@ -295,19 +299,21 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 				}
 			}
 			if ( 'deactivate' === $action ) {
-				$result = deactivate_plugins( $plugin, true, null );
-				if ( is_wp_error( $result ) ) {
-					// Process Error.
-					$new_status       = 'activated';
-					$new_action       = 'deactivate';
-					$new_status_label = 'Activated';
-					$new_action_label = 'Deactivate';
-				} else {
-					$new_status       = 'deactivated';
-					$new_action       = 'activate';
-					$new_status_label = 'Deactivated';
-					$new_action_label = 'Activate';
-				}
+				/*$result = */deactivate_plugins( $plugin, true, null );
+				// @TODO Check this, there is no return value for deactivate_plugins. So can we check this at all?
+
+				// if ( is_wp_error( $result ) ) {
+				// Process Error.
+				// $new_status       = 'activated';
+				// $new_action       = 'deactivate';
+				// $new_status_label = 'Activated';
+				// $new_action_label = 'Deactivate';
+				// } else {
+				// $new_status       = 'deactivated';
+				// $new_action       = 'activate';
+				// $new_status_label = 'Deactivated';
+				// $new_action_label = 'Activate';
+				// }.
 			}
 
 			if ( 'install' === $action ) {
@@ -406,7 +412,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		/**
 		 * Get featured for the addons screen
 		 *
-		 * @return object of objects
+		 * @return object|null
 		 */
 		public static function get_addons() {
 			$addons = get_transient( 'wc_kco_addons' );
@@ -423,6 +429,8 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 			if ( is_object( $addons ) ) {
 				return $addons;
 			}
+
+			return null;
 		}
 
 		/**
