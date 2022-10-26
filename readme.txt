@@ -3,10 +3,10 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 6.0.2
+Tested up to: 6.1
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 6.9.4
+WC tested up to: 7.0.0
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -44,13 +44,19 @@ __Klarna Payments__ removes the headaches of payments, for both consumers and me
 
 == Frequently Asked Questions ==
 = Which countries does this payment gateway support? =
-Klarna Payments works for merchants in Sweden, Denmark, Finland, Norway, Germany, Austria, the Netherlands, UK and United States.
+Klarna Payments works for merchants in Australia, Austria, Belgium, Canada, Czech Republic, Denmark, Finland, France, Germany, Greece, Ireland (Republic of Ireland), Italy, Netherlands, New Zealand, Norway, Poland, Portugal, Spain, Sweden, Switzerland, United Kingdom and United States.
 
 = Where can I find Klarna Payments for WooCommerce documentation? =
 For help setting up and configuring Klarna Payments for WooCommerce please refer to our [documentation](https://docs.krokedil.com/klarna-payments-for-woocommerce/).
 
 
 == Changelog ==
+= 2022.10.26    - version 2.12.0 =
+* Feature       - Added support for "PW WooCommerce Gift Cards".
+* Fix           – Fixed an issue where “null” is returned if the tax rate could not be retrieved.
+* Tweak         - If Klarna Payments is enabled, it should now be available through the 'woocommerce_available_payment_gateways' filter. This is changed from being only available on the checkout page or when performing AJAX calls.
+* Enhancement   – You can now use the ‘kp_locale’ filter to change the Klarna locale.
+
 = 2022.09.27    - version 2.11.5 =
 * Fix           - Fix the token fragment not being updated under certain conditions (thanks !@clifgriffin).
 * Tweak         - It should no longer be any issue when KP and KCO are enabled simultaneously on the checkout.

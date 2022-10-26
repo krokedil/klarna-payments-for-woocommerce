@@ -209,7 +209,7 @@ class KP_Order_Lines {
 			foreach ( $order_item->get_taxes()['total'] as $key => $value ) {
 				if ( '' !== $value ) {
 					if ( $rate_id === $key ) {
-						return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 );
+						return round( WC_Tax::_get_tax_rate( $rate_id )['tax_rate'] * 100 ?? 0 );
 					}
 				}
 			}
@@ -342,6 +342,30 @@ class KP_Order_Lines {
 				}
 			}
 		}
+
+		/**
+		 * PW WooCommerce Gift Cards.
+		 */
+		if ( isset( WC()->session ) && ! empty( WC()->session->get( 'pw-gift-card-data' ) ) ) {
+			$pw_gift_cards = WC()->session->get( 'pw-gift-card-data' );
+			foreach ( $pw_gift_cards['gift_cards'] as $code => $value ) {
+				$coupon_amount = intval( $value * -100 );
+				$gift_card_sku = apply_filters( 'klarna_pw_gift_card_sku', esc_html__( 'gift_card', 'klarna-payments-for-woocommerce' ), $code );
+				$gift_card     = array(
+					'type'                  => 'gift_card',
+					'reference'             => $gift_card_sku,
+					'name'                  => esc_html__( 'Gift card', 'pw-woocommerce-gift-cards' ) . ' ' . $code,
+					'quantity'              => 1,
+					'tax_rate'              => 0,
+					'total_discount_amount' => 0,
+					'total_tax_amount'      => 0,
+					'unit_price'            => $coupon_amount,
+					'total_amount'          => $coupon_amount,
+				);
+
+				$this->order_lines[] = $gift_card;
+			}
+		}
 	}
 
 	/**
@@ -436,7 +460,7 @@ class KP_Order_Lines {
 	private function get_order_shipping( $order_id = false ) {
 		$order = wc_get_order( $order_id );
 		if ( $order->get_shipping_method() ) {
-			$shipping            = array(
+			$shipping = array(
 				'type'             => 'shipping_fee',
 				'reference'        => $this->get_order_shipping_reference( $order ),
 				'name'             => ( '' !== $order->get_shipping_method() ) ? $order->get_shipping_method() : $shipping_name = __( 'Shipping', 'klarna-payments-for-woocommerce' ),
@@ -937,10 +961,6 @@ class KP_Order_Lines {
 		$order   = wc_get_order( $order_id );
 		$coupons = $order->get_items( 'coupon' );
 
-		if ( empty( $coupons ) ) {
-			return;
-		}
-
 		/**
 		 * Loop through the coupons.
 		 *
@@ -984,6 +1004,30 @@ class KP_Order_Lines {
 					'total_tax_amount'      => $coupon_tax_amount,
 				);
 				$this->order_lines[] = $discount;
+			}
+		}
+
+		/**
+		 * PW WooCommerce Gift Cards.
+		 */
+		if ( isset( WC()->session ) && ! empty( WC()->session->get( 'pw-gift-card-data' ) ) ) {
+			$pw_gift_cards = WC()->session->get( 'pw-gift-card-data' );
+			foreach ( $pw_gift_cards['gift_cards'] as $code => $value ) {
+				$coupon_amount = intval( $value * -100 );
+				$gift_card_sku = apply_filters( 'klarna_pw_gift_card_sku', esc_html__( 'gift_card', 'klarna-payments-for-woocommerce' ), $code );
+				$gift_card     = array(
+					'type'                  => 'gift_card',
+					'reference'             => $gift_card_sku,
+					'name'                  => esc_html__( 'Gift card', 'pw-woocommerce-gift-cards' ) . ' ' . $code,
+					'quantity'              => 1,
+					'tax_rate'              => 0,
+					'total_discount_amount' => 0,
+					'total_tax_amount'      => 0,
+					'unit_price'            => $coupon_amount,
+					'total_amount'          => $coupon_amount,
+				);
+
+				$this->order_lines[] = $gift_card;
 			}
 		}
 	}
