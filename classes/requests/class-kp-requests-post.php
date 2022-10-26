@@ -28,6 +28,8 @@ abstract class KP_Requests_Post extends KP_Requests {
 	 * @return array Request arguments
 	 */
 	protected function get_request_args() {
+		$body = $this->get_body();
+
 		return apply_filters(
 			$this->request_filter,
 			array(
@@ -35,7 +37,7 @@ abstract class KP_Requests_Post extends KP_Requests {
 				'user-agent' => $this->get_user_agent(),
 				'method'     => $this->method,
 				'timeout'    => apply_filters( 'wc_kp_request_timeout', 10 ),
-				'body'       => wp_json_encode( apply_filters( 'kp_wc_api_request_args', $this->get_body() ) ),
+				'body'       => wp_json_encode( apply_filters( 'kp_wc_api_request_args', $body ) ),
 			)
 		);
 	}
@@ -46,4 +48,18 @@ abstract class KP_Requests_Post extends KP_Requests {
 	 * @return array
 	 */
 	abstract protected function get_body();
+
+	/**
+	 * Returns the request helper for the request based on if we have a order id passed or not.
+	 *
+	 * @return KP_Order_Lines
+	 */
+	public function get_helper() {
+		if ( $this->arguments['order_id'] ?? false && ! empty( $this->arguments['order_id'] ) ) {
+			$order = wc_get_order( $this->arguments['order_id'] );
+			return new KP_Order_Helper( $order );
+		} else {
+			return new KP_Cart_Helper( WC()->cart );
+		}
+	}
 }
