@@ -192,69 +192,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Create Klarna Payments session request.
-	 *
-	 * @param string $request_url  Klarna request URL.
-	 * @param array  $request_args Klarna request arguments.
-	 *
-	 * @return array|mixed|object|WP_Error
-	 */
-	public function create_session_request( $request_url, $request_args ) {
-		// Make it filterable.
-		$request_args = apply_filters( 'wc_klarna_payments_create_session_args', $request_args );
-
-		$response      = wp_safe_remote_post( $request_url, $request_args );
-		$code          = wp_remote_retrieve_response_code( $response );
-		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
-		$session_id    = isset( $response_body['session_id'] ) ? $response_body['session_id'] : null;
-
-		// Log the request.
-		$log = WC_Klarna_Payments::format_log( $session_id, 'POST', 'Klarna Payments create session request.', $request_args, $response_body, $code, $request_url );
-		WC_Klarna_Payments::log( $log );
-
-		if ( is_array( $response ) ) {
-			if ( 200 === $code ) {
-				$decoded = json_decode( $response['body'] );
-
-				return $decoded;
-			} else {
-				return new WP_Error( $code, $response['body'] );
-			}
-		} else {
-			return new WP_Error( 'kp_create_session', 'Could not create Klarna Payments session.' );
-		}
-	}
-
-	/**
-	 * Update Klarna Payments session.
-	 *
-	 * @param string $request_url  Klarna request URL.
-	 * @param array  $request_args Klarna request arguments.
-	 *
-	 * @return array|mixed|object|WP_Error
-	 */
-	public function update_session_request( $request_url, $request_args ) {
-		// Make it filterable.
-		$request_args = apply_filters( 'wc_klarna_payments_update_session_args', $request_args );
-
-		$response      = wp_safe_remote_post( $request_url, $request_args );
-		$code          = wp_remote_retrieve_response_code( $response );
-		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
-
-		WC_Klarna_Payments::log( 'Klarna Payments update session request. Status Code: ' . $code . ' Response: ' . stripslashes_deep( wp_json_encode( $response_body ) ) );
-
-		if ( is_array( $response ) ) {
-			if ( 204 === $code ) {
-				return true;
-			} else {
-				return new WP_Error( $code, $response['body'] );
-			}
-		} else {
-			return new WP_Error( 'kp_update_session', 'Could not update Klarna Payments session.' );
-		}
-	}
-
-	/**
 	 * Adds Klarna Payments container to checkout page.
 	 */
 	public function payment_fields() {
@@ -307,7 +244,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				);
 				$klarna_payments_params['pay_for_order']  = 'true';
 			} else {
-				kp_maybe_create_session_cart();
+				KP_WC()->api->get_session_cart();
 				$klarna_payments_params['client_token']  = WC()->session->get( 'klarna_payments_client_token' );
 				$klarna_payments_params['submit_order']  = WC_AJAX::get_endpoint( 'checkout' );
 				$klarna_payments_params['pay_for_order'] = 'false';
@@ -371,11 +308,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Check if the order was created using WooCommerce blocks.
 		if ( $order && $order->is_created_via( 'store-api' ) ) {
-			// Register filter for the create session call to add customer details to the request.
-			add_filter( 'wc_klarna_payments_create_session_args', 'kp_send_customer_data_with_session', 10, 2 );
-
 			// Create a session for the order.
-			$session = kp_create_session_order( $order_id );
+			$session = KP_WC()->api->create_session( kp_get_klarna_country( $order ), $order_id, true );
 
 			if ( is_wp_error( $session ) ) {
 				wc_add_notice( 'Failed to create a session with Klarna.', 'error' );
@@ -387,7 +321,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$session_id = $session['session_id'];
 
 			// Create a HPP url.
-			$hpp = kp_create_hpp_url( $session_id, $order_id );
+			$hpp = KP_WC()->api->create_hpp( kp_get_klarna_country( $order ), $session_id, $order_id );
 
 			if ( is_wp_error( $hpp ) ) {
 				wc_add_notice( 'Failed to create a HPP session with Klarna.', 'error' );
