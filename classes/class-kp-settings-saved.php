@@ -30,7 +30,7 @@ class KP_Settings_Saved {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'check_api_credentials' ), 10 );
+		// add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'check_api_credentials' ), 10 );
 	}
 
 	/**
