@@ -3,7 +3,7 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 6.0.2
+Tested up to: 6.1
 Requires PHP: 7.0
 WC requires at least: 4.0.0
 WC tested up to: 7.0.0
@@ -51,6 +51,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2022.10.26    - version 2.12.0 =
+* Feature       - Added support for "PW WooCommerce Gift Cards".
+* Fix           – Fixed an issue where “null” is returned if the tax rate could not be retrieved.
+* Tweak         - If Klarna Payments is enabled, it should now be available through the 'woocommerce_available_payment_gateways' filter. This is changed from being only available on the checkout page or when performing AJAX calls.
+* Enhancement   – You can now use the ‘kp_locale’ filter to change the Klarna locale.
+
 = 2022.09.27    - version 2.11.5 =
 * Fix           - Fix the token fragment not being updated under certain conditions (thanks !@clifgriffin).
 * Tweak         - It should no longer be any issue when KP and KCO are enabled simultaneously on the checkout.

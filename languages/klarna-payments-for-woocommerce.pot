@@ -8,7 +8,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Krokedil <info@krokedil.se>\n"
 "Last-Translator: Krokedil <info@krokedil.se>\n"
-"POT-Creation-Date: 2022-07-15 19:37+0000\n"
+"POT-Creation-Date: 2022-10-26 12:54+0000\n"
 "Report-Msgid-Bugs-To: http://krokedil.se\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -91,7 +91,7 @@ msgstr ""
 msgid "What is Klarna?"
 msgstr ""
 
-#: ../includes/kp-functions.php:121
+#: ../includes/kp-functions.php:126
 msgid "Klarna Payments API Error: "
 msgstr ""
 
@@ -267,7 +267,7 @@ msgstr ""
 msgid "A value between 35 and 60 (measured in pixels). Leave blank for default height."
 msgstr ""
 
-#: ../classes/requests/helpers/class-kp-order-lines.php:231, ../classes/requests/helpers/class-kp-order-lines.php:232, ../classes/requests/helpers/class-kp-order-lines.php:465, ../classes/requests/helpers/class-kp-order-lines.php:466
+#: ../classes/requests/helpers/class-kp-order-lines.php:231, ../classes/requests/helpers/class-kp-order-lines.php:232, ../classes/requests/helpers/class-kp-order-lines.php:489, ../classes/requests/helpers/class-kp-order-lines.php:490
 msgid "Sales Tax"
 msgstr ""
 
@@ -275,7 +275,11 @@ msgstr ""
 msgid "Gift card"
 msgstr ""
 
-#: ../classes/requests/helpers/class-kp-order-lines.php:442, ../classes/requests/helpers/class-kp-order-lines.php:750, ../classes/requests/helpers/class-kp-order-lines.php:776, ../classes/requests/helpers/class-kp-order-lines.php:924
+#: ../classes/requests/helpers/class-kp-order-lines.php:353, ../classes/requests/helpers/class-kp-order-lines.php:1017
+msgid "gift_card"
+msgstr ""
+
+#: ../classes/requests/helpers/class-kp-order-lines.php:466, ../classes/requests/helpers/class-kp-order-lines.php:774, ../classes/requests/helpers/class-kp-order-lines.php:800, ../classes/requests/helpers/class-kp-order-lines.php:948
 msgid "Shipping"
 msgstr ""
 
