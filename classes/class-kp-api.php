@@ -74,7 +74,7 @@ class KP_Api {
 
 		// If the cart is empty, do nothing.
 		if ( empty( WC()->cart->get_cart() ) ) {
-			return;
+			return array();
 		}
 
 		$session_id               = WC()->session->get( 'klarna_payments_session_id' );
@@ -95,6 +95,13 @@ class KP_Api {
 				kp_unset_session_values();
 				$this->klarna_session = null;
 				$this->cart_hash      = null;
+
+				if ( did_action( 'kp_session_api_error' ) > 0 ) {
+					return $klarna_session; // Prevent infinite loop.
+				}
+
+				do_action( 'kp_session_api_error', $klarna_session );
+
 				return $this->get_session_cart();
 			}
 
@@ -109,6 +116,9 @@ class KP_Api {
 			if ( is_wp_error( $klarna_session ) ) {
 				$this->klarna_session = null;
 				$this->cart_hash      = null;
+
+				do_action( 'kp_session_api_error', $klarna_session );
+
 				return $klarna_session;
 			}
 
