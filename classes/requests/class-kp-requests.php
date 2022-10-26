@@ -77,9 +77,28 @@ abstract class KP_Requests {
 	public function __construct( $arguments = array() ) {
 		$this->arguments      = $arguments;
 		$this->country_params = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $this->arguments['country'] ?? '' ) ] ?? null;
-
 		$this->load_settings();
 		$this->set_environment();
+		$this->set_credentials();
+		$this->iframe_options = new KP_IFrame( $this->settings );
+
+		add_filter( 'wc_kp_image_url_cart_item', array( $this, 'maybe_allow_product_urls' ), 1, 1 );
+		add_filter( 'wc_kp_url_cart_item', array( $this, 'maybe_allow_product_urls' ), 1, 1 );
+		add_filter( 'wc_kp_image_url_order_item', array( $this, 'maybe_allow_product_urls' ), 1, 1 );
+		add_filter( 'wc_kp_url_order_item', array( $this, 'maybe_allow_product_urls' ), 1, 1 );
+	}
+
+	/**
+	 * Maybe filters out product urls before we send them to Klarna based on settings.
+	 *
+	 * @param string $url The URL to the product or product image.
+	 * @return string|null
+	 */
+	public function maybe_allow_product_urls( $url ) {
+		if ( 'yes' === $this->settings['send_product_urls'] ?? false ) {
+			$url = null;
+		}
+		return $url;
 	}
 
 	/**
@@ -126,7 +145,7 @@ abstract class KP_Requests {
 	 */
 	protected function set_environment() {
 		$region     = $this->country_params['endpoint'] ?? ''; // Get the region from the country parameters, blank for EU.
-		$playground = 'yes' == $this->settings['test_mode'] ? 'playground.' : ''; // If testmode is enabled, add playground to the subdomain.
+		$playground = 'yes' == $this->settings['testmode'] ? 'playground' : ''; // If testmode is enabled, add playground to the subdomain.
 		$subdomain  = "api${region}.${playground}"; // Combine the string to one subdomain.
 
 		$this->environment = "https://${subdomain}.klarna.com/"; // Return the full base url for the api.
@@ -136,19 +155,14 @@ abstract class KP_Requests {
 	 * Sets Klarna credentials.
 	 */
 	public function set_credentials() {
-		if ( 'yes' == $this->settings['test_mode'] ) {
-			$merchant_id   = 'test_merchant_id_' . strtolower( $this->country );
-			$shared_secret = 'test_shared_secret_' . strtolower( $this->country );
+		$prefix = 'yes' === $this->settings['testmode'] ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
+		$suffix = '_' . strtolower( $this->arguments['country'] ) ?? strtolower( kp_get_klarna_country() ); // Get the country from the arguments, or the fetch from helper method.
 
-			$this->merchant_id   = isset( $this->settings[ $merchant_id ] ) ? $this->settings[ $merchant_id ] : '';
-			$this->shared_secret = isset( $this->settings[ $shared_secret ] ) ? $this->settings[ $shared_secret ] : '';
-		} else {
-			$merchant_id   = 'merchant_id_' . strtolower( $this->country );
-			$shared_secret = 'shared_secret_' . strtolower( $this->country );
+		$merchant_id   = "${prefix}merchant_id${suffix}";
+		$shared_secret = "${prefix}shared_secret${suffix}";
 
-			$this->merchant_id   = isset( $this->settings[ $merchant_id ] ) ? $this->settings[ $merchant_id ] : '';
-			$this->shared_secret = isset( $this->settings[ $shared_secret ] ) ? $this->settings[ $shared_secret ] : '';
-		}
+		$this->merchant_id   = isset( $this->settings[ $merchant_id ] ) ? $this->settings[ $merchant_id ] : '';
+		$this->shared_secret = isset( $this->settings[ $shared_secret ] ) ? $this->settings[ $shared_secret ] : '';
 	}
 
 	/**
@@ -211,14 +225,12 @@ abstract class KP_Requests {
 			$error_message = '';
 			// Get the error messages.
 			if ( null !== json_decode( $response['body'], true ) ) {
-				$errors = json_decode( $response['body'], true );
-
-				foreach ( $errors as $error ) {
-					$error_message .= ' ' . $error;
+				foreach ( json_decode( $response['body'], true )['error_messages'] as $error ) {
+					$error_message = "$error_message $error";
 				}
 			}
 			$code          = wp_remote_retrieve_response_code( $response );
-			$error_message = empty( $response['body'] ) ? "API Error ${code}" : json_decode( $response['body'], true )['ErrorMessage'];
+			$error_message = empty( $error_message ) ? $response['response']['message'] : $error_message;
 			$return        = new WP_Error( $code, $error_message, $data );
 		} else {
 			$return = json_decode( wp_remote_retrieve_body( $response ), true );
