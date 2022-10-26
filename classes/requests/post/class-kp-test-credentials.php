@@ -24,6 +24,29 @@ class KP_Test_Credentials extends KP_Requests_Post {
 	}
 
 	/**
+	 * Overrides the default envinment setter, to set from the passed arguments instead.
+	 *
+	 * @return void
+	 */
+	public function set_environment() {
+		$region     = $this->country_params['endpoint'] ?? ''; // Get the region from the country parameters, blank for EU.
+		$playground = 'yes' == $this->arguments['testmode'] ? 'playground' : ''; // If testmode is enabled, add playground to the subdomain.
+		$subdomain  = "api${region}.${playground}"; // Combine the string to one subdomain.
+
+		$this->environment = "https://${subdomain}.klarna.com/"; // Return the full base url for the api.
+	}
+
+	/**
+	 * Overrides the default set_credentials method to use the once passed from arguments.
+	 *
+	 * @return void
+	 */
+	public function set_credentials() {
+		$this->merchant_id   = $this->arguments['username'];
+		$this->shared_secret = $this->arguments['password'];
+	}
+
+	/**
 	 * Get the request url.
 	 *
 	 * @return string
@@ -39,16 +62,17 @@ class KP_Test_Credentials extends KP_Requests_Post {
 	 */
 	protected function get_body() {
 		return array(
-			'purchase_country'  => kp_get_klarna_country(),
-			'purchase_currency' => get_woocommerce_currency(),
-			'locale'            => $this->get_klarna_locale(),
-			'order_amount'      => '', // $this->order_lines['order_amount'], - TODO
-			'order_tax_amount'  => '', // $this->order_lines['order_tax_amount'], - TODO
-			'order_lines'       => '', // $this->order_lines['order_lines'], - TODO
-			'customer'          => get_klarna_customer( $this->kp_settings['customer_type'] ),
-			'options'           => $this->iframe_options->get_kp_color_options(),
-			'merchant_urls'     => array(
-				'authorization' => home_url( '/wc-api/KP_WC_AUTHORIZATION' ),
+			'purchase_country'  => strtoupper( $this->arguments['country'] ),
+			'purchase_currency' => $this->country_params['currency'],
+			'locale'            => 'en-US',
+			'order_amount'      => 100,
+			'order_lines'       => array(
+				array(
+					'name'         => 'Test credentials Product',
+					'quantity'     => 1,
+					'total_amount' => 100,
+					'unit_price'   => 100,
+				),
 			),
 		);
 	}
