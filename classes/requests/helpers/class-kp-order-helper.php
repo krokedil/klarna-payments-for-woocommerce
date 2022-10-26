@@ -15,138 +15,164 @@ defined( 'ABSPATH' ) || exit;
 class KP_Order_Helper extends KP_Order_Lines {
 
 	/**
-	 * Gets the KP Order lines from a WooCommerce order.
+	 * The WooCommerce order to be processed.
 	 *
-	 * @param WC_Order $order The WooCommerce order.
-	 * @return array
+	 * @var WC_Order
 	 */
-	public static function get_kp_order_lines( $order ) {
-		$order_lines = array();
-		return $order_lines;
+	public static $order;
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param WC_Order $order The WooCommerce order to be processed.
+	 */
+	public function __construct( $order ) {
+		self::$order = $order;
 	}
 
 	/**
-	 * Returns the formated order line for Klarna payments.
+	 * Gets the KP order amount from a WooCommerce order.
 	 *
-	 * @param WC_Order_Item_Product $order_item The order item from WooCommerce.
+	 * @return int
+	 */
+	public static function get_kp_order_amount() {
+		return self::format_number( self::$order->get_total() );
+	}
+
+	/**
+	 * Gets the KP order tax from a WooCommerce order.
+	 *
+	 * @return int
+	 */
+	public static function get_kp_order_tax_amount() {
+		return self::format_number( self::$order->get_total_tax() );
+	}
+
+	/**
+	 * Gets the KP Order lines from a WooCommerce order.
+	 *
 	 * @return array
 	 */
-	public static function get_kp_order_line( $order_item ) {
-		return array(
-			'image_url'             => self::get_product_image( $order_item ),
-			'merchant_data'         => apply_filters( 'wc_kp_line_merchant_data', array(), $order_item ),
-			'name'                  => self::get_product_name( $order_item ),
-			'product_identifiers'   => self::get_product_identifiers( $order_item ),
-			'product_url'           => self::get_product_url( $order_item ),
-			'quantity'              => self::get_product_quantity( $order_item ),
-			'quantity_unit'         => apply_filters( 'wc_kp_quantity_unit', 'pcs', $order_item ),
-			'reference'             => self::get_product_reference( $order_item ),
-			'tax_rate'              => self::get_product_tax_rate( $order_item ),
-			'total_amount'          => self::get_product_total_amount( $order_item ),
-			'total_discount_amount' => self::get_product_total_discount_amount( $order_item ),
-			'total_tax_amount'      => self::get_product_total_tax_amount( $order_item ),
-			'type'                  => self::get_product_type( $order_item ),
-			'unit_price'            => self::get_product_unit_price( $order_item ),
-			'subscription'          => self::get_product_subscription( $order_item ),
-		);
+	public static function get_kp_order_lines() {
+		$order_lines = array();
+
+		/**
+		 * Process order item products.
+		 *
+		 * @var WC_Order_Item_Product $order_item WooCommerce order item product.
+		 */
+		foreach ( self::$order->get_items() as $order_item ) {
+			$order_lines[] = array_filter( KP_Order_Item_Helper::get_kp_order_line( $order_item ), 'KP_Order_Lines::remove_null' );
+		}
+
+		/**
+		 * Process order item shipping.
+		 *
+		 * @var WC_Order_Item_Shipping $order_item WooCommerce order item shipping.
+		 */
+		foreach ( self::$order->get_items( 'shipping' ) as $order_item ) {
+			$order_lines[] = array_filter( KP_Order_Shipping_Helper::get_kp_order_line( $order_item ), 'KP_Order_Lines::remove_null' );
+		}
+
+		/**
+		 * Process order item fee.
+		 *
+		 * @var WC_Order_Item_Fee $order_item WooCommerce order item fee.
+		 */
+		foreach ( self::$order->get_items( 'fee' ) as $order_item ) {
+			$order_lines[] = array_filter( KP_Order_Fee_Helper::get_kp_order_line( $order_item ), 'KP_Order_Lines::remove_null' );
+		}
+
+		return apply_filters( 'wc_kp_order_lines_order', array_values( $order_lines ), self::$order );
 	}
 
 	/**
 	 * Returns the product image url.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
-	 * @return string
+	 * @param WC_Order_Item $order_item The order item from WooCommerce.
+	 * @return string|null
 	 */
-	public static function get_product_image( $order_item ) {
-		$product = $order_item->get_product();
-		if ( $product ) {
-			$image_url = wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_thumbnail' );
-			if ( $image_url ) {
-				return $image_url;
-			}
-		}
-		return '';
+	public static function get_image( $order_item ) {
+		return apply_filters( 'wc_kp_image_url_order_item', null, $order_item );
 	}
+
+	/**
+	 * Returns the merchant data.
+	 *
+	 * @param WC_Order_Item $order_item The order item from WooCommerce.
+	 * @return array
+	 */
+	public static function get_merchant_data( $order_item ) {
+		return apply_filters( 'wc_kp_merchant_data_order_item', array(), $order_item );
+	}
+
 	/**
 	 * Returns the product name from the order line.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item $order_item The order item from WooCommerce.
 	 * @return string
 	 */
-	public static function get_product_name( $order_item ) {
-		return $order_item->get_name();
+	public static function get_name( $order_item ) {
+		return apply_filters( 'wc_kp_name_order_item', $order_item->get_name(), $order_item );
 	}
 
 	/**
-	 * Get the product identifiers from the order item.
+	 * Returns the product identifiers.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item $order_item The order item from WooCommerce.
 	 * @return array
 	 */
-	public static function get_product_identifiers( $order_item ) {
-		$product = $order_item->get_product();
-		if ( $product ) {
-			return array(
-				'category_path' => wc_get_product_category_list( $product->get_id(), '>' ), // Product categories separated by >.
-				'brand'         => apply_filters( 'wc_kp_item_brand', '', $product ),
-			);
-		}
-		return array();
+	public static function get_identifiers( $order_item ) {
+		return apply_filters( 'wc_kp_identifiers_order_item', array(), $order_item );
 	}
 
 	/**
-	 * Get the product URL from the order item.
+	 * Returns the product url.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
-	 * @return string
+	 * @param WC_Order_Item $order_item The order item from WooCommerce.
+	 * @return string|null
 	 */
-	public static function get_product_url( $order_item ) {
-		$product = $order_item->get_product();
-		if ( $product ) {
-			return $product->get_permalink();
-		}
-		return '';
+	public static function get_url( $order_item ) {
+		return apply_filters( 'wc_kp_url_order_item', null, $order_item );
 	}
 
 	/**
-	 * Get the quantity from the order item.
+	 * Returns the quantity of the order line.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item $order_item The order item from WooCommerce.
 	 * @return int
 	 */
-	public static function get_product_quantity( $order_item ) {
-		return $order_item->get_quantity();
+	public static function get_quantity( $order_item ) {
+		return apply_filters( 'wc_kp_quantity_order_item', $order_item->get_quantity(), $order_item );
 	}
 
 	/**
-	 * Get the product reference (sku) of the order item.
+	 * Returns the quantity type of the order line.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item $order_item The order item from WooCommerce.
 	 * @return string
 	 */
-	public static function get_product_reference( $order_item ) {
-		$product = $order_item->get_product();
-
-		if ( $product ) {
-			if ( $product->get_sku() ) {
-				$item_reference = $product->get_sku();
-			} else {
-				$item_reference = $product->get_id();
-			}
-
-			return substr( strval( $item_reference ), 0, 64 );
-		}
-
-		return '';
+	public static function get_quantity_unit( $order_item ) {
+		return apply_filters( 'wc_kp_quantity_unit_order_item', 'pcs', $order_item );
 	}
 
 	/**
-	 * Get the order item tax rate.
+	 * Returns the Reference of the order line.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item $order_item The order item from WooCommerce.
+	 * @return string
+	 */
+	public static function get_reference( $order_item ) {
+		return apply_filters( 'wc_kp_reference_order_item', $order_item->get_id(), $order_item );
+	}
+
+	/**
+	 * Get the tax rate for any order line item, except coupons.
+	 *
+	 * @param WC_Order_Item_Product|WC_Order_Item_Shipping|WC_Order_Item_Fee $order_item The order item from WooCommerce.
 	 * @return int
 	 */
-	public static function get_product_tax_rate( $order_item ) {
+	public static function get_tax_rate( $order_item ) {
 		$tax_rate = 0;
 		$taxes    = $order_item->get_taxes();
 		if ( ! empty( $taxes['total'] ) ) {
@@ -158,64 +184,57 @@ class KP_Order_Helper extends KP_Order_Lines {
 			}
 		}
 
-		return $tax_rate;
+		return apply_filters( 'wc_kp_tax_rate_order_item', $tax_rate, $order_item );
 	}
 
 	/**
-	 * Get the total amount for the order line.
+	 * Get the total amount for any order line item, except coupons.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item_Product|WC_Order_Item_Shipping|WC_Order_Item_Fee $order_item The order item from WooCommerce.
 	 * @return int
 	 */
-	public static function get_product_total_amount( $order_item ) {
-		return self::format_number( $order_item->get_total() );
+	public static function get_total_amount( $order_item ) {
+		return apply_filters( 'wc_kp_total_amount_order_item', self::format_number( $order_item->get_total() + $order_item->get_total_tax() ), $order_item );
 	}
 
 	/**
-	 * Get the total discounted amount by subtracting the total amount from the subtotal amount.
-	 * If subtotal = 100, and discount = 20. Then total would be 80. So 100 - 80 = 20.
+	 * Get the total discount amount for any order line item.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item $order_item The order item from WooCommerce.
 	 * @return int
 	 */
-	public static function get_product_total_discount_amount( $order_item ) {
-		return self::format_number( $order_item->get_subtotal() - $order_item->get_total() );
+	public static function get_total_discount_amount( $order_item ) {
+		return apply_filters( 'wc_kp_total_discount_amount_order_item', 0, $order_item );
 	}
 
 	/**
-	 * Get the total tax amount for the order line.
+	 * Returns the tax amount for any order line item, except coupons.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item_Product|WC_Order_Item_Shipping|WC_Order_Item_Fee $order_item The order item from WooCommerce.
 	 * @return int
 	 */
-	public static function get_product_total_tax_amount( $order_item ) {
-		return self::format_number( $order_item->get_total_tax() );
+	public static function get_total_tax_amount( $order_item ) {
+		return apply_filters( 'wc_kp_total_tax_amount_order_item', self::format_number( $order_item->get_total_tax() ), $order_item );
 	}
 
 	/**
-	 * Get the product type, if its digital or physical.
+	 * Returns the type of the order item.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item $order_item The order item from WooCommerce.
 	 * @return string
 	 */
-	public static function get_product_type( $order_item ) {
-		$product = $order_item->get_product();
-		if ( $product ) {
-			if ( $product->is_virtual() || $product->is_downloadable() ) {
-				return 'digital';
-			}
-		}
-		return 'physical';
+	public static function get_type( $order_item ) {
+		return apply_filters( 'wc_kp_type_order_item', 'physical', $order_item );
 	}
 
 	/**
-	 * Get the unit price for the order line.
+	 * Returns the unit price for any order line item, except coupons.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item_Product|WC_Order_Item_Shipping|WC_Order_Item_Fee $order_item The order item from WooCommerce.
 	 * @return int
 	 */
-	public static function get_product_unit_price( $order_item ) {
-		return self::format_number( $order_item->get_subtotal() / $order_item->get_quantity() );
+	public static function get_unit_price( $order_item ) {
+		return apply_filters( 'wc_kp_unit_price_order_item', self::format_number( ( $order_item->get_total() + $order_item->get_total_tax() ) / $order_item->get_quantity() ), $order_item );
 	}
 
 	/**
@@ -224,86 +243,7 @@ class KP_Order_Helper extends KP_Order_Lines {
 	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
 	 * @return array
 	 */
-	public static function get_product_subscription( $order_item ) {
-		return array();
-	}
-
-
-	/**
-	 * Returns the formated order line for Klarna payments.
-	 *
-	 * @param WC_Order_Item_Shipping $order_item The order item from WooCommerce.
-	 * @return array
-	 */
-	public static function get_kp_shipping_line( $order_item ) {
-		return array(
-			'image_url'             => null, // Not supported for shipping.
-			'merchant_data'         => apply_filters( 'wc_kp_line_merchant_data', array(), $order_item ),
-			'name'                  => self::get_shipping_name( $order_item ),
-			'product_identifiers'   => self::get_shipping_identifiers( $order_item ),
-			'product_url'           => null, // Not supported for fee.
-			'quantity'              => 1, // Allways 1 for shipping lines.
-			'quantity_unit'         => apply_filters( 'wc_kp_quantity_unit', 'pcs', $order_item ),
-			'reference'             => self::get_shipping_reference( $order_item ),
-			'tax_rate'              => self::get_shipping_tax_rate( $order_item ),
-			'total_amount'          => self::get_shipping_total_amount( $order_item ),
-			'total_discount_amount' => self::get_shipping_total_discount_amount( $order_item ),
-			'total_tax_amount'      => self::get_shipping_total_tax_amount( $order_item ),
-			'type'                  => 'shipping_fee', // Allways shipping_fee for shipping lines.
-			'unit_price'            => self::get_shipping_unit_price( $order_item ),
-			'subscription'          => self::get_shipping_subscription( $order_item ),
-		);
-	}
-
-	/**
-	 * Returns the formated order line for Klarna payments.
-	 *
-	 * @param WC_Order_Item_Fee $order_item The order item from WooCommerce.
-	 * @return array
-	 */
-	public static function get_kp_fee_line( $order_item ) {
-		return array(
-			'image_url'             => null, // Not supported for fee.
-			'merchant_data'         => apply_filters( 'wc_kp_line_merchant_data', array(), $order_item ),
-			'name'                  => self::get_fee_name( $order_item ),
-			'product_identifiers'   => self::get_fee_identifiers( $order_item ),
-			'product_url'           => null, // Not supported for fee.
-			'quantity'              => 1, // Allways 1 for fee lines.
-			'quantity_unit'         => apply_filters( 'wc_kp_quantity_unit', 'pcs', $order_item ),
-			'reference'             => self::get_fee_reference( $order_item ),
-			'tax_rate'              => self::get_fee_tax_rate( $order_item ),
-			'total_amount'          => self::get_fee_total_amount( $order_item ),
-			'total_discount_amount' => self::get_fee_total_discount_amount( $order_item ),
-			'total_tax_amount'      => self::get_fee_total_tax_amount( $order_item ),
-			'type'                  => 'surcharge', // Allways surcharge for fee lines.
-			'unit_price'            => self::get_fee_unit_price( $order_item ),
-			'subscription'          => self::get_fee_subscription( $order_item ),
-		);
-	}
-
-	/**
-	 * Returns the formated order line for Klarna payments.
-	 *
-	 * @param WC_Order_Item_Coupon $order_item The order item from WooCommerce.
-	 * @return array
-	 */
-	public static function get_kp_coupon_line( $order_item ) {
-		return array(
-			'image_url'             => null, // Not supported for coupon.
-			'merchant_data'         => apply_filters( 'wc_kp_line_merchant_data', array(), $order_item ),
-			'name'                  => self::get_coupon_name( $order_item ),
-			'product_identifiers'   => self::get_coupon_identifiers( $order_item ),
-			'product_url'           => null, // Not supported for fee.
-			'quantity'              => 1, // Allways 1 for coupon lines.
-			'quantity_unit'         => apply_filters( 'wc_kp_quantity_unit', 'pcs', $order_item ),
-			'reference'             => self::get_coupon_reference( $order_item ),
-			'tax_rate'              => self::get_coupon_tax_rate( $order_item ),
-			'total_amount'          => self::get_coupon_total_amount( $order_item ),
-			'total_discount_amount' => self::get_coupon_total_discount_amount( $order_item ),
-			'total_tax_amount'      => self::get_coupon_total_tax_amount( $order_item ),
-			'type'                  => 'discount', // Allways discount for coupon lines.
-			'unit_price'            => self::get_coupon_unit_price( $order_item ),
-			'subscription'          => self::get_coupon_subscription( $order_item ),
-		);
+	public static function get_subscription( $order_item ) {
+		return apply_filters( 'wc_kp_subscription_order_item', array(), $order_item );
 	}
 }
