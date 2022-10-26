@@ -6,66 +6,6 @@
  */
 
 /**
- * Maybe creates or updates Klarna Payments session.
- *
- * @param string|bool $klarna_country The Klarna Country.
- * @return void|string
- */
-function kp_maybe_create_session_cart( $klarna_country = false ) {
-	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-	if ( ! isset( $settings['enabled'] ) || 'yes' !== $settings['enabled'] ) {
-		return;
-	}
-
-	// Maybe calculate totals. Only once on a page load.
-	if ( ! is_ajax() && 0 >= did_action( 'woocommerce_before_calculate_totals' ) ) {
-		WC()->cart->calculate_fees();
-		WC()->cart->calculate_shipping();
-		WC()->cart->calculate_totals();
-	}
-
-	// If the cart is empty, do nothing.
-	if ( empty( WC()->cart->get_cart() ) ) {
-		return;
-	}
-
-	if ( ! $klarna_country ) {
-		$klarna_country = WC()->checkout->get_value( 'billing_country' );
-	}
-	if ( WC()->session->get( 'klarna_payments_session_id' ) && ( WC()->checkout->get_value( 'billing_country' ) === WC()->session->get( 'klarna_payments_session_country' ) ) ) { // Check if we have session ID and country has not changed.
-		// Try to update the session, if it fails try to create new session.
-		$request  = new KP_Update_Session();
-		$response = $request->request();
-		if ( is_wp_error( $response ) ) { // If update session failed try to create new session.
-			kp_unset_session_values();
-			$request  = new KP_Create_Session();
-			$response = $request->request();
-			if ( is_wp_error( $response ) ) {
-				return kp_extract_error_message( $response );
-			}
-			WC()->session->set( 'klarna_payments_session_id', $response['session_id'] );
-			WC()->session->set( 'klarna_payments_client_token', $response['client_token'] );
-			WC()->session->set( 'klarna_payments_session_country', $klarna_country );
-			WC()->session->set( 'klarna_payments_categories', $response['payment_method_categories'] );
-			return $response;
-		}
-		return $response;
-	} else {
-		$request  = new KP_Create_Session();
-		$response = $request->request();
-		if ( is_wp_error( $response ) ) {
-			return kp_extract_error_message( $response );
-		}
-
-		WC()->session->set( 'klarna_payments_session_id', $response['session_id'] );
-		WC()->session->set( 'klarna_payments_client_token', $response['client_token'] );
-		WC()->session->set( 'klarna_payments_session_country', $klarna_country );
-		WC()->session->set( 'klarna_payments_categories', $response['payment_method_categories'] );
-		return $response;
-	}
-}
-
-/**
  * Creates a Klarna Payments session if needed for an order.
  *
  * @param int         $order_id The WooCommerce order id.
@@ -81,18 +21,15 @@ function kp_create_session_order( $order_id, $klarna_country = false ) {
 	$klarna_payments_session_id = get_post_meta( $order_id, '_klarna_payments_session_id', true );
 
 	if ( $klarna_payments_session_id ) {
-		$request  = new KP_Update_Session( $order_id, $klarna_country );
-		$response = $request->request( $order_id );
+		$response = KP_WC()->api->update_session( $klarna_country, $klarna_payments_session_id, $order_id );
 		if ( is_wp_error( $response ) ) {
-			$request  = new KP_Create_Session( $order_id, $klarna_country );
-			$response = $request->request();
+			$response = KP_WC()->api->create_session( $klarna_country, $order_id );
 			if ( is_wp_error( $response ) ) {
 				return kp_extract_error_message( $response );
 			}
 		}
 	} else {
-		$request  = new KP_Create_Session( $order_id, $klarna_country );
-		$response = $request->request();
+		$response = KP_WC()->api->create_session( $klarna_country, $order_id );
 		if ( is_wp_error( $response ) ) {
 			return kp_extract_error_message( $response );
 		}
@@ -244,20 +181,6 @@ function kp_get_locale() {
 	}
 
 	return apply_filters( 'kp_locale', substr( str_replace( '_', '-', $locale ), 0, 5 ) );
-}
-
-/**
- * Creates a Klarna Payment HPP redirect url with Klarna.
- *
- * @param string $session_id The Klarna Payments session to use for the HPP request.
- * @param int    $order_id The WooCommerce order id to use for the HPP request.
- * @return array
- */
-function kp_create_hpp_url( $session_id, $order_id ) {
-	$request  = new KP_Create_HPP( $order_id );
-	$response = $request->request( $session_id, $order_id );
-
-	return $response;
 }
 
 /**

@@ -31,7 +31,7 @@ class KP_Checkout {
 			return;
 		}
 
-		$kp_session = kp_maybe_create_session_cart( WC()->customer->get_billing_country() );
+		$kp_session = KP_WC()->api->get_session_cart();
 
 		if ( ! is_array( $kp_session ) && ! empty( $kp_session ) ) {
 			// Handle error.

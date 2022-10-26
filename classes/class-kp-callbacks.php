@@ -75,8 +75,7 @@ class KP_Callbacks {
 			return;
 		}
 
-		$request  = new KP_Place_Order( $order_id, $country );
-		$response = $request->request( $auth_token );
+		$response = KP_WC()->api->place_order( $country, $auth_token, $order_id );
 		if ( is_wp_error( $response ) ) {
 			/**
 			 * WordPress error handling.
@@ -114,12 +113,12 @@ class KP_Callbacks {
 	 * @return void
 	 */
 	public function process_hpp_redirect() {
-		$session_id          = filter_input( INPUT_GET, 'sid', FILTER_SANITIZE_SPECIAL_CHARS );
-		$authorization_token = filter_input( INPUT_GET, 'authorization_token', FILTER_SANITIZE_SPECIAL_CHARS );
-		$order_key           = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS );
+		$session_id = filter_input( INPUT_GET, 'sid', FILTER_SANITIZE_SPECIAL_CHARS );
+		$auth_token = filter_input( INPUT_GET, 'authorization_token', FILTER_SANITIZE_SPECIAL_CHARS );
+		$order_key  = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS );
 
 		// Return if anything is null.
-		if ( null === $session_id || null === $authorization_token || null === $order_key ) {
+		if ( null === $session_id || null === $auth_token || null === $order_key ) {
 			return;
 		}
 
@@ -128,8 +127,7 @@ class KP_Callbacks {
 		$country  = $order->get_billing_country();
 
 		// Trigger place order on the auth token with KP.
-		$request  = new KP_Place_Order( $order_id, $country );
-		$response = $request->request( $authorization_token );
+		$response = KP_WC()->api->place_order( $country, $auth_token, $order_id );
 		if ( is_wp_error( $response ) ) {
 			/**
 			 * WordPress error handling.
