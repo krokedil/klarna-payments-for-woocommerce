@@ -30,8 +30,6 @@
  * @package WC_Klarna_Payments
  */
 
-namespace KlarnaPayments;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -99,6 +97,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $notices = array();
 
 		/**
+		 * KP Api class. Handles communication with Klarna.
+		 *
+		 * @var KP_Api|null
+		 */
+		public $api = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -120,6 +125,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public function init() {
 			// Init the gateway itself.
 			$this->include_files();
+
+			$this->api = new KP_Api();
 
 			$this->register_payment_block();
 		}
@@ -250,20 +257,34 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-callbacks.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-checkout.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-assets.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-api.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 
 			// Requests.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-post.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-update-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-place-order.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-iframe.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-test-credentials.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-hpp.php';
 
 			// Request helpers.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-order-lines.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-customer-data.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-iframe.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-order-lines.php';
+			// Order helpers.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-coupon-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-fee-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-item-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-shipping-helper.php';
+			// Cart helpers.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-coupon-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-fee-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-item-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-shipping-helper.php';
 
 			// Includes.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/kp-functions.php';
