@@ -240,7 +240,7 @@ class KP_Order_Helper extends KP_Order_Lines {
 	/**
 	 * Get the subscription object for the order line. NOT YET SUPPORTED.
 	 *
-	 * @param WC_Order_Item_Product $order_item The WooCommerce order item.
+	 * @param WC_Order_Item $order_item The WooCommerce order item.
 	 * @return array
 	 */
 	public static function get_subscription( $order_item ) {

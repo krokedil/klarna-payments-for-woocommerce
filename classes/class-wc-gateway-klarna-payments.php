@@ -23,6 +23,34 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF', 'CAD', 'AUD', 'NZD', 'MXN', 'PLN', 'CZK' );
 
 	/**
+	 * Shop country. Country base location from WooCommerce.
+	 *
+	 * @var string
+	 */
+	public $shop_country;
+
+	/**
+	 * Customer type (b2b or b2c) based on settings.
+	 *
+	 * @var string
+	 */
+	public $customer_type;
+
+	/**
+	 * Bool if we should hide what is klarna or not.
+	 *
+	 * @var bool
+	 */
+	public $hide_what_is_klarna;
+
+	/**
+	 * Bool if we should float what is klarna or not.
+	 *
+	 * @var bool
+	 */
+	public $float_what_is_klarna;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -262,7 +290,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
 
-		wp_register_script( 'klarnapayments', 'https://x.klarnacdn.net/kp/lib/v1/api.js', null, null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
+		wp_register_script( 'klarnapayments', 'https://x.klarnacdn.net/kp/lib/v1/api.js', array(), null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
 		wp_enqueue_script( 'klarnapayments' );
 	}
 

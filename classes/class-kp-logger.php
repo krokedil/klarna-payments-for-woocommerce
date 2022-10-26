@@ -23,7 +23,7 @@ class KP_Logger {
 	/**
 	 * Logs an event.
 	 *
-	 * @param string $data The data string.
+	 * @param array|string $data The data string.
 	 */
 	public static function log( $data ) {
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
@@ -43,7 +43,7 @@ class KP_Logger {
 	/**
 	 * Formats the log data to prevent json error.
 	 *
-	 * @param string $data Json string of data.
+	 * @param array $data Json string of data.
 	 * @return array
 	 */
 	public static function format_data( $data ) {
