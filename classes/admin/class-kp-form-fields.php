@@ -363,12 +363,6 @@ class KP_Form_Fields {
 					'default'  => '',
 					'desc_tip' => true,
 				),
-				'color_text'            => array(
-					'title'    => 'Text color',
-					'type'     => 'color',
-					'default'  => '',
-					'desc_tip' => true,
-				),
 				'radius_border'         => array(
 					'title'    => 'Border radius (px)',
 					'type'     => 'number',
