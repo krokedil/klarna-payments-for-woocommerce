@@ -39,16 +39,18 @@ class KP_Place_Order extends KP_Requests_Post {
 	 * @return array
 	 */
 	protected function get_body() {
-		$order = wc_get_order( $this->arguments['order_id'] );
+		$order  = wc_get_order( $this->arguments['order_id'] );
+		$helper = $this->get_helper();
+
 		return array(
 			'purchase_country'    => $this->country,
 			'purchase_currency'   => $order->get_currency(),
 			'locale'              => kp_get_locale(),
 			'billing_address'     => KP_Customer_Data::get_billing_address( $this->order_id, $this->settings['customer_type'] ),
 			'shipping_address'    => KP_Customer_Data::get_shipping_address( $this->order_id, $this->settings['customer_type'] ),
-			'order_amount'        => $this->order_lines['order_amount'],
-			'order_tax_amount'    => $this->order_lines['order_tax_amount'],
-			'order_lines'         => $this->order_lines['order_lines'],
+			'order_amount'        => $helper::get_kp_order_amount(),
+			'order_tax_amount'    => $helper::get_kp_order_tax_amount(),
+			'order_lines'         => $helper::get_kp_order_lines(),
 			'customer'            => get_klarna_customer( $this->kp_settings['customer_type'] ),
 			'merchant_reference1' => $order->get_order_number(),
 			'merchant_urls'       => array(

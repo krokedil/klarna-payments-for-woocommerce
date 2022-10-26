@@ -38,14 +38,15 @@ class KP_Create_Session extends KP_Requests_Post {
 	 * @return array
 	 */
 	protected function get_body() {
+		$helper = $this->get_helper();
 		return array(
 			'purchase_country'  => kp_get_klarna_country(),
 			'purchase_currency' => get_woocommerce_currency(),
-			'locale'            => $this->get_klarna_locale(),
-			'order_amount'      => '', // $this->order_lines['order_amount'], - TODO
-			'order_tax_amount'  => '', // $this->order_lines['order_tax_amount'], - TODO
-			'order_lines'       => '', // $this->order_lines['order_lines'], - TODO
-			'customer'          => get_klarna_customer( $this->kp_settings['customer_type'] ),
+			'locale'            => kp_get_locale(),
+			'order_amount'      => $helper::get_kp_order_amount(),
+			'order_tax_amount'  => $helper::get_kp_order_tax_amount(),
+			'order_lines'       => $helper::get_kp_order_lines(),
+			'customer'          => get_klarna_customer( $this->settings['customer_type'] ),
 			'options'           => $this->iframe_options->get_kp_color_options(),
 			'merchant_urls'     => array(
 				'authorization' => home_url( '/wc-api/KP_WC_AUTHORIZATION' ),
