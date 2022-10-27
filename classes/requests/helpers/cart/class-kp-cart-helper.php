@@ -76,10 +76,11 @@ class KP_Cart_Helper extends KP_Order_Lines {
 		// Get cart shipping.
 		if ( WC()->cart->needs_shipping() ) {
 			$shipping_ids   = array_unique( WC()->session->get( 'chosen_shipping_methods' ) );
-			$shipping_rates = WC()->shipping->get_packages()[0]['rates'];
+			$shipping_rates = WC()->shipping->get_packages()[0]['rates'] ?? array();
 			foreach ( $shipping_ids as  $shipping_id ) {
-				$shipping_method = $shipping_rates[ $shipping_id ];
-				$order_lines[]   = array_filter( KP_Cart_Shipping_Helper::get_kp_order_line( $shipping_method ), 'KP_Order_Lines::remove_null' );
+				if ( $shipping_rates[ $shipping_id ] ?? false ) {
+					$order_lines[] = array_filter( KP_Cart_Shipping_Helper::get_kp_order_line( $shipping_rates[ $shipping_id ] ), 'KP_Order_Lines::remove_null' );
+				}
 			}
 		}
 
