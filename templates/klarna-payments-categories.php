@@ -5,14 +5,7 @@
  * @package WC_Klarna_Payments/Templates
  */
 
-if ( is_wc_endpoint_url( 'order-pay' ) ) {
-	$key                = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
-	$order_id           = wc_get_order_id_by_order_key( $key );
-	$payment_categories = get_post_meta( $order_id, '_klarna_payments_categories', true );
-} else {
-	KP_WC()->api->get_session_cart();
-	$payment_categories = WC()->session->get( 'klarna_payments_categories' );
-}
+$payment_categories = KP_WC()->session->get_klarna_payment_method_categories();
 
 if ( is_array( $payment_categories ) ) {
 	$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
