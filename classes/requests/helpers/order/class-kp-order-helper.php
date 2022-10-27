@@ -178,7 +178,7 @@ class KP_Order_Helper extends KP_Order_Lines {
 		if ( ! empty( $taxes['total'] ) ) {
 			foreach ( $taxes['total'] as $tax_id => $tax_amount ) {
 				if ( $tax_amount > 0 ) {
-					$tax_rate = WC_Tax::get_rate_percent( $tax_id );
+					$tax_rate = WC_Tax::get_rate_percent_value( $tax_id ) * 100;
 					break;
 				}
 			}
