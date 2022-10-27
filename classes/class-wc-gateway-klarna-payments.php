@@ -85,7 +85,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
 		add_filter( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
-		add_action( 'klarna_payments_template', 'kp_maybe_create_session_cart' );
 	}
 
 	/**
@@ -183,7 +182,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
-		if ( is_wc_endpoint_url( 'order-pay' ) ) {
+		if ( kp_is_order_pay_page() ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
 			$order    = wc_get_order( $order_id );
 			if ( is_wp_error( $this->country_currency_check( $order ) ) ) {
@@ -255,28 +254,21 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_payments_params['update_session_nonce']   = wp_create_nonce( 'kp_wc_update_session' );
 		$klarna_payments_params['log_to_file_url']        = WC_AJAX::get_endpoint( 'kp_wc_log_js' );
 		$klarna_payments_params['log_to_file_nonce']      = wp_create_nonce( 'kp_wc_log_js' );
-		$klarna_payments_params['order_pay_page']         = false;
 
 		// Maybe create KP Session.
 		if ( 'yes' === $this->enabled ) {
-			if ( is_wc_endpoint_url( 'order-pay' ) ) {
-				$key      = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
-				$order_id = wc_get_order_id_by_order_key( $key );
-				kp_create_session_order( $order_id );
-				$klarna_payments_params['client_token']   = get_post_meta( $order_id, '_klarna_payments_client_token', true );
-				$klarna_payments_params['order_pay_page'] = true;
-				$klarna_payments_params['order_id']       = $order_id;
-				$klarna_payments_params['addresses']      = array(
-					'billing'  => KP_Customer_Data::get_billing_address( $order_id, $this->customer_type ),
-					'shipping' => KP_Customer_Data::get_shipping_address( $order_id, $this->customer_type ),
-				);
-				$klarna_payments_params['pay_for_order']  = 'true';
-			} else {
-				KP_WC()->api->get_session_cart();
-				$klarna_payments_params['client_token']  = WC()->session->get( 'klarna_payments_client_token' );
-				$klarna_payments_params['submit_order']  = WC_AJAX::get_endpoint( 'checkout' );
-				$klarna_payments_params['pay_for_order'] = 'false';
-			}
+			$pay_for_order = is_wc_endpoint_url( 'order-pay' );
+			$key           = $pay_for_order ? filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS ) : null;
+			$order_id      = $pay_for_order ? wc_get_order_id_by_order_key( $key ) : null;
+
+			$klarna_payments_params['client_token']   = KP_WC()->session->get_klarna_client_token();
+			$klarna_payments_params['order_pay_page'] = $pay_for_order;
+			$klarna_payments_params['pay_for_order']  = $pay_for_order;
+			$klarna_payments_params['order_id']       = $order_id;
+			$klarna_payments_params['addresses']      = $pay_for_order ? array(
+				'billing'  => WC()->customer->get_billing_address(),
+				'shipping' => WC()->customer->get_shipping_address(),
+			) : null;
 		}
 
 		wp_register_script(
@@ -325,10 +317,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * Uses authorization token to place the order.
 	 *
-	 * @TODO: Set customer payment method as KP.
-	 *
 	 * @param int $order_id WooCommerce order ID.
-	 *
 	 * @return array   $result  Payment result.
 	 */
 	public function process_payment( $order_id ) {
@@ -337,12 +326,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Check if the order was created using WooCommerce blocks.
 		if ( $order && $order->is_created_via( 'store-api' ) ) {
 			// Create a session for the order.
-			$session = KP_WC()->api->create_session( kp_get_klarna_country( $order ), $order_id, true );
+			$session = KP_WC()->session->get_session( $order_id );
 
 			if ( is_wp_error( $session ) ) {
 				wc_add_notice( 'Failed to create a session with Klarna.', 'error' );
 				return array(
-					'result' => 'error',
+					'result'   => 'error',
+					'redirect' => '#',
 				);
 			}
 
