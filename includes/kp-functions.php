@@ -107,6 +107,10 @@ function kp_create_session_order( $order_id, $klarna_country = false ) {
  * Unsets all Klarna Payments sessions.
  */
 function kp_unset_session_values() {
+	if ( ! isset( WC()->session ) ) {
+		return;
+	}
+
 	WC()->session->__unset( 'klarna_payments_session_id' );
 	WC()->session->__unset( 'klarna_payments_client_token' );
 	WC()->session->__unset( 'klarna_payments_session_country' );
