@@ -58,25 +58,6 @@ class KP_Session {
 	}
 
 	/**
-	 * Sets the class properties from session or order data based on what page we are on.
-	 *
-	 * @return void
-	 */
-	public function init() {
-		$order = null;
-		// Check if we are a pay for order page.
-		if ( is_wc_endpoint_url( 'order-pay' ) ) {
-			$order_id = absint( get_query_var( 'order-pay' ) );
-			$order    = wc_get_order( $order_id );
-		}
-
-		// If KP is available, and we are on a checkout page, and not on the blocks page.
-		if ( kp_is_available() && kp_is_checkout_page() && ! kp_is_checkout_blocks_page() ) {
-			add_action( 'woocommerce_after_calculate_totals', array( $this, 'get_session' ), 9999, 0 ); // Maybe update session on after_calculate_totals.
-		}
-	}
-
-	/**
 	 * Gets a Klarna sessios. Creates or updates the Klarna session if needed.
 	 *
 	 * @param int|WC_Order|null $order The WooCommerce order or order id. Null if we are working with a cart.
@@ -157,27 +138,50 @@ class KP_Session {
 	 * @return array|WP_Error
 	 */
 	private function process_result( $result, $order ) {
-		if ( ! is_wp_error( $result ) ) {
-			$this->klarna_session  = $result;
-			$this->session_hash    = null == $order ? $this->get_session_cart_hash() : $this->get_session_order_hash( $order );
-			$this->session_country = kp_get_klarna_country( $order );
-
-			// Update the WC Session or the order meta with instance of class.
-			if ( null == $order ) {
-				WC()->session->set( 'kp_session_data', wp_json_encode( $this ) );
-			} else {
-				$order->update_meta_data( '_kp_session_data', wp_json_encode( $this ) );
-			}
-		} else {
+		if ( is_wp_error( $result ) ) {
 			// If we get an error, clear the WC session or order meta.
-			if ( null == $order ) {
-				WC()->session->set( 'kp_session_data', wp_json_encode( $this ) );
-			} else {
-				$order->delete_meta_data( '_kp_session_data' );
-			}
+			$this->clear_session_data_in_wc( $order );
+			return $result;
 		}
 
+		$this->klarna_session  = $result;
+		$this->session_hash    = null == $order ? $this->get_session_cart_hash() : $this->get_session_order_hash( $order );
+		$this->session_country = kp_get_klarna_country( $order );
+
+		// Update the WC Session or the order meta with instance of class.
+		$this->update_session_data_in_wc( $order );
+
 		return $result;
+	}
+
+	/**
+	 * Updates the saved session data in WooCommerce. Either to WC_Session or order meta.
+	 *
+	 * @param WC_Order|null $order The WooCommerce order. Null if we are working with a cart.
+	 * @return void
+	 */
+	private function update_session_data_in_wc( $order ) {
+		// Update the WC Session or the order meta with instance of class.
+		if ( null == $order ) {
+			WC()->session->set( 'kp_session_data', wp_json_encode( $this ) );
+		} else {
+			$order->update_meta_data( '_kp_session_data', wp_json_encode( $this ) );
+		}
+	}
+
+	/**
+	 * Clears the saved session data in WooCommerce. Either from WC_Session or order meta.
+	 *
+	 * @param WC_Order|null $order The WooCommerce order. Null if we are working with a cart.
+	 * @return void
+	 */
+	private function clear_session_data_in_wc( $order ) {
+		// Clear the WC Session or the order meta with instance of class.
+		if ( null == $order ) {
+			WC()->session->__unset( 'kp_session_data' );
+		} else {
+			$order->delete_meta_data( '_kp_session_data' );
+		}
 	}
 
 	/**
@@ -224,6 +228,9 @@ class KP_Session {
 
 		$this->session_hash = $session_hash;
 
+		// Update stored session data, so we save the new hash.
+		$this->update_session_data_in_wc( $order );
+
 		return $needs_update;
 	}
 
@@ -234,13 +241,12 @@ class KP_Session {
 	 */
 	private function get_session_cart_hash() {
 		// Get values to use for the combined hash calculation.
-		$total            = WC()->cart->get_total( 'kp_total' );
-		$tax              = WC()->cart->get_total_tax();
+		$total            = array_sum( WC()->cart->get_totals() );
 		$billing_address  = WC()->customer->get_billing();
 		$shipping_address = WC()->customer->get_shipping();
 
 		// Calculate a hash from the values.
-		$hash = md5( wp_json_encode( array( $total, $tax, $billing_address, $shipping_address ) ) );
+		$hash = md5( wp_json_encode( array( $total, $billing_address, $shipping_address ) ) );
 
 		return $hash;
 	}
@@ -253,13 +259,12 @@ class KP_Session {
 	 */
 	private function get_session_order_hash( $order ) {
 		// Get values to use for the combined hash calculation.
-		$total            = $order->get_total();
-		$tax              = $order->get_total_tax();
+		$total            = $order->get_total( 'kp_total' );
 		$billing_address  = $order->get_address( 'billing' );
 		$shipping_address = $order->get_address( 'shipping' );
 
 		// Calculate a hash from the values.
-		$hash = md5( wp_json_encode( array( $total, $tax, $billing_address, $shipping_address ) ) );
+		$hash = md5( wp_json_encode( array( $total, $billing_address, $shipping_address ) ) );
 
 		return $hash;
 	}
