@@ -306,6 +306,16 @@ class KP_Session {
 	}
 
 	/**
+	 * Get the Klarna session country.
+	 *
+	 * @param WC_Order|null $order The WooCommerce order, used for the fallback kp_get_klarna_country incase the session is missing the country.
+	 * @return string
+	 */
+	public function get_klarna_session_country( $order = null ) {
+		return $this->session_country ?? kp_get_klarna_country( $order );
+	}
+
+	/**
 	 * Get the Klarna session payment method categories.
 	 *
 	 * @return array|null
