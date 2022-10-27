@@ -87,11 +87,14 @@ class KP_Api {
 	 * @return array|WP_Error The response from Klarna.
 	 */
 	public function place_order( $country, $auth_token, $order_id ) {
+		KP_WC()->session->set_session_data( $order_id );
+
 		$request  = new KP_Place_Order(
 			array(
 				'country'    => $country,
 				'auth_token' => $auth_token,
 				'order_id'   => $order_id,
+				'session_id' => KP_WC()->session->get_klarna_session_id(),
 			)
 		);
 		$response = $request->request();
