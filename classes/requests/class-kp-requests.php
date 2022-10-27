@@ -266,7 +266,7 @@ abstract class KP_Requests {
 		$method   = $this->method;
 		$title    = "{$this->log_title} - URL: {$request_url}";
 		$code     = wp_remote_retrieve_response_code( $response );
-		$order_id = $response['session_id'] ?? $response['order_id'] ?? null; // Try to get session id or order id from the response, else null.
+		$order_id = $response['session_id'] ?? $response['order_id'] ?? $this->arguments['session_id'] ?? null; // Try to get session id or order id from the response, else null.
 		$log      = KP_Logger::format_log( $order_id, $method, $title, $request_args, $response, $code, $request_url );
 		KP_Logger::log( $log );
 	}
