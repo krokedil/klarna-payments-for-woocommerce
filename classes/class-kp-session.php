@@ -105,10 +105,19 @@ class KP_Session {
 	/**
 	 * Sets session data from a WC session or order meta.
 	 *
-	 * @param WC_Order|null $order The WooCommerce order or order id. Null if we are working with a cart.
+	 * @param WC_Order|int|null $order The WooCommerce order or order id. Null if we are working with a cart.
 	 * @return void
+	 * @throws Exception If we get an error when trying to get the session data.
 	 */
-	private function set_session_data( $order ) {
+	public function set_session_data( $order ) {
+		// Maybe get the order from order id.
+		$order = $this->maybe_get_order( $order );
+
+		// Return WP Error if we get one.
+		if ( is_wp_error( $order ) ) {
+			throw new Exception( $order->get_error_message() );
+		}
+
 		// If we have an order, get the Klarna session from order meta.
 		$session_data = $order ? $order->get_meta( '_kp_session_data', true ) : WC()->session->get( 'kp_session_data' );
 
