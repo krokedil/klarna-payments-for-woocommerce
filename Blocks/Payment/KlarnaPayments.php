@@ -51,6 +51,10 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 * @return void
 	 */
 	public static function enqueue_style() {
+		if ( ! is_checkout() ) {
+			return;
+		}
+
 		wp_register_style(
 			'kp-checkout-block',
 			plugins_url( 'build/klarna-payments-block.css', __FILE__ ),
@@ -76,7 +80,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 * @return array
 	 */
 	public function get_payment_method_script_handles() {
-		$version      = filemtime( dirname( __FILE__ ) . 'build/klarna-payments-block.js' );
+		$version      = WC_KLARNA_PAYMENTS_VERSION;
 		$path         = plugins_url( 'build/klarna-payments-block.js', __FILE__ );
 		$handle       = 'kp-checkout-block';
 		$dependencies = array( 'wp-hooks' );
