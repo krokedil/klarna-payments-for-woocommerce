@@ -6,51 +6,10 @@
  */
 
 /**
- * Creates a Klarna Payments session if needed for an order.
- *
- * @param int         $order_id The WooCommerce order id.
- * @param string|bool $klarna_country The Klarna country.
- * @return void|WP_Error
- */
-function kp_create_session_order( $order_id, $klarna_country = false ) {
-	$order = wc_get_order( $order_id );
-	if ( ! $klarna_country ) {
-		$klarna_country = kp_get_klarna_country( $order );
-	}
-
-	$klarna_payments_session_id = get_post_meta( $order_id, '_klarna_payments_session_id', true );
-
-	if ( $klarna_payments_session_id ) {
-		$response = KP_WC()->api->update_session( $klarna_country, $klarna_payments_session_id, $order_id );
-		if ( is_wp_error( $response ) ) {
-			$response = KP_WC()->api->create_session( $klarna_country, $order_id );
-			if ( is_wp_error( $response ) ) {
-				return kp_extract_error_message( $response );
-			}
-		}
-	} else {
-		$response = KP_WC()->api->create_session( $klarna_country, $order_id );
-		if ( is_wp_error( $response ) ) {
-			return kp_extract_error_message( $response );
-		}
-	}
-	update_post_meta( $order_id, '_kp_session_id', $response['session_id'] );
-	update_post_meta( $order_id, '_klarna_payments_client_token', $response['client_token'] );
-	update_post_meta( $order_id, '_klarna_payments_categories', $response['payment_method_categories'] );
-	update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country( $order ) );
-
-	return $response;
-}
-
-/**
  * Unsets all Klarna Payments sessions.
  */
 function kp_unset_session_values() {
-	WC()->session->__unset( 'klarna_payments_session_id' );
-	WC()->session->__unset( 'klarna_payments_client_token' );
-	WC()->session->__unset( 'klarna_payments_session_country' );
-	WC()->session->__unset( 'klarna_payments_categories' );
-	WC()->session->__unset( 'kp_update_md5' );
+	WC()->session->__unset( 'kp_session_data' );
 }
 
 /**
@@ -83,6 +42,7 @@ function get_klarna_customer( $customer_type ) {
  * Gets Klarna country.
  *
  * @param WC_Order|false $order The WooCommerce order.
+ * @return string
  */
 function kp_get_klarna_country( $order = false ) {
 	if ( ! empty( $order ) ) {
@@ -223,7 +183,7 @@ function kp_print_error_message( $wp_error ) {
 		$error_message = implode( ' ', $error_message );
 	}
 
-	if ( is_ajax() ) {
+	if ( is_ajax() || defined( 'REST_REQUEST' ) ) { // If ajax or rest request. Add notice instead of print.
 		if ( function_exists( 'wc_add_notice' ) ) {
 			wc_add_notice( $error_message, 'error' );
 		}
@@ -232,4 +192,46 @@ function kp_print_error_message( $wp_error ) {
 			wc_print_notice( $error_message, 'error' );
 		}
 	}
+}
+
+/**
+ * Returns if Klarna payments is an available gateway from the WC()->paymnet_gateways->get_available_payment_gateways() array.
+ *
+ * @return bool
+ */
+function kp_is_available() {
+	$available_payment_gateways = WC()->payment_gateways()->get_available_payment_gateways();
+
+	return isset( $available_payment_gateways['klarna_payments'] );
+}
+
+/**
+ * Checks if the current page contains the WooCommerce checkout block.
+ *
+ * @return bool
+ */
+function kp_is_checkout_blocks_page() {
+	// Get the post from WordPress.
+	$post      = get_post();
+	$has_block = has_block( 'woocommerce/checkout', $post );
+
+	return $has_block;
+}
+
+/**
+ * Returns if the current page is the checkout page or not. Includes if we are on a pay for order page, but not if we are on a thank you page.
+ *
+ * @return bool
+ */
+function kp_is_checkout_page() {
+	return ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) && ! is_wc_endpoint_url( 'order-received' );
+}
+
+/**
+ * Returns if we are on a order pay page or not.
+ *
+ * @return bool
+ */
+function kp_is_order_pay_page() {
+	return is_wc_endpoint_url( 'order-pay' );
 }
