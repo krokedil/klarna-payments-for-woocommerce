@@ -72,7 +72,6 @@ class KP_Session {
 
 		// If KP is available, and we are on a checkout page, and not on the blocks page.
 		if ( kp_is_available() && kp_is_checkout_page() && ! kp_is_checkout_blocks_page() ) {
-			// KP_WC()->session->get_session( $order );
 			add_action( 'woocommerce_after_calculate_totals', array( $this, 'get_session' ), 9999, 0 ); // Maybe update session on after_calculate_totals.
 		}
 	}
