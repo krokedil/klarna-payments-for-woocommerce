@@ -104,6 +104,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $api = null;
 
 		/**
+		 * KP Session class. Stores and handles the session data.
+		 *
+		 * @var KP_Session|null
+		 */
+		public $session = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -126,7 +133,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			// Init the gateway itself.
 			$this->include_files();
 
-			$this->api = new KP_Api();
+			$this->api     = new KP_Api();
+			$this->session = new KP_Session();
 
 			$this->register_payment_block();
 		}
@@ -258,6 +266,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-checkout.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-assets.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-api.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 
 			// Requests.
