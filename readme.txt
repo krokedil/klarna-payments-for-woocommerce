@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2022.10.27    - version 2.12.1 =
+* Fix           - Fixed a critical error when trying to clear the session.
+
 = 2022.10.26    - version 2.12.0 =
 * Feature       - Added support for "PW WooCommerce Gift Cards".
 * Fix           – Fixed an issue where “null” is returned if the tax rate could not be retrieved.
