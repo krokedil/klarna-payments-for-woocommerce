@@ -16,27 +16,8 @@ class KP_Checkout {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		add_action( 'woocommerce_after_calculate_totals', array( $this, 'update_klarna_session' ), 9999 );
 		add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'add_token_fragment' ) );
 		add_action( 'woocommerce_review_order_before_submit', array( $this, 'html_client_token' ) );
-	}
-
-	/**
-	 * Update the current Klarna session.
-	 *
-	 * @return void
-	 */
-	public function update_klarna_session() {
-		if ( ! is_checkout() ) {
-			return;
-		}
-
-		$kp_session = KP_WC()->api->get_session_cart();
-
-		if ( ! is_array( $kp_session ) && ! empty( $kp_session ) ) {
-			// Handle error.
-			return;
-		}
 	}
 
 	/**
@@ -46,7 +27,7 @@ class KP_Checkout {
 	 * @return array
 	 */
 	public function add_token_fragment( $fragments ) {
-		$session_token = WC()->session->get( 'klarna_payments_client_token' );
+		$session_token = KP_WC()->session->get_klarna_client_token();
 		if ( empty( $session_token ) ) {
 			return $fragments;
 		}
@@ -67,7 +48,7 @@ class KP_Checkout {
 	 */
 	public function html_client_token( $session_token = false ) {
 		if ( ! $session_token ) {
-			$session_token = WC()->session->get( 'klarna_payments_client_token' );
+			$session_token = KP_WC()->session->get_klarna_client_token();
 		}
 		?>
 		<input type="hidden" id="kp_client_token" value="<?php echo esc_html( $session_token ); ?>" >
