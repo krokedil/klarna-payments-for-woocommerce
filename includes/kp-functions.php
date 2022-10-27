@@ -235,3 +235,13 @@ function kp_is_checkout_page() {
 function kp_is_order_pay_page() {
 	return is_wc_endpoint_url( 'order-pay' );
 }
+
+/**
+ * Returns if the order was created using the checkout block or not.
+ *
+ * @param WC_Order $order The WooCommerce order.
+ * @return bool
+ */
+function kp_is_wc_blocks_order( $order ) {
+	return $order && $order->is_created_via( 'store-api' );
+}
