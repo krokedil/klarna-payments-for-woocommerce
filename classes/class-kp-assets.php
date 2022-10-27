@@ -18,11 +18,116 @@ class KP_Assets {
 	 * Class constructor.
 	 */
 	public function __construct() {
+		/* Klarna Payments scripts */
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_script' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_script' ) );
+
 		/* Klarna Express Checkout (aka Express Button). */
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_express_button' ) );
 		add_action( 'script_loader_tag', array( $this, 'express_button_script_tag' ), 10, 2 );
 		add_action( 'woocommerce_proceed_to_checkout', array( $this, 'express_button_placement' ) );
 		add_action( 'woocommerce_widget_shopping_cart_buttons', array( $this, 'express_button_placement' ), 15 );
+	}
+
+	/**
+	 * Enqueue payment scripts.
+	 *
+	 * @hook wp_enqueue_scripts
+	 */
+	public function enqueue_checkout_script() {
+		if ( ! kp_is_checkout_page() ) {
+			return;
+		}
+
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		if ( 'yes' !== $settings['enabled'] ?? 'no' ) {
+			return;
+		}
+
+		$klarna_payments_params = $this->get_checkout_params( $settings );
+
+		wp_register_script(
+			'klarna_payments',
+			plugins_url( 'assets/js/klarna-payments.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
+			array( 'jquery', 'wc-checkout', 'jquery-blockui' ),
+			WC_KLARNA_PAYMENTS_VERSION,
+			true
+		);
+
+		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
+		wp_enqueue_script( 'klarna_payments' );
+
+		wp_register_script( 'klarnapayments', 'https://x.klarnacdn.net/kp/lib/v1/api.js', array(), null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
+		wp_enqueue_script( 'klarnapayments' );
+	}
+
+	/**
+	 * Get the params for the Klarna Payments checkout script.
+	 *
+	 * @param array $settings The Klarna Payments settings.
+	 * @return array
+	 */
+	private function get_checkout_params( $settings ) {
+		// Set needed variables for the order pay page handling.
+		$pay_for_order = kp_is_order_pay_page();
+		$key           = $pay_for_order ? filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS ) : null;
+		$order_id      = $pay_for_order ? wc_get_order_id_by_order_key( $key ) : null;
+
+		// Create the params array.
+		$klarna_payments_params = array(
+			// Ajax URLS.
+			'ajaxurl'                => WC_AJAX::get_endpoint( '%%endpoint%%' ),
+			'place_order_url'        => WC_AJAX::get_endpoint( 'kp_wc_place_order' ),
+			'place_order_nonce'      => wp_create_nonce( 'kp_wc_place_order' ),
+			'auth_failed_url'        => WC_AJAX::get_endpoint( 'kp_wc_auth_failed' ),
+			'auth_failed_nonce'      => wp_create_nonce( 'kp_wc_auth_failed' ),
+			'update_session_url'     => WC_AJAX::get_endpoint( 'kp_wc_update_session' ),
+			'update_session_nonce'   => wp_create_nonce( 'kp_wc_update_session' ),
+			'log_to_file_url'        => WC_AJAX::get_endpoint( 'kp_wc_log_js' ),
+			'log_to_file_nonce'      => wp_create_nonce( 'kp_wc_log_js' ),
+			'submit_order'           => WC_AJAX::get_endpoint( 'checkout' ),
+			// Params.
+			'testmode'               => $settings['testmode'] ?? 'no',
+			'customer_type'          => $settings['customer_type'] ?? 'b2c',
+			'remove_postcode_spaces' => ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no',
+			'client_token'           => KP_WC()->session->get_klarna_client_token(),
+			'order_pay_page'         => $pay_for_order,
+			'pay_for_order'          => $pay_for_order,
+			'order_id'               => $order_id,
+			'addresses'              => $pay_for_order ? array(
+				'billing'  => WC()->customer->get_billing_address(),
+				'shipping' => WC()->customer->get_shipping_address(),
+			) : null,
+		);
+
+		// Return with filter incase some people want to modify the params.
+		return apply_filters( 'wc_kp_checkout_params', $klarna_payments_params );
+	}
+
+	/**
+	 * Enqueue admin scripts.
+	 *
+	 * @param string $hook Admin page hook.
+	 *
+	 * @hook admin_enqueue_scripts
+	 */
+	public function enqueue_admin_script( $hook ) {
+		if ( 'woocommerce_page_wc-settings' !== $hook ) {
+			return;
+		}
+
+		$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ( empty( $section ) || 'klarna_payments' !== $section ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'klarna_payments_admin',
+			plugins_url( 'assets/js/klarna-payments-admin.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
+			array(),
+			WC_KLARNA_PAYMENTS_VERSION,
+			false
+		);
 	}
 
 	/**

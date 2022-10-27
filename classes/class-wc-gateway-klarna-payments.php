@@ -80,8 +80,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
 		add_filter( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
@@ -226,93 +224,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Enqueue payment scripts.
-	 *
-	 * @hook wp_enqueue_scripts
-	 */
-	public function enqueue_scripts() {
-		if ( ! is_checkout() || is_order_received_page() ) {
-			return;
-		}
-
-		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		if ( ! isset( $settings['enabled'] ) || 'yes' !== $settings['enabled'] ) {
-			return;
-		}
-
-		// Localize the script.
-		$klarna_payments_params                           = array();
-		$klarna_payments_params['testmode']               = $this->get_option( 'testmode' );
-		$klarna_payments_params['customer_type']          = $this->get_option( 'customer_type' );
-		$klarna_payments_params['remove_postcode_spaces'] = ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no';
-		$klarna_payments_params['ajaxurl']                = admin_url( 'admin-ajax.php' );
-		$klarna_payments_params['place_order_url']        = WC_AJAX::get_endpoint( 'kp_wc_place_order' );
-		$klarna_payments_params['place_order_nonce']      = wp_create_nonce( 'kp_wc_place_order' );
-		$klarna_payments_params['auth_failed_url']        = WC_AJAX::get_endpoint( 'kp_wc_auth_failed' );
-		$klarna_payments_params['auth_failed_nonce']      = wp_create_nonce( 'kp_wc_auth_failed' );
-		$klarna_payments_params['update_session_url']     = WC_AJAX::get_endpoint( 'kp_wc_update_session' );
-		$klarna_payments_params['update_session_nonce']   = wp_create_nonce( 'kp_wc_update_session' );
-		$klarna_payments_params['log_to_file_url']        = WC_AJAX::get_endpoint( 'kp_wc_log_js' );
-		$klarna_payments_params['log_to_file_nonce']      = wp_create_nonce( 'kp_wc_log_js' );
-
-		// Maybe create KP Session.
-		if ( 'yes' === $this->enabled ) {
-			$pay_for_order = is_wc_endpoint_url( 'order-pay' );
-			$key           = $pay_for_order ? filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS ) : null;
-			$order_id      = $pay_for_order ? wc_get_order_id_by_order_key( $key ) : null;
-
-			$klarna_payments_params['client_token']   = KP_WC()->session->get_klarna_client_token();
-			$klarna_payments_params['order_pay_page'] = $pay_for_order;
-			$klarna_payments_params['pay_for_order']  = $pay_for_order;
-			$klarna_payments_params['order_id']       = $order_id;
-			$klarna_payments_params['addresses']      = $pay_for_order ? array(
-				'billing'  => WC()->customer->get_billing_address(),
-				'shipping' => WC()->customer->get_shipping_address(),
-			) : null;
-		}
-
-		wp_register_script(
-			'klarna_payments',
-			plugins_url( 'assets/js/klarna-payments.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
-			array( 'jquery', 'wc-checkout', 'jquery-blockui' ),
-			WC_KLARNA_PAYMENTS_VERSION,
-			true
-		);
-
-		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
-		wp_enqueue_script( 'klarna_payments' );
-
-		wp_register_script( 'klarnapayments', 'https://x.klarnacdn.net/kp/lib/v1/api.js', array(), null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-		wp_enqueue_script( 'klarnapayments' );
-	}
-
-	/**
-	 * Enqueue admin scripts.
-	 *
-	 * @param string $hook Admin page hook.
-	 *
-	 * @hook admin_enqueue_scripts
-	 */
-	public function admin_enqueue_scripts( $hook ) {
-		if ( 'woocommerce_page_wc-settings' !== $hook ) {
-			return;
-		}
-
-		$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_STRING );
-		if ( empty( $section ) || 'klarna_payments' !== $section ) {
-			return;
-		}
-
-		wp_enqueue_script(
-			'klarna_payments_admin',
-			plugins_url( 'assets/js/klarna-payments-admin.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
-			array(),
-			WC_KLARNA_PAYMENTS_VERSION,
-			false
-		);
-	}
-
-	/**
 	 * Place Klarna Payments order, after authorization.
 	 *
 	 * Uses authorization token to place the order.
@@ -322,43 +233,41 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
-
 		// Check if the order was created using WooCommerce blocks.
-		if ( $order && $order->is_created_via( 'store-api' ) ) {
-			// Create a session for the order.
-			$session = KP_WC()->session->get_session( $order_id );
+		if ( kp_is_wc_blocks_order( $order ) ) {
+			return $this->process_blocks_order( $order );
+		}
 
-			if ( is_wp_error( $session ) ) {
-				wc_add_notice( 'Failed to create a session with Klarna.', 'error' );
-				return array(
-					'result'   => 'error',
-					'redirect' => '#',
-				);
-			}
+		return $this->process_checkout_order( $order );
+	}
 
-			$session_id = $session['session_id'];
+	/**
+	 * Process WooCommerce checkout order.
+	 *
+	 * @param WC_Order $order The WooCommerce order.
+	 * @return array
+	 */
+	private function process_checkout_order( $order ) {
+		// Load any session data that we might have. Pass null instead of order identifier to load session from WC()->session.
+		KP_WC()->session->set_session_data( null );
 
-			// Create a HPP url.
-			$hpp = KP_WC()->api->create_hpp( kp_get_klarna_country( $order ), $session_id, $order_id );
+		$order_id          = $order->get_id();
+		$klarna_country    = KP_WC()->session->get_klarna_session_country( $order );
+		$klarna_session_id = KP_WC()->session->get_klarna_session_id();
 
-			if ( is_wp_error( $hpp ) ) {
-				wc_add_notice( 'Failed to create a HPP session with Klarna.', 'error' );
-				return array(
-					'result' => 'error',
-				);
-			}
-
-			$hpp_redirect = $hpp['redirect_url'];
-
+		if ( empty( $klarna_country ) || empty( $klarna_session_id ) ) {
 			return array(
-				'result'   => 'success',
-				'redirect' => $hpp_redirect,
+				'result'   => 'error',
+				'messages' => array(
+					__( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' ),
+				),
 			);
 		}
 
-		update_post_meta( $order_id, '_wc_klarna_country', kp_get_klarna_country() );
-		update_post_meta( $order_id, '_kp_session_id', WC()->session->get( 'klarna_payments_session_id' ) );
-		// Add #kp hash to checkout url so we can do a finalize call to Klarna.
+		$order->update_meta_data( '_wc_klarna_country', $klarna_country );
+		$order->update_meta_data( '_kp_session_id', $klarna_session_id );
+
+		// Return success without redirect URL since our script handles the return instead of WooCommerce.
 		return array(
 			'result'    => 'success',
 			'order_id'  => $order_id,
@@ -366,6 +275,48 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'billing'  => KP_Customer_Data::get_billing_address( $order_id, $this->customer_type ),
 				'shipping' => KP_Customer_Data::get_shipping_address( $order_id, $this->customer_type ),
 			),
+		);
+	}
+
+	/**
+	 * Process WooCommerce blocks order.
+	 *
+	 * @param WC_Order $order The WooCommerce order.
+	 * @return array
+	 */
+	private function process_blocks_order( $order ) {
+		// Create a session for the order.
+		$session = KP_WC()->api->create_session( $order );
+
+		// Check for any errors.
+		if ( is_wp_error( $session ) ) {
+			return array(
+				'result'   => 'error',
+				'redirect' => '#',
+				'messages' => array(
+					__( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
+				),
+			);
+		}
+
+		$session_id = KP_WC()->session->get_klarna_session_id();
+
+		// Create a HPP url.
+		$hpp = KP_WC()->api->create_hpp( kp_get_klarna_country( $order ), $session_id, $order->get_id() );
+
+		if ( is_wp_error( $hpp ) ) {
+			return array(
+				'result'   => 'error',
+				'redirect' => '#',
+				'messages' => array(
+					__( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
+				),
+			);
+		}
+
+		return array(
+			'result'   => 'success',
+			'redirect' => $hpp['redirect_url'],
 		);
 	}
 
