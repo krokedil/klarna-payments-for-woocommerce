@@ -254,6 +254,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_payments_params['update_session_nonce']   = wp_create_nonce( 'kp_wc_update_session' );
 		$klarna_payments_params['log_to_file_url']        = WC_AJAX::get_endpoint( 'kp_wc_log_js' );
 		$klarna_payments_params['log_to_file_nonce']      = wp_create_nonce( 'kp_wc_log_js' );
+		$klarna_payments_params['submit_order']           = WC_AJAX::get_endpoint( 'checkout' );
 
 		// Maybe create KP Session.
 		if ( 'yes' === $this->enabled ) {
