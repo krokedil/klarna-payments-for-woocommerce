@@ -1,7 +1,0 @@
-{
-	"name": "Klarna Payments development",
-	"dockerComposeFile": ["../docker-compose.yml"],
-	"service": "wordpress-dev",
-	"workspaceFolder": "/var/www/html",
-	"runServices": ["db","wordpress-dev"],
-  }

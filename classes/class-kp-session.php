@@ -66,8 +66,10 @@ class KP_Session {
 		if ( ! kp_is_available() || ! kp_is_checkout_page() ) {
 			return;
 		}
+
 		// Check if we get an order.
-		$order = $this->maybe_get_order( $order );
+		$order    = $this->maybe_get_order( $order );
+		$order_id = $order ? $order->get_id() : null;
 
 		// Return WP Error if we get one.
 		if ( is_wp_error( $order ) ) {
@@ -91,12 +93,12 @@ class KP_Session {
 
 		// If we have a Klarna session and we get here, we should update it.
 		if ( null !== $this->klarna_session ) {
-			$result = KP_WC()->api->update_session( kp_get_klarna_country( $order ), $this->klarna_session['session_id'], $order?->get_id() );
+			$result = KP_WC()->api->update_session( kp_get_klarna_country( $order ), $this->klarna_session['session_id'], $order_id );
 			return $result;
 		}
 
 		// If we get here, we should create a new Klarna session. Pass true to include_address if we have an order.
-		$result = KP_WC()->api->create_session( kp_get_klarna_country( $order ), $order?->get_id(), null !== $order );
+		$result = KP_WC()->api->create_session( kp_get_klarna_country( $order ), $order_id, null !== $order );
 
 		// Process result and return the Klarna session.
 		return $this->process_result( $result, $order );

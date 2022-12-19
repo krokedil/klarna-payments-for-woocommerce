@@ -1,1 +1,9 @@
-#radio-control-wc-payment-method-options-klarna_payments__label span img{display:inline-block;padding-right:5px}
+/*!****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/.pnpm/css-loader@6.7.3_webpack@5.75.0/node_modules/css-loader/dist/cjs.js!./node_modules/.pnpm/sass-loader@13.2.0_prypmosz4yjwfdfq7zgwvid3aa/node_modules/sass-loader/dist/cjs.js!./Blocks/Payment/src/css/klarna-payments-block.scss ***!
+  \****************************************************************************************************************************************************************************************************************************************************************/
+#radio-control-wc-payment-method-options-klarna_payments__label span img {
+  display: inline-block;
+  padding-right: 5px;
+}
+
+/*# sourceMappingURL=klarna-payments-block.css.map*/
