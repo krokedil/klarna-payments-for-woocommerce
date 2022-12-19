@@ -159,7 +159,7 @@ abstract class KP_Requests {
 	 */
 	protected function set_environment() {
 		$region     = $this->country_params['endpoint'] ?? ''; // Get the region from the country parameters, blank for EU.
-		$playground = 'yes' == $this->settings['testmode'] ? 'playground' : ''; // If testmode is enabled, add playground to the subdomain.
+		$playground = 'yes' === $this->settings['testmode'] ? 'playground' : ''; // If testmode is enabled, add playground to the subdomain.
 		$subdomain  = "api${region}.${playground}"; // Combine the string to one subdomain.
 
 		$this->environment = "https://${subdomain}.klarna.com/"; // Return the full base url for the api.

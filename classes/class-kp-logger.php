@@ -186,7 +186,7 @@ class KP_Logger {
 	 * @return void
 	 */
 	private static function handle_wp_hook( $class, $function, &$args, $debug_line ) {
-		if ( 'WP_Hook' === $class && in_array( $function, array( 'apply_filters', 'do_action' ) ) ) {
+		if ( 'WP_Hook' === $class && in_array( $function, array( 'apply_filters', 'do_action' ), true ) ) {
 			$wp_hook = $debug_line['object'] ?? null;
 			if ( $wp_hook instanceof WP_Hook ) {
 				$priority = $wp_hook->current_priority();

@@ -156,7 +156,7 @@ class KP_Session {
 		}
 
 		$this->klarna_session  = $result;
-		$this->session_hash    = null == $order ? $this->get_session_cart_hash() : $this->get_session_order_hash( $order );
+		$this->session_hash    = null === $order ? $this->get_session_cart_hash() : $this->get_session_order_hash( $order );
 		$this->session_country = kp_get_klarna_country( $order );
 
 		// Update the WC Session or the order meta with instance of class.
@@ -173,7 +173,7 @@ class KP_Session {
 	 */
 	private function update_session_data_in_wc( $order ) {
 		// Update the WC Session or the order meta with instance of class.
-		if ( null == $order ) {
+		if ( null === $order ) {
 			WC()->session->set( 'kp_session_data', wp_json_encode( $this ) );
 		} else {
 			$order->update_meta_data( '_kp_session_data', wp_json_encode( $this ) );
@@ -188,7 +188,7 @@ class KP_Session {
 	 */
 	private function clear_session_data_in_wc( $order ) {
 		// Clear the WC Session or the order meta with instance of class.
-		if ( null == $order ) {
+		if ( null === $order ) {
 			WC()->session->__unset( 'kp_session_data' );
 		} else {
 			$order->delete_meta_data( '_kp_session_data' );

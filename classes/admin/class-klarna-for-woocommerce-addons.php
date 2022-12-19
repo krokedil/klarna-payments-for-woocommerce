@@ -153,7 +153,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 																	<?php else : ?>
 																		<span class="checkout-addon-status"></span>
 																		<span class="checkout-addon-action"><?php echo self::get_addon_action_button( $item ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-																	<?php endif; ?>	
+																	<?php endif; ?>
 																</div>
 															</div>
 														</div>
@@ -299,21 +299,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 				}
 			}
 			if ( 'deactivate' === $action ) {
-				/*$result = */deactivate_plugins( $plugin, true, null );
-				// @TODO Check this, there is no return value for deactivate_plugins. So can we check this at all?
-
-				// if ( is_wp_error( $result ) ) {
-				// Process Error.
-				// $new_status       = 'activated';
-				// $new_action       = 'deactivate';
-				// $new_status_label = 'Activated';
-				// $new_action_label = 'Deactivate';
-				// } else {
-				// $new_status       = 'deactivated';
-				// $new_action       = 'activate';
-				// $new_status_label = 'Deactivated';
-				// $new_action_label = 'Activate';
-				// }.
+				deactivate_plugins( $plugin, true, null );
 			}
 
 			if ( 'install' === $action ) {

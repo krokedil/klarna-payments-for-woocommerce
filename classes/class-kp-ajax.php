@@ -137,7 +137,8 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 			}
 
-			$customer = filter_var_array( $_POST['message'], FILTER_SANITIZE_STRING );
+			$customer = filter_input( INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY );
+
 			if ( ! $customer ) {
 				wp_send_json_error( 'Failed to filter the message.', $customer );
 			}
