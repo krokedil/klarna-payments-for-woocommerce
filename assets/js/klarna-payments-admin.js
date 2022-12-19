@@ -27,7 +27,7 @@ jQuery(function ($) {
 	tables.last().after('<hr style="margin-top:2em;margin-bottom:2em" />');
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
 	// On page start, check if Testmode is enabled
 	const testmode_checkbox = document.getElementById('woocommerce_klarna_payments_testmode');
 	testmode_checkbox.addEventListener('change', () => {
@@ -103,5 +103,4 @@ document.addEventListener('DOMContentLoaded', () => {
 			save_button[0].removeAttribute('disabled');
 		}
 	}
-})
-
+})*/
