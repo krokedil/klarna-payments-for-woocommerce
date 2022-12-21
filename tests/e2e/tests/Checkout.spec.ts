@@ -1,8 +1,10 @@
 import { test, expect, APIRequestContext } from '@playwright/test';
+import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
+import { Checkout } from '../pages/Checkout';
 import { GetApiClient } from '../utils/Utils';
 
 
-test.describe('Checkout', () => {
+test.describe.serial('Guest Checkout', () => {
 	test.use({ storageState: process.env.GUESTSTATE });
 
 	let apiClient: APIRequestContext;
@@ -41,8 +43,27 @@ test.describe('Checkout', () => {
 		await apiClient.delete(`products/${productId}`, { data: { force: true } });
 	});
 
-	test('Should see KP on checkout page.', async ({ page }) => {
-		await page.goto('/checkout');
-		await expect(page.locator('#payment_method_klarna_payments_pay_later')).toBeVisible();
+	test('Can place a Klarna payments order', async ({ page }) => {
+		const checkoutPage = new Checkout(page);
+
+		// Go to the checkout page.
+		await checkoutPage.goto();
+
+		// Fill in the billing address.
+		await checkoutPage.fillBillingAddress();
+
+		// Place the order.
+		await checkoutPage.placeOrder();
+
+		const iframe = new KlarnaPaymentsIframe(page)
+
+		// Fill in the NIN.
+		await iframe.fillNin();
+
+		// Confirm the order.
+		await iframe.clickConfirm();
+
+		// Verify that the order was placed.
+		await expect(page).toHaveURL(/order-received/);
 	});
 });
