@@ -13,12 +13,12 @@ export class Checkout {
 
 	// -- Order review start --
 	readonly orderReview: Locator;
-	readonly shippingMethodRadio: Locator;
+	readonly shippingMethods: Locator;
 	// -- Order review end --
 
 	// -- Payment start --
 	readonly payment: Locator;
-	readonly paymentMethodRadio: Locator;
+	readonly paymentMethods: Locator;
 	readonly termsCheckbox: Locator;
 	readonly placeOrderButton: Locator;
 	// -- Payment end --
@@ -61,10 +61,10 @@ export class Checkout {
 		this.applyCouponButton = this.couponForm.locator('[name="apply_coupon"]');
 
 		this.orderReview = page.locator('#order_review');
-		this.shippingMethodRadio = this.orderReview.locator('input[name="shipping_method[0]"]');
+		this.shippingMethods = this.orderReview.locator('#shipping_methods');
 
 		this.payment = page.locator('#payment');
-		this.paymentMethodRadio = this.payment.locator('input[name="payment_method"]');
+		this.paymentMethods = this.payment.locator('ul.wc_payment_methods');
 		this.termsCheckbox = this.payment.locator('#terms');
 		this.placeOrderButton = this.payment.locator('#place_order');
 
@@ -120,7 +120,6 @@ export class Checkout {
 		await this.billingPostcode.fill(billingAddress?.postcode ?? '12345');
 		await this.billingPhone.fill(billingAddress?.phone ?? '1234567890');
 		await this.billingEmail.fill(billingAddress?.email ?? 'test@krokedil.se');
-		await this.page.waitForResponse((response) => response.url().includes('update_order_review'));
 	}
 
 	async fillShippingAddress(shippingAddress: Address = {}) {
@@ -140,11 +139,11 @@ export class Checkout {
 	}
 
 	async selectShippingMethod(shippingMethod: string) {
-		await this.shippingMethodRadio.getByLabel(shippingMethod).check();
+		await this.page.getByLabel(shippingMethod).check();
 	}
 
 	async selectPaymentMethod(paymentMethod: string) {
-		await this.paymentMethodRadio.getByLabel(paymentMethod).check();
+		await this.page.getByLabel(paymentMethod).check();
 	}
 
 	async acceptTerms() {
