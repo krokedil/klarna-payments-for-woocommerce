@@ -50,21 +50,13 @@ export const SetKpSettings = async (adminPage: Page) => {
 		const apiClient = await GetApiClient();
 
 		const settings = {
-			enabled: {
-				value: "yes"
-			},
-			testmode: {
-				value: "yes"
-			},
-			logging: {
-				value: "yes"
-			},
-			test_merchant_id_se: {
-				value: KLARNA_API_USERNAME
-			},
-			test_shared_secret_se: {
-				value: KLARNA_API_PASSWORD
-			},
+			enabled: true,
+			settings: {
+				testmode: "yes",
+				logging: "yes",
+				test_merchant_id_se: KLARNA_API_USERNAME,
+				test_shared_secret_se: KLARNA_API_PASSWORD,
+			}
 		};
 
 		// Update settings.
