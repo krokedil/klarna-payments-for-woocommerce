@@ -21,6 +21,7 @@ const config: PlaywrightTestConfig = {
 	workers: CI ? 4 : undefined,
 	reporter: CI ? [['list'], ['github'], ['./reporter/slackReporter.ts'], ['./reporter/githubReporter.ts']] : [['list'], ['./reporter/slackReporter.ts']],
 	globalSetup: require.resolve('./global-setup'),
+	globalTeardown: require.resolve('./global-teardown'),
 	use: {
 		actionTimeout: 0,
 		trace: CI ? 'off' : 'retain-on-failure',
