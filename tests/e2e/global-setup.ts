@@ -12,10 +12,14 @@ let guestPage: Page;
 const globalSetup = async (config: FullConfig) => {
 	const { storageState, baseURL } = config.projects[0].use;
 
-	process.env.ADMINSTATE = `${storageState}adminStorageState.json`;
-	process.env.GUESTSTATE = `${storageState}guestStorageState.json`;
+	process.env.ADMINSTATE = `${storageState}/admin/state.json`;
+	process.env.GUESTSTATE = `${storageState}/guest/state.json`;
 
-	await setupContexts(baseURL);
+	await setupContexts(baseURL, storageState.toString());
+
+	// Save contexts as states.
+	await adminContext.storageState({ path: process.env.ADMINSTATE });
+	await guestContext.storageState({ path: process.env.GUESTSTATE });
 
 	// Login to the admin page.
 	await AdminLogin(adminPage);
@@ -31,10 +35,10 @@ const globalSetup = async (config: FullConfig) => {
 	await Setup();
 }
 
-async function setupContexts(baseUrl: string) {
-	adminContext = await chromium.launchPersistentContext(process.env.ADMINSTATE, { headless: true, baseURL: baseUrl });
+async function setupContexts(baseUrl: string, statesDir: string) {
+	adminContext = await chromium.launchPersistentContext(`${statesDir}/admin`, { headless: true, baseURL: baseUrl });
 	adminPage = await adminContext.newPage();
-	guestContext = await chromium.launchPersistentContext(process.env.GUESTSTATE, { headless: true, baseURL: baseUrl });
+	guestContext = await chromium.launchPersistentContext(`${statesDir}/guest`, { headless: true, baseURL: baseUrl });
 	guestPage = await guestContext.newPage();
 }
 
