@@ -3,7 +3,6 @@ import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
 import { Checkout } from '../pages/Checkout';
 import { GetApiClient } from '../utils/Utils';
 
-
 test.describe.serial('Guest Checkout', () => {
 	test.use({ storageState: process.env.GUESTSTATE });
 
