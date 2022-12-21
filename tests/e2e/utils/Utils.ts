@@ -6,6 +6,8 @@ const {
 	ADMIN_PASSWORD,
 	CONSUMER_KEY,
 	CONSUMER_SECRET,
+	KLARNA_API_USERNAME,
+	KLARNA_API_PASSWORD,
 } = process.env;
 
 export const AdminLogin = async (page: Page) => {
@@ -29,56 +31,43 @@ export const GetApiClient = async (): Promise<APIRequestContext> => {
 	});
 }
 
-export const getTestOrder = () => {
-	return {
-		billing: {
-			first_name: "John",
-			last_name: "Doe",
-			address_1: "969 Market",
-			address_2: "",
-			city: "San Francisco",
-			state: "CA",
-			postcode: "94103",
-			country: "US",
-			email: "e2e@krokedil.se"
-		},
-		shipping: {
-			first_name: "John",
-			last_name: "Doe",
-			address_1: "969 Market",
-			address_2: "",
-			city: "San Francisco",
-			state: "CA",
-			postcode: "94103",
-			country: "US",
-		},
-		line_items: [],
-		shipping_lines: [
-			{
-				method_id: "flat_rate",
-				method_title: "Flat Rate",
-				total: "10.00",
-			},
-		],
-		fee_lines: [
-			{
-				name: "Fee",
-				total: "10.00",
-			},
-		],
-		payment_method: "bacs",
-		payment_method_title: "Direct Bank Transfer",
-		status: "",
-	};
-};
+export const GetVersionNumbers = async (adminPage: Page) => {
+	const apiClient = await GetApiClient();
 
-export const getTestProduct = () => {
-	return {
-		name: "Test Product",
-		type: "simple",
-		regular_price: "9.99",
-		stock_quantity: 10,
-		manage_stock: true,
-		backorders: 'notify'
-	};
-};
+	// Get the system status.
+	const response = await apiClient.get('system_status');
+	const status = await response.json();
+
+	// Set the environment variables.
+	process.env.WC_VERSION = status.environment.version.trim().split(' ')[0];
+	process.env.WP_VERSION = status.environment.wp_version.trim().split(' ')[0];
+	process.env.PHP_VERSION = status.environment.php_version.trim().split(' ')[0];
+}
+
+export const SetKpSettings = async (adminPage: Page) => {
+	// Set api credentials and enable the gateway.
+	if (KLARNA_API_USERNAME) {
+		const apiClient = await GetApiClient();
+
+		const settings = {
+			enabled: {
+				value: "yes"
+			},
+			testmode: {
+				value: "yes"
+			},
+			logging: {
+				value: "yes"
+			},
+			test_merchant_id_se: {
+				value: KLARNA_API_USERNAME
+			},
+			test_shared_secret_se: {
+				value: KLARNA_API_PASSWORD
+			},
+		};
+
+		// Update settings.
+		await apiClient.post('payment_gateways/klarna_payments', { data: settings });
+	}
+}
