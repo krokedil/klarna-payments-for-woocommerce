@@ -31,6 +31,28 @@ export const GetWcApiClient = async (): Promise<APIRequestContext> => {
 	});
 }
 
+export const GetKpApiClient = async (): Promise<APIRequestContext> => {
+	return await request.newContext({
+		baseURL: `https://api.playground.klarna.com/payments/v1/`,
+		extraHTTPHeaders: {
+			Authorization: `Basic ${Buffer.from(
+				`${KLARNA_API_USERNAME ?? 'admin'}:${KLARNA_API_PASSWORD ?? 'password'}`
+			).toString('base64')}`,
+		},
+	});
+}
+
+export const GetKomApiClient = async (): Promise<APIRequestContext> => {
+	return await request.newContext({
+		baseURL: `https://api.playground.klarna.com/ordermanagement/v1/`,
+		extraHTTPHeaders: {
+			Authorization: `Basic ${Buffer.from(
+				`${KLARNA_API_USERNAME ?? 'admin'}:${KLARNA_API_PASSWORD ?? 'password'}`
+			).toString('base64')}`,
+		},
+	});
+}
+
 export const GetVersionNumbers = async (adminPage: Page) => {
 	const apiClient = await GetWcApiClient();
 
