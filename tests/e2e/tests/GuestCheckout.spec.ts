@@ -7,7 +7,7 @@ import { GetWcApiClient } from '../utils/Utils';
 import { VerifyOrderRecieved } from '../utils/VerifyOrder';
 
 
-test.describe('Guest Checkout', () => {
+test.describe('Guest Checkout @shortcode', () => {
 	test.use({ storageState: process.env.GUESTSTATE });
 
 	const paymentMethodId = 'klarna_payments';

@@ -6,7 +6,7 @@ import { OrderRecieved } from '../pages/OrderRecieved';
 import { GetWcApiClient } from '../utils/Utils';
 import { VerifyOrderRecieved } from '../utils/VerifyOrder';
 
-test.describe('Customer Checkout', () => {
+test.describe('Customer Checkout @shortcode', () => {
 
 	test.use({ storageState: process.env.GUESTSTATE });
 
