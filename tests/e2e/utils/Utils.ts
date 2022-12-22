@@ -64,6 +64,15 @@ export const GetVersionNumbers = async (adminPage: Page) => {
 	process.env.WC_VERSION = status.environment.version.trim().split(' ')[0];
 	process.env.WP_VERSION = status.environment.wp_version.trim().split(' ')[0];
 	process.env.PHP_VERSION = status.environment.php_version.trim().split(' ')[0];
+
+	// Get the name and plugin version of the plugin from the active_plugins.
+	const activePlugins = status.active_plugins;
+	const plugin = activePlugins.find((activePlugin: any) => activePlugin.plugin.includes('klarna-payments-for-woocommerce'));
+
+	if (plugin) {
+		process.env.PLUGIN_NAME = plugin.name;
+		process.env.PLUGIN_VERSION = plugin.version;
+	}
 }
 
 export const SetKpSettings = async (adminPage: Page) => {
