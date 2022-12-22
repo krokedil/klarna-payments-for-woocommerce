@@ -1,6 +1,6 @@
 import { APIRequestContext } from "playwright-chromium";
 import { Coupon, Product, ShippingZone, TaxClass } from "./Types";
-import { GetApiClient } from "./Utils";
+import { GetWcApiClient } from "./Utils";
 
 const wcSettings: { [key: string]: string } = {
 	woocommerce_price_num_decimals: "2",
@@ -393,7 +393,7 @@ const shippingZones: ShippingZone[] = [
 ];
 
 export const Setup = async () => {
-	const apiClient = await GetApiClient();
+	const apiClient = await GetWcApiClient();
 
 	// Set all the WC general settings, map wcSettings to
 	await SetWcGeneralSettings(apiClient);
@@ -412,7 +412,7 @@ export const Setup = async () => {
 }
 
 export const Teardown = async () => {
-	const apiClient = await GetApiClient();
+	const apiClient = await GetWcApiClient();
 
 	// Delete all the products.
 	await DeleteProducts(apiClient);

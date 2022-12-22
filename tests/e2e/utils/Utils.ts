@@ -20,7 +20,7 @@ export const AdminLogin = async (page: Page) => {
 	await page.waitForLoadState('networkidle');
 }
 
-export const GetApiClient = async (): Promise<APIRequestContext> => {
+export const GetWcApiClient = async (): Promise<APIRequestContext> => {
 	return await request.newContext({
 		baseURL: `${config.use.baseURL}/wp-json/wc/v3/`,
 		extraHTTPHeaders: {
@@ -32,7 +32,7 @@ export const GetApiClient = async (): Promise<APIRequestContext> => {
 }
 
 export const GetVersionNumbers = async (adminPage: Page) => {
-	const apiClient = await GetApiClient();
+	const apiClient = await GetWcApiClient();
 
 	// Get the system status.
 	const response = await apiClient.get('system_status');
@@ -47,7 +47,7 @@ export const GetVersionNumbers = async (adminPage: Page) => {
 export const SetKpSettings = async (adminPage: Page) => {
 	// Set api credentials and enable the gateway.
 	if (KLARNA_API_USERNAME) {
-		const apiClient = await GetApiClient();
+		const apiClient = await GetWcApiClient();
 
 		const settings = {
 			enabled: true,

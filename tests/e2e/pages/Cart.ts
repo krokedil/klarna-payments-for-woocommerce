@@ -1,6 +1,5 @@
-import { APIRequestContext, Locator, Page } from '@playwright/test';
-import { Address } from '../utils/Types';
-import { GetApiClient } from '../utils/Utils';
+import { Page } from '@playwright/test';
+import { GetWcApiClient } from '../utils/Utils';
 
 export class Cart {
 	readonly page: Page;
@@ -9,7 +8,7 @@ export class Cart {
 		this.page = page;
 	}
 
-	async goto(productId?: number) {
+	async goto() {
 		await this.page.goto('/cart');
 	}
 
@@ -49,7 +48,7 @@ export class Cart {
 	}
 
 	async getProduct(sku: string): Promise<any> {
-		const apiclient = await GetApiClient();
+		const apiclient = await GetWcApiClient();
 
 		const response = await apiclient.get(`products`, {
 			params: {
@@ -63,7 +62,7 @@ export class Cart {
 	}
 
 	async getProducts(skus: string[]): Promise<any[] | any> {
-		const apiclient = await GetApiClient();
+		const apiclient = await GetWcApiClient();
 
 		const response = await apiclient.get(`products`, {
 			params: {
