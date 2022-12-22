@@ -290,16 +290,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	private function process_blocks_order( $order ) {
 		// Create a session for the order.
-		$session = KP_WC()->api->create_session( $order );
+		$session = KP_WC()->session->get_session( $order );
 
 		// Check for any errors.
 		if ( is_wp_error( $session ) ) {
 			return array(
 				'result'   => 'error',
 				'redirect' => '#',
-				'messages' => array(
-					__( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
-				),
+				'message' => __( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
 			);
 		}
 
@@ -312,9 +310,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return array(
 				'result'   => 'error',
 				'redirect' => '#',
-				'messages' => array(
-					__( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
-				),
+				'message' => __( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
 			);
 		}
 
