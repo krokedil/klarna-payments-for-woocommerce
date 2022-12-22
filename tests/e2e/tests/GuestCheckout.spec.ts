@@ -2,6 +2,7 @@ import { test, expect, APIRequestContext } from '@playwright/test';
 import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
 import { Cart } from '../pages/Cart';
 import { Checkout } from '../pages/Checkout';
+import { CheckoutBlock } from '../pages/CheckoutBlock';
 import { OrderRecieved } from '../pages/OrderRecieved';
 import { GetWcApiClient } from '../utils/Utils';
 import { VerifyOrderRecieved } from '../utils/VerifyOrder';
@@ -299,5 +300,45 @@ test.describe('Guest Checkout @shortcode', () => {
 		await checkoutPage.placeOrder();
 
 		await iframe.hasError('There has been an error with your address');
+	});
+});
+
+test.describe('Guest Checkout @checkoutBlock', () => {
+	test.use({ storageState: process.env.GUESTSTATE });
+
+	const paymentMethodId = 'klarna_payments';
+
+	let orderId: string;
+
+	test.afterEach(async () => {
+		// Delete the order from WooCommerce.
+		const wcApiClient = await GetWcApiClient();
+		await wcApiClient.delete(`orders/${orderId}`);
+	});
+
+	test('Can buy 6x 99.99 products with 25% tax.', async ({ page }) => {
+		const cartPage = new Cart(page);
+		const orderRecievedPage = new OrderRecieved(page);
+		const checkoutPage = new CheckoutBlock(page);
+
+		// Add products to the cart.
+		await cartPage.addtoCart(['simple-25', 'simple-25', 'simple-25', 'simple-25', 'simple-25', 'simple-25']);
+
+		// Go to the checkout page.
+		await checkoutPage.goto();
+
+		// Fill in the billing address.
+		await checkoutPage.fillShippingAddress();
+
+		// Place the order.
+		await checkoutPage.placeOrder();
+
+		// Verify that the order was placed.
+		await expect(page).toHaveURL(/order-received/);
+
+		orderId = await orderRecievedPage.getOrderId();
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
 	});
 });
