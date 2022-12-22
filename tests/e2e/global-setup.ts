@@ -17,9 +17,6 @@ const globalSetup = async (config: FullConfig) => {
 
 	await setupContexts(baseURL, storageState.toString());
 
-	// Save contexts as states.
-	await adminContext.storageState({ path: process.env.ADMINSTATE });
-	await guestContext.storageState({ path: process.env.GUESTSTATE });
 
 	// Login to the admin page.
 	await AdminLogin(adminPage);
@@ -27,6 +24,10 @@ const globalSetup = async (config: FullConfig) => {
 	await SetKpSettings(adminPage);
 
 	await SetVersionNumbers(adminPage);
+
+	// Save contexts as states.
+	await adminContext.storageState({ path: process.env.ADMINSTATE });
+	await guestContext.storageState({ path: process.env.GUESTSTATE });
 
 	await adminContext.close();
 	await guestContext.close();
