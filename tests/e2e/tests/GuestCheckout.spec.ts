@@ -2,30 +2,40 @@ import { test, expect, APIRequestContext } from '@playwright/test';
 import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
 import { Cart } from '../pages/Cart';
 import { Checkout } from '../pages/Checkout';
+import { OrderRecieved } from '../pages/OrderRecieved';
+import { GetWcApiClient } from '../utils/Utils';
+import { VerifyOrderRecieved } from '../utils/VerifyOrder';
 
+test.use({ storageState: process.env.GUESTSTATE });
+
+const paymentMethodId = 'klarna_payments';
+let orderId: string;
 test.describe('Guest Checkout', () => {
-	test.use({ storageState: process.env.GUESTSTATE });
-
-	let orderId;
+	test.afterEach(async () => {
+		// Delete the order from WooCommerce.
+		const wcApiClient = await GetWcApiClient();
+		await wcApiClient.delete(`orders/${orderId}`);
+	});
 
 	test('Can buy 6x 99.99 products with 25% tax.', async ({ page }) => {
 		const cartPage = new Cart(page);
+		const orderRecievedPage = new OrderRecieved(page);
+		const checkoutPage = new Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25', 'simple-25', 'simple-25', 'simple-25', 'simple-25', 'simple-25']);
 
-		const checkoutPage = new Checkout(page);
-
 		// Go to the checkout page.
 		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
 
 		// Fill in the billing address.
 		await checkoutPage.fillBillingAddress();
 
 		// Place the order.
 		await checkoutPage.placeOrder();
-
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Fill in the NIN.
 		await iframe.fillNin();
@@ -35,26 +45,30 @@ test.describe('Guest Checkout', () => {
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
 	});
 
 	test('Can buy products with different tax rates', async ({ page }) => {
 		const cartPage = new Cart(page);
+		const orderRecievedPage = new OrderRecieved(page);
+		const checkoutPage = new Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25', 'simple-12', 'simple-06', 'simple-00']);
 
-		const checkoutPage = new Checkout(page);
-
 		// Go to the checkout page.
 		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
 
 		// Fill in the billing address.
 		await checkoutPage.fillBillingAddress();
 
 		// Place the order.
 		await checkoutPage.placeOrder();
-
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Fill in the NIN.
 		await iframe.fillNin();
@@ -64,26 +78,30 @@ test.describe('Guest Checkout', () => {
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
 	});
 
-	test('Can buy products that dont require shipping', async ({ page }) => {
+	test('Can buy products that don\'t require shipping', async ({ page }) => {
 		const cartPage = new Cart(page);
+		const orderRecievedPage = new OrderRecieved(page);
+		const checkoutPage = new Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page);
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-virtual-downloadable-25', 'simple-virtual-downloadable-12', 'simple-virtual-downloadable-06', 'simple-virtual-downloadable-00']);
 
-		const checkoutPage = new Checkout(page);
-
 		// Go to the checkout page.
 		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
 
 		// Fill in the billing address.
 		await checkoutPage.fillBillingAddress();
 
 		// Place the order.
 		await checkoutPage.placeOrder();
-
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Fill in the NIN.
 		await iframe.fillNin();
@@ -93,26 +111,30 @@ test.describe('Guest Checkout', () => {
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
 	});
 
 	test('Can buy variable products', async ({ page }) => {
 		const cartPage = new Cart(page);
+		const orderRecievedPage = new OrderRecieved(page);
+		const checkoutPage = new Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['variable-25-blue', 'variable-12-red', 'variable-12-red', 'variable-25-black', 'variable-12-black']);
 
-		const checkoutPage = new Checkout(page);
-
 		// Go to the checkout page.
 		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
 
 		// Fill in the billing address.
 		await checkoutPage.fillBillingAddress();
 
 		// Place the order.
 		await checkoutPage.placeOrder();
-
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Fill in the NIN.
 		await iframe.fillNin();
@@ -122,18 +144,24 @@ test.describe('Guest Checkout', () => {
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
 	});
 
 	test('Can place order with separate shipping address', async ({ page }) => {
 		const cartPage = new Cart(page);
+		const orderRecievedPage = new OrderRecieved(page);
+		const checkoutPage = new Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25']);
 
-		const checkoutPage = new Checkout(page);
-
 		// Go to the checkout page.
 		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
 
 		// Fill in the billing address.
 		await checkoutPage.fillBillingAddress();
@@ -144,8 +172,6 @@ test.describe('Guest Checkout', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		const iframe = new KlarnaPaymentsIframe(page)
-
 		// Fill in the NIN.
 		await iframe.fillNin();
 
@@ -154,18 +180,24 @@ test.describe('Guest Checkout', () => {
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
 	});
 
 	test('Can place order with Company name in both billing and shipping address', async ({ page }) => {
 		const cartPage = new Cart(page);
+		const orderRecievedPage = new OrderRecieved(page);
+		const checkoutPage = new Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25']);
 
-		const checkoutPage = new Checkout(page);
-
 		// Go to the checkout page.
 		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
 
 		// Fill in the billing address.
 		await checkoutPage.fillBillingAddress({ company: 'Test Company Billing' });
@@ -176,8 +208,6 @@ test.describe('Guest Checkout', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		const iframe = new KlarnaPaymentsIframe(page)
-
 		// Fill in the NIN.
 		await iframe.fillNin();
 
@@ -186,18 +216,24 @@ test.describe('Guest Checkout', () => {
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
 	});
 
 	test('Can change shipping method', async ({ page }) => {
 		const cartPage = new Cart(page);
+		const orderRecievedPage = new OrderRecieved(page);
+		const checkoutPage = new Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25']);
 
-		const checkoutPage = new Checkout(page);
-
 		// Go to the checkout page.
 		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
 
 		// Fill in the billing address.
 		await checkoutPage.fillBillingAddress();
@@ -208,8 +244,6 @@ test.describe('Guest Checkout', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		const iframe = new KlarnaPaymentsIframe(page)
-
 		// Fill in the NIN.
 		await iframe.fillNin();
 
@@ -218,5 +252,35 @@ test.describe('Guest Checkout', () => {
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
+	});
+
+	test('Can handle special characters in address field', async ({ page }) => {
+		const cartPage = new Cart(page);
+		const checkoutPage = new Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page)
+
+		// Add products to the cart.
+		await cartPage.addtoCart(['simple-25']);
+
+		// Go to the checkout page.
+		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
+
+		// Fill in the billing address.
+		await checkoutPage.fillBillingAddress(
+			{
+				firstName: 'Test ÅÄÖ',
+				lastName: 'Test @£$€{]}{[}~^`´',
+			}
+		);
+
+		// Place the order.
+		await checkoutPage.placeOrder();
+
+		await iframe.hasError('There has been an error with your address');
 	});
 });

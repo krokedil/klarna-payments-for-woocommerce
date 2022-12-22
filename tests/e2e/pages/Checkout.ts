@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { Address } from '../utils/Types';
 
 export class Checkout {
@@ -152,5 +152,10 @@ export class Checkout {
 
 	async placeOrder() {
 		await this.placeOrderButton.click();
+	}
+
+	async hasPaymentMethodId(paymentMethodId: string) {
+		// Expect to find a radio input that contains the payment method id in the element id. Might also have multiple in cases like KP.
+		await expect(this.page.locator(`input[id*="${paymentMethodId}"]`).first()).toBeVisible();
 	}
 }
