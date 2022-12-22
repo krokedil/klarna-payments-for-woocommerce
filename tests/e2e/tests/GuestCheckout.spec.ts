@@ -6,11 +6,14 @@ import { OrderRecieved } from '../pages/OrderRecieved';
 import { GetWcApiClient } from '../utils/Utils';
 import { VerifyOrderRecieved } from '../utils/VerifyOrder';
 
-test.use({ storageState: process.env.GUESTSTATE });
 
-const paymentMethodId = 'klarna_payments';
-let orderId: string;
 test.describe('Guest Checkout', () => {
+	test.use({ storageState: process.env.GUESTSTATE });
+
+	const paymentMethodId = 'klarna_payments';
+
+	let orderId: string;
+
 	test.afterEach(async () => {
 		// Delete the order from WooCommerce.
 		const wcApiClient = await GetWcApiClient();
