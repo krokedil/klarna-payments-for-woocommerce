@@ -66,14 +66,16 @@ class KP_Cart_Shipping_Helper extends KP_Cart_Helper {
 	 * @return int
 	 */
 	public static function get_tax_rate( $cart_item ) {
-		// Get the first key from the tax rates array.
-		$tax_rate_id   = array_key_first( $cart_item->get_taxes() );
 		$item_tax_rate = 0;
-		$_tax          = new WC_Tax();
-		$tmp_rates     = $_tax->get_rates( $tax_rate_id );
-		$vat           = array_shift( $tmp_rates );
-		if ( isset( $vat['rate'] ) ) {
-			$item_tax_rate = round( $vat['rate'] * 100 );
+
+		// Get the first key from the tax rates array.
+		$taxes = $cart_item->get_taxes();
+
+		if ( ! empty( $taxes ) ) {
+			$tax_rate_id   = array_key_first( $taxes );
+			$_tax          = new WC_Tax();
+			$vat           = $_tax->get_rate_percent_value( $tax_rate_id );
+			$item_tax_rate = round( $vat * 100 );
 		}
 
 		return apply_filters( 'wc_kp_tax_rate_cart_item', round( $item_tax_rate ), $cart_item );
@@ -86,7 +88,7 @@ class KP_Cart_Shipping_Helper extends KP_Cart_Helper {
 	 * @return int
 	 */
 	public static function get_total_amount( $cart_item ) {
-		return apply_filters( 'wc_kp_total_amount_cart_item', self::format_number( $cart_item->get_cost() ), $cart_item );
+		return apply_filters( 'wc_kp_total_amount_cart_item', self::format_number( $cart_item->get_cost() + $cart_item->get_shipping_tax() ), $cart_item );
 	}
 
 	/**
