@@ -49,6 +49,8 @@ test.describe('Guest Checkout', () => {
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
 
+		orderId = await orderRecievedPage.getOrderId();
+
 		// Verify the order details.
 		await VerifyOrderRecieved(orderRecievedPage);
 	});
@@ -81,6 +83,8 @@ test.describe('Guest Checkout', () => {
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
+
+		orderId = await orderRecievedPage.getOrderId();
 
 		// Verify the order details.
 		await VerifyOrderRecieved(orderRecievedPage);
@@ -115,6 +119,8 @@ test.describe('Guest Checkout', () => {
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
 
+		orderId = await orderRecievedPage.getOrderId();
+
 		// Verify the order details.
 		await VerifyOrderRecieved(orderRecievedPage);
 	});
@@ -147,6 +153,8 @@ test.describe('Guest Checkout', () => {
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
+
+		orderId = await orderRecievedPage.getOrderId();
 
 		// Verify the order details.
 		await VerifyOrderRecieved(orderRecievedPage);
@@ -184,6 +192,8 @@ test.describe('Guest Checkout', () => {
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
 
+		orderId = await orderRecievedPage.getOrderId();
+
 		// Verify the order details.
 		await VerifyOrderRecieved(orderRecievedPage);
 	});
@@ -220,6 +230,8 @@ test.describe('Guest Checkout', () => {
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
 
+		orderId = await orderRecievedPage.getOrderId();
+
 		// Verify the order details.
 		await VerifyOrderRecieved(orderRecievedPage);
 	});
@@ -255,6 +267,8 @@ test.describe('Guest Checkout', () => {
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
+
+		orderId = await orderRecievedPage.getOrderId();
 
 		// Verify the order details.
 		await VerifyOrderRecieved(orderRecievedPage);
