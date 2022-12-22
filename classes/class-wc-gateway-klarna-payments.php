@@ -264,8 +264,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			);
 		}
 
-		$order->update_meta_data( '_wc_klarna_country', $klarna_country );
-		$order->update_meta_data( '_kp_session_id', $klarna_session_id );
+		// Set both WooCommerce meta data, and session meta data for now.
+		$order->add_meta_data( '_wc_klarna_country', $klarna_country, true );
+		$order->add_meta_data( '_kp_session_id', $klarna_session_id, true );
+
+		// Save the order.
+		$order->save();
 
 		// Return success without redirect URL since our script handles the return instead of WooCommerce.
 		return array(
