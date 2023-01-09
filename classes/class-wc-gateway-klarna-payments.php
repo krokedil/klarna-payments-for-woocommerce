@@ -154,7 +154,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		$country = strtolower( kp_get_klarna_country( $order ) );
-		if ( ! isset( KP_Form_Fields::$kp_form_auto_countries [ $country ] ) ) {
+		if ( ! isset( KP_Form_Fields::$kp_form_auto_countries[ $country ] ) ) {
 			kp_unset_session_values();
 
 			return new WP_Error( 'country', "Country ({$country}) is not supported by Klarna Payments." );
@@ -271,13 +271,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Save the order.
 		$order->save();
 
+		$customer_helper = new KP_Order_Customer_Helper( $order );
+
 		// Return success without redirect URL since our script handles the return instead of WooCommerce.
 		return array(
 			'result'    => 'success',
 			'order_id'  => $order_id,
 			'addresses' => array(
-				'billing'  => KP_Customer_Data::get_billing_address( $order_id, $this->customer_type ),
-				'shipping' => KP_Customer_Data::get_shipping_address( $order_id, $this->customer_type ),
+				'billing'  => $customer_helper::get_billing_address( $this->customer_type ),
+				'shipping' => $customer_helper::get_shipping_address( $this->customer_type ),
 			),
 		);
 	}
@@ -297,7 +299,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return array(
 				'result'   => 'error',
 				'redirect' => '#',
-				'message' => __( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
+				'message'  => __( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
 			);
 		}
 
@@ -310,7 +312,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return array(
 				'result'   => 'error',
 				'redirect' => '#',
-				'message' => __( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
+				'message'  => __( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
 			);
 		}
 
