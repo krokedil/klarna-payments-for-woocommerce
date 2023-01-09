@@ -80,6 +80,16 @@ class KP_Order_Customer_Helper extends KP_Customer {
 			$address['organization_name'] = stripslashes( self::$order->get_shipping_company() );
 		}
 
+		// Get the billing address as well.
+		$billing_address = self::get_billing_address( $customer_type );
+
+		// Replace any empty values with the billing address value instead.
+		foreach ( $address as $key => $value ) {
+			if ( empty( $value ) ) {
+				$address[ $key ] = $billing_address[ $key ];
+			}
+		}
+
 		return apply_filters( 'wc_kp_shipping_address_order', $address, $customer_type, self::$order );
 	}
 }
