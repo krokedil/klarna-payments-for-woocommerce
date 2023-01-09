@@ -20,6 +20,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		public static function init() {
 			self::add_ajax_events();
 		}
+
 		/**
 		 * Hook in methods - uses WordPress ajax handlers (admin-ajax).
 		 */
@@ -96,9 +97,9 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 			}
 			// @codingStandardsIgnoreStart
-			$order_id  = $_POST['order_id'];
+			$order_id = $_POST['order_id'];
 			$show_form = $_POST['show_form'];
-			$order     = wc_get_order( $order_id );
+			$order = wc_get_order( $order_id );
 			// @codingStandardsIgnoreEnd
 			if ( 'true' === $show_form ) {
 				$order->add_order_note( __( 'Customer aborted purchase with Klarna.', 'klarna-payments-for-woocommerce' ) );
