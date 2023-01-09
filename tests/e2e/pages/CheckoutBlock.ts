@@ -40,7 +40,7 @@ export class CheckoutBlock {
 		this.placeOrderButton = this.page.locator('button.wc-block-components-checkout-place-order-button');
 
 		this.checkoutForm = page.locator('form.wc-block-components-form.wc-block-checkout__form');
-		this.toggleBillingAddress = this.checkoutForm.locator('#checkbox-control-1');
+		this.toggleBillingAddress = this.checkoutForm.locator('div.wc-block-checkout__use-address-for-billing input[type="checkbox"]');
 
 		this.billingFirstName = this.checkoutForm.locator('#billing-first_name');
 		this.billingLastName = this.checkoutForm.locator('#billing-last_name');

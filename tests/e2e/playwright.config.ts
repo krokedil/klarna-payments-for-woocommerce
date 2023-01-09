@@ -19,7 +19,7 @@ const config: PlaywrightTestConfig = {
 	forbidOnly: !!CI,
 	retries: 0,
 	workers: CI ? 4 : undefined,
-	reporter: CI ? [['list'], ['github'], ['./reporter/slackReporter.ts'], ['./reporter/githubReporter.ts']] : [['list'], ['./reporter/slackReporter.ts']],
+	reporter: CI ? [['list'], ['github'], ['./reporter/slackReporter.ts'], ['./reporter/githubReporter.ts']] : [['list'], ['html']],
 	globalSetup: require.resolve('./global-setup'),
 	globalTeardown: require.resolve('./global-teardown'),
 	use: {

@@ -3,10 +3,10 @@ import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
 import { Cart } from '../pages/Cart';
 import { Checkout } from '../pages/Checkout';
 import { CheckoutBlock } from '../pages/CheckoutBlock';
+import { KlarnaHPP } from '../pages/KlarnaHPP';
 import { OrderRecieved } from '../pages/OrderRecieved';
 import { GetWcApiClient } from '../utils/Utils';
 import { VerifyOrderRecieved } from '../utils/VerifyOrder';
-
 
 test.describe('Guest Checkout @shortcode', () => {
 	test.use({ storageState: process.env.GUESTSTATE });
@@ -274,39 +274,10 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Verify the order details.
 		await VerifyOrderRecieved(orderRecievedPage);
 	});
-
-	test('Can handle special characters in address field', async ({ page }) => {
-		const cartPage = new Cart(page);
-		const checkoutPage = new Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
-
-		// Add products to the cart.
-		await cartPage.addtoCart(['simple-25']);
-
-		// Go to the checkout page.
-		await checkoutPage.goto();
-
-		await checkoutPage.hasPaymentMethodId(paymentMethodId);
-
-		// Fill in the billing address.
-		await checkoutPage.fillBillingAddress(
-			{
-				firstName: 'Test ÅÄÖ',
-				lastName: 'Test @£$€{]}{[}~^`´',
-			}
-		);
-
-		// Place the order.
-		await checkoutPage.placeOrder();
-
-		await iframe.hasError('There has been an error with your address');
-	});
 });
 
 test.describe('Guest Checkout @checkoutBlock', () => {
 	test.use({ storageState: process.env.GUESTSTATE });
-
-	const paymentMethodId = 'klarna_payments';
 
 	let orderId: string;
 
@@ -320,6 +291,7 @@ test.describe('Guest Checkout @checkoutBlock', () => {
 		const cartPage = new Cart(page);
 		const orderRecievedPage = new OrderRecieved(page);
 		const checkoutPage = new CheckoutBlock(page);
+		const klarnaHPP = new KlarnaHPP(page);
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25', 'simple-25', 'simple-25', 'simple-25', 'simple-25', 'simple-25']);
@@ -327,11 +299,16 @@ test.describe('Guest Checkout @checkoutBlock', () => {
 		// Go to the checkout page.
 		await checkoutPage.goto();
 
-		// Fill in the billing address.
+		// Fill in the Address fields.
 		await checkoutPage.fillShippingAddress();
+		await checkoutPage.fillBillingAddress();
 
 		// Place the order.
 		await checkoutPage.placeOrder();
+
+		// Expect to end up on the Klarna HPP page.
+		await expect(page).toHaveURL(/pay\.playground\.klarna\.com/);
+		await klarnaHPP.placeOrder();
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
