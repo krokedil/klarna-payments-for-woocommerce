@@ -144,32 +144,6 @@ function kp_get_locale() {
 }
 
 /**
- * Adds customer data to the create session call to KP. Used by payment block.
- *
- * @param array $request_args The request arguments.
- * @param int   $order_id The WooCommerce order id.
- * @return array
- */
-function kp_send_customer_data_with_session( $request_args, $order_id ) {
-	if ( null === $order_id ) {
-		return $request_args;
-	}
-
-	$body     = json_decode( $request_args['body'], true );
-	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-
-	$billing_address  = KP_Customer_Data::get_billing_address( $order_id, $settings['customer_type'] ?? 'b2c' );
-	$shipping_address = KP_Customer_Data::get_shipping_address( $order_id, $settings['customer_type'] ?? 'b2c' );
-
-	$body['billing_address']  = $billing_address;
-	$body['shipping_address'] = $shipping_address;
-
-	$request_args['body'] = wp_json_encode( $body );
-
-	return $request_args;
-}
-
-/**
  * Prints error message to the frotend on api errors.
  *
  * @param WP_Error $wp_error The error response.

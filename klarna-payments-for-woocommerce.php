@@ -162,9 +162,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				$current_screen = get_current_screen();
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
-					<div class="notice notice-warning">
-						<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
-					</div>
+<div class="notice notice-warning">
+	<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
+</div>
 					<?php
 				}
 			}
@@ -224,8 +224,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				$permalinks = get_option( 'permalink_structure' );
 				if ( empty( $permalinks ) ) {
 					?>
-				<div class="kp-message notice woocommerce-message notice-error">
-				<a class="woocommerce-message-close notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
+<div class="kp-message notice woocommerce-message notice-error">
+	<a class="woocommerce-message-close notice-dismiss"
+		href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
 					<?php
 
 					echo wp_kses_post(
@@ -238,7 +239,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 						)
 					);
 					?>
-					</div>
+</div>
 					<?php
 				}
 			}
@@ -255,7 +256,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 
 			// Classes.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php';  // This is loaded very early becasue we'll need these settings right away.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php'; // This is loaded very early becasue we'll need these settings right away.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-gateway-klarna-payments.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-gdpr.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-ajax.php';
@@ -279,18 +280,21 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-hpp.php';
 
 			// Request helpers.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-customer-data.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-customer.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-iframe.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-order-lines.php';
 			// Order helpers.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-helper.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-coupon-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-customer-helper.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-fee-helper.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-item-helper.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-shipping-helper.php';
+
 			// Cart helpers.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-helper.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-coupon-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-customer-helper.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-fee-helper.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-item-helper.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-shipping-helper.php';
