@@ -54,12 +54,26 @@ abstract class KP_Requests_Post extends KP_Requests {
 	 *
 	 * @return KP_Order_Lines
 	 */
-	public function get_helper() {
+	public function get_order_lines_helper() {
 		if ( $this->arguments['order_id'] ?? false && ! empty( $this->arguments['order_id'] ) ) {
 			$order = wc_get_order( $this->arguments['order_id'] );
 			return new KP_Order_Helper( $order );
 		} else {
 			return new KP_Cart_Helper( WC()->cart );
+		}
+	}
+
+	/**
+	 * Returns the request helper for the request based on if we have a order id passed or not.
+	 *
+	 * @return KP_Customer
+	 */
+	public function get_customer_helper() {
+		if ( $this->arguments['order_id'] ?? false && ! empty( $this->arguments['order_id'] ) ) {
+			$order = wc_get_order( $this->arguments['order_id'] );
+			return new KP_Order_Customer_Helper( $order );
+		} else {
+			return new KP_Cart_Customer_Helper();
 		}
 	}
 }
