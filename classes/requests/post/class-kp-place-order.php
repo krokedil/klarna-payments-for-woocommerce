@@ -21,16 +21,8 @@ class KP_Place_Order extends KP_Requests_Post {
 
 		$this->log_title      = 'Place order';
 		$this->request_filter = 'wc_klarna_payments_place_order_args';
-	}
-
-	/**
-	 * Get the request url.
-	 *
-	 * @return string
-	 */
-	protected function get_request_url() {
-		$auth_token = $this->arguments['auth_token'];
-		return $this->environment . "payments/v1/authorizations/${auth_token}/order";
+		$auth_token           = $this->arguments['auth_token'];
+		$this->endpoint       = "payments/v1/authorizations/${auth_token}/order";
 	}
 
 	/**

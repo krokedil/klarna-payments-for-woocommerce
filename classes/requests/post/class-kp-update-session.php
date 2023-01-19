@@ -21,16 +21,8 @@ class KP_Update_Session extends KP_Requests_Post {
 
 		$this->log_title      = 'Update session';
 		$this->request_filter = 'wc_klarna_payments_update_session_args';
-	}
-
-	/**
-	 * Get the request url.
-	 *
-	 * @return string
-	 */
-	protected function get_request_url() {
-		$session_id = $this->arguments['session_id'];
-		return $this->environment . "payments/v1/sessions/${session_id}";
+		$session_id           = $this->arguments['session_id'];
+		$this->endpoint       = "payments/v1/sessions/${session_id}";
 	}
 
 	/**

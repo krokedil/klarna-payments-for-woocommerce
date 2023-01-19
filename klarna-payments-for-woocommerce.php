@@ -255,6 +255,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				return;
 			}
 
+			// Include the autoloader from composer.
+			require_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
+
 			// Classes.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php'; // This is loaded very early becasue we'll need these settings right away.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-gateway-klarna-payments.php';

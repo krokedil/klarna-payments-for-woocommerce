@@ -21,15 +21,7 @@ class KP_Create_HPP extends KP_Requests_Post {
 
 		$this->log_title      = 'Create HPP';
 		$this->request_filter = 'wc_klarna_payments_create_hpp_args';
-	}
-
-	/**
-	 * Get the request url.
-	 *
-	 * @return string
-	 */
-	protected function get_request_url() {
-		return $this->environment . 'hpp/v1/sessions';
+		$this->endpoint       = 'hpp/v1/sessions';
 	}
 
 	/**

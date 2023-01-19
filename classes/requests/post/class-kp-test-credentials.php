@@ -21,19 +21,7 @@ class KP_Test_Credentials extends KP_Requests_Post {
 
 		$this->log_title      = 'Test credentials';
 		$this->request_filter = 'wc_klarna_payments_create_session_args';
-	}
-
-	/**
-	 * Overrides the default envinment setter, to set from the passed arguments instead.
-	 *
-	 * @return void
-	 */
-	public function set_environment() {
-		$region     = $this->country_params['endpoint'] ?? ''; // Get the region from the country parameters, blank for EU.
-		$playground = 'yes' === $this->arguments['testmode'] ? 'playground' : ''; // If testmode is enabled, add playground to the subdomain.
-		$subdomain  = "api${region}.${playground}"; // Combine the string to one subdomain.
-
-		$this->environment = "https://${subdomain}.klarna.com/"; // Return the full base url for the api.
+		$this->endpoint       = 'payments/v1/sessions';
 	}
 
 	/**
@@ -47,23 +35,16 @@ class KP_Test_Credentials extends KP_Requests_Post {
 	}
 
 	/**
-	 * Get the request url.
-	 *
-	 * @return string
-	 */
-	protected function get_request_url() {
-		return $this->environment . 'payments/v1/sessions';
-	}
-
-	/**
 	 * Get the body for the request.
 	 *
 	 * @return array
 	 */
 	protected function get_body() {
+		$country_data = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $this->arguments['country'] ?? '' ) ] ?? null;
+
 		return array(
 			'purchase_country'  => strtoupper( $this->arguments['country'] ),
-			'purchase_currency' => $this->country_params['currency'],
+			'purchase_currency' => $country_data['currency'],
 			'locale'            => 'en-US',
 			'order_amount'      => 100,
 			'order_lines'       => array(
