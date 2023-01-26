@@ -1,6 +1,7 @@
 {
   "require": {
-    "krokedil/wp-api": "*"
+    "krokedil/wp-api": "*",
+    "krokedil/woocommerce": "*"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "^2.3",
@@ -12,6 +13,10 @@
     {
       "type": "vcs",
       "url": "git@github.com:krokedil/wp-api.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:krokedil/woocommerce.git"
     }
   ],
   "minimum-stability": "dev"

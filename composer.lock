@@ -4,20 +4,62 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de6e0fc448f5cf2ccf0fdb49f4b3c1d2",
+    "content-hash": "be275a8f57325833f174290e64663a49",
     "packages": [
+        {
+            "name": "krokedil/woocommerce",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:krokedil/woocommerce.git",
+                "reference": "ce066d614b65be6c6e19a14aab983d8cbf8bf570"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/ce066d614b65be6c6e19a14aab983d8cbf8bf570",
+                "reference": "ce066d614b65be6c6e19a14aab983d8cbf8bf570",
+                "shasum": ""
+            },
+            "require-dev": {
+                "php": "~7.1 || ~8.0",
+                "php-stubs/woocommerce-stubs": "^7.2",
+                "php-stubs/wordpress-stubs": "^6.1"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\WooCommerce\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-V2"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
+            "support": {
+                "source": "https://github.com/krokedil/woocommerce/tree/master",
+                "issues": "https://github.com/krokedil/woocommerce/issues"
+            },
+            "time": "2023-01-26T12:18:42+00:00"
+        },
         {
             "name": "krokedil/wp-api",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git@github.com:krokedil/wp-api.git",
-                "reference": "aa47f44b6eb96ae85e63dbc7d948e3996729b222"
+                "reference": "b8ecda3b553800e626f77888a3fbc5551da22a55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/aa47f44b6eb96ae85e63dbc7d948e3996729b222",
-                "reference": "aa47f44b6eb96ae85e63dbc7d948e3996729b222",
+                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/b8ecda3b553800e626f77888a3fbc5551da22a55",
+                "reference": "b8ecda3b553800e626f77888a3fbc5551da22a55",
                 "shasum": ""
             },
             "require-dev": {
@@ -46,7 +88,7 @@
                 "source": "https://github.com/krokedil/wp-api/tree/master",
                 "issues": "https://github.com/krokedil/wp-api/issues"
             },
-            "time": "2023-01-13T16:50:38+00:00"
+            "time": "2023-01-26T12:17:11+00:00"
         }
     ],
     "packages-dev": [
@@ -147,12 +189,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "88d8295174e25a4bdc18f5e7fc102afda4cbd695"
+                "reference": "81071791078812c589d6d3b9f72a2487bdf95049"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/88d8295174e25a4bdc18f5e7fc102afda4cbd695",
-                "reference": "88d8295174e25a4bdc18f5e7fc102afda4cbd695",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/81071791078812c589d6d3b9f72a2487bdf95049",
+                "reference": "81071791078812c589d6d3b9f72a2487bdf95049",
                 "shasum": ""
             },
             "require": {
@@ -199,7 +241,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-16T07:56:35+00:00"
+            "time": "2023-01-26T08:22:15+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -265,12 +307,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php73.git",
-                "reference": "9e8ecb5f92152187c4799efd3c96b78ccab18ff9"
+                "reference": "fe2f306d1d9d346a7fee353d0d5012e401e984b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php73/zipball/9e8ecb5f92152187c4799efd3c96b78ccab18ff9",
-                "reference": "9e8ecb5f92152187c4799efd3c96b78ccab18ff9",
+                "url": "https://api.github.com/repos/symfony/polyfill-php73/zipball/fe2f306d1d9d346a7fee353d0d5012e401e984b5",
+                "reference": "fe2f306d1d9d346a7fee353d0d5012e401e984b5",
                 "shasum": ""
             },
             "require": {
@@ -280,7 +322,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.27-dev"
+                    "dev-main": "1.28-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -321,7 +363,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php73/tree/v1.27.0"
+                "source": "https://github.com/symfony/polyfill-php73/tree/main"
             },
             "funding": [
                 {
@@ -337,7 +379,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-03T14:55:06+00:00"
+            "time": "2023-01-26T09:26:14+00:00"
         },
         {
             "name": "szepeviktor/phpstan-wordpress",
