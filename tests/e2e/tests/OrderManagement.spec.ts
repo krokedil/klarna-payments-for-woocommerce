@@ -1,19 +1,26 @@
-import { test, expect } from '@playwright/test';
+import { AdminLogin, GetWcApiClient, WcPages } from '@krokedil/wc-test-helper';
+import { test, expect, APIRequestContext } from '@playwright/test';
 import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
-import { AdminSingleOrder } from '../pages/AdminSingleOrder';
-import { Cart } from '../pages/Cart';
-import { Checkout } from '../pages/Checkout';
-import { OrderRecieved } from '../pages/OrderRecieved';
-import { AdminLogin, GetWcApiClient } from '../utils/Utils';
+
+const {
+	BASE_URL,
+	CONSUMER_KEY,
+	CONSUMER_SECRET,
+} = process.env;
 
 test.describe('Order management @shortcode', () => {
 	test.use({ storageState: process.env.GUESTSTATE });
 
+	let wcApiClient: APIRequestContext;
+
 	let orderId;
+
+	test.beforeAll(async () => {
+		wcApiClient = await GetWcApiClient(BASE_URL ?? 'http://localhost:8080', CONSUMER_KEY ?? 'admin', CONSUMER_SECRET ?? 'password');
+	});
 
 	test.afterEach(async ({ page }) => {
 		// Delete the order from WooCommerce.
-		const wcApiClient = await GetWcApiClient();
 		await wcApiClient.delete(`orders/${orderId}`);
 
 		// Clear all cookies.
@@ -22,9 +29,9 @@ test.describe('Order management @shortcode', () => {
 
 	test('Can capture an order', async ({ page }) => {
 		await test.step('Place an order with Klarna Payments.', async () => {
-			const cartPage = new Cart(page);
-			const orderRecievedPage = new OrderRecieved(page);
-			const checkoutPage = new Checkout(page);
+			const cartPage = new WcPages.Cart(page, wcApiClient);
+			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+			const checkoutPage = new WcPages.Checkout(page);
 			const iframe = new KlarnaPaymentsIframe(page)
 			await cartPage.addtoCart(['simple-25']);
 
@@ -44,7 +51,7 @@ test.describe('Order management @shortcode', () => {
 			// Login as admin.
 			await AdminLogin(page);
 
-			const adminSingleOrder = new AdminSingleOrder(page, orderId);
+			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.completeOrder();
 
@@ -54,9 +61,9 @@ test.describe('Order management @shortcode', () => {
 
 	test('Can cancel an order', async ({ page }) => {
 		await test.step('Place an order with Klarna Payments.', async () => {
-			const cartPage = new Cart(page);
-			const orderRecievedPage = new OrderRecieved(page);
-			const checkoutPage = new Checkout(page);
+			const cartPage = new WcPages.Cart(page, wcApiClient);
+			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+			const checkoutPage = new WcPages.Checkout(page);
 			const iframe = new KlarnaPaymentsIframe(page)
 			await cartPage.addtoCart(['simple-25']);
 
@@ -76,7 +83,7 @@ test.describe('Order management @shortcode', () => {
 			// Login as admin.
 			await AdminLogin(page);
 
-			const adminSingleOrder = new AdminSingleOrder(page, orderId);
+			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.cancelOrder();
 
@@ -87,9 +94,9 @@ test.describe('Order management @shortcode', () => {
 	test('Can refund an order', async ({ page }) => {
 		let order;
 		await test.step('Place an order with Klarna Payments.', async () => {
-			const cartPage = new Cart(page);
-			const orderRecievedPage = new OrderRecieved(page);
-			const checkoutPage = new Checkout(page);
+			const cartPage = new WcPages.Cart(page, wcApiClient);
+			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+			const checkoutPage = new WcPages.Checkout(page);
 			const iframe = new KlarnaPaymentsIframe(page)
 			await cartPage.addtoCart(['simple-25']);
 
@@ -110,7 +117,7 @@ test.describe('Order management @shortcode', () => {
 			// Login as admin.
 			await AdminLogin(page);
 
-			const adminSingleOrder = new AdminSingleOrder(page, orderId);
+			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.completeOrder();
 			await adminSingleOrder.refundFullOrder(order, false);
@@ -121,9 +128,9 @@ test.describe('Order management @shortcode', () => {
 	test('Can partially refund an order', async ({ page }) => {
 		let order;
 		await test.step('Place an order with Klarna Payments.', async () => {
-			const cartPage = new Cart(page);
-			const orderRecievedPage = new OrderRecieved(page);
-			const checkoutPage = new Checkout(page);
+			const cartPage = new WcPages.Cart(page, wcApiClient);
+			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+			const checkoutPage = new WcPages.Checkout(page);
 			const iframe = new KlarnaPaymentsIframe(page)
 			await cartPage.addtoCart(['simple-25']);
 
@@ -144,7 +151,7 @@ test.describe('Order management @shortcode', () => {
 			// Login as admin.
 			await AdminLogin(page);
 
-			const adminSingleOrder = new AdminSingleOrder(page, orderId);
+			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.completeOrder();
 			await adminSingleOrder.refundFullOrder(order, false);

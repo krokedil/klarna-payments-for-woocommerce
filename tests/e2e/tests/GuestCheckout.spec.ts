@@ -1,30 +1,38 @@
 import { test, expect, APIRequestContext } from '@playwright/test';
 import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
-import { Cart } from '../pages/Cart';
-import { Checkout } from '../pages/Checkout';
-import { CheckoutBlock } from '../pages/CheckoutBlock';
-import { KlarnaHPP } from '../pages/KlarnaHPP';
-import { OrderRecieved } from '../pages/OrderRecieved';
-import { GetWcApiClient } from '../utils/Utils';
+import { GetWcApiClient, WcPages } from '@krokedil/wc-test-helper';
 import { VerifyOrderRecieved } from '../utils/VerifyOrder';
+import { KlarnaHPP } from '../pages/KlarnaHPP';
+
+const {
+	BASE_URL,
+	CONSUMER_KEY,
+	CONSUMER_SECRET,
+} = process.env;
 
 test.describe('Guest Checkout @shortcode', () => {
 	test.use({ storageState: process.env.GUESTSTATE });
+
+	let wcApiClient: APIRequestContext;
 
 	const paymentMethodId = 'klarna_payments';
 
 	let orderId: string;
 
+	test.beforeAll(async () => {
+		wcApiClient = await GetWcApiClient(BASE_URL ?? 'http://localhost:8080', CONSUMER_KEY ?? 'admin', CONSUMER_SECRET ?? 'password');
+	});
+
 	test.afterEach(async () => {
 		// Delete the order from WooCommerce.
-		const wcApiClient = await GetWcApiClient();
+		wcApiClient = await GetWcApiClient(BASE_URL ?? 'http://localhost:8080', CONSUMER_KEY ?? 'admin', CONSUMER_SECRET ?? 'password');
 		await wcApiClient.delete(`orders/${orderId}`);
 	});
 
 	test('Can buy 6x 99.99 products with 25% tax.', async ({ page }) => {
-		const cartPage = new Cart(page);
-		const orderRecievedPage = new OrderRecieved(page);
-		const checkoutPage = new Checkout(page);
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
 		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
@@ -57,9 +65,9 @@ test.describe('Guest Checkout @shortcode', () => {
 	});
 
 	test('Can buy products with different tax rates', async ({ page }) => {
-		const cartPage = new Cart(page);
-		const orderRecievedPage = new OrderRecieved(page);
-		const checkoutPage = new Checkout(page);
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
 		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
@@ -92,9 +100,9 @@ test.describe('Guest Checkout @shortcode', () => {
 	});
 
 	test('Can buy products that don\'t require shipping', async ({ page }) => {
-		const cartPage = new Cart(page);
-		const orderRecievedPage = new OrderRecieved(page);
-		const checkoutPage = new Checkout(page);
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
 		const iframe = new KlarnaPaymentsIframe(page);
 
 		// Add products to the cart.
@@ -127,9 +135,9 @@ test.describe('Guest Checkout @shortcode', () => {
 	});
 
 	test('Can buy variable products', async ({ page }) => {
-		const cartPage = new Cart(page);
-		const orderRecievedPage = new OrderRecieved(page);
-		const checkoutPage = new Checkout(page);
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
 		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
@@ -162,9 +170,9 @@ test.describe('Guest Checkout @shortcode', () => {
 	});
 
 	test('Can place order with separate shipping address', async ({ page }) => {
-		const cartPage = new Cart(page);
-		const orderRecievedPage = new OrderRecieved(page);
-		const checkoutPage = new Checkout(page);
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
 		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
@@ -200,9 +208,9 @@ test.describe('Guest Checkout @shortcode', () => {
 	});
 
 	test('Can place order with Company name in both billing and shipping address', async ({ page }) => {
-		const cartPage = new Cart(page);
-		const orderRecievedPage = new OrderRecieved(page);
-		const checkoutPage = new Checkout(page);
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
 		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
@@ -238,9 +246,9 @@ test.describe('Guest Checkout @shortcode', () => {
 	});
 
 	test('Can change shipping method', async ({ page }) => {
-		const cartPage = new Cart(page);
-		const orderRecievedPage = new OrderRecieved(page);
-		const checkoutPage = new Checkout(page);
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
 		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
@@ -279,18 +287,24 @@ test.describe('Guest Checkout @shortcode', () => {
 test.describe('Guest Checkout @checkoutBlock', () => {
 	test.use({ storageState: process.env.GUESTSTATE });
 
+	let wcApiClient: APIRequestContext;
+
 	let orderId: string;
+
+	test.beforeAll(async () => {
+		wcApiClient = await GetWcApiClient(BASE_URL ?? 'http://localhost:8080', CONSUMER_KEY ?? 'admin', CONSUMER_SECRET ?? 'password');
+	});
 
 	test.afterEach(async () => {
 		// Delete the order from WooCommerce.
-		const wcApiClient = await GetWcApiClient();
 		await wcApiClient.delete(`orders/${orderId}`);
 	});
 
 	test('Can buy 6x 99.99 products with 25% tax.', async ({ page }) => {
-		const cartPage = new Cart(page);
-		const orderRecievedPage = new OrderRecieved(page);
-		const checkoutPage = new CheckoutBlock(page);
+		const wcApiClient = await GetWcApiClient(BASE_URL ?? 'http://localhost:8080', CONSUMER_KEY ?? 'admin', CONSUMER_SECRET ?? 'password');
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.CheckoutBlock(page);
 		const klarnaHPP = new KlarnaHPP(page);
 
 		// Add products to the cart.

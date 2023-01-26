@@ -1,35 +1,9 @@
-import { APIRequestContext, Page, request } from "@playwright/test";
-const config = require('../playwright.config').default;
+import { APIRequestContext, request } from "@playwright/test";
 
 const {
-	ADMIN_USERNAME,
-	ADMIN_PASSWORD,
-	CONSUMER_KEY,
-	CONSUMER_SECRET,
 	KLARNA_API_USERNAME,
 	KLARNA_API_PASSWORD,
 } = process.env;
-
-export const AdminLogin = async (page: Page) => {
-	await page.goto('/wp-admin');
-	await page.locator('#user_login').click();
-	await page.locator('#user_login').fill(ADMIN_USERNAME ?? 'admin');
-	await page.locator('#user_pass').click();
-	await page.locator('#user_pass').fill(ADMIN_PASSWORD ?? 'password');
-	await page.getByRole('button', { name: 'Log in' }).click();
-	await page.waitForLoadState('networkidle');
-}
-
-export const GetWcApiClient = async (): Promise<APIRequestContext> => {
-	return await request.newContext({
-		baseURL: `${config.use.baseURL}/wp-json/wc/v3/`,
-		extraHTTPHeaders: {
-			Authorization: `Basic ${Buffer.from(
-				`${CONSUMER_KEY ?? 'admin'}:${CONSUMER_SECRET ?? 'password'}`
-			).toString('base64')}`,
-		},
-	});
-}
 
 export const GetKpApiClient = async (): Promise<APIRequestContext> => {
 	return await request.newContext({
@@ -53,33 +27,9 @@ export const GetKomApiClient = async (): Promise<APIRequestContext> => {
 	});
 }
 
-export const GetVersionNumbers = async (adminPage: Page) => {
-	const apiClient = await GetWcApiClient();
-
-	// Get the system status.
-	const response = await apiClient.get('system_status');
-	const status = await response.json();
-
-	// Set the environment variables.
-	process.env.WC_VERSION = status.environment.version.trim().split(' ')[0];
-	process.env.WP_VERSION = status.environment.wp_version.trim().split(' ')[0];
-	process.env.PHP_VERSION = status.environment.php_version.trim().split(' ')[0];
-
-	// Get the name and plugin version of the plugin from the active_plugins.
-	const activePlugins = status.active_plugins;
-	const plugin = activePlugins.find((activePlugin: any) => activePlugin.plugin.includes('klarna-payments-for-woocommerce'));
-
-	if (plugin) {
-		process.env.PLUGIN_NAME = plugin.name;
-		process.env.PLUGIN_VERSION = plugin.version;
-	}
-}
-
-export const SetKpSettings = async (adminPage: Page) => {
+export const SetKpSettings = async (wcApiClient: APIRequestContext) => {
 	// Set api credentials and enable the gateway.
 	if (KLARNA_API_USERNAME) {
-		const apiClient = await GetWcApiClient();
-
 		const settings = {
 			enabled: true,
 			settings: {
@@ -91,6 +41,6 @@ export const SetKpSettings = async (adminPage: Page) => {
 		};
 
 		// Update settings.
-		await apiClient.post('payment_gateways/klarna_payments', { data: settings });
+		await wcApiClient.post('payment_gateways/klarna_payments', { data: settings });
 	}
 }

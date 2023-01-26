@@ -1,14 +1,20 @@
-import { test, expect, APIRequestContext } from '@playwright/test';
+import { GetWcApiClient, WcPages } from '@krokedil/wc-test-helper';
+import { test, expect } from '@playwright/test';
+import { APIRequestContext } from 'playwright-chromium';
 import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
-import { Cart } from '../pages/Cart';
-import { Checkout } from '../pages/Checkout';
-import { OrderRecieved } from '../pages/OrderRecieved';
-import { GetWcApiClient } from '../utils/Utils';
 import { VerifyOrderRecieved } from '../utils/VerifyOrder';
+
+const {
+	BASE_URL,
+	CONSUMER_KEY,
+	CONSUMER_SECRET,
+} = process.env;
 
 test.describe('Customer Checkout @shortcode', () => {
 
 	test.use({ storageState: process.env.GUESTSTATE });
+
+	let wcApiClient: APIRequestContext;
 
 	const paymentMethodId = 'klarna_payments';
 
@@ -17,13 +23,13 @@ test.describe('Customer Checkout @shortcode', () => {
 	let orderId;
 
 	test.beforeEach(async ({ page }) => {
-		const apiClient = await GetWcApiClient();
+		wcApiClient = await GetWcApiClient(BASE_URL ?? 'http://localhost:8080', CONSUMER_KEY ?? 'admin', CONSUMER_SECRET ?? 'password');
 
 		let randSuffix = Math.floor(Math.random() * 1000000);
 		username = `testCustomer_${randSuffix}`;
 
 		// Create a customer account.
-		const customerResponse = await apiClient.post('customers', {
+		const customerResponse = await wcApiClient.post('customers', {
 			data: {
 				email: `testCustomer_${username}@krokedil.se`,
 				first_name: 'Test',
@@ -70,20 +76,19 @@ test.describe('Customer Checkout @shortcode', () => {
 
 	test.afterEach(async ({ page }) => {
 		// Delete the customer account.
-		const apiClient = await GetWcApiClient();
-		await apiClient.delete(`customers/${customerId}`);
+		await wcApiClient.delete(`customers/${customerId}`);
 
 		// Delete the order.
-		await apiClient.delete(`orders/${orderId}`);
+		await wcApiClient.delete(`orders/${orderId}`);
 
 		// Clear all cookies.
 		await page.context().clearCookies();
 	});
 
 	test('Customer can checkout with Klarna Payments with prefilled address', async ({ page }) => {
-		const cartPage = new Cart(page);
-		const orderRecievedPage = new OrderRecieved(page);
-		const checkoutPage = new Checkout(page);
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
 		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.

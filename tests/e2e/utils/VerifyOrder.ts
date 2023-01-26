@@ -1,8 +1,8 @@
+import { WcPages } from "@krokedil/wc-test-helper";
 import { expect } from "@playwright/test";
-import { OrderRecieved } from "../pages/OrderRecieved";
 import { GetKomApiClient } from "./Utils";
 
-export const VerifyOrderRecieved = async (orderRecievedPage: OrderRecieved, expectedStatus: string = 'processing') => {
+export const VerifyOrderRecieved = async (orderRecievedPage: WcPages.OrderReceived, expectedStatus: string = 'processing') => {
 	const komClient = await GetKomApiClient();
 
 	// Get the WC Order.
