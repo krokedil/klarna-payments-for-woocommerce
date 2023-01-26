@@ -283,24 +283,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-hpp.php';
 
 			// Request helpers.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-customer.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-iframe.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-order-lines.php';
-			// Order helpers.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-helper.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-coupon-helper.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-customer-helper.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-fee-helper.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-item-helper.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/order/class-kp-order-shipping-helper.php';
-
-			// Cart helpers.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-helper.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-coupon-helper.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-customer-helper.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-fee-helper.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-item-helper.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/cart/class-kp-cart-shipping-helper.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-order-data.php';
 
 			// Includes.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/kp-functions.php';
