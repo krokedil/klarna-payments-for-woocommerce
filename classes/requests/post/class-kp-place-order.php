@@ -22,34 +22,20 @@ class KP_Place_Order extends KP_Requests_Post {
 		$this->log_title      = 'Place order';
 		$this->request_filter = 'wc_klarna_payments_place_order_args';
 		$auth_token           = $this->arguments['auth_token'];
-		$this->endpoint       = "payments/v1/authorizations/${auth_token}/order";
+		$this->endpoint       = "payments/v1/authorizations/{$auth_token}/order";
 	}
 
 	/**
-	 * Get the body for the request.
+	 * Adds the confirmation URL to the request body for Place order calls.
 	 *
 	 * @return array
 	 */
-	protected function get_body() {
-		$order              = wc_get_order( $this->arguments['order_id'] );
-		$order_lines_helper = $this->get_order_lines_helper();
-		$customer_helper    = $this->get_customer_helper();
+	public function get_body() {
+		$body = parent::get_body();
 
-		return array(
-			'purchase_country'    => $this->arguments['country'],
-			'purchase_currency'   => $order->get_currency(),
-			'locale'              => kp_get_locale(),
-			'billing_address'     => $customer_helper::get_billing_address( $this->arguments['order_id'], $this->settings['customer_type'] ),
-			'shipping_address'    => $customer_helper::get_shipping_address( $this->arguments['order_id'], $this->settings['customer_type'] ),
-			'order_amount'        => $order_lines_helper::get_kp_order_amount(),
-			'order_tax_amount'    => $order_lines_helper::get_kp_order_tax_amount(),
-			'order_lines'         => $order_lines_helper::get_kp_order_lines(),
-			'customer'            => get_klarna_customer( $this->settings['customer_type'] ),
-			'merchant_reference1' => $order->get_order_number(),
-			'merchant_urls'       => array(
-				'confirmation' => $order->get_checkout_order_received_url(),
-				'notification' => get_home_url() . '/wc-api/WC_Gateway_Klarna_Payments/?order_id=' . $this->arguments['order_id'],
-			),
-		);
+		$order                                 = wc_get_order( $this->arguments['order_id'] );
+		$body['merchant_urls']['confirmation'] = $order->get_checkout_order_received_url();
+
+		return $body;
 	}
 }

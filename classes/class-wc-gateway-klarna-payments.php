@@ -271,15 +271,16 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Save the order.
 		$order->save();
 
-		$customer_helper = new KP_Order_Customer_Helper( $order );
+		$order_data = new KP_Order_Data( $this->customer_type );
+		$customer   = $order_data->get_klarna_customer_object();
 
 		// Return success without redirect URL since our script handles the return instead of WooCommerce.
 		return array(
 			'result'    => 'success',
 			'order_id'  => $order_id,
 			'addresses' => array(
-				'billing'  => $customer_helper::get_billing_address( $this->customer_type ),
-				'shipping' => $customer_helper::get_shipping_address( $this->customer_type ),
+				'billing'  => $customer['billing'],
+				'shipping' => $customer['shipping'],
 			),
 		);
 	}

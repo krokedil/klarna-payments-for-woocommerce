@@ -34,6 +34,18 @@ abstract class KP_Requests extends Request {
 	 */
 	protected $iframe_options;
 
+	/**
+	 * Filter to use for the request args.
+	 *
+	 * @var string
+	 */
+	protected $request_filter = 'wc_klarna_payments_request_args';
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param mixed $arguments The request arguments.
+	 */
 	public function __construct( $arguments ) {
 		$settings = get_option( 'woocommerce_klarna_payments_settings' );
 		$config   = array(
@@ -66,9 +78,9 @@ abstract class KP_Requests extends Request {
 
 		$region     = $country_data['endpoint'] ?? ''; // Get the region from the country parameters, blank for EU.
 		$playground = 'yes' === $settings['testmode'] ? 'playground' : ''; // If testmode is enabled, add playground to the subdomain.
-		$subdomain  = "api${region}.${playground}"; // Combine the string to one subdomain.
+		$subdomain    = "api{$region}.{$playground}"; // Combine the string to one subdomain.
 
-		return "https://${subdomain}.klarna.com/"; // Return the full base url for the api.
+		return "https://{$subdomain}.klarna.com/"; // Return the full base url for the api.
 	}
 
 	/**
@@ -78,8 +90,8 @@ abstract class KP_Requests extends Request {
 		$prefix = 'yes' === $this->settings['testmode'] ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
 		$suffix = '_' . strtolower( $this->arguments['country'] ) ?? strtolower( kp_get_klarna_country() ); // Get the country from the arguments, or the fetch from helper method.
 
-		$merchant_id   = "${prefix}merchant_id${suffix}";
-		$shared_secret = "${prefix}shared_secret${suffix}";
+		$merchant_id   = "{$prefix}merchant_id{$suffix}";
+		$shared_secret = "{$prefix}shared_secret{$suffix}";
 
 		$this->merchant_id   = isset( $this->settings[ $merchant_id ] ) ? $this->settings[ $merchant_id ] : '';
 		$this->shared_secret = isset( $this->settings[ $shared_secret ] ) ? $this->settings[ $shared_secret ] : '';

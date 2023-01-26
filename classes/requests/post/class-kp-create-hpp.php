@@ -30,7 +30,7 @@ class KP_Create_HPP extends KP_Requests_Post {
 	 * @return array
 	 */
 	protected function get_body() {
-		$base_url    = $this->get_api_url_base();
+		$base_url    = $this->config['base_url'];
 		$session_id  = $this->arguments['session_id'];
 		$order       = wc_get_order( $this->arguments['order_id'] );
 		$success_url = add_query_arg(

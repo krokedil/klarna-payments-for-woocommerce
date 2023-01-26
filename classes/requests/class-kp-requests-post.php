@@ -7,6 +7,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Krokedil\WooCommerce\Cart\Cart;
+use Krokedil\WooCommerce\Order\Order;
+
 /**
  *  The main class for POST requests.
  */
@@ -43,37 +46,37 @@ abstract class KP_Requests_Post extends KP_Requests {
 	}
 
 	/**
-	 * Builds the request args for a POST request.
-	 *
-	 * @return array
-	 */
-	abstract protected function get_body();
-
-	/**
 	 * Returns the request helper for the request based on if we have a order id passed or not.
 	 *
-	 * @return KP_Order_Lines
+	 * @return \Krokedil\WooCommerce\OrderData
 	 */
-	public function get_order_lines_helper() {
+	public function get_order_data() {
+		$config = array(
+			'slug'         => 'kp',
+			'price_format' => 'minor',
+		);
+
 		if ( $this->arguments['order_id'] ?? false && ! empty( $this->arguments['order_id'] ) ) {
 			$order = wc_get_order( $this->arguments['order_id'] );
-			return new KP_Order_Helper( $order );
+			return new Order( $order, $config );
 		} else {
-			return new KP_Cart_Helper( WC()->cart );
+			return new Cart( WC()->cart, $config );
 		}
 	}
 
 	/**
-	 * Returns the request helper for the request based on if we have a order id passed or not.
+	 * Returns a formated Klarna order object.
 	 *
-	 * @return KP_Customer
+	 * @return array
 	 */
-	public function get_customer_helper() {
-		if ( $this->arguments['order_id'] ?? false && ! empty( $this->arguments['order_id'] ) ) {
-			$order = wc_get_order( $this->arguments['order_id'] );
-			return new KP_Order_Customer_Helper( $order );
-		} else {
-			return new KP_Cart_Customer_Helper();
-		}
+	protected function get_body() {
+		$order_id      = $this->arguments['order_id'] ?? null;
+		$customer_type = $this->arguments['customer_type'] ?? 'b2c';
+		$order_data    = new KP_Order_Data( $customer_type, $order_id );
+
+
+		return apply_filters( 'kp_wc_api_request_args',
+			$order_data->get_klarna_order_object( $this->iframe_options ),
+		);
 	}
 }
