@@ -103,12 +103,15 @@ class KP_Settings_Saved {
 		}
 		$cc             = strtoupper( $cc );
 		$code           = $test_response->get_error_code();
-		$error          = json_decode( $test_response->get_error_message(), true );
+		$error          = $test_response->get_error_message();
 		$data           = json_decode( $test_response->get_error_data(), true );
 		$error_message  = $error['message'];
 		$correlation_id = $data['correlation_id'];
-		if ( 401 === $code || 403 === $code ) {
+		if ( 400 === $code || 401 === $code || 403 === $code ) {
 			switch ( $code ) {
+				case 400:
+					$message = "It seems like your Klarna $cc $test credentials are not configured correctly, please your Klarna contract and ensure that your account is configured correctly for this country. ";
+					break;
 				case 401:
 					$message = "It seems like your Klarna $cc $test credentials are incorrect, please verify or remove these credentials and save again. ";
 					break;
