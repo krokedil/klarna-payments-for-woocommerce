@@ -305,9 +305,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		$session_id = KP_WC()->session->get_klarna_session_id();
+		$klarna_country = kp_get_klarna_country( $order );
 
 		// Create a HPP url.
-		$hpp = KP_WC()->api->create_hpp( kp_get_klarna_country( $order ), $session_id, $order->get_id() );
+		$hpp = KP_WC()->api->create_hpp( $klarna_country, $session_id, $order->get_id() );
+
+		// Set both WooCommerce meta data, and session meta data for now.
+		$order->add_meta_data( '_wc_klarna_country', $klarna_country, true );
+		$order->add_meta_data( '_kp_session_id', $session_id, true );
+
+		// Save the order.
+		$order->save();
 
 		if ( is_wp_error( $hpp ) ) {
 			return array(
