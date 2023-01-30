@@ -117,6 +117,11 @@ class KP_Form_Fields {
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
+		'ro' => array(
+			'name'     => 'Romania',
+			'currency' => 'RON',
+			'endpoint' => '',
+		),
 		'se' => array(
 			'name'     => 'Sweden',
 			'currency' => 'SEK',
