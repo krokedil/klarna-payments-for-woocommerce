@@ -143,17 +143,21 @@ class KP_Callbacks {
 			case 'ACCEPTED':
 				kp_process_accepted( $order, $response );
 				$order->add_order_note( __( 'The Klarna order was successfully completed', 'klarna-payments-for-woocommerce' ) );
+				kp_unset_session_values();
 				break;
 			case 'PENDING':
 				kp_process_pending( $order, $response );
 				$order->add_order_note( __( 'The Klarna order is pending approval by Klarna', 'klarna-payments-for-woocommerce' ) );
+				kp_unset_session_values();
 				break;
 			case 'REJECTED':
 				kp_process_rejected( $order, $response );
 				$order->add_order_note( __( 'The Klarna order was rejected by Klarna', 'klarna-payments-for-woocommerce' ) );
+				kp_unset_session_values();
 				break;
 			default:
 				$order->add_order_note( __( 'Failed to complete the order when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) );
+				kp_unset_session_values();
 				break;
 		}
 	}
