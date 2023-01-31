@@ -15,11 +15,25 @@ use Krokedil\WooCommerce\Order\Order;
  */
 class KP_Order_Data {
 	/**
-	 * The WooCommerce order it used to calculate the order data. If null the cart will be used instead.
+	 * The WooCommerce order id is used to calculate the order data. If null the cart will be used instead.
 	 *
 	 * @var int|null
 	 */
 	private $order_id;
+
+	/**
+	 * The WooCommerce order is used to calculate the order data. If null the cart will be used instead.
+	 *
+	 * @var WC_Order|null
+	 */
+	private $order;
+
+	/**
+	 * The Klarna country to use for the request body.
+	 *
+	 * @var string
+	 */
+	private $klarna_country;
 
 	/**
 	 * The Customer type to use for KP. Either B2B or B2C. Based on the setting in the plugin.
@@ -35,6 +49,13 @@ class KP_Order_Data {
      */
 	public $order_data;
 
+	/**
+	 * If we should use separate sales tax or not for the requests.
+	 *
+	 * @var bool
+	 */
+	private $separate_sales_tax;
+
     /**
      * Class constructor.
      *
@@ -42,10 +63,12 @@ class KP_Order_Data {
      * @param int|null $order_id The WooCommerce order it used to calculate the order data. If null the cart will be used instead.
      */
     public function __construct( $customer_type, $order_id = null ) {
-		$this->customer_type = $customer_type;
-        $this->order_id      = $order_id;
-
-		$this->order_data    = $this->get_order_data();
+		$this->customer_type      = $customer_type;
+        $this->order_id           = $order_id;
+		$this->order              = $this->order_id ? wc_get_order( $this->order_id ) : null;
+		$this->klarna_country     = kp_get_klarna_country( $this->order );
+		$this->order_data         = $this->get_order_data();
+		$this->separate_sales_tax = "US" === $this->klarna_country;
     }
 
 	/**
@@ -77,7 +100,7 @@ class KP_Order_Data {
 		$customer = $this->get_klarna_customer_object();
 
 		return array(
-			'purchase_country'  => kp_get_klarna_country(),
+			'purchase_country'  => $this->klarna_country,
 			'purchase_currency' => get_woocommerce_currency(),
 			'locale'            => kp_get_locale(),
 			'order_amount'      => $this->order_data->get_total(),
@@ -121,6 +144,20 @@ class KP_Order_Data {
 			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
 		}
 
+		if( $this->separate_sales_tax ) {
+			$klarna_order_lines[] = array(
+				'name'                  => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
+				'quantity'              => 1,
+				'reference'             => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
+				'tax_rate'              => 0,
+				'total_amount'          => $this->order_data->get_total_tax(),
+				'total_discount_amount' => 0,
+				'total_tax_amount'      => 0,
+				'type'                  => 'sales_tax',
+				'unit_price'            => $this->order_data->get_total_tax(),
+			);
+		}
+
 		return $klarna_order_lines;
 	}
 
@@ -155,12 +192,12 @@ class KP_Order_Data {
 				'quantity'              => $order_line->get_quantity(),
 				'quantity_unit'         => apply_filters( $order_line->get_filter_name( 'quantity_unit' ), 'pcs', $order_line ),
 				'reference'             => $order_line->get_sku(),
-				'tax_rate'              => $order_line->get_tax_rate(),
-				'total_amount'          => $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
-				'total_discount_amount' => $order_line->get_total_discount_amount(),
-				'total_tax_amount'      => $order_line->get_total_tax_amount(),
+				'tax_rate'              => $this->separate_sales_tax ? 0 : $order_line->get_tax_rate(),
+				'total_amount'          => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
+				'total_discount_amount' => $this->separate_sales_tax ? $order_line->get_total_discount_amount() : $order_line->get_total_discount_amount() + $order_line->get_total_discount_tax_amount(),
+				'total_tax_amount'      => $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount(),
 				'type'                  => $type,
-				'unit_price'            => $order_line->get_unit_price() + $order_line->get_unit_tax_amount(),
+				'unit_price'            => $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount(),
 				'subscription'          => apply_filters( $order_line->get_filter_name( 'subscription' ), array(), $order_line ),
 			),
 			'KP_Order_Data::remove_null' );
