@@ -208,15 +208,23 @@ class KP_Order_Data {
 			'country'         => $customer_data->get_shipping_country(),
 		);
 
-		$customer              = array(
-			'billing'  => $billing,
-			'shipping' => array_merge( $shipping, $billing ),
-		);
-
 		if ( 'b2b' === $customer_type ) {
 			$customer['billing']['organization_name']  = $customer_data->get_billing_company();
 			$customer['shipping']['organization_name'] = $customer_data->get_shipping_company();
 		}
+
+		foreach( $shipping as $key => $value ) {
+			if( ! empty( $value ) ) {
+				continue;
+			}
+
+			$shipping[ $key ] = $billing[ $key ];
+		}
+
+		$customer              = array(
+			'billing'  => $billing,
+			'shipping' => $shipping
+		);
 
 		return $customer;
 	}
