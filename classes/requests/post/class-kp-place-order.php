@@ -34,6 +34,8 @@ class KP_Place_Order extends KP_Requests_Post {
 		$body = parent::get_body();
 
 		$order                                 = wc_get_order( $this->arguments['order_id'] );
+		$body['merchant_reference1'] 		   = $order->get_order_number();
+		$body['merchant_reference2'] 		   = $order->get_id();
 		$body['merchant_urls']['confirmation'] = $order->get_checkout_order_received_url();
 
 		return $body;
