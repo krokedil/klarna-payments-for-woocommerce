@@ -236,14 +236,18 @@ function kp_process_rejected( $order, $decoded ) {
  */
 function kp_get_locale() {
 	$locale = get_locale();
-	// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formated to fi_fi.
+	// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formated to fi-fi.
 	switch ( $locale ) {
 		case 'fi':
-			$locale = 'fi_fi';
+			$locale = 'fi-fi';
+			break;
+		case 'el':
+			$locale = 'el-GR';
 			break;
 		default:
+			$locale = substr( str_replace( '_', '-', $locale ), 0, 5 );
 			break;
 	}
-
-	return apply_filters( 'kp_locale', substr( str_replace( '_', '-', $locale ), 0, 5 ) );
+	return apply_filters( 'kp_locale', $locale );
 }
+
