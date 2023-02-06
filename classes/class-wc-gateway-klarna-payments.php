@@ -180,6 +180,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return true;
+		}
+
 		if ( kp_is_order_pay_page() ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
 			$order    = wc_get_order( $order_id );
