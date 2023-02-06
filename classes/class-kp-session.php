@@ -94,7 +94,7 @@ class KP_Session {
 		// If we have a Klarna session and we get here, we should update it.
 		if ( null !== $this->klarna_session ) {
 			$result = KP_WC()->api->update_session( kp_get_klarna_country( $order ), $this->klarna_session['session_id'], $order_id );
-			return $result;
+			return $this->process_result( $result, $order );
 		}
 
 		// If we get here, we should create a new Klarna session. Pass true to include_address if we have an order.
@@ -155,7 +155,7 @@ class KP_Session {
 			return $result;
 		}
 
-		$this->klarna_session  = $result;
+		$this->klarna_session  = ! empty( $result ) ? $result : $this->klarna_session; // If the result is empty, it was from a successfull update request. So no need to update the session data.
 		$this->session_hash    = null === $order ? $this->get_session_cart_hash() : $this->get_session_order_hash( $order );
 		$this->session_country = kp_get_klarna_country( $order );
 
