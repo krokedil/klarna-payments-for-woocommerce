@@ -130,6 +130,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * Init the plugin after plugins_loaded so environment variables are set.
 		 */
 		public function init() {
+			// Include the autoloader from composer. If it fails, we'll just return and not load the plugin. But an admin notice will show to the merchant.
+			if ( ! $this->init_composer() ) {
+				return;
+			}
+
 			// Init the gateway itself.
 			$this->include_files();
 
@@ -224,22 +229,21 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				$permalinks = get_option( 'permalink_structure' );
 				if ( empty( $permalinks ) ) {
 					?>
-<div class="kp-message notice woocommerce-message notice-error">
-	<a class="woocommerce-message-close notice-dismiss"
-		href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
+					<div class="kp-message notice woocommerce-message notice-error">
+						<a class="woocommerce-message-close notice-dismiss"
+							href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
 					<?php
-
-					echo wp_kses_post(
-						wpautop(
-							'<p>' . sprintf(
-								// translators: URL to docs.
-								__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
-								esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
+						echo wp_kses_post(
+							wpautop(
+								'<p>' . sprintf(
+									// translators: URL to docs.
+									__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
+									esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
+								)
 							)
-						)
-					);
-					?>
-</div>
+						);
+						?>
+					</div>
 					<?php
 				}
 			}
@@ -254,9 +258,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
 			}
-
-			// Include the autoloader from composer.
-			require_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
 
 			// Classes.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php'; // This is loaded very early becasue we'll need these settings right away.
@@ -293,6 +294,42 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-klarna-for-woocommerce-addons.php';
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-banners.php';
 			}
+		}
+
+		public function init_composer() {
+			$autoloader = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
+
+			if ( ! is_readable( $autoloader ) ) {
+				self::missing_autoloader();
+				return false;
+			}
+
+			$autoloader_result = require $autoloader;
+			if ( ! $autoloader_result ) {
+				return false;
+			}
+
+			return $autoloader_result;
+		}
+
+		protected static function missing_autoloader() {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( // phpcs:ignore
+					esc_html__( 'Your installation of Klarna Payments is not complete. If you installed this plugin directly from Github please refer to the README.DEV.md file in the plugin.', 'klarna-payments-for-woocommerce' )
+				);
+			}
+			add_action(
+				'admin_notices',
+				function () {
+					?>
+						<div class="notice notice-error">
+							<p>
+								<?php echo esc_html__( 'Your installation of Klarna Payments is not complete. If you installed this plugin directly from Github please refer to the README.DEV.md file in the plugin.', 'klarna-payments-for-woocommerce' ) ?>
+							</p>
+						</div>
+					<?php
+				}
+			);
 		}
 
 		/**
