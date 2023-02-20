@@ -18,7 +18,7 @@ jobs:
             wcVersion: ""
           # Minimum supported WordPress, PHP and WC Versions
           - wpImage: "wordpress:5-php7.4"
-            wcVersion: "4.0.0"
+            wcVersion: "5.6.0"
     steps:
       # Checkout repo.
       - uses: actions/checkout@v3

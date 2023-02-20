@@ -9,7 +9,7 @@
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
- * WC requires at least: 3.4.0
+ * WC requires at least: 5.6.0
  * WC tested up to: 7.3.0
  *
  * Copyright (c) 2017-2022 Krokedil
@@ -41,7 +41,7 @@ use KlarnaPayments\Blocks\Payments\KlarnaPayments;
  */
 define( 'WC_KLARNA_PAYMENTS_VERSION', '3.0.0-beta.2' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
-define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '4.0.0' );
+define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
