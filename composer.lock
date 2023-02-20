@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be275a8f57325833f174290e64663a49",
+    "content-hash": "9f6502b6c6f2a0f20a04b09e1ca6f5e1",
     "packages": [
         {
             "name": "krokedil/woocommerce",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:krokedil/woocommerce.git",
-                "reference": "ce066d614b65be6c6e19a14aab983d8cbf8bf570"
+                "url": "https://github.com/krokedil/woocommerce.git",
+                "reference": "6e003949e85605fde6d124a72a427ba80c20dd86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/ce066d614b65be6c6e19a14aab983d8cbf8bf570",
-                "reference": "ce066d614b65be6c6e19a14aab983d8cbf8bf570",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/6e003949e85605fde6d124a72a427ba80c20dd86",
+                "reference": "6e003949e85605fde6d124a72a427ba80c20dd86",
                 "shasum": ""
             },
             "require-dev": {
@@ -25,7 +25,6 @@
                 "php-stubs/woocommerce-stubs": "^7.2",
                 "php-stubs/wordpress-stubs": "^6.1"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -43,23 +42,23 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/master",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.0.0",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2023-01-26T12:18:42+00:00"
+            "time": "2023-02-20T10:39:42+00:00"
         },
         {
             "name": "krokedil/wp-api",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:krokedil/wp-api.git",
-                "reference": "b8ecda3b553800e626f77888a3fbc5551da22a55"
+                "url": "https://github.com/krokedil/wp-api.git",
+                "reference": "16ebca1272e3266ed36d0df17e61fe6885107d6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/b8ecda3b553800e626f77888a3fbc5551da22a55",
-                "reference": "b8ecda3b553800e626f77888a3fbc5551da22a55",
+                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/16ebca1272e3266ed36d0df17e61fe6885107d6c",
+                "reference": "16ebca1272e3266ed36d0df17e61fe6885107d6c",
                 "shasum": ""
             },
             "require-dev": {
@@ -67,7 +66,6 @@
                 "php-stubs/woocommerce-stubs": "^7.2",
                 "php-stubs/wordpress-stubs": "^6.1"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -85,25 +83,25 @@
             ],
             "description": "A composer library for Krokedil WordPress plugins that contains classes for working with wp_remote_request to setup request classes. Also uses the WooCommerce logger to log request reponses.",
             "support": {
-                "source": "https://github.com/krokedil/wp-api/tree/master",
+                "source": "https://github.com/krokedil/wp-api/tree/1.0.0",
                 "issues": "https://github.com/krokedil/wp-api/issues"
             },
-            "time": "2023-01-26T12:17:11+00:00"
+            "time": "2023-02-20T10:40:21+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "php-stubs/woocommerce-stubs",
-            "version": "v7.3.0",
+            "version": "v7.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/woocommerce-stubs.git",
-                "reference": "446c335118632e00854b9ada74319b200e5c78a2"
+                "reference": "d8f5b3027f889fdc22729575dd0040a18c5565d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/446c335118632e00854b9ada74319b200e5c78a2",
-                "reference": "446c335118632e00854b9ada74319b200e5c78a2",
+                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/d8f5b3027f889fdc22729575dd0040a18c5565d2",
+                "reference": "d8f5b3027f889fdc22729575dd0040a18c5565d2",
                 "shasum": ""
             },
             "require": {
@@ -132,31 +130,28 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/woocommerce-stubs/issues",
-                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v7.3.0"
+                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v7.4.0"
             },
-            "time": "2023-01-13T00:24:42+00:00"
+            "time": "2023-02-19T17:20:03+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",
-            "version": "v6.1.0",
+            "version": "v6.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "19e7966c8e70a99a4824b3e5d1526680a151f13b"
+                "reference": "601c429ba8d91ef50a2a1bec05a7cd38b88064ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/19e7966c8e70a99a4824b3e5d1526680a151f13b",
-                "reference": "19e7966c8e70a99a4824b3e5d1526680a151f13b",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/601c429ba8d91ef50a2a1bec05a7cd38b88064ff",
+                "reference": "601c429ba8d91ef50a2a1bec05a7cd38b88064ff",
                 "shasum": ""
-            },
-            "replace": {
-                "giacocorsiglia/wordpress-stubs": "*"
             },
             "require-dev": {
                 "nikic/php-parser": "< 4.12.0",
                 "php": "~7.3 || ~8.0",
-                "php-stubs/generator": "^0.8.1",
+                "php-stubs/generator": "^0.8.3",
                 "phpdocumentor/reflection-docblock": "^5.3",
                 "phpstan/phpstan": "^1.2"
             },
@@ -179,9 +174,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.1.0"
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.1.1"
             },
-            "time": "2022-11-09T05:33:25+00:00"
+            "time": "2023-02-09T11:10:35+00:00"
         },
         {
             "name": "phpstan/phpstan",
@@ -189,12 +184,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "81071791078812c589d6d3b9f72a2487bdf95049"
+                "reference": "dcd69c3e0c475f20ae7ccec01b5ccef864263481"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/81071791078812c589d6d3b9f72a2487bdf95049",
-                "reference": "81071791078812c589d6d3b9f72a2487bdf95049",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dcd69c3e0c475f20ae7ccec01b5ccef864263481",
+                "reference": "dcd69c3e0c475f20ae7ccec01b5ccef864263481",
                 "shasum": ""
             },
             "require": {
@@ -241,7 +236,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-26T08:22:15+00:00"
+            "time": "2023-02-19T20:15:15+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -383,16 +378,16 @@
         },
         {
             "name": "szepeviktor/phpstan-wordpress",
-            "version": "v1.1.6",
+            "version": "v1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/szepeviktor/phpstan-wordpress.git",
-                "reference": "27784541f184a1ea3b6656fc8a882bb9adf45fc2"
+                "reference": "979dcb81a01942b576b9fbf72dcb9515c57a4aa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/27784541f184a1ea3b6656fc8a882bb9adf45fc2",
-                "reference": "27784541f184a1ea3b6656fc8a882bb9adf45fc2",
+                "url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/979dcb81a01942b576b9fbf72dcb9515c57a4aa8",
+                "reference": "979dcb81a01942b576b9fbf72dcb9515c57a4aa8",
                 "shasum": ""
             },
             "require": {
@@ -403,11 +398,11 @@
             },
             "require-dev": {
                 "composer/composer": "^2.1.14",
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.1",
                 "phpstan/phpstan-strict-rules": "^1.2",
                 "phpunit/phpunit": "^8.0 || ^9.0",
-                "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^0.6.1"
+                "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^0.8"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -436,7 +431,7 @@
             ],
             "support": {
                 "issues": "https://github.com/szepeviktor/phpstan-wordpress/issues",
-                "source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v1.1.6"
+                "source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v1.1.7"
             },
             "funding": [
                 {
@@ -448,7 +443,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-12-01T14:56:51+00:00"
+            "time": "2023-02-04T13:10:27+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
