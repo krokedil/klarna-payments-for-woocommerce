@@ -5,7 +5,7 @@
     "@krokedil/wc-test-helper": "^1.0.3",
     "@playwright/test": "^1.28.1",
     "@slack/webhook": "^6.1.0",
-    "@types/node": "^18.11.14",
+    "@types/node": "^18.14.0",
     "dotenv": "^16.0.3",
     "playwright-chromium": "^1.28.1"
   },
