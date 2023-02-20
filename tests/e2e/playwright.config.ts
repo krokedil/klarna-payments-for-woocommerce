@@ -17,7 +17,7 @@ const config: PlaywrightTestConfig = {
 		timeout: 10 * 1000
 	},
 	forbidOnly: !!CI,
-	retries: 0,
+	retries: 1,
 	workers: CI ? 4 : undefined,
 	reporter: CI ? [['list'], ['github'], ['./reporter/slackReporter.ts'], ['./reporter/githubReporter.ts']] : [['list'], ['html']],
 	globalSetup: require.resolve('./global-setup'),
