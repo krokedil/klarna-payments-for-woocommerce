@@ -1,0 +1,69 @@
+name: Run E2E tests on PR
+on:
+  pull_request:
+jobs:
+  run:
+    timeout-minutes: 60
+    name: Run E2E Tests WP Version ${{matrix.wpImage}}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Disable fail-fast so all jobs run even if one fails.
+      matrix:
+        include:
+          # Latest WP release version with latest WC version.
+          - wpImage: "wordpress:latest"
+            wcVersion: ""
+          # Latest WP 6.1 with PHP 8.0 to ensure PHP 8.0.0 compatability.
+          - wpImage: "wordpress:6.1-php8.0"
+            wcVersion: ""
+          # Minimum supported WordPress, PHP and WC Versions
+          - wpImage: "wordpress:5-php7.4"
+            wcVersion: "4.0.0"
+    steps:
+      # Checkout repo.
+      - uses: actions/checkout@v3
+        with:
+          # Use the commit that triggered the workflow.
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: actions/setup-node@v3 # Install node version 16.
+        with:
+          node-version: 16
+
+      # Install all composer dependencies for the plugin.
+      - name: Install Composer dependencies
+        uses: php-actions/composer@v6
+        with:
+          dev: no
+          php_version: 7.4
+
+      # Install and build Block release.
+      - name: Build block release versions.
+        run: |
+          npm ci
+          npm run build
+
+      # Install NPM packages for tests.
+      - name: Install NPM packages.
+        working-directory: tests/e2e
+        run: npm ci
+
+      # Start the docker container for the test suite.
+      - name: Start docker container.
+        working-directory: tests/e2e
+        env:
+          WP_IMAGE: ${{matrix.wpImage}}
+          WC_VERSION: ${{matrix.wcVersion}}
+        run: npm run docker:up
+
+      # Install Chromium with Playwright.
+      - name: Install Chromium browser with Playwright
+        working-directory: tests/e2e
+        run: npx playwright install chromium
+
+      # Run E2E tests.
+      - name: Run E2E Tests with Playwright.
+        working-directory: tests/e2e
+        env:
+          CI: 1
+        run: npx playwright test
