@@ -49,12 +49,13 @@ abstract class KP_Requests extends Request {
 	public function __construct( $arguments ) {
 		$settings = get_option( 'woocommerce_klarna_payments_settings' );
 		$config   = array(
-			'slug'               => 'klarna_payments',
-			'plugin_version'     => WC_KLARNA_PAYMENTS_VERSION,
-			'plugin_short_name'  => 'KP',
-			'logging_enabled'    => 'yes' === $settings['logging'],
-			'extended_debugging' => 'yes' === $settings['logging'],
-			'base_url'           => $this->get_base_url( $arguments['country'], $settings ),
+			'slug'                   => 'klarna_payments',
+			'plugin_version'         => WC_KLARNA_PAYMENTS_VERSION,
+			'plugin_short_name'      => 'KP',
+			'plugin_user_agent_name' => 'KP',
+			'logging_enabled'        => 'yes' === $settings['logging'],
+			'extended_debugging'     => 'no' === $settings['extra_logging'],
+			'base_url'               => $this->get_base_url( $arguments['country'], $settings ),
 		);
 
 		parent::__construct( $config, $settings, $arguments );

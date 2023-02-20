@@ -288,6 +288,14 @@ class KP_Form_Fields {
 				'default'     => 'no',
 				'desc_tip'    => true,
 			),
+			'extra_logging'        => array(
+				'title'       => __( 'Log extra data', 'klarna-payments-for-woocommerce' ),
+				'label'       => __( 'Log extra debug data', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Log extra data to the request logs from the plugin. This will log a lot more data, and should not be used unless you need it. But can be usefull to debug issues that are hard to replicate.', 'klarna-payments-for-woocommerce' ),
+				'default'     => 'no',
+				'desc_tip'    => true,
+			),
 			'hide_what_is_klarna'  => array(
 				'title'    => __( 'Hide What is Klarna? link', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
