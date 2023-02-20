@@ -6,8 +6,8 @@ Requires at least: 4.0
 Tested up to: 6.1.1
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 7.3.0
-Stable tag: trunk
+WC tested up to: 7.0.0
+Stable tag: 2.12.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -181,31 +181,31 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * Fix           - Fixed an issue with sending the wrong country code for the UK when testing credentials after saving settings.
 * Fix           - Fixed an issue that caused the customer to be redirected to a 404 page on an error in the checkout.
 
-= 2020.09.30    - version 2.1.3 = 
+= 2020.09.30    - version 2.1.3 =
 * Enhancement   - Added proper user-agent to test-credentials check requests.
 * Fix           - Fixed an issue with saving the incorrect value as the Klarna environment used. Caused Live orders to show as test orders in the Klarna Order management meta box.
 
-= 2020.09.07    - version 2.1.2 = 
+= 2020.09.07    - version 2.1.2 =
 * Enhancement   - Added compatibility with the plugin WooCommerce Gift Cards. https://woocommerce.com/products/gift-cards/
 * Fix           - Fixed so you can now hide the Klarna banner from the admin pages.
 * Fix           - Klarna banner no longer shows on all admin pages. Only the Dashboard and the Klarna Payments settings page.
 
-= 2020.07.28    - version 2.1.1 = 
+= 2020.07.28    - version 2.1.1 =
 * Fix           - Fixed support for Finish locale again.
 
-= 2020.07.02    - version 2.1.0 = 
+= 2020.07.02    - version 2.1.0 =
 * Feature       - Check if credentials are correct on saving them. If they are not an error message will be displayed with more information.
 * Feature       - Added new countries to the plugin. We have now added support for BE, ES, IT, FR, NZ.
 * Enhancement   - Updated admin page banners with a new design.
 
-= 2020.06.02    - version 2.0.9 = 
+= 2020.06.02    - version 2.0.9 =
 * Enhancement   - Removed fallback icons for payment methods. Could cause a timeout when we tried to verify a URL endpoint.
 * Enhancement   - Updated all API requests to have a default timeout of 10 seconds.
 * Enhancement    - Force payment category to be an array in the template. Prevents issues when updating from a 1.x version to 2.x.
 * Fix           - Prevent errors on failed requests.
 * Fix           - Removed the clearing of a snippet before logging requests. Caused errors for some people.
 
-= 2020.05.15     - version 2.0.8 = 
+= 2020.05.15     - version 2.0.8 =
 * Fix           - Modified redirect url set in process_payment function to improve checkout flow.
 
 = 2020.04.09  	- version 2.0.7 =
@@ -353,12 +353,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 = 2018.01.29  	- version 1.4.2 =
 * Fix           - Cleans up translation strings.
-* Enhancement   - process_payment method refactoring.    
+* Enhancement   - process_payment method refactoring.
 
 = 2018.01.25  	- version 1.4.1 =
 * Fix           - Fixes WC 3.3 notices.
-* Tweak         - Stores Klarna order transaction ID as soon as possible. 
-* Tweak         - Adds "can't edit order" admin note.    
+* Tweak         - Stores Klarna order transaction ID as soon as possible.
+* Tweak         - Adds "can't edit order" admin note.
 
 = 1.0 =
 * Initial release.
