@@ -282,6 +282,120 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Verify the order details.
 		await VerifyOrderRecieved(orderRecievedPage);
 	});
+
+	test('Can place order with coupon 10%', async ({ page }) => {
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page)
+
+		// Add products to the cart.
+		await cartPage.addtoCart(['simple-25']);
+
+		// Go to the checkout page.
+		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
+
+		// Fill in the billing address.
+		await checkoutPage.fillBillingAddress();
+
+		// Apply coupon.
+		await checkoutPage.applyCoupon('percent-10');
+
+		// Place the order.
+		await checkoutPage.placeOrder();
+
+		// Fill in the NIN.
+		await iframe.fillNin();
+
+		// Confirm the order.
+		await iframe.clickConfirm();
+
+		// Verify that the order was placed.
+		await expect(page).toHaveURL(/order-received/);
+
+		orderId = await orderRecievedPage.getOrderId();
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
+	});
+
+	test('Can place order with coupon fixed 10', async ({ page }) => {
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page)
+
+		// Add products to the cart.
+		await cartPage.addtoCart(['simple-25']);
+
+		// Go to the checkout page.
+		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
+
+		// Fill in the billing address.
+		await checkoutPage.fillBillingAddress();
+
+		// Apply coupon.
+		await checkoutPage.applyCoupon('fixed-10');
+
+		// Place the order.
+		await checkoutPage.placeOrder();
+
+		// Fill in the NIN.
+		await iframe.fillNin();
+
+		// Confirm the order.
+		await iframe.clickConfirm();
+
+		// Verify that the order was placed.
+		await expect(page).toHaveURL(/order-received/);
+
+		orderId = await orderRecievedPage.getOrderId();
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
+	});
+
+	test('Can place order with coupon 100%', async ({ page }) => {
+		const cartPage = new WcPages.Cart(page, wcApiClient);
+		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
+		const checkoutPage = new WcPages.Checkout(page);
+		const iframe = new KlarnaPaymentsIframe(page)
+
+		// Add products to the cart.
+		await cartPage.addtoCart(['simple-25']);
+
+		// Go to the checkout page.
+		await checkoutPage.goto();
+
+		await checkoutPage.hasPaymentMethodId(paymentMethodId);
+
+		// Fill in the billing address.
+		await checkoutPage.fillBillingAddress();
+
+		// Apply coupon.
+		await checkoutPage.applyCoupon('fixed-10');
+
+		// Place the order.
+		await checkoutPage.placeOrder();
+
+		// Fill in the NIN.
+		await iframe.fillNin();
+
+		// Confirm the order.
+		await iframe.clickConfirm();
+
+		// Verify that the order was placed.
+		await expect(page).toHaveURL(/order-received/);
+
+		orderId = await orderRecievedPage.getOrderId();
+
+		// Verify the order details.
+		await VerifyOrderRecieved(orderRecievedPage);
+	});
 });
 
 test.describe('Guest Checkout @checkoutBlock', () => {
