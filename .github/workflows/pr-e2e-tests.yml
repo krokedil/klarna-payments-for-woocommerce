@@ -66,4 +66,6 @@ jobs:
         working-directory: tests/e2e
         env:
           CI: 1
+          KLARNA_API_USERNAME: ${{ secrets.KLARNA_API_USERNAME }}
+          KLARNA_API_PASSWORD: ${{ secrets.KLARNA_API_PASSWORD }}
         run: npx playwright test
