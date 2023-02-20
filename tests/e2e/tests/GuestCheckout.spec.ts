@@ -3,6 +3,7 @@ import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
 import { GetWcApiClient, WcPages } from '@krokedil/wc-test-helper';
 import { VerifyOrderRecieved } from '../utils/VerifyOrder';
 import { KlarnaHPP } from '../pages/KlarnaHPP';
+import { gt } from 'semver';
 
 const {
 	BASE_URL,
@@ -399,6 +400,8 @@ test.describe('Guest Checkout @shortcode', () => {
 });
 
 test.describe('Guest Checkout @checkoutBlock', () => {
+	test.skip(!gt(process.env.WC_VERSION, '6.0.0'), 'Skipping guest checkout tests with checkout blocks for WooCommerce < 6.0.0');
+
 	test.use({ storageState: process.env.GUESTSTATE });
 
 	let wcApiClient: APIRequestContext;
