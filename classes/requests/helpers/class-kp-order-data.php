@@ -139,6 +139,11 @@ class KP_Order_Data {
 			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
 		}
 
+		// Order Coupons/Giftcards.
+		foreach ( $this->order_data->get_line_coupons() as $item ) {
+			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
+		}
+
 		// Order compatibility, to support third party plugins that add orders lines that needs to be handled seperatly.
 		foreach ( $this->order_data->get_line_compatibility() as $item ) {
 			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
@@ -177,8 +182,11 @@ class KP_Order_Data {
 			case 'fee':
 				$type = 'surcharge';
 				break;
-			default:
-				$type = 'physical';
+			case 'gift_card':
+				$type = 'gift_card';
+				break;
+			case 'discount':
+				$type = 'discount';
 				break;
 		}
 
@@ -216,7 +224,6 @@ class KP_Order_Data {
         }
 
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
-
 		$customer_data         = $this->order_data->customer;
 
 		$billing = array(
