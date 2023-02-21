@@ -8,7 +8,11 @@
 .editorconfig
 .distignore
 .gitignore
+.gitattributes
 .jshintrc
+DOCKER_ENV
+docker_tag
+output.log
 composer.json
 composer.lock
 package.json
@@ -17,7 +21,8 @@ phpcs.ruleset.xml
 pnpm-lock.yaml
 readme.dev.txt
 readme.dev.md
+README.DEV.md
 readme.md
 README.md
 webpack.config.js
-yarn-lock.json
+yarn.lock
