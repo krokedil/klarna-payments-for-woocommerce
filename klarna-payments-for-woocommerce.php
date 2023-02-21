@@ -5,12 +5,12 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 2.12.1
+ * Version: 3.0.0-beta.1
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
- * WC requires at least: 3.4.0
- * WC tested up to: 7.0.0
+ * WC requires at least: 5.6.0
+ * WC tested up to: 7.3.0
  *
  * Copyright (c) 2017-2022 Krokedil
  *
@@ -34,12 +34,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use KlarnaPayments\Blocks\Payments\KlarnaPayments;
+
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '2.12.1' );
-define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.0.0' );
-define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '3.4.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '3.0.0-beta.1' );
+define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
+define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
@@ -95,6 +97,20 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $notices = array();
 
 		/**
+		 * KP Api class. Handles communication with Klarna.
+		 *
+		 * @var KP_Api|null
+		 */
+		public $api = null;
+
+		/**
+		 * KP Session class. Stores and handles the session data.
+		 *
+		 * @var KP_Session|null
+		 */
+		public $session = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -114,8 +130,18 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * Init the plugin after plugins_loaded so environment variables are set.
 		 */
 		public function init() {
+			// Include the autoloader from composer. If it fails, we'll just return and not load the plugin. But an admin notice will show to the merchant.
+			if ( ! $this->init_composer() ) {
+				return;
+			}
+
 			// Init the gateway itself.
 			$this->include_files();
+
+			$this->api     = new KP_Api();
+			$this->session = new KP_Session();
+
+			$this->register_payment_block();
 		}
 
 		/**
@@ -141,9 +167,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				$current_screen = get_current_screen();
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
-					<div class="notice notice-warning">
-						<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
-					</div>
+<div class="notice notice-warning">
+	<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
+</div>
 					<?php
 				}
 			}
@@ -203,20 +229,20 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				$permalinks = get_option( 'permalink_structure' );
 				if ( empty( $permalinks ) ) {
 					?>
-				<div class="kp-message notice woocommerce-message notice-error">
-				<a class="woocommerce-message-close notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
+					<div class="kp-message notice woocommerce-message notice-error">
+						<a class="woocommerce-message-close notice-dismiss"
+							href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
 					<?php
-
-					echo wp_kses_post(
-						wpautop(
-							'<p>' . sprintf(
-								// translators: URL to docs.
-								__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
-								esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
+						echo wp_kses_post(
+							wpautop(
+								'<p>' . sprintf(
+									// translators: URL to docs.
+									__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
+									esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
+								)
 							)
-						)
-					);
-					?>
+						);
+						?>
 					</div>
 					<?php
 				}
@@ -234,7 +260,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 
 			// Classes.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php';  // This is loaded very early becasue we'll need these settings right away.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php'; // This is loaded very early becasue we'll need these settings right away.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-gateway-klarna-payments.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-gdpr.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-ajax.php';
@@ -244,19 +270,22 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-callbacks.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-checkout.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-assets.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-api.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 
 			// Requests.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-post.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-update-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-place-order.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-iframe.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-test-credentials.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-hpp.php';
 
 			// Request helpers.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-order-lines.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-customer-data.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-iframe.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-order-data.php';
 
 			// Includes.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/kp-functions.php';
@@ -264,6 +293,54 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			if ( is_admin() ) {
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-klarna-for-woocommerce-addons.php';
 				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-banners.php';
+			}
+		}
+
+		public function init_composer() {
+			$autoloader = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
+
+			if ( ! is_readable( $autoloader ) ) {
+				self::missing_autoloader();
+				return false;
+			}
+
+			$autoloader_result = require $autoloader;
+			if ( ! $autoloader_result ) {
+				return false;
+			}
+
+			return $autoloader_result;
+		}
+
+		protected static function missing_autoloader() {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( // phpcs:ignore
+					esc_html__( 'Your installation of Klarna Payments is not complete. If you installed this plugin directly from Github please refer to the README.DEV.md file in the plugin.', 'klarna-payments-for-woocommerce' )
+				);
+			}
+			add_action(
+				'admin_notices',
+				function () {
+					?>
+						<div class="notice notice-error">
+							<p>
+								<?php echo esc_html__( 'Your installation of Klarna Payments is not complete. If you installed this plugin directly from Github please refer to the README.DEV.md file in the plugin.', 'klarna-payments-for-woocommerce' ) ?>
+							</p>
+						</div>
+					<?php
+				}
+			);
+		}
+
+		/**
+		 * Registers the Klarna payments block with WooCommerce.
+		 *
+		 * @return void
+		 */
+		public function register_payment_block() {
+			if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
+				require_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/Blocks/Payment/KlarnaPayments.php';
+				KlarnaPayments::register();
 			}
 		}
 	}

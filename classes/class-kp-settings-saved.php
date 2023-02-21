@@ -46,103 +46,41 @@ class KP_Settings_Saved {
 		if ( $options && 'yes' !== $options['enabled'] ) {
 			return;
 		}
-		$countries = array(
-			'AU' => array(
-				'region'   => 'oc',
-				'currency' => 'AUD',
-			),
-			'AT' => array(
-				'region'   => 'eu',
-				'currency' => 'EUR',
-			),
-			'BE' => array(
-				'region'   => 'eu',
-				'currency' => 'EUR',
-			),
-			'CA' => array(
-				'region'   => 'na',
-				'currency' => 'CAD',
-			),
-			'DK' => array(
-				'region'   => 'eu',
-				'currency' => 'DKK',
-			),
-			'DE' => array(
-				'region'   => 'eu',
-				'currency' => 'EUR',
-			),
-			'FI' => array(
-				'region'   => 'eu',
-				'currency' => 'EUR',
-			),
-			'FR' => array(
-				'region'   => 'eu',
-				'currency' => 'EUR',
-			),
-			'IT' => array(
-				'region'   => 'eu',
-				'currency' => 'EUR',
-			),
-			'NL' => array(
-				'region'   => 'eu',
-				'currency' => 'EUR',
-			),
-			'NO' => array(
-				'region'   => 'eu',
-				'currency' => 'NOK',
-			),
-			'NZ' => array(
-				'region'   => 'oc',
-				'currency' => 'NZD',
-			),
-			'MX' => array(
-				'region'   => 'na',
-				'currency' => 'MXN',
-			),
-			'PL' => array(
-				'region'   => 'eu',
-				'currency' => 'PLN',
-			),
-			'SE' => array(
-				'region'   => 'eu',
-				'currency' => 'SEK',
-			),
-			'ES' => array(
-				'region'   => 'eu',
-				'currency' => 'EUR',
-			),
-			'CH' => array(
-				'region'   => 'eu',
-				'currency' => 'CHF',
-			),
-			'UK' => array(
-				'region'   => 'eu',
-				'currency' => 'GBP',
-			),
-			'US' => array(
-				'region'   => 'na',
-				'currency' => 'USD',
-			),
-		);
+		$countries = KP_Form_Fields::$kp_form_auto_countries;
 
 		foreach ( $countries as $cc => $country ) {
-			$lc_cc = strtolower( $cc );
-			$lc_cc = 'uk' === $lc_cc ? 'gb' : $lc_cc;
+			$cc = 'uk' === $cc ? 'gb' : $cc;
 			// Live.
-			if ( '' !== $options[ 'merchant_id_' . $lc_cc ] ) {
-				$username = $options[ 'merchant_id_' . $lc_cc ];
-				$password = $options[ 'shared_secret_' . $lc_cc ];
+			if ( '' !== $options[ 'merchant_id_' . $cc ] ) {
+				$username = $options[ 'merchant_id_' . $cc ];
+				$password = $options[ 'shared_secret_' . $cc ];
 
-				$test_response = ( new KP_Test_Credentials() )->request( $username, $password, false, $country, $lc_cc );
+				// Create request arguments.
+				$args = array(
+					'username' => $username,
+					'password' => $password,
+					'country'  => $cc,
+					'testmode' => false,
+				);
+
+				$test_response = ( new KP_Test_Credentials( $args ) )->request();
 				$this->process_test_response( $test_response, self::PROD, $cc );
 			}
 
 			// Test.
-			if ( '' !== $options[ 'test_merchant_id_' . $lc_cc ] ) {
-				$username = $options[ 'test_merchant_id_' . $lc_cc ];
-				$password = $options[ 'test_shared_secret_' . $lc_cc ];
+			if ( '' !== $options[ 'test_merchant_id_' . $cc ] ) {
+				$username = $options[ 'test_merchant_id_' . $cc ];
+				$password = $options[ 'test_shared_secret_' . $cc ];
 
-				$test_response = ( new KP_Test_Credentials() )->request( $username, $password, true, $country, $lc_cc );
+				// Create request arguments.
+				$args = array(
+					'username' => $username,
+					'password' => $password,
+					'country'  => $cc,
+					'testmode' => true,
+				);
+
+				$test_response = ( new KP_Test_Credentials( $args ) )->request();
 				$this->process_test_response( $test_response, self::TEST, $cc );
 			}
 
@@ -154,7 +92,7 @@ class KP_Settings_Saved {
 	 * Processes the test response.
 	 *
 	 * @param array|WP_Error $test_response The response from the test.
-	 * @param array          $test The test that was run.
+	 * @param string         $test The test that was run.
 	 * @param string         $cc The county code.
 	 * @return void
 	 */
@@ -163,13 +101,17 @@ class KP_Settings_Saved {
 		if ( ! is_wp_error( $test_response ) ) {
 			return;
 		}
+		$cc             = strtoupper( $cc );
 		$code           = $test_response->get_error_code();
-		$error          = json_decode( $test_response->get_error_message(), true );
+		$error          = $test_response->get_error_message();
 		$data           = json_decode( $test_response->get_error_data(), true );
 		$error_message  = $error['message'];
 		$correlation_id = $data['correlation_id'];
-		if ( 401 === $code || 403 === $code ) {
+		if ( 400 === $code || 401 === $code || 403 === $code ) {
 			switch ( $code ) {
+				case 400:
+					$message = "It seems like your Klarna $cc $test credentials are not configured correctly, please your Klarna contract and ensure that your account is configured correctly for this country. ";
+					break;
 				case 401:
 					$message = "It seems like your Klarna $cc $test credentials are incorrect, please verify or remove these credentials and save again. ";
 					break;

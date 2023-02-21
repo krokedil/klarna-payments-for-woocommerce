@@ -19,6 +19,7 @@ class KP_Callbacks {
 	public function __construct() {
 		add_action( 'woocommerce_api_kp_wc_authorization', array( $this, 'authorization_cb' ) );
 		add_action( 'kp_wc_authorization', array( $this, 'kp_wc_authorization' ), 10, 2 );
+		add_action( 'init', array( $this, 'process_hpp_redirect' ), 9999 );
 	}
 
 	/**
@@ -74,8 +75,7 @@ class KP_Callbacks {
 			return;
 		}
 
-		$request  = new KP_Place_Order( $order_id, $country );
-		$response = $request->request( $auth_token );
+		$response = KP_WC()->api->place_order( $country, $auth_token, $order_id );
 		if ( is_wp_error( $response ) ) {
 			/**
 			 * WordPress error handling.
@@ -105,6 +105,61 @@ class KP_Callbacks {
 				break;
 		}
 
+	}
+
+	/**
+	 * Handle the hpp redirect from Klarna.
+	 *
+	 * @return void
+	 */
+	public function process_hpp_redirect() {
+		$session_id = filter_input( INPUT_GET, 'sid', FILTER_SANITIZE_SPECIAL_CHARS );
+		$auth_token = filter_input( INPUT_GET, 'authorization_token', FILTER_SANITIZE_SPECIAL_CHARS );
+		$order_key  = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS );
+
+		// Return if anything is null.
+		if ( null === $session_id || null === $auth_token || null === $order_key ) {
+			return;
+		}
+
+		$order_id = wc_get_order_id_by_order_key( $order_key );
+		$order    = wc_get_order( $order_id );
+		$country  = $order->get_billing_country();
+
+		// Trigger place order on the auth token with KP.
+		$response = KP_WC()->api->place_order( $country, $auth_token, $order_id );
+		if ( is_wp_error( $response ) ) {
+			/**
+			 * WordPress error handling.
+			 *
+			 * @var WP_Error $response The error response.
+			 */
+			$order->add_order_note( __( 'Failed to complete the order when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) . $response->get_error_message() );
+			return;
+		}
+
+		$fraud_status = $response['fraud_status'];
+		switch ( $fraud_status ) {
+			case 'ACCEPTED':
+				kp_process_accepted( $order, $response );
+				$order->add_order_note( __( 'The Klarna order was successfully completed', 'klarna-payments-for-woocommerce' ) );
+				kp_unset_session_values();
+				break;
+			case 'PENDING':
+				kp_process_pending( $order, $response );
+				$order->add_order_note( __( 'The Klarna order is pending approval by Klarna', 'klarna-payments-for-woocommerce' ) );
+				kp_unset_session_values();
+				break;
+			case 'REJECTED':
+				kp_process_rejected( $order, $response );
+				$order->add_order_note( __( 'The Klarna order was rejected by Klarna', 'klarna-payments-for-woocommerce' ) );
+				kp_unset_session_values();
+				break;
+			default:
+				$order->add_order_note( __( 'Failed to complete the order when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) );
+				kp_unset_session_values();
+				break;
+		}
 	}
 }
 new KP_Callbacks();

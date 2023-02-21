@@ -3,10 +3,10 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 4.0
-Tested up to: 6.1
+Tested up to: 6.1.1
 Requires PHP: 7.0
-WC requires at least: 4.0.0
-WC tested up to: 7.0.0
+WC requires at least: 5.6.0
+WC tested up to: 7.4.0
 Stable tag: 2.12.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -51,6 +51,14 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2023.02.20    - version 3.0.0 =
+* Feature       - Added support for WooCommerce Checkout blocks using Klarna Payments.
+* Feature       - Added support for Romania.
+* Feature       - Added a lot more filters to everything in the requests to Klarna, to make it easier to customize the data as needed.
+* Enhancement   - Improved the logs for each request, with the ability to add a lot more information to each log. This will help with debugging issues faster.
+* Enhancement   - Reduced the amount of requests needed to place an order with Klarna.
+* Note          - This version contains a lot of major changes to the plugin, so please test thoroughly before updating to this version to ensure that it works as expected on your store.
+
 = 2022.10.27    - version 2.12.1 =
 * Fix           - Fixed a critical error when trying to clear the session.
 

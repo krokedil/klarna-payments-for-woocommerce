@@ -1,122 +1,60 @@
 <?php
 /**
- * Create KP session
+ * Class for the testing credentials requests.
  *
- * @package WC_Klarna_Payments/Classes/Post/Requests
+ * @package WC_Klarna_Payments/Classes/Requests/POST
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Create KP Order
+ * KP_Test_Credentials class.
  */
-class KP_Test_Credentials {
+class KP_Test_Credentials extends KP_Requests_Post {
 	/**
-	 * Makes the request.
+	 * Class constructor.
 	 *
-	 * @param string $username The username to use.
-	 * @param string $password The password to use.
-	 * @param bool   $testmode If its test mode or not.
-	 * @param array  $country The needed country params.
-	 * @param string $cc The country code.
-	 * @return array
+	 * @param array $arguments The request arguments.
 	 */
-	public function request( $username, $password, $testmode, $country, $cc ) {
-		$request_url       = $this->get_test_endpoint( $testmode, $country['region'] ) . 'payments/v1/sessions';
-		$request_args      = apply_filters( 'kp_wc_test_credentials', $this->get_request_args( $username, $password, $country, $cc ) );
-		$response          = wp_remote_request( $request_url, $request_args );
-		$code              = wp_remote_retrieve_response_code( $response );
-		$formated_response = $this->process_response( $response, $request_args, $request_url );
-		// Log the request.
-		$log = KP_Logger::format_log( null, 'POST', 'KP test credentials', $request_args, json_decode( wp_remote_retrieve_body( $response ), true ), $code, $request_url );
-		KP_Logger::log( $log );
-		return $formated_response;
+	public function __construct( $arguments ) {
+		parent::__construct( $arguments );
+
+		$this->log_title      = 'Test credentials';
+		$this->request_filter = 'wc_klarna_payments_create_session_args';
+		$this->endpoint       = 'payments/v1/sessions';
 	}
 
 	/**
-	 * Gets the request body for the API call.
+	 * Overrides the default set_credentials method to use the once passed from arguments.
 	 *
-	 * @return string
-	 * @param array  $country The needed country params.
-	 * @param string $cc The country code.
+	 * @return void
 	 */
-	public function get_request_body( $country, $cc ) {
-		return wp_json_encode(
-			array(
-				'purchase_country'  => strtoupper( $cc ),
-				'purchase_currency' => $country['currency'],
-				'locale'            => 'en-US',
-				'order_amount'      => 100,
-				'order_lines'       => array(
-					array(
-						'name'         => 'Test credentials Product',
-						'quantity'     => 1,
-						'total_amount' => 100,
-						'unit_price'   => 100,
-					),
-				),
-			)
-		);
+	public function set_credentials() {
+		$this->merchant_id   = $this->arguments['username'];
+		$this->shared_secret = $this->arguments['password'];
 	}
 
 	/**
-	 * Gets the request args for the API call.
+	 * Get the body for the request.
 	 *
-	 * @param string $username The username to use.
-	 * @param string $password The password to use.
-	 * @param array  $country The needed country params.
-	 * @param string $cc The country code.
 	 * @return array
 	 */
-	protected function get_request_args( $username, $password, $country, $cc ) {
+	protected function get_body() {
+		$country_data = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $this->arguments['country'] ?? '' ) ] ?? null;
+
 		return array(
-			'headers'    => array(
-				'Authorization' => 'Basic ' . base64_encode( $username . ':' . htmlspecialchars_decode( $password ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
-				'Content-Type'  => 'application/json',
+			'purchase_country'  => strtoupper( $this->arguments['country'] ),
+			'purchase_currency' => $country_data['currency'],
+			'locale'            => 'en-US',
+			'order_amount'      => 100,
+			'order_lines'       => array(
+				array(
+					'name'         => 'Test credentials Product',
+					'quantity'     => 1,
+					'total_amount' => 100,
+					'unit_price'   => 100,
+				),
 			),
-			'method'     => 'POST',
-			'body'       => $this->get_request_body( $country, $cc ),
-			'user-agent' => apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) ) . ' - WooCommerce: ' . WC()->version . ' - KP:' . WC_KLARNA_PAYMENTS_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil',
-			'timeout'    => 10,
 		);
-	}
-
-	/**
-	 * Gets the endpoint for the test.
-	 *
-	 * @param bool   $testmode If its test mode or not.
-	 * @param string $endpoint The endpoint for the request.
-	 */
-	public function get_test_endpoint( $testmode, $endpoint ) {
-		$country_string = '';
-		if ( 'eu' !== $endpoint ) {
-			$country_string = "-$endpoint";
-		}
-		$test_string = $testmode ? '.playground' : '';
-
-		return 'https://api' . $country_string . $test_string . '.klarna.com/';
-	}
-
-	/**
-	 * Checks response for any error.
-	 *
-	 * @param object $response The response.
-	 * @param array  $request_args The request args.
-	 * @param string $request_url The request URL.
-	 * @return object|array
-	 */
-	public function process_response( $response, $request_args = array(), $request_url = '' ) {
-		// Check if response is a WP_Error, and return it back if it is.
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
-		// Check the status code, if its not between 200 and 299 then its an error.
-		if ( wp_remote_retrieve_response_code( $response ) < 200 || wp_remote_retrieve_response_code( $response ) > 299 ) {
-			$error_message = wp_json_encode( $response['response'] );
-			return new WP_Error( wp_remote_retrieve_response_code( $response ), $error_message, $response['body'] );
-		}
-		return json_decode( wp_remote_retrieve_body( $response ), true );
 	}
 }
