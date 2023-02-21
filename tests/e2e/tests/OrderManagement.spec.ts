@@ -9,8 +9,6 @@ const {
 } = process.env;
 
 test.describe('Order management @shortcode', () => {
-	// Run tests in parallel, also can not be retried.
-	test.describe.configure({ mode: 'serial', retries: 1 });
 	test.use({ storageState: process.env.GUESTSTATE });
 
 	let wcApiClient: APIRequestContext;
