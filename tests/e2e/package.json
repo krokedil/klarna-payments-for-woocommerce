@@ -15,7 +15,7 @@
     "test:debug": "playwright test --headed",
     "test:debug:browser": "playwright test --headed --browser=chromium",
     "test:docker:up": "npm run docker:up && npm run test",
-    "docker:up": "docker-compose up -d --build wp db && docker-compose run --rm wp-cli",
+    "docker:up": "docker-compose up -d --build wp db && docker-compose run --rm wp-cli && docker-compose run --rm wp composer install --no-dev --working-dir=/var/www/html/wp-content/plugins/klarna-payments-for-woocommerce",
     "docker:down": "docker-compose down -v"
   }
 }
