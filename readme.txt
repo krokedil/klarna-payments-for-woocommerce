@@ -54,7 +54,7 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 = 2023.02.20    - version 3.0.0 =
 * Feature       - Added support for WooCommerce Checkout blocks using Klarna Payments.
 * Feature       - Added support for Romania.
-* Feature       - Added alot more filters to everything in the requests to Klarna, to make it easier to customize the data as needed. A full list of filters can be found in the [documentation](https://docs.krokedil.com/klarna-payments-for-woocommerce/).
+* Feature       - Added a lot more filters to everything in the requests to Klarna, to make it easier to customize the data as needed.
 * Enhancement   - Improved the logs for each request, with the ability to add a lot more information to each log. This will help with debugging issues faster.
 * Enhancement   - Reduced the amount of requests needed to place an order with Klarna.
 * Note          - This version contains a lot of major changes to the plugin, so please test thoroughly before updating to this version to ensure that it works as expected on your store.

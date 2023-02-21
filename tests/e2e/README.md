@@ -31,7 +31,7 @@ If you want to run the tests against a local environment you will need to set so
 2. Create a `.env` in the tests folder file following the example in the [.example.env](./.example.env) file
 3. Open the `tests/e2e` folder in your CLI. For VS Code you can rightclick the folder and press "Open in Integrated Ierminal".
 4. Run `npm ci` to install required packages.
-5. Run `npm test` to run the normal tests, and `npm run test:debug` to run the tests with headless mode turned off to be able to see the browser while the test is running.
+5. Run `npm run test` to run the normal tests, and `npm run test:debug` to run the tests with headless mode turned off to be able to see the browser while the test is running.
 
 #### Usefull links
 * [Playwright documentation](https://playwright.dev/docs/intro)
