@@ -20,6 +20,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		public static function init() {
 			self::add_ajax_events();
 		}
+
 		/**
 		 * Hook in methods - uses WordPress ajax handlers (admin-ajax).
 		 */
@@ -46,20 +47,20 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return void
 		 */
 		public static function kp_wc_place_order() {
-			$order_id   = filter_input( INPUT_POST, 'order_id', FILTER_SANITIZE_STRING );
-			$auth_token = filter_input( INPUT_POST, 'auth_token', FILTER_SANITIZE_STRING );
+			$order_id   = filter_input( INPUT_POST, 'order_id', FILTER_SANITIZE_SPECIAL_CHARS );
+			$auth_token = filter_input( INPUT_POST, 'auth_token', FILTER_SANITIZE_SPECIAL_CHARS );
 
 			if ( empty( $order_id ) || empty( $auth_token ) ) {
 				wp_send_json_error( 'missing_data' );
 			}
 
 			$order    = wc_get_order( $order_id );
-			$request  = new KP_Place_Order( $order_id );
-			$response = $request->request( $auth_token );
+			$response = KP_WC()->api->place_order( kp_get_klarna_country(), $auth_token, $order_id );
+
 			if ( is_wp_error( $response ) ) {
-				wc_add_notice( kp_extract_error_message( $response ), 'error' );
 				wp_send_json_error( kp_extract_error_message( $response ) );
 			}
+
 			$fraud_status = $response['fraud_status'];
 			switch ( $fraud_status ) {
 				case 'ACCEPTED':
@@ -96,9 +97,9 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 			}
 			// @codingStandardsIgnoreStart
-			$order_id  = $_POST['order_id'];
+			$order_id = $_POST['order_id'];
 			$show_form = $_POST['show_form'];
-			$order     = wc_get_order( $order_id );
+			$order = wc_get_order( $order_id );
 			// @codingStandardsIgnoreEnd
 			if ( 'true' === $show_form ) {
 				$order->add_order_note( __( 'Customer aborted purchase with Klarna.', 'klarna-payments-for-woocommerce' ) );
@@ -120,7 +121,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 			}
 			$posted_message    = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
-			$klarna_session_id = WC()->session->get( 'klarna_payments_session_id' );
+			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
 			$message           = "Frontend JS $klarna_session_id: $posted_message";
 			KP_Logger::log( $message );
 			wp_send_json_success();
@@ -137,7 +138,8 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 			}
 
-			$customer = filter_var_array( $_POST['message'], FILTER_SANITIZE_STRING );
+			$customer = filter_input( INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY );
+
 			if ( ! $customer ) {
 				wp_send_json_error( 'Failed to filter the message.', $customer );
 			}
