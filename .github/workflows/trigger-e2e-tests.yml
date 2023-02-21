@@ -65,5 +65,7 @@ jobs:
         working-directory: tests/e2e
         env:
           CI: 1
+          KLARNA_API_USERNAME: ${{ secrets.KLARNA_API_USERNAME }}
+          KLARNA_API_PASSWORD: ${{ secrets.KLARNA_API_PASSWORD }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: npx playwright test
