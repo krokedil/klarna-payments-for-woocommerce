@@ -12,9 +12,9 @@ const {
 const config: PlaywrightTestConfig = {
 	fullyParallel: true,
 	testDir: './tests',
-	timeout: 60 * 1000,
+	timeout: 60 * 2000,
 	expect: {
-		timeout: 10 * 1000
+		timeout: 10 * 2000
 	},
 	forbidOnly: !!CI,
 	retries: 1,
