@@ -102,6 +102,9 @@ test.describe('Customer Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
+		// Wait for 1 second to make sure the iframe is loaded, since we dont fill any address details this happens pretty quickly.
+		await page.waitForTimeout(1000);
+
 		// Fill in the NIN.
 		await iframe.fillNin();
 
