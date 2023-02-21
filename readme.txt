@@ -2,12 +2,12 @@
 Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
-Requires at least: 4.0
+Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 7.0
 WC requires at least: 5.6.0
 WC tested up to: 7.4.0
-Stable tag: 2.12.1
+Stable tag: 3.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -44,7 +44,7 @@ __Klarna Payments__ removes the headaches of payments, for both consumers and me
 
 == Frequently Asked Questions ==
 = Which countries does this payment gateway support? =
-Klarna Payments works for merchants in Australia, Austria, Belgium, Canada, Czech Republic, Denmark, Finland, France, Germany, Greece, Ireland (Republic of Ireland), Italy, Netherlands, New Zealand, Norway, Poland, Portugal, Spain, Sweden, Switzerland, United Kingdom and United States.
+Klarna Payments works for merchants in Australia, Austria, Belgium, Canada, Czech Republic, Denmark, Finland, France, Germany, Greece, Ireland (Republic of Ireland), Italy, Netherlands, New Zealand, Norway, Poland, Portugal, Romania, Spain, Sweden, Switzerland, United Kingdom and United States.
 
 = Where can I find Klarna Payments for WooCommerce documentation? =
 For help setting up and configuring Klarna Payments for WooCommerce please refer to our [documentation](https://docs.krokedil.com/klarna-payments-for-woocommerce/).
