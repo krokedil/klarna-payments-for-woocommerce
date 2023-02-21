@@ -20,7 +20,9 @@ export class KlarnaPaymentsIframe {
 	}
 
 	async fillNin(nin: string = '410321-9202') {
-		await this.ninInput.fill(nin);
+		await this.ninInput.isVisible();
+		await this.ninInput.click();
+		await this.ninInput.type(nin);
 	}
 
 	async clickConfirm() {
