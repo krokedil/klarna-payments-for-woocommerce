@@ -51,6 +51,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $float_what_is_klarna;
 
 	/**
+	 * Bool if we should use test mode or not.
+	 *
+	 * @var bool
+	 */
+	public $testmode;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -73,6 +80,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->title         = $this->get_option( 'title' );
 		$this->enabled       = $this->get_option( 'enabled' );
 		$this->customer_type = $this->get_option( 'customer_type' );
+		$this->testmode      = 'yes' === $this->get_option( 'testmode' );
 
 		// What is Klarna link.
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
@@ -268,7 +276,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			);
 		}
 
-		// Set both WooCommerce meta data, and session meta data for now.
+		// Set the order meta data.
+		$environment = $this->testmode ? 'test' : 'live';
+		$order->add_meta_data( '_wc_klarna_environment', $environment, true );
 		$order->add_meta_data( '_wc_klarna_country', $klarna_country, true );
 		$order->add_meta_data( '_kp_session_id', $klarna_session_id, true );
 
@@ -314,7 +324,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Create a HPP url.
 		$hpp = KP_WC()->api->create_hpp( $klarna_country, $session_id, $order->get_id() );
 
-		// Set both WooCommerce meta data, and session meta data for now.
+		// Set the order meta data.
+		$environment = $this->testmode ? 'test' : 'live';
+		$order->add_meta_data( '_wc_klarna_environment', $environment, true );
 		$order->add_meta_data( '_wc_klarna_country', $klarna_country, true );
 		$order->add_meta_data( '_kp_session_id', $session_id, true );
 

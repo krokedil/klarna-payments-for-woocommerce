@@ -54,7 +54,7 @@ abstract class KP_Requests extends Request {
 			'plugin_short_name'      => 'KP',
 			'plugin_user_agent_name' => 'KP',
 			'logging_enabled'        => 'yes' === $settings['logging'],
-			'extended_debugging'     => 'no' === $settings['extra_logging'],
+			'extended_debugging'     => 'yes' === ( isset( $settings['extra_logging'] ) ? $settings['extra_logging'] : 'no' ),
 			'base_url'               => $this->get_base_url( $arguments['country'], $settings ),
 		);
 
