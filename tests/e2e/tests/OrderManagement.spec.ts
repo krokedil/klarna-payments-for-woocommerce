@@ -1,5 +1,6 @@
 import { AdminLogin, GetWcApiClient, WcPages } from '@krokedil/wc-test-helper';
 import { test, expect, APIRequestContext } from '@playwright/test';
+import { gt, valid } from 'semver';
 import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
 import { KlarnaHPP } from '../pages/KlarnaHPP';
 
@@ -162,6 +163,11 @@ test.describe('Order management @shortcode', () => {
 });
 
 test.describe('Order management @checkoutBlock', () => {
+	test.skip(
+		valid(process.env.WC_VERSION) && // And it is not an empty string
+		!gt(process.env.WC_VERSION, '6.0.0'), // And
+		'Skipping tests with checkout blocks for WooCommerce < 6.0.0');
+
 	test.use({ storageState: process.env.GUESTSTATE });
 
 	let wcApiClient: APIRequestContext;
