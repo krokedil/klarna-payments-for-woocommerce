@@ -11,8 +11,6 @@ const {
 } = process.env;
 
 test.describe('Order management @shortcode', () => {
-	test.use({ storageState: process.env.GUESTSTATE });
-
 	let wcApiClient: APIRequestContext;
 
 	let orderId;
@@ -21,16 +19,15 @@ test.describe('Order management @shortcode', () => {
 		wcApiClient = await GetWcApiClient(BASE_URL ?? 'http://localhost:8080', CONSUMER_KEY ?? 'admin', CONSUMER_SECRET ?? 'password');
 	});
 
-	test.afterEach(async ({ page }) => {
+	test.afterEach(async () => {
 		// Delete the order from WooCommerce.
 		await wcApiClient.delete(`orders/${orderId}`);
-
-		// Clear all cookies.
-		await page.context().clearCookies();
 	});
 
-	test('Can capture an order', async ({ page }) => {
+	test('Can capture an order', async ({ browser }) => {
 		await test.step('Place an order with Klarna Payments.', async () => {
+			const context = await browser.newContext({ storageState: process.env.GUESTSTATE });
+			const page = await context.newPage();
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.Checkout(page);
@@ -47,22 +44,25 @@ test.describe('Order management @shortcode', () => {
 			await expect(page).toHaveURL(/order-received/);
 
 			orderId = await orderRecievedPage.getOrderId();
+			page.close();
 		});
 
 		await test.step('Capture the order.', async () => {
-			// Login as admin.
-			await AdminLogin(page);
-
+			const context = await browser.newContext({ storageState: process.env.ADMINSTATE });
+			const page = await context.newPage();
 			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.completeOrder();
 
 			expect(await adminSingleOrder.hasOrderNoteWithText('Klarna order captured')).toBe(true);
+			page.close();
 		});
 	});
 
-	test('Can cancel an order', async ({ page }) => {
+	test('Can cancel an order', async ({ browser }) => {
 		await test.step('Place an order with Klarna Payments.', async () => {
+			const context = await browser.newContext({ storageState: process.env.GUESTSTATE });
+			const page = await context.newPage();
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.Checkout(page);
@@ -79,23 +79,27 @@ test.describe('Order management @shortcode', () => {
 			await expect(page).toHaveURL(/order-received/);
 
 			orderId = await orderRecievedPage.getOrderId();
+			page.close();
 		});
 
 		await test.step('Cancel the order.', async () => {
-			// Login as admin.
-			await AdminLogin(page);
+			const context = await browser.newContext({ storageState: process.env.ADMINSTATE });
+			const page = await context.newPage();
 
 			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.cancelOrder();
 
 			expect(await adminSingleOrder.hasOrderNoteWithText('Klarna order cancelled')).toBe(true);
+			page.close();
 		});
 	});
 
-	test('Can refund an order', async ({ page }) => {
+	test('Can refund an order', async ({ browser }) => {
 		let order;
 		await test.step('Place an order with Klarna Payments.', async () => {
+			const context = await browser.newContext({ storageState: process.env.GUESTSTATE });
+			const page = await context.newPage();
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.Checkout(page);
@@ -113,23 +117,27 @@ test.describe('Order management @shortcode', () => {
 
 			order = await orderRecievedPage.getOrder();
 			orderId = order.id;
+			page.close();
 		});
 
 		await test.step('Fully refund the order.', async () => {
-			// Login as admin.
-			await AdminLogin(page);
+			const context = await browser.newContext({ storageState: process.env.ADMINSTATE });
+			const page = await context.newPage();
 
 			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.completeOrder();
 			await adminSingleOrder.refundFullOrder(order, false);
 			expect(await adminSingleOrder.hasOrderNoteWithText('refunded via Klarna')).toBe(true);
+			page.close();
 		});
 	});
 
-	test('Can partially refund an order', async ({ page }) => {
+	test('Can partially refund an order', async ({ browser }) => {
 		let order;
 		await test.step('Place an order with Klarna Payments.', async () => {
+			const context = await browser.newContext({ storageState: process.env.GUESTSTATE });
+			const page = await context.newPage();
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.Checkout(page);
@@ -147,17 +155,19 @@ test.describe('Order management @shortcode', () => {
 
 			order = await orderRecievedPage.getOrder();
 			orderId = order.id;
+			page.close();
 		});
 
 		await test.step('Partially refund the order.', async () => {
-			// Login as admin.
-			await AdminLogin(page);
+			const context = await browser.newContext({ storageState: process.env.ADMINSTATE });
+			const page = await context.newPage();
 
 			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.completeOrder();
 			await adminSingleOrder.refundFullOrder(order, false);
 			expect(await adminSingleOrder.hasOrderNoteWithText('refunded via Klarna')).toBe(true);
+			page.close();
 		});
 	});
 });
@@ -168,8 +178,6 @@ test.describe('Order management @checkoutBlock', () => {
 		!gt(process.env.WC_VERSION, '6.0.0'), // And
 		'Skipping tests with checkout blocks for WooCommerce < 6.0.0');
 
-	test.use({ storageState: process.env.GUESTSTATE });
-
 	let wcApiClient: APIRequestContext;
 
 	let orderId;
@@ -178,16 +186,15 @@ test.describe('Order management @checkoutBlock', () => {
 		wcApiClient = await GetWcApiClient(BASE_URL ?? 'http://localhost:8080', CONSUMER_KEY ?? 'admin', CONSUMER_SECRET ?? 'password');
 	});
 
-	test.afterEach(async ({ page }) => {
+	test.afterEach(async () => {
 		// Delete the order from WooCommerce.
 		await wcApiClient.delete(`orders/${orderId}`);
-
-		// Clear all cookies.
-		await page.context().clearCookies();
 	});
 
-	test('Can capture an order', async ({ page }) => {
+	test('Can capture an order', async ({ browser }) => {
 		await test.step('Place an order with Klarna Payments.', async () => {
+			const context = await browser.newContext({ storageState: process.env.GUESTSTATE });
+			const page = await context.newPage();
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.CheckoutBlock(page);
@@ -214,22 +221,26 @@ test.describe('Order management @checkoutBlock', () => {
 			await expect(page).toHaveURL(/order-received/);
 
 			orderId = await orderRecievedPage.getOrderId();
+			page.close();
 		});
 
 		await test.step('Capture the order.', async () => {
-			// Login as admin.
-			await AdminLogin(page);
+			const context = await browser.newContext({ storageState: process.env.ADMINSTATE });
+			const page = await context.newPage();
 
 			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.completeOrder();
 
 			expect(await adminSingleOrder.hasOrderNoteWithText('Klarna order captured')).toBe(true);
+			page.close();
 		});
 	});
 
-	test('Can cancel an order', async ({ page }) => {
+	test('Can cancel an order', async ({ browser }) => {
 		await test.step('Place an order with Klarna Payments.', async () => {
+			const context = await browser.newContext({ storageState: process.env.GUESTSTATE });
+			const page = await context.newPage();
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.CheckoutBlock(page);
@@ -257,23 +268,27 @@ test.describe('Order management @checkoutBlock', () => {
 			await expect(page).toHaveURL(/order-received/);
 
 			orderId = await orderRecievedPage.getOrderId();
+			page.close();
 		});
 
 		await test.step('Cancel the order.', async () => {
-			// Login as admin.
-			await AdminLogin(page);
+			const context = await browser.newContext({ storageState: process.env.ADMINSTATE });
+			const page = await context.newPage();
 
 			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.cancelOrder();
 
 			expect(await adminSingleOrder.hasOrderNoteWithText('Klarna order cancelled')).toBe(true);
+			page.close();
 		});
 	});
 
-	test('Can refund an order', async ({ page }) => {
+	test('Can refund an order', async ({ browser }) => {
 		let order;
 		await test.step('Place an order with Klarna Payments.', async () => {
+			const context = await browser.newContext({ storageState: process.env.GUESTSTATE });
+			const page = await context.newPage();
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.CheckoutBlock(page);
@@ -301,23 +316,27 @@ test.describe('Order management @checkoutBlock', () => {
 
 			order = await orderRecievedPage.getOrder();
 			orderId = order.id;
+			page.close();
 		});
 
 		await test.step('Fully refund the order.', async () => {
-			// Login as admin.
-			await AdminLogin(page);
+			const context = await browser.newContext({ storageState: process.env.ADMINSTATE });
+			const page = await context.newPage();
 
 			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.completeOrder();
 			await adminSingleOrder.refundFullOrder(order, false);
 			expect(await adminSingleOrder.hasOrderNoteWithText('refunded via Klarna')).toBe(true);
+			page.close();
 		});
 	});
 
-	test('Can partially refund an order', async ({ page }) => {
+	test('Can partially refund an order', async ({ browser }) => {
 		let order;
 		await test.step('Place an order with Klarna Payments.', async () => {
+			const context = await browser.newContext({ storageState: process.env.GUESTSTATE });
+			const page = await context.newPage();
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.CheckoutBlock(page);
@@ -345,17 +364,19 @@ test.describe('Order management @checkoutBlock', () => {
 
 			order = await orderRecievedPage.getOrder();
 			orderId = order.id;
+			page.close();
 		});
 
 		await test.step('Partially refund the order.', async () => {
-			// Login as admin.
-			await AdminLogin(page);
+			const context = await browser.newContext({ storageState: process.env.ADMINSTATE });
+			const page = await context.newPage();
 
 			const adminSingleOrder = new WcPages.AdminSingleOrder(page, orderId);
 			await adminSingleOrder.goto();
 			await adminSingleOrder.completeOrder();
 			await adminSingleOrder.refundFullOrder(order, false);
 			expect(await adminSingleOrder.hasOrderNoteWithText('refunded via Klarna')).toBe(true);
+			page.close();
 		});
 	});
 });
