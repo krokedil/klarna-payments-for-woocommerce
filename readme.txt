@@ -7,7 +7,7 @@ Tested up to: 6.1.1
 Requires PHP: 7.0
 WC requires at least: 5.6.0
 WC tested up to: 7.4.0
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2023.02.24    - version 3.0.3 =
+* Fix           - Fixed an issue with shipping not being present when loading the checkout page if the cart needs shipping.
+
 = 2023.02.22    - version 3.0.2 =
 * Fix           - Fixed an issue with cart fees not being processed properly, causing a potential error.
 * Fix           - Fixed a notice caused by a new setting not being set.

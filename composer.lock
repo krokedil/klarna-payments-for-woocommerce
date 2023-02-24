@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "krokedil/woocommerce",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "de8e8bd7a1bf145bac0a7ce65a459a6a5386598b"
+                "reference": "4cf2e956f9c3d11fee34f9ee9af8ad97bf86b90b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/de8e8bd7a1bf145bac0a7ce65a459a6a5386598b",
-                "reference": "de8e8bd7a1bf145bac0a7ce65a459a6a5386598b",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/4cf2e956f9c3d11fee34f9ee9af8ad97bf86b90b",
+                "reference": "4cf2e956f9c3d11fee34f9ee9af8ad97bf86b90b",
                 "shasum": ""
             },
             "require-dev": {
@@ -42,10 +42,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.0.1",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.0.2",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2023-02-22T07:47:24+00:00"
+            "time": "2023-02-23T12:29:53+00:00"
         },
         {
             "name": "krokedil/wp-api",
@@ -244,12 +244,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "add95a74551c3ba8fc99ef7651ad05f553b3fbbf"
+                "reference": "ed8e00df0a83aa96acf703f8c2979ff33341f879"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/add95a74551c3ba8fc99ef7651ad05f553b3fbbf",
-                "reference": "add95a74551c3ba8fc99ef7651ad05f553b3fbbf",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/ed8e00df0a83aa96acf703f8c2979ff33341f879",
+                "reference": "ed8e00df0a83aa96acf703f8c2979ff33341f879",
                 "shasum": ""
             },
             "require": {
@@ -294,7 +294,7 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2022-12-22T21:46:41+00:00"
+            "time": "2023-02-22T23:07:41+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
