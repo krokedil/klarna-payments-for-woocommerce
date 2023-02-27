@@ -105,8 +105,7 @@ class KP_Settings_Saved {
 		$code           = $test_response->get_error_code();
 		$error          = $test_response->get_error_message();
 		$data           = json_decode( $test_response->get_error_data(), true );
-		$error_message  = $error['message'];
-		$correlation_id = $data['correlation_id'];
+
 		if ( 400 === $code || 401 === $code || 403 === $code ) {
 			switch ( $code ) {
 				case 400:
@@ -119,7 +118,13 @@ class KP_Settings_Saved {
 					$message = "It seems like your Klarna $cc $test API credentials are not working for the Klarna Payments plugin, please verify your Klarna contract is for the Klarna Payments solution.  If your Klarna contract is for Klarna Checkout, please instead use the <a href='https://docs.woocommerce.com/document/klarna-checkout/'>Klarna Checkout for WooCommerce</a> plugin. ";
 					break;
 			}
-			$message        .= "API error code: $code, Klarna API error message: $error_message, Klarna correlation_id: $correlation_id";
+			$message        .= "API error code: $code, Klarna API error message: $error";
+
+			if( isset( $data['correlation_id'] ) ) {
+				$correlation_id = $data['correlation_id'];
+				$message       .= " Klarna correlation_id: $correlation_id";
+			}
+
 			$this->message[] = $message;
 			$this->error     = true;
 		}

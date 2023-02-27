@@ -20,7 +20,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 *
 	 * @var array
 	 */
-	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF', 'CAD', 'AUD', 'NZD', 'MXN', 'PLN', 'CZK' );
+	public $allowed_currencies = array( 'USD', 'GBP', 'SEK', 'NOK', 'EUR', 'DKK', 'CHF', 'CAD', 'AUD', 'NZD', 'MXN', 'PLN', 'CZK', 'RON' );
 
 	/**
 	 * Shop country. Country base location from WooCommerce.
@@ -157,18 +157,27 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Check if allowed currency.
 		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies, true ) ) {
 			kp_unset_session_values();
-
 			return new WP_Error( 'currency', 'Currency not allowed for Klarna Payments' );
 		}
 
-		$country = strtolower( kp_get_klarna_country( $order ) );
+		$klarna_country = kp_get_klarna_country( $order );
+		$country        = strtolower( $klarna_country );
+
 		if ( ! isset( KP_Form_Fields::$kp_form_auto_countries[ $country ] ) ) {
 			kp_unset_session_values();
-
 			return new WP_Error( 'country', "Country ({$country}) is not supported by Klarna Payments." );
-
 		}
 
+		// Check that the credentials are set for the current country in KP.
+		$prefix        = $this->testmode ? 'test_' : '';
+		$merchant_id   = $this->get_option( "{$prefix}merchant_id_{$country}" );
+		$shared_secret = $this->get_option( "{$prefix}shared_secret_{$country}" );
+		if ( empty( $merchant_id ) || empty( $shared_secret ) ) {
+			kp_unset_session_values();
+			return new WP_Error( 'country', "No credentials found for {$country}" );
+		}
+
+		// Check the countrys currency against the current curreny.
 		$country_values    = KP_Form_Fields::$kp_form_auto_countries[ $country ];
 		$required_currency = $country_values['currency'];
 		$country_name      = $country_values['name'];
@@ -192,16 +201,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return true;
 		}
 
+		$order = false;
+
 		if ( kp_is_order_pay_page() ) {
 			$order_id = absint( get_query_var( 'order-pay' ) );
 			$order    = wc_get_order( $order_id );
-			if ( is_wp_error( $this->country_currency_check( $order ) ) ) {
-				return false;
-			}
 		}
 
 		// Check country and currency.
-		if ( is_wp_error( $this->country_currency_check() ) ) {
+		if ( is_wp_error( $this->country_currency_check( $order ) ) ) {
 			return false;
 		}
 
