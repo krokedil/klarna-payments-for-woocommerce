@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "krokedil/woocommerce",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "4cf2e956f9c3d11fee34f9ee9af8ad97bf86b90b"
+                "reference": "ab32794f3d395b198cf9058154b2ad9c06224a4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/4cf2e956f9c3d11fee34f9ee9af8ad97bf86b90b",
-                "reference": "4cf2e956f9c3d11fee34f9ee9af8ad97bf86b90b",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/ab32794f3d395b198cf9058154b2ad9c06224a4a",
+                "reference": "ab32794f3d395b198cf9058154b2ad9c06224a4a",
                 "shasum": ""
             },
             "require-dev": {
@@ -42,10 +42,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.0.2",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.0.3",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2023-02-23T12:29:53+00:00"
+            "time": "2023-03-02T09:36:21+00:00"
         },
         {
             "name": "krokedil/wp-api",
@@ -184,12 +184,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "c9b506043ba93c76b6a52248cd3a26396d2ba169"
+                "reference": "8045bf91ea75856436490b8817693febf9181497"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c9b506043ba93c76b6a52248cd3a26396d2ba169",
-                "reference": "c9b506043ba93c76b6a52248cd3a26396d2ba169",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8045bf91ea75856436490b8817693febf9181497",
+                "reference": "8045bf91ea75856436490b8817693febf9181497",
                 "shasum": ""
             },
             "require": {
@@ -236,7 +236,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-26T12:54:58+00:00"
+            "time": "2023-03-01T14:10:56+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
