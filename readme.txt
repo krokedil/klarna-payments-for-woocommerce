@@ -4,7 +4,7 @@ Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
 Tested up to: 6.1.1
-Requires PHP: 7.0
+Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 7.4.1
 Stable tag: 3.0.4
