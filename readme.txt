@@ -51,6 +51,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2023.03.02    - version 3.0.5 =
+* Fix           - Fixed an issue where using Smart Coupons would cause a BAD_VALUE if the coupon amount was greater than the total sum of the cart content.
+* Fix           - Removed an extraneous comma which would result in a fatal error when using PHP version older than 7.3. Note: the minimum PHP version is 7.4.
+
 = 2023.02.27    - version 3.0.4 =
 * Fix           - Fixed an error message that could happen when updating your settings.
 * Fix           - Fixed an issue where we would sometimes attempt to create sessions with Klarna for countries that you do not have settings for.
