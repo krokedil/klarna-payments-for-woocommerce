@@ -54,7 +54,7 @@ class KP_Session {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		add_action( 'woocommerce_after_calculate_totals', array( $this, 'get_session' ), 9999 ); // Maybe update session on after_calculate_totals.
+		add_action( 'woocommerce_after_calculate_totals', array( $this, 'get_session' ), 999999 ); // Maybe update session on after_calculate_totals.
 	}
 
 	/**
