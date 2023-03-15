@@ -27,6 +27,7 @@ class KP_Checkout {
 	 * @return array
 	 */
 	public function add_token_fragment( $fragments ) {
+		KP_WC()->session->set_session_data();
 		$session_token = KP_WC()->session->get_klarna_client_token();
 		if ( empty( $session_token ) ) {
 			return $fragments;
@@ -48,6 +49,7 @@ class KP_Checkout {
 	 */
 	public function html_client_token( $session_token = false ) {
 		if ( ! $session_token ) {
+			KP_WC()->session->set_session_data();
 			$session_token = KP_WC()->session->get_klarna_client_token();
 		}
 		?>
