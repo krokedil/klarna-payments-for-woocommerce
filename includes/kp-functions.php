@@ -9,7 +9,7 @@
  * Unsets all Klarna Payments sessions.
  */
 function kp_unset_session_values() {
-	if( ! WC()->session ) {
+	if ( ! WC()->session ) {
 		return;
 	}
 

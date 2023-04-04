@@ -109,7 +109,9 @@ class KP_Api {
 	 * @return array|WP_Error
 	 */
 	private static function check_for_api_error( $response ) {
-		if ( is_wp_error( $response ) ) {
+		$is_testmode = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'];
+
+		if ( is_wp_error( $response ) && $is_testmode ) {
 			if ( ! is_admin() ) {
 				kp_print_error_message( $response );
 			}

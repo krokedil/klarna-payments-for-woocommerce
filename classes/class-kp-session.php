@@ -92,7 +92,7 @@ class KP_Session {
 		}
 
 		// If we have a Klarna session and we get here, we should update it.
-		if ( null !== $this->klarna_session ) {
+		if ( null !== $this->klarna_session && false !== strpos( WC()->session->get( 'chosen_payment_method' ), 'klarna_payments' ) ) {
 			$result = KP_WC()->api->update_session( kp_get_klarna_country( $order ), $this->klarna_session['session_id'], $order_id );
 			return $this->process_result( $result, $order );
 		}
@@ -149,6 +149,10 @@ class KP_Session {
 	 * @return array|WP_Error
 	 */
 	private function process_result( $result, $order ) {
+		if ( is_wp_error( $result ) && false === strpos( WC()->session->get( 'chosen_payment_method' ), 'klarna_payments' ) ) {
+			return array();
+		}
+
 		if ( is_wp_error( $result ) ) {
 			// If we get an error, clear the WC session or order meta.
 			$this->clear_session_data_in_wc( $order );
