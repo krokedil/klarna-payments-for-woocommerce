@@ -149,7 +149,7 @@ class KP_Session {
 	 * @return array|WP_Error
 	 */
 	private function process_result( $result, $order ) {
-		if ( is_wp_error( $result ) && false === strpos( WC()->session->get( 'chosen_payment_method' ), 'klarna_payments' ) ) {
+		if ( is_wp_error( $result ) && ! $this->is_kp_chosen() ) {
 			return array();
 		}
 
@@ -167,6 +167,40 @@ class KP_Session {
 		$this->update_session_data_in_wc( $order );
 
 		return $result;
+	}
+
+	/**
+	 * Checks if Klarna Payments is chosen.
+	 *
+	 * @return bool
+	 */
+	public function is_kp_chosen() {
+		$chosen_payment_method = $this->get_chosen_payment_method();
+
+		if ( $chosen_payment_method ) {
+			return false !== strpos( $chosen_payment_method, 'klarna_payments' );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Gets the chosen payment method.
+	 *
+	 * @return string
+	 */
+	public function get_chosen_payment_method() {
+		$chosen_payment_method = '';
+
+		if ( isset( WC()->session ) ) {
+			$chosen_payment_method = WC()->session->get( 'chosen_payment_method' );
+		}
+
+		if ( ! $chosen_payment_method && isset( WC()->checkout ) ) {
+			$chosen_payment_method = WC()->checkout->get_value( 'payment_method' );
+		}
+
+		return $chosen_payment_method;
 	}
 
 	/**
