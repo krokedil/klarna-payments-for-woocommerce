@@ -18,6 +18,7 @@ class KP_Checkout {
 	public function __construct() {
 		add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'add_token_fragment' ) );
 		add_action( 'woocommerce_review_order_before_submit', array( $this, 'html_client_token' ) );
+		add_action( 'woocommerce_pay_order_before_submit', array( $this, 'html_client_token' ) );
 	}
 
 	/**
