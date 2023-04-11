@@ -55,7 +55,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			}
 
 			$order    = wc_get_order( $order_id );
-			$response = KP_WC()->api->place_order( kp_get_klarna_country(), $auth_token, $order_id );
+			$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $auth_token, $order_id );
 
 			if ( is_wp_error( $response ) ) {
 				wp_send_json_error( kp_extract_error_message( $response ) );
