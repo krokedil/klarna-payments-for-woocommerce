@@ -7,7 +7,7 @@ Tested up to: 6.1.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 7.4.1
-Stable tag: 3.0.5
+Stable tag: 3.0.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2023.04.11    - version 3.0.6 =
+* Fix           - Fixed an issue where the client token would disappear due to a conflict with a third-party plugin, causing the Klarna payment options to not appear.
+* Fix           - Pay for order should now work as expected.
+* Fix           - When the order is being placed, the billing country should now be retrieved from the order directly. This should fix an issue with "Fluid Checkout PRO".
+* Tweak         - API errors are now only displayed on the front-end if test mode is enabled. They will still be logged provided that logging is enabled.
+
 = 2023.03.02    - version 3.0.5 =
 * Fix           - Fixed an issue where using Smart Coupons would cause a BAD_VALUE if the coupon amount was greater than the total sum of the cart content.
 * Fix           - Removed an extraneous comma which would result in a fatal error when using PHP version older than 7.3. Note: the minimum PHP version is 7.4.

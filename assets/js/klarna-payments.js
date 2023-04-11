@@ -544,8 +544,9 @@ jQuery( function($) {
 		klarna_payments.setRadioButtonValues();
 	});
 
-	$('body').on( 'click', 'input#place_order, button#place_order', function( e ) {
-		if( "true" === klarna_payments_params.pay_for_order ) {
+	$('body').on('click', 'input#place_order, button#place_order', function (e) {
+		// No strict comparison: wp_localize_script() converts booleans to strings "1", respectively, "0".
+		if( true == klarna_payments_params.pay_for_order ) {
 			klarna_payments.klarnaPayForOrder( e );
 		} else {
 			klarna_payments.orderSubmit( e );

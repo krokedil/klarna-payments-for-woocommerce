@@ -107,11 +107,11 @@ class KP_Session {
 	/**
 	 * Sets session data from a WC session or order meta.
 	 *
-	 * @param WC_Order|int|null $order The WooCommerce order or order id. Null if we are working with a cart.
+	 * @param WC_Order|int|null $order The WooCommerce order or order id. Null if we are working with a cart (default).
 	 * @return void
 	 * @throws Exception If we get an error when trying to get the session data.
 	 */
-	public function set_session_data( $order ) {
+	public function set_session_data( $order = null ) {
 		// Maybe get the order from order id.
 		$order = $this->maybe_get_order( $order );
 

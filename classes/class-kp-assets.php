@@ -73,6 +73,10 @@ class KP_Assets {
 		$key           = $pay_for_order ? filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS ) : null;
 		$order_id      = $pay_for_order ? wc_get_order_id_by_order_key( $key ) : null;
 
+		$customer_type = $settings['customer_type'] ?? 'b2c';
+		$order_data    = new KP_Order_Data( $customer_type );
+		$customer      = $order_data->get_klarna_customer_object();
+
 		// Create the params array.
 		$klarna_payments_params = array(
 			// Ajax URLS.
@@ -88,15 +92,15 @@ class KP_Assets {
 			'submit_order'           => WC_AJAX::get_endpoint( 'checkout' ),
 			// Params.
 			'testmode'               => $settings['testmode'] ?? 'no',
-			'customer_type'          => $settings['customer_type'] ?? 'b2c',
+			'customer_type'          => $customer_type,
 			'remove_postcode_spaces' => ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no',
 			'client_token'           => KP_WC()->session->get_klarna_client_token(),
 			'order_pay_page'         => $pay_for_order,
 			'pay_for_order'          => $pay_for_order,
 			'order_id'               => $order_id,
 			'addresses'              => $pay_for_order ? array(
-				'billing'  => WC()->customer->get_billing_address(),
-				'shipping' => WC()->customer->get_shipping_address(),
+				'billing'  => $customer['billing'],
+				'shipping' => $customer['shipping'],
 			) : null,
 		);
 

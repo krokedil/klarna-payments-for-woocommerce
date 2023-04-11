@@ -1,8 +1,9 @@
 import { AdminLogin, GetWcApiClient, WcPages } from '@krokedil/wc-test-helper';
 import { test, expect, APIRequestContext } from '@playwright/test';
 import { gt, valid } from 'semver';
-import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
 import { KlarnaHPP } from '../pages/KlarnaHPP';
+import { KlarnaPopup } from '../pages/KlarnaPopup';
+import { HandleKpPopup } from '../utils/Utils';
 
 const {
 	BASE_URL,
@@ -34,15 +35,14 @@ test.describe('Order management @shortcode', () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.Checkout(page);
-			const iframe = new KlarnaPaymentsIframe(page)
 			await cartPage.addtoCart(['simple-25']);
 
 			await checkoutPage.goto();
 			await checkoutPage.fillBillingAddress();
 			await checkoutPage.placeOrder();
 
-			await iframe.fillNin();
-			await iframe.clickConfirm();
+			// A new window should open with the Klarna payment popup.
+			await HandleKpPopup(page);
 
 			await expect(page).toHaveURL(/order-received/);
 
@@ -66,15 +66,14 @@ test.describe('Order management @shortcode', () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.Checkout(page);
-			const iframe = new KlarnaPaymentsIframe(page)
 			await cartPage.addtoCart(['simple-25']);
 
 			await checkoutPage.goto();
 			await checkoutPage.fillBillingAddress();
 			await checkoutPage.placeOrder();
 
-			await iframe.fillNin();
-			await iframe.clickConfirm();
+			// A new window should open with the Klarna payment popup.
+			await HandleKpPopup(page);
 
 			await expect(page).toHaveURL(/order-received/);
 
@@ -99,15 +98,14 @@ test.describe('Order management @shortcode', () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.Checkout(page);
-			const iframe = new KlarnaPaymentsIframe(page)
 			await cartPage.addtoCart(['simple-25']);
 
 			await checkoutPage.goto();
 			await checkoutPage.fillBillingAddress();
 			await checkoutPage.placeOrder();
 
-			await iframe.fillNin();
-			await iframe.clickConfirm();
+			// A new window should open with the Klarna payment popup.
+			await HandleKpPopup(page);
 
 			await expect(page).toHaveURL(/order-received/);
 
@@ -133,15 +131,14 @@ test.describe('Order management @shortcode', () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 			const checkoutPage = new WcPages.Checkout(page);
-			const iframe = new KlarnaPaymentsIframe(page)
 			await cartPage.addtoCart(['simple-25']);
 
 			await checkoutPage.goto();
 			await checkoutPage.fillBillingAddress();
 			await checkoutPage.placeOrder();
 
-			await iframe.fillNin();
-			await iframe.clickConfirm();
+			// A new window should open with the Klarna payment popup.
+			await HandleKpPopup(page);
 
 			await expect(page).toHaveURL(/order-received/);
 

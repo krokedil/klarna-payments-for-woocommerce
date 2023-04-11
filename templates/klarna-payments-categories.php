@@ -4,6 +4,14 @@
  *
  * @package WC_Klarna_Payments/Templates
  */
+if ( kp_is_order_pay_page() ) {
+	$key      = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
+	$order_id = wc_get_order_id_by_order_key( $key );
+	$order    = wc_get_order( $order_id );
+
+	// Create a new session as 'woocommerce_after_calculate_totals' is only triggered on the cart (and checkout) page.
+	KP_WC()->session->get_session( $order );
+}
 
 $payment_categories = KP_WC()->session->get_klarna_payment_method_categories();
 
