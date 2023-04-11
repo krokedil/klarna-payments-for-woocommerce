@@ -1,8 +1,8 @@
 import { GetWcApiClient, WcPages } from '@krokedil/wc-test-helper';
 import { test, expect } from '@playwright/test';
 import { APIRequestContext } from 'playwright-chromium';
-import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
 import { VerifyOrderRecieved } from '../utils/VerifyOrder';
+import { HandleKpPopup } from '../utils/Utils';
 
 const {
 	CI,
@@ -91,7 +91,6 @@ test.describe('Customer Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25']);
@@ -107,11 +106,8 @@ test.describe('Customer Checkout @shortcode', () => {
 		// Wait for 1 second to make sure the iframe is loaded, since we dont fill any address details this happens pretty quickly.
 		await page.waitForTimeout(1000);
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
