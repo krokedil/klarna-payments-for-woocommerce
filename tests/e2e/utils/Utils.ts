@@ -1,4 +1,5 @@
-import { APIRequestContext, request } from "@playwright/test";
+import { APIRequestContext, Page, request } from "@playwright/test";
+import { KlarnaPopup } from "../pages/KlarnaPopup";
 
 const {
 	KLARNA_API_USERNAME,
@@ -43,4 +44,9 @@ export const SetKpSettings = async (wcApiClient: APIRequestContext) => {
 		// Update settings.
 		await wcApiClient.post('payment_gateways/klarna_payments', { data: settings });
 	}
+}
+
+export const HandleKpPopup = async (page: Page) => {
+	const klarnaPopup = new KlarnaPopup(await page.waitForEvent('popup'));
+	await klarnaPopup.placeOrder();
 }
