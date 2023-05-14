@@ -9,7 +9,7 @@
  * Unsets all Klarna Payments sessions.
  */
 function kp_unset_session_values() {
-	if( ! WC()->session ) {
+	if ( ! WC()->session ) {
 		return;
 	}
 
@@ -76,9 +76,9 @@ function kp_process_accepted( $order, $decoded ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
-	update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
-	update_post_meta( $order->get_id(), '_payment_method', 'klarna_payments' );
-	update_post_meta( $order->get_id(), '_payment_method_title', 'Klarna' );
+	$order->update_meta_data( '_wc_klarna_order_id', $decoded['order_id'], true );
+	$order->update_meta_data( '_payment_method', 'klarna_payments' );
+	$order->update_meta_data( '_payment_method_title', 'Klarna' );
 	do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
 	return array(
@@ -98,8 +98,8 @@ function kp_process_accepted( $order, $decoded ) {
 function kp_process_pending( $order, $decoded ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded['order_id'] );
-	update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
-	update_post_meta( $order->get_id(), '_transaction_id', $decoded['order_id'], true );
+	$order->update_meta_data( '_wc_klarna_order_id', $decoded['order_id'], true );
+	$order->update_meta_data( '_transaction_id', $decoded['order_id'], true );
 	do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_pending', $order->get_id(), $decoded );
 	return array(
