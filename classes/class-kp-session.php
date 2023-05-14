@@ -177,6 +177,7 @@ class KP_Session {
 			WC()->session->set( 'kp_session_data', wp_json_encode( $this ) );
 		} else {
 			$order->update_meta_data( '_kp_session_data', wp_json_encode( $this ) );
+			$order->save();
 		}
 	}
 
