@@ -47,11 +47,15 @@ class KP_Callbacks {
 	public function kp_wc_authorization( $data ) {
 		$order = wc_get_orders(
 			array(
+				'meta_query' => array(
+					array(
+						'key'   => '_kp_session_id',
+						'value' => $data['session_id'],
+					),
+				),
 				'limit'      => 1,
 				'orderby'    => 'date',
 				'order'      => 'DESC',
-				'meta_key'   => '_kp_session_id',
-				'meta_value' => $data['session_id'],
 			)
 		);
 
