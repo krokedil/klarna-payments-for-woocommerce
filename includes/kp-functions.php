@@ -77,8 +77,8 @@ function kp_process_accepted( $order, $decoded ) {
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
 	$order->update_meta_data( '_wc_klarna_order_id', $decoded['order_id'], true );
-	$order->update_meta_data( '_payment_method', 'klarna_payments' );
-	$order->update_meta_data( '_payment_method_title', 'Klarna' );
+	$order->set_payment_method( 'klarna_payments' );
+	$order->set_payment_method_title( 'Klarna' );
 	$order->save();
 	do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
@@ -100,7 +100,7 @@ function kp_process_pending( $order, $decoded ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded['order_id'] );
 	$order->update_meta_data( '_wc_klarna_order_id', $decoded['order_id'], true );
-	$order->update_meta_data( '_transaction_id', $decoded['order_id'], true );
+	$order->set_transaction_id( $decoded['order_id'] );
 	$order->save();
 	do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_pending', $order->get_id(), $decoded );

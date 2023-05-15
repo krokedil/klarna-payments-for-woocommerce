@@ -60,7 +60,7 @@ class KP_Callbacks {
 		);
 
 		$order = reset( $order );
-		if ( ! $order ) {
+		if ( empty( $order ) ) {
 			return;
 		}
 
