@@ -7,7 +7,7 @@ Tested up to: 6.1.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 7.4.1
-Stable tag: 3.0.6
+Stable tag: 3.0.7
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2023.05.16    - version 3.0.7 =
+* Fix           - Fixed a critical error related to calculating the cart total sum. Previously, a fatal error would occur on certain PHP versions if a non-numeric item was encountered during the calculation (thanks @tobyaherbert!)
+* Fix           - Fixed an issue where essential meta data required for proper order management was missing during the pay for order payment process. 
+* Fix           - Fixed an issue where the table rate shipping method used a different identifier during checkout compared to order management. 
+
 = 2023.04.11    - version 3.0.6 =
 * Fix           - Fixed an issue where the client token would disappear due to a conflict with a third-party plugin, causing the Klarna payment options to not appear.
 * Fix           - Pay for order should now work as expected.
