@@ -83,7 +83,6 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 					wp_send_json_error( $order->get_cancel_order_url_raw() );
 					break;
 			}
-			wp_send_json_success();
 		}
 
 		/**

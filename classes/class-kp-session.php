@@ -251,8 +251,13 @@ class KP_Session {
 	 * @return string
 	 */
 	private function get_session_cart_hash() {
+		// The `get_totals` method can return non-numeric items which should be removed before using `array_sum`.
+		$cart_totals = array_filter( WC()->cart->get_totals(), function( $total ) {
+			return is_numeric( $total );
+		} );
+
 		// Get values to use for the combined hash calculation.
-		$total            = array_sum( WC()->cart->get_totals() );
+		$total            = array_sum( $cart_totals );
 		$billing_address  = WC()->customer->get_billing();
 		$shipping_address = WC()->customer->get_shipping();
 		$shipping_method  = WC()->session->get( 'chosen_shipping_methods' );
