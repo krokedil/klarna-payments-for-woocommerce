@@ -67,17 +67,21 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 					kp_process_accepted( $order, $response );
 					kp_unset_session_values();
 					wp_send_json_success( $response['redirect_url'] );
+					break;
 				case 'PENDING':
 					kp_process_pending( $order, $response );
 					kp_unset_session_values();
 					wp_send_json_success( $response['redirect_url'] );
+					break;
 				case 'REJECTED':
 					kp_process_rejected( $order, $response );
 					kp_unset_session_values();
 					wp_send_json_error( $order->get_cancel_order_url_raw() );
+					break;
 				default:
 					kp_unset_session_values();
 					wp_send_json_error( $order->get_cancel_order_url_raw() );
+					break;
 			}
 		}
 
