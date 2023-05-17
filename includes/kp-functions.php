@@ -74,9 +74,9 @@ function kp_get_klarna_country( $order = false ) {
  */
 function kp_process_auth_or_callback( $order, $response ) {
 
-	$environment = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'] ? 'playground' : 'production';
+	$environment = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'] ? 'test' : 'live';
 
-	$order->update_meta_data( '_wc_klarna_environment', $environment ? 'test' : 'live' );
+	$order->update_meta_data( '_wc_klarna_environment', $environment );
 	$order->update_meta_data( '_wc_klarna_country', kp_get_klarna_country( $order ) );
 	$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
 	$order->update_meta_data( '_transaction_id', $response['order_id'], true );
