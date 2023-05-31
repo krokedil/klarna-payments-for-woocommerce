@@ -45,29 +45,26 @@ class KP_Callbacks {
 	 * @return void
 	 */
 	public function kp_wc_authorization( $data ) {
-		$query_args = array(
-			'fields'      => 'ids',
-			'post_type'   => wc_get_order_types(),
-			'post_status' => array_keys( wc_get_order_statuses() ),
-			'meta_key'    => '_kp_session_id', // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
-			'meta_value'  => $data['session_id'], // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
-			'date_query'  => array(
-				array(
-					'after'  => '5 minute ago',
-					'column' => 'post_date',
+		$order = wc_get_orders(
+			array(
+				'meta_query' => array(
+					array(
+						'key'   => '_kp_session_id',
+						'value' => $data['session_id'],
+					),
 				),
-			),
+				'limit'      => 1,
+				'orderby'    => 'date',
+				'order'      => 'DESC',
+			)
 		);
 
-		$orders = get_posts( $query_args );
-
-		if ( empty( $orders ) ) {
+		$order = reset( $order );
+		if ( empty( $order ) ) {
 			return;
 		}
 
 		$auth_token = $data['authorization_token'];
-		$order_id   = $orders[0];
-		$order      = wc_get_order( $order_id );
 		$country    = $order->get_billing_country();
 
 		// Dont do anything if the order has been processed.
@@ -75,7 +72,7 @@ class KP_Callbacks {
 			return;
 		}
 
-		$response = KP_WC()->api->place_order( $country, $auth_token, $order_id );
+		$response = KP_WC()->api->place_order( $country, $auth_token, $order->get_id() );
 		if ( is_wp_error( $response ) ) {
 			/**
 			 * WordPress error handling.
