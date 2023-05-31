@@ -65,6 +65,27 @@ function kp_get_klarna_country( $order = false ) {
 }
 
 /**
+ * Process authorization or callback response for accepted or pending Klarna orders.
+ *
+ * @param WC_Order $order WooCommerce order.
+ * @param array    $decoded Klarna authorization or callback response.
+ *
+ * @return void
+ */
+function kp_process_auth_or_callback( $order, $response ) {
+
+	$environment = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'] ? 'test' : 'live';
+
+	$order->update_meta_data( '_wc_klarna_environment', $environment );
+	$order->update_meta_data( '_wc_klarna_country', kp_get_klarna_country( $order ) );
+	$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
+	$order->update_meta_data( '_transaction_id', $response['order_id'], true );
+	$order->update_meta_data( '_payment_method', $order->get_payment_method() );
+	$order->update_meta_data( '_payment_method_title', 'Klarna' );
+	$order->save();
+}
+
+/**
  * Process accepted Klarna Payments order.
  *
  * @param WC_Order $order WooCommerce order.
@@ -76,12 +97,10 @@ function kp_process_accepted( $order, $decoded ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
-	$order->update_meta_data( '_wc_klarna_order_id', $decoded['order_id'], true );
-	$order->set_payment_method( 'klarna_payments' );
-	$order->set_payment_method_title( 'Klarna' );
-	$order->save();
+	kp_process_auth_or_callback( $order, $decoded );
 	do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
+
 	return array(
 		'result'   => 'success',
 		'redirect' => $kp_gateway->get_return_url( $order ),
@@ -99,9 +118,7 @@ function kp_process_accepted( $order, $decoded ) {
 function kp_process_pending( $order, $decoded ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded['order_id'] );
-	$order->update_meta_data( '_wc_klarna_order_id', $decoded['order_id'], true );
-	$order->set_transaction_id( $decoded['order_id'] );
-	$order->save();
+	kp_process_auth_or_callback( $order, $decoded );
 	do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_pending', $order->get_id(), $decoded );
 	return array(

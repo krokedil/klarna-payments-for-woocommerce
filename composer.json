@@ -6,7 +6,6 @@
   "require-dev": {
     "wp-coding-standards/wpcs": "^2.3",
     "php-stubs/wordpress-stubs": "^6.1",
-    "szepeviktor/phpstan-wordpress": "^1.1",
     "php-stubs/woocommerce-stubs": "^7.2"
   },
   "repositories": [
