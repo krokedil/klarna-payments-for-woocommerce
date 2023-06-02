@@ -354,10 +354,7 @@ jQuery( function($) {
 		printErrorMessage: function( message ) {
 			$('#klarna-payments-error-notice').remove();
 			$('form.checkout').prepend( '<div id="klarna-payments-error-notice" class="woocommerce-NoticeGroup"><ul class="woocommerce-error" role="alert"><li>' +  message + '</li></ul></div>' );
-				var etop = $('form.checkout').offset().top;
-				$('html, body').animate({
-					scrollTop: etop
-				}, 1000);
+			$.scroll_to_notices( $('form.checkout') );
 		},
 
 		authorizeKlarnaOrder: function( order_id ) {
@@ -511,9 +508,7 @@ jQuery( function($) {
 			$( 'form.checkout' ).removeClass( 'processing' ).unblock();
 			$( 'form.checkout' ).find( '.input-text, select, input:checkbox' ).trigger( 'validate' ).blur();
 			$( document.body ).trigger( 'checkout_error' , [ error_message ] );
-			$( 'html, body' ).animate( {
-				scrollTop: ( $( 'form.checkout' ).offset().top - 100 )
-			}, 1000 );
+			$.scroll_to_notices( $('form.checkout') );
 		},
 
 		/**
