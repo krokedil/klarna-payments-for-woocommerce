@@ -397,6 +397,9 @@ test.describe('Guest Checkout @checkoutBlock', () => {
 		await checkoutPage.fillShippingAddress();
 		await checkoutPage.fillBillingAddress();
 
+		// Wait for the page to be idle.
+		await page.waitForLoadState('networkidle');
+
 		// Place the order.
 		await checkoutPage.placeOrder();
 
