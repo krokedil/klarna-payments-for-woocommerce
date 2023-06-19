@@ -1,35 +1,59 @@
-//buy-button
-import { Locator, Page } from '@playwright/test';
-import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
+import { FrameLocator, Locator, Page, expect } from '@playwright/test';
 
 export class KlarnaHPP {
 	readonly page: Page;
 
-	readonly buyButton: Locator;
+	readonly loginSelectorDiv: Locator;
+	readonly dialogDiv: Locator;
 
-	readonly klarnaIframe: KlarnaPaymentsIframe;
+	readonly continueWithBankIdButton: Locator;
+	readonly confirmAndPayButton: Locator;
+	readonly skipSmoothCheckoutButton: Locator;
+	readonly iframe: FrameLocator;
 
 	constructor(page: Page) {
 		this.page = page;
 
-		this.buyButton = page.locator('button#buy-button');
+		this.iframe = page.frameLocator('#klarna-apf-iframe');
 
-		this.klarnaIframe = new KlarnaPaymentsIframe(page);
+		this.loginSelectorDiv = this.iframe.locator('#loginSelectionView');
+		this.dialogDiv = this.iframe.locator('#dialog');
+
+		this.continueWithBankIdButton = this.iframe.getByTestId('kaf-button');
+		this.confirmAndPayButton = this.iframe.getByTestId('confirm-and-pay');
+
+		this.skipSmoothCheckoutButton = this.iframe.getByTestId('SmoothCheckoutPopUp:skip');
 	}
 
-	async goto() {
-		// There is no goto for Klarnas HPP. It is an automatic redirect from the checkout page.
+	async fillNin(nin: string = '410321-9202') {
+
+	}
+
+	async continueWithBankId() {
+		await this.continueWithBankIdButton.click();
+
+		// Wait for the loginSelectionView to no longer be on the page.
+		await expect(this.loginSelectorDiv).toHaveCount(0)
+
+		// Wait for the dialog to also be gone.
+		await expect(this.dialogDiv).toHaveCount(0)
+	}
+
+	async confirmAndPay() {
+		await this.confirmAndPayButton.click();
+	}
+
+	async skipSmoothCheckout() {
+		// Wait and see if the skipSmoothCheckoutButton appears, if it does click it, else just continue.
+		if (await this.skipSmoothCheckoutButton.isVisible()) {
+			await this.skipSmoothCheckoutButton.click();
+		}
+
 	}
 
 	async placeOrder() {
-		// Wait for network idle.
-		await this.page.waitForLoadState('networkidle');
-
-		// Click the buy button.
-		await this.buyButton.click();
-
-		// Process the iframe.
-		await this.klarnaIframe.fillNin();
-		await this.klarnaIframe.clickConfirm();
+		await this.continueWithBankId();
+		await this.confirmAndPay();
+		await this.skipSmoothCheckout();
 	}
 }

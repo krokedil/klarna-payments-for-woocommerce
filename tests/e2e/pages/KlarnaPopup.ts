@@ -40,7 +40,10 @@ export class KlarnaPopup {
     }
 
     async skipSmoothCheckout() {
-        await this.skipSmoothCheckoutButton.click();
+        // Wait and see if the skipSmoothCheckoutButton appears, if it does click it, else just continue.
+        if (await this.skipSmoothCheckoutButton.isVisible()) {
+            await this.skipSmoothCheckoutButton.click();
+        }
     }
 
     async placeOrder() {
