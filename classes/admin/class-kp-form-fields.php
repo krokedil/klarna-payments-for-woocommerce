@@ -72,6 +72,11 @@ class KP_Form_Fields {
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
+		'hu' => array(
+			'name'     => 'Hungary',
+			'currency' => 'HUF',
+			'endpoint' => '',
+		),
 		'ie' => array(
 			'name'     => 'Ireland',
 			'currency' => 'EUR',
