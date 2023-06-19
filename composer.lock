@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "krokedil/woocommerce",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "27d555775a23698ec02db8bbc5536fe356fb40b6"
+                "reference": "aa619b36dd86ce8a797a2044cf4a787137e3a950"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/27d555775a23698ec02db8bbc5536fe356fb40b6",
-                "reference": "27d555775a23698ec02db8bbc5536fe356fb40b6",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/aa619b36dd86ce8a797a2044cf4a787137e3a950",
+                "reference": "aa619b36dd86ce8a797a2044cf4a787137e3a950",
                 "shasum": ""
             },
             "require-dev": {
@@ -42,10 +42,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.1.0",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.2.0",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2023-05-15T12:46:46+00:00"
+            "time": "2023-06-19T15:32:59+00:00"
         },
         {
             "name": "krokedil/wp-api",
@@ -92,16 +92,16 @@
     "packages-dev": [
         {
             "name": "php-stubs/woocommerce-stubs",
-            "version": "v7.7.0",
+            "version": "v7.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/woocommerce-stubs.git",
-                "reference": "2fec812b7bb3458a232f4637bf83e4037106537d"
+                "reference": "1e9180bbac115884bf41bf1d2ee0f72338c0a566"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/2fec812b7bb3458a232f4637bf83e4037106537d",
-                "reference": "2fec812b7bb3458a232f4637bf83e4037106537d",
+                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/1e9180bbac115884bf41bf1d2ee0f72338c0a566",
+                "reference": "1e9180bbac115884bf41bf1d2ee0f72338c0a566",
                 "shasum": ""
             },
             "require": {
@@ -130,22 +130,22 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/woocommerce-stubs/issues",
-                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v7.7.0"
+                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v7.8.0"
             },
-            "time": "2023-05-10T05:40:44+00:00"
+            "time": "2023-06-13T20:06:40+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",
-            "version": "v6.2.0",
+            "version": "v6.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "b73fe99eadf9fb56363619dac0343b6d19907dce"
+                "reference": "0009429e639b748eef1c955200ea0d4e5ad5627d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/b73fe99eadf9fb56363619dac0343b6d19907dce",
-                "reference": "b73fe99eadf9fb56363619dac0343b6d19907dce",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/0009429e639b748eef1c955200ea0d4e5ad5627d",
+                "reference": "0009429e639b748eef1c955200ea0d4e5ad5627d",
                 "shasum": ""
             },
             "require-dev": {
@@ -153,7 +153,8 @@
                 "php": "~7.3 || ~8.0",
                 "php-stubs/generator": "^0.8.3",
                 "phpdocumentor/reflection-docblock": "^5.3",
-                "phpstan/phpstan": "^1.9"
+                "phpstan/phpstan": "^1.10.12",
+                "phpunit/phpunit": "^9.5"
             },
             "suggest": {
                 "paragonie/sodium_compat": "Pure PHP implementation of libsodium",
@@ -174,9 +175,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.2.0"
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.2.1"
             },
-            "time": "2023-03-31T09:48:52+00:00"
+            "time": "2023-05-18T04:35:23+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -184,12 +185,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "a26c071d00b415bba26cedd8f835fca6288cf6b9"
+                "reference": "d148febc2a2eb82972121d7f962883f7a5697b55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/a26c071d00b415bba26cedd8f835fca6288cf6b9",
-                "reference": "a26c071d00b415bba26cedd8f835fca6288cf6b9",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/d148febc2a2eb82972121d7f962883f7a5697b55",
+                "reference": "d148febc2a2eb82972121d7f962883f7a5697b55",
                 "shasum": ""
             },
             "require": {
@@ -234,7 +235,7 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2023-05-07T04:45:11+00:00"
+            "time": "2023-05-26T22:32:02+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
