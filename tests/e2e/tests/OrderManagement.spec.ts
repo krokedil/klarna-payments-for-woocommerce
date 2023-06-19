@@ -162,7 +162,7 @@ test.describe('Order management @shortcode', () => {
 test.describe('Order management @checkoutBlock', () => {
 	test.skip(
 		valid(process.env.WC_VERSION) && // And it is not an empty string
-		!gt(process.env.WC_VERSION, '6.0.0'), // And
+		!gt(process.env.WC_VERSION, '6.0.0'), // And it is not greater than 6.0.0
 		'Skipping tests with checkout blocks for WooCommerce < 6.0.0');
 
 	test.use({ storageState: process.env.GUESTSTATE });
@@ -200,8 +200,8 @@ test.describe('Order management @checkoutBlock', () => {
 			await checkoutPage.fillShippingAddress();
 			await checkoutPage.fillBillingAddress();
 
-			// Wait for 2 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
-			await page.waitForTimeout(2000);
+			// Wait for 5 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
+			await page.waitForTimeout(5000);
 
 			// Place the order.
 			await checkoutPage.placeOrder();
@@ -245,8 +245,8 @@ test.describe('Order management @checkoutBlock', () => {
 			await checkoutPage.fillShippingAddress();
 			await checkoutPage.fillBillingAddress();
 
-			// Wait for 2 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
-			await page.waitForTimeout(2000);
+			// Wait for 5 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
+			await page.waitForTimeout(5000);
 
 			// Place the order.
 			await checkoutPage.placeOrder();
@@ -292,8 +292,8 @@ test.describe('Order management @checkoutBlock', () => {
 			await checkoutPage.fillShippingAddress();
 			await checkoutPage.fillBillingAddress();
 
-			// Wait for 2 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
-			await page.waitForTimeout(2000);
+			// Wait for 5 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
+			await page.waitForTimeout(5000);
 
 			// Place the order.
 			await checkoutPage.placeOrder();
@@ -339,8 +339,8 @@ test.describe('Order management @checkoutBlock', () => {
 			await checkoutPage.fillShippingAddress();
 			await checkoutPage.fillBillingAddress();
 
-			// Wait for 2 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
-			await page.waitForTimeout(2000);
+			// Wait for 5 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
+			await page.waitForTimeout(5000);
 
 			// Place the order.
 			await checkoutPage.placeOrder();
