@@ -397,8 +397,8 @@ test.describe('Guest Checkout @checkoutBlock', () => {
 		await checkoutPage.fillShippingAddress();
 		await checkoutPage.fillBillingAddress();
 
-		// Wait for the page to be idle.
-		await page.waitForLoadState('networkidle');
+		// Wait for 2 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
+		await page.waitForTimeout(2000);
 
 		// Place the order.
 		await checkoutPage.placeOrder();

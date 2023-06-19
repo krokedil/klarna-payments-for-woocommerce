@@ -200,6 +200,9 @@ test.describe('Order management @checkoutBlock', () => {
 			await checkoutPage.fillShippingAddress();
 			await checkoutPage.fillBillingAddress();
 
+			// Wait for 2 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
+			await page.waitForTimeout(2000);
+
 			// Place the order.
 			await checkoutPage.placeOrder();
 
@@ -241,6 +244,9 @@ test.describe('Order management @checkoutBlock', () => {
 			// Fill in the Address fields.
 			await checkoutPage.fillShippingAddress();
 			await checkoutPage.fillBillingAddress();
+
+			// Wait for 2 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
+			await page.waitForTimeout(2000);
 
 			// Place the order.
 			await checkoutPage.placeOrder();
@@ -286,6 +292,9 @@ test.describe('Order management @checkoutBlock', () => {
 			await checkoutPage.fillShippingAddress();
 			await checkoutPage.fillBillingAddress();
 
+			// Wait for 2 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
+			await page.waitForTimeout(2000);
+
 			// Place the order.
 			await checkoutPage.placeOrder();
 
@@ -329,6 +338,9 @@ test.describe('Order management @checkoutBlock', () => {
 			// Fill in the Address fields.
 			await checkoutPage.fillShippingAddress();
 			await checkoutPage.fillBillingAddress();
+
+			// Wait for 2 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
+			await page.waitForTimeout(2000);
 
 			// Place the order.
 			await checkoutPage.placeOrder();

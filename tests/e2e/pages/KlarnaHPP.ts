@@ -22,6 +22,8 @@ export class KlarnaHPP {
 
 		this.continueWithBankIdButton = this.iframe.getByTestId('kaf-button');
 		this.confirmAndPayButton = this.iframe.getByTestId('confirm-and-pay');
+
+		this.skipSmoothCheckoutButton = this.iframe.getByTestId('SmoothCheckoutPopUp:skip');
 	}
 
 	async fillNin(nin: string = '410321-9202') {
@@ -42,8 +44,13 @@ export class KlarnaHPP {
 		await this.confirmAndPayButton.click();
 	}
 
+	async skipSmoothCheckout() {
+		await this.skipSmoothCheckoutButton.click();
+	}
+
 	async placeOrder() {
 		await this.continueWithBankId();
 		await this.confirmAndPay();
+		await this.skipSmoothCheckout();
 	}
 }
