@@ -1,4 +1,3 @@
-//buy-button
 import { FrameLocator, Locator, Page, expect } from '@playwright/test';
 
 export class KlarnaHPP {
@@ -45,7 +44,11 @@ export class KlarnaHPP {
 	}
 
 	async skipSmoothCheckout() {
-		await this.skipSmoothCheckoutButton.click();
+		// Wait and see if the skipSmoothCheckoutButton appears, if it does click it, else just continue.
+		if (await this.skipSmoothCheckoutButton.isVisible()) {
+			await this.skipSmoothCheckoutButton.click();
+		}
+
 	}
 
 	async placeOrder() {
