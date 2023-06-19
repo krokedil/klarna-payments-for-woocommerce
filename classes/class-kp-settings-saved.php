@@ -109,7 +109,7 @@ class KP_Settings_Saved {
 		if ( 400 === $code || 401 === $code || 403 === $code ) {
 			switch ( $code ) {
 				case 400:
-					$message = "It seems like your Klarna $cc $test credentials are not configured correctly, please your Klarna contract and ensure that your account is configured correctly for this country. ";
+					$message = "It seems like your Klarna $cc $test credentials are not configured correctly, please review your Klarna contract and ensure that your account is configured correctly for this country. ";
 					break;
 				case 401:
 					$message = "It seems like your Klarna $cc $test credentials are incorrect, please verify or remove these credentials and save again. ";
