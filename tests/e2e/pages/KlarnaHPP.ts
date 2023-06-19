@@ -45,7 +45,7 @@ export class KlarnaHPP {
 		const body = await paymentMethodResponse.json();
 		if (!body.payment_categories.some(category => category.selected)) {
 			// Select the first payment method.
-			await this.paymentMethodRadio.click();
+			await this.paymentMethodRadio.first().click();
 			await this.paymentMethodButton.click();
 		}
 
