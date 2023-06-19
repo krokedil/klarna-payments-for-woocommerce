@@ -3,18 +3,21 @@ import { Locator, Page, expect } from '@playwright/test';
 export class KlarnaPopup {
     readonly page: Page;
 
-    readonly loginSelectorDiv: Locator;
     readonly dialogDiv: Locator;
 
     readonly continueWithBankIdButton: Locator;
     readonly confirmAndPayButton: Locator;
     readonly skipSmoothCheckoutButton: Locator;
+    readonly paymentMethodRadio: Locator;
+    readonly paymentMethodButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
 
-        this.loginSelectorDiv = page.locator('#loginSelectionView');
         this.dialogDiv = page.locator('#dialog');
+
+        this.paymentMethodRadio = page.locator('input[type="radio"]');
+        this.paymentMethodButton = page.getByTestId('select-payment-category');
 
         this.continueWithBankIdButton = page.getByTestId('kaf-button');
         this.confirmAndPayButton = page.getByTestId('confirm-and-pay');
@@ -28,10 +31,21 @@ export class KlarnaPopup {
     async continueWithBankId() {
         await this.continueWithBankIdButton.click();
 
-        // Wait for the loginSelectionView to no longer be on the page.
-        await expect(this.loginSelectorDiv).toHaveCount(0)
+        // Wait for 200 response from call to /profile/seNoLogin
+        await this.page.waitForResponse(response => response.url().includes('/profile/seNoLogin') && response.status() === 200);
 
-        // Wait for the dialog to also be gone.
+        // Wait for 200 response from /payment_methods call
+        const paymentMethodResponse = await this.page.waitForResponse(response => response.url().includes('/payment_methods') && response.status() === 200);
+
+        // Parse the response and check if a payment method is already selected.
+        const body = await paymentMethodResponse.json();
+        if (!body.payment_categories.some(category => category.selected)) {
+            // Select the first payment method.
+            await this.paymentMethodRadio.click();
+            await this.paymentMethodButton.click();
+        }
+
+        // Wait untill there is no dialog window on the page.
         await expect(this.dialogDiv).toHaveCount(0)
     }
 

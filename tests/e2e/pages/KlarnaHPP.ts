@@ -3,8 +3,10 @@ import { FrameLocator, Locator, Page, expect } from '@playwright/test';
 export class KlarnaHPP {
 	readonly page: Page;
 
-	readonly loginSelectorDiv: Locator;
 	readonly dialogDiv: Locator;
+
+	readonly paymentMethodRadio: Locator;
+	readonly paymentMethodButton: Locator;
 
 	readonly continueWithBankIdButton: Locator;
 	readonly confirmAndPayButton: Locator;
@@ -15,12 +17,13 @@ export class KlarnaHPP {
 		this.page = page;
 
 		this.iframe = page.frameLocator('#klarna-apf-iframe');
-
-		this.loginSelectorDiv = this.iframe.locator('#loginSelectionView');
-		this.dialogDiv = this.iframe.locator('#dialog');
+		this.dialogDiv = page.locator('#dialog');
 
 		this.continueWithBankIdButton = this.iframe.getByTestId('kaf-button');
 		this.confirmAndPayButton = this.iframe.getByTestId('confirm-and-pay');
+
+		this.paymentMethodRadio = this.iframe.locator('input[type="radio"]');
+		this.paymentMethodButton = this.iframe.getByTestId('select-payment-category');
 
 		this.skipSmoothCheckoutButton = this.iframe.getByTestId('SmoothCheckoutPopUp:skip');
 	}
@@ -32,10 +35,20 @@ export class KlarnaHPP {
 	async continueWithBankId() {
 		await this.continueWithBankIdButton.click();
 
-		// Wait for the loginSelectionView to no longer be on the page.
-		await expect(this.loginSelectorDiv).toHaveCount(0)
+		// Wait for 200 response from call to /profile/seNoLogin
+		await this.page.waitForResponse(response => response.url().includes('/profile/seNoLogin') && response.status() === 200);
 
-		// Wait for the dialog to also be gone.
+		// Wait for 200 response from /payment_methods call
+		const paymentMethodResponse = await this.page.waitForResponse(response => response.url().includes('/payment_methods') && response.status() === 200);
+
+		// Parse the response and check if a payment method is already selected.
+		const body = await paymentMethodResponse.json();
+		if (!body.payment_categories.some(category => category.selected)) {
+			// Select the first payment method.
+			await this.paymentMethodRadio.click();
+			await this.paymentMethodButton.click();
+		}
+
 		await expect(this.dialogDiv).toHaveCount(0)
 	}
 
