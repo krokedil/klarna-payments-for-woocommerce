@@ -141,6 +141,11 @@ class KP_Order_Data {
 
 		// Order Coupons/Giftcards.
 		foreach ( $this->order_data->get_line_coupons() as $item ) {
+			// Skip any that are not type discount or gift_card.
+			if ( ! in_array( $item->get_type(), array( 'discount', 'gift_card' ), true ) ) {
+				continue;
+			}
+
 			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
 		}
 
