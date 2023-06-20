@@ -5,12 +5,12 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 3.0.7
+ * Version: 3.1.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 7.4.1
+ * WC tested up to: 7.7.2
  *
  * Copyright (c) 2017-2023 Krokedil
  *
@@ -39,7 +39,7 @@ use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '3.0.7' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '3.1.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -142,6 +142,20 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->session = new KP_Session();
 
 			$this->register_payment_block();
+
+			add_action( 'before_woocommerce_init', array( $this, 'declare_wc_compatibility' ) );
+		}
+
+		/**
+		 * Declare compatibility with WooCommerce features.
+		 *
+		 * @return void
+		 */
+		public function declare_wc_compatibility() {
+			// Declare HPOS compatibility.
+			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			}
 		}
 
 		/**

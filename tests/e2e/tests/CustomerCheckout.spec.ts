@@ -103,8 +103,8 @@ test.describe('Customer Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Wait for 1 second to make sure the iframe is loaded, since we dont fill any address details this happens pretty quickly.
-		await page.waitForTimeout(1000);
+		// Wait for an AJAX call to /?wc-ajax=checkout to complete.
+		await page.waitForResponse('**/?wc-ajax=checkout');
 
 		// A new window should open with the Klarna payment popup.
 		await HandleKpPopup(page);

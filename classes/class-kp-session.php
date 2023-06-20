@@ -173,10 +173,11 @@ class KP_Session {
 	 */
 	private function update_session_data_in_wc( $order ) {
 		// Update the WC Session or the order meta with instance of class.
-		if ( null === $order ) {
+		if ( empty( $order ) ) {
 			WC()->session->set( 'kp_session_data', wp_json_encode( $this ) );
 		} else {
 			$order->update_meta_data( '_kp_session_data', wp_json_encode( $this ) );
+			$order->save();
 		}
 	}
 
