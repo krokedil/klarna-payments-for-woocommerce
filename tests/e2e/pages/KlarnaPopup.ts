@@ -1,7 +1,9 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { FrameLocator, Locator, Page, expect } from '@playwright/test';
 
 export class KlarnaPopup {
     readonly page: Page;
+    readonly iframe: FrameLocator | null;
+    readonly frame: Page | FrameLocator;
 
     readonly dialogDiv: Locator;
 
@@ -11,17 +13,20 @@ export class KlarnaPopup {
     readonly paymentMethodRadio: Locator;
     readonly paymentMethodButton: Locator;
 
-    constructor(page: Page) {
+    constructor(page: Page, hpp: boolean = false) {
         this.page = page;
+        this.iframe = hpp ? page.frameLocator('#klarna-apf-iframe') : null;
 
-        this.dialogDiv = page.locator('#dialog');
+        this.frame = hpp ? this.iframe : page;
 
-        this.paymentMethodRadio = page.locator('input[type="radio"]');
-        this.paymentMethodButton = page.getByTestId('select-payment-category');
+        this.dialogDiv = this.frame.locator('#dialog');
 
-        this.continueWithBankIdButton = page.getByTestId('kaf-button');
-        this.confirmAndPayButton = page.getByTestId('confirm-and-pay');
-        this.skipSmoothCheckoutButton = page.getByTestId('SmoothCheckoutPopUp:skip');
+        this.paymentMethodRadio = this.frame.locator('input[type="radio"]');
+        this.paymentMethodButton = this.frame.getByTestId('select-payment-category');
+
+        this.continueWithBankIdButton = this.frame.getByTestId('kaf-button');
+        this.confirmAndPayButton = this.frame.getByTestId('confirm-and-pay');
+        this.skipSmoothCheckoutButton = this.frame.getByTestId('SmoothCheckoutPopUp:skip');
     }
 
     async fillNin(nin: string = '410321-9202') {
@@ -50,6 +55,13 @@ export class KlarnaPopup {
     }
 
     async confirmAndPay() {
+        // Wait for the content to render fully.
+        await this.frame.getByText('Payment option').isVisible();
+
+        // Ensure the confirmAndPayButton is not disabled.
+        await expect(this.confirmAndPayButton).not.toBeDisabled();
+
+		// Click the confirm and pay button.
         await this.confirmAndPayButton.click();
     }
 
