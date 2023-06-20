@@ -30,7 +30,6 @@ test.describe('Order management @shortcode', () => {
 	});
 
 	test('Can capture an order', async ({ page }) => {
-		test.slow();
 		await test.step('Place an order with Klarna Payments.', async () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
@@ -62,7 +61,6 @@ test.describe('Order management @shortcode', () => {
 	});
 
 	test('Can cancel an order', async ({ page }) => {
-		test.slow();
 		await test.step('Place an order with Klarna Payments.', async () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
@@ -94,7 +92,6 @@ test.describe('Order management @shortcode', () => {
 	});
 
 	test('Can refund an order', async ({ page }) => {
-		test.slow();
 		let order;
 		await test.step('Place an order with Klarna Payments.', async () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
@@ -128,7 +125,6 @@ test.describe('Order management @shortcode', () => {
 	});
 
 	test('Can partially refund an order', async ({ page }) => {
-		test.slow();
 		let order;
 		await test.step('Place an order with Klarna Payments.', async () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
@@ -187,7 +183,6 @@ test.describe('Order management @checkoutBlock', () => {
 	});
 
 	test('Can capture an order', async ({ page }) => {
-		test.slow();
 		await test.step('Place an order with Klarna Payments.', async () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
@@ -233,7 +228,6 @@ test.describe('Order management @checkoutBlock', () => {
 	});
 
 	test('Can cancel an order', async ({ page }) => {
-		test.slow();
 		await test.step('Place an order with Klarna Payments.', async () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
 			const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
@@ -280,7 +274,6 @@ test.describe('Order management @checkoutBlock', () => {
 	});
 
 	test('Can refund an order', async ({ page }) => {
-		test.slow();
 		let order;
 		await test.step('Place an order with Klarna Payments.', async () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
@@ -328,7 +321,6 @@ test.describe('Order management @checkoutBlock', () => {
 	});
 
 	test('Can partially refund an order', async ({ page }) => {
-		test.slow();
 		let order;
 		await test.step('Place an order with Klarna Payments.', async () => {
 			const cartPage = new WcPages.Cart(page, wcApiClient);
