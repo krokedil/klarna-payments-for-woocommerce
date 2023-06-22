@@ -83,7 +83,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->testmode      = 'yes' === $this->get_option( 'testmode' );
 
 		// What is Klarna link.
-		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
+		$this->hide_what_is_klarna  = 'yes' !== $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 
 		// Hooks.
@@ -326,7 +326,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			);
 		}
 
-		$session_id = KP_WC()->session->get_klarna_session_id();
+		$session_id     = KP_WC()->session->get_klarna_session_id();
 		$klarna_country = kp_get_klarna_country( $order );
 
 		// Create a HPP url.

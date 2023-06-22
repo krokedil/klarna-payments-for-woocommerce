@@ -24,7 +24,7 @@ class KP_Session {
 	 *          {
 	 *              'name'        => string         - The name of the payment method category.
 	 *              'identifier'  => string         - The identifier of the payment method category.
-	 *              'assets_urls' => array(         - The assets urls for the payment method category. Array of objects describing the assets urls.
+	 *              'asset_urls' => array(         - The assets urls for the payment method category. Array of objects describing the assets urls.
 	 *                 'descriptive' => string,     - The descriptive assets url.
 	 *                 'standard'    => string,     - The standard assets url.
 	 *              ),
@@ -253,9 +253,12 @@ class KP_Session {
 	 */
 	private function get_session_cart_hash() {
 		// The `get_totals` method can return non-numeric items which should be removed before using `array_sum`.
-		$cart_totals = array_filter( WC()->cart->get_totals(), function( $total ) {
-			return is_numeric( $total );
-		} );
+		$cart_totals = array_filter(
+			WC()->cart->get_totals(),
+			function( $total ) {
+				return is_numeric( $total );
+			}
+		);
 
 		// Get values to use for the combined hash calculation.
 		$total            = array_sum( $cart_totals );
