@@ -65,7 +65,22 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->method_title       = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
 		$this->method_description = __( 'Get the flexibility to pay over time with Klarna!', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = true;
-		$this->supports           = apply_filters( 'wc_klarna_payments_supports', array( 'products' ) ); // Make this filterable.
+		$this->supports           = apply_filters(
+			'wc_klarna_payments_supports',
+			array(
+				'products',
+				'subscriptions',
+				'subscription_cancellation',
+				'subscription_suspension',
+				'subscription_reactivation',
+				'subscription_amount_changes',
+				'subscription_date_changes',
+				'subscription_payment_method_change',
+				'subscription_payment_method_change_customer',
+				'subscription_payment_method_change_admin',
+				'multiple_subscriptions',
+			)
+		); // Make this filterable.
 
 		$base_location      = wc_get_base_location();
 		$this->shop_country = $base_location['country'];
@@ -326,7 +341,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			);
 		}
 
-		$session_id = KP_WC()->session->get_klarna_session_id();
+		$session_id     = KP_WC()->session->get_klarna_session_id();
 		$klarna_country = kp_get_klarna_country( $order );
 
 		// Create a HPP url.
