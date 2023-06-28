@@ -15,14 +15,14 @@ let guestPage: Page;
 
 
 const globalSetup = async (config: FullConfig) => {
-	if (process.env.BASE_URL === undefined) {
+	if (process.env.BASE_URL === undefined || process.env.CI === '1') {
 		// Get the base URL from ngrok and set it as an env variable.
 		process.env.BASE_URL = await getBaseUrl();
 	}
 
 	const baseURL = process.env.BASE_URL;
 
-	const wcApiClient = await GetWcApiClient(process.env.BASE_URL ?? 'http://localhost:8080', CONSUMER_KEY ?? 'admin', CONSUMER_SECRET ?? 'password');
+	const wcApiClient = await GetWcApiClient(baseURL ?? 'http://localhost:8080', CONSUMER_KEY ?? 'admin', CONSUMER_SECRET ?? 'password');
 
 	const { storageState } = config.projects[0].use;
 
