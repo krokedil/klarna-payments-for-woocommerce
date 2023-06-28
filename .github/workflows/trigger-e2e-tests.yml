@@ -68,4 +68,5 @@ jobs:
           KLARNA_API_USERNAME: ${{ secrets.KLARNA_API_USERNAME }}
           KLARNA_API_PASSWORD: ${{ secrets.KLARNA_API_PASSWORD }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          NGROK_AUTH: ${{ secrets.NGROK_AUTH }}
         run: npx playwright test
