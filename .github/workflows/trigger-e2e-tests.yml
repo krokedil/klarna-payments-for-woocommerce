@@ -53,6 +53,7 @@ jobs:
         env:
           WP_IMAGE: ${{ github.event.inputs.wpImage }}
           WC_VERSION: ${{ github.event.inputs.wcVersion }}
+          NGROK_AUTH: ${{ secrets.NGROK_AUTH }}
         run: npm run docker:up
 
       # Only the chromium browser for now.
@@ -68,4 +69,5 @@ jobs:
           KLARNA_API_USERNAME: ${{ secrets.KLARNA_API_USERNAME }}
           KLARNA_API_PASSWORD: ${{ secrets.KLARNA_API_PASSWORD }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          NGROK_AUTH: ${{ secrets.NGROK_AUTH }}
         run: npx playwright test

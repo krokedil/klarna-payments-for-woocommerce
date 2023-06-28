@@ -54,6 +54,7 @@ jobs:
         env:
           WP_IMAGE: ${{matrix.wpImage}}
           WC_VERSION: ${{matrix.wcVersion}}
+          NGROK_AUTH: ${{ secrets.NGROK_AUTH }}
         run: npm run docker:up
 
       # Install Chromium with Playwright.
@@ -69,4 +70,5 @@ jobs:
           KLARNA_API_USERNAME: ${{ secrets.KLARNA_API_USERNAME }}
           KLARNA_API_PASSWORD: ${{ secrets.KLARNA_API_PASSWORD }}
           WC_VERSION: ${{matrix.wcVersion}}
+          NGROK_AUTH: ${{ secrets.NGROK_AUTH }}
         run: npx playwright test
