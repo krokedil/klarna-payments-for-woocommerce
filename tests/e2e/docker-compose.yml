@@ -43,7 +43,6 @@ services:
       - "8080:80"
     restart: on-failure
     environment:
-      BASE_URL: http://localhost:8080
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_NAME: wpdb
       WORDPRESS_DB_USER: wordpress
