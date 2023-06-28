@@ -54,6 +54,7 @@ jobs:
         env:
           WP_IMAGE: ${{matrix.wpImage}}
           WC_VERSION: ${{matrix.wcVersion}}
+          NGROK_AUTH: ${{ secrets.NGROK_AUTH }}
         run: npm run docker:up
 
       # Install Chromium with Playwright.

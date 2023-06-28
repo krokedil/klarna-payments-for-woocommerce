@@ -53,6 +53,7 @@ jobs:
         env:
           WP_IMAGE: ${{ github.event.inputs.wpImage }}
           WC_VERSION: ${{ github.event.inputs.wcVersion }}
+          NGROK_AUTH: ${{ secrets.NGROK_AUTH }}
         run: npm run docker:up
 
       # Only the chromium browser for now.
