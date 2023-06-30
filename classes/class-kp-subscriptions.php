@@ -30,19 +30,13 @@ if ( class_exists( 'WC_Subscription' ) ) {
 		 * Process subscription renewal.
 		 *
 		 * @param float    $amount_to_charge
-		 * @param WC_Order $renewal_order
+		 * @param WC_Order $renewal_order The WooCommerce order that will be created as a result of the renewal.
 		 * @return void
 		 */
 		public function process_scheduled_payment( $amount_to_charge, $renewal_order ) {
 			$recurring_token = $this->get_recurring_tokens( $renewal_order->get_id() );
-			$create_order    = new KP_Create_Recurring(
-				array(
-					'country'         => kp_get_klarna_country( $renewal_order ),
-					'order_id'        => $renewal_order->get_id(),
-					'recurring_token' => $recurring_token,
-				)
-			);
-			$response        = $create_order->request();
+
+			$response = KP_WC()->api->create_recurring_order( kp_get_klarna_country( $renewal_order ), $recurring_token, $renewal_order->get_id() );
 			if ( ! is_wp_error( $response ) ) {
 				$klarna_order_id = $response['order_id'];
 				$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Klarna. Klarna order id: %s', 'klarna-payments-for-woocommerce' ), $klarna_order_id ) );
@@ -72,14 +66,8 @@ if ( class_exists( 'WC_Subscription' ) ) {
 
 		public function cancel_scheduled_payment( $subscription ) {
 			$recurring_token = $this->get_recurring_tokens( $subscription->get_id() );
-			$cancel_order    = new KP_Cancel_Recurring(
-				array(
-					'country'         => kp_get_klarna_country( $subscription ),
-					'recurring_token' => $recurring_token,
-				)
-			);
 
-			$response = $cancel_order->request();
+			$response = KP_WC()->api->cancel_recurring_order( kp_get_klarna_country( $subscription ), $recurring_token );
 			if ( ! is_wp_error( $response ) ) {
 				$subscription->add_order_note( __( 'Subscription cancelled with Klarna Payments.', 'klarna-payments-for-woocommerce' ) );
 			} else {
