@@ -23,6 +23,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'woocommerce_scheduled_subscription_payment_' . self::GATEWAY_ID, array( $this, 'process_scheduled_payment' ), 10, 2 );
+			add_action( 'woocommerce_subscription_cancelled_' . self::GATEWAY_ID, array( $this, 'cancel_scheduled_payment' ) );
 		}
 
 		/**
@@ -44,12 +45,12 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			$response        = $create_order->request();
 			if ( ! is_wp_error( $response ) ) {
 				$klarna_order_id = $response['order_id'];
-				$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Klarna. Klarna order id: %s', 'klarna-checkout-for-woocommerce' ), $klarna_order_id ) );
+				$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Klarna. Klarna order id: %s', 'klarna-payments-for-woocommerce' ), $klarna_order_id ) );
 				kp_process_auth_or_callback( $renewal_order, $response );
 			} else {
 				$error_message = $response->get_error_message();
 				// Translators: Error message.
-				$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Klarna. Message: %1$s', 'klarna-checkout-for-woocommerce' ), $error_message ) );
+				$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Klarna. Message: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 			}
 
 			$subscriptions = wcs_get_subscriptions_for_renewal_order( $renewal_order->get_id() );
@@ -66,6 +67,26 @@ if ( class_exists( 'WC_Subscription' ) ) {
 
 			// Save to the WC order.
 			self::save_recurring_token( $renewal_order->get_id(), $recurring_token );
+
+		}
+
+		public function cancel_scheduled_payment( $subscription ) {
+			$recurring_token = $this->get_recurring_tokens( $subscription->get_id() );
+			$cancel_order    = new KP_Cancel_Recurring(
+				array(
+					'country'         => kp_get_klarna_country( $subscription ),
+					'recurring_token' => $recurring_token,
+				)
+			);
+
+			$response = $cancel_order->request();
+			if ( ! is_wp_error( $response ) ) {
+				$subscription->add_order_note( __( 'Subscription cancelled with Klarna Payments.', 'klarna-payments-for-woocommerce' ) );
+			} else {
+				$error_message = $response->get_error_message();
+				// Translators: Error message.
+				$subscription->add_order_note( sprintf( __( 'Subscription cancellation failed with Klarna Payments. Message: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
+			}
 
 		}
 
