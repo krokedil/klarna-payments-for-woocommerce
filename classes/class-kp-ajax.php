@@ -54,7 +54,22 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'missing_data' );
 			}
 
-			$order    = wc_get_order( $order_id );
+			$order = wc_get_order( $order_id );
+			if ( function_exists( 'wcs_order_contains_subscription' ) && wcs_order_contains_subscription( $order ) ) {
+				$request = new KP_Create_Customer_Token(
+					array(
+						'country'    => kp_get_klarna_country( $order ),
+						'auth_token' => $auth_token,
+						'order_id'   => $order_id,
+					)
+				);
+				// TODO: Handle error.
+				$response = $request->request();
+				if ( ! is_wp_error( $response ) ) {
+					KP_Subscription::save_recurring_token( $order_id, $response['token_id'] );
+				}
+			}
+
 			$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $auth_token, $order_id );
 
 			if ( is_wp_error( $response ) ) {
