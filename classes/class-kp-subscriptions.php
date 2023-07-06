@@ -18,6 +18,8 @@ if ( class_exists( 'WC_Subscription' ) ) {
 
 		private const GATEWAY_ID = 'klarna_payments';
 
+		public const RECURRING_TOKEN = '_' . self::GATEWAY_ID . '_recurring_token';
+
 		/**
 		 * Register hooks.
 		 */
@@ -87,7 +89,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 		 */
 		public static function save_recurring_token( $order_id, $recurring_token ) {
 			$order = wc_get_order( $order_id );
-			$order->update_meta_data( '_kp_recurring_token', $recurring_token );
+			$order->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
 			$order->save();
 		}
 
@@ -99,13 +101,13 @@ if ( class_exists( 'WC_Subscription' ) ) {
 		 */
 		public static function get_recurring_tokens( $order_id ) {
 			$order           = wc_get_order( $order_id );
-			$recurring_token = $order->get_meta( '_kp_recurring_token' );
+			$recurring_token = $order->get_meta( self::RECURRING_TOKEN );
 
 			if ( empty( $recurring_token ) ) {
 				$subscriptions = wcs_get_subscriptions_for_renewal_order( $order_id );
 				foreach ( $subscriptions as $subscription ) {
 					$parent_order    = $subscription->get_parent();
-					$recurring_token = $parent_order->get_meta( '_kp_recurring_token' );
+					$recurring_token = $parent_order->get_meta( self::RECURRING_TOKEN );
 
 					if ( ! empty( $recurring_token ) ) {
 						break;
