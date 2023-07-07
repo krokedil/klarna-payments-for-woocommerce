@@ -56,11 +56,12 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 
 			$order = wc_get_order( $order_id );
 			if ( function_exists( 'wcs_order_contains_subscription' ) && wcs_order_contains_subscription( $order ) ) {
-				// TODO: Handle error.
 				$response = KP_WC()->api->create_customer_token( kp_get_klarna_country( $order ), $auth_token, $order_id );
-				if ( ! is_wp_error( $response ) ) {
-					KP_Subscription::save_recurring_token( $order_id, $response['token_id'] );
+				if ( is_wp_error( $response ) ) {
+					wp_send_json_error( 'customer_token_failed' );
 				}
+
+				KP_Subscription::save_recurring_token( $order_id, $response['token_id'] );
 			}
 
 			$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $auth_token, $order_id );
