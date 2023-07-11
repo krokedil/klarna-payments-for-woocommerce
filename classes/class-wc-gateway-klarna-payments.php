@@ -246,6 +246,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
 				}
 			}
+
+			// When changing subscription payment method, hide the payment fields as we'll redirect to Klarna's HPP, not one of the payment categories.
+			if ( KP_Subscription::is_change_payment_method() ) {
+				$this->has_fields = false;
+			}
 		}
 
 		return $located;
@@ -268,12 +273,26 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
+
+		if ( wcs_is_subscription( $order_id ) ) {
+			return $this->process_subscription( $order );
+		}
 		// Check if the order was created using WooCommerce blocks.
 		if ( kp_is_wc_blocks_order( $order ) ) {
 			return $this->process_blocks_order( $order );
 		}
 
 		return $this->process_checkout_order( $order );
+	}
+
+	/**
+	 * Create a session for Klarna Hosted Payment Page, and redirect the customer there.
+	 *
+	 * @param mixed $order The WooCommerce order.
+	 * @return array
+	 */
+	private function process_subscription( $order ) {
+		return $this->process_blocks_order( $order );
 	}
 
 	/**

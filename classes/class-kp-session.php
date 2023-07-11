@@ -58,18 +58,18 @@ class KP_Session {
 	}
 
 	/**
-	 * Gets a Klarna sessios. Creates or updates the Klarna session if needed.
+	 * Gets a Klarna sessions. Creates or updates the Klarna session if needed.
 	 *
 	 * @param int|WC_Order|null $order The WooCommerce order or order id. Null if we are working with a cart.
 	 */
 	public function get_session( $order = null ) {
-		if ( ! kp_is_available() || ! kp_is_checkout_page() ) {
+		if ( ! kp_is_available() || ! kp_is_checkout_page() && ! KP_Subscription::is_change_payment_method() ) {
 			return;
 		}
 
 		// Check if we get an order.
 		$order    = $this->maybe_get_order( $order );
-		$order_id = $order ? $order->get_id() : null;
+		$order_id = ! ( empty( $order ) || is_wp_error( $order ) ) ? $order->get_id() : null;
 
 		// Return WP Error if we get one.
 		if ( is_wp_error( $order ) ) {
@@ -253,9 +253,12 @@ class KP_Session {
 	 */
 	private function get_session_cart_hash() {
 		// The `get_totals` method can return non-numeric items which should be removed before using `array_sum`.
-		$cart_totals = array_filter( WC()->cart->get_totals(), function( $total ) {
-			return is_numeric( $total );
-		} );
+		$cart_totals = array_filter(
+			WC()->cart->get_totals(),
+			function( $total ) {
+				return is_numeric( $total );
+			}
+		);
 
 		// Get values to use for the combined hash calculation.
 		$total            = array_sum( $cart_totals );

@@ -26,6 +26,13 @@ if ( class_exists( 'WC_Subscription' ) ) {
 		public function __construct() {
 			add_action( 'woocommerce_scheduled_subscription_payment_' . self::GATEWAY_ID, array( $this, 'process_scheduled_payment' ), 10, 2 );
 			add_action( 'woocommerce_subscription_cancelled_' . self::GATEWAY_ID, array( $this, 'cancel_scheduled_payment' ) );
+
+			// Override the subscription cost.
+			add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'set_subscription_to_free' ) );
+			// Override the redirect URLs to redirect back to the change payment method page on failure or to the subscription view on success.
+			add_filter( 'wc_klarna_payments_create_hpp_args', array( $this, 'set_subscription_order_redirect_urls' ) );
+			// On successful payment method change, the customer is redirected back to the subscription view page. We need to handle the redirect and create a recurring token.
+			add_action( 'woocommerce_account_view-subscription_endpoint', array( $this, 'handle_redirect_from_change_payment_method' ) );
 		}
 
 		/**
@@ -66,6 +73,16 @@ if ( class_exists( 'WC_Subscription' ) ) {
 
 		}
 
+		/**
+		 * Cancel the customer token to prevent further payments using the token.
+		 *
+		 * Note: When changing payment method, WC Subscriptions will cancel the subscription with existing payment gateway (which triggers this functions), and create a new one. Thus the new subscription must generate a new customer token.
+		 *
+		 * @see WC_Subscriptions_Change_Payment_Gateway::update_payment_method
+		 *
+		 * @param mixed $subscription WC_Subscription
+		 * @return void
+		 */
 		public function cancel_scheduled_payment( $subscription ) {
 			$recurring_token = $this->get_recurring_tokens( $subscription->get_id() );
 
@@ -78,6 +95,107 @@ if ( class_exists( 'WC_Subscription' ) ) {
 				$subscription->add_order_note( sprintf( __( 'Subscription cancellation failed with Klarna Payments. Message: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 			}
 
+		}
+
+		/**
+		 * Set the redirect URLs for the hosted payment page.
+		 *
+		 * Used for changing payment method.
+		 *
+		 * @param array $request The Klarna request.
+		 * @return array
+		 */
+		public function set_subscription_order_redirect_urls( $request ) {
+			if ( ! self::is_change_payment_method() ) {
+				return $request;
+			}
+
+			$key          = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS );
+			$order_id     = wc_get_order_id_by_order_key( $key );
+			$subscription = wc_get_order( $order_id );
+			$body         = json_decode( $request['body'], true );
+
+			$success_url           = add_query_arg(
+				array(
+					'authorization_token' => '{{authorization_token}}',
+				),
+				$subscription->get_view_order_url()
+			);
+			$body['merchant_urls'] = array(
+				'success' => $success_url,
+				'cancel'  => $subscription->get_change_payment_method_url(),
+				'back'    => $subscription->get_change_payment_method_url(),
+				'failure' => $subscription->get_change_payment_method_url(),
+				'error'   => $subscription->get_change_payment_method_url(),
+			);
+
+			$request['body'] = wp_json_encode( $body );
+			return $request;
+		}
+
+		/**
+		 * Handle the redirect from the hosted payment page.
+		 *
+		 * Used for changing payment method.
+		 *
+		 * @param int $subscription_id The subscription ID.
+		 * @return void
+		 */
+		public function handle_redirect_from_change_payment_method( $subscription_id ) {
+			$auth_token = filter_input( INPUT_GET, 'authorization_token', FILTER_SANITIZE_SPECIAL_CHARS );
+			if ( ! isset( $auth_token ) ) {
+				return;
+			}
+
+			$subscription = wcs_get_subscription( $subscription_id );
+			$response     = KP_WC()->api->create_customer_token( kp_get_klarna_country( $subscription ), $auth_token, $subscription_id );
+			if ( is_wp_error( $response ) ) {
+				$message = sprintf(
+					/* translators: Error message. */
+					__( 'Failed to create recurring token. Message: %s', 'klarna-payments-for-woocommerce' ),
+					$response->get_error_message()
+				);
+			} else {
+				$message = sprintf(
+				/* translators: Recurring token. */
+					__( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ),
+					$response['token_id']
+				);
+
+				self::save_recurring_token( $subscription_id, $response['token_id'] );
+			}
+
+			$subscription->add_order_note( $message );
+			$subscription->save();
+		}
+
+		/**
+		 * Set the subscription cost to 0.
+		 * This is required when changing payment method.
+		 *
+		 * @param array $request The Klarna request.
+		 * @return array
+		 */
+		public function set_subscription_to_free( $request ) {
+			if ( ! self::is_change_payment_method() ) {
+				return $request;
+			}
+
+			$body = json_decode( $request['body'], true );
+			foreach ( $body['order_lines'] as $item => $order_line ) {
+				if ( ! isset( $order_line['subscription'] ) ) {
+					continue;
+				}
+
+				$body['order_lines'][ $item ]['unit_price']   = 0;
+				$body['order_lines'][ $item ]['total_amount'] = 0;
+			}
+
+			// 0 order amounts are allowed if the purchase intent is 'tokenize'. On the intent 'buy_and_tokenize' 0 order amounts are not allowed.
+			$body['intent'] = 'tokenize';
+
+			$request['body'] = wp_json_encode( $body );
+			return $request;
 		}
 
 		/**
@@ -132,6 +250,15 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			}
 
 			return false;
+		}
+
+		/**
+		 * Check if the current request is for changing the payment method.
+		 *
+		 * @return bool
+		 */
+		public static function is_change_payment_method() {
+			return isset( $_GET['change_payment_method'] );
 		}
 	}
 
