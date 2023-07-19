@@ -27,12 +27,33 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			add_action( 'woocommerce_scheduled_subscription_payment_' . self::GATEWAY_ID, array( $this, 'process_scheduled_payment' ), 10, 2 );
 			add_action( 'woocommerce_subscription_cancelled_' . self::GATEWAY_ID, array( $this, 'cancel_scheduled_payment' ) );
 
-			// Override the subscription cost.
-			add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'set_subscription_to_free' ) );
+			// Set the purchase intent to 'tokenize' for trial subscriptions. The 'buy_and_tokenize' intent is not allowed for 0 order amounts.
+			add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'set_tokenize_intent' ) );
+			add_filter( 'wc_klarna_payments_place_order_args', array( $this, 'set_tokenize_intent' ) );
+			add_filter( 'wc_klarna_payments_update_session_args', array( $this, 'set_tokenize_intent' ) );
+
+			// For free or trial subscription, we set the order as captured to prevent KOM from setting the order to on-hold when the merchant set the order to "Completed".
+			add_filter( 'woocommerce_payment_complete', array( $this, 'set_subscription_as_captured' ) );
+
 			// Override the redirect URLs to redirect back to the change payment method page on failure or to the subscription view on success.
 			add_filter( 'wc_klarna_payments_create_hpp_args', array( $this, 'set_subscription_order_redirect_urls' ) );
+			// Override the subscription cost when change payment method.
+			add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'set_subscription_to_free' ) );
 			// On successful payment method change, the customer is redirected back to the subscription view page. We need to handle the redirect and create a recurring token.
 			add_action( 'woocommerce_account_view-subscription_endpoint', array( $this, 'handle_redirect_from_change_payment_method' ) );
+
+		}
+
+		public function set_subscription_as_captured( $order_id ) {
+			$order = wc_get_order( $order_id );
+			if ( self::GATEWAY_ID !== $order->get_payment_method() ) {
+				return $order_id;
+			}
+
+			if ( self::order_has_subscription( $order ) && 0.0 === floatval( $order->get_total() ) ) {
+				$order->update_meta_data( '_wc_klarna_capture_id', 'trial' );
+				$order->save();
+			}
 		}
 
 		/**
@@ -49,7 +70,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			if ( ! is_wp_error( $response ) ) {
 				$klarna_order_id = $response['order_id'];
 				$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Klarna. Klarna order id: %s', 'klarna-payments-for-woocommerce' ), $klarna_order_id ) );
-				kp_process_auth_or_callback( $renewal_order, $response );
+				self::save_order_meta_data( $renewal_order, $response );
 			} else {
 				$error_message = $response->get_error_message();
 				// Translators: Error message.
@@ -198,8 +219,29 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			return $request;
 		}
 
+
 		/**
-		 * Save the payment and recurring token to the order if it has a subscription.
+		 * Set the purchase intent to 'tokenize' for trial subscriptions.
+		 *
+		 * The 'buy_and_tokenize' intent is not allowed for 0 order amounts.
+		 *
+		 * @param array $request The Klarna request.
+		 * @return array
+		 */
+		public function set_tokenize_intent( $request ) {
+			$body = json_decode( $request['body'], true );
+
+			// Only allow free orders if the cart contains a subscription (not limited to trial subscription as a subscription can become free if a 100% discount coupon is applied).
+			if ( 0.0 === floatval( $body['order_amount'] ) && self::cart_has_subscription() ) {
+				$body['intent']  = 'tokenize';
+				$request['body'] = wp_json_encode( $body );
+			}
+
+			return $request;
+		}
+
+		/**
+		 * Save the payment and recurring token to the order and its subscription(s).
 		 *
 		 * @param string $order_id The WooCommerce order id.
 		 * @param string $recurring_token The recurring token ("customer token").
@@ -208,6 +250,12 @@ if ( class_exists( 'WC_Subscription' ) ) {
 		public static function save_recurring_token( $order_id, $recurring_token ) {
 			$order = wc_get_order( $order_id );
 			$order->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
+
+			foreach ( wcs_get_subscriptions_for_order( $order ) as $subscription ) {
+				$subscription->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
+				$subscription->save();
+			}
+
 			$order->save();
 		}
 
@@ -259,6 +307,53 @@ if ( class_exists( 'WC_Subscription' ) ) {
 		 */
 		public static function is_change_payment_method() {
 			return isset( $_GET['change_payment_method'] );
+		}
+
+		/**
+		 * Process the response from a Klarna request to store meta data about an order.
+		 *
+		 * @param WC_Order $renewal_order The WooCommerce order.
+		 * @param array    $response Response from Klarna request that contain order details.
+		 *
+		 * @return void
+		 */
+		public static function save_order_meta_data( $order, $response ) {
+			$environment = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'] ? 'test' : 'live';
+
+			$order->update_meta_data( '_wc_klarna_environment', $environment );
+			$order->update_meta_data( '_wc_klarna_country', kp_get_klarna_country( $order ) );
+			$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
+			$order->set_transaction_id( $response['order_id'] );
+			$order->set_payment_method_title( 'Klarna' );
+
+			$order->save();
+		}
+
+		/**
+		 * Check if an order contains a subscription.
+		 *
+		 * @param WC_Order $order The WooCommerce order or leave empty to use the cart (default).
+		 * @return bool
+		 */
+		public static function order_has_subscription( $order ) {
+			if ( empty( $order ) ) {
+				return false;
+			}
+
+			return function_exists( 'wcs_order_contains_subscription' ) && wcs_order_contains_subscription( $order );
+		}
+
+		/**
+		 * Check if a cart contains a subscription.
+		 *
+		 * @return bool
+		 */
+		public static function cart_has_subscription() {
+			if ( ! is_checkout() ) {
+				return false;
+			}
+
+			return class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription();
 		}
 	}
 

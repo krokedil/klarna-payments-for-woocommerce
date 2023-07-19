@@ -214,13 +214,15 @@ class KP_Order_Data {
 			'subscription'          => apply_filters( $order_line->get_filter_name( 'subscription' ), array(), $order_line ),
 		);
 
-		$product = $order_line->product;
-		if ( class_exists( 'WC_Subscriptions_Product' ) && WC_Subscriptions_Product::is_subscription( $product ) ) {
-			$klarna_item['subscription'] = array(
-				'name'           => $klarna_item['name'],
-				'interval'       => strtoupper( WC_Subscriptions_Product::get_period( $product ) ),
-				'interval_count' => absint( WC_Subscriptions_Product::get_interval( $product ) ),
-			);
+		if ( isset( $order_line->product ) ) {
+			$product = $order_line->product;
+			if ( class_exists( 'WC_Subscriptions_Product' ) && WC_Subscriptions_Product::is_subscription( $product ) ) {
+				$klarna_item['subscription'] = array(
+					'name'           => $klarna_item['name'],
+					'interval'       => strtoupper( WC_Subscriptions_Product::get_period( $product ) ),
+					'interval_count' => absint( WC_Subscriptions_Product::get_interval( $product ) ),
+				);
+			}
 		}
 
 		return array_filter( $klarna_item, 'KP_Order_Data::remove_null' );

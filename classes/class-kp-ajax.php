@@ -62,6 +62,13 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				}
 
 				KP_Subscription::save_recurring_token( $order_id, $response['token_id'] );
+
+				if ( KP_Subscription::order_has_subscription( $order ) && 0.0 === floatval( $order->get_total() ) ) {
+					$order->payment_complete();
+					$order->add_order_note( __( 'The order contains a free or trial subscription, and no Klarna order is associated with this purchase. A Klarna order will only be registered once the subscriber is charged.', 'klarna-payments-for-woocommerce' ) );
+					kp_unset_session_values();
+					wp_send_json_success( $order->get_checkout_order_received_url() );
+				}
 			}
 
 			$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $auth_token, $order_id );

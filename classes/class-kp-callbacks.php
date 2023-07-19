@@ -72,6 +72,13 @@ class KP_Callbacks {
 			return;
 		}
 
+		// For free or trial subscriptions, authorization can be safely ignored as we do not need to act upon it
+		// since no Klarna order is associated with the purchase, only a Klarna customer token.
+		if ( KP_Subscription::order_has_subscription( $order ) && 0.0 === floatval( $order->get_total() ) ) {
+			$order->payment_complete();
+			return;
+		}
+
 		$response = KP_WC()->api->place_order( $country, $auth_token, $order->get_id() );
 		if ( is_wp_error( $response ) ) {
 			/**

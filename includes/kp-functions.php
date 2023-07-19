@@ -79,9 +79,9 @@ function kp_process_auth_or_callback( $order, $response ) {
 	$order->update_meta_data( '_wc_klarna_environment', $environment );
 	$order->update_meta_data( '_wc_klarna_country', kp_get_klarna_country( $order ) );
 	$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
-	$order->update_meta_data( '_transaction_id', $response['order_id'], true );
-	$order->update_meta_data( '_payment_method', $order->get_payment_method() );
-	$order->update_meta_data( '_payment_method_title', 'Klarna' );
+	$order->set_transaction_id( $response['order_id'] );
+	$order->set_payment_method_title( 'Klarna' );
+
 	$order->save();
 }
 
