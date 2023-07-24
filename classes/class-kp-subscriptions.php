@@ -16,8 +16,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 	 */
 	class KP_Subscription {
 
-		private const GATEWAY_ID = 'klarna_payments';
-
+		public const GATEWAY_ID      = 'klarna_payments';
 		public const RECURRING_TOKEN = '_' . self::GATEWAY_ID . '_recurring_token';
 
 		/**
@@ -42,6 +41,9 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			// On successful payment method change, the customer is redirected back to the subscription view page. We need to handle the redirect and create a recurring token.
 			add_action( 'woocommerce_account_view-subscription_endpoint', array( $this, 'handle_redirect_from_change_payment_method' ) );
 
+			// Show the recurring token on the subscription page in the billing fields.
+			add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'show_recurring_token' ) );
+			// Ensure wp_safe_redirect do not redirect back to default dashboard or home page.
 			add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
 
 		}
@@ -369,6 +371,37 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			$hosts[] = 'pay.playground.klarna.com';
 			$hosts[] = 'pay.klarna.com';
 			return $hosts;
+		}
+
+		/**
+		 * Shows the recurring token for the order.
+		 *
+		 * @param WC_Order $order The WooCommerce order.
+		 * @return void
+		 */
+		public function show_recurring_token( $order ) {
+			if ( 'shop_subscription' === $order->get_type() && $order->get_meta( self::RECURRING_TOKEN ) ) {
+				?>
+			<div class="order_data_column" style="clear:both; float:none; width:100%;">
+				<div class="address">
+					<p>
+						<strong><?php echo esc_html( 'Klarna recurring token' ); ?>:</strong><?php echo esc_html( $order->get_meta( self::RECURRING_TOKEN ) ); ?>
+					</p>
+				</div>
+				<div class="edit_address">
+					<?php
+						woocommerce_wp_text_input(
+							array(
+								'id'            => self::RECURRING_TOKEN,
+								'label'         => __( 'Klarna recurring token', 'klarna-checkout-for-woocommerce' ),
+								'wrapper_class' => '_billing_company_field',
+							)
+						);
+					?>
+				</div>
+			</div>
+				<?php
+			}
 		}
 	}
 
