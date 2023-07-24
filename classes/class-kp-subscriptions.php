@@ -42,6 +42,8 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			// On successful payment method change, the customer is redirected back to the subscription view page. We need to handle the redirect and create a recurring token.
 			add_action( 'woocommerce_account_view-subscription_endpoint', array( $this, 'handle_redirect_from_change_payment_method' ) );
 
+			add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
+
 		}
 
 		public function set_subscription_as_captured( $order_id ) {
@@ -354,6 +356,19 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			}
 
 			return class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription();
+		}
+
+		/**
+		 * Add Klarna hosted payment page as allowed external url for wp_safe_redirect.
+		 * We do this because WooCommerce Subscriptions use wp_safe_redirect when processing a payment method change request (from v5.1.0).
+		 *
+		 * @param array $hosts Domains that are allowed when wp_safe_redirect is used.
+		 * @return array
+		 */
+		public function extend_allowed_domains_list( $hosts ) {
+			$hosts[] = 'pay.playground.klarna.com';
+			$hosts[] = 'pay.klarna.com';
+			return $hosts;
 		}
 	}
 
