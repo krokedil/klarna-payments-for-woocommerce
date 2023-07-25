@@ -50,38 +50,41 @@ class KP_Settings_Saved {
 
 		foreach ( $countries as $cc => $country ) {
 			$cc = 'uk' === $cc ? 'gb' : $cc;
-			// Live.
-			if ( '' !== $options[ 'merchant_id_' . $cc ] ) {
-				$username = $options[ 'merchant_id_' . $cc ];
-				$password = $options[ 'shared_secret_' . $cc ];
 
-				// Create request arguments.
-				$args = array(
-					'username' => $username,
-					'password' => $password,
-					'country'  => $cc,
-					'testmode' => false,
-				);
+			if ( 'yes' !== $options['testmode'] ) {
+				// Live.
+				if ( '' !== $options[ 'merchant_id_' . $cc ] ) {
+					$username = $options[ 'merchant_id_' . $cc ];
+					$password = $options[ 'shared_secret_' . $cc ];
 
-				$test_response = ( new KP_Test_Credentials( $args ) )->request();
-				$this->process_test_response( $test_response, self::PROD, $cc );
-			}
+					// Create request arguments.
+					$args = array(
+						'username' => $username,
+						'password' => $password,
+						'country'  => $cc,
+						'testmode' => false,
+					);
 
-			// Test.
-			if ( '' !== $options[ 'test_merchant_id_' . $cc ] ) {
-				$username = $options[ 'test_merchant_id_' . $cc ];
-				$password = $options[ 'test_shared_secret_' . $cc ];
+					$test_response = ( new KP_Test_Credentials( $args ) )->request();
+					$this->process_test_response( $test_response, self::PROD, $cc );
+				}
+			} else {
+				// Test.
+				if ( '' !== $options[ 'test_merchant_id_' . $cc ] ) {
+					$username = $options[ 'test_merchant_id_' . $cc ];
+					$password = $options[ 'test_shared_secret_' . $cc ];
 
-				// Create request arguments.
-				$args = array(
-					'username' => $username,
-					'password' => $password,
-					'country'  => $cc,
-					'testmode' => true,
-				);
+					// Create request arguments.
+					$args = array(
+						'username' => $username,
+						'password' => $password,
+						'country'  => $cc,
+						'testmode' => true,
+					);
 
-				$test_response = ( new KP_Test_Credentials( $args ) )->request();
-				$this->process_test_response( $test_response, self::TEST, $cc );
+					$test_response = ( new KP_Test_Credentials( $args ) )->request();
+					$this->process_test_response( $test_response, self::TEST, $cc );
+				}
 			}
 
 			$this->maybe_handle_error();
@@ -101,10 +104,10 @@ class KP_Settings_Saved {
 		if ( ! is_wp_error( $test_response ) ) {
 			return;
 		}
-		$cc             = strtoupper( $cc );
-		$code           = $test_response->get_error_code();
-		$error          = $test_response->get_error_message();
-		$data           = json_decode( $test_response->get_error_data(), true );
+		$cc    = strtoupper( $cc );
+		$code  = $test_response->get_error_code();
+		$error = $test_response->get_error_message();
+		$data  = json_decode( $test_response->get_error_data(), true );
 
 		if ( 400 === $code || 401 === $code || 403 === $code ) {
 			switch ( $code ) {
@@ -112,15 +115,15 @@ class KP_Settings_Saved {
 					$message = "It seems like your Klarna $cc $test credentials are not configured correctly, please review your Klarna contract and ensure that your account is configured correctly for this country. ";
 					break;
 				case 401:
-					$message = "It seems like your Klarna $cc $test credentials are incorrect, please verify or remove these credentials and save again. ";
+					$message = "Your Klarna $cc $test credentials are not authorized. Please verify the credentials and environment (production or test mode) or remove these credentials and save again. API credentials only work in either production or test, not both environments. ";
 					break;
 				case 403:
 					$message = "It seems like your Klarna $cc $test API credentials are not working for the Klarna Payments plugin, please verify your Klarna contract is for the Klarna Payments solution.  If your Klarna contract is for Klarna Checkout, please instead use the <a href='https://docs.woocommerce.com/document/klarna-checkout/'>Klarna Checkout for WooCommerce</a> plugin. ";
 					break;
 			}
-			$message        .= "API error code: $code, Klarna API error message: $error";
+			$message .= "API error code: $code, Klarna API error message: $error";
 
-			if( isset( $data['correlation_id'] ) ) {
+			if ( isset( $data['correlation_id'] ) ) {
 				$correlation_id = $data['correlation_id'];
 				$message       .= " Klarna correlation_id: $correlation_id";
 			}

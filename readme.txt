@@ -6,7 +6,7 @@ Requires at least: 5.0
 Tested up to: 6.2.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 7.8.0
+WC tested up to: 8.0.0
 Stable tag: 3.1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -51,9 +51,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
-= 2023.06.28    - version 3.1.1 =
-* Fix           - Fixed an issue with how we made our meta queries when trying to find orders based on a the Klarna session ID.
-* Enhancement   - Added a validation to ensure that the order returned by our meta query actually is the correct order by verifying that the Klarna session ID stored matches the one we searched for.
+= 2023.07.25    - version 3.1.1 =
+* Fix           - The Klarna logo will now correctly be fetched from the session as originally intended, rather than defaulting to the use of the standard logo.
+- Tweak         - We have removed the settings tab from the "Klarna Add-ons" page because its functionalities have been transferred to the plugin.
+* Tweak         - We will now validate the API credentials based on the active mode, whether it's test or production. This enhancement should prevent the plugin from inaccurately attempting to verify production credentials when the test mode is in operation.
 
 = 2023.06.20    - version 3.1.0 =
 * Feature       - The plugin now supports WooCommerce's "High-Performance Order Storage" ("HPOS") feature.
