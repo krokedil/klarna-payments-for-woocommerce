@@ -7,7 +7,7 @@ Tested up to: 6.2.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 8.0.0
-Stable tag: 3.1.2
+Stable tag: 3.1.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2023.07.26    - version 3.1.3 =
+* Fix           - Fixed an issue where the customer type defaulted to B2C even when B2B was chosen in the settings.
+
 = 2023.07.25    - version 3.1.2 =
 * Fix           - The Klarna logo will now correctly be fetched from the session as originally intended, rather than defaulting to the use of the standard logo.
 - Tweak         - We have removed the settings tab from the "Klarna Add-ons" page because its functionalities have been transferred to the plugin.

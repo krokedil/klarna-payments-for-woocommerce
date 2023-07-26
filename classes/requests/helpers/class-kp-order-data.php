@@ -42,11 +42,11 @@ class KP_Order_Data {
 	 */
 	private $customer_type;
 
-    /**
-     * The generated order data.
-     *
-     * @var \Krokedil\WooCommerce\OrderData
-     */
+	/**
+	 * The generated order data.
+	 *
+	 * @var \Krokedil\WooCommerce\OrderData
+	 */
 	public $order_data;
 
 	/**
@@ -56,20 +56,20 @@ class KP_Order_Data {
 	 */
 	private $separate_sales_tax;
 
-    /**
-     * Class constructor.
-     *
-     * @param string   $customer_type The Customer type to use for KP. Either B2B or B2C. Based on the setting in the plugin.
-     * @param int|null $order_id The WooCommerce order it used to calculate the order data. If null the cart will be used instead.
-     */
-    public function __construct( $customer_type, $order_id = null ) {
+	/**
+	 * Class constructor.
+	 *
+	 * @param string   $customer_type The Customer type to use for KP. Either B2B or B2C. Based on the setting in the plugin.
+	 * @param int|null $order_id The WooCommerce order it used to calculate the order data. If null the cart will be used instead.
+	 */
+	public function __construct( $customer_type, $order_id = null ) {
 		$this->customer_type      = $customer_type;
-        $this->order_id           = $order_id;
+		$this->order_id           = $order_id;
 		$this->order              = $this->order_id ? wc_get_order( $this->order_id ) : null;
 		$this->klarna_country     = kp_get_klarna_country( $this->order );
 		$this->order_data         = $this->get_order_data();
-		$this->separate_sales_tax = "US" === $this->klarna_country;
-    }
+		$this->separate_sales_tax = 'US' === $this->klarna_country;
+	}
 
 	/**
 	 * Returns the request helper for the request based on if we have a order id passed or not.
@@ -93,10 +93,10 @@ class KP_Order_Data {
 	/**
 	 * Returns a formated Klarna order object.
 	 *
-     * @param KP_IFrame $iframe_options The options to use for the Klarna Payments iframes.
+	 * @param KP_IFrame $iframe_options The options to use for the Klarna Payments iframes.
 	 * @return array
 	 */
-    public function get_klarna_order_object( $iframe_options ) {
+	public function get_klarna_order_object( $iframe_options ) {
 		$customer = $this->get_klarna_customer_object();
 
 		return array(
@@ -114,7 +114,7 @@ class KP_Order_Data {
 				'authorization' => home_url( '/wc-api/KP_WC_AUTHORIZATION' ),
 			),
 		);
-    }
+	}
 
 	/**
 	 * Returns an array of Klarna order line objects.
@@ -154,7 +154,7 @@ class KP_Order_Data {
 			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
 		}
 
-		if( $this->separate_sales_tax ) {
+		if ( $this->separate_sales_tax ) {
 			$klarna_order_lines[] = array(
 				'name'                  => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
 				'quantity'              => 1,
@@ -213,8 +213,8 @@ class KP_Order_Data {
 				'unit_price'            => $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount(),
 				'subscription'          => apply_filters( $order_line->get_filter_name( 'subscription' ), array(), $order_line ),
 			),
-			'KP_Order_Data::remove_null' );
-		;
+			'KP_Order_Data::remove_null'
+		);
 	}
 
 	/**
@@ -224,9 +224,9 @@ class KP_Order_Data {
 	 * @return array
 	 */
 	public function get_klarna_customer_object( $customer_type = null ) {
-        if( null === $customer_type ) {
+		if ( null === $customer_type ) {
 			$customer_type = $this->customer_type;
-        }
+		}
 
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
 		$customer_data         = $this->order_data->customer;
@@ -258,21 +258,21 @@ class KP_Order_Data {
 		);
 
 		if ( 'b2b' === $customer_type ) {
-			$customer['billing']['organization_name']  = $customer_data->get_billing_company();
-			$customer['shipping']['organization_name'] = $customer_data->get_shipping_company();
+			$billing['organization_name']  = $customer_data->get_billing_company();
+			$shipping['organization_name'] = $customer_data->get_shipping_company();
 		}
 
-		foreach( $shipping as $key => $value ) {
-			if( ! empty( $value ) ) {
+		foreach ( $shipping as $key => $value ) {
+			if ( ! empty( $value ) ) {
 				continue;
 			}
 
 			$shipping[ $key ] = $billing[ $key ];
 		}
 
-		$customer              = array(
+		$customer = array(
 			'billing'  => $billing,
-			'shipping' => $shipping
+			'shipping' => $shipping,
 		);
 
 		return $customer;
