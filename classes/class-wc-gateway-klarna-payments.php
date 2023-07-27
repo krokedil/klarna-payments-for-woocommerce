@@ -274,7 +274,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
-		if ( wcs_is_subscription( $order_id ) ) {
+		if ( function_exists( 'wcs_is_subscription' ) && wcs_is_subscription( $order_id ) ) {
 			return $this->process_subscription( $order );
 		}
 		// Check if the order was created using WooCommerce blocks.
