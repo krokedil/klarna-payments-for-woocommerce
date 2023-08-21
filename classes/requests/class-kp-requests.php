@@ -77,7 +77,7 @@ abstract class KP_Requests extends Request {
 	protected function get_base_url( $country, $settings ) {
 		$country_data = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $country ?? '' ) ] ?? null;
 
-		$region     = $country_data['endpoint'] ?? ''; // Get the region from the country parameters, blank for EU.
+		$region     = strtolower( apply_filters( 'klarna_base_region', $country_data['endpoint'] ?? '' ) ); // Get the region from the country parameters, blank for EU.
 		$playground = 'yes' === $settings['testmode'] ? '.playground' : ''; // If testmode is enabled, add playground to the subdomain.
 		$subdomain  = "api{$region}{$playground}"; // Combine the string to one subdomain.
 
