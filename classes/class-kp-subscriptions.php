@@ -78,7 +78,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			} else {
 				$error_message = $response->get_error_message();
 				// Translators: Error message.
-				$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Klarna. Message: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
+				$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Klarna. Reason: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 			}
 
 			$subscriptions = wcs_get_subscriptions_for_renewal_order( $renewal_order->get_id() );
@@ -117,7 +117,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			} else {
 				$error_message = $response->get_error_message();
 				// Translators: Error message.
-				$subscription->add_order_note( sprintf( __( 'Subscription cancellation failed with Klarna Payments. Message: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
+				$subscription->add_order_note( sprintf( __( 'Subscription cancellation failed with Klarna Payments. Reason: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 			}
 
 		}
@@ -255,7 +255,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			$order = wc_get_order( $order_id );
 			$order->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
 
-			foreach ( wcs_get_subscriptions_for_order( $order ) as $subscription ) {
+			foreach ( wcs_get_subscriptions_for_order( $order, array( 'order_type' => 'any' ) ) as $subscription ) {
 				$subscription->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
 				$subscription->save();
 			}
@@ -344,7 +344,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 				return false;
 			}
 
-			return function_exists( 'wcs_order_contains_subscription' ) && wcs_order_contains_subscription( $order );
+			return function_exists( 'wcs_order_contains_subscription' ) && wcs_order_contains_subscription( $order, array( 'parent', 'resubscribe', 'switch', 'renewal' ) );
 		}
 
 		/**
