@@ -235,9 +235,14 @@ if ( class_exists( 'WC_Subscription' ) ) {
 		public function set_tokenize_intent( $request ) {
 			$body = json_decode( $request['body'], true );
 
-			// Only allow free orders if the cart contains a subscription (not limited to trial subscription as a subscription can become free if a 100% discount coupon is applied).
-			if ( 0.0 === floatval( $body['order_amount'] ) && self::cart_has_subscription() ) {
-				$body['intent']  = 'tokenize';
+			if ( self::cart_has_subscription() ) {
+				$body['intent'] = 'buy_and_tokenize';
+
+				// Only allow free orders if the cart contains a subscription (not limited to trial subscription as a subscription can become free if a 100% discount coupon is applied).
+				if ( 0.0 === floatval( $body['order_amount'] ) ) {
+					$body['intent'] = 'tokenize';
+				}
+
 				$request['body'] = wp_json_encode( $body );
 			}
 

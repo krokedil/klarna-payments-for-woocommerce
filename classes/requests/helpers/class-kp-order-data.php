@@ -113,7 +113,6 @@ class KP_Order_Data {
 			'merchant_urls'     => array(
 				'authorization' => home_url( '/wc-api/KP_WC_AUTHORIZATION' ),
 			),
-			'intent'            => 'buy_and_tokenize',
 		);
 	}
 
