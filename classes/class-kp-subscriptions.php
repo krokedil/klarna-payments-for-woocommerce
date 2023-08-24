@@ -178,7 +178,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			if ( is_wp_error( $response ) ) {
 				$message = sprintf(
 					/* translators: Error message. */
-					__( 'Failed to create recurring token. Message: %s', 'klarna-payments-for-woocommerce' ),
+					__( 'Failed to create recurring token. Reason: %s', 'klarna-payments-for-woocommerce' ),
 					$response->get_error_message()
 				);
 			} else {

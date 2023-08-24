@@ -148,7 +148,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$this->api     = new KP_Api();
 			$this->session = new KP_Session();
-			$this->subscription = new KP_Subscription();
+			if ( class_exists( 'WC_Subscriptions' ) ) {
+				$this->subscription = new KP_Subscription();
+			}
 
 			$this->register_payment_block();
 
