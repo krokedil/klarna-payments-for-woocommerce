@@ -410,6 +410,4 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			}
 		}
 	}
-
-	new KP_Subscription();
 }

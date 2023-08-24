@@ -90,14 +90,20 @@ function kp_process_auth_or_callback( $order, $response ) {
  *
  * @param WC_Order $order WooCommerce order.
  * @param array    $decoded Klarna order.
+ * @param string|bool   $recurring_token Recurring token.
  *
  * @return array   $result  Payment result.
  */
-function kp_process_accepted( $order, $decoded ) {
+function kp_process_accepted( $order, $decoded, $recurring_token = false ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
 	kp_process_auth_or_callback( $order, $decoded );
+
+	if ( $recurring_token ) {
+		KP_Subscription::save_recurring_token( $order->get_id(), $recurring_token );
+	}
+
 	do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
 

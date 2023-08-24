@@ -110,6 +110,14 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public $session = null;
 
+
+		/**
+		 * KP Subscription class. Handles the integration with WooCommerce Subscription
+		 *
+		 * @var KP_Subscription|null
+		 */
+		public $subscription = null;
+
 		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
@@ -140,6 +148,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$this->api     = new KP_Api();
 			$this->session = new KP_Session();
+			$this->subscription = new KP_Subscription();
 
 			$this->register_payment_block();
 
