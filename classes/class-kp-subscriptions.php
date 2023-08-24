@@ -209,10 +209,6 @@ if ( class_exists( 'WC_Subscription' ) ) {
 
 			$body = json_decode( $request['body'], true );
 			foreach ( $body['order_lines'] as $item => $order_line ) {
-				if ( ! isset( $order_line['subscription'] ) ) {
-					continue;
-				}
-
 				$body['order_lines'][ $item ]['unit_price']   = 0;
 				$body['order_lines'][ $item ]['total_amount'] = 0;
 			}
