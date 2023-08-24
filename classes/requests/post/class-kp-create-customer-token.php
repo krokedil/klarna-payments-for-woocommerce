@@ -49,7 +49,6 @@ class KP_Create_Customer_Token extends KP_Requests_Post {
 				'locale'            => kp_get_locale(),
 				'purchase_country'  => kp_get_klarna_country( $order ),
 				'purchase_currency' => get_woocommerce_currency(),
-
 			)
 		);
 	}

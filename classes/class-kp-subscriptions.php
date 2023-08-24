@@ -29,6 +29,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 			// Set the purchase intent to 'tokenize' for trial subscriptions. The 'buy_and_tokenize' intent is not allowed for 0 order amounts.
 			add_filter( 'wc_klarna_payments_create_session_args', array( $this, 'set_tokenize_intent' ) );
 			add_filter( 'wc_klarna_payments_place_order_args', array( $this, 'set_tokenize_intent' ) );
+			add_filter( 'wc_klarna_payments_create_customer_token_args', array( $this, 'set_tokenize_intent' ) );
 			add_filter( 'wc_klarna_payments_update_session_args', array( $this, 'set_tokenize_intent' ) );
 
 			// For free or trial subscription, we set the order as captured to prevent KOM from setting the order to on-hold when the merchant set the order to "Completed".
@@ -362,7 +363,7 @@ if ( class_exists( 'WC_Subscription' ) ) {
 				return false;
 			}
 
-			return class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription();
+			return ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || ( function_exists( 'wcs_cart_contains_failed_renewal_order_payment' ) && wcs_cart_contains_failed_renewal_order_payment() );
 		}
 
 		/**
