@@ -193,6 +193,7 @@ class KP_Session {
 			WC()->session->__unset( 'kp_session_data' );
 		} else {
 			$order->delete_meta_data( '_kp_session_data' );
+			$order->save();
 		}
 	}
 

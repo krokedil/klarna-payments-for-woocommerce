@@ -121,6 +121,10 @@ if ( class_exists( 'WC_Subscription' ) ) {
 				$subscription->add_order_note( sprintf( __( 'Subscription cancellation failed with Klarna Payments. Reason: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 			}
 
+			// The session data must be deleted since Klarna doesn't allow reusing a session when generating a new customer token to change payment method.
+			$subscription->delete_meta_data( '_kp_session_data' );
+			$subscription->save();
+
 		}
 
 		/**
