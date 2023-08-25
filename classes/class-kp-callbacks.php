@@ -47,12 +47,8 @@ class KP_Callbacks {
 	public function kp_wc_authorization( $data ) {
 		$order = wc_get_orders(
 			array(
-				'meta_query' => array(
-					array(
-						'key'   => '_kp_session_id',
-						'value' => $data['session_id'],
-					),
-				),
+				'meta_key'   => '_kp_session_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value' => $data['session_id'],
 				'limit'      => 1,
 				'orderby'    => 'date',
 				'order'      => 'DESC',
@@ -60,6 +56,12 @@ class KP_Callbacks {
 		);
 
 		$order = reset( $order );
+
+		// Verify that the meta data is correct with what we just searched for.
+		if ( $order && $order->get_meta( '_kp_session_id', true ) !== $data['session_id'] ) {
+			$order = null;
+		}
+
 		if ( empty( $order ) ) {
 			return;
 		}

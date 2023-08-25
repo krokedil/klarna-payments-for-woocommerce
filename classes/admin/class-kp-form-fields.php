@@ -52,11 +52,7 @@ class KP_Form_Fields {
 			'currency' => 'DKK',
 			'endpoint' => '',
 		),
-		'de' => array(
-			'name'     => 'Germany',
-			'currency' => 'EUR',
-			'endpoint' => '',
-		),
+
 		'fi' => array(
 			'name'     => 'Finland',
 			'currency' => 'EUR',
@@ -64,6 +60,11 @@ class KP_Form_Fields {
 		),
 		'fr' => array(
 			'name'     => 'France',
+			'currency' => 'EUR',
+			'endpoint' => '',
+		),
+		'de' => array(
+			'name'     => 'Germany',
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
@@ -87,14 +88,14 @@ class KP_Form_Fields {
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
+		'mx' => array(
+			'name'     => 'Mexico',
+			'currency' => 'MXN',
+			'endpoint' => '-na',
+		),
 		'nl' => array(
 			'name'     => 'Netherlands',
 			'currency' => 'EUR',
-			'endpoint' => '',
-		),
-		'no' => array(
-			'name'     => 'Norway',
-			'currency' => 'NOK',
 			'endpoint' => '',
 		),
 		'nz' => array(
@@ -102,11 +103,12 @@ class KP_Form_Fields {
 			'currency' => 'NZD',
 			'endpoint' => '-oc',
 		),
-		'mx' => array(
-			'name'     => 'Mexico',
-			'currency' => 'MXN',
-			'endpoint' => '-na',
+		'no' => array(
+			'name'     => 'Norway',
+			'currency' => 'NOK',
+			'endpoint' => '',
 		),
+
 		'pl' => array(
 			'name'     => 'Poland',
 			'currency' => 'PLN',
@@ -117,14 +119,14 @@ class KP_Form_Fields {
 			'currency' => 'EUR',
 			'endpoint' => '',
 		),
-		'es' => array(
-			'name'     => 'Spain',
-			'currency' => 'EUR',
-			'endpoint' => '',
-		),
 		'ro' => array(
 			'name'     => 'Romania',
 			'currency' => 'RON',
+			'endpoint' => '',
+		),
+		'es' => array(
+			'name'     => 'Spain',
+			'currency' => 'EUR',
 			'endpoint' => '',
 		),
 		'se' => array(
@@ -302,16 +304,16 @@ class KP_Form_Fields {
 				'desc_tip'    => true,
 			),
 			'hide_what_is_klarna'  => array(
-				'title'    => __( 'Hide What is Klarna? link', 'klarna-payments-for-woocommerce' ),
+				'title'    => __( 'Hide "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
-				'label'    => __( 'If checked, What is Klarna? will not be shown.', 'klarna-payments-for-woocommerce' ),
+				'label'    => __( 'If checked, "What is Klarna?" will not be shown.', 'klarna-payments-for-woocommerce' ),
 				'default'  => 'no',
 				'desc_tip' => true,
 			),
 			'float_what_is_klarna' => array(
-				'title'    => __( 'Float What is Klarna? link', 'klarna-payments-for-woocommerce' ),
+				'title'    => __( 'Float "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
-				'label'    => __( 'If checked, What is Klarna? will be floated right.', 'klarna-payments-for-woocommerce' ),
+				'label'    => __( 'If checked, "What is Klarna?" will be floated right.', 'klarna-payments-for-woocommerce' ),
 				'default'  => 'yes',
 				'desc_tip' => true,
 			),

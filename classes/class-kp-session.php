@@ -24,7 +24,7 @@ class KP_Session {
 	 *          {
 	 *              'name'        => string         - The name of the payment method category.
 	 *              'identifier'  => string         - The identifier of the payment method category.
-	 *              'assets_urls' => array(         - The assets urls for the payment method category. Array of objects describing the assets urls.
+	 *              'asset_urls' => array(         - The assets urls for the payment method category. Array of objects describing the assets urls.
 	 *                 'descriptive' => string,     - The descriptive assets url.
 	 *                 'standard'    => string,     - The standard assets url.
 	 *              ),

@@ -268,8 +268,8 @@ class KP_Order_Data {
 		);
 
 		if ( 'b2b' === $customer_type ) {
-			$customer['billing']['organization_name']  = $customer_data->get_billing_company();
-			$customer['shipping']['organization_name'] = $customer_data->get_shipping_company();
+			$billing['organization_name']  = $customer_data->get_billing_company();
+			$shipping['organization_name'] = $customer_data->get_shipping_company();
 		}
 
 		foreach ( $shipping as $key => $value ) {

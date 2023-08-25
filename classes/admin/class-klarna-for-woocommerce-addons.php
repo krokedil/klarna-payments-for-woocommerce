@@ -88,16 +88,6 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 					'order'  => 0,
 				)
 			);
-
-			Menu::add_plugin_item(
-				array(
-					'id'     => 'klarna-checkout-for-woocommerce-settings',
-					'parent' => 'klarna-checkout-for-woocommerce',
-					'title'  => __( 'Settings', 'klarna-checkout-for-woocommerce' ),
-					'url'    => 'checkout-addons&tab=settings',
-					'order'  => 1,
-				)
-			);
 		}
 
 		/**
@@ -165,11 +155,6 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		<?php endforeach; ?>
 		<?php endif; ?>
 	</div>
-				<?php
-			} elseif ( 'settings' === $tab ) {
-				do_action( 'klarna_addons_settings_tab', $section );
-				?>
-	<p><?php esc_html_e( 'Please install an add-on to be able to see the settings.', 'klarna-checkout-for-woocommerce' ); ?></p>
 				<?php
 			}
 			?>
@@ -431,8 +416,7 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 				$current = 'addons';
 			}
 			$tabs = array(
-				'addons'   => __( 'Klarna Add-ons', 'klarna-checkout-for-woocommerce' ),
-				'settings' => __( 'Settings', 'klarna-checkout-for-woocommerce' ),
+				'addons' => __( 'Klarna Add-ons', 'klarna-checkout-for-woocommerce' ),
 			);
 			$html = '<h2 class="nav-tab-wrapper">';
 			foreach ( $tabs as $tab => $name ) {
