@@ -49,6 +49,14 @@ if ( class_exists( 'WC_Subscription' ) ) {
 
 		}
 
+		/**
+		 * Flags a free or trial subscription parent order as captured.
+		 *
+		 * This is required to prevent Klarna Order Management from attempting to process the order for capture when the customer sets the order to completed as there is nothing to capture.
+		 *
+		 * @param  int $order_id WooCommerce order ID.
+		 * @return int WooCommerce order ID.
+		 */
 		public function set_subscription_as_captured( $order_id ) {
 			$order = wc_get_order( $order_id );
 			if ( self::GATEWAY_ID !== $order->get_payment_method() ) {
@@ -59,6 +67,8 @@ if ( class_exists( 'WC_Subscription' ) ) {
 				$order->update_meta_data( '_wc_klarna_capture_id', 'trial' );
 				$order->save();
 			}
+
+			return $order_id;
 		}
 
 		/**
