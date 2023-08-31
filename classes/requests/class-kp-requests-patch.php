@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 abstract class KP_Requests_Patch extends KP_Requests {
 
 	/**
-	 * Qliro_One_Request_Post constructor.
+	 * KP_Requests_Patch constructor.
 	 *
 	 * @param  array $arguments  The request arguments.
 	 */
