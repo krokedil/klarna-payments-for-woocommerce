@@ -7,7 +7,7 @@ Tested up to: 6.2.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 8.0.0
-Stable tag: 3.1.3
+Stable tag: 3.2.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2023.08.31    - version 3.2.0 =
+* Feature       - Added support for WC subscriptions.
+* Enhancement   - You can now use the 'klarna_base_region' filter to change the regional endpoint (EU, US or OC).
+* Tweak         - The KP regions in the settings should now appear in alphabetic order.
+* Fix           - Revert changes related to the setting "What is Klarna". Enabling the setting should now hide the link (like it used to) instead of making it appear.
+
 = 2023.07.26    - version 3.1.3 =
 * Fix           - Fixed an issue where the customer type defaulted to B2C even when B2B was chosen in the settings.
 
