@@ -16,7 +16,7 @@ use Krokedil\WooCommerce\Order\Order;
 abstract class KP_Requests_Post extends KP_Requests {
 
 	/**
-	 * Qliro_One_Request_Post constructor.
+	 * KP_Requests_Post constructor.
 	 *
 	 * @param  array $arguments  The request arguments.
 	 */

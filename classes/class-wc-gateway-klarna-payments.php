@@ -65,7 +65,22 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->method_title       = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
 		$this->method_description = __( 'Get the flexibility to pay over time with Klarna!', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = true;
-		$this->supports           = apply_filters( 'wc_klarna_payments_supports', array( 'products' ) ); // Make this filterable.
+		$this->supports           = apply_filters(
+			'wc_klarna_payments_supports',
+			array(
+				'products',
+				'subscriptions',
+				'subscription_cancellation',
+				'subscription_suspension',
+				'subscription_reactivation',
+				'subscription_amount_changes',
+				'subscription_date_changes',
+				'subscription_payment_method_change',
+				'subscription_payment_method_change_customer',
+				'subscription_payment_method_change_admin',
+				'multiple_subscriptions',
+			)
+		); // Make this filterable.
 
 		$base_location      = wc_get_base_location();
 		$this->shop_country = $base_location['country'];
@@ -83,7 +98,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->testmode      = 'yes' === $this->get_option( 'testmode' );
 
 		// What is Klarna link.
-		$this->hide_what_is_klarna  = 'yes' !== $this->get_option( 'hide_what_is_klarna' );
+		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 
 		// Hooks.
@@ -231,6 +246,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
 				}
 			}
+
+			// When changing subscription payment method, hide the payment fields as we'll redirect to Klarna's HPP, not one of the payment categories.
+			if ( KP_Subscription::is_change_payment_method() ) {
+				$this->has_fields = false;
+			}
 		}
 
 		return $located;
@@ -253,12 +273,26 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
+
+		if ( function_exists( 'wcs_is_subscription' ) && wcs_is_subscription( $order_id ) ) {
+			return $this->process_subscription( $order );
+		}
 		// Check if the order was created using WooCommerce blocks.
 		if ( kp_is_wc_blocks_order( $order ) ) {
 			return $this->process_blocks_order( $order );
 		}
 
 		return $this->process_checkout_order( $order );
+	}
+
+	/**
+	 * Create a session for Klarna Hosted Payment Page, and redirect the customer there.
+	 *
+	 * @param mixed $order The WooCommerce order.
+	 * @return array
+	 */
+	private function process_subscription( $order ) {
+		return $this->process_blocks_order( $order );
 	}
 
 	/**
