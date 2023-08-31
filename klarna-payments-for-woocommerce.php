@@ -110,6 +110,14 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public $session = null;
 
+
+		/**
+		 * KP Subscription class. Handles the integration with WooCommerce Subscription
+		 *
+		 * @var KP_Subscription|null
+		 */
+		public $subscription = null;
+
 		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
@@ -140,6 +148,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$this->api     = new KP_Api();
 			$this->session = new KP_Session();
+			if ( class_exists( 'WC_Subscriptions' ) ) {
+				$this->subscription = new KP_Subscription();
+			}
 
 			$this->register_payment_block();
 
@@ -286,16 +297,21 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-assets.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-api.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-session.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-subscriptions.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 
 			// Requests.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-post.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-patch.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/patch/class-kp-cancel-recurring.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-update-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-place-order.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-test-credentials.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-hpp.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-customer-token.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-recurring.php';
 
 			// Request helpers.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-iframe.php';

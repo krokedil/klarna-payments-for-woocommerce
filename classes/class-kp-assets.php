@@ -35,7 +35,8 @@ class KP_Assets {
 	 * @hook wp_enqueue_scripts
 	 */
 	public function enqueue_checkout_script() {
-		if ( ! kp_is_checkout_page() ) {
+		// We do not need to enqueue scripts on the change subscription payment method page since we'll redirect the customer to Klarna's HPP.
+		if ( ! kp_is_checkout_page() || KP_Subscription::is_change_payment_method() ) {
 			return;
 		}
 

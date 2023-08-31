@@ -195,26 +195,36 @@ class KP_Order_Data {
 				break;
 		}
 
-		return array_filter(
-			array(
-				'image_url'             => $order_line->get_image_url(),
-				'merchant_data'         => apply_filters( $order_line->get_filter_name( 'merchant_data' ), array(), $order_line ),
-				'name'                  => $order_line->get_name(),
-				'product_identifiers'   => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
-				'product_url'           => $order_line->get_product_url(),
-				'quantity'              => $order_line->get_quantity(),
-				'quantity_unit'         => apply_filters( $order_line->get_filter_name( 'quantity_unit' ), 'pcs', $order_line ),
-				'reference'             => $order_line->get_sku(),
-				'tax_rate'              => $this->separate_sales_tax ? 0 : $order_line->get_tax_rate(),
-				'total_amount'          => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
-				'total_discount_amount' => $this->separate_sales_tax ? $order_line->get_total_discount_amount() : $order_line->get_total_discount_amount() + $order_line->get_total_discount_tax_amount(),
-				'total_tax_amount'      => $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount(),
-				'type'                  => $type,
-				'unit_price'            => $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount(),
-				'subscription'          => apply_filters( $order_line->get_filter_name( 'subscription' ), array(), $order_line ),
-			),
-			'KP_Order_Data::remove_null'
+		$klarna_item = array(
+			'image_url'             => $order_line->get_image_url(),
+			'merchant_data'         => apply_filters( $order_line->get_filter_name( 'merchant_data' ), array(), $order_line ),
+			'name'                  => $order_line->get_name(),
+			'product_identifiers'   => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
+			'product_url'           => $order_line->get_product_url(),
+			'quantity'              => $order_line->get_quantity(),
+			'quantity_unit'         => apply_filters( $order_line->get_filter_name( 'quantity_unit' ), 'pcs', $order_line ),
+			'reference'             => $order_line->get_sku(),
+			'tax_rate'              => $this->separate_sales_tax ? 0 : $order_line->get_tax_rate(),
+			'total_amount'          => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
+			'total_discount_amount' => $this->separate_sales_tax ? $order_line->get_total_discount_amount() : $order_line->get_total_discount_amount() + $order_line->get_total_discount_tax_amount(),
+			'total_tax_amount'      => $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount(),
+			'type'                  => $type,
+			'unit_price'            => $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount(),
+			'subscription'          => apply_filters( $order_line->get_filter_name( 'subscription' ), array(), $order_line ),
 		);
+
+		if ( isset( $order_line->product ) ) {
+			$product = $order_line->product;
+			if ( class_exists( 'WC_Subscriptions_Product' ) && WC_Subscriptions_Product::is_subscription( $product ) ) {
+				$klarna_item['subscription'] = array(
+					'name'           => $klarna_item['name'],
+					'interval'       => strtoupper( WC_Subscriptions_Product::get_period( $product ) ),
+					'interval_count' => absint( WC_Subscriptions_Product::get_interval( $product ) ),
+				);
+			}
+		}
+
+		return array_filter( $klarna_item, 'KP_Order_Data::remove_null' );
 	}
 
 	/**

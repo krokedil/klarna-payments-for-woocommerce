@@ -54,7 +54,30 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'missing_data' );
 			}
 
-			$order    = wc_get_order( $order_id );
+			$order = wc_get_order( $order_id );
+			$recurring_token = false;
+
+			if ( KP_Subscription::order_has_subscription( $order ) ) {
+				$response = KP_WC()->api->create_customer_token( kp_get_klarna_country( $order ), $auth_token, $order_id );
+				if ( is_wp_error( $response ) ) {
+					wp_send_json_error( 'customer_token_failed' );
+				}
+
+				$recurring_token = $response['token_id'];
+
+				/* translators: Recurring token. */
+				$order->add_order_note( sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $recurring_token ) );
+
+				if ( 0.0 === floatval( $order->get_total() ) ) {
+					$order->payment_complete();
+					KP_Subscription::save_recurring_token( $order_id, $recurring_token );
+					$order->add_order_note( __( 'The order contains a free or trial subscription, and no Klarna order is associated with this purchase. A Klarna order will only be registered once the subscriber is charged.', 'klarna-payments-for-woocommerce' ) );
+
+					kp_unset_session_values();
+					wp_send_json_success( $order->get_checkout_order_received_url() );
+				}
+			}
+
 			$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $auth_token, $order_id );
 
 			if ( is_wp_error( $response ) ) {
@@ -64,7 +87,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			$fraud_status = $response['fraud_status'];
 			switch ( $fraud_status ) {
 				case 'ACCEPTED':
-					kp_process_accepted( $order, $response );
+					kp_process_accepted( $order, $response, $recurring_token );
 					kp_unset_session_values();
 					wp_send_json_success( $response['redirect_url'] );
 					break;
