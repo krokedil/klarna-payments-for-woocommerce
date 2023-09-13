@@ -136,19 +136,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
-				add_action(
-					'admin_notices',
-					function () {
-						?>
-					<div class="notice notice-error">
-						<p>
-						<?php esc_html_e( 'The WooCommerce plugin must be active for Klarna Payments to work.', 'klarna-payments-for-woocommerce' ); ?>
-						</p>
-					</div>
-						<?php
-					}
-				);
-
+				add_action( 'admin_notices', array( $this, 'wc_unavailable_warning' ) );
 				return;
 			}
 
@@ -249,6 +237,21 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				echo wp_kses( $notice['message'], array( 'a' => array( 'href' => array() ) ) );
 				echo '</p></div>';
 			}
+		}
+
+		/**
+		 * Show WC notice about KP not available if WC is disabled.
+		 *
+		 * @return void
+		 */
+		public function wc_unavailable_warning() {
+			?>
+			<div class="notice notice-error">
+				<p>
+				<?php esc_html_e( 'The WooCommerce plugin must be active for Klarna Payments to work.', 'klarna-payments-for-woocommerce' ); ?>
+				</p>
+			</div>
+			<?php
 		}
 
 		/**
