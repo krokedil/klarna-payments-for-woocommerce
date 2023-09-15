@@ -143,6 +143,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				return;
 			}
 
+			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
+				add_action( 'admin_notices', array( $this, 'wc_unavailable_warning' ) );
+				return;
+			}
+
 			// Init the gateway itself.
 			$this->include_files();
 
@@ -246,6 +251,21 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		}
 
 		/**
+		 * Show WC notice about KP not available if WC is disabled.
+		 *
+		 * @return void
+		 */
+		public function wc_unavailable_warning() {
+			?>
+			<div class="notice notice-error">
+				<p>
+				<?php esc_html_e( 'The WooCommerce plugin must be active for Klarna Payments to work.', 'klarna-payments-for-woocommerce' ); ?>
+				</p>
+			</div>
+			<?php
+		}
+
+		/**
 		 * Check if pretty permalinks are used.
 		 */
 		public function check_permalinks() {
@@ -280,10 +300,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @since 2.0.0
 		 */
 		public function include_files() {
-			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
-				return;
-			}
-
 			// Classes.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php'; // This is loaded very early becasue we'll need these settings right away.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-gateway-klarna-payments.php';
