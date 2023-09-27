@@ -75,7 +75,7 @@ class KP_Assets {
 		$order_id      = $pay_for_order ? wc_get_order_id_by_order_key( $key ) : null;
 
 		$customer_type = $settings['customer_type'] ?? 'b2c';
-		$order_data    = new KP_Order_Data( $customer_type );
+		$order_data    = new KP_Order_Data( $customer_type, $order_id );
 		$customer      = $order_data->get_klarna_customer_object();
 
 		// Create the params array.
