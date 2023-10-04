@@ -232,7 +232,6 @@ class KP_Subscription {
 		return $request;
 	}
 
-
 	/**
 	 * Set the purchase intent to 'tokenize' for trial subscriptions.
 	 *
@@ -244,6 +243,7 @@ class KP_Subscription {
 	public function set_tokenize_intent( $request ) {
 		$body = json_decode( $request['body'], true );
 
+		$body['intent'] = 'buy';
 		if ( self::cart_has_subscription() ) {
 			$body['intent'] = 'buy_and_tokenize';
 
@@ -251,10 +251,9 @@ class KP_Subscription {
 			if ( 0.0 === floatval( $body['order_amount'] ) ) {
 				$body['intent'] = 'tokenize';
 			}
-
-			$request['body'] = wp_json_encode( $body );
 		}
 
+		$request['body'] = wp_json_encode( $body );
 		return $request;
 	}
 
