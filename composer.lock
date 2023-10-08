@@ -4,20 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7fcb38f5ebe9715448a75ee0a3d079ac",
+    "content-hash": "a45d134c2f2132f5b11506d60077a990",
     "packages": [
         {
+            "name": "krokedil/sign-in-with-klarna",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "/var/www/html/wp-content/plugins/sign-in-with-klarna",
+                "reference": "adbd6f5165e3b666d446f9bd1b98a30f1a5a0b30"
+            },
+            "require": {
+                "php": "~7.1 || ~8.0"
+            },
+            "require-dev": {
+                "php-stubs/woocommerce-stubs": "dev-master",
+                "php-stubs/wordpress-stubs": "^6.0",
+                "wp-coding-standards/wpcs": "dev-develop"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\SignInWithKlarna\\": "src/"
+                }
+            },
+            "description": "Add \"Sign in with Klarna\" compatibility with your WooCommerce plugin.",
+            "transport-options": {
+                "symlink": true,
+                "relative": false
+            }
+        },
+        {
             "name": "krokedil/woocommerce",
-            "version": "dev-develop-sub-free-trial",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "a0b5469a2e0d08f8b4da4881f105aa6a3ad4e7a5"
+                "reference": "5ea0b2af42359562c6d47cedd84038cdf0dc5823"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/a0b5469a2e0d08f8b4da4881f105aa6a3ad4e7a5",
-                "reference": "a0b5469a2e0d08f8b4da4881f105aa6a3ad4e7a5",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/5ea0b2af42359562c6d47cedd84038cdf0dc5823",
+                "reference": "5ea0b2af42359562c6d47cedd84038cdf0dc5823",
                 "shasum": ""
             },
             "require-dev": {
@@ -25,6 +53,7 @@
                 "php-stubs/woocommerce-stubs": "^7.2",
                 "php-stubs/wordpress-stubs": "^6.1"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -42,10 +71,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/develop-sub-free-trial",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.3.0",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2023-08-25T10:19:26+00:00"
+            "time": "2023-10-03T06:34:40+00:00"
         },
         {
             "name": "krokedil/wp-api",
@@ -184,12 +213,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "b0ecdf10fa5a15bbf341b6dd75d1b23bd803aaaf"
+                "reference": "7566b4d89de1d08d2a8ad85910507d6633a35d28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/b0ecdf10fa5a15bbf341b6dd75d1b23bd803aaaf",
-                "reference": "b0ecdf10fa5a15bbf341b6dd75d1b23bd803aaaf",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/7566b4d89de1d08d2a8ad85910507d6633a35d28",
+                "reference": "7566b4d89de1d08d2a8ad85910507d6633a35d28",
                 "shasum": ""
             },
             "require": {
@@ -234,7 +263,7 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2023-08-27T15:25:51+00:00"
+            "time": "2023-09-11T11:08:03+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -288,17 +317,11 @@
             "time": "2020-05-13T23:57:56+00:00"
         }
     ],
-    "aliases": [
-        {
-            "package": "krokedil/woocommerce",
-            "version": "dev-develop-sub-free-trial",
-            "alias": "1.2.2",
-            "alias_normalized": "1.2.2.0"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "krokedil/woocommerce": 20
+        "krokedil/woocommerce": 20,
+        "krokedil/sign-in-with-klarna": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
