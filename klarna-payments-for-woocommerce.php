@@ -5,7 +5,7 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: krokedil, klarna, automattic
  * Author URI: https://krokedil.com/
- * Version: 3.2.1
+ * Version: 3.2.2
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
@@ -39,7 +39,7 @@ use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '3.2.1' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '3.2.2' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -140,6 +140,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public function init() {
 			// Include the autoloader from composer. If it fails, we'll just return and not load the plugin. But an admin notice will show to the merchant.
 			if ( ! $this->init_composer() ) {
+				return;
+			}
+
+			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
+				add_action( 'admin_notices', array( $this, 'wc_unavailable_warning' ) );
 				return;
 			}
 
@@ -246,6 +251,21 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		}
 
 		/**
+		 * Show WC notice about KP not available if WC is disabled.
+		 *
+		 * @return void
+		 */
+		public function wc_unavailable_warning() {
+			?>
+			<div class="notice notice-error">
+				<p>
+				<?php esc_html_e( 'The WooCommerce plugin must be active for Klarna Payments to work.', 'klarna-payments-for-woocommerce' ); ?>
+				</p>
+			</div>
+			<?php
+		}
+
+		/**
 		 * Check if pretty permalinks are used.
 		 */
 		public function check_permalinks() {
@@ -280,10 +300,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @since 2.0.0
 		 */
 		public function include_files() {
-			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
-				return;
-			}
-
 			// Classes.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php'; // This is loaded very early becasue we'll need these settings right away.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-gateway-klarna-payments.php';
