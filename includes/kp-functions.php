@@ -36,10 +36,16 @@ function kp_extract_error_message( $response ) {
  * @return array
  */
 function get_klarna_customer( $customer_type ) {
-	$type = ( 'b2b' === $customer_type ) ? 'organization' : 'person';
-	return array(
-		'type' => $type,
+	$customer = array(
+		'type' => ( 'b2b' === $customer_type ) ? 'organization' : 'person',
 	);
+
+	$access_token = \Krokedil\SignInWithKlarna\SignInWithKlarna::get_access_token( get_current_user_id() );
+	if ( $access_token ) {
+		$customer['klarna_access_token'] = $access_token;
+	}
+
+	return $customer;
 }
 
 /**
@@ -88,9 +94,9 @@ function kp_process_auth_or_callback( $order, $response ) {
 /**
  * Process accepted Klarna Payments order.
  *
- * @param WC_Order $order WooCommerce order.
- * @param array    $decoded Klarna order.
- * @param string|bool   $recurring_token Recurring token.
+ * @param WC_Order    $order WooCommerce order.
+ * @param array       $decoded Klarna order.
+ * @param string|bool $recurring_token Recurring token.
  *
  * @return array   $result  Payment result.
  */
