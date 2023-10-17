@@ -30,7 +30,10 @@ class KP_Assets {
 
 		/* Sign in with Klarna. */
 		if ( class_exists( '\Krokedil\SignInWithKlarna\SignInWithKlarna' ) ) {
-			add_action( 'woocommerce_proceed_to_checkout', array( $this, 'siwk_placement' ) );
+			$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+			add_action( 'woocommerce_proceed_to_checkout', array( \Krokedil\SignInWithKlarna\SignInWithKlarna::get_instance(), 'siwk_placement' ), $settings['siwk_cart_placement'] ?? 10 );
+			add_action( 'woocommerce_login_form_end', array( \Krokedil\SignInWithKlarna\SignInWithKlarna::get_instance(), 'siwk_placement' ) );
 		}
 	}
 

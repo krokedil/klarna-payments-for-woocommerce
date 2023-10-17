@@ -154,11 +154,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->api     = new KP_Api();
 			$this->session = new KP_Session();
 
-			if ( class_exists( '\Krokedil\SignInWithKlarna\SignInWithKlarna' ) ) {
-				$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-				add_filter( 'wc_gateway_klarna_payments_settings', '\Krokedil\SignInWithKlarna\SignInWithKlarna::add_siwk_settings' );
-				\Krokedil\SignInWithKlarna\SignInWithKlarna::get_instance()->init( $settings );
-			}
+			$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+			add_filter( 'wc_gateway_klarna_payments_settings', '\Krokedil\SignInWithKlarna\SignInWithKlarna::add_siwk_settings' );
+			\Krokedil\SignInWithKlarna\SignInWithKlarna::get_instance()->init( $settings );
 
 			if ( class_exists( 'WC_Subscriptions' ) ) {
 				$this->subscription = new KP_Subscription();
