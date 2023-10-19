@@ -143,17 +143,6 @@ class KP_Assets {
 		);
 	}
 
-		/**
-		 * Prepend the SIWK button before the 'Proceed to checkout' button.
-		 *
-		 * @return void
-		 */
-	public function siwk_placement() {
-		\Krokedil\SignInWithKlarna\SignInWithKlarna::get_instance()->siwk_placement();
-	}
-
-
-
 	/**
 	 * Conditionally enqueue the scripts and styles required for Express Button.
 	 *
