@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a45d134c2f2132f5b11506d60077a990",
+    "content-hash": "c672af86d1723c5c57933963ab295f42",
     "packages": [
         {
             "name": "krokedil/sign-in-with-klarna",
@@ -36,16 +36,16 @@
         },
         {
             "name": "krokedil/woocommerce",
-            "version": "dev-master",
+            "version": "dev-develop-free-trial-shipping",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "5ea0b2af42359562c6d47cedd84038cdf0dc5823"
+                "reference": "abc47fcc65bd2c04d1d96e0a71245e98600f6dc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/5ea0b2af42359562c6d47cedd84038cdf0dc5823",
-                "reference": "5ea0b2af42359562c6d47cedd84038cdf0dc5823",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/abc47fcc65bd2c04d1d96e0a71245e98600f6dc5",
+                "reference": "abc47fcc65bd2c04d1d96e0a71245e98600f6dc5",
                 "shasum": ""
             },
             "require-dev": {
@@ -317,7 +317,14 @@
             "time": "2020-05-13T23:57:56+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "krokedil/woocommerce",
+            "version": "dev-develop-free-trial-shipping",
+            "alias": "1.3.1",
+            "alias_normalized": "1.3.1.0"
+        }
+    ],
     "minimum-stability": "dev",
     "stability-flags": {
         "krokedil/woocommerce": 20,

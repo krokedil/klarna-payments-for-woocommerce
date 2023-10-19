@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.2.2
+Tested up to: 6.3.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 8.0.0
-Stable tag: 3.2.1
+WC tested up to: 8.2.0
+Stable tag: 3.2.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2023.10.09    - version 3.2.2 =
+* Fix           - Fixed a critical error due to the class "KP_Api" being undefined.
+* Fix           - The plugin will no longer cause a critical error when its dependency, WooCommerce, is disabled.
+* Fix           - Fixed an issue related to subscriptions where the incorrect "intent" would be set.
+* Fix           - Pay for order should now work as expected.
+
 = 2023.08.31    - version 3.2.1 =
 * Fix           - Fix fatal error due to subscriptions class not available.
 
