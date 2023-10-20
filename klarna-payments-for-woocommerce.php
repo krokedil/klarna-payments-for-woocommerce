@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
-use \Krokedil\SignInWithKlarna\SignInWithKlarna;
+use Krokedil\SignInWithKlarna\SignInWithKlarna;
 
 /**
  * Required minimums and constants
