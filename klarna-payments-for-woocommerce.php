@@ -197,9 +197,10 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				$current_screen = get_current_screen();
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
-<div class="notice notice-warning">
-	<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?></p>
-</div>
+					<div class="notice notice-warning">
+						<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?>
+						</p>
+					</div>
 					<?php
 				}
 			}
@@ -259,7 +260,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			?>
 			<div class="notice notice-error">
 				<p>
-				<?php esc_html_e( 'The WooCommerce plugin must be active for Klarna Payments to work.', 'klarna-payments-for-woocommerce' ); ?>
+					<?php esc_html_e( 'The WooCommerce plugin must be active for Klarna Payments to work.', 'klarna-payments-for-woocommerce' ); ?>
 				</p>
 			</div>
 			<?php
@@ -276,8 +277,10 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					?>
 					<div class="kp-message notice woocommerce-message notice-error">
 						<a class="woocommerce-message-close notice-dismiss"
-							href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>"><?php esc_html_e( 'Dismiss', 'woocommerce' ); ?></a>
-					<?php
+							href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>">
+							<?php esc_html_e( 'Dismiss', 'woocommerce' ); ?>
+						</a>
+						<?php
 						echo wp_kses_post(
 							wpautop(
 								'<p>' . sprintf(
@@ -301,7 +304,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function include_files() {
 			// Classes.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php'; // This is loaded very early becasue we'll need these settings right away.
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-form-fields.php'; // This is loaded very early because we'll need these settings right away.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-wc-gateway-klarna-payments.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-gdpr.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-ajax.php';
@@ -318,9 +321,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			// Requests.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-get.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-post.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-patch.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/get/class-kp-get-order.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/patch/class-kp-cancel-recurring.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/patch/class-kp-upsell-order.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-update-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-place-order.php';
@@ -368,11 +374,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				'admin_notices',
 				function () {
 					?>
-						<div class="notice notice-error">
-							<p>
-								<?php echo esc_html__( 'Your installation of Klarna Payments is not complete. If you installed this plugin directly from Github please refer to the README.DEV.md file in the plugin.', 'klarna-payments-for-woocommerce' ); ?>
-							</p>
-						</div>
+					<div class="notice notice-error">
+						<p>
+							<?php echo esc_html__( 'Your installation of Klarna Payments is not complete. If you installed this plugin directly from Github please refer to the README.DEV.md file in the plugin.', 'klarna-payments-for-woocommerce' ); ?>
+						</p>
+					</div>
 					<?php
 				}
 			);
