@@ -167,6 +167,48 @@ class KP_Api {
 	}
 
 	/**
+	 * Get the Klarna order from the order management API.
+	 *
+	 * @param string $country The Klarna country to use.
+	 * @param string $klarna_order_id The Klarna order id.
+	 *
+	 * @return array|WP_Error The response from Klarna.
+	 */
+	public function get_klarna_om_order( $country, $klarna_order_id ) {
+		$request  = new KP_Get_Order(
+			array(
+				'country'         => $country,
+				'klarna_order_id' => $klarna_order_id,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
+	/**
+	 * Upsell the klarna order.
+	 *
+	 * @param string $country The Klarna country to use.
+	 * @param string $klarna_order_id The Klarna order id.
+	 * @param int    $order_id The WooCommerce order id.
+	 *
+	 * @return array|WP_Error The response from Klarna.
+	 */
+	public function upsell_klarna_order( $country, $klarna_order_id, $order_id ) {
+		$request  = new KP_Upsell_Order(
+			array(
+				'country'         => $country,
+				'klarna_order_id' => $klarna_order_id,
+				'order_id'        => $order_id,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
+	/**
 	 * Checks for WP Errors and returns either the response or a WP Error..
 	 *
 	 * @param array|WP_Error $response The response from the request.
