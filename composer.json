@@ -1,7 +1,7 @@
 {
   "require": {
-    "krokedil/wp-api": "^1.0",
-    "krokedil/woocommerce": "dev-develop-free-trial-shipping as 1.3.1"
+    "krokedil/wp-api": "dev-develop",
+    "krokedil/woocommerce": "^1.0"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "^2.3",
