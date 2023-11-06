@@ -18,6 +18,7 @@ $payment_categories = KP_WC()->session->get_klarna_payment_method_categories();
 if ( is_array( $payment_categories ) ) {
 	$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
 	$kp                 = $available_gateways['klarna_payments'];
+	$chosen_gateway     = $available_gateways[ array_key_first( $available_gateways ) ];
 
 	foreach ( apply_filters( 'wc_klarna_payments_available_payment_categories', $payment_categories ) as $payment_category ) {
 		if ( ! is_array( $payment_category ) ) {
@@ -30,6 +31,15 @@ if ( is_array( $payment_categories ) ) {
 		$kp->id                = $payment_category_id;
 		$kp->title             = $payment_category_name;
 		$kp->icon              = $payment_category_icon;
+
+		// Make sure the first KP payment categories is selected, if KP is the chosen gateway.
+		if ( false !== strpos( $chosen_gateway->id, 'klarna_payments' ) || $kp->chosen ) {
+			$kp->chosen = false;
+			if ( $payment_category_name == $payment_categories[ array_key_first( $payment_categories ) ]['name'] ) {
+				$kp->chosen = true;
+			}
+		}
+
 		wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $kp ) );
 	}
 }
