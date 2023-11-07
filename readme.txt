@@ -7,7 +7,7 @@ Tested up to: 6.3.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 8.2.1
-Stable tag: 3.2.2
+Stable tag: 3.2.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2023.11.07    - version 3.2.3 =
+* Fix           - If Klarna Payment is the preferred payment gateway, the first payment category should be selected by default rather than the last one (current behavior).
+
 = 2023.10.09    - version 3.2.2 =
 * Fix           - Fixed a critical error due to the class "KP_Api" being undefined.
 * Fix           - The plugin will no longer cause a critical error when its dependency, WooCommerce, is disabled.
