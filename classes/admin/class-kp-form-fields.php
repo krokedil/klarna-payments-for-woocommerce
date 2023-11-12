@@ -189,7 +189,7 @@ class KP_Form_Fields {
 	private static function kp_form_production_password() {
 		return array(
 			'title'       => __( 'Production Klarna API password', 'klarna-payments-for-woocommerce' ),
-			'type'        => 'text',
+			'type'        => 'password',
 			'description' => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => false,
@@ -219,7 +219,7 @@ class KP_Form_Fields {
 	private static function kp_form_test_password() {
 		return array(
 			'title'       => __( 'Test Klarna API password', 'klarna-payments-for-woocommerce' ),
-			'type'        => 'text',
+			'type'        => 'password',
 			'description' => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => false,
