@@ -55,6 +55,12 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			}
 
 			$order = wc_get_order( $order_id );
+
+			// Prevent further processing if the order has already been processed once.
+			if ( ! empty( $order->get_date_paid() ) ) {
+				wp_send_json_success( $order->get_checkout_order_received_url() );
+			}
+
 			$recurring_token = false;
 
 			if ( KP_Subscription::order_has_subscription( $order ) ) {
