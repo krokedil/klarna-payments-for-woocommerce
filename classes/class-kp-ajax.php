@@ -60,7 +60,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'no order found' );
 			}
 
-			if ( $order->get_order_key() !== $order_key ) {
+			if ( ! hash_equals( $order->get_order_key(), $order_key ) ) {
 				wp_send_json_error( 'order id and key do not match order' );
 			}
 
@@ -145,7 +145,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'no order found' );
 			}
 
-			if ( $order->get_order_key() !== $order_key ) {
+			if ( ! hash_equals( $order->get_order_key(), $order_key ) ) {
 				wp_send_json_error( 'order id and key do not match order' );
 			}
 
