@@ -64,6 +64,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'order id and key do not match order' );
 			}
 
+			// Prevent further processing if the order has already been processed once.
+			if ( ! empty( $order->get_date_paid() ) ) {
+				wp_send_json_success( $order->get_checkout_order_received_url() );
+			}
+
 			$recurring_token = false;
 			if ( KP_Subscription::order_has_subscription( $order ) ) {
 				$response = KP_WC()->api->create_customer_token( kp_get_klarna_country( $order ), $auth_token, $order_id );
