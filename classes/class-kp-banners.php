@@ -44,7 +44,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			global $pagenow;
 
 			// Only display the banner on WP admin dashboard page or KCO settings page.
-			$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_STRING );
+			$section = isset( $_GET['section'] ) ? htmlspecialchars( wp_unslash( $_GET['section'] ) ) : false;
 			if ( 'index.php' !== $pagenow && ! ( ! empty( $section ) && 'klarna_payments' === $section ) ) {
 				return;
 			}
