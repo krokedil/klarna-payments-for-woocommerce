@@ -71,9 +71,12 @@ class KP_Assets {
 	private function get_checkout_params( $settings ) {
 		// Set needed variables for the order pay page handling.
 		$pay_for_order = kp_is_order_pay_page();
-		$key           = $pay_for_order ? filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS ) : null;
-		$order_id      = $pay_for_order ? wc_get_order_id_by_order_key( $key ) : null;
-		$order_key     = $pay_for_order ? $key : null;
+		$order_id      = $pay_for_order ? absint( get_query_var( 'order-pay', 0 ) ) : null;
+		$order_key     = null;
+		if ( ! empty( $order_id ) ) {
+			$order     = wc_get_order( $order_id );
+			$order_key = $order->get_order_key();
+		}
 
 		$customer_type = $settings['customer_type'] ?? 'b2c';
 		$order_data    = new KP_Order_Data( $customer_type, $order_id );
