@@ -4,17 +4,82 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c672af86d1723c5c57933963ab295f42",
+    "content-hash": "9d4a57493c294610cbb5b777c249c99a",
     "packages": [
+        {
+            "name": "firebase/php-jwt",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/firebase/php-jwt.git",
+                "reference": "f03270e63eaccf3019ef0f32849c497385774e11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/f03270e63eaccf3019ef0f32849c497385774e11",
+                "reference": "f03270e63eaccf3019ef0f32849c497385774e11",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4||^8.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^6.5||^7.4",
+                "phpspec/prophecy-phpunit": "^2.0",
+                "phpunit/phpunit": "^9.5",
+                "psr/cache": "^1.0||^2.0",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0"
+            },
+            "suggest": {
+                "ext-sodium": "Support EdDSA (Ed25519) signatures",
+                "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Firebase\\JWT\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Neuman Vong",
+                    "email": "neuman+pear@twilio.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Anant Narayanan",
+                    "email": "anant@php.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
+            "homepage": "https://github.com/firebase/php-jwt",
+            "keywords": [
+                "jwt",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/firebase/php-jwt/issues",
+                "source": "https://github.com/firebase/php-jwt/tree/v6.9.0"
+            },
+            "time": "2023-10-05T00:24:42+00:00"
+        },
         {
             "name": "krokedil/sign-in-with-klarna",
             "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "/var/www/html/wp-content/plugins/sign-in-with-klarna",
-                "reference": "adbd6f5165e3b666d446f9bd1b98a30f1a5a0b30"
+                "reference": "f6439c28a4f4d5b0cd04e9f25cc5fff4d40fa8ee"
             },
             "require": {
+                "firebase/php-jwt": "dev-main",
                 "php": "~7.1 || ~8.0"
             },
             "require-dev": {
@@ -53,7 +118,6 @@
                 "php-stubs/woocommerce-stubs": "^7.2",
                 "php-stubs/wordpress-stubs": "^6.1"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -71,10 +135,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.3.0",
+                "source": "https://github.com/krokedil/woocommerce/tree/develop-free-trial-shipping",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2023-10-03T06:34:40+00:00"
+            "time": "2023-10-06T00:07:50+00:00"
         },
         {
             "name": "krokedil/wp-api",
@@ -165,28 +229,31 @@
         },
         {
             "name": "php-stubs/wordpress-stubs",
-            "version": "v6.3.0",
+            "version": "6.4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "adda7609e71d5f4dc7b87c74f8ec9e3437d2e92c"
+                "reference": "7b48cdb201f30ac92b0da3c0ad661e315ddad8fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/adda7609e71d5f4dc7b87c74f8ec9e3437d2e92c",
-                "reference": "adda7609e71d5f4dc7b87c74f8ec9e3437d2e92c",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/7b48cdb201f30ac92b0da3c0ad661e315ddad8fd",
+                "reference": "7b48cdb201f30ac92b0da3c0ad661e315ddad8fd",
                 "shasum": ""
             },
             "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
                 "nikic/php-parser": "^4.13",
                 "php": "^7.4 || ~8.0.0",
                 "php-stubs/generator": "^0.8.3",
                 "phpdocumentor/reflection-docblock": "^5.3",
                 "phpstan/phpstan": "^1.10.12",
-                "phpunit/phpunit": "^9.5"
+                "phpunit/phpunit": "^9.5",
+                "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^0.8"
             },
             "suggest": {
                 "paragonie/sodium_compat": "Pure PHP implementation of libsodium",
+                "symfony/polyfill-php80": "Symfony polyfill backporting some PHP 8.0+ features to lower PHP versions",
                 "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
             },
             "type": "library",
@@ -203,9 +270,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.3.0"
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/6.4"
             },
-            "time": "2023-08-10T16:34:11+00:00"
+            "time": "2023-11-01T17:56:43+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -213,12 +280,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "7566b4d89de1d08d2a8ad85910507d6633a35d28"
+                "reference": "7763e2e1f773cb0615ed8afa133189fc804f583d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/7566b4d89de1d08d2a8ad85910507d6633a35d28",
-                "reference": "7566b4d89de1d08d2a8ad85910507d6633a35d28",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/7763e2e1f773cb0615ed8afa133189fc804f583d",
+                "reference": "7763e2e1f773cb0615ed8afa133189fc804f583d",
                 "shasum": ""
             },
             "require": {
@@ -263,7 +330,7 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2023-09-11T11:08:03+00:00"
+            "time": "2023-11-02T00:47:31+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -327,8 +394,8 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "krokedil/woocommerce": 20,
-        "krokedil/sign-in-with-klarna": 20
+        "krokedil/sign-in-with-klarna": 20,
+        "krokedil/woocommerce": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

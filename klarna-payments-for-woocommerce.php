@@ -151,17 +151,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				return;
 			}
 
-			// siwk must be initialized before KP_Assets since the latter make use of the former.
-			$settings   = get_option( 'woocommerce_klarna_payments_settings', array() );
-			$this->siwk = new SignInWithKlarna( $settings );
-			$this->siwk->settings->update( $settings );
-			add_filter( 'wc_gateway_klarna_payments_settings', array( $this->siwk->settings, 'add_siwk_settings' ) );
-
 			// Init the gateway itself.
 			$this->include_files();
 
 			$this->api     = new KP_Api();
 			$this->session = new KP_Session();
+			$this->siwk    = new SignInWithKlarna( get_option( 'woocommerce_klarna_payments_settings', array() ) );
+			add_filter( 'wc_gateway_klarna_payments_settings', array( $this->siwk->settings, 'extend_settings' ) );
 
 			if ( class_exists( 'WC_Subscriptions' ) ) {
 				$this->subscription = new KP_Subscription();

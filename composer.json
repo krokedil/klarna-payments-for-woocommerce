@@ -1,7 +1,7 @@
 {
   "require": {
     "krokedil/wp-api": "^1.0",
-    "krokedil/sign-in-with-klarna": "@dev"
+    "krokedil/sign-in-with-klarna": "@dev",
     "krokedil/woocommerce": "dev-develop-free-trial-shipping as 1.3.1"
   },
   "require-dev": {

@@ -27,14 +27,6 @@ class KP_Assets {
 		add_action( 'script_loader_tag', array( $this, 'express_button_script_tag' ), 10, 2 );
 		add_action( 'woocommerce_proceed_to_checkout', array( $this, 'express_button_placement' ) );
 		add_action( 'woocommerce_widget_shopping_cart_buttons', array( $this, 'express_button_placement' ), 15 );
-
-		/* Sign in with Klarna. */
-		if ( class_exists( '\Krokedil\SignInWithKlarna\SignInWithKlarna' ) ) {
-			$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-
-			add_action( 'woocommerce_proceed_to_checkout', array( KP_WC()->siwk, 'siwk_placement' ), intval( $settings['siwk_cart_placement'] ) ?? 10 );
-			add_action( 'woocommerce_login_form_end', array( KP_WC()->siwk, 'siwk_placement' ) );
-		}
 	}
 
 	/**
