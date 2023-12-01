@@ -35,6 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
+use Krokedil\SignInWithKlarna\SignInWithKlarna;
 
 /**
  * Required minimums and constants
@@ -119,6 +120,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $subscription = null;
 
 		/**
+		 * Let the customer sign in or register a new account using their data stored at Klarna.
+		 *
+		 * @var SignInWithKlarna
+		 */
+		public $siwk = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -153,6 +161,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$this->api     = new KP_Api();
 			$this->session = new KP_Session();
+			$this->siwk    = new SignInWithKlarna( get_option( 'woocommerce_klarna_payments_settings', array() ) );
+			add_filter( 'wc_gateway_klarna_payments_settings', array( $this->siwk->settings, 'extend_settings' ) );
+
 			if ( class_exists( 'WC_Subscriptions' ) ) {
 				$this->subscription = new KP_Subscription();
 			}

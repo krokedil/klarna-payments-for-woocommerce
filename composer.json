@@ -1,6 +1,7 @@
 {
   "require": {
     "krokedil/wp-api": "^1.0",
+    "krokedil/sign-in-with-klarna": "@dev",
     "krokedil/woocommerce": "dev-develop-free-trial-shipping as 1.3.1"
   },
   "require-dev": {
@@ -16,6 +17,13 @@
     {
       "type": "vcs",
       "url": "git@github.com:krokedil/woocommerce.git"
+    },
+    {
+      "type": "path",
+      "url": "/var/www/html/wp-content/plugins/sign-in-with-klarna",
+      "options": {
+        "symlink": true
+      }
     }
   ],
   "minimum-stability": "dev"
