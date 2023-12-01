@@ -119,6 +119,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public $subscription = null;
 
+		/**
+		 * Let the customer sign in or register a new account using their data stored at Klarna.
+		 *
+		 * @var SignInWithKlarna
+		 */
 		public $siwk = null;
 
 		/**

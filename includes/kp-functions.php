@@ -40,7 +40,7 @@ function get_klarna_customer( $customer_type ) {
 		'type' => ( 'b2b' === $customer_type ) ? 'organization' : 'person',
 	);
 
-	$access_token = \Krokedil\SignInWithKlarna\User::get_access_token( get_current_user_id() );
+	$access_token = KP_WC()->siwk->user->get_access_token( get_current_user_id() );
 	if ( $access_token ) {
 		$customer['klarna_access_token'] = $access_token;
 	}
