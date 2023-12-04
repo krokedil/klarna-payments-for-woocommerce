@@ -49,16 +49,16 @@
         },
         {
             "name": "krokedil/wp-api",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/wp-api.git",
-                "reference": "5da83b450809821a80e2d1891da3bbb90c42d111"
+                "reference": "494eb9a7d08e722f66ea059e87eb1bee7e73f7d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/5da83b450809821a80e2d1891da3bbb90c42d111",
-                "reference": "5da83b450809821a80e2d1891da3bbb90c42d111",
+                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/494eb9a7d08e722f66ea059e87eb1bee7e73f7d0",
+                "reference": "494eb9a7d08e722f66ea059e87eb1bee7e73f7d0",
                 "shasum": ""
             },
             "require-dev": {
@@ -83,10 +83,10 @@
             ],
             "description": "A composer library for Krokedil WordPress plugins that contains classes for working with wp_remote_request to setup request classes. Also uses the WooCommerce logger to log request reponses.",
             "support": {
-                "source": "https://github.com/krokedil/wp-api/tree/1.0.1",
+                "source": "https://github.com/krokedil/wp-api/tree/1.1.0",
                 "issues": "https://github.com/krokedil/wp-api/issues"
             },
-            "time": "2023-02-27T07:45:30+00:00"
+            "time": "2023-12-04T12:15:24+00:00"
         }
     ],
     "packages-dev": [
