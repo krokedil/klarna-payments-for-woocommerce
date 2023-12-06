@@ -203,7 +203,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			} else {
 				$hide_days = 6;
 				set_transient( 'klarna_kp_hide_banner', '1', $hide_days * DAY_IN_SECONDS );
-				wp_send_json_success( "Klarna Payment Go Live banner hidden for ${hide_days} days." );
+				wp_send_json_success( "Klarna Payment Go Live banner hidden for {$hide_days} days." );
 			}
 			wp_die();
 		}
