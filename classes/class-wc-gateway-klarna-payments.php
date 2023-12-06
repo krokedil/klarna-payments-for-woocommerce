@@ -305,6 +305,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Load any session data that we might have. Pass null instead of order identifier to load session from WC()->session.
 		KP_WC()->session->set_session_data( null );
 
+		$order_key         = $order->get_order_key();
 		$order_id          = $order->get_id();
 		$klarna_country    = KP_WC()->session->get_klarna_session_country( $order );
 		$klarna_session_id = KP_WC()->session->get_klarna_session_id();
@@ -334,6 +335,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		return array(
 			'result'    => 'success',
 			'order_id'  => $order_id,
+			'order_key' => $order_key,
 			'addresses' => array(
 				'billing'  => $customer['billing'],
 				'shipping' => $customer['shipping'],

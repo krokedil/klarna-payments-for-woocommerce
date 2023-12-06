@@ -44,7 +44,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			global $pagenow;
 
 			// Only display the banner on WP admin dashboard page or KCO settings page.
-			$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_STRING );
+			$section = isset( $_GET['section'] ) ? htmlspecialchars( wp_unslash( $_GET['section'] ) ) : false;
 			if ( 'index.php' !== $pagenow && ! ( ! empty( $section ) && 'klarna_payments' === $section ) ) {
 				return;
 			}
@@ -203,7 +203,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			} else {
 				$hide_days = 6;
 				set_transient( 'klarna_kp_hide_banner', '1', $hide_days * DAY_IN_SECONDS );
-				wp_send_json_success( "Klarna Payment Go Live banner hidden for ${hide_days} days." );
+				wp_send_json_success( "Klarna Payment Go Live banner hidden for {$hide_days} days." );
 			}
 			wp_die();
 		}

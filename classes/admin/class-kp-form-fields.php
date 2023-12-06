@@ -173,11 +173,14 @@ class KP_Form_Fields {
 	 */
 	private static function kp_form_production_username() {
 		return array(
-			'title'       => __( 'Production Klarna API username', 'klarna-payments-for-woocommerce' ),
-			'type'        => 'text',
-			'description' => __( 'Use the API username you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
-			'default'     => '',
-			'desc_tip'    => false,
+			'title'             => __( 'Production Klarna API username', 'klarna-payments-for-woocommerce' ),
+			'type'              => 'text',
+			'description'       => __( 'Use the API username you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+			'default'           => '',
+			'desc_tip'          => false,
+			'custom_attributes' => array(
+				'autocomplete' => 'off',
+			),
 		);
 	}
 
@@ -188,11 +191,14 @@ class KP_Form_Fields {
 	 */
 	private static function kp_form_production_password() {
 		return array(
-			'title'       => __( 'Production Klarna API password', 'klarna-payments-for-woocommerce' ),
-			'type'        => 'text',
-			'description' => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
-			'default'     => '',
-			'desc_tip'    => false,
+			'title'             => __( 'Production Klarna API password', 'klarna-payments-for-woocommerce' ),
+			'type'              => 'password',
+			'description'       => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+			'default'           => '',
+			'desc_tip'          => false,
+			'custom_attributes' => array(
+				'autocomplete' => 'off',
+			),
 		);
 	}
 
@@ -203,11 +209,14 @@ class KP_Form_Fields {
 	 */
 	private static function kp_form_test_username() {
 		return array(
-			'title'       => __( 'Test Klarna API username', 'klarna-payments-for-woocommerce' ),
-			'type'        => 'text',
-			'description' => __( 'Use the API username you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
-			'default'     => '',
-			'desc_tip'    => false,
+			'title'             => __( 'Test Klarna API username', 'klarna-payments-for-woocommerce' ),
+			'type'              => 'text',
+			'description'       => __( 'Use the API username you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+			'default'           => '',
+			'desc_tip'          => false,
+			'custom_attributes' => array(
+				'autocomplete' => 'off',
+			),
 		);
 	}
 
@@ -218,11 +227,14 @@ class KP_Form_Fields {
 	 */
 	private static function kp_form_test_password() {
 		return array(
-			'title'       => __( 'Test Klarna API password', 'klarna-payments-for-woocommerce' ),
-			'type'        => 'text',
-			'description' => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
-			'default'     => '',
-			'desc_tip'    => false,
+			'title'             => __( 'Test Klarna API password', 'klarna-payments-for-woocommerce' ),
+			'type'              => 'password',
+			'description'       => __( 'Use the API password you downloaded in the Klarna Merchant Portal. Don’t use your email address.', 'klarna-payments-for-woocommerce' ),
+			'default'           => '',
+			'desc_tip'          => false,
+			'custom_attributes' => array(
+				'autocomplete' => 'off',
+			),
 		);
 	}
 
