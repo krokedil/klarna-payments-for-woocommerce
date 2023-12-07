@@ -91,7 +91,7 @@ class KP_Order_Data {
 	}
 
 	/**
-	 * Returns a formated Klarna order object.
+	 * Returns a formatted Klarna order object.
 	 *
 	 * @param KP_IFrame $iframe_options The options to use for the Klarna Payments iframes.
 	 * @return array
@@ -172,7 +172,7 @@ class KP_Order_Data {
 	}
 
 	/**
-	 * Returns a formated Klarna order line object.
+	 * Returns a formatted Klarna order line object.
 	 *
 	 * @param  \Krokedil\WooCommerce\OrderLineData $order_line The order line data.
 	 * @return array
@@ -228,7 +228,7 @@ class KP_Order_Data {
 	}
 
 	/**
-	 * Returns a formated Klarna customer object.
+	 * Returns a formatted Klarna customer object.
 	 *
 	 * @param  string|null $customer_type The customer type to use for generating the data. If empty it will use the class property instead.
 	 * @return array
