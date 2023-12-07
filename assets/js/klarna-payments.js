@@ -357,7 +357,7 @@ jQuery( function($) {
 			$.scroll_to_notices( $('form.checkout') );
 		},
 
-		authorizeKlarnaOrder: function( order_id ) {
+		authorizeKlarnaOrder: function( order_id, order_key ) {
 			klarna_payments.authorize().done( function( response ) {
 				if ('authorization_token' in response) {
 					$('body').trigger( 'kp_auth_success' );
@@ -368,6 +368,7 @@ jQuery( function($) {
 							dataType: "json",
 							async: true,
 							data: {
+								order_key: order_key,
 								order_id: order_id,
 								auth_token: klarna_payments.authorization_response.authorization_token,
 								nonce: klarna_payments_params.place_order_nonce,
@@ -412,7 +413,8 @@ jQuery( function($) {
 							async: true,
 							data: {
 								show_form: response.show_form,
-								order_id: json.order_id,
+								order_key: order_key,
+								order_id: order_id,
 								nonce: klarna_payments_params.auth_failed_nonce
 							},
 						}
@@ -425,7 +427,7 @@ jQuery( function($) {
 			if( klarna_payments.isKlarnaPaymentsSelected() ) {
 				event.preventDefault();
 				klarna_payments.addresses = klarna_payments_params.addresses;
-				klarna_payments.authorizeKlarnaOrder( klarna_payments_params.order_id );
+				klarna_payments.authorizeKlarnaOrder(  klarna_payments_params.order_id, klarna_payments_params.order_key );
 			}
 		},
 
@@ -464,7 +466,7 @@ jQuery( function($) {
 							if ( 'success' === data.result ) {
 								klarna_payments.logToFile( 'Successfully placed order. Starting authorization with Klarna' );	
 								klarna_payments.addresses = data.addresses
-								klarna_payments.authorizeKlarnaOrder( data.order_id );
+								klarna_payments.authorizeKlarnaOrder( data.order_id, data.order_key );
 							} else {
 								throw 'Result failed';
 							}

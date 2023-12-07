@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.3.1
+Tested up to: 6.3.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 8.2.0
-Stable tag: 3.2.2
+WC tested up to: 8.2.1
+Stable tag: 3.2.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,16 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2023.12.06    - version 3.2.4 =
+* Fix           – Added a check to ensure that a Klarna order is always, at most, processed once. This should prevent accidental order re-processing.
+* Fix           - Fixed PHP 8 deprecation warnings.
+* Tweak         - The API password fields in the plugin settings is now treated as a password field.
+* Tweak         - Improved performance when retrieving the order. This is especially noticeable in stores with many orders (thanks @fitimvata!).
+* Tweak         - Added an extra integrity check when verifying AJAX requests.
+
+= 2023.11.07    - version 3.2.3 =
+* Fix           - If Klarna Payment is the preferred payment gateway, the first payment category should be selected by default rather than the last one (current behavior).
+
 = 2023.10.09    - version 3.2.2 =
 * Fix           - Fixed a critical error due to the class "KP_Api" being undefined.
 * Fix           - The plugin will no longer cause a critical error when its dependency, WooCommerce, is disabled.
