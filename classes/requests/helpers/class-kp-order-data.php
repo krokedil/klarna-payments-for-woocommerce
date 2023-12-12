@@ -91,12 +91,12 @@ class KP_Order_Data {
 	}
 
 	/**
-	 * Returns a formated Klarna order object.
+	 * Returns a formatted Klarna order object.
 	 *
 	 * @param KP_IFrame $iframe_options The options to use for the Klarna Payments iframes.
 	 * @return array
 	 */
-	public function get_klarna_order_object( $iframe_options ) {
+	public function get_klarna_order_object( $iframe_options = null ) {
 		$customer = $this->get_klarna_customer_object();
 
 		return array(
@@ -109,7 +109,7 @@ class KP_Order_Data {
 			'customer'          => get_klarna_customer( $this->customer_type ),
 			'billing_address'   => $customer['billing'],
 			'shipping_address'  => $customer['shipping'],
-			'options'           => $iframe_options->get_kp_color_options(),
+			'options'           => $iframe_options ? $iframe_options->get_kp_color_options() : array(),
 			'merchant_urls'     => array(
 				'authorization' => home_url( '/wc-api/KP_WC_AUTHORIZATION' ),
 			),
