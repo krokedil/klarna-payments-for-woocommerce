@@ -429,7 +429,7 @@ jQuery( function($) {
 			$.scroll_to_notices($("form.checkout"));
 		},
 
-		onSuccessfulAuthorization: function (order_id) {
+		onSuccessfulAuthorization: function (order_id, order_key) {
 			$("body").trigger("kp_auth_success");
 			$.ajax(klarna_payments_params.place_order_url, {
 				type: "POST",
@@ -437,6 +437,7 @@ jQuery( function($) {
 				async: true,
 				data: {
 					order_id: order_id,
+					order_key: order_key,
 					auth_token:
 						klarna_payments.authorization_response
 							.authorization_token,
@@ -467,7 +468,7 @@ jQuery( function($) {
 			});
 		},
 
-		onFailedAuthorization: function (order_id, response) {
+		onFailedAuthorization: function (order_id, order_key, response) {
 			$("body").trigger("kp_auth_failed");
 
 			// Re-enable the form.
@@ -484,7 +485,8 @@ jQuery( function($) {
 				async: true,
 				data: {
 					show_form: response.show_form,
-					order_id: json.order_id,
+					order_id: order_id,
+					order_key: order_key,
 					nonce: klarna_payments_params.auth_failed_nonce,
 				},
 			});
@@ -501,7 +503,7 @@ jQuery( function($) {
 							result
 						);
 					} else {
-						klarna_payments.onFailedAuthorization(order_id, result);
+						klarna_payments.onFailedAuthorization(order_id, order_key, result);
 					}
 				});
 
@@ -516,7 +518,11 @@ jQuery( function($) {
 						response
 					);
 				} else {
-					klarna_payments.onFailedAuthorization(order_id, response);
+					klarna_payments.onFailedAuthorization(
+						order_id,
+						order_key,
+						response
+					);
 				}
 			});
 		},
