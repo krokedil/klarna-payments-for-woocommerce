@@ -51,6 +51,13 @@ class KP_Session {
 	public $session_country = null;
 
 	/**
+	 * If KEC is used or not.
+	 *
+	 * @var bool
+	 */
+	public $is_kec = false;
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
@@ -84,6 +91,7 @@ class KP_Session {
 			$this->klarna_session  = null;
 			$this->session_hash    = null;
 			$this->session_country = null;
+			$this->is_kec          = false;
 		}
 
 		// If we already have a Klarna session and session does not need an update, return the Klarna session.
@@ -139,6 +147,7 @@ class KP_Session {
 		$this->klarna_session  = $session_data['klarna_session'];
 		$this->session_hash    = $session_data['session_hash'];
 		$this->session_country = $session_data['session_country'];
+		$this->is_kec          = $session_data['is_kec'] ?? false;
 	}
 
 	/**
@@ -256,7 +265,7 @@ class KP_Session {
 		// The `get_totals` method can return non-numeric items which should be removed before using `array_sum`.
 		$cart_totals = array_filter(
 			WC()->cart->get_totals(),
-			function( $total ) {
+			function ( $total ) {
 				return is_numeric( $total );
 			}
 		);
