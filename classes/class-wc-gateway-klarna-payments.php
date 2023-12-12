@@ -69,6 +69,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'wc_klarna_payments_supports',
 			array(
 				'products',
+				'pay_button',
 				'subscriptions',
 				'subscription_cancellation',
 				'subscription_suspension',
@@ -100,6 +101,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// What is Klarna link.
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
+
+		$this->pay_button_id = \Krokedil\KlarnaExpressCheckout\KlarnaExpressCheckout::get_payment_button_id();
 
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -331,7 +334,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$customer   = $order_data->get_klarna_customer_object();
 
 		// Return success without redirect URL since our script handles the return instead of WooCommerce.
-		return array(
+		$return = array(
 			'result'    => 'success',
 			'order_id'  => $order_id,
 			'addresses' => array(
@@ -339,6 +342,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'shipping' => $customer['shipping'],
 			),
 		);
+
+		// If KEC is enabled, we should pass the payload with the result.
+		if ( KP_WC()->session->is_kec ) {
+			$return['payload'] = KP_WC()->klarna_express_checkout->get_payload();
+		}
+
+		return $return;
 	}
 
 	/**
