@@ -28,7 +28,6 @@ abstract class KP_Requests_Get extends KP_Requests {
 	 * @return array Request arguments
 	 */
 	protected function get_request_args() {
-
 		return apply_filters(
 			$this->request_filter,
 			array(

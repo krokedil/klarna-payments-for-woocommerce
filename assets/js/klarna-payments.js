@@ -490,13 +490,14 @@ jQuery( function($) {
 			});
 		},
 
-		authorizeKlarnaOrder: async function (order_id, payload) {
+		authorizeKlarnaOrder: async function (order_id, order_key, payload) {
 			if ("yes" === klarna_payments_params.kec_enabled) {
 				await Klarna.Payments.finalize({}, payload, function (result) {
 					klarna_payments.authorization_response = result;
 					if (result.approved) {
 						klarna_payments.onSuccessfulAuthorization(
 							order_id,
+							order_key,
 							result
 						);
 					} else {
@@ -511,6 +512,7 @@ jQuery( function($) {
 				if ("authorization_token" in response) {
 					klarna_payments.onSuccessfulAuthorization(
 						order_id,
+						order_key,
 						response
 					);
 				} else {
@@ -524,7 +526,8 @@ jQuery( function($) {
 				event.preventDefault();
 				klarna_payments.addresses = klarna_payments_params.addresses;
 				klarna_payments.authorizeKlarnaOrder(
-					klarna_payments_params.order_id
+					klarna_payments_params.order_id,
+					klarna_payments_params.order_key
 				);
 			}
 		},
@@ -568,6 +571,7 @@ jQuery( function($) {
 								klarna_payments.addresses = data.addresses;
 								klarna_payments.authorizeKlarnaOrder(
 									data.order_id,
+									data.order_key,
 									data.payload || null
 								);
 							} else {
