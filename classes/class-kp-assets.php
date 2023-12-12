@@ -78,6 +78,8 @@ class KP_Assets {
 		$order_data    = new KP_Order_Data( $customer_type, $order_id );
 		$customer      = $order_data->get_klarna_customer_object();
 
+		KP_WC()->session->set_session_data();
+
 		// Create the params array.
 		$klarna_payments_params = array(
 			// Ajax URLS.
@@ -96,6 +98,7 @@ class KP_Assets {
 			'customer_type'          => $customer_type,
 			'remove_postcode_spaces' => ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no',
 			'client_token'           => KP_WC()->session->get_klarna_client_token(),
+			'kec_enabled'            => KP_WC()->session->is_kec ? 'yes' : 'no',
 			'order_pay_page'         => $pay_for_order,
 			'pay_for_order'          => $pay_for_order,
 			'order_id'               => $order_id,
@@ -159,7 +162,6 @@ class KP_Assets {
 
 		$this->enqueue_express_button_scripts();
 		$this->enqueue_express_button_styles();
-
 	}
 
 	/**
@@ -318,9 +320,7 @@ class KP_Assets {
 		);
 
 		wp_enqueue_style( 'klarna_express_button_styles' );
-
 	}
-
 }
 
 new KP_Assets();
