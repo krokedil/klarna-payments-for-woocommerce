@@ -29,6 +29,7 @@ class KP_Klarna_Express_Checkout {
 		$this->klarna_express_checkout = new KlarnaExpressCheckout();
 
 		$this->klarna_express_checkout->ajax()->set_get_payload( array( $this, 'get_payload' ) );
+		$this->klarna_express_checkout->ajax()->set_finalize_callback( array( $this, 'finalize_callback' ) );
 	}
 
 	/**
@@ -65,33 +66,40 @@ class KP_Klarna_Express_Checkout {
 	}
 
 	/**
-	 * Set session data from KEC auth response.
+	 * Finalize order callback handler.
 	 *
-	 * @param string $session_id The session ID.
-	 * @param string $client_token The client token.
+	 * @param string $auth_token The auth token from Klarna.
+	 * @param string $order_id The order ID.
+	 * @param string $order_key The order key.
 	 *
-	 * @return void
+	 * @throws Exception If the order is invalid.
+	 * @return array
 	 */
-	public static function set_session_data( $session_id, $client_token ) {
-		// Get the Klarna session.
-		$country        = kp_get_klarna_country();
-		$klarna_session = KP_WC()->api->get_session( $session_id, $country );
+	public function finalize_callback( $auth_token, $order_id, $order_key ) {
+		// Get the order from the order ID.
+		$order = wc_get_order( $order_id );
 
-		// Verify the response.
-		if ( is_wp_error( $klarna_session ) ) {
-			return;
+		// Verify the order.
+		if ( ! $order ) {
+			throw new Exception( __( 'Invalid order.', 'klarna-payments-for-woocommerce' ) ); // phpcs:ignore
 		}
 
-		KP_WC()->session->klarna_session = array(
-			'session_id'                => $session_id,
-			'client_token'              => $client_token,
-			'payment_method_categories' => $klarna_session['payment_method_categories'] ?? array(),
+		// Verify the order key.
+		if ( $order->get_order_key() !== $order_key ) {
+			throw new Exception( __( 'Invalid order key.', 'klarna-payments-for-woocommerce' ) ); // phpcs:ignore
+		}
+
+		// Make a place order call to Klarna.
+		$place_order_response = KP_WC()->api->place_order( kp_get_klarna_country(), $auth_token, $order_id );
+
+		// Verify the response.
+		if ( is_wp_error( $place_order_response ) ) {
+			throw new Exception( $place_order_response->get_error_message() ); // phpcs:ignore
+		}
+
+		return array(
+			'result'   => 'success',
+			'redirect' => $order->get_checkout_order_received_url(),
 		);
-
-		KP_WC()->session->session_country = $country;
-
-		KP_WC()->session->is_kec = true;
-
-		WC()->session->set( 'kp_session_data', wp_json_encode( KP_WC()->session ) );
 	}
 }
