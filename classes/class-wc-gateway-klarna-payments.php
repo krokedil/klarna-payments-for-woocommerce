@@ -80,7 +80,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'subscription_payment_method_change_customer',
 				'subscription_payment_method_change_admin',
 				'multiple_subscriptions',
-				'upsell'
+				'upsell',
 			)
 		); // Make this filterable.
 
@@ -306,21 +306,27 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	private function process_checkout_order( $order ) {
-		// Load any session data that we might have. Pass null instead of order identifier to load session from WC()->session.
-		KP_WC()->session->set_session_data( null );
+		$kec_client_token = \Krokedil\KlarnaExpressCheckout\KlarnaExpressCheckout::get_client_token();
+		$order_key        = $order->get_order_key();
+		$order_id         = $order->get_id();
 
-		$order_key         = $order->get_order_key();
-		$order_id          = $order->get_id();
-		$klarna_country    = KP_WC()->session->get_klarna_session_country( $order );
-		$klarna_session_id = KP_WC()->session->get_klarna_session_id();
+		if ( empty( $kec_client_token ) ) {
+			// Load any session data that we might have. Pass null instead of order identifier to load session from WC()->session.
+			KP_WC()->session->set_session_data( null );
+			$klarna_country    = KP_WC()->session->get_klarna_session_country( $order );
+			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
 
-		if ( empty( $klarna_country ) || empty( $klarna_session_id ) ) {
-			return array(
-				'result'   => 'error',
-				'messages' => array(
-					__( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' ),
-				),
-			);
+			if ( empty( $klarna_country ) || empty( $klarna_session_id ) ) {
+				return array(
+					'result'   => 'error',
+					'messages' => array(
+						__( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' ),
+					),
+				);
+			}
+		} else {
+			$klarna_country    = kp_get_klarna_country( $order );
+			$klarna_session_id = $kec_client_token;
 		}
 
 		// Set the order meta data.
@@ -347,7 +353,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		);
 
 		// If KEC is enabled, we should pass the payload with the result.
-		if ( KP_WC()->session->is_kec ) {
+		if ( ! empty( $kec_client_token ) ) {
 			$return['payload'] = KP_WC()->klarna_express_checkout->get_payload();
 		}
 
