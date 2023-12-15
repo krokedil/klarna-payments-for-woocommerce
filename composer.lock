@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8f40ecac2761b509181bd214bfb8769",
+    "content-hash": "b42d57c4c09b2598c6d49caa9e6d9547",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -71,16 +71,16 @@
         },
         {
             "name": "krokedil/klarna-express-checkout",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "cea60145ba5204028807601198be659511ebeb35"
+                "reference": "32fd2c8b252b8016fbab2f424ecefef94e9b344c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/cea60145ba5204028807601198be659511ebeb35",
-                "reference": "cea60145ba5204028807601198be659511ebeb35",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/32fd2c8b252b8016fbab2f424ecefef94e9b344c",
+                "reference": "32fd2c8b252b8016fbab2f424ecefef94e9b344c",
                 "shasum": ""
             },
             "require": {
@@ -136,10 +136,10 @@
             ],
             "description": "A Klarna Express Checkout solution for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-express-checkout/tree/1.0.0",
+                "source": "https://github.com/krokedil/klarna-express-checkout/tree/1.1.0",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2023-12-12T12:49:30+00:00"
+            "time": "2023-12-15T08:22:22+00:00"
         },
         {
             "name": "krokedil/woocommerce",
@@ -322,12 +322,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "040f675a5020a62ddc9c46344d9cf26658e2b04e"
+                "reference": "88d3cec355a252c8fb6a338c420960bf1b0d5679"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/040f675a5020a62ddc9c46344d9cf26658e2b04e",
-                "reference": "040f675a5020a62ddc9c46344d9cf26658e2b04e",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/88d3cec355a252c8fb6a338c420960bf1b0d5679",
+                "reference": "88d3cec355a252c8fb6a338c420960bf1b0d5679",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-12-11T21:00:05+00:00"
+            "time": "2023-12-14T14:17:01+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",

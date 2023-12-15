@@ -2,7 +2,7 @@
   "require": {
     "krokedil/wp-api": "^1.0",
     "krokedil/woocommerce": "^1.3",
-    "krokedil/klarna-express-checkout": "^1.0.0"
+    "krokedil/klarna-express-checkout": "^1.1.0"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "^2.3",
