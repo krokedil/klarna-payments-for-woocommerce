@@ -97,9 +97,35 @@ class KP_Klarna_Express_Checkout {
 			throw new Exception( $place_order_response->get_error_message() ); // phpcs:ignore
 		}
 
-		return array(
-			'result'   => 'success',
-			'redirect' => $order->get_checkout_order_received_url(),
-		);
+		$fraud_status = $place_order_response['fraud_status'];
+		switch ( $fraud_status ) {
+			case 'ACCEPTED':
+				kp_process_accepted( $order, $place_order_response );
+				kp_unset_session_values();
+				return array(
+					'result'   => 'success',
+					'redirect' => $place_order_response['redirect_url'],
+				);
+			case 'PENDING':
+				kp_process_pending( $order, $place_order_response );
+				kp_unset_session_values();
+				return array(
+					'result'   => 'success',
+					'redirect' => $place_order_response['redirect_url'],
+				);
+			case 'REJECTED':
+				kp_process_rejected( $order, $place_order_response );
+				kp_unset_session_values();
+				return array(
+					'result'   => 'error',
+					'redirect' => $order->get_cancel_order_url_raw(),
+				);
+			default:
+				kp_unset_session_values();
+				return array(
+					'result'   => 'error',
+					'redirect' => $order->get_cancel_order_url_raw(),
+				);
+		}
 	}
 }
