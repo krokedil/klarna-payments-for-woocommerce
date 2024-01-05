@@ -306,7 +306,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	private function process_checkout_order( $order ) {
-		$kec_client_token = \Krokedil\KlarnaExpressCheckout\KlarnaExpressCheckout::get_client_token();
+		$kec_client_token = \Krokedil\KlarnaExpressCheckout\Session::get_client_token();
 		$order_key        = $order->get_order_key();
 		$order_id         = $order->get_id();
 
