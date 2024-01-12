@@ -41,7 +41,7 @@ class KP_Assets {
 		}
 
 		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		if ( 'yes' !== $settings['enabled'] ?? 'no' ) {
+		if ( 'yes' !== ( $settings['enabled'] ?? 'no' ) ) {
 			return;
 		}
 
