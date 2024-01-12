@@ -89,6 +89,8 @@ class KP_Klarna_Express_Checkout {
 			throw new Exception( __( 'Invalid order key.', 'klarna-payments-for-woocommerce' ) ); // phpcs:ignore
 		}
 
+		add_filter( 'http_headers_useragent', array( $this, 'add_to_useragent' ) );
+
 		// Make a place order call to Klarna.
 		$place_order_response = KP_WC()->api->place_order( kp_get_klarna_country(), $auth_token, $order_id );
 
@@ -127,5 +129,21 @@ class KP_Klarna_Express_Checkout {
 					'redirect' => $order->get_cancel_order_url_raw(),
 				);
 		}
+	}
+
+	/**
+	 * Add to user agent.
+	 *
+	 * @param string $user_agent The user agent.
+	 *
+	 * @return string
+	 */
+	public function add_to_useragent( $user_agent ) {
+		// Only if the useragent contains KP.
+		if ( strpos( $user_agent, 'KP' ) !== false ) {
+			$user_agent .= ' KEC: ' . KlarnaExpressCheckout::VERSION;
+		}
+
+		return $user_agent;
 	}
 }
