@@ -69,6 +69,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'wc_klarna_payments_supports',
 			array(
 				'products',
+				'pay_button',
 				'subscriptions',
 				'subscription_cancellation',
 				'subscription_suspension',
@@ -79,6 +80,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'subscription_payment_method_change_customer',
 				'subscription_payment_method_change_admin',
 				'multiple_subscriptions',
+				'upsell',
 			)
 		); // Make this filterable.
 
@@ -100,6 +102,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// What is Klarna link.
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
+
+		$this->pay_button_id = \Krokedil\KlarnaExpressCheckout\KlarnaExpressCheckout::get_payment_button_id();
 
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -302,21 +306,27 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	private function process_checkout_order( $order ) {
-		// Load any session data that we might have. Pass null instead of order identifier to load session from WC()->session.
-		KP_WC()->session->set_session_data( null );
+		$kec_client_token = \Krokedil\KlarnaExpressCheckout\Session::get_client_token();
+		$order_key        = $order->get_order_key();
+		$order_id         = $order->get_id();
 
-		$order_key         = $order->get_order_key();
-		$order_id          = $order->get_id();
-		$klarna_country    = KP_WC()->session->get_klarna_session_country( $order );
-		$klarna_session_id = KP_WC()->session->get_klarna_session_id();
+		if ( empty( $kec_client_token ) ) {
+			// Load any session data that we might have. Pass null instead of order identifier to load session from WC()->session.
+			KP_WC()->session->set_session_data( null );
+			$klarna_country    = KP_WC()->session->get_klarna_session_country( $order );
+			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
 
-		if ( empty( $klarna_country ) || empty( $klarna_session_id ) ) {
-			return array(
-				'result'   => 'error',
-				'messages' => array(
-					__( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' ),
-				),
-			);
+			if ( empty( $klarna_country ) || empty( $klarna_session_id ) ) {
+				return array(
+					'result'   => 'error',
+					'messages' => array(
+						__( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' ),
+					),
+				);
+			}
+		} else {
+			$klarna_country    = kp_get_klarna_country( $order );
+			$klarna_session_id = $kec_client_token;
 		}
 
 		// Set the order meta data.
@@ -332,7 +342,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$customer   = $order_data->get_klarna_customer_object();
 
 		// Return success without redirect URL since our script handles the return instead of WooCommerce.
-		return array(
+		$return = array(
 			'result'    => 'success',
 			'order_id'  => $order_id,
 			'order_key' => $order_key,
@@ -341,6 +351,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'shipping' => $customer['shipping'],
 			),
 		);
+
+		// If KEC is enabled, we should pass the payload with the result.
+		if ( ! empty( $kec_client_token ) ) {
+			$return['payload'] = KP_WC()->klarna_express_checkout->get_payload();
+		}
+
+		return $return;
 	}
 
 	/**
@@ -457,6 +474,76 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$new_title = $title . ' - ' . $klarna_method;
 			$order->set_payment_method_title( $new_title );
 		}
+	}
+
+	/**
+	 * Check if upsell should be available for the Klarna order or not.
+	 *
+	 * @param int $order_id The WooCommerce order id.
+	 * @return bool
+	 */
+	public function upsell_available( $order_id ) {
+		$order           = wc_get_order( $order_id );
+		$country         = $order->get_meta( '_wc_klarna_country', true );
+		$klarna_order_id = $order->get_meta( '_wc_klarna_order_id', true );
+
+		if ( empty( $klarna_order_id ) ) {
+			return false;
+		}
+
+		$klarna_order = KP_WC()->api->get_klarna_om_order( $country, $klarna_order_id );
+
+		if ( is_wp_error( $klarna_order ) ) {
+			return false;
+		}
+
+		// If the needed keys are not set, return false.
+		if ( ! isset( $klarna_order['initial_payment_method'] ) || ! isset( $klarna_order['initial_payment_method']['type'] ) ) {
+			return false;
+		}
+
+		// Set allowed payment methods for upsell based on country. https://developers.klarna.com/documentation/order-management/integration-guide/pre-delivery/#update-order-amount.
+		$allowed_payment_methods = array( 'INVOICE', 'B2B_INVOICE', 'BASE_ACCOUNT', 'DIRECT_DEBIT' );
+		switch ( $klarna_order['billing_address']['country'] ) {
+			case 'AT':
+			case 'DE':
+			case 'DK':
+			case 'FI':
+			case 'FR':
+			case 'NL':
+			case 'NO':
+			case 'SE':
+				$allowed_payment_methods[] = 'FIXED_AMOUNT';
+				break;
+			case 'CH':
+				$allowed_payment_methods = array();
+				break;
+		}
+
+		return in_array( $klarna_order['initial_payment_method']['type'], $allowed_payment_methods, true );
+	}
+
+	/**
+	 * Make an upsell request to Klarna.
+	 *
+	 * @param int    $order_id The WooCommerce order id.
+	 * @param string $upsell_uuid The unique id for the upsell request.
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function upsell( $order_id, $upsell_uuid ) {
+		$order           = wc_get_order( $order_id );
+		$country         = $order->get_meta( '_wc_klarna_country', true );
+		$klarna_order_id = $order->get_meta( '_wc_klarna_order_id', true );
+
+		$klarna_upsell_order = KP_WC()->api->upsell_klarna_order( $country, $klarna_order_id, $order_id );
+
+		if ( is_wp_error( $klarna_upsell_order ) ) {
+			$error = new WP_Error( '401', __( 'Klarna did not accept the new order amount, the order has not been updated' ) );
+			return $error;
+		}
+
+		return true;
 	}
 }
 

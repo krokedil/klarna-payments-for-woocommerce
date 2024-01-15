@@ -57,4 +57,4 @@ class KP_Checkout {
 		<input type="hidden" id="kp_client_token" value="<?php echo esc_html( $session_token ); ?>" >
 		<?php
 	}
-} new KP_Checkout();
+}

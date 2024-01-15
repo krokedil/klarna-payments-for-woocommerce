@@ -21,7 +21,6 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 			add_action( 'in_admin_header', array( $this, 'klarna_banner' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_css' ) );
 			add_action( 'wp_ajax_hide_klarna_kp_banner', array( $this, 'hide_klarna_kp_banner' ) );
-			add_action( 'wp_ajax_nopriv_hide_klarna_kp_banner', array( $this, 'hide_klarna_kp_banner' ) );
 		}
 
 		/**
@@ -196,6 +195,7 @@ if ( ! class_exists( 'KP_Banners' ) ) {
 		 * Hide Klarna banner in admin pages for.
 		 */
 		public function hide_klarna_kp_banner() {
+			check_ajax_referer( 'hide-klarna-banner', '_wpnonce' );
 			$permanent = ( array_key_exists( 'permanent', $_POST ) && 'true' === $_POST['permanent'] ); //phpcs:ignore WordPress.Security.NonceVerification.Missing -- It is my understanding that WP checks the nonce before triggering the action?
 			if ( $permanent ) {
 				set_transient( 'klarna_kp_hide_banner', '1' );

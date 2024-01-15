@@ -167,6 +167,71 @@ class KP_Api {
 	}
 
 	/**
+	 * Get the Klarna order from the order management API.
+	 *
+	 * @param string $country The Klarna country to use.
+	 * @param string $klarna_order_id The Klarna order id.
+	 *
+	 * @return array|WP_Error The response from Klarna.
+	 */
+	public function get_klarna_om_order( $country, $klarna_order_id ) {
+		$request  = new KP_Get_Order(
+			array(
+				'country'         => $country,
+				'klarna_order_id' => $klarna_order_id,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
+	/**
+	 * Upsell the klarna order.
+	 *
+	 * @param string $country The Klarna country to use.
+	 * @param string $klarna_order_id The Klarna order id.
+	 * @param int    $order_id The WooCommerce order id.
+	 *
+	 * @return array|WP_Error The response from Klarna.
+	 */
+	public function upsell_klarna_order( $country, $klarna_order_id, $order_id ) {
+		$request  = new KP_Upsell_Order(
+			array(
+				'country'         => $country,
+				'klarna_order_id' => $klarna_order_id,
+				'order_id'        => $order_id,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
+	/**
+	 * Return the session from Klarna Payments.
+	 *
+	 * @param string $session_id The Klarna session id.
+	 * @param string $country The Klarna country to use.
+	 * @return array|WP_Error The response from Klarna.
+	 */
+	public function get_session( $session_id, $country = null ) {
+		if ( ! $country ) {
+			$country = kp_get_klarna_country();
+		}
+
+		$request  = new KP_Get_Session(
+			array(
+				'session_id' => $session_id,
+				'country'    => $country,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
+	/**
 	 * Checks for WP Errors and returns either the response or a WP Error..
 	 *
 	 * @param array|WP_Error $response The response from the request.
@@ -182,5 +247,4 @@ class KP_Api {
 		}
 		return $response;
 	}
-
 }
