@@ -110,6 +110,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public $session = null;
 
+		/**
+		 * KP Checkout class. Handles the checkout process.
+		 *
+		 * @var KP_Checkout|null
+		 */
+		public $checkout = null;
+
 
 		/**
 		 * KP Subscription class. Handles the integration with WooCommerce Subscription
@@ -117,6 +124,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @var KP_Subscription|null
 		 */
 		public $subscription = null;
+
+		/**
+		 * KP Klarna Express Checkout class. Handles the integration with Klarna Express Checkout
+		 *
+		 * @var KP_Klarna_Express_Checkout|null
+		 */
+		public $klarna_express_checkout = null;
 
 		/**
 		 * Protected constructor to prevent creating a new instance of the
@@ -131,7 +145,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
 
 			// Load text domain.
-			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
 		}
 
 		/**
@@ -156,6 +170,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			if ( class_exists( 'WC_Subscriptions' ) ) {
 				$this->subscription = new KP_Subscription();
 			}
+
+			$this->checkout                = new KP_Checkout();
+			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
 
 			$this->register_payment_block();
 
@@ -198,8 +215,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
 					<div class="notice notice-warning">
-						<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'woocommerce-klarna-payments' ); ?>
-						</p>
+						<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'klarna-payments-for-woocommerce' ); ?></p>
 					</div>
 					<?php
 				}
@@ -290,7 +306,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 								)
 							)
 						);
-					?>
+						?>
 					</div>
 					<?php
 				}
@@ -317,6 +333,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-api.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-subscriptions.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-klarna-express-checkout.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 
 			// Requests.
@@ -324,6 +341,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-get.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-post.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-patch.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests-get.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/get/class-kp-get-order.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/patch/class-kp-cancel-recurring.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/patch/class-kp-upsell-order.php';
@@ -334,6 +352,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-hpp.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-customer-token.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-recurring.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/get/class-kp-get-session.php';
 
 			// Request helpers.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/helpers/class-kp-iframe.php';
@@ -348,6 +367,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 		}
 
+		/**
+		 * Initialize composers autoloader.
+		 *
+		 * @return bool|mixed
+		 */
 		public function init_composer() {
 			$autoloader = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
 
@@ -364,6 +388,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			return $autoloader_result;
 		}
 
+		/**
+		 * Checks if the autoloader is missing and displays an admin notice.
+		 *
+		 * @return void
+		 */
 		protected static function missing_autoloader() {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				error_log( // phpcs:ignore
