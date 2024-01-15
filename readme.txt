@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.4.1
+Tested up to: 6.4.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 8.3.1
-Stable tag: 3.2.4
+WC tested up to: 8.5.0
+Stable tag: 3.3.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.01.15    - version 3.3.0 =
+* Feature       - Added support for Klarna Express Checkout.
+* Feature       - Added support for Post Purchase Upsell.
+* Fix           - Fixed an issue with a undefined index when reading the enabled setting before it has been saved.
+* Tweak         - Changed author and author uri for the plugin.
+
 = 2023.12.06    - version 3.2.4 =
 * Fix           – Added a check to ensure that a Klarna order is always, at most, processed once. This should prevent accidental order re-processing.
 * Fix           - Fixed PHP 8 deprecation warnings.
