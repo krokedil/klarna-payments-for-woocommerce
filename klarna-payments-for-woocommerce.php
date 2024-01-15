@@ -3,8 +3,8 @@
  * Plugin Name: Klarna Payments for WooCommerce
  * Plugin URI: https://krokedil.com/klarna-payments/
  * Description: Provides Klarna Payments as payment method to WooCommerce.
- * Author: krokedil, klarna, automattic
- * Author URI: https://krokedil.com/
+ * Author: klarna
+ * Author URI: https://www.klarna.com/
  * Version: 3.2.4
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
