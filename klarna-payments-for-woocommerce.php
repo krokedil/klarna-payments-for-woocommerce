@@ -12,7 +12,7 @@
  * WC requires at least: 5.6.0
  * WC tested up to: 8.3.1
  *
- * Copyright (c) 2017-2023 Krokedil
+ * Copyright (c) 2017-2024 Krokedil
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
