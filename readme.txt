@@ -7,7 +7,7 @@ Tested up to: 6.4.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 8.5.0
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.01.16    - version 3.3.1 =
+* Fix           - Remove the required flag from the KEC client identifier setting.
+
 = 2024.01.15    - version 3.3.0 =
 * Feature       - Added support for Klarna Express Checkout.
 * Feature       - Added support for Post Purchase Upsell.
