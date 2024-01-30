@@ -69,7 +69,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			'wc_klarna_payments_supports',
 			array(
 				'products',
-				'pay_button',
 				'subscriptions',
 				'subscription_cancellation',
 				'subscription_suspension',

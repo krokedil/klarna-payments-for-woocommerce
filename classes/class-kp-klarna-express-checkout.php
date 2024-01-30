@@ -26,10 +26,36 @@ class KP_Klarna_Express_Checkout {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->klarna_express_checkout = new KlarnaExpressCheckout();
+		$this->klarna_express_checkout = new KlarnaExpressCheckout( 'woocommerce_klarna_payments_settings', kp_get_locale() );
 
 		$this->klarna_express_checkout->ajax()->set_get_payload( array( $this, 'get_payload' ) );
 		$this->klarna_express_checkout->ajax()->set_finalize_callback( array( $this, 'finalize_callback' ) );
+
+		add_filter( 'wc_klarna_payments_supports', array( $this, 'maybe_add_pay_button_support' ) );
+	}
+
+	/**
+	 * Maybe add pay button support.
+	 *
+	 * @param array $supports The supports array.
+	 *
+	 * @return array
+	 */
+	public function maybe_add_pay_button_support( $supports ) {
+		if ( $this->is_enabled() ) {
+			$supports[] = 'pay_button';
+		}
+
+		return $supports;
+	}
+
+	/**
+	 * Returns if KEC is enabled or not.
+	 *
+	 * @return bool
+	 */
+	public function is_enabled() {
+		return $this->klarna_express_checkout->settings()->is_enabled();
 	}
 
 	/**
