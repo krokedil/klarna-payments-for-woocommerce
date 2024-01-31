@@ -44,7 +44,6 @@ class KP_Subscription {
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'show_recurring_token' ) );
 		// Ensure wp_safe_redirect do not redirect back to default dashboard or home page.
 		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
-
 	}
 
 	/**
@@ -104,7 +103,6 @@ class KP_Subscription {
 
 		// Save to the WC order.
 		self::save_recurring_token( $renewal_order->get_id(), $recurring_token );
-
 	}
 
 	/**
@@ -114,10 +112,15 @@ class KP_Subscription {
 	 *
 	 * @see WC_Subscriptions_Change_Payment_Gateway::update_payment_method
 	 *
-	 * @param mixed $subscription WC_Subscription
+	 * @param mixed $subscription WC_Subscription.
 	 * @return void
 	 */
 	public function cancel_scheduled_payment( $subscription ) {
+		// Prevent a recursion of this function when we save the subscription.
+		if ( did_action( 'woocommerce_subscription_cancelled_' . self::GATEWAY_ID ) > 1 ) {
+			return;
+		}
+
 		$recurring_token = $this->get_recurring_tokens( $subscription->get_id() );
 
 		$response = KP_WC()->api->cancel_recurring_order( kp_get_klarna_country( $subscription ), $recurring_token );
@@ -132,7 +135,6 @@ class KP_Subscription {
 		// The session data must be deleted since Klarna doesn't allow reusing a session when generating a new customer token to change payment method.
 		$subscription->delete_meta_data( '_kp_session_data' );
 		$subscription->save();
-
 	}
 
 	/**
