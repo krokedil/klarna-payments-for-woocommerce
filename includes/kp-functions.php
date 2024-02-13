@@ -14,6 +14,9 @@ function kp_unset_session_values() {
 	}
 
 	WC()->session->__unset( 'kp_session_data' );
+
+	// TODO: Store the ID to 'kp_session_data'.
+	WC()->session->__unset( 'kp_supplementary_data_id' );
 }
 
 /**
@@ -88,9 +91,9 @@ function kp_process_auth_or_callback( $order, $response ) {
 /**
  * Process accepted Klarna Payments order.
  *
- * @param WC_Order $order WooCommerce order.
- * @param array    $decoded Klarna order.
- * @param string|bool   $recurring_token Recurring token.
+ * @param WC_Order    $order WooCommerce order.
+ * @param array       $decoded Klarna order.
+ * @param string|bool $recurring_token Recurring token.
  *
  * @return array   $result  Payment result.
  */
@@ -247,4 +250,19 @@ function kp_is_order_pay_page() {
  */
 function kp_is_wc_blocks_order( $order ) {
 	return $order && $order->is_created_via( 'store-api' );
+}
+
+/**
+ * Generates a random unique ID.
+ *
+ * @param int $length The length of the string.
+ * @return string
+ */
+function kp_generate_unique_id( $length = 36 ) {
+	try {
+		// random_bytes while more secure is not available on all systems.
+		return bin2hex( random_bytes( $length / 2 ) );
+	} catch ( Exception $e ) {
+		return wp_generate_password( $length, false );
+	}
 }

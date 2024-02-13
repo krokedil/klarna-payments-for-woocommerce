@@ -63,7 +63,13 @@ class KP_Session {
 	 * @param int|WC_Order|null $order The WooCommerce order or order id. Null if we are working with a cart.
 	 */
 	public function get_session( $order = null ) {
-		if ( ! kp_is_available() || ! kp_is_checkout_page() && ! KP_Subscription::is_change_payment_method() ) {
+		if ( ! kp_is_available() ) {
+			return;
+		}
+
+		KP_WC()->api->send_supplementary_data();
+
+		if ( ! kp_is_checkout_page() && ! KP_Subscription::is_change_payment_method() ) {
 			return;
 		}
 

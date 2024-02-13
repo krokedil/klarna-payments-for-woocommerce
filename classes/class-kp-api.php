@@ -231,6 +231,14 @@ class KP_Api {
 		return self::check_for_api_error( $response );
 	}
 
+	// TODO: Add documentation.
+	public function send_supplementary_data() {
+		$request  = new KP_Supplementary_Data( array( 'country' => kp_get_klarna_country() ) );
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
 	/**
 	 * Checks for WP Errors and returns either the response or a WP Error..
 	 *
