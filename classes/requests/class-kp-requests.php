@@ -124,8 +124,9 @@ abstract class KP_Requests extends Request {
 	public function get_error_message( $response ) {
 		$error_message = '';
 		// Get the error messages.
-		if ( null !== json_decode( $response['body'], true ) ) {
-			foreach ( json_decode( $response['body'], true )['error_messages'] as $error ) {
+		$body = json_decode( $response['body'], true );
+		if ( isset( $body['error_messages'] ) ) {
+			foreach ( $body['error_messages'] as $error ) {
 				$error_message = "$error_message $error";
 			}
 		}
