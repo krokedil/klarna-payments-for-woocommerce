@@ -42,11 +42,47 @@ class KP_Supplementary_Data extends KP_Requests_Post {
 	public function get_body() {
 		$body = parent::get_body();
 
-		// TODO: Store the ID to 'kp_session_data'.
 		$merchant_reference = WC()->session->get( 'kp_supplementary_data_id' );
 		if ( empty( $merchant_reference ) ) {
-			$merchant_reference = kp_generate_unique_id();
+			$merchant_reference[] = kp_generate_unique_id();
 			WC()->session->set( 'kp_supplementary_data_id', $merchant_reference );
+		}
+
+		$pending_order_id = WC()->session->get( 'order_awaiting_payment' );
+		if ( $pending_order_id ) {
+			$pending_order = wc_get_order( $pending_order_id );
+			if ( strpos( $pending_order->get_payment_method(), 'klarna' ) ) {
+				$mollie = $pending_order->get_meta( '_mollie_order_id' );
+				if ( ! empty( $mollie ) ) {
+					$merchant_reference[] = $mollie;
+				}
+			}
+		}
+
+		if ( isset( $this->arguments['order_number'], $this->arguments['transaction_id'] ) ) {
+			$order_id           = $this->arguments['order_number'];
+			$transaction_id     = $this->arguments['transaction_id'];
+			$order              = wc_get_order( $order_id );
+			$merchant_reference = array_merge( $merchant_reference, array( $order->get_order_number(), $transaction_id ) );
+		}
+
+		$allowed_keys = array(
+			'name',
+			'product_url',
+			'quantity',
+			'total_amount',
+			'total_tax_amount',
+			'unit_price',
+			'product_identifier',
+		);
+
+		foreach ( $body['order_lines'] as $index => $order_line ) {
+			$body['order_lines'][ $index ]['product_reference'] = $body['order_lines'][ $index ]['reference'];
+			foreach ( $order_line as $key => $value ) {
+				if ( ! in_array( $key, $allowed_keys, true ) ) {
+					unset( $body['order_lines'][ $index ][ $key ] );
+				}
+			}
 		}
 
 		$body = array(

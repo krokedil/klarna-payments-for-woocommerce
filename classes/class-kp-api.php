@@ -232,8 +232,20 @@ class KP_Api {
 	}
 
 	// TODO: Add documentation.
-	public function send_supplementary_data() {
-		$request  = new KP_Supplementary_Data( array( 'country' => kp_get_klarna_country() ) );
+	public function send_supplementary_data( $extra = null ) {
+		$arguments = array( 'country' => kp_get_klarna_country() );
+		if ( ! empty( $extra ) ) {
+			$arguments = array_merge(
+				$arguments,
+				array(
+					'order_id'       => $extra['order_id'],
+					'order_number'   => $extra['order_number'],
+					'transaction_id' => $extra['transaction_id'],
+				)
+			);
+		}
+
+		$request  = new KP_Supplementary_Data( $arguments );
 		$response = $request->request();
 
 		return self::check_for_api_error( $response );
@@ -248,11 +260,11 @@ class KP_Api {
 	private static function check_for_api_error( $response ) {
 		$is_testmode = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'];
 
-		if ( is_wp_error( $response ) && $is_testmode ) {
-			if ( ! is_admin() ) {
-				kp_print_error_message( $response );
-			}
-		}
+		// if ( is_wp_error( $response ) && $is_testmode ) {
+		// if ( ! is_admin() ) {
+		// kp_print_error_message( $response );
+		// }
+		// }
 		return $response;
 	}
 }

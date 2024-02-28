@@ -177,6 +177,47 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->register_payment_block();
 
 			add_action( 'before_woocommerce_init', array( $this, 'declare_wc_compatibility' ) );
+			add_action(
+				'woocommerce_pre_payment_complete',
+				function ( $order_id, $transaction_id ) {
+					$order          = wc_get_order( $order_id );
+					$payment_method = $order->get_payment_method();
+					if ( false !== strpos( $payment_method, 'klarna' ) ) {
+						KP_WC()->api->send_supplementary_data(
+							array(
+								'order_id'       => $order_id,
+								'order_number'   => $order->get_order_number(),
+								'transaction_id' => $transaction_id,
+							)
+						);
+					}
+
+					WC()->session->__unset( 'kp_supplementary_data_id' );
+				},
+				10,
+				3
+			);
+
+			add_filter(
+				'woocommerce_payment_successful_result',
+				function ( $result, $order_id ) {
+					$order          = wc_get_order( $order_id );
+					$payment_method = $order->get_payment_method();
+					if ( false !== strpos( $payment_method, 'klarna' ) ) {
+						KP_WC()->api->send_supplementary_data(
+							array(
+								'order_id'       => $order_id,
+								'order_number'   => $order->get_order_number(),
+								'transaction_id' => $order->get_transaction_id(),
+							)
+						);
+					}
+
+					return $result;
+				},
+				10,
+				2
+			);
 		}
 
 		/**
