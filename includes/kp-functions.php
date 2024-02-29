@@ -65,15 +65,16 @@ function kp_get_klarna_country( $order = false ) {
 }
 
 /**
- * Process authorization or callback response for accepted or pending Klarna orders.
+ * Process the response from a Klarna request to store meta data about an order.
  *
- * @param WC_Order $order WooCommerce order.
- * @param array    $decoded Klarna authorization or callback response.
+ * Also used for processing authorization or callback response for accepted or pending Klarna orders.
+ *
+ * @param WC_Order $order The WooCommerce order.
+ * @param array    $response Response from Klarna request that contain order details.
  *
  * @return void
  */
-function kp_process_auth_or_callback( $order, $response ) {
-
+function kp_save_order_meta_data( $order, $response ) {
 	$environment = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'] ? 'test' : 'live';
 
 	$order->update_meta_data( '_wc_klarna_environment', $environment );
@@ -81,6 +82,7 @@ function kp_process_auth_or_callback( $order, $response ) {
 	$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
 	$order->set_transaction_id( $response['order_id'] );
 	$order->set_payment_method_title( 'Klarna' );
+	$order->set_payment_method( 'klarna_payments' );
 
 	$order->save();
 }
@@ -88,9 +90,9 @@ function kp_process_auth_or_callback( $order, $response ) {
 /**
  * Process accepted Klarna Payments order.
  *
- * @param WC_Order $order WooCommerce order.
- * @param array    $decoded Klarna order.
- * @param string|bool   $recurring_token Recurring token.
+ * @param WC_Order    $order WooCommerce order.
+ * @param array       $decoded Klarna order.
+ * @param string|bool $recurring_token Recurring token.
  *
  * @return array   $result  Payment result.
  */
@@ -98,7 +100,7 @@ function kp_process_accepted( $order, $decoded, $recurring_token = false ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
-	kp_process_auth_or_callback( $order, $decoded );
+	kp_save_order_meta_data( $order, $decoded );
 
 	if ( $recurring_token ) {
 		KP_Subscription::save_recurring_token( $order->get_id(), $recurring_token );
@@ -124,7 +126,7 @@ function kp_process_accepted( $order, $decoded, $recurring_token = false ) {
 function kp_process_pending( $order, $decoded ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded['order_id'] );
-	kp_process_auth_or_callback( $order, $decoded );
+	kp_save_order_meta_data( $order, $decoded );
 	do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_pending', $order->get_id(), $decoded );
 	return array(
