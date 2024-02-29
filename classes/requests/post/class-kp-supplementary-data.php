@@ -52,17 +52,28 @@ class KP_Supplementary_Data extends KP_Requests_Post {
 		if ( $pending_order_id ) {
 			$pending_order = wc_get_order( $pending_order_id );
 			if ( strpos( $pending_order->get_payment_method(), 'klarna' ) ) {
-				$mollie = $pending_order->get_meta( '_mollie_order_id' );
-				if ( ! empty( $mollie ) ) {
-					$merchant_reference[] = $mollie;
+				$payment_specific_order_id = $pending_order->get_meta( '_mollie_order_id' );
+				if ( empty( $payment_specific_order_id ) ) {
+					$payment_specific_order_id = $pending_order->get_meta( '_payment_intent_id' );
+				}
+
+				if ( ! empty( $payment_specific_order_id ) ) {
+					$merchant_reference[] = $payment_specific_order_id;
 				}
 			}
 		}
 
 		if ( isset( $this->arguments['order_number'], $this->arguments['transaction_id'] ) ) {
-			$order_id           = $this->arguments['order_number'];
-			$transaction_id     = $this->arguments['transaction_id'];
-			$order              = wc_get_order( $order_id );
+			$order_id       = $this->arguments['order_number'];
+			$transaction_id = $this->arguments['transaction_id'];
+			$order          = wc_get_order( $order_id );
+
+			$payment_specific_order_id = $order->get_meta( '_mollie_order_id' );
+			if ( empty( $payment_specific_order_id ) ) {
+				$payment_specific_order_id = $order->get_meta( '_payment_intent_id' );
+			}
+
+			$transaction_id     = ! empty( $transaction_id ) ? $transaction_id : $payment_specific_order_id;
 			$merchant_reference = array_merge( $merchant_reference, array( $order->get_order_number(), $transaction_id ) );
 		}
 
@@ -86,7 +97,7 @@ class KP_Supplementary_Data extends KP_Requests_Post {
 		}
 
 		$body = array(
-			'merchant_references' => array( $merchant_reference ),
+			'merchant_references' => array_unique( $merchant_reference ),
 			'content_type'        => 'vnd.klarna.supplementary-data.v1',
 			'content'             => array(
 				'order_lines' => $body['order_lines'],
