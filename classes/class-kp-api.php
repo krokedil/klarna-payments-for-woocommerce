@@ -231,21 +231,27 @@ class KP_Api {
 		return self::check_for_api_error( $response );
 	}
 
-	// TODO: Add documentation.
-	public function send_supplementary_data( $extra = null ) {
+
+	/**
+	 * Send supplementary data to Klarna.
+	 *
+	 * @param array|null $order_data Data used for identifying a WC order. If null, cart data will be used.
+	 * @return array|WP_Error
+	 */
+	public function send_supplementary_data( $order_data = null ) {
 		$arguments = array( 'country' => kp_get_klarna_country() );
-		if ( ! empty( $extra ) ) {
+		if ( ! empty( $order_data ) ) {
 			$arguments = array_merge(
 				$arguments,
 				array(
-					'order_id'       => $extra['order_id'],
-					'order_number'   => $extra['order_number'],
-					'transaction_id' => $extra['transaction_id'],
+					'order_id'       => $order_data['order_id'],
+					'order_number'   => $order_data['order_number'],
+					'transaction_id' => $order_data['transaction_id'],
 				)
 			);
 		}
 
-		$request  = new KP_Supplementary_Data( $arguments );
+		$request  = new KP_Send_Supplementary_Data( $arguments );
 		$response = $request->request();
 
 		return self::check_for_api_error( $response );

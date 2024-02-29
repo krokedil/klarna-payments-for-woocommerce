@@ -67,8 +67,6 @@ class KP_Session {
 			return;
 		}
 
-		KP_WC()->api->send_supplementary_data();
-
 		if ( ! kp_is_checkout_page() && ! KP_Subscription::is_change_payment_method() ) {
 			return;
 		}

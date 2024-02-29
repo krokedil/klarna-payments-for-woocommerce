@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * KP_Supplementary_Data class.
  */
-class KP_Supplementary_Data extends KP_Requests_Post {
+class KP_Send_Supplementary_Data extends KP_Requests_Post {
 	/**
 	 * Class constructor.
 	 *
@@ -19,19 +19,9 @@ class KP_Supplementary_Data extends KP_Requests_Post {
 	public function __construct( $arguments ) {
 		parent::__construct( $arguments );
 
-		// TODO: Send the API key in the Authorization header.
 		$this->log_title      = 'Send supplementary data';
-		$this->request_filter = 'wc_klarna_payments_supplementary_data_args';
+		$this->request_filter = 'wc_klarna_payments_send_supplementary_data_args';
 		$this->endpoint       = 'payments/v2/supplementary-data';
-
-		add_filter(
-			'wc_klarna_payments_supplementary_data_args',
-			function( $request ) {
-				$request['headers']['Authorization'] = 'sk_test_51GreKDI5H4ar61xXSYn6UMBuvxLH4HnWzHktoZEEsRjy2Rx3n3gMZHsKK0TFav7WpXHDX2Vixefv0pA3LFLPRYZR00vrZOoEzN';
-
-				return $request;
-			}
-		);
 	}
 
 	/**
@@ -42,12 +32,14 @@ class KP_Supplementary_Data extends KP_Requests_Post {
 	public function get_body() {
 		$body = parent::get_body();
 
-		$merchant_reference = WC()->session->get( 'kp_supplementary_data_id' );
+		// Generate a unique ID for identifying this session.
+		$merchant_reference = WC()->session->get( KP_Supplementary_Data::$session_key );
 		if ( empty( $merchant_reference ) ) {
-			$merchant_reference[] = kp_generate_unique_id();
-			WC()->session->set( 'kp_supplementary_data_id', $merchant_reference );
+			$merchant_reference[] = KP_Supplementary_Data::generate_unique_id();
+			WC()->session->set( KP_Supplementary_Data::$session_key, $merchant_reference );
 		}
 
+		// Check if it is a resumable WC order. This can happen if the customer returns to the checkout page if they don't finalize the purchase.
 		$pending_order_id = WC()->session->get( 'order_awaiting_payment' );
 		if ( $pending_order_id ) {
 			$pending_order = wc_get_order( $pending_order_id );
@@ -63,20 +55,25 @@ class KP_Supplementary_Data extends KP_Requests_Post {
 			}
 		}
 
+		// If a WC order has been created, retrieve the payment order ID.
 		if ( isset( $this->arguments['order_number'], $this->arguments['transaction_id'] ) ) {
 			$order_id       = $this->arguments['order_number'];
 			$transaction_id = $this->arguments['transaction_id'];
 			$order          = wc_get_order( $order_id );
 
+			// Retrieve the payment ID from Mollie.
 			$payment_specific_order_id = $order->get_meta( '_mollie_order_id' );
 			if ( empty( $payment_specific_order_id ) ) {
+				// If it is not Mollie, it must be Stripe. We only support these two as of now.
 				$payment_specific_order_id = $order->get_meta( '_payment_intent_id' );
 			}
 
+			// If $transaction_id is set, we can skip retrieving specific payment order ID. Check if that exists first.
 			$transaction_id     = ! empty( $transaction_id ) ? $transaction_id : $payment_specific_order_id;
 			$merchant_reference = array_merge( $merchant_reference, array( $order->get_order_number(), $transaction_id ) );
 		}
 
+		// Order line fields that Klarna's supplementary data API supports.
 		$allowed_keys = array(
 			'name',
 			'product_url',
@@ -87,6 +84,7 @@ class KP_Supplementary_Data extends KP_Requests_Post {
 			'product_identifier',
 		);
 
+		// Delete the order line fields that are not required. Refer to $allowed_keys.
 		foreach ( $body['order_lines'] as $index => $order_line ) {
 			$body['order_lines'][ $index ]['product_reference'] = $body['order_lines'][ $index ]['reference'];
 			foreach ( $order_line as $key => $value ) {
