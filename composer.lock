@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "978a7f69a01f9c4fcbbf8dc44f854acd",
+    "content-hash": "24f0d4679600025e0b26bc068b68cfb8",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -143,16 +143,16 @@
         },
         {
             "name": "krokedil/woocommerce",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "11a6ac25cdab496a169a1ea1fc6c17594579634c"
+                "reference": "0f92aa008d8af7236094dc52497af7ae62f53937"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/11a6ac25cdab496a169a1ea1fc6c17594579634c",
-                "reference": "11a6ac25cdab496a169a1ea1fc6c17594579634c",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/0f92aa008d8af7236094dc52497af7ae62f53937",
+                "reference": "0f92aa008d8af7236094dc52497af7ae62f53937",
                 "shasum": ""
             },
             "require-dev": {
@@ -177,10 +177,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.4.0",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.5.0",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2024-01-08T08:08:25+00:00"
+            "time": "2024-03-12T13:13:23+00:00"
         },
         {
             "name": "krokedil/wp-api",
@@ -322,12 +322,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "2fbf9e38ef3307d740de375b8d2f19fc1dd19472"
+                "reference": "9905515ecd59bbc4da0dca897676f2b04683beec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/2fbf9e38ef3307d740de375b8d2f19fc1dd19472",
-                "reference": "2fbf9e38ef3307d740de375b8d2f19fc1dd19472",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/9905515ecd59bbc4da0dca897676f2b04683beec",
+                "reference": "9905515ecd59bbc4da0dca897676f2b04683beec",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-01-29T05:54:15+00:00"
+            "time": "2024-03-08T21:27:43+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -456,5 +456,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
