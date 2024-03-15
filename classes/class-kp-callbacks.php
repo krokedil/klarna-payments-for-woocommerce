@@ -67,7 +67,7 @@ class KP_Callbacks {
 		}
 
 		$auth_token = $data['authorization_token'];
-		$country    = $order->get_billing_country();
+		$country    = kp_get_klarna_country( $order );
 
 		// Dont do anything if the order has been processed.
 		if ( $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
