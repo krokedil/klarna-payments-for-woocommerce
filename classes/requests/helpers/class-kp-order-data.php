@@ -101,7 +101,7 @@ class KP_Order_Data {
 
 		return array(
 			'purchase_country'  => $this->klarna_country,
-			'purchase_currency' => get_woocommerce_currency(),
+			'purchase_currency' => empty( $order ) ? get_woocommerce_currency() : $order->get_currency(),
 			'locale'            => kp_get_locale(),
 			'order_amount'      => $this->order_data->get_total(),
 			'order_tax_amount'  => $this->order_data->get_total_tax(),
