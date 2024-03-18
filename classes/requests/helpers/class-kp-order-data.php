@@ -251,7 +251,7 @@ class KP_Order_Data {
 			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_billing_postcode() : str_replace( ' ', '', $customer_data->get_billing_postcode() ),
 			'city'            => $customer_data->get_billing_city(),
 			'region'          => $customer_data->get_billing_state(),
-			'country'         => $customer_data->get_billing_country(),
+			'country'         => empty( $customer_data->get_billing_country() ) ? kp_get_klarna_country() : $customer_data->get_billing_country(),
 		);
 
 		$shipping = array(
