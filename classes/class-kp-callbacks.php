@@ -132,6 +132,11 @@ class KP_Callbacks {
 		$order    = wc_get_order( $order_id );
 		$country  = $order->get_billing_country();
 
+		// Check if the order has already been processed.
+		if ( ! empty( $order->get_date_paid() ) ) {
+			return;
+		}
+
 		// Trigger place order on the auth token with KP.
 		$response = KP_WC()->api->place_order( $country, $auth_token, $order_id );
 		if ( is_wp_error( $response ) ) {
