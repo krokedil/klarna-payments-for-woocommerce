@@ -69,8 +69,8 @@ class KP_Callbacks {
 		$auth_token = $data['authorization_token'];
 		$country    = $order->get_billing_country();
 
-		// Dont do anything if the order has been processed.
-		if ( $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+		// Check if the PURCHASE has already been completed by the customer.
+		if ( ! empty( $order->get_date_paid() ) ) {
 			return;
 		}
 
