@@ -101,7 +101,7 @@ class KP_Order_Data {
 
 		return array(
 			'purchase_country'  => $this->klarna_country,
-			'purchase_currency' => get_woocommerce_currency(),
+			'purchase_currency' => empty( $order ) ? get_woocommerce_currency() : $order->get_currency(),
 			'locale'            => kp_get_locale(),
 			'order_amount'      => $this->order_data->get_total(),
 			'order_tax_amount'  => $this->order_data->get_total_tax(),
@@ -251,7 +251,7 @@ class KP_Order_Data {
 			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_billing_postcode() : str_replace( ' ', '', $customer_data->get_billing_postcode() ),
 			'city'            => $customer_data->get_billing_city(),
 			'region'          => $customer_data->get_billing_state(),
-			'country'         => $customer_data->get_billing_country(),
+			'country'         => empty( $customer_data->get_billing_country() ) ? kp_get_klarna_country() : $customer_data->get_billing_country(),
 		);
 
 		$shipping = array(

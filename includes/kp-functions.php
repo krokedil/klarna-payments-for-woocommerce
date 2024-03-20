@@ -50,12 +50,20 @@ function get_klarna_customer( $customer_type ) {
  */
 function kp_get_klarna_country( $order = false ) {
 	if ( ! empty( $order ) ) {
-		return apply_filters( 'wc_klarna_payments_country', $order->get_billing_country() );
+		$country = $order->get_billing_country();
+
+		// If the billing_country field is unset, $country will be empty.
+		if ( ! empty( $country ) ) {
+			return apply_filters( 'wc_klarna_payments_country', $country );
+		}
 	}
 
-	/* The billing country selected on the checkout page is to prefer over the store's base location. It makse more sense that we check for available payment methods based on the customer's country. */
-	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer ) && ! empty( WC()->customer->get_billing_country() ) ) {
-		return apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
+	/* The billing country selected on the checkout page is to prefer over the store's base location. It makes more sense that we check for available payment methods based on the customer's country. */
+	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer ) ) {
+		$country = WC()->customer->get_billing_country();
+		if ( ! empty( $country ) ) {
+			return apply_filters( 'wc_klarna_payments_country', $country );
+		}
 	}
 
 	/* Ignores whatever country the customer selects on the checkout page, and always uses the store's base location. Only used as fallback. */

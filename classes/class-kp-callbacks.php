@@ -67,7 +67,7 @@ class KP_Callbacks {
 		}
 
 		$auth_token = $data['authorization_token'];
-		$country    = $order->get_billing_country();
+		$country    = kp_get_klarna_country( $order );
 
 		// Check if the PURCHASE has already been completed by the customer.
 		if ( ! empty( $order->get_date_paid() ) ) {
