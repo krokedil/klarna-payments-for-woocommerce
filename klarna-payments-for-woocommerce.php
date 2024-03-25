@@ -35,6 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
+use Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
 
 /**
  * Required minimums and constants
@@ -170,6 +171,10 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			if ( class_exists( 'WC_Subscriptions' ) ) {
 				$this->subscription = new KP_Subscription();
 			}
+
+			$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+			$kosm     = new KlarnaOnsiteMessaging( $settings );
+			add_filter( 'wc_gateway_klarna_payments_settings', array( $kosm->settings, 'extend_settings' ) );
 
 			$this->checkout                = new KP_Checkout();
 			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
