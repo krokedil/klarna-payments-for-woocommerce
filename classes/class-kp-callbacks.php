@@ -67,10 +67,10 @@ class KP_Callbacks {
 		}
 
 		$auth_token = $data['authorization_token'];
-		$country    = $order->get_billing_country();
+		$country    = kp_get_klarna_country( $order );
 
-		// Dont do anything if the order has been processed.
-		if ( $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+		// Check if the PURCHASE has already been completed by the customer.
+		if ( ! empty( $order->get_date_paid() ) ) {
 			return;
 		}
 
@@ -131,6 +131,11 @@ class KP_Callbacks {
 		$order_id = wc_get_order_id_by_order_key( $order_key );
 		$order    = wc_get_order( $order_id );
 		$country  = $order->get_billing_country();
+
+		// Check if the order has already been processed.
+		if ( ! empty( $order->get_date_paid() ) ) {
+			return;
+		}
 
 		// Trigger place order on the auth token with KP.
 		$response = KP_WC()->api->place_order( $country, $auth_token, $order_id );
