@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "24f0d4679600025e0b26bc068b68cfb8",
+    "content-hash": "dabe1208ababd386cc793a870b5f2fd2",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -140,6 +140,77 @@
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
             "time": "2024-01-31T07:58:09+00:00"
+        },
+        {
+            "name": "krokedil/klarna-onsite-messaging",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
+                "reference": "1d5fed99cb6a40e7bfa3015a4fb70b8df8382985"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/1d5fed99cb6a40e7bfa3015a4fb70b8df8382985",
+                "reference": "1d5fed99cb6a40e7bfa3015a4fb70b8df8382985",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.4 || ~8.0"
+            },
+            "require-dev": {
+                "10up/wp_mock": "^1.0",
+                "php-stubs/woocommerce-stubs": "^8.3",
+                "wp-coding-standards/wpcs": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\KlarnaOnsiteMessaging\\": "src/"
+                }
+            },
+            "archive": {
+                "exclude": [
+                    "tests/*",
+                    "phpunit.xml",
+                    "composer-lock.json",
+                    ".github/*",
+                    ".gitignore",
+                    ".gitattributes"
+                ]
+            },
+            "scripts": {
+                "phpcs": [
+                    "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+                ],
+                "phpcbf": [
+                    "phpcbf --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+                ],
+                "test": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml"
+                ],
+                "test-coverage-html": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage"
+                ],
+                "test-coverage-clover": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
+                ]
+            },
+            "license": [
+                "GPL-v3"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "Klarna On-Site Messaging for WooCommerce",
+            "support": {
+                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/develop",
+                "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
+            },
+            "time": "2024-03-25T09:30:33+00:00"
         },
         {
             "name": "krokedil/woocommerce",
@@ -322,12 +393,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "9905515ecd59bbc4da0dca897676f2b04683beec"
+                "reference": "8b8ef253834ef826d0442c88a4b30688f60e4d7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/9905515ecd59bbc4da0dca897676f2b04683beec",
-                "reference": "9905515ecd59bbc4da0dca897676f2b04683beec",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/8b8ef253834ef826d0442c88a4b30688f60e4d7a",
+                "reference": "8b8ef253834ef826d0442c88a4b30688f60e4d7a",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +466,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-03-08T21:27:43+00:00"
+            "time": "2024-03-20T16:13:41+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -451,7 +522,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "krokedil/klarna-onsite-messaging": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
