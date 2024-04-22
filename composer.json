@@ -2,7 +2,8 @@
   "require": {
     "krokedil/wp-api": "^1.0",
     "krokedil/woocommerce": "^1.5",
-    "krokedil/klarna-express-checkout": "^1.2.0"
+    "krokedil/klarna-express-checkout": "^1.0.0",
+    "krokedil/klarna-onsite-messaging": "^1.0.0"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "^2.3",
@@ -21,6 +22,10 @@
     {
       "type": "vcs",
       "url": "git@github.com:krokedil/klarna-express-checkout.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:krokedil/klarna-onsite-messaging.git"
     }
   ],
   "minimum-stability": "dev"
