@@ -7,7 +7,7 @@ Tested up to: 6.5.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 8.8.2
-Stable tag: 3.4.2
+Stable tag: 3.5.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.04.22    - version 3.5.0 =
+* Feature       - On-site messaging is now part of the Klarna Payments plugin. With this change we've moved to the new Web SDK and resolved deprecation warnings.
+* Tweak         - Redacted sensitive information from the log.
+* Fix           - Fixed an issue where multiple KEC buttons would appear on a variable product page every time the user picked a different variant option.
+* Fix           - Moved to client_key which should resolve the client_id deprecation warning.
+
 = 2024.04.02    - version 3.4.2 =
 * Fix           - Retrieve the currency from the order where applicable. This should enhance compatibility with custom currency switchers.
 * Fix           - Prevent order from being processed more than once through callbacks.
