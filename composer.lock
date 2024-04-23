@@ -143,16 +143,16 @@
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
-                "reference": "ec5dc4236415bd452ffaf39d70f18c0f58d42276"
+                "reference": "9046fa0efde7a4e2b0c7bb52bcfd93fd19be1ba4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/ec5dc4236415bd452ffaf39d70f18c0f58d42276",
-                "reference": "ec5dc4236415bd452ffaf39d70f18c0f58d42276",
+                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/9046fa0efde7a4e2b0c7bb52bcfd93fd19be1ba4",
+                "reference": "9046fa0efde7a4e2b0c7bb52bcfd93fd19be1ba4",
                 "shasum": ""
             },
             "require": {
@@ -207,10 +207,10 @@
             ],
             "description": "Klarna On-Site Messaging for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/1.0.0",
+                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/1.0.1",
                 "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
             },
-            "time": "2024-04-22T08:38:56+00:00"
+            "time": "2024-04-22T14:41:31+00:00"
         },
         {
             "name": "krokedil/woocommerce",
@@ -393,12 +393,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "271a13a57169a062e34a4935b5ef598bda7f7002"
+                "reference": "83f38598bafc04c9def87942775b95bfbe08880b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/271a13a57169a062e34a4935b5ef598bda7f7002",
-                "reference": "271a13a57169a062e34a4935b5ef598bda7f7002",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/83f38598bafc04c9def87942775b95bfbe08880b",
+                "reference": "83f38598bafc04c9def87942775b95bfbe08880b",
                 "shasum": ""
             },
             "require": {
@@ -466,7 +466,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-04-19T16:40:34+00:00"
+            "time": "2024-04-22T22:29:04+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",

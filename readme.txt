@@ -7,7 +7,7 @@ Tested up to: 6.5.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 8.8.2
-Stable tag: 3.5.1
+Stable tag: 3.5.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.04.23    - version 3.5.2 =
+* Fix           - Update package version.
+
 = 2024.04.22    - version 3.5.1 =
 * Fix           - Fixed a critical error that happened under certain conditions if the KOSM plugin is active. 
 
