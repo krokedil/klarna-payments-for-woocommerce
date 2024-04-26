@@ -26,10 +26,13 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public function __construct() {
+		// WC_Settings.
 		add_action( 'woocommerce_admin_field_kp_section_start', array( __CLASS__, 'section_start_html' ) );
 		add_action( 'woocommerce_admin_field_kp_section_end', array( __CLASS__, 'section_end_html' ) );
 		add_action( 'woocommerce_admin_field_kp_text_info', array( __CLASS__, 'text_info_html' ) );
 		add_action( 'woocommerce_admin_field_kp_credentials_info', array( __CLASS__, 'credentials_html' ) );
+
+		// WC_Settings_API.
 		add_filter( 'woocommerce_generate_kp_section_start_html', array( __CLASS__, 'section_start' ), 10, 3 );
 		add_filter( 'woocommerce_generate_kp_section_end_html', array( __CLASS__, 'section_end' ), 10, 3 );
 		add_filter( 'woocommerce_generate_kp_text_info_html', array( __CLASS__, 'text_info' ), 10, 3 );
@@ -51,7 +54,6 @@ class KP_Settings_Page {
 				<p class="kp_settings__header_links">
 					<a href="https://krokedil.se" target="_blank" class="kp_settings__header_link"><?php esc_html_e( 'Set-up guidelines', 'klarna-payments-for-woocommerce' ); ?></a>
 					<a href="https://krokedil.se" target="_blank" class="kp_settings__header_link"><?php esc_html_e( 'Learn more about Klarna', 'klarna-payments-for-woocommerce' ); ?></a>
-					<a href="https://krokedil.se" target="_blank" class="kp_settings__header_link"><?php esc_html_e( 'Support', 'klarna-payments-for-woocommerce' ); ?></a>
 				</p>
 			</div>
 		</div>
@@ -188,18 +190,6 @@ class KP_Settings_Page {
 	}
 
 	/**
-	 * Outputs the HTML for the Klarna Payments credentials end.
-	 *
-	 * @return void
-	 */
-	public static function credentials_end_html() {
-		?>
-			</td>
-		</tr>
-		<?php
-	}
-
-	/**
 	 * Get the HTML as a string for the Klarna Payments credentials.
 	 *
 	 * @param string $html The HTML to append the credentials to.
@@ -211,57 +201,6 @@ class KP_Settings_Page {
 	public static function credentials( $html, $key, $args ) {
 		ob_start();
 		self::credentials_html( $args );
-		return ob_get_clean();
-	}
-
-	/**
-	 * Get the HTML as a string for the Klarna Payments credentials.
-	 *
-	 * @param string $html The HTML to append the credentials to.
-	 * @param string $key The key for the credentials.
-	 *
-	 * @return string
-	 */
-	public static function credentials_end( $html, $key ) {
-		ob_start();
-		self::credentials_end_html();
-		return ob_get_clean();
-	}
-
-	/**
-	 * Outputs the HTML for the Klarna Payments hidden field.
-	 *
-	 * @param array $args The arguments for the hidden field.
-	 *
-	 * @return void
-	 */
-	public static function hidden_html( $args ) {
-		?>
-		<input type="hidden" name="woocommerce_klarna_payments_<?php echo esc_attr( $args['id'] ); ?>" value="<?php echo esc_attr( $args['value'] ?? '' ); ?>" />
-		<?php
-	}
-
-	/**
-	 * Get the HTML as a string for the Klarna Payments hidden field.
-	 *
-	 * @param string $html The HTML to append the hidden field to.
-	 * @param string $key The key for the hidden field.
-	 * @param array  $args The arguments for the hidden field.
-	 *
-	 * @return string
-	 */
-	public static function hidden( $html, $key, $args ) {
-		if ( ! isset( $args['value'] ) ) {
-			$settings      = get_option( 'woocommerce_klarna_payments_settings', array() );
-			$args['value'] = $settings[ $key ] ?? '';
-		}
-
-		if ( ! isset( $args['id'] ) ) {
-			$args['id'] = $key;
-		}
-
-		ob_start();
-		self::hidden_html( $args );
 		return ob_get_clean();
 	}
 }
