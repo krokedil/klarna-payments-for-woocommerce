@@ -179,10 +179,32 @@ table.form-table.kp_settings__section_content {
 	margin: 0;
 }
 
-.kp_settings__credentials td {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 10px;
+.woocommerce .kp_settings__section table.form-table tr:has(td fieldset input.kp_settings__credentials_field[type="text"]) {
+	float: left;
+	/** Calculate the width so there is always a 10px gap between the two rows */
+	width: calc(50% - 25px);
+	padding-top: 0;
+	padding-right: 0;
+}
+
+.woocommerce .kp_settings__section table.form-table tr:has(td fieldset input.kp_settings__credentials_field[type="password"]) {
+	float: right;
+	/** Calculate the width so there is always a 10px gap between the two rows */
+	width: calc(50% - 25px);
+	padding-top: 0;
+	padding-left: 0;
+}
+
+.woocommerce .kp_settings__section table.form-table tr:has(td fieldset input.kp_settings__credentials_field[type="password"])::after {
+	clear: both;
+	content: ".";
+	visibility: hidden;
+	height: 0;
+	display: block;
+}
+
+.kp_settings__credentials {
+	clear:both
 }
 
 .woocommerce table.form-table .kp_settings__credentials td fieldset {
@@ -198,8 +220,9 @@ table.form-table.kp_settings__section_content {
 	position: relative;
 }
 
-.kp_settings__credentials fieldset label {
+.woocommerce table.form-table tr:has(td fieldset input.kp_settings__credentials_field) th label {
 	font-family: Klarna;
+	font-weight: 300;
 	position: absolute;
 	top: 0;
 	left: 10px;
@@ -208,16 +231,17 @@ table.form-table.kp_settings__section_content {
     opacity: 0.6;
 	cursor: text;
 	user-select: none;
+	display: inline-block;
 }
 
-.kp_settings__credentials fieldset input:placeholder-shown + label {
-	top: 5px;
+.woocommerce table.form-table tr:has(td fieldset input.kp_settings__credentials_field:placeholder-shown) th label {
+	top: 21px;
 	font-size: 14px;
 }
 
-.kp_settings__credentials fieldset input:not(:placeholder-shown) + label,
-.kp_settings__credentials fieldset input:focus + label {
-	top: -10px;
+.woocommerce table.form-table tr:has(td fieldset input.kp_settings__credentials_field:not(:placeholder-shown)) th label,
+.woocommerce table.form-table tr:has(td fieldset input.kp_settings__credentials_field:focus) th label {
+	top: 5px;
 	background: white;
 	font-size: 10px;
 	padding: 0 4px;
