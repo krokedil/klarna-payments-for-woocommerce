@@ -138,6 +138,13 @@ class KP_Assets {
 			WC_KLARNA_PAYMENTS_VERSION,
 			false
 		);
+
+		wp_enqueue_style(
+			'klarna_payments_admin',
+			plugins_url( 'assets/css/klarna-payments-admin.css', WC_KLARNA_PAYMENTS_MAIN_FILE ),
+			array(),
+			WC_KLARNA_PAYMENTS_VERSION
+		);
 	}
 
 	/**
@@ -164,7 +171,6 @@ class KP_Assets {
 
 		$this->enqueue_express_button_scripts();
 		$this->enqueue_express_button_styles();
-
 	}
 
 	/**
@@ -323,9 +329,7 @@ class KP_Assets {
 		);
 
 		wp_enqueue_style( 'klarna_express_button_styles' );
-
 	}
-
 }
 
 new KP_Assets();
