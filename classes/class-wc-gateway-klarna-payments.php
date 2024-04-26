@@ -112,10 +112,128 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Initialise Gateway Settings Form Fields.
+	 * Initialize Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = KP_Form_Fields::get_form_fields();
+		// Migrate any legacy settings we have.
+		KP_Form_Fields::migrate_legacy_settings();
+
+		$this->form_fields = array(
+			'general'                => array(
+				'id'          => 'general',
+				'title'       => 'Klarna Payments',
+				'description' => __( 'Enable or disable Klarna payments, depending on your setup, enter client keys and turn on test mode.', 'klarna-payments-for-woocommerce' ),
+				'links'       => array(
+					array(
+						'url'   => 'https://krokedil.se',
+						'title' => __( 'Learn more', 'klarna-payments-for-woocommerce' ),
+					),
+					array(
+						'url'   => 'https://krokedil.se',
+						'title' => __( 'Documentation', 'klarna-payments-for-woocommerce' ),
+					),
+				),
+				'type'        => 'kp_section_start',
+			),
+			'enabled'                => array(
+				'label'       => __( 'Enable Klarna Payments', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'checkbox',
+				'description' => '',
+				'default'     => 'no',
+				'class'       => 'kp_settings__hide_label',
+			),
+			'testmode'               => array(
+				'label'    => __( 'Enable Klarna Payments in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'checkbox',
+				'default'  => 'yes',
+				'desc_tip' => true,
+				'class'    => 'kp_settings__hide_label',
+			),
+			'title'                  => array(
+				'title'    => __( 'Title', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'text',
+				'default'  => 'Klarna',
+				'desc_tip' => true,
+			),
+			'customer_type'          => array(
+				'title'    => __( 'Select the type of customer that you sell to', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'select',
+				'options'  => array(
+					'b2c' => __( 'B2C', 'klarna-payments-for-woocommerce' ),
+					'b2b' => __( 'B2B', 'klarna-payments-for-woocommerce' ),
+				),
+				'default'  => 'b2c',
+				'desc_tip' => true,
+			),
+			'markets'                => array(
+				'title'       => __( 'Markets & regional API Credentials', 'klarna-payments-for-woocommerce' ),
+				'description' => __( 'Enter the countries you plan to make Klarna available and then enter the respective test and production credentials for each sales region', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'kp_text_info',
+			),
+			'available_countries'    => array(
+				'title'       => __( 'Countries where you plan to make Klarna available', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'multiselect',
+				'options'     => KP_Form_Fields::available_countries(),
+				'class'       => 'wc-enhanced-select',
+				'default'     => '',
+				'placeholder' => __( 'Start typing', 'klarna-payments-for-woocommerce' ),
+			),
+			'eu_test_username'       => array(
+				'type' => 'kp_hidden',
+			),
+			'eu_test_password'       => array(
+				'type' => 'kp_hidden',
+			),
+			'eu_production_username' => array(
+				'type' => 'kp_hidden',
+			),
+			'eu_production_password' => array(
+				'type' => 'kp_hidden',
+			),
+			'eu_credentials'         => array(
+				'title' => __( 'API Credentials for Europe:', 'klarna-payments-for-woocommerce' ),
+				'type'  => 'kp_credentials',
+				'id'    => 'eu',
+			),
+			'na_test_username'       => array(
+				'type' => 'kp_hidden',
+			),
+			'na_test_password'       => array(
+				'type' => 'kp_hidden',
+			),
+			'na_production_username' => array(
+				'type' => 'kp_hidden',
+			),
+			'na_production_password' => array(
+				'type' => 'kp_hidden',
+			),
+			'na_credentials'         => array(
+				'title' => __( 'API Credentials for US, Canada & Mexico:', 'klarna-payments-for-woocommerce' ),
+				'type'  => 'kp_credentials',
+				'id'    => 'na',
+			),
+			'oc_test_username'       => array(
+				'type' => 'kp_hidden',
+			),
+			'oc_test_password'       => array(
+				'type' => 'kp_hidden',
+			),
+			'oc_production_username' => array(
+				'type' => 'kp_hidden',
+			),
+			'oc_production_password' => array(
+				'type' => 'kp_hidden',
+			),
+			'oc_credentials'         => array(
+				'title' => __( 'API Credentials for Australia & New Zealand:', 'klarna-payments-for-woocommerce' ),
+				'type'  => 'kp_credentials',
+				'id'    => 'oc',
+			),
+			'general_end'            => array(
+				'type'        => 'kp_section_end',
+				'preview_img' => WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/kp-general-preview.png',
+			),
+		);
 	}
 
 	/**
@@ -127,13 +245,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function get_icon() {
 		if ( ! empty( $this->icon ) ) {
 			$icon_width = '39';
-			$icon_html  = '<img src="' . $this->icon . '" alt="Klarna" style="max-width:' . $icon_width . 'px"/>';
+			$icon_html  = '<img src="' . $this->icon . '" alt="Klarna" css="max-width:' . $icon_width . 'px"/>';
 			if ( ! $this->hide_what_is_klarna ) {
 				// If default WooCommerce CSS is used, float "What is Klarna link like PayPal does it".
 				if ( $this->float_what_is_klarna ) {
-					$link_style = 'style="float: right; margin-right:10px; font-size: .83em;"';
+					$link_css = 'css="float: right; margin-right:10px; font-size: .83em;"';
 				} else {
-					$link_style = '';
+					$link_css = '';
 				}
 
 				$what_is_klarna_text = __( 'What is Klarna?', 'klarna-payments-for-woocommerce' );
@@ -144,10 +262,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				if ( stripos( $locale, 'de' ) !== false ) {
 					$what_is_klarna_text = 'Was ist Klarna?';
 				}
-				$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
+				$icon_html .= '<a ' . $link_css . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 			}
 		} else {
-			$icon_html = '<img src="' . WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg" alt="Klarna" style="max-width:39px;"/>';
+			$icon_html = '<img src="' . WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg" alt="Klarna" css="max-width:39px;"/>';
 		}
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
 	}
@@ -156,12 +274,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Add sidebar to the settings page.
 	 */
 	public function admin_options() {
-		ob_start();
-		parent::admin_options();
-		$parent_options = ob_get_contents();
-		ob_end_clean();
-		KP_Settings_Saved::maybe_show_errors();
-		KP_Banners::settings_sidebar( $parent_options );
+		KP_Settings_Page::header_html();
+		echo $this->generate_settings_html( $this->get_form_fields(), false ); // phpcs:ignore
 	}
 
 	/**
@@ -441,7 +555,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function address_notice( $order ) {
 		if ( $this->id === $order->get_payment_method() ) {
-			echo '<div style="margin: 10px 0; padding: 10px; border: 1px solid #B33A3A; font-size: 12px">Order address should not be changed and any changes you make will not be reflected in Klarna system.</div>';
+			echo '<div css="margin: 10px 0; padding: 10px; border: 1px solid #B33A3A; font-size: 12px">Order address should not be changed and any changes you make will not be reflected in Klarna system.</div>';
 		}
 	}
 
