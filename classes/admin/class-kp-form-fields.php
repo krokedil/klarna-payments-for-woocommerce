@@ -52,7 +52,6 @@ class KP_Form_Fields {
 			'currency' => 'DKK',
 			'endpoint' => '',
 		),
-
 		'fi' => array(
 			'name'     => 'Finland',
 			'currency' => 'EUR',
@@ -108,7 +107,6 @@ class KP_Form_Fields {
 			'currency' => 'NOK',
 			'endpoint' => '',
 		),
-
 		'pl' => array(
 			'name'     => 'Poland',
 			'currency' => 'PLN',
@@ -150,6 +148,290 @@ class KP_Form_Fields {
 			'endpoint' => '-na',
 		),
 	);
+
+	/**
+	 * List of available countries for Klarna Payments.
+	 *
+	 * @param string $region The region to get countries for. Default is 'all'.
+	 *
+	 * @return array
+	 */
+	public static function available_countries( $region = 'all' ) {
+		$eu = array(
+			'at' => __( 'Austria', 'klarna-payments-for-woocommerce' ),
+			'be' => __( 'Belgium', 'klarna-payments-for-woocommerce' ),
+			'cz' => __( 'Czech Republic', 'klarna-payments-for-woocommerce' ),
+			'dk' => __( 'Denmark', 'klarna-payments-for-woocommerce' ),
+			'fi' => __( 'Finland', 'klarna-payments-for-woocommerce' ),
+			'fr' => __( 'France', 'klarna-payments-for-woocommerce' ),
+			'de' => __( 'Germany', 'klarna-payments-for-woocommerce' ),
+			'gr' => __( 'Greece', 'klarna-payments-for-woocommerce' ),
+			'hu' => __( 'Hungary', 'klarna-payments-for-woocommerce' ),
+			'ie' => __( 'Ireland', 'klarna-payments-for-woocommerce' ),
+			'it' => __( 'Italy', 'klarna-payments-for-woocommerce' ),
+			'nl' => __( 'Netherlands', 'klarna-payments-for-woocommerce' ),
+			'no' => __( 'Norway', 'klarna-payments-for-woocommerce' ),
+			'pl' => __( 'Poland', 'klarna-payments-for-woocommerce' ),
+			'pt' => __( 'Portugal', 'klarna-payments-for-woocommerce' ),
+			'ro' => __( 'Romania', 'klarna-payments-for-woocommerce' ),
+			'es' => __( 'Spain', 'klarna-payments-for-woocommerce' ),
+			'se' => __( 'Sweden', 'klarna-payments-for-woocommerce' ),
+			'ch' => __( 'Switzerland', 'klarna-payments-for-woocommerce' ),
+			'gb' => __( 'United Kingdom', 'klarna-payments-for-woocommerce' ),
+		);
+
+		$na = array(
+			'ca' => __( 'Canada', 'klarna-payments-for-woocommerce' ),
+			'mx' => __( 'Mexico', 'klarna-payments-for-woocommerce' ),
+			'us' => __( 'United States', 'klarna-payments-for-woocommerce' ),
+		);
+
+		$oc = array(
+			'au' => __( 'Australia', 'klarna-payments-for-woocommerce' ),
+			'nz' => __( 'New Zealand', 'klarna-payments-for-woocommerce' ),
+		);
+
+		switch ( $region ) {
+			case 'eu':
+				$countries = $eu;
+				break;
+			case 'na':
+				$countries = $na;
+				break;
+			case 'oc':
+				$countries = $oc;
+				break;
+			default:
+				$countries = array_merge( $eu, $na, $oc );
+				break;
+		}
+
+		asort( $countries );
+
+		return $countries;
+	}
+
+	/**
+	 * Handle migration from legacy settings to new settings.
+	 *
+	 * @return void
+	 */
+	public static function migrate_legacy_settings() {
+		// Check if we already migrated the settings.
+		$has_migrated = get_option( 'kp_settings_migrated', 'no' );
+
+		if ( 'yes' === $has_migrated ) {
+			return;
+		}
+
+		// Get the settings from the plugin.
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+		// Migrate EU credentials.
+		$settings = self::migrate_eu_credentials( $settings );
+
+		// Migrate NA credentials.
+		$settings = self::migrate_na_credentials( $settings );
+
+		// Migrate OC credentials.
+		$settings = self::migrate_oc_credentials( $settings );
+
+		// Save the settings.
+		update_option( 'woocommerce_klarna_payments_settings', $settings );
+		update_option( 'kp_settings_migrated', true );
+	}
+
+	/**
+	 * Migrate production and test credentials for EU countries to new settings.
+	 *
+	 * @param array $settings The settings to migrate.
+	 *
+	 * @return array
+	 */
+	public static function migrate_eu_credentials( $settings ) {
+		$eu_countries  = array_keys( self::available_countries( 'eu' ) );
+		$migrated_prod = isset( $settings['eu_production_username'] ) && isset( $settings['eu_production_password'] );
+		$migrated_test = isset( $settings['eu_test_username'] ) && isset( $settings['eu_test_password'] );
+
+		$available_countries = $settings['available_countries'] ?? array();
+		$available_countries = ! empty( $available_countries ) ? $available_countries : array();
+
+		// If we have migrated both, and available countries contains any of the EU countries, we can return early.
+		if ( $migrated_prod && $migrated_test && array_intersect( $eu_countries, $available_countries ) ) {
+			return $settings;
+		}
+
+		// Loop each country and see if we have credentials for them.
+		foreach ( $eu_countries as $country ) {
+			$country_available  = false;
+			$merchant_id        = $settings[ 'merchant_id_' . $country ];
+			$shared_secret      = $settings[ 'shared_secret_' . $country ];
+			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ];
+			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ];
+
+			// Migrate any live credentials we have.
+			if ( ! empty( $merchant_id ) && ! empty( $shared_secret ) && ! $migrated_prod ) {
+				$settings['eu_production_username'] = $merchant_id;
+				$settings['eu_production_password'] = $shared_secret;
+				$migrated_prod                      = true;
+				$country_available                  = true;
+			}
+
+			// Migrate any test credentials we have.
+			if ( ! empty( $test_merchant_id ) && ! empty( $test_shared_secret ) && ! $migrated_test ) {
+				$settings['eu_test_username'] = $test_merchant_id;
+				$settings['eu_test_password'] = $test_shared_secret;
+				$migrated_test                = true;
+				$country_available            = true;
+			}
+
+			if ( $country_available ) {
+				$available_countries[] = $country;
+			}
+		}
+
+		$settings['available_countries'] = $available_countries;
+		return $settings;
+	}
+
+	/**
+	 * Migrate production and test credentials for NA countries to new settings.
+	 *
+	 * @param array $settings The settings to migrate.
+	 *
+	 * @return array
+	 */
+	public static function migrate_na_credentials( $settings ) {
+		$na_countries = array_keys( self::available_countries( 'na' ) );
+
+		$migrated_prod       = isset( $settings['na_production_username'] ) && isset( $settings['na_production_password'] );
+		$migrated_test       = isset( $settings['na_test_username'] ) && isset( $settings['na_test_password'] );
+		$available_countries = $settings['available_countries'] ?? array();
+		$available_countries = ! empty( $available_countries ) ? $available_countries : array();
+
+		// If we have migrated both, and available countries contains any of the NA countries, we can return early.
+		if ( $migrated_prod && $migrated_test && in_array( $na_countries, $available_countries, true ) ) {
+			return $settings;
+		}
+
+		// Start with checking if we have credentials for US, and prioritize them.
+		if ( ! empty( $settings['us_merchant_id'] ) && ! empty( $settings['us_shared_secret'] ) ) {
+			$settings['na_production_username'] = $settings['us_merchant_id'];
+			$settings['na_production_password'] = $settings['us_shared_secret'];
+			$migrated_prod                      = true;
+
+			if ( ! in_array( 'us', $available_countries, true ) ) {
+				$available_countries[] = 'us';
+			}
+		}
+
+		if ( ! empty( $settings['us_test_merchant_id'] ) && ! empty( $settings['us_test_shared_secret'] ) ) {
+			$settings['na_test_username'] = $settings['us_test_merchant_id'];
+			$settings['na_test_password'] = $settings['us_test_shared_secret'];
+			$migrated_test                = true;
+
+			if ( ! in_array( 'us', $available_countries, true ) ) {
+				$available_countries[] = 'us';
+			}
+		}
+
+		// If we have migrated both, and available countries contains any of the NA countries, we can return early.
+		if ( $migrated_prod && $migrated_test && array_intersect( $na_countries, $available_countries ) ) {
+			$settings['available_countries'] = $available_countries;
+			return $settings;
+		}
+
+		// Loop each country and see if we have credentials for them.
+		foreach ( $na_countries as $country ) {
+			// Skip US.
+			if ( 'us' === $country ) {
+				continue;
+			}
+
+			$country_available  = false;
+			$merchant_id        = $settings[ 'merchant_id_' . $country ];
+			$shared_secret      = $settings[ 'shared_secret_' . $country ];
+			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ];
+			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ];
+
+			// Migrate any live credentials we have.
+			if ( ! empty( $merchant_id ) && ! empty( $shared_secret ) && ! $migrated_prod ) {
+				$settings['na_production_username'] = $merchant_id;
+				$settings['na_production_password'] = $shared_secret;
+				$migrated_prod                      = true;
+				$country_available                  = true;
+			}
+
+			// Migrate any test credentials we have.
+			if ( ! empty( $test_merchant_id ) && ! empty( $test_shared_secret ) && ! $migrated_test ) {
+				$settings['na_test_username'] = $test_merchant_id;
+				$settings['na_test_password'] = $test_shared_secret;
+				$migrated_test                = true;
+				$country_available            = true;
+			}
+
+			if ( $country_available ) {
+				$available_countries[] = $country;
+			}
+		}
+
+		$settings['available_countries'] = $available_countries;
+		return $settings;
+	}
+
+	/**
+	 * Migrate production and test credentials for OC countries to new settings.
+	 *
+	 * @param array $settings The settings to migrate.
+	 *
+	 * @return array
+	 */
+	public static function migrate_oc_credentials( $settings ) {
+		$oc_countries = array_keys( self::available_countries( 'oc' ) );
+
+		$migrated_prod = isset( $settings['oc_production_username'] ) && isset( $settings['oc_production_password'] );
+		$migrated_test = isset( $settings['oc_test_username'] ) && isset( $settings['oc_test_password'] );
+
+		$available_countries = $settings['available_countries'] ?? array();
+		$available_countries = ! empty( $available_countries ) ? $available_countries : array();
+
+		// If we have migrated both, and available countries contains any of the OC countries, we can return early.
+		if ( $migrated_prod && $migrated_test && array_intersect( $oc_countries, $available_countries ) ) {
+			return $settings;
+		}
+
+		// Loop each country and see if we have credentials for them.
+		foreach ( $oc_countries as $country ) {
+			$country_available  = false;
+			$merchant_id        = $settings[ 'merchant_id_' . $country ];
+			$shared_secret      = $settings[ 'shared_secret_' . $country ];
+			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ];
+			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ];
+
+			// Migrate any live credentials we have.
+			if ( ! empty( $merchant_id ) && ! empty( $shared_secret ) && ! $migrated_prod ) {
+				$settings['oc_production_username'] = $merchant_id;
+				$settings['oc_production_password'] = $shared_secret;
+				$migrated_prod                      = true;
+				$country_available                  = true;
+			}
+
+			// Migrate any test credentials we have.
+			if ( ! empty( $test_merchant_id ) && ! empty( $test_shared_secret ) && ! $migrated_test ) {
+				$settings['oc_test_username'] = $test_merchant_id;
+				$settings['oc_test_password'] = $test_shared_secret;
+				$migrated_test                = true;
+				$country_available            = true;
+			}
+
+			if ( $country_available ) {
+				$available_countries[] = $country;
+			}
+		}
+
+		$settings['available_countries'] = $available_countries;
+		return $settings;
+	}
 
 	/**
 	 * Standardized form building for easier maintenance.
@@ -259,7 +541,6 @@ class KP_Form_Fields {
 		$section[ 'test_shared_secret_' . $country_code ] = self::kp_form_test_password();
 
 		return $section;
-
 	}
 
 	/**
