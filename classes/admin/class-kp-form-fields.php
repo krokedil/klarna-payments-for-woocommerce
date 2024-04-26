@@ -302,72 +302,30 @@ class KP_Form_Fields {
 	 * @return array
 	 */
 	public static function migrate_na_credentials( $settings ) {
+		// US, CA and MX should be stored as separate settings still.
 		$na_countries = array_keys( self::available_countries( 'na' ) );
 
-		$migrated_prod       = isset( $settings['na_production_username'] ) && isset( $settings['na_production_password'] );
-		$migrated_test       = isset( $settings['na_test_username'] ) && isset( $settings['na_test_password'] );
 		$available_countries = $settings['available_countries'] ?? array();
 		$available_countries = ! empty( $available_countries ) ? $available_countries : array();
 
-		// If we have migrated both, and available countries contains any of the NA countries, we can return early.
-		if ( $migrated_prod && $migrated_test && in_array( $na_countries, $available_countries, true ) ) {
-			return $settings;
-		}
-
-		// Start with checking if we have credentials for US, and prioritize them.
-		if ( ! empty( $settings['us_merchant_id'] ) && ! empty( $settings['us_shared_secret'] ) ) {
-			$settings['na_production_username'] = $settings['us_merchant_id'];
-			$settings['na_production_password'] = $settings['us_shared_secret'];
-			$migrated_prod                      = true;
-
-			if ( ! in_array( 'us', $available_countries, true ) ) {
-				$available_countries[] = 'us';
-			}
-		}
-
-		if ( ! empty( $settings['us_test_merchant_id'] ) && ! empty( $settings['us_test_shared_secret'] ) ) {
-			$settings['na_test_username'] = $settings['us_test_merchant_id'];
-			$settings['na_test_password'] = $settings['us_test_shared_secret'];
-			$migrated_test                = true;
-
-			if ( ! in_array( 'us', $available_countries, true ) ) {
-				$available_countries[] = 'us';
-			}
-		}
-
-		// If we have migrated both, and available countries contains any of the NA countries, we can return early.
-		if ( $migrated_prod && $migrated_test && array_intersect( $na_countries, $available_countries ) ) {
-			$settings['available_countries'] = $available_countries;
-			return $settings;
-		}
-
-		// Loop each country and see if we have credentials for them.
 		foreach ( $na_countries as $country ) {
-			// Skip US.
-			if ( 'us' === $country ) {
-				continue;
-			}
-
-			$country_available  = false;
 			$merchant_id        = $settings[ 'merchant_id_' . $country ];
 			$shared_secret      = $settings[ 'shared_secret_' . $country ];
 			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ];
 			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ];
 
 			// Migrate any live credentials we have.
-			if ( ! empty( $merchant_id ) && ! empty( $shared_secret ) && ! $migrated_prod ) {
-				$settings['na_production_username'] = $merchant_id;
-				$settings['na_production_password'] = $shared_secret;
-				$migrated_prod                      = true;
-				$country_available                  = true;
+			if ( ! empty( $merchant_id ) && ! empty( $shared_secret ) ) {
+				$settings[ $country . '_production_username' ] = $merchant_id;
+				$settings[ $country . '_production_password' ] = $shared_secret;
+				$country_available                             = true;
 			}
 
 			// Migrate any test credentials we have.
-			if ( ! empty( $test_merchant_id ) && ! empty( $test_shared_secret ) && ! $migrated_test ) {
-				$settings['na_test_username'] = $test_merchant_id;
-				$settings['na_test_password'] = $test_shared_secret;
-				$migrated_test                = true;
-				$country_available            = true;
+			if ( ! empty( $test_merchant_id ) && ! empty( $test_shared_secret ) ) {
+				$settings[ $country . '_test_username' ] = $test_merchant_id;
+				$settings[ $country . '_test_password' ] = $test_shared_secret;
+				$country_available                       = true;
 			}
 
 			if ( $country_available ) {
