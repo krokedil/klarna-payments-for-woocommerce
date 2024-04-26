@@ -313,6 +313,7 @@ class KP_Form_Fields {
 			$shared_secret      = $settings[ 'shared_secret_' . $country ];
 			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ];
 			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ];
+			$country_available  = false;
 
 			// Migrate any live credentials we have.
 			if ( ! empty( $merchant_id ) && ! empty( $shared_secret ) ) {
