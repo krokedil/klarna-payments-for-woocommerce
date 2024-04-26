@@ -7,10 +7,19 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Krokedil\SettingsPage\SettingsPage;
+
 /**
  * KP_Settings_Page.
  */
 class KP_Settings_Page {
+	/**
+	 * Instance of the settings page class from the Krokedil/SettingsPage package.
+	 *
+	 * @var SettingsPage $settings_page
+	 */
+	protected $settings_page;
+
 	/**
 	 * Class constructor.
 	 *
@@ -21,12 +30,10 @@ class KP_Settings_Page {
 		add_action( 'woocommerce_admin_field_kp_section_end', array( __CLASS__, 'section_end_html' ) );
 		add_action( 'woocommerce_admin_field_kp_text_info', array( __CLASS__, 'text_info_html' ) );
 		add_action( 'woocommerce_admin_field_kp_credentials_info', array( __CLASS__, 'credentials_html' ) );
-		add_action( 'woocommerce_admin_field_kp_hidden_info', array( __CLASS__, 'hidden_html' ) );
 		add_filter( 'woocommerce_generate_kp_section_start_html', array( __CLASS__, 'section_start' ), 10, 3 );
 		add_filter( 'woocommerce_generate_kp_section_end_html', array( __CLASS__, 'section_end' ), 10, 3 );
 		add_filter( 'woocommerce_generate_kp_text_info_html', array( __CLASS__, 'text_info' ), 10, 3 );
 		add_filter( 'woocommerce_generate_kp_credentials_html', array( __CLASS__, 'credentials' ), 10, 3 );
-		add_filter( 'woocommerce_generate_kp_hidden_html', array( __CLASS__, 'hidden' ), 10, 3 );
 	}
 
 	/**
@@ -48,7 +55,7 @@ class KP_Settings_Page {
 				</p>
 			</div>
 		</div>
-		<hr />
+		<?php SettingsPage::get_instance()->navigation( 'klarna_payments' )->output(); ?>
 		<?php
 	}
 
@@ -162,54 +169,6 @@ class KP_Settings_Page {
 	}
 
 	/**
-	 * Get the HTML output for a KP credential based on the region, type and environment.
-	 *
-	 * @param string $region The region of the credential.
-	 * @param string $type The type of the credential. username or password.
-	 * @param string $env The environment of the credential. test or production.
-	 *
-	 * @return void
-	 */
-	private static function credential_field_html( $region, $type, $env ) {
-		if ( ! in_array( $region, array( 'eu', 'na', 'oc' ), true ) ) {
-			wc_doing_it_wrong( __METHOD__, 'Invalid region. Only eu, na or oc is supported.', '1.0.0' );
-			return;
-		}
-
-		if ( ! in_array( $type, array( 'username', 'password' ), true ) ) {
-			wc_doing_it_wrong( __METHOD__, 'Invalid type. Only username or password is supported.', '1.0.0' );
-			return;
-		}
-
-		if ( ! in_array( $env, array( 'test', 'production' ), true ) ) {
-			wc_doing_it_wrong( __METHOD__, 'Invalid environment. Only test or prod is supported.', '1.0.0' );
-			return;
-		}
-
-		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-
-		$name        = "{$region}_{$env}_{$type}";
-		$value       = $settings[ $name ] ?? '';
-		$placeholder = ucfirst( $type ) . ' (' . ucfirst( $env ) . ')';
-		$type        = 'password' === $type ? 'password' : 'text';
-		?>
-		<fieldset>
-			<legend class="screen-reader-text"><span><?php echo esc_html( $placeholder ); ?></span></legend>
-			<input
-				type="<?php echo esc_attr( $type ); ?>"
-				class="input-text regular-input"
-				name="woocommerce_klarna_payments_<?php echo esc_attr( $name ); ?>"
-				id="woocommerce_klarna_payments_<?php echo esc_attr( $name ); ?>"
-				value="<?php echo esc_attr( $value ); ?>"
-				placeholder=" "
-				autocomplete="off"
-			/>
-			<label for="woocommerce_klarna_payments_<?php echo esc_attr( $name ); ?>"> <?php echo esc_html( $placeholder ); ?></label>
-		</fieldset>
-		<?php
-	}
-
-	/**
 	 * Outputs the HTML for the Klarna Payments credentials.
 	 *
 	 * @param array $args The arguments for the credentials.
@@ -217,17 +176,24 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function credentials_html( $args ) {
-		$region = $args['id'];
 		?>
 		<tr class="kp_settings__credentials" valign="top">
 			<th scope="row" class="titledesc">
 				<label><?php echo esc_html( $args['title'] ?? '' ); ?></label>
 			</th>
 			<td class="forminp">
-				<?php self::credential_field_html( $region, 'username', 'test' ); ?>
-				<?php self::credential_field_html( $region, 'password', 'test' ); ?>
-				<?php self::credential_field_html( $region, 'username', 'production' ); ?>
-				<?php self::credential_field_html( $region, 'password', 'production' ); ?>
+				<?php echo esc_html( $args['description'] ?? '' ); ?>
+			</td>
+		<?php
+	}
+
+	/**
+	 * Outputs the HTML for the Klarna Payments credentials end.
+	 *
+	 * @return void
+	 */
+	public static function credentials_end_html() {
+		?>
 			</td>
 		</tr>
 		<?php
@@ -245,6 +211,20 @@ class KP_Settings_Page {
 	public static function credentials( $html, $key, $args ) {
 		ob_start();
 		self::credentials_html( $args );
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get the HTML as a string for the Klarna Payments credentials.
+	 *
+	 * @param string $html The HTML to append the credentials to.
+	 * @param string $key The key for the credentials.
+	 *
+	 * @return string
+	 */
+	public static function credentials_end( $html, $key ) {
+		ob_start();
+		self::credentials_end_html();
 		return ob_get_clean();
 	}
 

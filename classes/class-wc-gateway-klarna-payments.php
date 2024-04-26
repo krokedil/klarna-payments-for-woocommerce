@@ -1,4 +1,5 @@
 <?php
+use Krokedil\SettingsPage\SettingsPage;
 /**
  * Klarna Payment Gateway class file.
  *
@@ -118,8 +119,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Migrate any legacy settings we have.
 		KP_Form_Fields::migrate_legacy_settings();
 
-		$this->form_fields = array(
-			'general'                => array(
+		$form_fields = array(
+			'general'             => array(
 				'id'          => 'general',
 				'title'       => 'Klarna Payments',
 				'description' => __( 'Enable or disable Klarna payments, depending on your setup, enter client keys and turn on test mode.', 'klarna-payments-for-woocommerce' ),
@@ -135,27 +136,27 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				),
 				'type'        => 'kp_section_start',
 			),
-			'enabled'                => array(
+			'enabled'             => array(
 				'label'       => __( 'Enable Klarna Payments', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no',
 				'class'       => 'kp_settings__hide_label',
 			),
-			'testmode'               => array(
+			'testmode'            => array(
 				'label'    => __( 'Enable Klarna Payments in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
 				'default'  => 'yes',
 				'desc_tip' => true,
 				'class'    => 'kp_settings__hide_label',
 			),
-			'title'                  => array(
+			'title'               => array(
 				'title'    => __( 'Title', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'text',
 				'default'  => 'Klarna',
 				'desc_tip' => true,
 			),
-			'customer_type'          => array(
+			'customer_type'       => array(
 				'title'    => __( 'Select the type of customer that you sell to', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'select',
 				'options'  => array(
@@ -165,12 +166,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'  => 'b2c',
 				'desc_tip' => true,
 			),
-			'markets'                => array(
+			'markets'             => array(
 				'title'       => __( 'Markets & regional API Credentials', 'klarna-payments-for-woocommerce' ),
 				'description' => __( 'Enter the countries you plan to make Klarna available and then enter the respective test and production credentials for each sales region', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'kp_text_info',
 			),
-			'available_countries'    => array(
+			'available_countries' => array(
 				'title'       => __( 'Countries where you plan to make Klarna available', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'multiselect',
 				'options'     => KP_Form_Fields::available_countries(),
@@ -178,60 +179,66 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => '',
 				'placeholder' => __( 'Start typing', 'klarna-payments-for-woocommerce' ),
 			),
-			'eu_test_username'       => array(
-				'type' => 'kp_hidden',
-			),
-			'eu_test_password'       => array(
-				'type' => 'kp_hidden',
-			),
-			'eu_production_username' => array(
-				'type' => 'kp_hidden',
-			),
-			'eu_production_password' => array(
-				'type' => 'kp_hidden',
-			),
-			'eu_credentials'         => array(
-				'title' => __( 'API Credentials for Europe:', 'klarna-payments-for-woocommerce' ),
+		);
+
+		// Add the credentials fields.
+		$eu = $this->get_credential_fields( 'eu', __( 'API Credentials for Europe:', 'klarna-payments-for-woocommerce' ) );
+		$us = $this->get_credential_fields( 'us', __( 'API Credentials for the US:', 'klarna-payments-for-woocommerce' ) );
+		$ca = $this->get_credential_fields( 'ca', __( 'API Credentials for Canada:', 'klarna-payments-for-woocommerce' ) );
+		$mx = $this->get_credential_fields( 'mx', __( 'API Credentials for Mexico:', 'klarna-payments-for-woocommerce' ) );
+		$oc = $this->get_credential_fields( 'oc', __( 'API Credentials for Australia & New Zealand:', 'klarna-payments-for-woocommerce' ) );
+
+		$form_fields = array_merge( $form_fields, $eu, $us, $ca, $mx, $oc );
+
+		$form_fields['general_end'] = array(
+			'type'        => 'kp_section_end',
+			'preview_img' => WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/kp-general-preview.png',
+		);
+
+		$this->form_fields = apply_filters( 'wc_klarna_payments_form_fields', $form_fields );
+	}
+
+	/**
+	 * Get credential settings fields
+	 *
+	 * @param string $key   The key for the settings field.
+	 * @param string $title The title for the settings field.
+	 *
+	 * @return array
+	 */
+	public function get_credential_fields( $key, $title ) {
+		return array(
+			"{$key}_credentials"         => array(
+				'title' => $title,
 				'type'  => 'kp_credentials',
-				'id'    => 'eu',
 			),
-			'na_test_username'       => array(
-				'type' => 'kp_hidden',
+			"{$key}_test_username"       => array(
+				'type'        => 'text',
+				'default'     => '',
+				'title'       => __( 'Username (Test)', 'klarna-payments-for-woocommerce' ),
+				'placeholder' => ' ',
+				'class'       => 'kp_settings__credentials_field',
 			),
-			'na_test_password'       => array(
-				'type' => 'kp_hidden',
+			"{$key}_test_password"       => array(
+				'type'        => 'password',
+				'default'     => '',
+				'title'       => __( 'Password (Test)', 'klarna-payments-for-woocommerce' ),
+				'placeholder' => ' ',
+				'class'       => 'kp_settings__credentials_field',
 			),
-			'na_production_username' => array(
-				'type' => 'kp_hidden',
+			"{$key}_production_username" => array(
+				'type'        => 'text',
+				'default'     => '',
+				'title'       => __( 'Username (Test)', 'klarna-payments-for-woocommerce' ),
+				'placeholder' => ' ',
+				'class'       => 'kp_settings__credentials_field',
 			),
-			'na_production_password' => array(
-				'type' => 'kp_hidden',
-			),
-			'na_credentials'         => array(
-				'title' => __( 'API Credentials for US, Canada & Mexico:', 'klarna-payments-for-woocommerce' ),
-				'type'  => 'kp_credentials',
-				'id'    => 'na',
-			),
-			'oc_test_username'       => array(
-				'type' => 'kp_hidden',
-			),
-			'oc_test_password'       => array(
-				'type' => 'kp_hidden',
-			),
-			'oc_production_username' => array(
-				'type' => 'kp_hidden',
-			),
-			'oc_production_password' => array(
-				'type' => 'kp_hidden',
-			),
-			'oc_credentials'         => array(
-				'title' => __( 'API Credentials for Australia & New Zealand:', 'klarna-payments-for-woocommerce' ),
-				'type'  => 'kp_credentials',
-				'id'    => 'oc',
-			),
-			'general_end'            => array(
-				'type'        => 'kp_section_end',
-				'preview_img' => WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/kp-general-preview.png',
+			"{$key}_production_password" => array(
+				'type'        => 'password',
+				'default'     => '',
+				'title'       => __( 'Password (Test)', 'klarna-payments-for-woocommerce' ),
+				'placeholder' => ' ',
+				'class'       => 'kp_settings__credentials_field',
 			),
 		);
 	}
@@ -274,6 +281,28 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Add sidebar to the settings page.
 	 */
 	public function admin_options() {
+		$settings_page = SettingsPage::get_instance();
+		$settings_page->register_page(
+			'klarna_payments',
+			array(
+				'page'            => 'wc-settings',
+				'tab'             => 'checkout',
+				'section'         => 'klarna_payments',
+				'enable_support'  => true,
+				'enable_addons'   => true,
+				'general_content' => array( $this, 'settings_page_content' ),
+			),
+		);
+
+		$settings_page->output( 'klarna_payments' );
+	}
+
+	/**
+	 * Callable function for the general content for the settings page.
+	 *
+	 * @return void
+	 */
+	public function settings_page_content() {
 		KP_Settings_Page::header_html();
 		echo $this->generate_settings_html( $this->get_form_fields(), false ); // phpcs:ignore
 	}
