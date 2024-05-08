@@ -36,6 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
+use Krokedil\WooCommerce\KrokedilWooCommerce;
 
 /**
  * Required minimums and constants
@@ -134,6 +135,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $klarna_express_checkout = null;
 
 		/**
+		 * The WooCommerce package from Krokedil.
+		 *
+		 * @var KrokedilWooCommerce
+		 */
+		public $krokedil = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -178,6 +186,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$this->checkout                = new KP_Checkout();
 			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
+			$this->krokedil                = new KrokedilWooCommerce(
+				array(
+					'slug'         => 'klarna_payments',
+					'price_format' => 'minor',
+				)
+			);
 
 			$this->register_payment_block();
 
