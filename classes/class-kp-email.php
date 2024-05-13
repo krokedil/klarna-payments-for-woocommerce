@@ -29,14 +29,15 @@ if ( ! class_exists( 'KP_Email' ) ) {
 		 * @return void
 		 */
 		public function add_klarna_data_to_mail( $order ) {
-			$gateway_used = $order->get_payment_method();
-			$settings     = get_option( 'woocommerce_klarna_payments_settings', array() );
-			$add_to_email = ( isset( $settings['add_to_email'] ) && 'yes' === $settings['add_to_email'] ) ? true : false;
-			if ( 'klarna_payments' === $gateway_used && $add_to_email ) {
+			$transaction_id = $order->get_transaction_id();
+			$gateway_used   = $order->get_payment_method();
+			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
+			$add_to_email   = ( isset( $settings['add_to_email'] ) && 'yes' === $settings['add_to_email'] ) ? true : false;
+			if ( 'klarna_payments' === $gateway_used && $add_to_email && ! empty( $transaction_id ) ) {
 				$klarna_cs_url  = '<a href="https://www.klarna.com/customer-service">' . esc_html__( 'Klarna', 'klarna-payments-for-woocommerce' ) . '</a>';
 				$klarna_app_url = '<a href="https://app.klarna.com/">' . esc_html__( 'Klarna App', 'klarna-payments-for-woocommerce' ) . '</a>';
 				?>
-				<p><?php echo esc_html__( 'Klarna order id:', 'klarna-payments-for-woocommerce' ) . ' ' . esc_html( $order->get_transaction_id() ); ?></p>
+				<p><?php echo esc_html__( 'Klarna order id:', 'klarna-payments-for-woocommerce' ) . ' ' . esc_html( $transaction_id ); ?></p>
 				<p>
 					<?php
 					echo wp_kses(
