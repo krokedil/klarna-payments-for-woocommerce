@@ -7,7 +7,7 @@ Tested up to: 6.5.3
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 8.9.0
-Stable tag: 3.5.2
+Stable tag: 3.5.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,14 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.05.13    - version 3.5.3 =
+* Fix           - [KOSM] Restored the theme setting "custom" (previously known as "none").
+* Fix           - [KOSM] Resolved deprecation warning in PHP 8.2.
+* Fix           - [KOSM] The disable KOSM admin banner will now only show if the KOSM plugin is enabled (previously it would always show as long as the KOSM plugin is installed).
+* Fix           - [KOSM] The shortcode should now work as intended on non-shop pages.
+* Tweak         - Enhanced compatibility with third-party gift card and coupon plugins.
+* Tweak         - The "Klarna order id" label will now only be added to the email template if the Klarna order ID is set.
+
 = 2024.04.23    - version 3.5.2 =
 * Fix           - Update package version.
 
