@@ -179,6 +179,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				'default'     => '',
 				'placeholder' => __( 'Start typing', 'klarna-payments-for-woocommerce' ),
 			),
+			'general_end'         => array(
+				'type'        => 'kp_section_end',
+				'preview_img' => WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/kp-general-preview.png',
+			),
+			'credentials'         => array(
+				'id'    => 'credentials',
+				'title' => 'API Credentials',
+				'type'  => 'kp_section_start',
+			),
 		);
 
 		// Add the credentials fields.
@@ -186,13 +195,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$us = $this->get_credential_fields( 'us', __( 'API Credentials for the US:', 'klarna-payments-for-woocommerce' ) );
 		$ca = $this->get_credential_fields( 'ca', __( 'API Credentials for Canada:', 'klarna-payments-for-woocommerce' ) );
 		$mx = $this->get_credential_fields( 'mx', __( 'API Credentials for Mexico:', 'klarna-payments-for-woocommerce' ) );
-		$oc = $this->get_credential_fields( 'oc', __( 'API Credentials for Australia & New Zealand:', 'klarna-payments-for-woocommerce' ) );
+		$au = $this->get_credential_fields( 'au', __( 'API Credentials for Australia:', 'klarna-payments-for-woocommerce' ) );
+		$nz = $this->get_credential_fields( 'nz', __( 'API Credentials for New Zealand:', 'klarna-payments-for-woocommerce' ) );
 
-		$form_fields = array_merge( $form_fields, $eu, $us, $ca, $mx, $oc );
+		$form_fields = array_merge( $form_fields, $eu, $us, $ca, $mx, $au, $nz );
 
-		$form_fields['general_end'] = array(
-			'type'        => 'kp_section_end',
-			'preview_img' => WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/kp-general-preview.png',
+		$form_fields['credentials_end'] = array(
+			'type' => 'kp_section_end',
 		);
 
 		$this->form_fields = apply_filters( 'wc_klarna_payments_form_fields', $form_fields );
@@ -211,34 +220,48 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			"{$key}_credentials"         => array(
 				'title' => $title,
 				'type'  => 'kp_credentials',
+				'key'   => $key,
 			),
 			"{$key}_test_username"       => array(
-				'type'        => 'text',
-				'default'     => '',
-				'title'       => __( 'Username (Test)', 'klarna-payments-for-woocommerce' ),
-				'placeholder' => ' ',
-				'class'       => 'kp_settings__credentials_field',
+				'type'              => 'text',
+				'default'           => '',
+				'title'             => __( 'Username (Test)', 'klarna-payments-for-woocommerce' ),
+				'placeholder'       => ' ',
+				'class'             => 'kp_settings__credentials_field kp_settings__credentials_field_hidden',
+				'custom_attributes' => array(
+					'data-field-key' => $key,
+				),
 			),
 			"{$key}_test_password"       => array(
-				'type'        => 'password',
-				'default'     => '',
-				'title'       => __( 'Password (Test)', 'klarna-payments-for-woocommerce' ),
-				'placeholder' => ' ',
-				'class'       => 'kp_settings__credentials_field',
+				'type'              => 'password',
+				'default'           => '',
+				'title'             => __( 'Password (Test)', 'klarna-payments-for-woocommerce' ),
+				'placeholder'       => ' ',
+				'class'             => 'kp_settings__credentials_field kp_settings__credentials_field_hidden',
+				'custom_attributes' => array(
+					'data-field-key' => $key,
+				),
 			),
 			"{$key}_production_username" => array(
-				'type'        => 'text',
-				'default'     => '',
-				'title'       => __( 'Username (Test)', 'klarna-payments-for-woocommerce' ),
-				'placeholder' => ' ',
-				'class'       => 'kp_settings__credentials_field',
+				'type'              => 'text',
+				'default'           => '',
+				'title'             => __( 'Username (Production)', 'klarna-payments-for-woocommerce' ),
+				'placeholder'       => ' ',
+				'class'             => 'kp_settings__credentials_field kp_settings__credentials_field_hidden',
+				'key'               => $key,
+				'custom_attributes' => array(
+					'data-field-key' => $key,
+				),
 			),
 			"{$key}_production_password" => array(
-				'type'        => 'password',
-				'default'     => '',
-				'title'       => __( 'Password (Test)', 'klarna-payments-for-woocommerce' ),
-				'placeholder' => ' ',
-				'class'       => 'kp_settings__credentials_field',
+				'type'              => 'password',
+				'default'           => '',
+				'title'             => __( 'Password (Production)', 'klarna-payments-for-woocommerce' ),
+				'placeholder'       => ' ',
+				'class'             => 'kp_settings__credentials_field kp_settings__credentials_field_hidden',
+				'custom_attributes' => array(
+					'data-field-key' => $key,
+				),
 			),
 		);
 	}
@@ -281,18 +304,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Add sidebar to the settings page.
 	 */
 	public function admin_options() {
-		$settings_page = SettingsPage::get_instance();
-		$settings_page->register_page(
-			'klarna_payments',
-			array(
-				'page'            => 'wc-settings',
-				'tab'             => 'checkout',
-				'section'         => 'klarna_payments',
-				'enable_support'  => true,
-				'enable_addons'   => true,
-				'general_content' => array( $this, 'settings_page_content' ),
-			),
-		);
+		$args                    = json_decode( '{"support":{"links":[{"text":"General information","target":"_blank","href":{"en":"https://krokedil.com/product/klarna-checkout-for-woocommerce/","sv":"https://krokedil.se/product/klarna-checkout-for-woocommerce/"}},{"text":"Technical documentation","target":"_blank","href":{"en":"https://docs.krokedil.com/klarna-checkout-for-woocommerce/"}},{"text":"General support information","target":"_blank","href":{"en":"https://docs.krokedil.com/krokedil-general-support-info/"}},{"text":"Klarna","target":"_blank","href":{"en":"https://klarna.com/merchant-support"}},{"text":"Krokedil","target":"_blank","href":{"en":"https://krokedil.com/support/","sv":"https://krokedil.se/support/"}}]},"sidebar":{"plugin_resources":{"links":[{"text":"General information","target":"_blank","href":{"en":"https://krokedil.com/product/klarna-checkout-for-woocommerce/","sv":"https://krokedil.se/product/klarna-checkout-for-woocommerce/"}},{"text":"Technical documentation","target":"_blank","href":{"en":"https://docs.krokedil.com/klarna-checkout-for-woocommerce/"}},{"text":"Support","href":{"en":"/wp-admin/admin.php?page=wc-settings&tab=checkout&section=klarna_payments&subsection=kco-support"}},{"text":"Add-ons","href":{"en":"/wp-admin/admin.php?page=wc-settings&tab=checkout&section=klarna_payments&subsection=kco-addons"}}]},"additional_resources":{"links":[{"text":"General Support Information","target":"_blank","href":{"en":"https://docs.krokedil.com/krokedil-general-support-info/?utm_source=kco&utm_medium=wp-admin&utm_campaign=settings-sidebar"}},{"text":"Other Krokedil plugins","target":"_blank","href":{"en":"https://krokedil.com/products/?utm_source=kco&utm_medium=wp-admin&utm_campaign=settings-sidebar","sv":"https://krokedil.se/produkter/?utm_source=kco&utm_medium=wp-admin&utm_campaign=settings-sidebar"}},{"text":"Krokedil blog","target":"_blank","href":{"en":"https://krokedil.com/knowledge/?utm_source=kco&utm_medium=wp-admin&utm_campaign=settings-sidebar","sv":"https://krokedil.se/kunskap/?utm_source=kco&utm_medium=wp-admin&utm_campaign=settings-sidebar"}}]}},"addons":{"items":[{"title":"Klarna Order Management","image":"https://s3-eu-west-1.amazonaws.com/krokedil-checkout-addons/images/kco/klarna-icon-thumbnail.jpg","description":"Handle post purchase order management in Klarna\'s system directly from WooCommerce . This way you can save time and don\'t have to work in both systems simultaneously.","button":"Learn more","plugin_slug":"klarna-order-management-for-woocommerce/klarna-order-management-for-woocommerce.php","plugin_url":"https://downloads.wordpress.org/plugin/klarna-order-management-for-woocommerce.zip"},{"title":"On-Site Messaging","image":"https://s3-eu-west-1.amazonaws.com/krokedil-checkout-addons/images/kco/klarna-icon-thumbnail.jpg","description":"On-Site Messaging is easy and simple to integrate providing tailored messaging ranging from generic banners to promote your partnership with Klarna and availability of financing to personalized credit promotions on product or cart pages.","button":"Learn more","plugin_slug":"klarna-onsite-messaging-for-woocommerce/klarna-onsite-messaging-for-woocommerce.php","plugin_url":"https://bit.ly/klarna-on-site-messaging-for-woocommerce"},{"title":"Coming soon","image":"https://s3-eu-west-1.amazonaws.com/krokedil-checkout-addons/images/kco/klarna-icon-thumbnail.jpg","description":"We are working on more add-ons. Make sure to keep an eye on this page for updates.","button":"Learn more","plugin_slug":"","plugin_url":""}]}}', true );
+		$args['general_content'] = array( $this, 'settings_page_content' );
+		$settings_page           = SettingsPage::get_instance();
+		$settings_page->register_page( 'klarna_payments', $args );
 
 		$settings_page->output( 'klarna_payments' );
 	}

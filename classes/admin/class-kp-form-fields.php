@@ -348,39 +348,28 @@ class KP_Form_Fields {
 	public static function migrate_oc_credentials( $settings ) {
 		$oc_countries = array_keys( self::available_countries( 'oc' ) );
 
-		$migrated_prod = isset( $settings['oc_production_username'] ) && isset( $settings['oc_production_password'] );
-		$migrated_test = isset( $settings['oc_test_username'] ) && isset( $settings['oc_test_password'] );
-
 		$available_countries = $settings['available_countries'] ?? array();
 		$available_countries = ! empty( $available_countries ) ? $available_countries : array();
 
-		// If we have migrated both, and available countries contains any of the OC countries, we can return early.
-		if ( $migrated_prod && $migrated_test && array_intersect( $oc_countries, $available_countries ) ) {
-			return $settings;
-		}
-
-		// Loop each country and see if we have credentials for them.
 		foreach ( $oc_countries as $country ) {
-			$country_available  = false;
 			$merchant_id        = $settings[ 'merchant_id_' . $country ];
 			$shared_secret      = $settings[ 'shared_secret_' . $country ];
 			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ];
 			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ];
+			$country_available  = false;
 
 			// Migrate any live credentials we have.
-			if ( ! empty( $merchant_id ) && ! empty( $shared_secret ) && ! $migrated_prod ) {
-				$settings['oc_production_username'] = $merchant_id;
-				$settings['oc_production_password'] = $shared_secret;
-				$migrated_prod                      = true;
-				$country_available                  = true;
+			if ( ! empty( $merchant_id ) && ! empty( $shared_secret ) ) {
+				$settings[ $country . '_production_username' ] = $merchant_id;
+				$settings[ $country . '_production_password' ] = $shared_secret;
+				$country_available                             = true;
 			}
 
 			// Migrate any test credentials we have.
-			if ( ! empty( $test_merchant_id ) && ! empty( $test_shared_secret ) && ! $migrated_test ) {
-				$settings['oc_test_username'] = $test_merchant_id;
-				$settings['oc_test_password'] = $test_shared_secret;
-				$migrated_test                = true;
-				$country_available            = true;
+			if ( ! empty( $test_merchant_id ) && ! empty( $test_shared_secret ) ) {
+				$settings[ $country . '_test_username' ] = $test_merchant_id;
+				$settings[ $country . '_test_password' ] = $test_shared_secret;
+				$country_available                       = true;
 			}
 
 			if ( $country_available ) {

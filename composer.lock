@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "43f545a365b170959e1e5f090395b00d",
+    "content-hash": "dc9a74936dc8fbdabc73f1bd3acbcbba",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -213,6 +213,38 @@
             "time": "2024-04-22T14:41:31+00:00"
         },
         {
+            "name": "krokedil/settings-page",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../krokedil/settings-page",
+                "reference": "59ff19031091fe8297d0681aa267a5212900375d"
+            },
+            "require-dev": {
+                "php-stubs/woocommerce-stubs": "dev-master",
+                "wp-coding-standards/wpcs": "dev-develop"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\SettingsPage\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-V2"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "A package to help setup settings pages in WordPress and WooCommerce for Krokedil plugins to add the Addons and Support tabs",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "krokedil/woocommerce",
             "version": "1.5.0",
             "source": {
@@ -393,12 +425,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "83f38598bafc04c9def87942775b95bfbe08880b"
+                "reference": "9a0c2546ea2fa7aac19881da7b655cc5f022bc10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/83f38598bafc04c9def87942775b95bfbe08880b",
-                "reference": "83f38598bafc04c9def87942775b95bfbe08880b",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/9a0c2546ea2fa7aac19881da7b655cc5f022bc10",
+                "reference": "9a0c2546ea2fa7aac19881da7b655cc5f022bc10",
                 "shasum": ""
             },
             "require": {
@@ -466,7 +498,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-04-22T22:29:04+00:00"
+            "time": "2024-04-24T15:14:01+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -522,10 +554,12 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "krokedil/settings-page": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

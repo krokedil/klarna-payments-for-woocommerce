@@ -111,11 +111,11 @@ class KP_Settings_Page {
 	public static function section_end_html( $section ) {
 		?>
 			</table>
+			<div class="kp_settings__section_preview">
 			<?php if ( isset( $section['preview_img'] ) ) : ?>
-				<div class="kp_settings__section_preview">
-					<img width="400" alt="test" src="<?php echo esc_url( $section['preview_img'] ); ?>" />
-				</div>
+				<img width="400" alt="test" src="<?php echo esc_url( $section['preview_img'] ); ?>" />
 			<?php endif; ?>
+			</div>
 		</div>
 		<?php
 	}
@@ -181,7 +181,13 @@ class KP_Settings_Page {
 		?>
 		<tr class="kp_settings__credentials" valign="top">
 			<th scope="row" class="titledesc">
-				<label><?php echo esc_html( $args['title'] ?? '' ); ?></label>
+				<label
+					data-field-key="<?php echo esc_attr( $args['key'] ?? '' ); ?>"
+					class="kp_settings__fields_toggle"
+				>
+					<?php echo esc_html( $args['title'] ?? '' ); ?>
+					<span class="dashicons dashicons-arrow-up-alt2"></span>
+				</label>
 			</th>
 			<td class="forminp">
 				<?php echo esc_html( $args['description'] ?? '' ); ?>
