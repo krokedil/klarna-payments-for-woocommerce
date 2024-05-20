@@ -264,10 +264,10 @@ class KP_Form_Fields {
 		// Loop each country and see if we have credentials for them.
 		foreach ( $eu_countries as $country ) {
 			$country_available  = false;
-			$merchant_id        = $settings[ 'merchant_id_' . $country ];
-			$shared_secret      = $settings[ 'shared_secret_' . $country ];
-			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ];
-			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ];
+			$merchant_id        = $settings[ 'merchant_id_' . $country ] ?? '';
+			$shared_secret      = $settings[ 'shared_secret_' . $country ] ?? '';
+			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ] ?? '';
+			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ] ?? '';
 
 			// Migrate any live credentials we have.
 			if ( ! empty( $merchant_id ) && ! empty( $shared_secret ) && ! $migrated_prod ) {
@@ -309,10 +309,10 @@ class KP_Form_Fields {
 		$available_countries = ! empty( $available_countries ) ? $available_countries : array();
 
 		foreach ( $na_countries as $country ) {
-			$merchant_id        = $settings[ 'merchant_id_' . $country ];
-			$shared_secret      = $settings[ 'shared_secret_' . $country ];
-			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ];
-			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ];
+			$merchant_id        = $settings[ 'merchant_id_' . $country ] ?? '';
+			$shared_secret      = $settings[ 'shared_secret_' . $country ] ?? '';
+			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ] ?? '';
+			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ] ?? '';
 			$country_available  = false;
 
 			// Migrate any live credentials we have.
@@ -352,10 +352,10 @@ class KP_Form_Fields {
 		$available_countries = ! empty( $available_countries ) ? $available_countries : array();
 
 		foreach ( $oc_countries as $country ) {
-			$merchant_id        = $settings[ 'merchant_id_' . $country ];
-			$shared_secret      = $settings[ 'shared_secret_' . $country ];
-			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ];
-			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ];
+			$merchant_id        = $settings[ 'merchant_id_' . $country ] ?? '';
+			$shared_secret      = $settings[ 'shared_secret_' . $country ] ?? '';
+			$test_merchant_id   = $settings[ 'test_merchant_id_' . $country ] ?? '';
+			$test_shared_secret = $settings[ 'test_shared_secret_' . $country ] ?? '';
 			$country_available  = false;
 
 			// Migrate any live credentials we have.
@@ -699,12 +699,202 @@ class KP_Form_Fields {
 	}
 
 	/**
+	 * Build the settings array.
+	 *
+	 * @return array
+	 */
+	public static function build_settings() {
+		$form_fields = array(
+			'general'             => array(
+				'id'          => 'general',
+				'title'       => 'Klarna Payments',
+				'description' => __( 'Enable or disable Klarna payments, depending on your setup, enter client keys and turn on test mode.', 'klarna-payments-for-woocommerce' ),
+				'links'       => array(
+					array(
+						'url'   => 'https://krokedil.se',
+						'title' => __( 'Learn more', 'klarna-payments-for-woocommerce' ),
+					),
+					array(
+						'url'   => 'https://krokedil.se',
+						'title' => __( 'Documentation', 'klarna-payments-for-woocommerce' ),
+					),
+				),
+				'type'        => 'kp_section_start',
+			),
+			'enabled'             => array(
+				'label'       => __( 'Enable Klarna Payments', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'checkbox',
+				'description' => '',
+				'default'     => 'no',
+				'class'       => 'kp_settings__hide_label',
+			),
+			'testmode'            => array(
+				'label'    => __( 'Enable Klarna Payments in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'checkbox',
+				'default'  => 'yes',
+				'desc_tip' => true,
+				'class'    => 'kp_settings__hide_label',
+			),
+			'title'               => array(
+				'title'    => __( 'Title', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'text',
+				'default'  => 'Klarna',
+				'desc_tip' => true,
+			),
+			'customer_type'       => array(
+				'title'    => __( 'Select the type of customer that you sell to', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'select',
+				'options'  => array(
+					'b2c' => __( 'B2C', 'klarna-payments-for-woocommerce' ),
+					'b2b' => __( 'B2B', 'klarna-payments-for-woocommerce' ),
+				),
+				'default'  => 'b2c',
+				'desc_tip' => true,
+			),
+			'markets'             => array(
+				'title'       => __( 'Markets & regional API Credentials', 'klarna-payments-for-woocommerce' ),
+				'description' => __( 'Enter the countries you plan to make Klarna available and then enter the respective test and production credentials for each sales region', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'kp_text_info',
+			),
+			'available_countries' => array(
+				'title'       => __( 'Countries where you plan to make Klarna available', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'multiselect',
+				'options'     => self::available_countries(),
+				'class'       => 'wc-enhanced-select',
+				'default'     => '',
+				'placeholder' => __( 'Start typing', 'klarna-payments-for-woocommerce' ),
+			),
+			'general_end'         => array(
+				'type'        => 'kp_section_end',
+				'preview_img' => WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/kp-general-preview.png',
+			),
+			'credentials'         => array(
+				'id'    => 'credentials',
+				'title' => 'API Credentials',
+				'type'  => 'kp_section_start',
+			),
+		);
+
+		// Add the credentials fields.
+		$eu = self::get_credential_fields( 'eu', __( 'API Credentials for Europe:', 'klarna-payments-for-woocommerce' ) );
+		$us = self::get_credential_fields( 'us', __( 'API Credentials for the US:', 'klarna-payments-for-woocommerce' ) );
+		$ca = self::get_credential_fields( 'ca', __( 'API Credentials for Canada:', 'klarna-payments-for-woocommerce' ) );
+		$mx = self::get_credential_fields( 'mx', __( 'API Credentials for Mexico:', 'klarna-payments-for-woocommerce' ) );
+		$au = self::get_credential_fields( 'au', __( 'API Credentials for Australia:', 'klarna-payments-for-woocommerce' ) );
+		$nz = self::get_credential_fields( 'nz', __( 'API Credentials for New Zealand:', 'klarna-payments-for-woocommerce' ) );
+
+		$form_fields = array_merge( $form_fields, $eu, $us, $ca, $mx, $au, $nz );
+
+		$form_fields['credentials_end'] = array(
+			'type' => 'kp_section_end',
+		);
+
+		return apply_filters( 'wc_klarna_payments_form_fields', $form_fields );
+	}
+
+	/**
+	 * Get credential settings fields
+	 *
+	 * @param string $key   The key for the settings field.
+	 * @param string $title The title for the settings field.
+	 *
+	 * @return array
+	 */
+	private static function get_credential_fields( $key, $title ) {
+		return array(
+			"{$key}_credentials"         => array(
+				'title' => $title,
+				'type'  => 'kp_credentials',
+				'key'   => $key,
+			),
+			"{$key}_test_username"       => array(
+				'type'              => 'text',
+				'default'           => '',
+				'title'             => __( 'Username (Test)', 'klarna-payments-for-woocommerce' ),
+				'placeholder'       => ' ',
+				'class'             => 'kp_settings__credentials_field kp_settings__credentials_field_hidden',
+				'custom_attributes' => array(
+					'data-field-key' => $key,
+				),
+			),
+			"{$key}_test_password"       => array(
+				'type'              => 'password',
+				'default'           => '',
+				'title'             => __( 'Password (Test)', 'klarna-payments-for-woocommerce' ),
+				'placeholder'       => ' ',
+				'class'             => 'kp_settings__credentials_field kp_settings__credentials_field_hidden',
+				'custom_attributes' => array(
+					'data-field-key' => $key,
+				),
+			),
+			"{$key}_production_username" => array(
+				'type'              => 'text',
+				'default'           => '',
+				'title'             => __( 'Username (Production)', 'klarna-payments-for-woocommerce' ),
+				'placeholder'       => ' ',
+				'class'             => 'kp_settings__credentials_field kp_settings__credentials_field_hidden',
+				'key'               => $key,
+				'custom_attributes' => array(
+					'data-field-key' => $key,
+				),
+			),
+			"{$key}_production_password" => array(
+				'type'              => 'password',
+				'default'           => '',
+				'title'             => __( 'Password (Production)', 'klarna-payments-for-woocommerce' ),
+				'placeholder'       => ' ',
+				'class'             => 'kp_settings__credentials_field kp_settings__credentials_field_hidden',
+				'custom_attributes' => array(
+					'data-field-key' => $key,
+				),
+			),
+		);
+	}
+
+	/**
 	 * Get the full list of Klarna Payments settings form fields.
 	 * Filter 'wc_gateway_klarna_payments_settings' is applied before returning.
 	 *
 	 * @return array Filtered settings for Klarna Payments.
 	 */
 	public static function get_form_fields() {
-		return apply_filters( 'wc_gateway_klarna_payments_settings', self::kp_form_build_settings() );
+		$form_fields        = apply_filters( 'wc_gateway_klarna_payments_settings', self::build_settings() );
+		$parsed_form_fields = array();
+
+		$has_section_end = true;
+
+		foreach ( $form_fields as $key => $value ) {
+			$type = isset( $value['type'] ) ? $value['type'] : '';
+			// Replace any title types with the custom type kp_section_start.
+			if ( 'title' === $type ) {
+				// If we don't have a section end when we find a new title, add one before it.
+				if ( ! $has_section_end ) {
+					$parsed_form_fields[ 'section_end_' . $key ] = array(
+						'type' => 'kp_section_end',
+					);
+				}
+
+				$value['type']   = 'kp_section_start';
+				$value['id']     = $key;
+				$has_section_end = false;
+			}
+
+			// Replace any sectionend types with the custom type kp_section_end.
+			if ( 'sectionend' === $type ) {
+				$has_section_end = true;
+				$value['type']   = 'kp_section_end';
+			}
+
+			$parsed_form_fields[ $key ] = $value;
+		}
+
+		// If we don't have a section end at the end of the form, add one.
+		if ( ! $has_section_end ) {
+			$parsed_form_fields['section_end_final'] = array(
+				'type' => 'kp_section_end',
+			);
+		}
+
+		return $parsed_form_fields;
 	}
 }

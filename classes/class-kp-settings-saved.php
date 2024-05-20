@@ -70,9 +70,9 @@ class KP_Settings_Saved {
 				}
 			} else {
 				// Test.
-				if ( '' !== $options[ 'test_merchant_id_' . $cc ] ) {
-					$username = $options[ 'test_merchant_id_' . $cc ];
-					$password = $options[ 'test_shared_secret_' . $cc ];
+				if ( '' !== $options[ 'test_merchant_id_' . $cc ] ?? '' ) {
+					$username = $options[ 'test_merchant_id_' . $cc ] ?? '';
+					$password = $options[ 'test_shared_secret_' . $cc ] ?? '';
 
 					// Create request arguments.
 					$args = array(
