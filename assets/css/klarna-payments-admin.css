@@ -80,7 +80,7 @@ table.form-table.kp_settings__section_content {
 }
 
 /** If a tr contains a child with the class kp_settings__hide_label, hide the th. */
-.kp_settings__section tr:has(input.kp_settings__hide_label) th {
+.kp_settings__section tr:has(input[type="checkbox"]) th {
 	display: none;
 }
 
@@ -224,7 +224,15 @@ table.form-table.kp_settings__section_content {
 	position: relative;
 }
 
-.woocommerce table.form-table tr:has(td fieldset input.kp_settings__credentials_field) th label {
+.woocommerce table.form-table tr th label {
+	display: inline-block;
+}
+.woocommerce table.form-table tr th label .woocommerce-help-tip, .wc-wp-version-gte-53 .woocommerce table.form-table tr th label .woocommerce-help-tip {
+	margin: -2px 0 0 0;
+	position: relative;
+}
+
+.woocommerce table.form-table.kp_settings__section_content tr:has(td fieldset input.kp_settings__credentials_field) th label {
 	font-family: Klarna;
 	font-weight: 300;
 	position: absolute;
