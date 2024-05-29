@@ -1,5 +1,4 @@
 <?php
-use Krokedil\SettingsPage\SettingsPage;
 /**
  * Klarna Payment Gateway class file.
  *
@@ -9,6 +8,8 @@ use Krokedil\SettingsPage\SettingsPage;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+use Krokedil\SettingsPage\SettingsPage;
 
 /**
  * WC_Payment_Gateway class.
@@ -550,7 +551,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_upsell_order = KP_WC()->api->upsell_klarna_order( $country, $klarna_order_id, $order_id );
 
 		if ( is_wp_error( $klarna_upsell_order ) ) {
-			$error = new WP_Error( '401', __( 'Klarna did not accept the new order amount, the order has not been updated' ) );
+			$error = new WP_Error( '401', __( 'Klarna did not accept the new order amount, the order has not been updated', 'klarna-payments-for-woocommerce' ) );
 			return $error;
 		}
 
@@ -564,7 +565,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
  * @param  array $methods All registered payment methods.
  * @return array $methods All registered payment methods.
  */
-function add_kp_gateway( $methods ) {
+function add_kp_gateway( $methods ) { // phpcs:ignore
 	$methods[] = 'WC_Gateway_Klarna_Payments';
 	return $methods;
 }
