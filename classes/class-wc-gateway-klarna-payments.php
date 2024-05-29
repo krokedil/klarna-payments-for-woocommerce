@@ -117,7 +117,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function init_form_fields() {
 		// Migrate any legacy settings we have.
-		KP_Form_Fields::migrate_legacy_settings();
 		$this->form_fields = KP_Form_Fields::get_form_fields();
 	}
 

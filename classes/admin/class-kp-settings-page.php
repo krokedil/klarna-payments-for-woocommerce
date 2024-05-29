@@ -74,7 +74,7 @@ class KP_Settings_Page {
 		<div id="klarna-payments-settings-<?php echo esc_attr( $section['id'] ); ?>" class="kp_settings__section">
 			<div class="kp_settings__section_info">
 				<h3 class="kp_settings__section_title"><?php echo esc_html( $section['title'] ); ?></h3>
-				<p class="kp_settings__section_description"><?php echo esc_html( $section['description'] ); ?></p>
+				<p class="kp_settings__section_description"><?php echo esc_html( $section['description'] ?? '' ); ?></p>
 				<?php for ( $i = 0; $i < $link_count; $i++ ) : ?>
 					<a class="kp_settings__section_link" href="<?php echo esc_url( $section['links'][ $i ]['url'] ); ?>" target="_blank"><?php echo esc_html( $section['links'][ $i ]['title'] ); ?></a>
 					<?php if ( $i < count( $section['links'] ) - 1 ) : ?>
@@ -178,20 +178,82 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function credentials_html( $args ) {
+		$key      = $args['key'] ?? '';
+		$settings = get_option( 'woocommerce_klarna_payments_settings' );
+
+		$eu_countries  = KP_Form_Fields::available_countries( 'eu' );
+		$is_eu_country = key_exists( $key, $eu_countries );
+		$is_eu_region  = 'eu' === $key;
+		$combine_eu    = 'yes' === $settings['combine_eu_credentials'] ?? 'no';
+		$test_enabled  = 'yes' === $settings['testmode'] ?? 'no';
+		$hide          = false;
+
+		if ( $combine_eu && $is_eu_country ) {
+			$hide = true;
+		} elseif ( ! $combine_eu && $is_eu_region ) {
+			$hide = true;
+		}
+
 		?>
-		<tr class="kp_settings__credentials" valign="top">
+		<tr class="kp_settings__credentials" style="<?php echo esc_attr( $hide ? 'display:none;' : '' ); ?>" valign="top" <?php echo esc_attr( $is_eu_region ? 'data-eu-region' : ( $is_eu_country ? 'data-eu-country' : '' ) ); ?>>
 			<th scope="row" class="titledesc">
 				<label
 					data-field-key="<?php echo esc_attr( $args['key'] ?? '' ); ?>"
-					class="kp_settings__fields_toggle"
+					class="kp_settings__fields_toggle <?php echo esc_attr( $args['class'] ?? '' ); ?>"
 				>
-					<?php echo esc_html( $args['title'] ?? '' ); ?>
+					<?php echo wp_kses_post( $args['title'] ?? '' ); ?>
 					<span class="dashicons dashicons-arrow-up-alt2"></span>
 				</label>
 			</th>
-			<td class="forminp">
-				<?php echo esc_html( $args['description'] ?? '' ); ?>
+			<td class="forminp kp_settings__credentials_field_hidden">
+				<?php self::credentials_fields_html( $key, false, ! $test_enabled ); ?>
+				<?php self::credentials_fields_html( $key, true, $test_enabled ); ?>
 			</td>
+		<?php
+	}
+
+	/**
+	 * Output the HTML of the Klarna Payments Credentials fields.
+	 *
+	 * @param string $key The key for the credentials.
+	 * @param bool   $test_mode Whether the credentials are for test mode.
+	 * @param bool   $hide Whether to hide the fields.
+	 *
+	 * @return void
+	 */
+	public static function credentials_fields_html( $key, $test_mode, $hide ) {
+		$settings = get_option( 'woocommerce_klarna_payments_settings' );
+		$prefix   = $test_mode ? 'test_' : '';
+
+		$mid_key           = "{$prefix}merchant_id_{$key}";
+		$shared_secret_key = "{$prefix}shared_secret_{$key}";
+		$client_id_key     = "{$prefix}client_id_{$key}";
+
+		$mid_name           = 'woocommerce_klarna_payments_' . $mid_key;
+		$shared_secret_name = 'woocommerce_klarna_payments_' . $shared_secret_key;
+		$client_id_name     = 'woocommerce_klarna_payments_' . $client_id_key;
+
+		$wrapper_classes = $test_mode ? 'kp_settings__test_credentials' : 'kp_settings__production_credentials';
+
+		$label_suffix = $test_mode ? __( '(Test)', 'klarna-payments-for-woocommerce' ) : __( '(Production)', 'klarna-payments-for-woocommerce' );
+
+		?>
+		<div class="kp_settings__credentials <?php echo esc_attr( $wrapper_classes ); ?>" style="<?php echo esc_attr( $hide ? 'display:none;' : '' ); ?>">
+			<div class="kp_settings__fields_credentials" data-field-key="<?php echo esc_attr( $key ); ?>">
+				<div class="kp_settings__field">
+					<label for="<?php echo esc_attr( $mid_key ); ?>"><?php echo esc_html( __( 'Username', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix ); ?></label>
+					<input type="text" class="kp_settings__fields_mid" id="<?php echo esc_attr( $mid_key ); ?>" name="<?php echo esc_attr( $mid_name ); ?>" value="<?php echo esc_attr( $settings[ $mid_key ] ?? '' ); ?>" placeholder=" " />
+				</div>
+				<div class="kp_settings__field">
+					<label for="<?php echo esc_attr( $shared_secret_key ); ?>"><?php echo esc_html( __( 'Password', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix ); ?></label>
+					<input type="password" class="kp_settings__fields_secret" id="<?php echo esc_attr( $shared_secret_key ); ?>" name="<?php echo esc_attr( $shared_secret_name ); ?>" value="<?php echo esc_attr( $settings[ $shared_secret_key ] ?? '' ); ?>" placeholder=" " />
+				</div>
+			</div>
+			<div class="kp_settings__field">
+				<label for="<?php echo esc_attr( $client_id_key ); ?>"><?php echo esc_html( __( 'Client ID', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix ); ?></label>
+				<input type="text" class="kp_settings__fields_mid" id="<?php echo esc_attr( $client_id_key ); ?>" name="<?php echo esc_attr( $client_id_name ); ?>" value="<?php echo esc_attr( $settings[ $client_id_key ] ?? '' ); ?>" placeholder=" " />
+			</div>
+		</div>
 		<?php
 	}
 
