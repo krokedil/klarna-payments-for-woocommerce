@@ -7,8 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Krokedil\WooCommerce\Cart\Cart;
-use Krokedil\WooCommerce\Order\Order;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\Cart\Cart;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\Order\Order;
 
 /**
  * Helper class to generate a Klarna payments request body for a order/session request.
@@ -45,7 +45,7 @@ class KP_Order_Data {
 	/**
 	 * The generated order data.
 	 *
-	 * @var \Krokedil\WooCommerce\OrderData
+	 * @var KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderData
 	 */
 	public $order_data;
 
@@ -74,7 +74,7 @@ class KP_Order_Data {
 	/**
 	 * Returns the request helper for the request based on if we have a order id passed or not.
 	 *
-	 * @return \Krokedil\WooCommerce\OrderData
+	 * @return KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderData
 	 */
 	public function get_order_data() {
 		$config = array(
@@ -150,7 +150,7 @@ class KP_Order_Data {
 				continue;
 			}
 
-			$retrieved_giftcards = ! empty($this->order) ? $giftcards->get_order_giftcards($this->order) : $giftcards->get_cart_giftcards();
+			$retrieved_giftcards = ! empty( $this->order ) ? $giftcards->get_order_giftcards( $this->order ) : $giftcards->get_cart_giftcards();
 			foreach ( $retrieved_giftcards as $retrieved_giftcard ) {
 				$klarna_order_lines[] = $this->get_klarna_order_line_object( $retrieved_giftcard );
 			}
@@ -176,7 +176,7 @@ class KP_Order_Data {
 	/**
 	 * Returns a formatted Klarna order line object.
 	 *
-	 * @param  \Krokedil\WooCommerce\OrderLineData $order_line The order line data.
+	 * @param  KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderLineData $order_line The order line data.
 	 * @return array
 	 */
 	public function get_klarna_order_line_object( $order_line ) {

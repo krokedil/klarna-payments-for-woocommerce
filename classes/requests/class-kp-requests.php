@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Krokedil\WpApi\Request;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Request;
 
 /**
  * Base class for all request classes.

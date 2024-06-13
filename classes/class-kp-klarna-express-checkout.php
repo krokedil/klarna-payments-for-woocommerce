@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Krokedil\KlarnaExpressCheckout\KlarnaExpressCheckout;
+use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\KlarnaExpressCheckout;
 
 /**
  * Class KP_Klarna_Express_Checkout

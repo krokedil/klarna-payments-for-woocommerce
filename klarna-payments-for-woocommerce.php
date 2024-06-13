@@ -35,8 +35,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
-use Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
-use Krokedil\WooCommerce\KrokedilWooCommerce;
+use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 
 /**
  * Required minimums and constants
@@ -396,14 +396,16 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @return bool|mixed
 		 */
 		public function init_composer() {
-			$autoloader = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
+			$old_autoloader = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
+			$autoloader     = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/dependencies/scoper-autoload.php';
 
 			if ( ! is_readable( $autoloader ) ) {
 				self::missing_autoloader();
 				return false;
 			}
 
-			$autoloader_result = require $autoloader;
+			$old_autoloader_result = require $old_autoloader;
+			$autoloader_result     = require $autoloader;
 			if ( ! $autoloader_result ) {
 				return false;
 			}
