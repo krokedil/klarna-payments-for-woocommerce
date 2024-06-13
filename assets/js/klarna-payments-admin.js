@@ -19,6 +19,9 @@ jQuery(function ($) {
 				this.toggleTest
 			);
 			$(document).on("change", this.toggleEuSelector, this.toggleEu);
+
+			// Trigger the change event to set the initial state.
+			$(this.toggleTestModeSelector).trigger("change");
 		},
 
 		openCredentials: function (e) {
