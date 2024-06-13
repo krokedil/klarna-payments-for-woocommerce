@@ -88,16 +88,28 @@ abstract class KP_Requests extends Request {
 	 * Sets Klarna credentials.
 	 */
 	public function set_credentials() {
-		$prefix = 'yes' === $this->settings['testmode'] ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
-		$suffix = '_' . strtolower( $this->arguments['country'] ) ?? strtolower( kp_get_klarna_country() ); // Get the country from the arguments, or the fetch from helper method.
+		$country     = strtolower( $this->arguments['country'] ) ?? strtolower( kp_get_klarna_country() ); // Get the country from the arguments, or the fetch from helper method.
+		$combined_eu = 'yes' === $this->settings['combine_eu_credentials'] ?? 'no';
 
-		$merchant_id   = "{$prefix}merchant_id{$suffix}";
-		$shared_secret = "{$prefix}shared_secret{$suffix}";
+		// If the country is a EU country, check if we should get the credentials from the EU settings.
+		if ( $combined_eu && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
+			$country = 'eu';
+		}
+
+		$prefix = 'yes' === $this->settings['testmode'] ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
+
+		$merchant_id   = "{$prefix}merchant_id_{$country}";
+		$shared_secret = "{$prefix}shared_secret_{$country}";
 
 		$this->merchant_id   = isset( $this->settings[ $merchant_id ] ) ? $this->settings[ $merchant_id ] : '';
 		$this->shared_secret = isset( $this->settings[ $shared_secret ] ) ? $this->settings[ $shared_secret ] : '';
 	}
 
+	/**
+	 * Calculates the auth header for the request.
+	 *
+	 * @return string
+	 */
 	public function calculate_auth() {
 		return 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
 	}
