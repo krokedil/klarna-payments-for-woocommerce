@@ -239,17 +239,31 @@ class KP_Form_Fields {
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no',
-				'class'       => 'kp_settings__hide_label',
 			),
 			'testmode'               => array(
 				'label'    => __( 'Enable Klarna Payments in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
-				'default'  => 'yes',
+				'default'  => 'no',
 				'desc_tip' => true,
-				'class'    => 'kp_settings__hide_label',
+			),
+			'logging'                => array(
+				'title'       => __( 'Logging', 'klarna-payments-for-woocommerce' ),
+				'label'       => __( 'Log debug messages', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'klarna-payments-for-woocommerce' ),
+				'default'     => 'no',
+				'desc_tip'    => true,
+			),
+			'extra_logging'          => array(
+				'title'       => __( 'Log extra data', 'klarna-payments-for-woocommerce' ),
+				'label'       => __( 'Log extra debug data', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Log extra data to the request logs from the plugin. This will log a lot more data, and should not be used unless you need it. But can be useful to debug issues that are hard to replicate.', 'klarna-payments-for-woocommerce' ),
+				'default'     => 'no',
+				'desc_tip'    => true,
 			),
 			'title'                  => array(
-				'title'    => __( 'Title', 'klarna-payments-for-woocommerce' ),
+				'title'    => __( 'Payment method title', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'text',
 				'default'  => 'Klarna',
 				'desc_tip' => true,
@@ -264,11 +278,7 @@ class KP_Form_Fields {
 				'default'  => 'b2c',
 				'desc_tip' => true,
 			),
-			'markets'                => array(
-				'title'       => __( 'Markets & regional API Credentials', 'klarna-payments-for-woocommerce' ),
-				'description' => __( 'Enter the countries you plan to make Klarna available and then enter the respective test and production credentials for each sales region', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'kp_text_info',
-			),
+			/*
 			'available_countries'    => array(
 				'title'       => __( 'Countries where you plan to make Klarna available', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'multiselect',
@@ -276,7 +286,7 @@ class KP_Form_Fields {
 				'class'       => 'wc-enhanced-select',
 				'default'     => '',
 				'placeholder' => __( 'Start typing', 'klarna-payments-for-woocommerce' ),
-			),
+			),*/
 			'general_end'            => array(
 				'type'        => 'kp_section_end',
 				'preview_img' => WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/kp-general-preview.png',
@@ -286,12 +296,16 @@ class KP_Form_Fields {
 				'title' => 'API Credentials',
 				'type'  => 'kp_section_start',
 			),
+			'markets'                => array(
+				'title'       => __( 'Markets & regional API Credentials', 'klarna-payments-for-woocommerce' ),
+				'description' => __( 'Enter the countries you plan to make Klarna available and then enter the respective test and production credentials for each sales region', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'kp_text_info',
+			),
 			'combine_eu_credentials' => array(
 				'label'       => __( 'Combine all EU country credentials', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'checkbox',
 				'description' => '',
-				'default'     => 'no',
-				'class'       => 'kp_settings__hide_label',
+				'default'     => 'yes',
 			),
 		);
 
