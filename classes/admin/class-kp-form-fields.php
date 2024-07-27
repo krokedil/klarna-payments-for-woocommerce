@@ -179,7 +179,7 @@ class KP_Form_Fields {
 			'default'           => '',
 			'desc_tip'          => false,
 			'custom_attributes' => array(
-				'autocomplete' => 'off',
+				'autocomplete' => 'webauthn',
 			),
 		);
 	}
@@ -259,7 +259,6 @@ class KP_Form_Fields {
 		$section[ 'test_shared_secret_' . $country_code ] = self::kp_form_test_password();
 
 		return $section;
-
 	}
 
 	/**
