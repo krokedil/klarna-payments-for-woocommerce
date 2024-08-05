@@ -39,6 +39,9 @@ if ( is_array( $payment_categories ) ) {
 			}
 		}
 
-		wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $kp ) );
+		// For "Linear Checkout for WooCommerce by Cartimize" to work, we cannot output any HTML.
+		if ( did_action( 'cartimize_get_payment_methods_html' ) === 0 ) {
+			wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $kp ) );
+		}
 	}
 }

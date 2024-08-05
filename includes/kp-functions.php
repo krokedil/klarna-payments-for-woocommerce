@@ -200,10 +200,8 @@ function kp_print_error_message( $wp_error ) {
 		if ( function_exists( 'wc_add_notice' ) ) {
 			wc_add_notice( $error_message, 'error' );
 		}
-	} else {
-		if ( function_exists( 'wc_print_notice' ) ) {
+	} elseif ( function_exists( 'wc_print_notice' ) ) {
 			wc_print_notice( $error_message, 'error' );
-		}
 	}
 }
 
