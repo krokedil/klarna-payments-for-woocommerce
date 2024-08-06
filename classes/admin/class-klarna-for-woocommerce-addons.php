@@ -3,8 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use \Automattic\WooCommerce\Admin\Features\Navigation\Menu;
-
 if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 	/**
 	 * Klarna_Checkout_For_WooCommerce_Addons class.
@@ -66,28 +64,6 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		 **/
 		public function add_menu() {
 			$submenu = add_submenu_page( 'woocommerce', __( 'Klarna Add-ons', 'klarna-checkout-for-woocommerce' ), __( 'Klarna Add-ons', 'klarna-checkout-for-woocommerce' ), 'manage_woocommerce', 'checkout-addons', array( $this, 'options_page' ) );
-
-			if ( ! class_exists( '\Automattic\WooCommerce\Admin\Features\Navigation\Menu' ) ) {
-				return;
-			}
-
-			Menu::add_plugin_category(
-				array(
-					'id'         => 'klarna-checkout-for-woocommerce',
-					'title'      => __( 'Klarna', 'klarna-checkout-for-woocommerce' ),
-					'capability' => 'manage_woocommerce',
-				)
-			);
-
-			Menu::add_plugin_item(
-				array(
-					'id'     => 'klarna-checkout-for-woocommerce-add-ons',
-					'parent' => 'klarna-checkout-for-woocommerce',
-					'title'  => __( 'Add-ons', 'klarna-checkout-for-woocommerce' ),
-					'url'    => 'checkout-addons&tab=addons',
-					'order'  => 0,
-				)
-			);
 		}
 
 		/**
