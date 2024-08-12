@@ -124,6 +124,11 @@ class KP_Form_Fields {
 			'currency' => 'RON',
 			'endpoint' => '',
 		),
+		'sk' => array(
+			'name'     => 'Slovakia',
+			'currency' => 'EUR',
+			'endpoint' => '',
+		),
 		'es' => array(
 			'name'     => 'Spain',
 			'currency' => 'EUR',
@@ -132,11 +137,6 @@ class KP_Form_Fields {
 		'se' => array(
 			'name'     => 'Sweden',
 			'currency' => 'SEK',
-			'endpoint' => '',
-		),
-		'sk' => array(
-			'name'     => 'Slovakia',
-			'currency' => 'EUR',
 			'endpoint' => '',
 		),
 		'ch' => array(
