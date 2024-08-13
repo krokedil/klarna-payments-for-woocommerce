@@ -377,8 +377,8 @@ class KP_Subscription {
 	 * @return void
 	 */
 	public function show_recurring_token( $order ) {
-		$recurring_token = $order->get_meta( self::RECURRING_TOKEN );
 		if ( 'shop_subscription' === $order->get_type() ) {
+			$recurring_token = $order->get_meta( self::RECURRING_TOKEN );
 			?>
 			<div class="order_data_column" style="clear:both; float:none; width:100%;">
 				<div class="address">
