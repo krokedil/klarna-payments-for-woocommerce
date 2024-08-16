@@ -300,6 +300,12 @@ class KP_Order_Data {
 		return is_array( $var ) ? ! empty( $var ) : null !== $var; // If empty array, or if value is null return true to remove value.
 	}
 
+	/**
+	 * Maybe filters out product url for the order line before we send them to Klarna based on settings.
+	 *
+	 * @param string $url The URL to the product or product image.
+	 * @return string|null
+	 */
 	public function maybe_allow_order_line_url( $url ) {
 		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 
