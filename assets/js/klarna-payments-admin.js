@@ -64,9 +64,11 @@ jQuery(function ($) {
 			const $this = $(this);
 			const $section = $this.parent().parent().parent();
 
-			//$section.find(".kp_settings__section_info_text").slideToggle();
 			$section.find(".kp_settings__section_content").slideToggle();
-			$section.find(".kp_settings__section_previews").slideToggle();
+			// Only toggle the previews if the screen size is 1300px or more.
+			if (window.innerWidth >= 1300) {
+				$section.find(".kp_settings__section_previews").slideToggle();
+			}
 
 			// Toggle the icon
 			$this
