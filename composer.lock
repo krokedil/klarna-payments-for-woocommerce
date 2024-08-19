@@ -4,41 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c23dfed83c16d9000002d347d9e24dd",
-    "packages": [
-        {
-            "name": "krokedil/settings-page",
-            "version": "1.0.0",
-            "dist": {
-                "type": "path",
-                "url": "../krokedil/settings-page",
-                "reference": "7ab1585afe6e6162b577bf4ae5314257c78d8320"
-            },
-            "require-dev": {
-                "php-stubs/woocommerce-stubs": "dev-master",
-                "wp-coding-standards/wpcs": "dev-develop"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Krokedil\\SettingsPage\\": "src/"
-                }
-            },
-            "license": [
-                "GPL-V2"
-            ],
-            "authors": [
-                {
-                    "name": "Krokedil AB",
-                    "email": "info@krokedil.se"
-                }
-            ],
-            "description": "A package to help setup settings pages in WordPress and WooCommerce for Krokedil plugins to add the Addons and Support tabs",
-            "transport-options": {
-                "relative": true
-            }
-        }
-    ],
+    "content-hash": "dcc8fce71bf98d463ebe3e190f0fa47f",
+    "packages": [],
     "packages-dev": [
         {
             "name": "php-stubs/woocommerce-stubs",
@@ -86,27 +53,28 @@
         },
         {
             "name": "php-stubs/wordpress-stubs",
-            "version": "v6.5.3",
+            "version": "v6.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "e611a83292d02055a25f83291a98fadd0c21e092"
+                "reference": "86e8753e89d59849276dcdd91b9a7dd78bb4abe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/e611a83292d02055a25f83291a98fadd0c21e092",
-                "reference": "e611a83292d02055a25f83291a98fadd0c21e092",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/86e8753e89d59849276dcdd91b9a7dd78bb4abe2",
+                "reference": "86e8753e89d59849276dcdd91b9a7dd78bb4abe2",
                 "shasum": ""
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
                 "nikic/php-parser": "^4.13",
-                "php": "^7.4 || ~8.0.0",
+                "php": "^7.4 || ^8.0",
                 "php-stubs/generator": "^0.8.3",
-                "phpdocumentor/reflection-docblock": "5.3",
+                "phpdocumentor/reflection-docblock": "^5.4.1",
                 "phpstan/phpstan": "^1.10.49",
                 "phpunit/phpunit": "^9.5",
-                "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^0.11"
+                "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^1.0",
+                "wp-coding-standards/wpcs": "3.1.0 as 2.3.0"
             },
             "suggest": {
                 "paragonie/sodium_compat": "Pure PHP implementation of libsodium",
@@ -127,9 +95,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.5.3"
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.6.0"
             },
-            "time": "2024-05-08T02:12:31+00:00"
+            "time": "2024-07-17T08:50:38+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -137,12 +105,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "df258d47231f1ed86c59b4c51a95ec00b852f588"
+                "reference": "41a426cac70d410183189bc31c63f474f6f53548"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/df258d47231f1ed86c59b4c51a95ec00b852f588",
-                "reference": "df258d47231f1ed86c59b4c51a95ec00b852f588",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/41a426cac70d410183189bc31c63f474f6f53548",
+                "reference": "41a426cac70d410183189bc31c63f474f6f53548",
                 "shasum": ""
             },
             "require": {
@@ -210,7 +178,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-06-05T17:35:20+00:00"
+            "time": "2024-08-17T17:43:40+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -366,9 +334,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "krokedil/settings-page": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

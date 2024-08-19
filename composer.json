@@ -1,7 +1,4 @@
 {
-  "require": {
-    "krokedil/settings-page": "@dev"
-  },
   "require-dev": {
     "wp-coding-standards/wpcs": "^2.3",
     "php-stubs/wordpress-stubs": "^6.1",

@@ -3,8 +3,9 @@
     "php": ">=7.4",
     "krokedil/wp-api": "^1.0",
     "krokedil/woocommerce": "1.6.1",
-    "krokedil/klarna-express-checkout": "^1.0.0",
-    "krokedil/klarna-onsite-messaging": "1.0.2"
+    "krokedil/klarna-express-checkout": "dev-develop-settings-changes",
+    "krokedil/klarna-onsite-messaging": "dev-develop-settings-changes",
+    "krokedil/settings-page": "dev-develop-changes"
   },
   "config": {
     "platform": {
@@ -27,6 +28,10 @@
     {
       "type": "vcs",
       "url": "git@github.com:krokedil/klarna-onsite-messaging.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:krokedil/settings-page.git"
     }
   ],
   "minimum-stability": "dev",
