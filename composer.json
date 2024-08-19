@@ -28,5 +28,10 @@
       "url": "git@github.com:krokedil/klarna-onsite-messaging.git"
     }
   ],
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    }
 }
