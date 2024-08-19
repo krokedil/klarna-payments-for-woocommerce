@@ -11,8 +11,8 @@ return array(
 				'target' => '_blank',
 				'href'   =>
 				array(
-					'en' => 'https://krokedil.com/product/klarna-checkout-for-woocommerce/',
-					'sv' => 'https://krokedil.se/product/klarna-checkout-for-woocommerce/',
+					'en' => 'https://krokedil.com/product/klarna-payments-for-woocommerce/',
+					'sv' => 'https://krokedil.se/product/klarna-payments-for-woocommerce/',
 				),
 			),
 			array(
@@ -20,7 +20,7 @@ return array(
 				'target' => '_blank',
 				'href'   =>
 				array(
-					'en' => 'https://docs.krokedil.com/klarna-checkout-for-woocommerce/',
+					'en' => 'https://docs.krokedil.com/klarna-payments-for-woocommerce/',
 				),
 			),
 			array(
@@ -77,8 +77,8 @@ return array(
 					'target' => '_blank',
 					'href'   =>
 					array(
-						'en' => 'https://krokedil.com/product/klarna-checkout-for-woocommerce/',
-						'sv' => 'https://krokedil.se/product/klarna-checkout-for-woocommerce/',
+						'en' => 'https://krokedil.com/product/klarna-payments-for-woocommerce/?utm_source=kp&utm_medium=wp-admin&utm_campaign=settings-sidebar',
+						'sv' => 'https://krokedil.se/product/klarna-payments-for-woocommerce/?utm_source=kp&utm_medium=wp-admin&utm_campaign=settings-sidebar',
 					),
 				),
 				array(
@@ -86,7 +86,7 @@ return array(
 					'target' => '_blank',
 					'href'   =>
 					array(
-						'en' => 'https://docs.krokedil.com/klarna-checkout-for-woocommerce/',
+						'en' => 'https://docs.krokedil.com/klarna-payments-for-woocommerce/?utm_source=kp&utm_medium=wp-admin&utm_campaign=settings-sidebar',
 					),
 				),
 				array(
@@ -114,7 +114,7 @@ return array(
 					'target' => '_blank',
 					'href'   =>
 					array(
-						'en' => 'https://docs.krokedil.com/krokedil-general-support-info/?utm_source=kco&utm_medium=wp-admin&utm_campaign=settings-sidebar',
+						'en' => 'https://docs.krokedil.com/krokedil-general-support-info/?utm_source=kp&utm_medium=wp-admin&utm_campaign=settings-sidebar',
 					),
 				),
 				1 =>
@@ -123,8 +123,8 @@ return array(
 					'target' => '_blank',
 					'href'   =>
 					array(
-						'en' => 'https://krokedil.com/products/?utm_source=kco&utm_medium=wp-admin&utm_campaign=settings-sidebar',
-						'sv' => 'https://krokedil.se/produkter/?utm_source=kco&utm_medium=wp-admin&utm_campaign=settings-sidebar',
+						'en' => 'https://krokedil.com/products/?utm_source=kp&utm_medium=wp-admin&utm_campaign=settings-sidebar',
+						'sv' => 'https://krokedil.se/produkter/?utm_source=kp&utm_medium=wp-admin&utm_campaign=settings-sidebar',
 					),
 				),
 				array(
@@ -132,8 +132,8 @@ return array(
 					'target' => '_blank',
 					'href'   =>
 					array(
-						'en' => 'https://krokedil.com/knowledge/?utm_source=kco&utm_medium=wp-admin&utm_campaign=settings-sidebar',
-						'sv' => 'https://krokedil.se/kunskap/?utm_source=kco&utm_medium=wp-admin&utm_campaign=settings-sidebar',
+						'en' => 'https://krokedil.com/knowledge/?utm_source=kp&utm_medium=wp-admin&utm_campaign=settings-sidebar',
+						'sv' => 'https://krokedil.se/kunskap/?utm_source=kp&utm_medium=wp-admin&utm_campaign=settings-sidebar',
 					),
 				),
 			),
@@ -144,6 +144,7 @@ return array(
 		'items' =>
 		array(
 			array(
+				'source'      => 'wordpress',
 				'slug'        => 'klarna-order-management-for-woocommerce',
 				'title'       => 'Klarna Order Management',
 				'image'       => array(
@@ -154,19 +155,33 @@ return array(
 					'en' => 'Handle post purchase order management in Klarna\'s system directly from WooCommerce . This way you can save time and don\'t have to work in both systems simultaneously.',
 					'sv' => 'Hantera ordrar i Klarnas system direkt från WooCommerce. På så sätt sparar du tid och behöver inte arbeta i båda systemen samtidigt.',
 				),
-				'link'        => array(
-					'class' => 'thickbox open-plugin-details-modal',
-					'text'  => array(
-						'en' => 'Learn more',
-						'sv' => 'Läs mer',
+				'links'       => array(
+					'read_more' => array(
+						'target' => '_blank',
+						'text'   => array(
+							'en' => 'Read more',
+							'sv' => 'Läs mer',
+						),
+						'href'   => array(
+							'en' => 'https://wordpress.org/plugins/klarna-order-management-for-woocommerce/',
+							'sv' => 'https://sv.wordpress.org/plugins/klarna-order-management-for-woocommerce/',
+						),
 					),
-					'href'  => array(
-						'en' => '/wp-admin/plugin-install.php?tab=plugin-information&plugin=klarna-order-management-for-woocommerce&TB_iframe=true&width=772&height=1005',
-						'sv' => '/wp-admin/plugin-install.php?tab=plugin-information&plugin=klarna-order-management-for-woocommerce&TB_iframe=true&width=772&height=1005',
+					'buy_now'   => array(
+						'class' => 'thickbox open-plugin-details-modal button button-secondary',
+						'text'  => array(
+							'en' => 'Install now',
+							'sv' => 'Installera nu',
+						),
+						'href'  => array(
+							'en' => '/wp-admin/plugin-install.php?tab=plugin-information&plugin=klarna-order-management-for-woocommerce&TB_iframe=true',
+							'sv' => '/wp-admin/plugin-install.php?tab=plugin-information&plugin=klarna-order-management-for-woocommerce&TB_iframe=true',
+						),
 					),
 				),
 			),
 			array(
+				'source'      => 'krokedil',
 				'slug'        => 'post-purchase-upsell-for-woocommerce',
 				'title'       => 'Post Purchase Upsell',
 				'image'       => array(
@@ -177,20 +192,39 @@ return array(
 					'en' => 'With Post Purchase Upsell, the customer can add additional products to their order after a completed purchase. They easily choose which of the selectable products they want to add and update their order with one click.',
 					'sv' => 'Med Post Purchase Upsell kan kunden lägga till ytterligare produkter till sin beställning efter att de genomfört ett köp. De väljer enkelt vilka av de valbara produkterna de vill lägga till och uppdaterar sin order med ett klick.',
 				),
-				'link'        => array(
-					'target' => '_blank',
-					'text'   => array(
-						'en' => 'Learn more',
-						'sv' => 'Läs mer',
+				'price'       => array(
+					'eur' => '25€ Monthly',
+					'sek' => '250 SEK Månadsvis',
+				),
+				'links'       => array(
+					'read_more' => array(
+						'target' => '_blank',
+						'text'   => array(
+							'en' => 'Read more',
+							'sv' => 'Läs mer',
+						),
+						'href'   =>
+						array(
+							'en' => 'https://krokedil.com/product/post-purchase-upsell-for-woocommerce/?utm_source=kp&utm_medium=wp-admin&utm_campaign=add-ons',
+							'sv' => 'https://krokedil.se/produkt/post-purchase-upsell-for-woocommerce/?utm_source=kp&utm_medium=wp-admin&utm_campaign=add-ons',
+						),
 					),
-					'href'   =>
-					array(
-						'en' => 'https://krokedil.com/product/post-purchase-upsell-for-woocommerce/',
-						'sv' => 'https://krokedil.se/produkt/post-purchase-upsell-for-woocommerce/',
+					'buy_now'   => array(
+						'target' => '_blank',
+						'class'  => 'button button-secondary',
+						'text'   => array(
+							'en' => 'Buy now',
+							'sv' => 'Köp nu',
+						),
+						'href'   => array(
+							'en' => 'https://krokedil.com/product/post-purchase-upsell-for-woocommerce/?utm_source=kp&utm_medium=wp-admin&utm_campaign=add-ons#installation',
+							'sv' => 'https://krokedil.se/product/post-purchase-upsell-for-woocommerce/?utm_source=kp&utm_medium=wp-admin&utm_campaign=add-ons#installation',
+						),
 					),
 				),
 			),
 			array(
+				'source'      => 'krokedil',
 				'slug'        => 'partial-delivery-for-woocommerce',
 				'title'       => 'Partial Delivery',
 				'image'       => array(
@@ -201,16 +235,33 @@ return array(
 					'en' => 'Enable partially delivered orders in WooCommerce, manage back ordered products automatically and give your customers a full overview under “My account”.',
 					'sv' => 'Möjliggör dellevererade ordrar i WooCommerce, hantera restnoterade produkter automatiskt och ge era kunder full överblick under “Mitt konto”.',
 				),
-				'link'        => array(
-					'target' => '_blank',
-					'text'   => array(
-						'en' => 'Learn more',
-						'sv' => 'Läs mer',
+				'price'       => array(
+					'eur' => '75€ Quarterly',
+					'sek' => '750 SEK Kvartalsvis',
+				),
+				'links'       => array(
+					'read_more' => array(
+						'target' => '_blank',
+						'text'   => array(
+							'en' => 'Read more',
+							'sv' => 'Läs mer',
+						),
+						'href'   => array(
+							'en' => 'https://krokedil.com/product/krokedil-shipping-connector/?utm_source=kp&utm_medium=wp-admin&utm_campaign=add-ons',
+							'sv' => 'https://krokedil.se/product/krokedil-shipping-connector/?utm_source=kp&utm_medium=wp-admin&utm_campaign=add-ons',
+						),
 					),
-					'href'   =>
-					array(
-						'en' => 'https://krokedil.com/product/partial-delivery-for-woocommerce/',
-						'sv' => 'https://krokedil.se/produkt/partial-delivery-for-woocommerce/',
+					'buy_now'   => array(
+						'target' => '_blank',
+						'class'  => 'button button-secondary',
+						'text'   => array(
+							'en' => 'Buy now',
+							'sv' => 'Köp nu',
+						),
+						'href'   => array(
+							'en' => 'https://krokedil.com/product/krokedil-shipping-connector/?utm_source=kp&utm_medium=wp-admin&utm_campaign=add-ons#installation',
+							'sv' => 'https://krokedil.se/product/krokedil-shipping-connector/?utm_source=kp&utm_medium=wp-admin&utm_campaign=add-ons#installation',
+						),
 					),
 				),
 			),
