@@ -11,24 +11,43 @@ jQuery(function ($) {
 			$(document).on(
 				"click",
 				".kp_settings__fields_toggle",
-				this.openCredentials
+				this.toggleCredentials
 			);
+
+			$(document).on(
+				"click",
+				".kp_settings__section_toggle",
+				this.toggleSection
+			);
+
 			$(document).on(
 				"change",
 				this.toggleTestModeSelector,
 				this.toggleTest
 			);
+
+			$(document).on(
+				"change",
+				"#woocommerce_klarna_payments_kec_theme, #woocommerce_klarna_payments_kec_shape",
+				this.changeKecPreview
+			);
+
+			$(document).on(
+				"change",
+				"#woocommerce_klarna_payments_placement_data_key_product, #woocommerce_klarna_payments_onsite_messaging_theme_product, #woocommerce_klarna_payments_placement_data_key_cart, #woocommerce_klarna_payments_onsite_messaging_theme_cart",
+				this.changeOsmPreview
+			);
+
 			$(document).on("change", this.toggleEuSelector, this.toggleEu);
 
 			// Trigger the change event to set the initial state.
 			$(this.toggleTestModeSelector).trigger("change");
 		},
 
-		openCredentials: function (e) {
+		toggleCredentials: function (e) {
 			e.preventDefault();
 			const $this = $(this);
 			const $td = $this.parent().parent().find("td");
-			console.log($td);
 
 			// Toggle the kp_settings__credentials_field kp_settings__credentials_field_hidden class
 			$td.toggleClass("kp_settings__credentials_field_hidden");
@@ -38,6 +57,22 @@ jQuery(function ($) {
 				.find("span")
 				.toggleClass(kp_admin.openedIcon)
 				.toggleClass(kp_admin.closedIcon);
+		},
+
+		toggleSection: function (e) {
+			e.preventDefault();
+			const $this = $(this);
+			const $section = $this.parent().parent().parent();
+
+			//$section.find(".kp_settings__section_info_text").slideToggle();
+			$section.find(".kp_settings__section_content").slideToggle();
+			$section.find(".kp_settings__section_previews").slideToggle();
+
+			// Toggle the icon
+			$this
+				.toggleClass(kp_admin.openedIcon)
+				.toggleClass(kp_admin.closedIcon);
+
 		},
 
 		toggleEu: function () {
@@ -72,6 +107,57 @@ jQuery(function ($) {
 				$prod.show();
 				$test.hide();
 			}
+		},
+
+		changeKecPreview: function () {
+			let theme = $("#woocommerce_klarna_payments_kec_theme").val();
+			let shape = $("#woocommerce_klarna_payments_kec_shape").val();
+
+			if( 'dark' === theme || 'custom' === theme || '' === theme ) {
+				theme = 'default';
+			}
+
+			const $img = $(
+				"#klarna-payments-settings-kec_settings .kp_settings__section_previews img"
+			);
+
+			const src = $img.attr("src").replace(/preview-(.*).png/, `preview-${shape}-${theme}.png`);
+
+			$img.attr("src", src);
+		},
+
+		changeOsmPreview: function (e) {
+			const type = e.target.id.includes("product") ? "product" : "cart";
+
+			let placement = $(`#woocommerce_klarna_payments_placement_data_key_${type}`).val();
+			let theme = $(`#woocommerce_klarna_payments_onsite_messaging_theme_${type}`).val();
+
+			const $previewImgs = $(
+				`#klarna-payments-settings-kosm .kp_settings__section_previews img`
+			);
+
+			// If we are changing the cart, its the first image, else the second.
+			const index = type === "cart" ? 0 : 1;
+			const $img = $previewImgs.eq(index);
+
+			// Get the img src.
+			const src = $img.attr("src");
+
+			// Split on the last / to get the path and the filename.
+			const parts = src.split("/");
+			const path = parts.slice(0, -1).join("/");
+
+			if ( 'default' === theme || 'custom' === theme || '' === theme ) {
+				theme = 'light';
+			}
+
+			if ("" === placement) {
+				placement = "credit-promotion-badge";
+			}
+
+			const filename = `preview-${type}-${theme}-${placement}.jpg`;
+
+			$img.attr("src", `${path}/${filename}`);
 		},
 	};
 
