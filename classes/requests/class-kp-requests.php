@@ -53,8 +53,8 @@ abstract class KP_Requests extends Request {
 			'plugin_version'         => WC_KLARNA_PAYMENTS_VERSION,
 			'plugin_short_name'      => 'KP',
 			'plugin_user_agent_name' => 'KP',
-			'logging_enabled'        => 'yes' === $settings['logging'],
-			'extended_debugging'     => 'yes' === ( isset( $settings['extra_logging'] ) ? $settings['extra_logging'] : 'no' ),
+			'logging_enabled'        => 'no' !== $settings['logging'] ?? 'no',
+			'extended_debugging'     => 'extra' === ( isset( $settings['logging'] ) ? $settings['logging'] : 'no' ),
 			'base_url'               => $this->get_base_url( $arguments['country'], $settings ),
 		);
 

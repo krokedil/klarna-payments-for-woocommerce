@@ -335,17 +335,14 @@ class KP_Form_Fields {
 			'logging'       => array(
 				'title'       => __( 'Logging', 'klarna-payments-for-woocommerce' ),
 				'label'       => __( 'Log debug messages', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'checkbox',
+				'type'        => 'select',
 				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'klarna-payments-for-woocommerce' ),
 				'default'     => 'no',
-				'desc_tip'    => true,
-			),
-			'extra_logging' => array(
-				'title'       => __( 'Log extra data', 'klarna-payments-for-woocommerce' ),
-				'label'       => __( 'Log extra debug data', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'checkbox',
-				'description' => __( 'Log extra data to the request logs from the plugin. This will log a lot more data, and should not be used unless you need it. But can be useful to debug issues that are hard to replicate.', 'klarna-payments-for-woocommerce' ),
-				'default'     => 'no',
+				'options'     => array(
+					'no'    => __( 'No', 'klarna-payments-for-woocommerce' ),
+					'yes'   => __( 'Yes', 'klarna-payments-for-woocommerce' ),
+					'extra' => __( 'Yes (with extra debug data)', 'klarna-payments-for-woocommerce' ),
+				),
 				'desc_tip'    => true,
 			),
 			'title'         => array(

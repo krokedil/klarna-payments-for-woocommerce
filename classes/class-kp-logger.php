@@ -27,7 +27,7 @@ class KP_Logger {
 	 */
 	public static function log( $data ) {
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		if ( 'yes' === $kp_settings['logging'] ) {
+		if ( 'no' !== $kp_settings['logging'] ) {
 			$message = self::format_data( $data );
 			if ( empty( self::$log ) ) {
 				self::$log = new WC_Logger();
@@ -164,7 +164,7 @@ class KP_Logger {
 		$caller .= $log_extra_data ? implode(
 			', ',
 			array_map(
-				function( $value ) {
+				function ( $value ) {
 					// Json encode all values so that we can see what objects and arrays are passed. Dont escape anything, partial output on errors, and ignore slashes and line terminators.
 					return wp_json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_UNESCAPED_LINE_TERMINATORS | JSON_UNESCAPED_SLASHES );
 				},
