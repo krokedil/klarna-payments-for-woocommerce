@@ -108,6 +108,10 @@ class KP_Assets {
 				'billing'  => $customer['billing'],
 				'shipping' => $customer['shipping'],
 			) : null,
+			// i18n.
+			'i18n'                   => array(
+				'order_button_label' => apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) ),
+			),
 		);
 
 		// Return with filter incase some people want to modify the params.
