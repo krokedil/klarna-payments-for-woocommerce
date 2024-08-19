@@ -124,7 +124,7 @@ span.kp_settings__section_toggle {
 
 	div.kp_settings__section_content {
 		grid-column: 2;
-		margin: auto;
+		margin: 0 auto;
 		grid-row: 1 / 3;
 	}
 
@@ -141,7 +141,10 @@ span.kp_settings__section_toggle {
 	align-items: center;
 	background-color: white;
 	padding: 0 1em 1em 1em;
-	margin-bottom: 20px;
+}
+
+.kp_settings__section_previews .kp_settings_section_preview:not(:first-child) {
+	margin-top: 20px;
 }
 
 .kp_settings_section_preview .kp_settings__preview_title {
