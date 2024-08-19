@@ -160,6 +160,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
 
+			add_filter( 'kosm_data_client_id', 'kp_get_client_id' );
+
 			// Load text domain.
 			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
 		}
@@ -186,10 +188,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			if ( class_exists( 'WC_Subscriptions' ) ) {
 				$this->subscription = new KP_Subscription();
 			}
-
 			$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 			$kosm     = new KlarnaOnsiteMessaging( $settings );
-			add_filter( 'wc_gateway_klarna_payments_settings', array( $kosm->settings(), 'extend_settings' ) );
+			add_filter( 'wc_gateway_klarna_payments_settings', array( $kosm->settings(), 'extend_v2_settings' ) );
 
 			$this->settings_page           = new KP_Settings_Page();
 			$this->checkout                = new KP_Checkout();
@@ -396,16 +397,14 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @return bool|mixed
 		 */
 		public function init_composer() {
-			$old_autoloader = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
-			$autoloader     = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/dependencies/scoper-autoload.php';
+			$autoloader = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/dependencies/scoper-autoload.php';
 
 			if ( ! is_readable( $autoloader ) ) {
 				self::missing_autoloader();
 				return false;
 			}
 
-			$old_autoloader_result = require $old_autoloader;
-			$autoloader_result     = require $autoloader;
+			$autoloader_result = require $autoloader;
 			if ( ! $autoloader_result ) {
 				return false;
 			}
