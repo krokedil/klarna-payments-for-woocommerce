@@ -5,12 +5,12 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 3.5.4
+ * Version: 3.6.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 8.9.0
+ * WC tested up to: 9.2.0
  *
  * Copyright (c) 2017-2024 Krokedil
  *
@@ -36,11 +36,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
+use Krokedil\WooCommerce\KrokedilWooCommerce;
 
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '3.5.4' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '3.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -134,6 +135,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $klarna_express_checkout = null;
 
 		/**
+		 * The WooCommerce package from Krokedil.
+		 *
+		 * @var KrokedilWooCommerce
+		 */
+		public $krokedil = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -178,6 +186,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$this->checkout                = new KP_Checkout();
 			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
+			$this->krokedil                = new KrokedilWooCommerce(
+				array(
+					'slug'         => 'klarna_payments',
+					'price_format' => 'minor',
+				)
+			);
 
 			$this->register_payment_block();
 

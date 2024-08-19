@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use \Automattic\WooCommerce\Admin\Features\Navigation\Menu;
+use Automattic\WooCommerce\Admin\Features\Navigation\Menu;
 
 if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 	/**
@@ -94,8 +94,8 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 		 * Add the Addons options page to WooCommerce.
 		 **/
 		public function options_page() {
-			$tab     = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
-			$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_STRING );
+			$tab     = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+			$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 			?>
 <div class="wrap woocommerce">
 			<?php $this->add_page_tabs( $tab ); ?>
@@ -303,18 +303,16 @@ if ( ! class_exists( 'Klarna_For_WooCommerce_Addons' ) ) {
 						$new_action       = 'install';
 						$new_status_label = 'Not installed';
 						$new_action_label = 'Install';
-					} else {
-						if ( 'installed' === $result['status'] ) {
+					} elseif ( 'installed' === $result['status'] ) {
 							$new_status       = 'installed';
 							$new_action       = 'activate';
 							$new_status_label = 'Installed';
 							$new_action_label = 'Activate';
-						} else {
-							$new_status       = 'not-installed';
-							$new_action       = 'install';
-							$new_status_label = 'Not installed';
-							$new_action_label = 'Install';
-						}
+					} else {
+						$new_status       = 'not-installed';
+						$new_action       = 'install';
+						$new_status_label = 'Not installed';
+						$new_action_label = 'Install';
 					}
 				}
 			}

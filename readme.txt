@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.5.3
+Tested up to: 6.6.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 8.9.0
-Stable tag: 3.5.4
+WC tested up to: 9.2.0
+Stable tag: 3.6.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,16 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.08.19    - version 3.6.0 =
+* Feature       - Added compatibility with "Linear Checkout for WooCommerce" plugin.
+* Feature       - Added the 'kp_blocks_order_button_label' filter to change the order button label in the Klarna Payments block.
+* Fix           - Fixed divide by zero error when calculating the tax rate.
+* Tweak         - Addressed various Woo Quality Insights recommendations.
+* Tweak         - You can now overwrite the recurring payment token from the admin Subscription page.
+* Feature       - [KOSM] Added support for Slovakia.
+* Feature       - [KOSM] Added support for Hungary.
+* Feature       - [KOSM] Added 'kosm_hide_placement' filter hook for conditionally hiding the placement.
+
 = 2024.05.13    - version 3.5.4 =
 * Fix           - Fixed a critical error due to undefined method call.
 
