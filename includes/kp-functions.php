@@ -200,10 +200,8 @@ function kp_print_error_message( $wp_error ) {
 		if ( function_exists( 'wc_add_notice' ) ) {
 			wc_add_notice( $error_message, 'error' );
 		}
-	} else {
-		if ( function_exists( 'wc_print_notice' ) ) {
+	} elseif ( function_exists( 'wc_print_notice' ) ) {
 			wc_print_notice( $error_message, 'error' );
-		}
 	}
 }
 
@@ -257,4 +255,28 @@ function kp_is_order_pay_page() {
  */
 function kp_is_wc_blocks_order( $order ) {
 	return $order && $order->is_created_via( 'store-api' );
+}
+
+/**
+ * Get the client id for Klarna Payments from the settings based on the customer country.
+ *
+ * @param string|null $country The customer country.
+ *
+ * @return string
+ */
+function kp_get_client_id( $country = null ) {
+	$country  = strtolower( $country ? $country : kp_get_klarna_country() );
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+	$eu_combined = 'yes' === isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no';
+	$test_mode   = 'yes' === isset( $settings['testmode'] ) ? $settings['testmode'] : 'no';
+
+	// If the country is in the EU and the EU combined setting is enabled, we should use the EU combined client id.
+	if ( $eu_combined && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
+		$country = 'eu';
+	}
+	$prefix      = $test_mode ? 'test_' : '';
+	$setting_key = "{$prefix}client_id_{$country}";
+
+	return $settings[ $setting_key ] ?? '';
 }
