@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Krokedil\SettingsPage\SettingsPage;
+use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
 
 /**
  * WC_Payment_Gateway class.
@@ -64,8 +64,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                 = 'klarna_payments';
-		$this->method_title       = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
-		$this->method_description = __( 'Get the flexibility to pay over time with Klarna!', 'klarna-payments-for-woocommerce' );
+		$this->method_title       = __( 'Klarna for WooCommerce', 'klarna-payments-for-woocommerce' );
+		$this->method_description = __( 'Supercharge your business with one single plugin for increased sales and enhanced shopping experiences.', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = true;
 		$this->supports           = apply_filters(
 			'wc_klarna_payments_supports',
@@ -161,8 +161,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function admin_options() {
 		$args                    = include WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/kp-settings-data.php';
 		$args['general_content'] = array( $this, 'settings_page_content' );
+		$args['icon']            = WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-icon.svg';
 		$settings_page           = SettingsPage::get_instance();
-		$settings_page->register_page( 'klarna_payments', $args );
+		$settings_page->register_page( 'klarna_payments', $args, $this );
 
 		$settings_page->output( 'klarna_payments' );
 	}
@@ -232,7 +233,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function is_available() {
 		if ( 'yes' !== $this->enabled ) {
-			error_log( 'Klarna Payments is not enabled' );
 			return false;
 		}
 
