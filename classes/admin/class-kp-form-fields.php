@@ -122,6 +122,11 @@ class KP_Form_Fields {
 			'currency' => 'RON',
 			'endpoint' => '',
 		),
+		'sk' => array(
+			'name'     => 'Slovakia',
+			'currency' => 'EUR',
+			'endpoint' => '',
+		),
 		'es' => array(
 			'name'     => 'Spain',
 			'currency' => 'EUR',
@@ -174,6 +179,7 @@ class KP_Form_Fields {
 			'pl' => __( 'Poland', 'klarna-payments-for-woocommerce' ),
 			'pt' => __( 'Portugal', 'klarna-payments-for-woocommerce' ),
 			'ro' => __( 'Romania', 'klarna-payments-for-woocommerce' ),
+			'sk' => __( 'Slovakia', 'klarna-payments-for-woocommerce' ),
 			'es' => __( 'Spain', 'klarna-payments-for-woocommerce' ),
 			'se' => __( 'Sweden', 'klarna-payments-for-woocommerce' ),
 			'ch' => __( 'Switzerland', 'klarna-payments-for-woocommerce' ),
