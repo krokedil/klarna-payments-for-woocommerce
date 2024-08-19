@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Krokedil\SettingsPage\SettingsPage;
+use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
 
 /**
  * KP_Settings_Page.
@@ -73,16 +73,22 @@ class KP_Settings_Page {
 		?>
 		<div id="klarna-payments-settings-<?php echo esc_attr( $section['id'] ); ?>" class="kp_settings__section">
 			<div class="kp_settings__section_info">
-				<h3 class="kp_settings__section_title"><?php echo esc_html( $section['title'] ); ?></h3>
-				<p class="kp_settings__section_description"><?php echo esc_html( $section['description'] ?? '' ); ?></p>
-				<?php for ( $i = 0; $i < $link_count; $i++ ) : ?>
-					<a class="kp_settings__section_link" href="<?php echo esc_url( $section['links'][ $i ]['url'] ); ?>" target="_blank"><?php echo esc_html( $section['links'][ $i ]['title'] ); ?></a>
-					<?php if ( $i < count( $section['links'] ) - 1 ) : ?>
-						|
-					<?php endif; ?>
-				<?php endfor; ?>
+				<h3 class="kp_settings__section_title">
+					<?php echo esc_html( $section['title'] ); ?>
+					<span class="kp_settings__section_toggle dashicons dashicons-arrow-down-alt2"></span>
+				</h3>
+				<div class="kp_settings__section_info_text">
+					<p class="kp_settings__section_description"><?php echo esc_html( $section['description'] ?? '' ); ?></p>
+					<?php for ( $i = 0; $i < $link_count; $i++ ) : ?>
+						<a class="kp_settings__section_link" href="<?php echo esc_url( $section['links'][ $i ]['url'] ); ?>" target="_blank"><?php echo esc_html( $section['links'][ $i ]['title'] ); ?></a>
+						<?php if ( $i < count( $section['links'] ) - 1 ) : ?>
+							|
+						<?php endif; ?>
+					<?php endfor; ?>
+				</div>
 			</div>
-			<table class="form-table kp_settings__section_content">
+			<div class="kp_settings__section_content">
+				<table class="form-table">
 		<?php
 	}
 
@@ -109,12 +115,21 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function section_end_html( $section ) {
+		$previews = $section['previews'] ?? array();
 		?>
-			</table>
-			<div class="kp_settings__section_preview">
-			<?php if ( isset( $section['preview_img'] ) ) : ?>
-				<img width="400" alt="test" src="<?php echo esc_url( $section['preview_img'] ); ?>" />
-			<?php endif; ?>
+				</table>
+			</div>
+			<div class="kp_settings__section_previews">
+				<?php foreach ( $previews as $preview ) : ?>
+					<div class="kp_settings_section_preview">
+						<?php if ( isset( $preview['title'] ) ) : ?>
+							<h3 class="kp_settings__preview_title"><?php echo esc_html( $preview['title'] ); ?></h3>
+						<?php endif; ?>
+						<?php if ( isset( $preview['image'] ) ) : ?>
+							<img width="100%" alt="test" src="<?php echo esc_url( $preview['image'] ); ?>" />
+						<?php endif; ?>
+					</div>
+				<?php endforeach; ?>
 			</div>
 		</div>
 		<?php
@@ -146,10 +161,10 @@ class KP_Settings_Page {
 		?>
 		<tr class="kp_settings__text_info" valign="top">
 			<th scope="row" class="titledesc">
-				<h4><?php echo esc_html( $args['title'] ?? '' ); ?></h4>
+				<h4><?php echo wp_kses_post( $args['title'] ?? '' ); ?></h4>
 			</th>
 			<td class="forminp">
-				<p><?php echo esc_html( $args['description'] ?? '' ); ?></p>
+				<p><?php echo wp_kses_post( $args['description'] ?? '' ); ?></p>
 			</td>
 		</tr>
 		<?php
@@ -184,7 +199,7 @@ class KP_Settings_Page {
 		$eu_countries  = KP_Form_Fields::available_countries( 'eu' );
 		$is_eu_country = key_exists( $key, $eu_countries );
 		$is_eu_region  = 'eu' === $key;
-		$combine_eu    = 'yes' === $settings['combine_eu_credentials'] ?? 'no';
+		$combine_eu    = 'yes' === $settings['combine_eu_credentials'] ?? 'yes';
 		$test_enabled  = 'yes' === $settings['testmode'] ?? 'no';
 		$hide          = false;
 
@@ -202,7 +217,7 @@ class KP_Settings_Page {
 					class="kp_settings__fields_toggle <?php echo esc_attr( $args['class'] ?? '' ); ?>"
 				>
 					<?php echo wp_kses_post( $args['title'] ?? '' ); ?>
-					<span class="dashicons dashicons-arrow-up-alt2"></span>
+					<span class="dashicons dashicons-arrow-down-alt2"></span>
 				</label>
 			</th>
 			<td class="forminp kp_settings__credentials_field_hidden">
@@ -242,16 +257,16 @@ class KP_Settings_Page {
 			<div class="kp_settings__fields_credentials" data-field-key="<?php echo esc_attr( $key ); ?>">
 				<div class="kp_settings__field">
 					<label for="<?php echo esc_attr( $mid_key ); ?>"><?php echo esc_html( __( 'Username', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix ); ?></label>
-					<input type="text" class="kp_settings__fields_mid" id="<?php echo esc_attr( $mid_key ); ?>" name="<?php echo esc_attr( $mid_name ); ?>" value="<?php echo esc_attr( $settings[ $mid_key ] ?? '' ); ?>" placeholder=" " />
+					<input autocomplete="off new-password" type="text" class="kp_settings__fields_mid" id="<?php echo esc_attr( $mid_key ); ?>" name="<?php echo esc_attr( $mid_name ); ?>" value="<?php echo esc_attr( $settings[ $mid_key ] ?? '' ); ?>" placeholder=" " />
 				</div>
 				<div class="kp_settings__field">
 					<label for="<?php echo esc_attr( $shared_secret_key ); ?>"><?php echo esc_html( __( 'Password', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix ); ?></label>
-					<input type="password" class="kp_settings__fields_secret" id="<?php echo esc_attr( $shared_secret_key ); ?>" name="<?php echo esc_attr( $shared_secret_name ); ?>" value="<?php echo esc_attr( $settings[ $shared_secret_key ] ?? '' ); ?>" placeholder=" " />
+					<input autocomplete="off new-password" type="password" class="kp_settings__fields_secret" id="<?php echo esc_attr( $shared_secret_key ); ?>" name="<?php echo esc_attr( $shared_secret_name ); ?>" value="<?php echo esc_attr( $settings[ $shared_secret_key ] ?? '' ); ?>" placeholder=" " />
 				</div>
 			</div>
 			<div class="kp_settings__field">
 				<label for="<?php echo esc_attr( $client_id_key ); ?>"><?php echo esc_html( __( 'Client ID', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix ); ?></label>
-				<input type="text" class="kp_settings__fields_mid" id="<?php echo esc_attr( $client_id_key ); ?>" name="<?php echo esc_attr( $client_id_name ); ?>" value="<?php echo esc_attr( $settings[ $client_id_key ] ?? '' ); ?>" placeholder=" " />
+				<input autocomplete="off new-password" type="text" class="kp_settings__fields_mid" id="<?php echo esc_attr( $client_id_key ); ?>" name="<?php echo esc_attr( $client_id_name ); ?>" value="<?php echo esc_attr( $settings[ $client_id_key ] ?? '' ); ?>" placeholder=" " />
 			</div>
 		</div>
 		<?php
