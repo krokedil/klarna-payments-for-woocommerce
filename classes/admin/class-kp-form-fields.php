@@ -227,9 +227,9 @@ class KP_Form_Fields {
 	public static function get_credential_section_fields( $settings = array() ) {
 		$merchant_portal_html = '<a href="https://portal.klarna.com" target="_blank">' . __( 'Klarna Merchant Portal', 'klarna-payments-for-woocommerce' ) . '</a>';
 		$credentials_section  = array(
-			'credentials'            => array(
+			'credentials'      => array(
 				'id'          => 'credentials',
-				'title'       => 'Activation',
+				'title'       => 'Credentials',
 				'description' => __( 'To unlock the plugin\'s features, enter your credentials', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'kp_section_start',
 				'links'       => array(
@@ -239,25 +239,19 @@ class KP_Form_Fields {
 					),
 				),
 			),
-			'credentials_info'       => array(
+			'credentials_info' => array(
 				'type'        => 'kp_text_info',
 				'title'       => __( 'Client Identifier & API Credentials', 'klarna-payments-for-woocommerce' ),
 				// translators: %s: merchant portal link.
 				'description' => sprintf( __( 'Enter the credentials for production and test for each market Klarna is used. Get the client identifier and API credentials from the %s, under Settings', 'klarna-payments-for.woocommerce' ), $merchant_portal_html ),
 			),
-			'testmode'               => array(
+			'testmode'         => array(
 				'label'    => __( 'Enable Klarna Payments in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
 				'default'  => 'no',
 				'desc_tip' => true,
 			),
-			'combine_eu_credentials' => array(
-				'label'       => __( 'Combine all EU country credentials', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'checkbox',
-				'description' => '',
-				'default'     => 'yes',
-			),
-			'eu_credentials'         => array(
+			'eu_credentials'   => array(
 				'title' => __( 'European Market', 'klarna-payments-for-woocommerce' ),
 				'type'  => 'kp_text_info',
 			),
@@ -272,14 +266,13 @@ class KP_Form_Fields {
 		foreach ( $eu_countries as $key => $name ) {
 			$eu = array_merge( $eu, self::get_eu_country_fields( $key, $name ) );
 		}
-		/*
-		'markets'                => array(
-				'title'       => __( 'Markets & regional API Credentials', 'klarna-payments-for-woocommerce' ),
-				'description' => __( 'Enter the countries you plan to make Klarna available and then enter the respective test and production credentials for each sales region', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'kp_text_info',
-			),
-			*/
-		$na = array_merge(
+		$eu['combine_eu_credentials'] = array(
+			'label'       => __( 'Combine all EU country credentials', 'klarna-payments-for-woocommerce' ),
+			'type'        => 'checkbox',
+			'description' => '',
+			'default'     => 'yes',
+		);
+		$na                           = array_merge(
 			array(
 				'na_credentials' => array(
 					'title' => __( 'North American Market', 'klarna-payments-for-woocommerce' ),
@@ -323,7 +316,7 @@ class KP_Form_Fields {
 			'general'       => array(
 				'id'          => 'general',
 				'title'       => 'Klarna Payments*',
-				'description' => __( 'Give your customers the ability to pay in flexible ways such as Buy now, Pay Later, Invoicing, Installments and Financing. Klarna payments is required to enabled the additional solutions', 'klarna-payments-for-woocommerce' ),
+				'description' => __( 'Give your customers the ability to pay in flexible ways such as Buy now, Pay Later, Invoicing, Installments and Financing.', 'klarna-payments-for-woocommerce' ),
 				'links'       => array(
 					array(
 						'url'   => 'https://docs.klarna.com/klarna-payments/',
@@ -391,7 +384,7 @@ class KP_Form_Fields {
 	 */
 	private static function get_eu_country_fields( $key, $name ) {
 		// translators: %s: country name.
-		$title = sprintf( __( 'API Credentials for %s:', 'klarna-payments-for-woocommerce' ), $name );
+		$title = sprintf( __( 'Credentials for %s:', 'klarna-payments-for-woocommerce' ), $name );
 
 		$fields = self::get_credential_fields( $key, $title );
 
