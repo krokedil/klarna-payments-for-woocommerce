@@ -243,7 +243,7 @@ class KP_Form_Fields {
 				'type'        => 'kp_text_info',
 				'title'       => __( 'Client Identifier & API Credentials', 'klarna-payments-for-woocommerce' ),
 				// translators: %s: merchant portal link.
-				'description' => sprintf( __( 'Enter the credentials for production and test for each market Klarna is used. Get the client identifier and API credentials from the %s, under Settings', 'klarna-payments-for.woocommerce' ), $merchant_portal_html ),
+				'description' => sprintf( __( 'Enter the credentials for production and test for each market Klarna is used. Get the client identifier and API credentials from the %s, under Settings.', 'klarna-payments-for-woocommerce' ), $merchant_portal_html ),
 			),
 			'testmode'         => array(
 				'label'    => __( 'Enable Klarna Payments in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
@@ -398,7 +398,8 @@ class KP_Form_Fields {
 	}
 
 	/**
-	 * Get credential settings fields
+	 * Get credential settings fields.
+	 * Hidden settings are required for our custom input fields to work properly when saving the settings.
 	 *
 	 * @param string $key   The key for the settings field.
 	 * @param string $title The title for the settings field.
