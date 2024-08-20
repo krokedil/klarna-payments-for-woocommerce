@@ -115,8 +115,8 @@ jQuery(function ($) {
 			let theme = $("#woocommerce_klarna_payments_kec_theme").val();
 			let shape = $("#woocommerce_klarna_payments_kec_shape").val();
 
-			if( 'dark' === theme || 'custom' === theme || '' === theme ) {
-				theme = 'default';
+			if( '' === theme || 'default' === theme ) {
+				theme = 'dark';
 			}
 
 			const $img = $(
