@@ -260,11 +260,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function plugin_action_links( $links ) {
 			$setting_link = $this->get_setting_link();
+			$support_link = add_query_arg( 'subsection', 'support', $setting_link );
 
 			$plugin_links = array(
 				'<a href="' . $setting_link . '">' . __( 'Settings', 'klarna-payments-for-woocommerce' ) . '</a>',
 				'<a href="https://docs.woocommerce.com/document/klarna-payments/">' . __( 'Docs', 'klarna-payments-for-woocommerce' ) . '</a>',
-				'<a href="https://krokedil.com/support/">' . __( 'Support', 'klarna-payments-for-woocommerce' ) . '</a>',
+				'<a href="' . $support_link . '">' . __( 'Support', 'klarna-payments-for-woocommerce' ) . '</a>',
 			);
 
 			return array_merge( $plugin_links, $links );
