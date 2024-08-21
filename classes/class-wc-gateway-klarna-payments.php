@@ -162,7 +162,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$args = $this->get_settings_page_args();
 
 		if ( empty( $args ) ) {
-			parent::admin_options();
+			$this->settings_page_content();
 			return;
 		}
 
