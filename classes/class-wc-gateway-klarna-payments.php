@@ -159,13 +159,44 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Add sidebar to the settings page.
 	 */
 	public function admin_options() {
-		$args                    = include WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/kp-settings-data.php';
+		$args = $this->get_settings_page_args();
+
+		if ( empty( $args ) ) {
+			parent::admin_options();
+			return;
+		}
+
 		$args['general_content'] = array( $this, 'settings_page_content' );
 		$args['icon']            = WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-icon.svg';
-		$settings_page           = SettingsPage::get_instance();
-		$settings_page->register_page( 'klarna_payments', $args, $this );
+		( SettingsPage::get_instance() )
+			->set_plugin_name( 'Klarna' )
+			->register_page( 'klarna_payments', $args, $this )
+			->output( 'klarna_payments' );
+	}
 
-		$settings_page->output( 'klarna_payments' );
+	/**
+	 * Read the settings page arguments from remote or local storage.
+	 * If the args are stored locally, they are fetched from the transient cache.
+	 * If they are not available locally, they are fetched from the remote source and stored in the transient cache.
+	 * If the remote source is not available, the function returns null, and default settings page will be used instead.
+	 *
+	 * @return array|null
+	 */
+	private function get_settings_page_args() {
+		$args = get_transient( 'klarna_payments_settings_page_config' );
+		if ( ! $args ) {
+			$args = wp_remote_get( 'https://kroconnect.blob.core.windows.net/krokedil/plugin-settings/klarna-payments.json' );
+
+			if ( is_wp_error( $args ) ) {
+				KP_Logger::log( 'Failed to fetch Klarna Payments settings page config from remote source.' );
+				return null;
+			}
+
+			$args = wp_remote_retrieve_body( $args );
+			set_transient( 'klarna_payments_settings_page_config', $args, 60 * 60 * 24 ); // 24 hours lifetime.
+		}
+
+		return json_decode( $args, true );
 	}
 
 	/**
