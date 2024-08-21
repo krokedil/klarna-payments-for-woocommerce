@@ -205,6 +205,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return void
 	 */
 	public function settings_page_content() {
+		KP_Settings_Saved::maybe_show_errors();
 		KP_Settings_Page::header_html();
 		echo $this->generate_settings_html( $this->get_form_fields(), false ); // phpcs:ignore
 	}
@@ -260,6 +261,39 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Check if the country is available for Klarna Payments.
+	 *
+	 * @param string $country The country code.
+	 *
+	 * @return bool
+	 */
+	public function is_country_available( $country ) {
+		/**
+		 * Get the available countries from the settings. This is actually an array, even if the method says it's a string.
+		 *
+		 * @var array $available_countries The available countries.
+		 */
+		$available_countries = $this->get_option( 'available_countries', array() );
+		$country             = strtolower( $country );
+		if ( empty( $available_countries ) ) {
+			// See if the country has values saved from the old settings, before the available countries setting was added.
+			$testmode = $this->get_option( 'testmode' );
+			$prefix   = $testmode ? 'test_' : '';
+
+			$merchant_id = $this->get_option( "{$prefix}merchant_id_{$country}" );
+			$secret      = $this->get_option( "{$prefix}shared_secret_{$country}" );
+
+			// If we have the merchant id and secret, the country is available.
+			if ( ! empty( $merchant_id ) && ! empty( $secret ) ) {
+				return true;
+			}
+		}
+
+		$is_available = in_array( $country, $available_countries, true );
+		return $is_available;
+	}
+
+	/**
 	 * Check if Klarna Payments should be available
 	 */
 	public function is_available() {
@@ -280,6 +314,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Check country and currency.
 		if ( is_wp_error( $this->country_currency_check( $order ) ) ) {
+			return false;
+		}
+
+		// Check the country against the available countries in the settings.
+		if ( ! $this->is_country_available( kp_get_klarna_country( $order ) ) ) {
 			return false;
 		}
 
