@@ -45,6 +45,7 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function header_html() {
+		$navigation = SettingsPage::get_instance()->navigation( 'klarna_payments' );
 		?>
 		<div class="kp_settings__header">
 			<img class="kp_settings__header_logo" src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/klarna-icon.svg" alt="Klarna Payments" />
@@ -57,7 +58,9 @@ class KP_Settings_Page {
 				</p>
 			</div>
 		</div>
-		<?php SettingsPage::get_instance()->navigation( 'klarna_payments' )->output(); ?>
+		<?php if ( $navigation ) : ?>
+			<?php $navigation->output(); ?>
+		<?php endif; ?>
 		<?php
 	}
 
