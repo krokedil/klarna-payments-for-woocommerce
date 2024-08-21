@@ -198,7 +198,7 @@ class KP_Order_Data {
 		}
 
 		$klarna_item = array(
-			'image_url'             => $order_line->get_image_url(),
+			'image_url'             => $this->maybe_allow_order_line_url( $order_line->get_image_url() ),
 			'merchant_data'         => apply_filters( $order_line->get_filter_name( 'merchant_data' ), array(), $order_line ),
 			'name'                  => $order_line->get_name(),
 			'product_identifiers'   => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
@@ -298,5 +298,21 @@ class KP_Order_Data {
 	 */
 	public static function remove_null( $var ) {
 		return is_array( $var ) ? ! empty( $var ) : null !== $var; // If empty array, or if value is null return true to remove value.
+	}
+
+	/**
+	 * Maybe filters out product url for the order line before we send them to Klarna based on settings.
+	 *
+	 * @param string $url The URL to the product or product image.
+	 * @return string|null
+	 */
+	public function maybe_allow_order_line_url( $url ) {
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+		if ( 'yes' !== ( $settings['send_product_urls'] ?? 'no' ) ) {
+			$url = null;
+		}
+
+		return $url;
 	}
 }
