@@ -463,14 +463,15 @@ class KP_Form_Fields {
 		$parsed_form_fields = array();
 
 		$has_section_end = true;
+		$previous_key    = 'none';
 
 		foreach ( $form_fields as $key => $value ) {
 			$type = isset( $value['type'] ) ? $value['type'] : '';
 			// Replace any title types with the custom type kp_section_start.
-			if ( 'title' === $type ) {
+			if ( 'title' === $type || 'kp_section_start' === $type ) {
 				// If we don't have a section end when we find a new title, add one before it.
 				if ( ! $has_section_end ) {
-					$parsed_form_fields[ 'section_end_' . $key ] = array(
+					$parsed_form_fields[ 'section_end_' . $previous_key ] = array(
 						'type' => 'kp_section_end',
 					);
 				}
@@ -478,12 +479,12 @@ class KP_Form_Fields {
 				$value['type']   = 'kp_section_start';
 				$value['id']     = $key;
 				$has_section_end = false;
-			}
-
-			// Replace any sectionend types with the custom type kp_section_end.
-			if ( 'sectionend' === $type ) {
+				$previous_key    = $key;
+			} elseif ( 'sectionend' === $type ) { // Replace any sectionend types with the custom type kp_section_end.
 				$has_section_end = true;
 				$value['type']   = 'kp_section_end';
+			} elseif ( 'kp_section_end' === $type ) {
+				$has_section_end = true;
 			}
 
 			$parsed_form_fields[ $key ] = $value;
