@@ -10,7 +10,7 @@ function customize_php_scoper_config( array $config ): array {
 	$config['exclude-classes'][] = 'WC_Product';
 	$config['exclude-functions'][] = 'kp_get_client_id';
 	$config['exclude-functions'][] = 'KP_WC';
-
+	$config['exclude-namespaces'][] = 'Automattic';
 
 	return $config;
 }
