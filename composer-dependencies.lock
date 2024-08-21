@@ -218,12 +218,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/settings-page.git",
-                "reference": "1ec93cd7114eeb5b4967c78ab31c43c30b439a6d"
+                "reference": "5f84c5a2db108da3ee6599f20ca864a64ddccc53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/1ec93cd7114eeb5b4967c78ab31c43c30b439a6d",
-                "reference": "1ec93cd7114eeb5b4967c78ab31c43c30b439a6d",
+                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/5f84c5a2db108da3ee6599f20ca864a64ddccc53",
+                "reference": "5f84c5a2db108da3ee6599f20ca864a64ddccc53",
                 "shasum": ""
             },
             "require-dev": {
@@ -235,6 +235,11 @@
                 "psr-4": {
                     "Krokedil\\SettingsPage\\": "src/"
                 }
+            },
+            "scripts": {
+                "makepot": [
+                    "wp --allow-root i18n make-pot ./src ./languages/krokedil-settings.pot --domain=krokedil-settings"
+                ]
             },
             "license": [
                 "GPL-V2"
@@ -250,7 +255,7 @@
                 "source": "https://github.com/krokedil/settings-page/tree/develop-changes",
                 "issues": "https://github.com/krokedil/settings-page/issues"
             },
-            "time": "2024-06-25T07:45:19+00:00"
+            "time": "2024-08-21T09:53:36+00:00"
         },
         {
             "name": "krokedil/woocommerce",
