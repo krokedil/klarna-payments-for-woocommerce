@@ -313,7 +313,7 @@ class KP_Form_Fields {
 	 */
 	public static function get_kp_section_fields( $settings = array() ) {
 		$kp_section = array(
-			'general'       => array(
+			'general'             => array(
 				'id'          => 'general',
 				'title'       => 'Klarna Payments*',
 				'description' => __( 'Give your customers the ability to pay in flexible ways such as Buy now, Pay Later, Invoicing, Installments and Financing.', 'klarna-payments-for-woocommerce' ),
@@ -325,13 +325,13 @@ class KP_Form_Fields {
 				),
 				'type'        => 'kp_section_start',
 			),
-			'enabled'       => array(
+			'enabled'             => array(
 				'label'       => __( 'Enable Klarna Payments', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no',
 			),
-			'logging'       => array(
+			'logging'             => array(
 				'title'       => __( 'Logging', 'klarna-payments-for-woocommerce' ),
 				'label'       => __( 'Log debug messages', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'select',
@@ -344,13 +344,13 @@ class KP_Form_Fields {
 				),
 				'desc_tip'    => true,
 			),
-			'title'         => array(
+			'title'               => array(
 				'title'    => __( 'Payment method title', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'text',
 				'default'  => 'Klarna',
 				'desc_tip' => true,
 			),
-			'customer_type' => array(
+			'customer_type'       => array(
 				'title'    => __( 'Select the type of customer that you sell to', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'select',
 				'options'  => array(
@@ -360,7 +360,15 @@ class KP_Form_Fields {
 				'default'  => 'b2c',
 				'desc_tip' => true,
 			),
-			'general_end'   => array(
+			'available_countries' => array(
+				'title'       => __( 'Enter the countries where Klarna will be available', 'klarna-payments-for-woocommerce' ) . ':',
+				'type'        => 'multiselect',
+				'class'       => 'wc-enhanced-select',
+				'options'     => self::available_countries(),
+				'placeholder' => __( 'Start typing', 'klarna-payments-for-woocommerce' ),
+				'default'     => '',
+			),
+			'general_end'         => array(
 				'type'     => 'kp_section_end',
 				'previews' => array(
 					array(
