@@ -202,7 +202,7 @@ class KP_Form_Fields {
 			'default'           => '',
 			'desc_tip'          => false,
 			'custom_attributes' => array(
-				'autocomplete' => 'off',
+				'autocomplete' => 'off new-password',
 			),
 		);
 	}
