@@ -144,7 +144,7 @@ class KP_Assets {
 		);
 
 		wp_enqueue_style(
-			'klarna_payments_admin',
+			'klarna_payments_admin_style',
 			plugins_url( 'assets/css/klarna-payments-admin.css', WC_KLARNA_PAYMENTS_MAIN_FILE ),
 			array(),
 			WC_KLARNA_PAYMENTS_VERSION
