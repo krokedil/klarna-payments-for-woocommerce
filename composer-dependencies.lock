@@ -75,12 +75,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "907fa663d5ef1190243e34a06afe5dcf92f9efa8"
+                "reference": "70473a8c47cb70362636568693123e92471fc8f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/907fa663d5ef1190243e34a06afe5dcf92f9efa8",
-                "reference": "907fa663d5ef1190243e34a06afe5dcf92f9efa8",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/70473a8c47cb70362636568693123e92471fc8f9",
+                "reference": "70473a8c47cb70362636568693123e92471fc8f9",
                 "shasum": ""
             },
             "require": {
@@ -139,7 +139,7 @@
                 "source": "https://github.com/krokedil/klarna-express-checkout/tree/develop-settings-changes",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2024-08-20T06:17:41+00:00"
+            "time": "2024-08-23T09:40:48+00:00"
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
@@ -147,12 +147,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
-                "reference": "c614bad27626f95dbb092575ca1826f9e380dd09"
+                "reference": "29bf34df0edef5d25b2b07fb4084eaa6541a056e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/c614bad27626f95dbb092575ca1826f9e380dd09",
-                "reference": "c614bad27626f95dbb092575ca1826f9e380dd09",
+                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/29bf34df0edef5d25b2b07fb4084eaa6541a056e",
+                "reference": "29bf34df0edef5d25b2b07fb4084eaa6541a056e",
                 "shasum": ""
             },
             "require": {
@@ -210,7 +210,7 @@
                 "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/develop-settings-changes",
                 "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
             },
-            "time": "2024-08-20T06:16:14+00:00"
+            "time": "2024-08-23T09:42:54+00:00"
         },
         {
             "name": "krokedil/settings-page",
