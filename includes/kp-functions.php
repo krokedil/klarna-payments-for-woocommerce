@@ -162,7 +162,6 @@ function kp_process_rejected( $order, $decoded ) {
 	);
 }
 
-
 /**
  * Formats the locale to match Klarnas api.
  *
@@ -170,7 +169,7 @@ function kp_process_rejected( $order, $decoded ) {
  */
 function kp_get_locale() {
 	$locale = get_locale();
-	// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formated to fi_fi.
+	// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formatted to fi_fi.
 	switch ( $locale ) {
 		case 'fi':
 			$locale = 'fi_fi';
@@ -271,12 +270,77 @@ function kp_get_client_id( $country = null ) {
 	$eu_combined = 'yes' === isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no';
 	$test_mode   = 'yes' === isset( $settings['testmode'] ) ? $settings['testmode'] : 'no';
 
+	if ( ! kp_is_country_available( $country ) ) {
+		return '';
+	}
+
 	// If the country is in the EU and the EU combined setting is enabled, we should use the EU combined client id.
 	if ( $eu_combined && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
 		$country = 'eu';
 	}
 	$prefix      = $test_mode ? 'test_' : '';
 	$setting_key = "{$prefix}client_id_{$country}";
-
 	return $settings[ $setting_key ] ?? '';
+}
+
+/**
+ * Get the client id based on the currency.
+ *
+ * @param string|null $currency The currency code to get the client id for, if null the current currency will be used.
+ *
+ * @return string
+ */
+function kp_get_client_id_by_currency( $currency = null ) {
+	if ( empty( $currency ) ) {
+		$currency = get_woocommerce_currency();
+	}
+
+	$country = null;
+	// If the currency is EUR, we should maybe get the client id based on the locale for the customer.
+	if ( 'EUR' === $currency ) {
+		$country = kp_get_klarna_country();
+	} else {
+		foreach ( KP_Form_Fields::$kp_form_auto_countries as $cc => $country_data ) {
+			if ( $country_data['currency'] === $currency ) {
+				$country = $cc;
+				break;
+			}
+		}
+	}
+
+	return kp_get_client_id( $country );
+}
+
+/**
+ * Check if the country is available for Klarna Payments.
+ *
+ * @param string $country The country code.
+ *
+ * @return bool
+ */
+function kp_is_country_available( $country ) {
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+	/**
+	 * Get the available countries from the settings. This is actually an array, even if the method says it's a string.
+	 *
+	 * @var array $available_countries The available countries.
+	 */
+	$available_countries = isset( $settings['available_countries'] ) ? $settings['available_countries'] : array();
+	$country             = strtolower( $country );
+	if ( empty( $available_countries ) ) {
+		// See if the country has values saved from the old settings, before the available countries setting was added.
+		$testmode = $settings['testmode'] ?? 'no';
+		$prefix   = $testmode ? 'test_' : '';
+
+		$merchant_id = $settings[ "{$prefix}merchant_id_{$country}" ];
+		$secret      = $settings[ "{$prefix}shared_secret_{$country}" ];
+
+		// If we have the merchant id and secret, the country is available.
+		if ( ! empty( $merchant_id ) && ! empty( $secret ) ) {
+			return true;
+		}
+	}
+
+	$is_available = in_array( $country, $available_countries, true );
+	return $is_available;
 }
