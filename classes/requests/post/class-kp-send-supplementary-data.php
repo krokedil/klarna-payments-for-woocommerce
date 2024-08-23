@@ -21,7 +21,7 @@ class KP_Send_Supplementary_Data extends KP_Requests_Post {
 
 		$this->log_title      = 'Send supplementary data';
 		$this->request_filter = 'wc_klarna_payments_send_supplementary_data_args';
-		$this->endpoint       = 'alpha/shopping/sessions';
+		$this->endpoint       = 'v1/shopping/sessions';
 	}
 
 	protected function get_base_url( $country, $settings ) {
@@ -35,7 +35,7 @@ class KP_Send_Supplementary_Data extends KP_Requests_Post {
 	 */
 	protected function get_request_headers() {
 		return array(
-			'Authorization' => $this->calculate_auth(),
+			'Authorization' => 'Basic ',
 			'Content-Type'  => 'application/json',
 		);
 	}
