@@ -227,7 +227,7 @@ class KP_Form_Fields {
 	public static function get_credential_section_fields( $settings = array() ) {
 		$merchant_portal_html = '<a href="https://portal.klarna.com" target="_blank">' . __( 'Klarna Merchant Portal', 'klarna-payments-for-woocommerce' ) . '</a>';
 		$credentials_section  = array(
-			'credentials'      => array(
+			'credentials'         => array(
 				'id'          => 'credentials',
 				'title'       => 'Credentials',
 				'description' => __( 'To unlock the plugin\'s features, enter your credentials', 'klarna-payments-for-woocommerce' ),
@@ -239,19 +239,27 @@ class KP_Form_Fields {
 					),
 				),
 			),
-			'credentials_info' => array(
+			'credentials_info'    => array(
 				'type'        => 'kp_text_info',
 				'title'       => __( 'Client Identifier & API Credentials', 'klarna-payments-for-woocommerce' ),
 				// translators: %s: merchant portal link.
 				'description' => sprintf( __( 'Enter the credentials for production and test for each market Klarna is used. Get the client identifier and API credentials from the %s, under Settings.', 'klarna-payments-for-woocommerce' ), $merchant_portal_html ),
 			),
-			'testmode'         => array(
+			'available_countries' => array(
+				'title'       => __( 'Enter the countries where Klarna will be available', 'klarna-payments-for-woocommerce' ) . ':',
+				'type'        => 'multiselect',
+				'class'       => 'wc-enhanced-select',
+				'options'     => self::available_countries(),
+				'placeholder' => __( 'Start typing', 'klarna-payments-for-woocommerce' ),
+				'default'     => '',
+			),
+			'testmode'            => array(
 				'label'    => __( 'Enable Klarna Payments in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
 				'default'  => 'no',
 				'desc_tip' => true,
 			),
-			'eu_credentials'   => array(
+			'eu_credentials'      => array(
 				'title' => __( 'European Market', 'klarna-payments-for-woocommerce' ),
 				'type'  => 'kp_text_info',
 			),
@@ -313,7 +321,7 @@ class KP_Form_Fields {
 	 */
 	public static function get_kp_section_fields( $settings = array() ) {
 		$kp_section = array(
-			'general'             => array(
+			'general'       => array(
 				'id'          => 'general',
 				'title'       => 'Klarna Payments*',
 				'description' => __( 'Give your customers the ability to pay in flexible ways such as Buy now, Pay Later, Invoicing, Installments and Financing.', 'klarna-payments-for-woocommerce' ),
@@ -325,13 +333,13 @@ class KP_Form_Fields {
 				),
 				'type'        => 'kp_section_start',
 			),
-			'enabled'             => array(
+			'enabled'       => array(
 				'label'       => __( 'Enable Klarna Payments', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no',
 			),
-			'logging'             => array(
+			'logging'       => array(
 				'title'       => __( 'Logging', 'klarna-payments-for-woocommerce' ),
 				'label'       => __( 'Log debug messages', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'select',
@@ -344,13 +352,13 @@ class KP_Form_Fields {
 				),
 				'desc_tip'    => true,
 			),
-			'title'               => array(
+			'title'         => array(
 				'title'    => __( 'Payment method title', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'text',
 				'default'  => 'Klarna',
 				'desc_tip' => true,
 			),
-			'customer_type'       => array(
+			'customer_type' => array(
 				'title'    => __( 'Select the type of customer that you sell to', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'select',
 				'options'  => array(
@@ -360,15 +368,7 @@ class KP_Form_Fields {
 				'default'  => 'b2c',
 				'desc_tip' => true,
 			),
-			'available_countries' => array(
-				'title'       => __( 'Enter the countries where Klarna will be available', 'klarna-payments-for-woocommerce' ) . ':',
-				'type'        => 'multiselect',
-				'class'       => 'wc-enhanced-select',
-				'options'     => self::available_countries(),
-				'placeholder' => __( 'Start typing', 'klarna-payments-for-woocommerce' ),
-				'default'     => '',
-			),
-			'general_end'         => array(
+			'general_end'   => array(
 				'type'     => 'kp_section_end',
 				'previews' => array(
 					array(
