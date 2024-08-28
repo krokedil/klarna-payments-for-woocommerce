@@ -1,7 +1,7 @@
 {
   "require": {
     "krokedil/wp-api": "^1.0",
-    "krokedil/woocommerce": "1.6.1",
+    "krokedil/woocommerce": "^1.0.0",
     "krokedil/klarna-express-checkout": "^1.0.0",
     "krokedil/klarna-onsite-messaging": "^1.0.0"
   },
