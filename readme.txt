@@ -7,7 +7,7 @@ Tested up to: 6.6.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.2.0
-Stable tag: 3.6.0
+Stable tag: 3.6.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,14 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.08.28    - version 3.6.1 =
+* Fix           - Fixed a critical error when retrieving PW gift card from a Woo order.
+* Fix           - Fixed a division by zero when calculating the tax rate.
+* Fix           - Fixed an undefined index warning by ensuring that PW gift card exists before attempting retrieval.
+* Fix           - Resolved an issue where Chrome ignored the autocomplete attribute for Australian credentials.
+* Fix           - Fixed an issue where the product image URLs where sent to Klarna even when the setting was disabled.
+* Tweak         - Updated the default Klarna logo.
+
 = 2024.08.19    - version 3.6.0 =
 * Feature       - Added compatibility with "Linear Checkout for WooCommerce" plugin.
 * Feature       - Added the 'kp_blocks_order_button_label' filter to change the order button label in the Klarna Payments block.
