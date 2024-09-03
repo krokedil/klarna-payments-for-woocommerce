@@ -1,6 +1,6 @@
 {
   "name": "klarna-payments-for-woocommerce",
-  "version": "3.3.1",
+  "version": "3.6.0",
   "description": "Klarna Payments for WooCommerce",
   "main": "gulpfile.js",
   "repository": "https://github.com/krokedil/klarna-payments-for-woocommerce.git",
@@ -12,7 +12,7 @@
     "@babel/preset-env": "^7.19.4",
     "@babel/preset-react": "^7.18.6",
     "@webpack-cli/generators": "^2.5.0",
-    "@woocommerce/dependency-extraction-webpack-plugin": "^2.2.0",
+    "@woocommerce/dependency-extraction-webpack-plugin": "2.2.0",
     "@wordpress/components": "^21.3.0",
     "@wordpress/scripts": "^24.2.0",
     "babel-loader": "^8.2.5",

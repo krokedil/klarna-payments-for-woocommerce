@@ -82,7 +82,7 @@ class KP_Subscription {
 		if ( ! is_wp_error( $response ) ) {
 			$klarna_order_id = $response['order_id'];
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Klarna. Klarna order id: %s', 'klarna-payments-for-woocommerce' ), $klarna_order_id ) );
-			self::save_order_meta_data( $renewal_order, $response );
+			kp_save_order_meta_data( $renewal_order, $response );
 		} else {
 			$error_message = $response->get_error_message();
 			// Translators: Error message.
@@ -328,25 +328,7 @@ class KP_Subscription {
 		return isset( $_GET['change_payment_method'] );
 	}
 
-	/**
-	 * Process the response from a Klarna request to store meta data about an order.
-	 *
-	 * @param WC_Order $renewal_order The WooCommerce order.
-	 * @param array    $response Response from Klarna request that contain order details.
-	 *
-	 * @return void
-	 */
-	public static function save_order_meta_data( $order, $response ) {
-		$environment = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'] ? 'test' : 'live';
 
-		$order->update_meta_data( '_wc_klarna_environment', $environment );
-		$order->update_meta_data( '_wc_klarna_country', kp_get_klarna_country( $order ) );
-		$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
-		$order->set_transaction_id( $response['order_id'] );
-		$order->set_payment_method_title( 'Klarna' );
-
-		$order->save();
-	}
 
 	/**
 	 * Check if an order contains a subscription.
@@ -395,12 +377,13 @@ class KP_Subscription {
 	 * @return void
 	 */
 	public function show_recurring_token( $order ) {
-		if ( 'shop_subscription' === $order->get_type() && $order->get_meta( self::RECURRING_TOKEN ) ) {
+		if ( 'shop_subscription' === $order->get_type() ) {
+			$recurring_token = $order->get_meta( self::RECURRING_TOKEN );
 			?>
 			<div class="order_data_column" style="clear:both; float:none; width:100%;">
 				<div class="address">
 					<p>
-						<strong><?php echo esc_html( 'Klarna recurring token' ); ?>:</strong><?php echo esc_html( $order->get_meta( self::RECURRING_TOKEN ) ); ?>
+						<strong><?php echo esc_html( 'Klarna recurring token' ); ?>:</strong><?php echo esc_html( $recurring_token ); ?>
 					</p>
 				</div>
 				<div class="edit_address">
@@ -408,8 +391,9 @@ class KP_Subscription {
 					woocommerce_wp_text_input(
 						array(
 							'id'            => self::RECURRING_TOKEN,
-							'label'         => __( 'Klarna recurring token', 'klarna-checkout-for-woocommerce' ),
+							'label'         => __( 'Klarna recurring token', 'klarna-payments-for-woocommerce' ),
 							'wrapper_class' => '_billing_company_field',
+							'value'         => $recurring_token,
 						)
 					);
 				?>

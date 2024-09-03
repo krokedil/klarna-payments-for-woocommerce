@@ -50,12 +50,20 @@ function get_klarna_customer( $customer_type ) {
  */
 function kp_get_klarna_country( $order = false ) {
 	if ( ! empty( $order ) ) {
-		return apply_filters( 'wc_klarna_payments_country', $order->get_billing_country() );
+		$country = $order->get_billing_country();
+
+		// If the billing_country field is unset, $country will be empty.
+		if ( ! empty( $country ) ) {
+			return apply_filters( 'wc_klarna_payments_country', $country );
+		}
 	}
 
-	/* The billing country selected on the checkout page is to prefer over the store's base location. It makse more sense that we check for available payment methods based on the customer's country. */
-	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer ) && ! empty( WC()->customer->get_billing_country() ) ) {
-		return apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
+	/* The billing country selected on the checkout page is to prefer over the store's base location. It makes more sense that we check for available payment methods based on the customer's country. */
+	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer ) ) {
+		$country = WC()->customer->get_billing_country();
+		if ( ! empty( $country ) ) {
+			return apply_filters( 'wc_klarna_payments_country', $country );
+		}
 	}
 
 	/* Ignores whatever country the customer selects on the checkout page, and always uses the store's base location. Only used as fallback. */
@@ -65,15 +73,16 @@ function kp_get_klarna_country( $order = false ) {
 }
 
 /**
- * Process authorization or callback response for accepted or pending Klarna orders.
+ * Process the response from a Klarna request to store meta data about an order.
  *
- * @param WC_Order $order WooCommerce order.
- * @param array    $decoded Klarna authorization or callback response.
+ * Also used for processing authorization or callback response for accepted or pending Klarna orders.
+ *
+ * @param WC_Order $order The WooCommerce order.
+ * @param array    $response Response from Klarna request that contain order details.
  *
  * @return void
  */
-function kp_process_auth_or_callback( $order, $response ) {
-
+function kp_save_order_meta_data( $order, $response ) {
 	$environment = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'] ? 'test' : 'live';
 
 	$order->update_meta_data( '_wc_klarna_environment', $environment );
@@ -81,6 +90,7 @@ function kp_process_auth_or_callback( $order, $response ) {
 	$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
 	$order->set_transaction_id( $response['order_id'] );
 	$order->set_payment_method_title( 'Klarna' );
+	$order->set_payment_method( 'klarna_payments' );
 
 	$order->save();
 }
@@ -98,7 +108,7 @@ function kp_process_accepted( $order, $decoded, $recurring_token = false ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
-	kp_process_auth_or_callback( $order, $decoded );
+	kp_save_order_meta_data( $order, $decoded );
 
 	if ( $recurring_token ) {
 		KP_Subscription::save_recurring_token( $order->get_id(), $recurring_token );
@@ -124,7 +134,7 @@ function kp_process_accepted( $order, $decoded, $recurring_token = false ) {
 function kp_process_pending( $order, $decoded ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded['order_id'] );
-	kp_process_auth_or_callback( $order, $decoded );
+	kp_save_order_meta_data( $order, $decoded );
 	do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_pending', $order->get_id(), $decoded );
 	return array(
@@ -190,10 +200,8 @@ function kp_print_error_message( $wp_error ) {
 		if ( function_exists( 'wc_add_notice' ) ) {
 			wc_add_notice( $error_message, 'error' );
 		}
-	} else {
-		if ( function_exists( 'wc_print_notice' ) ) {
+	} elseif ( function_exists( 'wc_print_notice' ) ) {
 			wc_print_notice( $error_message, 'error' );
-		}
 	}
 }
 

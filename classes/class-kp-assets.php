@@ -108,6 +108,10 @@ class KP_Assets {
 				'billing'  => $customer['billing'],
 				'shipping' => $customer['shipping'],
 			) : null,
+			// i18n.
+			'i18n'                   => array(
+				'order_button_label' => apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) ),
+			),
 		);
 
 		// Return with filter incase some people want to modify the params.
@@ -164,7 +168,6 @@ class KP_Assets {
 
 		$this->enqueue_express_button_scripts();
 		$this->enqueue_express_button_styles();
-
 	}
 
 	/**
@@ -323,9 +326,7 @@ class KP_Assets {
 		);
 
 		wp_enqueue_style( 'klarna_express_button_styles' );
-
 	}
-
 }
 
 new KP_Assets();

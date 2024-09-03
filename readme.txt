@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.4.2
+Tested up to: 6.6.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 8.5.2
-Stable tag: 3.4.0
+WC tested up to: 9.2.0
+Stable tag: 3.6.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,58 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.08.28    - version 3.6.1 =
+* Fix           - Fixed a critical error when retrieving PW gift card from a Woo order.
+* Fix           - Fixed a division by zero when calculating the tax rate.
+* Fix           - Fixed an undefined index warning by ensuring that PW gift card exists before attempting retrieval.
+* Fix           - Resolved an issue where Chrome ignored the autocomplete attribute for Australian credentials.
+* Fix           - Fixed an issue where the product image URLs where sent to Klarna even when the setting was disabled.
+* Tweak         - Updated the default Klarna logo.
+
+= 2024.08.19    - version 3.6.0 =
+* Feature       - Added compatibility with "Linear Checkout for WooCommerce" plugin.
+* Feature       - Added the 'kp_blocks_order_button_label' filter to change the order button label in the Klarna Payments block.
+* Fix           - Fixed divide by zero error when calculating the tax rate.
+* Tweak         - Addressed various Woo Quality Insights recommendations.
+* Tweak         - You can now overwrite the recurring payment token from the admin Subscription page.
+* Feature       - [KOSM] Added support for Slovakia.
+* Feature       - [KOSM] Added support for Hungary.
+* Feature       - [KOSM] Added 'kosm_hide_placement' filter hook for conditionally hiding the placement.
+
+= 2024.05.13    - version 3.5.4 =
+* Fix           - Fixed a critical error due to undefined method call.
+
+= 2024.05.13    - version 3.5.3 =
+* Fix           - [KOSM] Restored the theme setting "custom" (previously known as "none").
+* Fix           - [KOSM] Resolved deprecation warning in PHP 8.2.
+* Fix           - [KOSM] The disable KOSM admin banner will now only show if the KOSM plugin is enabled (previously it would always show as long as the KOSM plugin is installed).
+* Fix           - [KOSM] The shortcode should now work as intended on non-shop pages.
+* Tweak         - Enhanced compatibility with third-party gift card and coupon plugins.
+* Tweak         - The "Klarna order id" label will now only be added to the email template if the Klarna order ID is set.
+
+= 2024.04.23    - version 3.5.2 =
+* Fix           - Update package version.
+
+= 2024.04.22    - version 3.5.1 =
+* Fix           - Fixed a critical error that happened under certain conditions if the KOSM plugin is active. 
+
+= 2024.04.22    - version 3.5.0 =
+* Feature       - On-site messaging is now part of the Klarna Payments plugin. With this change we've moved to the new Web SDK and resolved deprecation warnings.
+* Tweak         - Redacted sensitive information from the log.
+* Fix           - Fixed an issue where multiple KEC buttons would appear on a variable product page every time the user picked a different variant option.
+* Fix           - Moved to client_key which should resolve the client_id deprecation warning.
+
+= 2024.04.02    - version 3.4.2 =
+* Fix           - Retrieve the currency from the order where applicable. This should enhance compatibility with custom currency switchers.
+* Fix           - Prevent order from being processed more than once through callbacks.
+* Fix           - Resolve an issue where if the customer was redirected back to the store from the hosted payment page, an HTTP 409 error could occur.
+* Tweak         - Use shipping country if the billing country field is unset. Defaults to store location if none is available.
+
+= 2024.03.12    - version 3.4.1 =
+* Fix           - Fixed an issue where the name of the previous payment gateway was set on the order after changing to, and paying with Klarna Payments.
+* Fix           - Setting multiple tax rates with different priorities in WooCommerce tax settings should now work as expected.
+* Fix           - Fixed an issue introduced in WooCommerce version 8.7.0 where a critical error would occur if the cart contained any coupon.
+
 = 2024.01.31    - version 3.4.0 =
 * Feature       - Add support to pass locale to Klarna Express Checkout.
 * Fix           - Klarna Express Checkout will no longer compare the shipping address to the KEC provided address when delivery address is forced to be the billing address.

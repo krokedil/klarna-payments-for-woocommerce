@@ -99,7 +99,7 @@ abstract class KP_Requests extends Request {
 	}
 
 	public function calculate_auth() {
-		return 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
+		return 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
 	}
 
 	/**

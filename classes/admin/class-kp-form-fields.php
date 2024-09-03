@@ -124,6 +124,11 @@ class KP_Form_Fields {
 			'currency' => 'RON',
 			'endpoint' => '',
 		),
+		'sk' => array(
+			'name'     => 'Slovakia',
+			'currency' => 'EUR',
+			'endpoint' => '',
+		),
 		'es' => array(
 			'name'     => 'Spain',
 			'currency' => 'EUR',
@@ -197,7 +202,7 @@ class KP_Form_Fields {
 			'default'           => '',
 			'desc_tip'          => false,
 			'custom_attributes' => array(
-				'autocomplete' => 'off',
+				'autocomplete' => 'off new-password',
 			),
 		);
 	}
@@ -259,7 +264,6 @@ class KP_Form_Fields {
 		$section[ 'test_shared_secret_' . $country_code ] = self::kp_form_test_password();
 
 		return $section;
-
 	}
 
 	/**
