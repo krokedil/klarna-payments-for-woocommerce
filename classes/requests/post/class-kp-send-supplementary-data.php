@@ -35,7 +35,7 @@ class KP_Send_Supplementary_Data extends KP_Requests_Post {
 	 */
 	protected function get_request_headers() {
 		return array(
-			'Authorization' => 'Basic ',
+			'Authorization' => 'Basic ' . apply_filters( 'DO_NOT_MERGE_kole_auth', '' ),
 			'Content-Type'  => 'application/json',
 		);
 	}
@@ -215,7 +215,6 @@ class KP_Send_Supplementary_Data extends KP_Requests_Post {
 		$customer['customer_device'] = array(
 			'user_agent' => $order->get_customer_user_agent(),
 			'ip_address' => $order->get_customer_ip_address(),
-			wc_get_user_agent(),
 		);
 
 		return apply_filters( 'kole_customer', $customer );
