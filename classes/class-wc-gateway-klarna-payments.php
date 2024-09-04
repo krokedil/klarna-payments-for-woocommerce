@@ -134,7 +134,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			if ( ! $this->hide_what_is_klarna ) {
 				// If default WooCommerce CSS is used, float "What is Klarna link like PayPal does it".
 				if ( $this->float_what_is_klarna ) {
-					$link_css = 'css="float: right; margin-right:10px; font-size: .83em;"';
+					$link_css = 'style="float: right; margin-right:10px; font-size: .83em;"';
 				} else {
 					$link_css = '';
 				}
