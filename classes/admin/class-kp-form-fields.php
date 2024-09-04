@@ -225,6 +225,8 @@ class KP_Form_Fields {
 	 * @return array
 	 */
 	public static function get_credential_section_fields( $settings = array() ) {
+		$saved_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
 		$merchant_portal_html = '<a href="https://portal.klarna.com" target="_blank">' . __( 'Klarna Merchant Portal', 'klarna-payments-for-woocommerce' ) . '</a>';
 		$credentials_section  = array(
 			'credentials'         => array(
@@ -278,7 +280,7 @@ class KP_Form_Fields {
 			'label'       => __( 'Combine all EU country credentials', 'klarna-payments-for-woocommerce' ),
 			'type'        => 'checkbox',
 			'description' => '',
-			'default'     => 'yes',
+			'default'     => empty( $saved_settings ) ? 'yes' : 'no', // Default to yes for new installations, but no for existing.
 		);
 		$na                           = array_merge(
 			array(

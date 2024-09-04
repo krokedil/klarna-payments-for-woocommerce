@@ -202,9 +202,16 @@ class KP_Settings_Page {
 		$eu_countries  = KP_Form_Fields::available_countries( 'eu' );
 		$is_eu_country = key_exists( $key, $eu_countries );
 		$is_eu_region  = 'eu' === $key;
-		$combine_eu    = 'yes' === $settings['combine_eu_credentials'] ?? 'yes';
-		$test_enabled  = 'yes' === $settings['testmode'] ?? 'no';
-		$hide          = false;
+
+		// If settings are empty and the combine eu credentials is not set, default to yes. Otherwise default to no.
+		if ( empty( $settings ) ) {
+			$combine_eu = true;
+		} else {
+			$combine_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+		}
+
+		$test_enabled = 'yes' === ( isset( $settings['testmode'] ) ? $settings['testmode'] : 'no' );
+		$hide         = false;
 
 		if ( $combine_eu && $is_eu_country ) {
 			$hide = true;

@@ -218,6 +218,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @param WC_Order|bool $order The WooCommerce order.
 	 */
 	public function country_currency_check( $order = false ) {
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 		// Check if allowed currency.
 		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies, true ) ) {
 			kp_unset_session_values();
@@ -233,7 +234,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return new WP_Error( 'country', "Country ({$country}) is not supported by Klarna Payments." );
 		}
 
-		$combined_eu = 'yes' === $this->get_option( 'combine_eu_credentials', 'no' );
+		$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+
 		// If the country is a EU country, check if we should get the credentials from the EU settings.
 		if ( $combined_eu && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
 			$country = 'eu';
@@ -249,7 +251,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return new WP_Error( 'country', "No credentials found for {$country}" );
 		}
 
-		// Check the countrys currency against the current curreny.
+		// Check the countrys currency against the current currency.
 		$required_currency = $country_values['currency'];
 		$country_name      = $country_values['name'];
 		if ( get_woocommerce_currency() !== $required_currency ) {
