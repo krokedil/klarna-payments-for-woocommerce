@@ -323,7 +323,7 @@ class KP_Form_Fields {
 	 */
 	public static function get_kp_section_fields( $settings = array() ) {
 		$kp_section = array(
-			'general'       => array(
+			'general'              => array(
 				'id'          => 'general',
 				'title'       => 'Klarna Payments*',
 				'description' => __( 'Give your customers the ability to pay in flexible ways such as Buy now, Pay Later, Invoicing, Installments and Financing.', 'klarna-payments-for-woocommerce' ),
@@ -335,13 +335,13 @@ class KP_Form_Fields {
 				),
 				'type'        => 'kp_section_start',
 			),
-			'enabled'       => array(
+			'enabled'              => array(
 				'label'       => __( 'Enable Klarna Payments', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no',
 			),
-			'logging'       => array(
+			'logging'              => array(
 				'title'       => __( 'Logging', 'klarna-payments-for-woocommerce' ),
 				'label'       => __( 'Log debug messages', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'select',
@@ -354,23 +354,56 @@ class KP_Form_Fields {
 				),
 				'desc_tip'    => true,
 			),
-			'title'         => array(
+			'title'                => array(
 				'title'    => __( 'Payment method title', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'text',
 				'default'  => 'Klarna',
 				'desc_tip' => true,
 			),
-			'customer_type' => array(
-				'title'    => __( 'Select the type of customer that you sell to', 'klarna-payments-for-woocommerce' ),
-				'type'     => 'select',
-				'options'  => array(
+			'hide_what_is_klarna'  => array(
+				'title'    => __( 'Hide "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'checkbox',
+				'label'    => __( 'Hide "What is Klarna?" link.', 'klarna-payments-for-woocommerce' ),
+				// 'label'    => __( 'If checked, "What is Klarna?" will not be shown.', 'klarna-payments-for-woocommerce' ),
+				'default'  => 'no',
+				'desc_tip' => true,
+			),
+			'float_what_is_klarna' => array(
+				'title'       => __( 'Float "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'Float "What is Klarna?" link.', 'klarna-payments-for-woocommerce' ),
+				'description' => __( 'If checked, "What is Klarna?" will be floated right.', 'klarna-payments-for-woocommerce' ),
+				'default'     => 'yes',
+				'desc_tip'    => false,
+			),
+			'send_product_urls'    => array(
+				'title'    => __( 'Product URLs', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'checkbox',
+				'label'    => __( 'Send product and product image URLs to Klarna', 'klarna-payments-for-woocommerce' ),
+				'default'  => 'yes',
+				'desc_tip' => true,
+			),
+			'add_to_email'         => array(
+				'title'       => __( 'Add Klarna Urls to order email', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'Add Klarna Urls to order email', 'klarna-payments-for-woocommerce' ),
+				'description' => __( 'This will add Klarna urls to the order emails that are sent. You can read more about this here: ', 'klarna-payments-for-woocommerce' ) . '<a href="https://docs.klarna.com/payments/web-payments/additional-resources/ux-guidelines/post-purchase-experience/" target="_blank">Klarna URLs</a>',
+				'default'     => 'no',
+				'desc_tip'    => false,
+			),
+			'customer_type'        => array(
+				'title'       => __( 'Customer type', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'select',
+				'label'       => __( 'Customer type', 'klarna-payments-for-woocommerce' ),
+				'description' => __( 'Select the customer for the store.', 'klarna-payments-for-woocommerce' ),
+				'options'     => array(
 					'b2c' => __( 'B2C', 'klarna-payments-for-woocommerce' ),
 					'b2b' => __( 'B2B', 'klarna-payments-for-woocommerce' ),
 				),
-				'default'  => 'b2c',
-				'desc_tip' => true,
+				'default'     => 'b2c',
+				'desc_tip'    => true,
 			),
-			'general_end'   => array(
+			'general_end'          => array(
 				'type'     => 'kp_section_end',
 				'previews' => array(
 					array(
@@ -381,7 +414,7 @@ class KP_Form_Fields {
 			),
 		);
 
-		return array_merge( $settings, $kp_section );
+			return array_merge( $settings, $kp_section );
 	}
 
 	/**
