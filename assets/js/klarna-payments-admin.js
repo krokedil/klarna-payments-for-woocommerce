@@ -62,19 +62,19 @@ jQuery(function ($) {
 		toggleSection: function (e) {
 			e.preventDefault();
 			const $this = $(this);
-			const $section = $this.parent().parent().parent();
+			const $section = $this.closest(".kp_settings__section");
+			// Get all the children of the section that is the toggle button.
+			const $toggle = $section.find(".kp_settings__section_toggle");
+			const $gradient = $section.find(".kp_settings__content_gradient");
 
-			$section.find(".kp_settings__section_content").slideToggle();
-			// Only toggle the previews if the screen size is 1300px or more.
-			if (window.innerWidth >= 1300) {
-				$section.find(".kp_settings__section_previews").slideToggle();
-			}
+			$section.find("table").toggleClass("kp_settings__section_content_hidden");
+			$section.find(".kp_settings__section_previews").toggleClass("kp_settings__section_content_hidden");
+			$gradient.toggle();
 
 			// Toggle the icon
-			$this
+			$toggle
 				.toggleClass(kp_admin.openedIcon)
 				.toggleClass(kp_admin.closedIcon);
-
 		},
 
 		toggleEu: function () {

@@ -37,6 +37,27 @@ class KP_Settings_Page {
 		add_filter( 'woocommerce_generate_kp_section_end_html', array( __CLASS__, 'section_end' ), 10, 3 );
 		add_filter( 'woocommerce_generate_kp_text_info_html', array( __CLASS__, 'text_info' ), 10, 3 );
 		add_filter( 'woocommerce_generate_kp_credentials_html', array( __CLASS__, 'credentials' ), 10, 3 );
+
+		// Preload the fonts before the settings page is loaded.
+		add_action( 'admin_head', array( $this, 'preload_fonts' ) );
+	}
+
+	/**
+	 * Preload fonts by adding the fonts to the head of the admin page.
+	 * This prevents the fonts from being loaded after the CSS file is loaded and the page is rendered.
+	 *
+	 * @return void
+	 */
+	public function preload_fonts() {
+		// Only if we are on the settings page for Klarna.
+		if ( ! isset( $_GET['page'] ) || ! isset( $_GET['section'] ) || 'wc-settings' !== $_GET['page'] || 'klarna_payments' !== $_GET['section'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+
+		?>
+		<link rel="preload" href="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/fonts/KlarnaSans-Regular.otf" as="font" type="font/otf" crossorigin>
+		<link rel="preload" href="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/fonts/KlarnaHeadline-Bold.otf" as="font" type="font/otf" crossorigin>
+		<?php
 	}
 
 	/**
@@ -78,7 +99,7 @@ class KP_Settings_Page {
 			<div class="kp_settings__section_info">
 				<h3 class="kp_settings__section_title">
 					<?php echo esc_html( $section['title'] ); ?>
-					<span class="kp_settings__section_toggle dashicons dashicons-arrow-down-alt2"></span>
+					<span class="kp_settings__section_toggle dashicons dashicons-arrow-up-alt2"></span>
 				</h3>
 				<div class="kp_settings__section_info_text">
 					<p class="kp_settings__section_description"><?php echo esc_html( $section['description'] ?? '' ); ?></p>
@@ -91,6 +112,8 @@ class KP_Settings_Page {
 				</div>
 			</div>
 			<div class="kp_settings__section_content">
+				<span class="kp_settings__section_toggle dashicons dashicons-arrow-up-alt2"></span>
+				<div class="kp_settings__content_gradient"></div>
 				<table class="form-table">
 		<?php
 	}

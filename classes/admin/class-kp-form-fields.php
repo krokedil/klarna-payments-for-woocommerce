@@ -256,6 +256,7 @@ class KP_Form_Fields {
 				'default'     => '',
 			),
 			'testmode'            => array(
+				'title'    => __( 'Test mode', 'klarna-payments-for-woocommerce' ),
 				'label'    => __( 'Enable Klarna Payments in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
 				'default'  => 'no',
@@ -277,7 +278,8 @@ class KP_Form_Fields {
 			$eu = array_merge( $eu, self::get_eu_country_fields( $key, $name ) );
 		}
 		$eu['combine_eu_credentials'] = array(
-			'label'       => __( 'Combine all EU country credentials', 'klarna-payments-for-woocommerce' ),
+			'title'       => __( 'Combine EU credentials', 'klarna-payments-for-woocommerce' ),
+			'label'       => __( 'Combine all EU country credentials into a single', 'klarna-payments-for-woocommerce' ),
 			'type'        => 'checkbox',
 			'description' => '',
 			'default'     => empty( $saved_settings ) ? 'yes' : 'no', // Default to yes for new installations, but no for existing.
@@ -336,6 +338,7 @@ class KP_Form_Fields {
 				'type'        => 'kp_section_start',
 			),
 			'enabled'              => array(
+				'title'       => __( 'Enable/Disable', 'klarna-payments-for-woocommerce' ),
 				'label'       => __( 'Enable Klarna Payments', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'checkbox',
 				'description' => '',
@@ -363,18 +366,16 @@ class KP_Form_Fields {
 			'hide_what_is_klarna'  => array(
 				'title'    => __( 'Hide "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
-				'label'    => __( 'Hide "What is Klarna?" link.', 'klarna-payments-for-woocommerce' ),
-				// 'label'    => __( 'If checked, "What is Klarna?" will not be shown.', 'klarna-payments-for-woocommerce' ),
+				'label'    => __( 'If checked, "What is Klarna?" will not be shown.', 'klarna-payments-for-woocommerce' ),
 				'default'  => 'no',
 				'desc_tip' => true,
 			),
 			'float_what_is_klarna' => array(
-				'title'       => __( 'Float "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'checkbox',
-				'label'       => __( 'Float "What is Klarna?" link.', 'klarna-payments-for-woocommerce' ),
-				'description' => __( 'If checked, "What is Klarna?" will be floated right.', 'klarna-payments-for-woocommerce' ),
-				'default'     => 'yes',
-				'desc_tip'    => false,
+				'title'    => __( 'Float "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'checkbox',
+				'label'    => __( 'If checked, "What is Klarna?" will be floated right.', 'klarna-payments-for-woocommerce' ),
+				'default'  => 'yes',
+				'desc_tip' => false,
 			),
 			'send_product_urls'    => array(
 				'title'    => __( 'Product URLs', 'klarna-payments-for-woocommerce' ),
@@ -384,12 +385,11 @@ class KP_Form_Fields {
 				'desc_tip' => true,
 			),
 			'add_to_email'         => array(
-				'title'       => __( 'Add Klarna Urls to order email', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'checkbox',
-				'label'       => __( 'Add Klarna Urls to order email', 'klarna-payments-for-woocommerce' ),
-				'description' => __( 'This will add Klarna urls to the order emails that are sent. You can read more about this here: ', 'klarna-payments-for-woocommerce' ) . '<a href="https://docs.klarna.com/payments/web-payments/additional-resources/ux-guidelines/post-purchase-experience/" target="_blank">Klarna URLs</a>',
-				'default'     => 'no',
-				'desc_tip'    => false,
+				'title'    => __( 'Add Klarna Urls to order email', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'checkbox',
+				'label'    => __( 'This will add Klarna urls to the order emails that are sent. You can read more about this here: ', 'klarna-payments-for-woocommerce' ) . '<a href="https://docs.klarna.com/payments/web-payments/additional-resources/ux-guidelines/post-purchase-experience/" target="_blank">Klarna URLs</a>',
+				'default'  => 'no',
+				'desc_tip' => false,
 			),
 			'customer_type'        => array(
 				'title'       => __( 'Customer type', 'klarna-payments-for-woocommerce' ),

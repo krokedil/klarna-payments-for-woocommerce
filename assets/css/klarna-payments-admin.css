@@ -35,11 +35,11 @@
 }
 
 div.kp_settings__section_content {
-	position: relative;
 	background: white;
 	border: 1px solid #e5e5e5;
 	padding: 20px;
 	width: calc( 100% - 40px );
+	position: relative;
 }
 
 span.kp_settings__section_toggle {
@@ -90,11 +90,6 @@ span.kp_settings__section_toggle {
 	min-width: 100% !important;
 }
 
-/** If a tr contains a child with the class kp_settings__hide_label, hide the th. */
-.kp_settings__section tr:has(input[type="checkbox"]) th {
-	display: none;
-}
-
 .kp_settings__section_previews {
 	display: none;
 }
@@ -119,7 +114,7 @@ span.kp_settings__section_toggle {
 @media (min-width: 1300px) {
 	.kp_settings__section {
 		max-width: 1700px;
-		grid-template-columns: 1fr 3fr 1fr;
+		grid-template-columns: 1fr 3fr 400px;
 	}
 
 	div.kp_settings__section_content {
@@ -133,6 +128,58 @@ span.kp_settings__section_toggle {
 		grid-column: 3;
 		width: 400px;
 	}
+}
+
+div.kp_settings__section_content .kp_settings__section_toggle {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	z-index: 999;
+}
+
+
+div.kp_settings__section_content table {
+	display: block;
+	height: auto;
+	max-height: 100vh;
+	overflow: hidden;
+	transition: all 0.15s ease-in-out;
+}
+
+.kp_settings__section_previews {
+	max-height: 100vh;
+}
+
+div.kp_settings__section_content table.kp_settings__section_content_hidden {
+	max-height: 50px;
+	pointer-events: none; /* Prevent interaction with the gradient */
+}
+
+.kp_settings__section_previews.kp_settings__section_content_hidden {
+	max-height: 0;
+	display: none;
+	pointer-events: none; /* Prevent interaction with the gradient */
+}
+
+div.kp_settings__section_content .kp_settings__content_gradient {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: linear-gradient(
+		to bottom,
+		rgba(255, 255, 255, 0) 0%,
+		rgba(255, 255, 255, 1) 75%
+	);
+	pointer-events: none; /* Prevent interaction with the gradient */
+	z-index: 999;
+}
+
+
+.kp_settings__section_title.kp_settings__section_title_hidden {
+	display: none;
 }
 
 .kp_settings__section_previews .kp_settings_section_preview {
