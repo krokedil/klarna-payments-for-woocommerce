@@ -218,12 +218,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/settings-page.git",
-                "reference": "3d8c85ad54e45365462b974dbaf6bb1d75e7ad28"
+                "reference": "77080319230c7188e9c7b74557a7fceb14684b01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/3d8c85ad54e45365462b974dbaf6bb1d75e7ad28",
-                "reference": "3d8c85ad54e45365462b974dbaf6bb1d75e7ad28",
+                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/77080319230c7188e9c7b74557a7fceb14684b01",
+                "reference": "77080319230c7188e9c7b74557a7fceb14684b01",
                 "shasum": ""
             },
             "require-dev": {
@@ -255,7 +255,7 @@
                 "source": "https://github.com/krokedil/settings-page/tree/develop-changes",
                 "issues": "https://github.com/krokedil/settings-page/issues"
             },
-            "time": "2024-08-21T12:34:16+00:00"
+            "time": "2024-09-06T13:31:04+00:00"
         },
         {
             "name": "krokedil/woocommerce",
