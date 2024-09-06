@@ -141,7 +141,7 @@ div.kp_settings__section_content .kp_settings__section_toggle {
 div.kp_settings__section_content table {
 	display: block;
 	height: auto;
-	max-height: 100vh;
+	max-height: 100%;
 	overflow: hidden;
 	transition: all 0.15s ease-in-out;
 }
