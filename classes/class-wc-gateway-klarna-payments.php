@@ -384,7 +384,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				);
 			}
 		} else {
-			$klarna_country    = kp_get_klarna_country( $order );
+			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
+			$klarna_country = kp_get_klarna_country( $order );
+
+			// If EU credentials are combined, we should use the EU country code.
+			$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+			if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
+				$klarna_country = 'EU';
+			}
+
 			$klarna_session_id = $kec_client_token;
 		}
 
@@ -440,6 +448,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$session_id     = KP_WC()->session->get_klarna_session_id();
 		$klarna_country = kp_get_klarna_country( $order );
+
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		// If EU credentials are combined, we should use the EU country code.
+		$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+		if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
+			$klarna_country = 'EU';
+		}
 
 		// Create a HPP url.
 		$hpp = KP_WC()->api->create_hpp( $klarna_country, $session_id, $order->get_id() );

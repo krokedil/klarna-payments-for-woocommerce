@@ -85,8 +85,17 @@ function kp_get_klarna_country( $order = false ) {
 function kp_save_order_meta_data( $order, $response ) {
 	$environment = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'] ? 'test' : 'live';
 
+	$klarna_country = kp_get_klarna_country( $order );
+
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+	// If EU credentials are combined, we should use the EU country code.
+	$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+	if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
+		$klarna_country = 'EU';
+	}
+
 	$order->update_meta_data( '_wc_klarna_environment', $environment );
-	$order->update_meta_data( '_wc_klarna_country', kp_get_klarna_country( $order ) );
+	$order->update_meta_data( '_wc_klarna_country', $klarna_country );
 	$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
 	$order->set_transaction_id( $response['order_id'] );
 	$order->set_payment_method_title( 'Klarna' );
@@ -320,25 +329,37 @@ function kp_get_client_id_by_currency( $currency = null ) {
  */
 function kp_is_country_available( $country ) {
 	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
 	/**
 	 * Get the available countries from the settings. This is actually an array, even if the method says it's a string.
 	 *
 	 * @var array $available_countries The available countries.
 	 */
-	$available_countries = isset( $settings['available_countries'] ) ? $settings['available_countries'] : array();
-	$country             = strtolower( $country );
+	$available_countries = $settings['available_countries'] ?? array();
+
+	$country = strtolower( $country );
 	if ( empty( $available_countries ) ) {
 		// See if the country has values saved from the old settings, before the available countries setting was added.
 		$testmode = $settings['testmode'] ?? 'no';
 		$prefix   = $testmode ? 'test_' : '';
 
-		$merchant_id = $settings[ "{$prefix}merchant_id_{$country}" ];
-		$secret      = $settings[ "{$prefix}shared_secret_{$country}" ];
+		// If the country is a EU country, check if we are using the combined EU credentials.
+		if ( key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
+			$eu_combined = 'yes' === ( $settings['combine_eu_credentials'] ?? 'no' );
+			if ( $eu_combined ) {
+				$country = 'eu';
+			}
+		}
+
+		$merchant_id = $settings[ "{$prefix}merchant_id_{$country}" ] ?? '';
+		$secret      = $settings[ "{$prefix}shared_secret_{$country}" ] ?? '';
 
 		// If we have the merchant id and secret, the country is available.
 		if ( ! empty( $merchant_id ) && ! empty( $secret ) ) {
 			return true;
 		}
+
+		return false;
 	}
 
 	$is_available = in_array( $country, $available_countries, true );
