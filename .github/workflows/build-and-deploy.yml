@@ -15,14 +15,12 @@ jobs:
       uses: php-actions/composer@v6
       with:
         dev: yes
-        php_version: 7.4
 
     # Build the plugin for release.
     - name: Install Composer dependencies
       uses: php-actions/composer@v6
       with:
         dev: no
-        php_version: 7.4
 
     # Install and build Block release.
     - name: Build block release versions.
