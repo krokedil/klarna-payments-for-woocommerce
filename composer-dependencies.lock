@@ -8,26 +8,26 @@
     "packages": [
         {
             "name": "firebase/php-jwt",
-            "version": "v6.10.1",
+            "version": "v6.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "500501c2ce893c824c801da135d02661199f60c5"
+                "reference": "a49db6f0a5033aef5143295342f1c95521b075ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/500501c2ce893c824c801da135d02661199f60c5",
-                "reference": "500501c2ce893c824c801da135d02661199f60c5",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/a49db6f0a5033aef5143295342f1c95521b075ff",
+                "reference": "a49db6f0a5033aef5143295342f1c95521b075ff",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0"
+                "php": "^7.4||^8.0"
             },
             "require-dev": {
-                "guzzlehttp/guzzle": "^7.4",
+                "guzzlehttp/guzzle": "^6.5||^7.4",
                 "phpspec/prophecy-phpunit": "^2.0",
                 "phpunit/phpunit": "^9.5",
-                "psr/cache": "^2.0||^3.0",
+                "psr/cache": "^1.0||^2.0",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0"
             },
@@ -65,9 +65,9 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v6.10.1"
+                "source": "https://github.com/firebase/php-jwt/tree/v6.10.0"
             },
-            "time": "2024-05-18T18:05:11+00:00"
+            "time": "2023-12-01T16:26:39+00:00"
         },
         {
             "name": "krokedil/klarna-express-checkout",
@@ -75,16 +75,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "70473a8c47cb70362636568693123e92471fc8f9"
+                "reference": "ef251c8fb7ca222ef175b16a8193d5a0452a940f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/70473a8c47cb70362636568693123e92471fc8f9",
-                "reference": "70473a8c47cb70362636568693123e92471fc8f9",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/ef251c8fb7ca222ef175b16a8193d5a0452a940f",
+                "reference": "ef251c8fb7ca222ef175b16a8193d5a0452a940f",
                 "shasum": ""
             },
             "require": {
-                "firebase/php-jwt": "^6.10",
+                "firebase/php-jwt": "6.10.0",
                 "php": "~7.4 || ~8.0"
             },
             "require-dev": {
@@ -139,7 +139,7 @@
                 "source": "https://github.com/krokedil/klarna-express-checkout/tree/develop-settings-changes",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2024-08-23T09:40:48+00:00"
+            "time": "2024-09-11T06:36:18+00:00"
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
@@ -147,12 +147,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
-                "reference": "29bf34df0edef5d25b2b07fb4084eaa6541a056e"
+                "reference": "e3349e01c9388e7aceb7e4c97019d68586ededb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/29bf34df0edef5d25b2b07fb4084eaa6541a056e",
-                "reference": "29bf34df0edef5d25b2b07fb4084eaa6541a056e",
+                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/e3349e01c9388e7aceb7e4c97019d68586ededb0",
+                "reference": "e3349e01c9388e7aceb7e4c97019d68586ededb0",
                 "shasum": ""
             },
             "require": {
@@ -210,7 +210,7 @@
                 "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/develop-settings-changes",
                 "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
             },
-            "time": "2024-08-23T09:42:54+00:00"
+            "time": "2024-09-11T06:30:58+00:00"
         },
         {
             "name": "krokedil/settings-page",
@@ -218,12 +218,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/settings-page.git",
-                "reference": "77080319230c7188e9c7b74557a7fceb14684b01"
+                "reference": "f02ffbd02424a90554815d63f1b12784d73a12af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/77080319230c7188e9c7b74557a7fceb14684b01",
-                "reference": "77080319230c7188e9c7b74557a7fceb14684b01",
+                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/f02ffbd02424a90554815d63f1b12784d73a12af",
+                "reference": "f02ffbd02424a90554815d63f1b12784d73a12af",
                 "shasum": ""
             },
             "require-dev": {
@@ -255,7 +255,7 @@
                 "source": "https://github.com/krokedil/settings-page/tree/develop-changes",
                 "issues": "https://github.com/krokedil/settings-page/issues"
             },
-            "time": "2024-09-06T13:31:04+00:00"
+            "time": "2024-09-11T06:31:07+00:00"
         },
         {
             "name": "krokedil/woocommerce",
