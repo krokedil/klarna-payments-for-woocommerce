@@ -1,6 +1,4 @@
 <?php
-use Krokedil\WooCommerce\Order\Order;
-
 /**
  * Upsell the Klarna order from the order management API.
  *

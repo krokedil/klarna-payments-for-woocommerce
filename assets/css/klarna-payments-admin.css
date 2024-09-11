@@ -1,5 +1,6 @@
 @font-face {
 	font-family: Klarna;
+	font-weight: 300;
 	src: url("../fonts/KlarnaSans-Regular.otf") format("opentype");
 }
 
@@ -9,493 +10,393 @@
 	src: url("../fonts/KlarnaHeadline-Bold.otf") format("opentype");
 }
 
-/* Banner */
+/** New Settings page styling */
 
-#kb-spacer {
-	height: 60px;
+/** Start kp_settings__section */
+.kp_settings__section {
+	display: grid;
+	align-items: start;
+	grid-template-columns: 1fr;
+	grid-template-rows: min-content auto;
+	gap: 40px;
 }
 
-.kb-new-container{
-	background-color: #FFB3C7;
-	display: flex;
-	margin: 0px !important;
-	padding: 20px 2% 30px 2% !important;
-}
-.kb-left-group{
-	width: 50%;
-}
-.kb-middle-group{
-	width:25%;
-	display:grid;
-	grid-template-rows: 25% 25% 25% 25%;
-
-
-}
-.kb-right-group{
-	width:25%;
-	display:flex;
-	flex-direction: column;
-	justify-content: flex-end;
-}
-
-/*Left*/
-.container-title {
-	font-size: 94px;
-	font-weight: bold;
-	font-family: KlarnaHeadline, sans-serif;
-	width:100%;
-	margin-bottom:38px;
-}
-
-.container-main-text{
-	font-size: 21px;
-	font-weight:300;
-	letter-spacing:0.3px;
-	width:80%;
-	line-height: 1.3;
-	color: black;
-}
-
-/* Middle */
-
-
-.kb-button{
-	font-size: 24px;
-	letter-spacing:0.9px;
-	padding:20px 35px 20px 35px;
-	text-decoration: none;
-	white-space: nowrap;
-	overflow: hidden;
-}
-
-#left-main-title{
-	color: #000000;
-	font-size: 4em;;
-	margin:15px 0px 30px 0px;
-}
-
-#left-main-text {
-	font-size: 1rem;
-}
-
-#kb-button-left-frame{
-	grid-row: 2;
-		align-self:center;
-		margin-bottom: 20px !important;
-}
-#kb-button-go-live-frame{
-	grid-row: 3;
-	align-self:center;
+.woocommerce .kp_settings__section {
+	font-family: Klarna;
 	margin-top: 40px;
 }
 
-
-#kb-button-left{
-	background-color: black;
-	color: white;
-	font-size: 1.5em;
-}
-#kb-button-go-live{
-	color: black;
-	background-color: white;
-	font-size: 1.5em;
-}
-
-#klarna-logo-left-frame{
-	display: flex;
-justify-content: flex-end;
-}
-
-/* Other */
-.klarna-logo-img{
-	z-index: 1;
-}
-
-#klarna-logo-left{
-	height: 40px;
-}
-
-/* Main content */
-
-#klarna-wrapper:after {
-	content: '';
-	display: block;
-	clear: both;
-}
-
-#klarna-main {
-	width: 70%;
-	float: left;
-	padding: 0 2% 0 0;
-	border-right: 1px solid #ccc;
-	box-sizing: border-box;
-}
-
-/* Sidebar  */
-
-#klarna-sidebar {
-	width:  350px;
-	margin-left: 20px;
-	float: left;
-	box-sizing: border-box;
-	text-align: center;
-	font-family: Klarna, sans-serif;
-	background-color: #FFB3C7;
-	display: flex;
-	justify-content: center;
-	padding: 20px 0px;
-}
-
-
-.kb-sidebar-section{
-	max-width: 85%;
-	display:flex;
-	flex-direction: column;
-
-}
-
-#kb-sidebar-title{
-	font-size: 2em !important;
-	font-weight: bold;
-	font-family: KlarnaHeadline, sans-serif;
-	text-align: start;
-	width:100%;
-	margin-bottom:10px;
-}
-
-
-.kb-sidebar-content{
+.woocommerce .kp_settings__section table.form-table tr {
 	display: flex;
 	flex-direction: column;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 20px;
 }
 
-#kb-sidebar-main-text{
-	text-align: start;
-	font-size: 1.5em !important;
-	letter-spacing:0.2px;
-	width:95%;
-	line-height: 1.4;
-}
-#sidebar-link-holder{
-	text-align: start;
+div.kp_settings__section_content {
+	background: white;
+	border: 1px solid #e5e5e5;
+	padding: 20px;
+	width: calc( 100% - 40px );
+	position: relative;
 }
 
-#kb-sidebar-button-left{
-	font-size: 20px;
-	color: black;
-	text-decoration: none;
-	padding: 0px !important;
-	border-bottom: 3px solid black !important;
-	font-weight: bolder;
-}
-
-#kb-sidebar-bottom-holder{
-	background-color: #000000;
-	padding: 5px 10px 10px 10px;
-	margin-top: 80px;
-	display:flex;
-	align-self:flex-end;
-	flex-direction: column;
-}
-
-#kb-sidebar-logo-follow-up-text{
-align-self: flex-start;
-color: #ffffff;
-margin: 5px 0px 5px 0px !important;
-word-spacing: 0.3em;
-font: 1em sans-serif;
-}
-
-#kb-sidebar-klarna-logo-left{
-	margin:0px !important;
-	height:20px;
-	width:auto;
-}
-
-#klarna-sidebar h3 {
-	font-family: KlarnaHeadline, sans-serif;
-	font-size: 24px;
-	line-height: 1.2;
-}
-
-#klarna-sidebar p {
-	margin-bottom: 1.5em;
-}
-
-#klarna-sidebar img {
-	display: inline-block;
-	margin: 0 5px;
-}
-
-.save-separator {
-	clear: both;
-}
-
-#krokdocs-sidebar {
-	width:  350px;
-	margin-left: 20px;
-	margin-bottom: 20px;
-	float: left;
-	box-sizing: border-box;
-	text-align: left;
-	font-family: Roboto, sans-serif;
-	background-color: #f5f5f5;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #cccccc;
-	display: flex;
-	justify-content: center;
-	padding: 20px 0px;
-}
-
-.krokdocs-sidebar-section{
-	max-width: 85%;
-	display:flex;
-	flex-direction: column;
-}
-
-#krokdocs-sidebar-title{
-	font-size: 1.5em !important;
-	font-weight: bold;
-	font-family: Roboto, sans-serif !important;
-	text-align: start;
-	width:100%;
-	margin-bottom:0px;
-}
-
-.krokdocs-sidebar-content{
-	display: flex;
-	flex-direction: column;
-}
-
-#krokdocs-sidebar-main-text{
-	text-align: start;
-	font-size: 1.1em !important;
-	letter-spacing:0.2px;
-	width:95%;
-	line-height: 1.4;
-	margin-top: 5px;
-}
-
-#krokdocs-sidebar-button-left{
-	font-size: 20px;
-	color: black;
-	text-decoration: none;
-	padding: 0px !important;
-	border-bottom: 3px solid black !important;
-	font-weight: bolder;
-}
-
-#krokdocs-sidebar-bottom-holder{
-	padding: 5px 10px 10px 10px;
-	margin-top: 10px;
-	align-self:flex-end;
-	flex-direction: column;
-}
-
-#krokdocs-sidebar-krokedil-logo-right{
-	margin:0px !important;
-	height:20px;
-	width:auto;
-}
-
-#krokdocs-sidebar-logo-follow-up-text{
-	align-self: flex-start;
-	color: #000000;
-	margin: 5px 0px 5px 0px !important;
-	font: 1em sans-serif;
-	}
-
-	
-/*--- Dismiss button -----*/
-
-#kb-dismiss-close-icon {
-	position: absolute;
-	top: 65px;
-	right: 20px;
-}
-
-#kb-dismiss-close-icon:hover {
-	color: #eb6f93;
+span.kp_settings__section_toggle {
 	cursor: pointer;
 }
 
-#klarna-settings-logo {
-	display: block;
-	margin: 20px 0;
+.kp_settings__section_info, .kp_settings__section_preview {
+	align-self: start;
+	grid-row: 1;
 }
 
-/* ----- MOBILE VIEW ----- */
-
-@media (hover: none) and (max-width:700px){
-
-/* Main container */
-.kb-spacer{
-	display:none;
+.kp_settings__section_preview {
+	width: 400px;
 }
 
-.kb-new-container{
-	display: grid;
-	height: auto !important;
-	width:calc(100% - 25px) !important;
-	margin-top:35px !important;
-}
-
-.kb-left-group{
+.woocommerce .kp_settings__section table.form-table tr th, .woocommerce .kp_settings__section table.form-table tr td {
 	width: 100%;
+	padding: 0;
+	font-size: 14px;
+	font-weight: normal;
 }
 
-.kb-right-group{
-	width:100%;
-	display:flex;
-	flex-direction: row;
-	justify-content: flex-end;
+.woocommerce .kp_settings__section table.form-table tr th {
+	padding-bottom: 10px;
+	font-weight: 600;
+}
+
+.woocommerce .kp_settings__section table.form-table input:not([type="checkbox"]):not(.select2-search__field), .woocommerce .kp_settings__section table.form-table select {
+	max-width: 100%;
+	width: 100%;
+	height: 40px;
+	margin: 5px;
+	padding: 0 10px;
+	border: 1px solid #ccc;
+}
+
+.woocommerce .kp_settings__section table.form-table input[type="checkbox"] {
+	margin-right: 15px;
+}
+
+.woocommerce .kp_settings__section table.form-table tr:has(input[type="hidden"]) {
+	display: none;
+}
+
+.woocommerce .kp_settings__section table.form-table .select2-container {
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 100% !important;
+}
+
+.kp_settings__section_previews {
+	display: none;
+}
+
+/** Adapt the layout for bigger screens than mobile. */
+@media (min-width: 960px) and (max-width: 1300px) {
+	.kp_settings__section {
+		grid-template-columns: 1fr 3fr;
+	}
+
+	.kp_settings__section_info {
+		grid-column: 1;
+	}
+
+	div.kp_settings__section_content {
+		grid-column: 2;
+		margin: auto;
+		grid-row: 1 / 3;
+	}
+}
+
+@media (min-width: 1300px) {
+	.kp_settings__section {
+		max-width: 1700px;
+		grid-template-columns: 1fr 3fr 400px;
+	}
+
+	div.kp_settings__section_content {
+		grid-column: 2;
+		margin: 0 auto;
+		grid-row: 1 / 3;
+	}
+
+	.kp_settings__section_previews {
+		display: block;
+		grid-column: 3;
+		width: 400px;
+	}
+}
+
+div.kp_settings__section_content .kp_settings__section_toggle {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	z-index: 999;
 }
 
 
-.kb-small-container{
-	padding: 0px 30px;
-}
-
-/*Left*/
-.container-title {
-	font-size: 56px;
-	font-weight: bold;
-	width:100%;
-	margin-bottom:10vh;
-}
-
-.container-main-text{
-	font-size: 17px;
-	font-weight:300;
-	letter-spacing:0.5px;
-	width:100%;
-}
-
-.kb-button{
-	font-size: 22px;
-	letter-spacing:0.9px;
-	text-decoration: none;
-	white-space: nowrap;
+div.kp_settings__section_content table {
+	display: block;
+	height: auto;
+	max-height: 100%;
 	overflow: hidden;
-	margin-left: 30px !important;
+	transition: all 0.15s ease-in-out;
 }
 
-#kb-button-left{
-	background-color: black;
-	color: white;
-	padding:10px 25px 10px 25px;
+.kp_settings__section_previews {
+	max-height: 100vh;
 }
 
-#kb-button-go-live{
-	font-size: 18px;
-	font-weight: 700;
-	color: black;
-	background-color: unset !important;
-	padding: 0px !important;
-	margin-left: 5px;
-	border-bottom: 3px solid black !important;
+div.kp_settings__section_content table.kp_settings__section_content_hidden {
+	max-height: 50px;
+	pointer-events: none; /* Prevent interaction with the gradient */
 }
 
-#klarna-logo-left-frame{
-display:unset;
-align-self: center;
-margin-top: 40px;
-margin-right:20px;
+.kp_settings__section_previews.kp_settings__section_content_hidden {
+	max-height: 0;
+	display: none;
+	pointer-events: none; /* Prevent interaction with the gradient */
 }
 
-/* Other */
-.klarna-logo-img{
-	z-index: 1;
+div.kp_settings__section_content .kp_settings__content_gradient {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: linear-gradient(
+		to bottom,
+		rgba(255, 255, 255, 0) 0%,
+		rgba(255, 255, 255, 1) 75%
+	);
+	pointer-events: none; /* Prevent interaction with the gradient */
+	z-index: 999;
 }
 
-#klarna-logo-left{
-	height: 30px;
+
+.kp_settings__section_title.kp_settings__section_title_hidden {
+	display: none;
 }
 
-#klarna-main{
-	border: none;
-	margin-bottom:30px !important;
+.kp_settings__section_previews .kp_settings_section_preview {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: white;
+	padding: 0 1em 1em 1em;
 }
 
-	/* Mobile Sidebar */
-
-
-	#klarna-sidebar {
-		width: 95vw !important;
-		max-width: unset;
-
-		margin-left: 0px;
-		float: none;
-		box-sizing: border-box;
-		text-align: unset;
-		font-family: Klarna, sans-serif;
-		background-color: #FFB3C7;
-		display: flex;
-		justify-content: unset;
-		padding: 20px 0px;
-	}
-
-
-	.kb-sidebar-section{
-		/* padding:30px; */
-
-		width:unset;
-		max-width: unset;
-		display:flex;
-		flex-direction: column;
-		margin: 0px 10px;
-
-	}
-}
-/* --- END --- Mobile View*/
-
-
-
-.wc-settings-sub-title a, .wc-settings-sub-title a:hover, .wc-settings-sub-title a:click, .wc-settings-sub-title a:visited, .wc-settings-sub-title a:focus {
-	border:none;
-	outline:none;
-	text-decoration:none;
-	color:black;
+.kp_settings__section_previews .kp_settings_section_preview:not(:first-child) {
+	margin-top: 20px;
 }
 
-div.kco-message.notice {
-	border-left-color: #bb2525!important;
+.kp_settings_section_preview .kp_settings__preview_title {
+	font-family: KlarnaHeadline;
+	font-size: 14px;
+}
+
+/** End kp_settings__section */
+
+/** Start kp_settings__text_info */
+.woocommerce .kp_settings__text_info h4 {
+	font-family: KlarnaHeadline;
+	margin: 0;
+}
+
+/** End kp_settings__text_info */
+
+/** Start WooCommerce settings overrides */
+.kp_settings__field input:not(.select2-search__field),
+.kp_settings__field select {
+	max-width: 100%;
+	width: 100%;
+	height: 40px;
+	padding: 0 10px;
+	border: 1px solid #ccc;
+}
+
+.kp_settings__field p.kp_settings__field_description,
+.kp_settings__field label {
+	font-family: KlarnaHeadline;
+	margin: 0;
+	font-size: 14px;
+}
+
+.kp_settings__header {
+	font-family: Klarna;
+	display: flex;
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+.kp_settings__header h1.kp_settings__header_title {
+	font-family: KlarnaHeadline;
+	margin: 0;
+	padding: 0;
+}
+
+.kp_settings__header_logo {
+	width: 75px;
+	height: 75px;
+	border: 1px solid transparent;
+	border-radius: 10px;
+}
+
+.kp_settings__header_description {
+	margin: 5px 0 0 0;
+}
+
+.kp_settings__header_links {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+	margin: 0;
+}
+
+.woocommerce .kp_settings__section table.form-table tr:has(td fieldset input.kp_settings__credentials_field) {
+	padding-top: 0;
+}
+
+.woocommerce .kp_settings__section table.form-table tr:has(td fieldset input.kp_settings__credentials_field[type="text"]:not(.kp_settings__credentials_field_client_id)) {
+	float: left;
+	/** Calculate the width so there is always a 10px gap between the two rows */
+	width: calc(50% - 25px);
+	padding-right: 0;
+}
+
+.woocommerce .kp_settings__section table.form-table tr:has(td fieldset input.kp_settings__credentials_field[type="password"]) {
+	float: right;
+	/** Calculate the width so there is always a 10px gap between the two rows */
+	width: calc(50% - 25px);
+	padding-left: 0;
+}
+
+.woocommerce .kp_settings__section table.form-table tr:has(td fieldset input.kp_settings__credentials_field[type="password"])::after {
+	clear: both;
+	content: ".";
+	visibility: hidden;
+	height: 0;
+	display: block;
+}
+
+.kp_settings__credentials {
+	clear:both
+}
+
+.woocommerce table.form-table .kp_settings__credentials td fieldset {
+	margin-top: 0;
+}
+
+.woocommerce div.kp_settings__section_content tbody:last-child tr:last-child td {
+	margin-bottom: 20px;
+}
+
+/** Label for credentials fields start */
+.kp_settings__credentials fieldset {
 	position: relative;
+}
+
+.woocommerce table.form-table tr th label {
+	display: inline-block;
+}
+.woocommerce table.form-table tr th label .woocommerce-help-tip, .wc-wp-version-gte-53 .woocommerce table.form-table tr th label .woocommerce-help-tip {
+	margin: -2px 0 0 0;
+	position: relative;
+}
+
+.woocommerce div.kp_settings__section_content tr:has(td fieldset input.kp_settings__credentials_field) th label {
+	font-family: Klarna;
+	font-weight: 300;
+	position: absolute;
+	top: 0;
+	left: 10px;
+	color: grey;
+    transition: all 0.2s;
+    opacity: 0.6;
+	cursor: text;
+	user-select: none;
+	display: inline-block;
+}
+
+.woocommerce table.form-table tr:has(td fieldset input.kp_settings__credentials_field:placeholder-shown) th label {
+	top: 21px;
+	font-size: 14px;
+}
+
+.woocommerce table.form-table tr:has(td fieldset input.kp_settings__credentials_field:not(:placeholder-shown)) th label,
+.woocommerce table.form-table tr:has(td fieldset input.kp_settings__credentials_field:focus) th label {
+	top: 5px;
+	background: white;
+	font-size: 10px;
+	padding: 0 4px;
+	opacity: 1;
+}
+
+/** Label for credentials fields end */
+
+/** Toggle button start */
+.woocommerce table.form-table .kp_settings__credentials th label {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	cursor: pointer;
+}
+
+.woocommerce .kp_settings__section table.form-table tr.kp_settings__credentials td.kp_settings__credentials_field_hidden {
+	/*display: none;*/
+	max-height: 0;
+	transition: max-height 0.15s ease-out;
 	overflow: hidden;
 }
 
-input.bad_credential {
-	border-color: #bb2525!important;
+.woocommerce .kp_settings__section table.form-table tr.kp_settings__credentials td:not(.kp_settings__credentials_field_hidden) {
+	max-height: 150px;
+	transition: max-height 0.15s ease-in;
+	overflow: hidden;
 }
 
-/* fix for the footer */
-#wpfooter{
-	position: unset !important;
+.kp_settings__credentials {
+	display: grid;
+	grid-template-columns: 1fr;
+}
+.kp_settings__credentials .kp_settings__fields_credentials {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 }
 
-
-#klarna-payments-countries-body{
-	display: flex;
-	flex-direction: row;
+.kp_settings__credentials .kp_settings__field {
+	margin: 0 5px;
+	position: relative;
 }
 
-#klarna-payments-countries-row-1{
-	width: 35%;
-	display: flex;
-	flex-direction: column;
+.kp_settings__credentials .kp_settings__field label {
+	font-family: Klarna;
+	font-weight: 300;
+	position: absolute;
+	top: 0;
+	left: 15px;
+	color: grey;
+    transition: all 0.2s;
+    opacity: 0.6;
+	cursor: text;
+	user-select: none;
+	display: inline-block;
 }
 
-#klarna-payments-countries-row-1 > *{
-text-justify: center;
-width:100%;
+.kp_settings__credentials .kp_settings__field:has(input:placeholder-shown) label {
+	top: 17px;
+	font-size: 14px;
 }
 
-#klarna-payments-countries-row-2{
-	display: flex;
-	flex-direction: column;
-}
-
-#klarna-payments-countries-row-2 > *{
-	width:100%;
+.kp_settings__credentials .kp_settings__field:has(input:not(:placeholder-shown)) label,
+.kp_settings__credentials .kp_settings__field:has(input:focus) label {
+	top: 0;
+	background: white;
+	font-size: 10px;
+	padding: 0 4px;
+	opacity: 1;
 }

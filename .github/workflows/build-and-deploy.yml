@@ -10,7 +10,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@master
 
-      # Install all composer dependencies for the plugin.
+    # Build the plugin with dev dependencies to scope the dependency packages.
+    - name: Install Composer dependencies
+      uses: php-actions/composer@v6
+      with:
+        dev: yes
+        php_version: 7.4
+
+    # Build the plugin for release.
     - name: Install Composer dependencies
       uses: php-actions/composer@v6
       with:
