@@ -5,12 +5,12 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 3.6.2
+ * Version: 3.7.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 9.2.0
+ * WC tested up to: 9.2.3
  * Requires Plugins: woocommerce
  *
  * Copyright (c) 2017-2024 Krokedil
@@ -42,7 +42,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '3.6.2' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '3.7.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -399,15 +399,17 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @return bool|mixed
 		 */
 		public function init_composer() {
-			$autoloader = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/dependencies/scoper-autoload.php';
+			$autoloader              = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
+			$autoloader_dependencies = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/dependencies/scoper-autoload.php';
 
-			if ( ! is_readable( $autoloader ) ) {
+			if ( ! is_readable( $autoloader_dependencies ) || ! is_readable( $autoloader_dependencies ) ) {
 				self::missing_autoloader();
 				return false;
 			}
 
-			$autoloader_result = require $autoloader;
-			if ( ! $autoloader_result ) {
+			$autoloader_result              = require $autoloader;
+			$autoloader_dependencies_result = require $autoloader_dependencies;
+			if ( ! $autoloader_result || ! $autoloader_dependencies_result ) {
 				return false;
 			}
 

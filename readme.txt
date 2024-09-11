@@ -7,7 +7,7 @@ Tested up to: 6.6.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.2.0
-Stable tag: 3.6.2
+Stable tag: 3.7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,17 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.09.11    - version 3.7.0 =
+* Changed       - Changed the settings page to follow a new design that's more streamlined and matching with Klarnas other products.
+* Changed       - Changed the payment method name to be Klarna instead of Klarna Payments.
+* Feature       - Added a setting to combine all EU country credentials into a single setting field, for cases where you use the same merchant id and secret for multiple countries that you sell to with Klarna Payments.
+* Feature       - Added settings for each region to have their own Client ID that can be used by On-Site Messaging, Express Checkout and other products from Klarna instead of these having to add the setting separately. This will also allow for more control of the regions these features are available in.
+* Feature       - Added a setting to set what countries are available for the payment method. This will be skipped if it is empty to prevent issues until stores can update the setting properly.
+* Feature       - Added a Support tab on the settings page for the gateway. This will allow stores to open a support ticket directly with Krokedil from the plugin, and has the ability to attach the system report. And has links to other resources such as plugin documentation and information.
+* Feature       - Added a Addons tab on the settings page for the gateway. This will show other plugins developed by Krokedil that work well together with the plugin that can provide additional features to the WooCommerce store.
+* Fix           - Fixed potential issues caused by other plugins having similar composer dependencies but with different versions by scoping the plugins dependencies.
+* Fix           - Fixed some issues in the credentials check that runs when settings are saved.
+
 = 2024.09.09    - version 3.6.2 =
 * Enhancement   - Performance improvements related to session management.
 
@@ -87,7 +98,7 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * Fix           - Update package version.
 
 = 2024.04.22    - version 3.5.1 =
-* Fix           - Fixed a critical error that happened under certain conditions if the KOSM plugin is active. 
+* Fix           - Fixed a critical error that happened under certain conditions if the KOSM plugin is active.
 
 = 2024.04.22    - version 3.5.0 =
 * Feature       - On-site messaging is now part of the Klarna Payments plugin. With this change we've moved to the new Web SDK and resolved deprecation warnings.
