@@ -19,7 +19,7 @@ Grow your business for increased sales and enhanced shopping experiences at no e
 
 Klarna is the default checkout option for our partners, used (and loved) by millions of shoppers every month, both online and in-store.
 
-| **150M Shoppers** | **2.5M Daily Transactions** | **550K Retailers Globally** |
+| **85M Shoppers** | **2.5M Daily Transactions** | **550K Retailers Globally** |
 |-------------------|-----------------------------|-----------------------------|
 
 
