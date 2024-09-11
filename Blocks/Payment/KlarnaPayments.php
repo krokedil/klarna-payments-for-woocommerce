@@ -30,7 +30,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	}
 
 	/**
-	 * Method to register the paymnet blocks with WooCommerce.
+	 * Method to register the payment blocks with WooCommerce.
 	 *
 	 * @return void
 	 */
@@ -93,7 +93,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	/**
 	 * Gets the payment method data to load into the frontend.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function get_payment_method_data() {
 		return array(
