@@ -130,7 +130,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function get_icon() {
 		if ( ! empty( $this->icon ) ) {
 			$icon_width = '39';
-			$icon_html  = '<img src="' . $this->icon . '" alt="Klarna" css="max-width:' . $icon_width . 'px"/>';
+			$icon_html  = '<img src="' . $this->icon . '" alt="Klarna" style="max-width:' . $icon_width . 'px"/>';
 			if ( ! $this->hide_what_is_klarna ) {
 				// If default WooCommerce CSS is used, float "What is Klarna link like PayPal does it".
 				if ( $this->float_what_is_klarna ) {
@@ -150,7 +150,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				$icon_html .= '<a ' . $link_css . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 			}
 		} else {
-			$icon_html = '<img src="' . WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg" alt="Klarna" css="max-width:39px;"/>';
+			$icon_html = '<img src="' . WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg" alt="Klarna" style="max-width:39px;"/>';
 		}
 		return apply_filters( 'woocommerce_gateway_icon', $icon_html, $this->id );
 	}
@@ -516,7 +516,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function address_notice( $order ) {
 		if ( $this->id === $order->get_payment_method() ) {
-			echo '<div css="margin: 10px 0; padding: 10px; border: 1px solid #B33A3A; font-size: 12px">Order address should not be changed and any changes you make will not be reflected in Klarna system.</div>';
+			echo '<div style="margin: 10px 0; padding: 10px; border: 1px solid #B33A3A; font-size: 12px">Order address should not be changed and any changes you make will not be reflected in Klarna system.</div>';
 		}
 	}
 
