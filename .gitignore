@@ -18,3 +18,9 @@ wp-content/plugins/hello.php
 /sitemap.xml.gz
 /node_modules
 /vendor
+
+dependencies/*
+!dependencies/.gitkeep
+
+# tmp folders from scoping.
+tmp*

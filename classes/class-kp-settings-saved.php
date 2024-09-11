@@ -46,9 +46,9 @@ class KP_Settings_Saved {
 		if ( $options && 'yes' !== $options['enabled'] ) {
 			return;
 		}
-		$countries = KP_Form_Fields::$kp_form_auto_countries;
+		$countries = array_keys( KP_Form_Fields::$kp_form_auto_countries );
 
-		foreach ( $countries as $cc => $country ) {
+		foreach ( $countries as $cc ) {
 			$cc = 'uk' === $cc ? 'gb' : $cc;
 
 			if ( 'yes' !== $options['testmode'] ) {
@@ -68,11 +68,9 @@ class KP_Settings_Saved {
 					$test_response = ( new KP_Test_Credentials( $args ) )->request();
 					$this->process_test_response( $test_response, self::PROD, $cc );
 				}
-			} else {
-				// Test.
-				if ( '' !== $options[ 'test_merchant_id_' . $cc ] ) {
-					$username = $options[ 'test_merchant_id_' . $cc ];
-					$password = $options[ 'test_shared_secret_' . $cc ];
+			} elseif ( '' !== $options[ 'test_merchant_id_' . $cc ] ?? '' ) { // Test.
+					$username = $options[ 'test_merchant_id_' . $cc ] ?? '';
+					$password = $options[ 'test_shared_secret_' . $cc ] ?? '';
 
 					// Create request arguments.
 					$args = array(
@@ -84,7 +82,6 @@ class KP_Settings_Saved {
 
 					$test_response = ( new KP_Test_Credentials( $args ) )->request();
 					$this->process_test_response( $test_response, self::TEST, $cc );
-				}
 			}
 
 			$this->maybe_handle_error();
@@ -107,7 +104,7 @@ class KP_Settings_Saved {
 		$cc    = strtoupper( $cc );
 		$code  = $test_response->get_error_code();
 		$error = $test_response->get_error_message();
-		$data  = json_decode( $test_response->get_error_data(), true );
+		$data  = json_decode( $test_response->get_error_data() ?? '', true );
 
 		if ( 400 === $code || 401 === $code || 403 === $code ) {
 			switch ( $code ) {
@@ -159,13 +156,13 @@ class KP_Settings_Saved {
 		if ( $error_messages ) {
 			?>
 				<div class="kp-message notice notice-error">
-				<?php
-				foreach ( $error_messages as $error_message ) {
-					?>
+			<?php
+			foreach ( $error_messages as $error_message ) {
+				?>
 					<p><?php echo wp_kses_post( $error_message ); ?></p>
 				<?php } ?>
 				</div>
-			<?php
+				<?php
 		}
 	}
 }

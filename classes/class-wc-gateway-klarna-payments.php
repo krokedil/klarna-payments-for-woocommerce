@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
+
 /**
  * WC_Payment_Gateway class.
  *
@@ -62,8 +64,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                 = 'klarna_payments';
-		$this->method_title       = __( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
-		$this->method_description = __( 'Get the flexibility to pay over time with Klarna!', 'klarna-payments-for-woocommerce' );
+		$this->method_title       = __( 'Klarna for WooCommerce', 'klarna-payments-for-woocommerce' );
+		$this->method_description = __( 'Supercharge your business with one single plugin for increased sales and enhanced shopping experiences.', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = true;
 		$this->supports           = apply_filters(
 			'wc_klarna_payments_supports',
@@ -102,7 +104,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 
-		$this->pay_button_id = \Krokedil\KlarnaExpressCheckout\KlarnaExpressCheckout::get_payment_button_id();
+		$this->pay_button_id = KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\KlarnaExpressCheckout::get_payment_button_id();
 
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -112,9 +114,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Initialise Gateway Settings Form Fields.
+	 * Initialize Gateway Settings Form Fields.
 	 */
 	public function init_form_fields() {
+		// Migrate any legacy settings we have.
 		$this->form_fields = KP_Form_Fields::get_form_fields();
 	}
 
@@ -131,9 +134,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			if ( ! $this->hide_what_is_klarna ) {
 				// If default WooCommerce CSS is used, float "What is Klarna link like PayPal does it".
 				if ( $this->float_what_is_klarna ) {
-					$link_style = 'style="float: right; margin-right:10px; font-size: .83em;"';
+					$link_css = 'style="float: right; margin-right:10px; font-size: .83em;"';
 				} else {
-					$link_style = '';
+					$link_css = '';
 				}
 
 				$what_is_klarna_text = __( 'What is Klarna?', 'klarna-payments-for-woocommerce' );
@@ -144,7 +147,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				if ( stripos( $locale, 'de' ) !== false ) {
 					$what_is_klarna_text = 'Was ist Klarna?';
 				}
-				$icon_html .= '<a ' . $link_style . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
+				$icon_html .= '<a ' . $link_css . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 			}
 		} else {
 			$icon_html = '<img src="' . WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg" alt="Klarna" style="max-width:39px;"/>';
@@ -156,12 +159,55 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Add sidebar to the settings page.
 	 */
 	public function admin_options() {
-		ob_start();
-		parent::admin_options();
-		$parent_options = ob_get_contents();
-		ob_end_clean();
+		$args = $this->get_settings_page_args();
+
+		if ( empty( $args ) ) {
+			$this->settings_page_content();
+			return;
+		}
+
+		$args['general_content'] = array( $this, 'settings_page_content' );
+		$args['icon']            = WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-icon.svg';
+		( SettingsPage::get_instance() )
+			->set_plugin_name( 'Klarna' )
+			->register_page( 'klarna_payments', $args, $this )
+			->output( 'klarna_payments' );
+	}
+
+	/**
+	 * Read the settings page arguments from remote or local storage.
+	 * If the args are stored locally, they are fetched from the transient cache.
+	 * If they are not available locally, they are fetched from the remote source and stored in the transient cache.
+	 * If the remote source is not available, the function returns null, and default settings page will be used instead.
+	 *
+	 * @return array|null
+	 */
+	private function get_settings_page_args() {
+		$args = get_transient( 'klarna_payments_settings_page_config' );
+		if ( ! $args ) {
+			$args = wp_remote_get( 'https://kroconnect.blob.core.windows.net/krokedil/plugin-settings/klarna-payments.json' );
+
+			if ( is_wp_error( $args ) ) {
+				KP_Logger::log( 'Failed to fetch Klarna Payments settings page config from remote source.' );
+				return null;
+			}
+
+			$args = wp_remote_retrieve_body( $args );
+			set_transient( 'klarna_payments_settings_page_config', $args, 60 * 60 * 24 ); // 24 hours lifetime.
+		}
+
+		return json_decode( $args, true );
+	}
+
+	/**
+	 * Callable function for the general content for the settings page.
+	 *
+	 * @return void
+	 */
+	public function settings_page_content() {
 		KP_Settings_Saved::maybe_show_errors();
-		KP_Banners::settings_sidebar( $parent_options );
+		KP_Settings_Page::header_html();
+		echo $this->generate_settings_html( $this->get_form_fields(), false ); // phpcs:ignore
 	}
 
 	/**
@@ -172,6 +218,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @param WC_Order|bool $order The WooCommerce order.
 	 */
 	public function country_currency_check( $order = false ) {
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 		// Check if allowed currency.
 		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies, true ) ) {
 			kp_unset_session_values();
@@ -180,23 +227,31 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$klarna_country = kp_get_klarna_country( $order );
 		$country        = strtolower( $klarna_country );
+		$country_values = KP_Form_Fields::$kp_form_auto_countries[ $country ];
 
 		if ( ! isset( KP_Form_Fields::$kp_form_auto_countries[ $country ] ) ) {
 			kp_unset_session_values();
 			return new WP_Error( 'country', "Country ({$country}) is not supported by Klarna Payments." );
 		}
 
+		$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+
+		// If the country is a EU country, check if we should get the credentials from the EU settings.
+		if ( $combined_eu && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
+			$country = 'eu';
+		}
+
 		// Check that the credentials are set for the current country in KP.
 		$prefix        = $this->testmode ? 'test_' : '';
 		$merchant_id   = $this->get_option( "{$prefix}merchant_id_{$country}" );
 		$shared_secret = $this->get_option( "{$prefix}shared_secret_{$country}" );
+
 		if ( empty( $merchant_id ) || empty( $shared_secret ) ) {
 			kp_unset_session_values();
 			return new WP_Error( 'country', "No credentials found for {$country}" );
 		}
 
-		// Check the countrys currency against the current curreny.
-		$country_values    = KP_Form_Fields::$kp_form_auto_countries[ $country ];
+		// Check the countrys currency against the current currency.
 		$required_currency = $country_values['currency'];
 		$country_name      = $country_values['name'];
 		if ( get_woocommerce_currency() !== $required_currency ) {
@@ -228,6 +283,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Check country and currency.
 		if ( is_wp_error( $this->country_currency_check( $order ) ) ) {
+			return false;
+		}
+
+		// Check the country against the available countries in the settings.
+		if ( ! kp_is_country_available( kp_get_klarna_country( $order ) ) ) {
 			return false;
 		}
 
@@ -305,7 +365,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	private function process_checkout_order( $order ) {
-		$kec_client_token = \Krokedil\KlarnaExpressCheckout\Session::get_client_token();
+		$kec_client_token = KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\Session::get_client_token();
 		$order_key        = $order->get_order_key();
 		$order_id         = $order->get_id();
 
@@ -324,7 +384,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				);
 			}
 		} else {
-			$klarna_country    = kp_get_klarna_country( $order );
+			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
+			$klarna_country = kp_get_klarna_country( $order );
+
+			// If EU credentials are combined, we should use the EU country code.
+			$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+			if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
+				$klarna_country = 'EU';
+			}
+
 			$klarna_session_id = $kec_client_token;
 		}
 
@@ -380,6 +448,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$session_id     = KP_WC()->session->get_klarna_session_id();
 		$klarna_country = kp_get_klarna_country( $order );
+
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		// If EU credentials are combined, we should use the EU country code.
+		$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+		if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
+			$klarna_country = 'EU';
+		}
 
 		// Create a HPP url.
 		$hpp = KP_WC()->api->create_hpp( $klarna_country, $session_id, $order->get_id() );
@@ -538,7 +613,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_upsell_order = KP_WC()->api->upsell_klarna_order( $country, $klarna_order_id, $order_id );
 
 		if ( is_wp_error( $klarna_upsell_order ) ) {
-			$error = new WP_Error( '401', __( 'Klarna did not accept the new order amount, the order has not been updated' ) );
+			$error = new WP_Error( '401', __( 'Klarna did not accept the new order amount, the order has not been updated', 'klarna-payments-for-woocommerce' ) );
 			return $error;
 		}
 
@@ -552,7 +627,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
  * @param  array $methods All registered payment methods.
  * @return array $methods All registered payment methods.
  */
-function add_kp_gateway( $methods ) {
+function add_kp_gateway( $methods ) { // phpcs:ignore
 	$methods[] = 'WC_Gateway_Klarna_Payments';
 	return $methods;
 }
