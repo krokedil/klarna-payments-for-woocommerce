@@ -11,16 +11,12 @@ jobs:
       uses: actions/checkout@master
 
     # Build the plugin with dev dependencies to scope the dependency packages.
-    - name: Install Composer dependencies
-      uses: php-actions/composer@v6
-      with:
-        dev: yes
+    - name: Composer Install (Dev)
+      run: composer install
 
     # Build the plugin for release.
-    - name: Install Composer dependencies
-      uses: php-actions/composer@v6
-      with:
-        dev: no
+    - name: Composer Install (Prod)
+      run: composer install --no-dev
 
     # Install and build Block release.
     - name: Build block release versions.
