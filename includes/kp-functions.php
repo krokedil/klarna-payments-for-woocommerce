@@ -276,8 +276,8 @@ function kp_get_client_id( $country = null ) {
 	$country  = strtolower( $country ? $country : kp_get_klarna_country() );
 	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 
-	$eu_combined = 'yes' === isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no';
-	$test_mode   = 'yes' === isset( $settings['testmode'] ) ? $settings['testmode'] : 'no';
+	$eu_combined = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+	$test_mode   = 'yes' === ( isset( $settings['testmode'] ) ? $settings['testmode'] : 'no' );
 
 	if ( ! kp_is_country_available( $country ) ) {
 		return '';

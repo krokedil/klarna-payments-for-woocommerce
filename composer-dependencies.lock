@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "261fdaa5924c389691d71810c5a1ed0e",
+    "content-hash": "bef47250909618e625a355af2afc0e22",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -259,21 +259,21 @@
         },
         {
             "name": "krokedil/woocommerce",
-            "version": "1.6.1",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "c603dc52f8e1d3d41ad9781a20744d4467a375b8"
+                "reference": "aec179c982067431582c4a9c199ee9c6fd986d91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/c603dc52f8e1d3d41ad9781a20744d4467a375b8",
-                "reference": "c603dc52f8e1d3d41ad9781a20744d4467a375b8",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/aec179c982067431582c4a9c199ee9c6fd986d91",
+                "reference": "aec179c982067431582c4a9c199ee9c6fd986d91",
                 "shasum": ""
             },
             "require-dev": {
                 "10up/wp_mock": "^1.0",
-                "php": "~7.1 || ~8.0",
+                "php": "~7.4 || ~8.0",
                 "php-stubs/woocommerce-stubs": "^7.2",
                 "php-stubs/wordpress-stubs": "^6.1"
             },
@@ -299,10 +299,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.6.1",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.7.0",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2024-05-13T13:10:01+00:00"
+            "time": "2024-09-11T09:02:40+00:00"
         },
         {
             "name": "krokedil/wp-api",
