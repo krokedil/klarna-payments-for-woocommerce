@@ -3,9 +3,9 @@
     "php": ">=7.4",
     "krokedil/wp-api": "^1.0",
     "krokedil/woocommerce": "1.6.1",
-    "krokedil/klarna-express-checkout": "dev-develop-settings-changes",
-    "krokedil/klarna-onsite-messaging": "dev-develop-settings-changes",
-    "krokedil/settings-page": "dev-develop-changes"
+    "krokedil/klarna-express-checkout": "^1.4.0",
+    "krokedil/klarna-onsite-messaging": "^1.2.0",
+    "krokedil/settings-page": "^1.1.0"
   },
   "config": {
     "platform": {
