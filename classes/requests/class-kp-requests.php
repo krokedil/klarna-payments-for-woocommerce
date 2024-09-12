@@ -89,7 +89,7 @@ abstract class KP_Requests extends Request {
 	 */
 	public function set_credentials() {
 		$country     = strtolower( $this->arguments['country'] ) ?? strtolower( kp_get_klarna_country() ); // Get the country from the arguments, or the fetch from helper method.
-		$combined_eu = 'yes' === $this->settings['combine_eu_credentials'] ?? 'no';
+		$combined_eu = isset( $this->settings['combine_eu_credentials'] ) ? ( 'yes' === $this->settings['combine_eu_credentials'] ) : false; // Check if we should combine the EU credentials.
 
 		// If the country is a EU country, check if we should get the credentials from the EU settings.
 		if ( $combined_eu && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
