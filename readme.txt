@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.09.12    - version 3.7.2 =
+* Fix           - Fixed a undefined index warning related to new settings.
+
 = 2024.09.11    - version 3.7.1 =
 * Fix           - Fixed a issue with getting the correct client id when not combining all EU countries into a single setting.
 * Tweak         - Bumped version for krokedil/woocommerce dependency.
