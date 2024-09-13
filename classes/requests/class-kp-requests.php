@@ -76,9 +76,10 @@ abstract class KP_Requests extends Request {
 	 */
 	protected function get_base_url( $country, $settings ) {
 		$country_data = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $country ?? '' ) ] ?? null;
+		$testmode     = wc_string_to_bool( $settings['testmode'] ?? 'no' ); // Get the testmode setting.
 
 		$region     = strtolower( apply_filters( 'klarna_base_region', $country_data['endpoint'] ?? '' ) ); // Get the region from the country parameters, blank for EU.
-		$playground = 'yes' === $settings['testmode'] ? '.playground' : ''; // If testmode is enabled, add playground to the subdomain.
+		$playground = $testmode ? '.playground' : ''; // If testmode is enabled, add playground to the subdomain.
 		$subdomain  = "api{$region}{$playground}"; // Combine the string to one subdomain.
 
 		return "https://{$subdomain}.klarna.com/"; // Return the full base url for the api.
@@ -90,13 +91,14 @@ abstract class KP_Requests extends Request {
 	public function set_credentials() {
 		$country     = strtolower( $this->arguments['country'] ) ?? strtolower( kp_get_klarna_country() ); // Get the country from the arguments, or the fetch from helper method.
 		$combined_eu = isset( $this->settings['combine_eu_credentials'] ) ? ( 'yes' === $this->settings['combine_eu_credentials'] ) : false; // Check if we should combine the EU credentials.
+		$testmode    = wc_string_to_bool( $this->settings['testmode'] ?? 'no' ); // Get the testmode setting.
 
 		// If the country is a EU country, check if we should get the credentials from the EU settings.
 		if ( $combined_eu && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
 			$country = 'eu';
 		}
 
-		$prefix = 'yes' === $this->settings['testmode'] ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
+		$prefix = $testmode ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
 
 		$merchant_id   = "{$prefix}merchant_id_{$country}";
 		$shared_secret = "{$prefix}shared_secret_{$country}";

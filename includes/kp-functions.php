@@ -83,7 +83,9 @@ function kp_get_klarna_country( $order = false ) {
  * @return void
  */
 function kp_save_order_meta_data( $order, $response ) {
-	$environment = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'] ? 'test' : 'live';
+	$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
+	$testmode    = wc_string_to_bool( $settings['testmode'] ?? 'no' );
+	$environment = $testmode ? 'test' : 'live';
 
 	$klarna_country = kp_get_klarna_country( $order );
 
@@ -340,7 +342,7 @@ function kp_is_country_available( $country ) {
 	$country = strtolower( $country );
 	if ( empty( $available_countries ) ) {
 		// See if the country has values saved from the old settings, before the available countries setting was added.
-		$testmode = $settings['testmode'] ?? 'no';
+		$testmode = wc_string_to_bool( $settings['testmode'] ?? 'no' );
 		$prefix   = $testmode ? 'test_' : '';
 
 		// If the country is a EU country, check if we are using the combined EU credentials.
