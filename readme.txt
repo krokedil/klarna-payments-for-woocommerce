@@ -7,7 +7,7 @@ Tested up to: 6.6.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.2.3
-Stable tag: 3.7.2
+Stable tag: 3.7.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 
 == Changelog ==
+= 2024.09.13    - version 3.7.3 =
+* Fix           - Fix an issue with getting the correct credentials in some cases when not using the combined setting for EU countries.
+
 = 2024.09.12    - version 3.7.2 =
 * Fix           - Fixed a undefined index warning related to new settings.
 
