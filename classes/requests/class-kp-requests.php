@@ -78,7 +78,7 @@ abstract class KP_Requests extends Request {
 		$country_data = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $country ?? '' ) ] ?? null;
 
 		$region     = strtolower( apply_filters( 'klarna_base_region', $country_data['endpoint'] ?? '' ) ); // Get the region from the country parameters, blank for EU.
-		$playground = 'yes' === $settings['testmode'] ? '.playground' : ''; // If testmode is enabled, add playground to the subdomain.
+		$playground = ( 'yes' === $settings['testmode'] ) ? '.playground' : ''; // If testmode is enabled, add playground to the subdomain.
 		$subdomain  = "api{$region}{$playground}"; // Combine the string to one subdomain.
 
 		return "https://{$subdomain}.klarna.com/"; // Return the full base url for the api.
@@ -96,7 +96,7 @@ abstract class KP_Requests extends Request {
 			$country = 'eu';
 		}
 
-		$prefix = 'yes' === $this->settings['testmode'] ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
+		$prefix = ( 'yes' === $this->settings['testmode'] ) ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
 
 		$merchant_id   = "{$prefix}merchant_id_{$country}";
 		$shared_secret = "{$prefix}shared_secret_{$country}";
