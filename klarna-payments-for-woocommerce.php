@@ -5,12 +5,13 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 3.5.4
+ * Version: 3.7.3
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 8.9.0
+ * WC tested up to: 9.3.1
+ * Requires Plugins: woocommerce
  *
  * Copyright (c) 2017-2024 Krokedil
  *
@@ -35,12 +36,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
-use Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
+use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '3.5.4' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '3.7.3' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -134,6 +136,20 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $klarna_express_checkout = null;
 
 		/**
+		 * Klarna settings page class instance.
+		 *
+		 * @var KP_Settings_Page
+		 */
+		public $settings_page = null;
+
+		/**
+		 * The WooCommerce package from Krokedil.
+		 *
+		 * @var KrokedilWooCommerce
+		 */
+		public $krokedil = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -144,6 +160,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
+
+			add_filter( 'kosm_data_client_id', 'kp_get_client_id' );
 
 			// Load text domain.
 			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
@@ -171,13 +189,19 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			if ( class_exists( 'WC_Subscriptions' ) ) {
 				$this->subscription = new KP_Subscription();
 			}
-
 			$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 			$kosm     = new KlarnaOnsiteMessaging( $settings );
-			add_filter( 'wc_gateway_klarna_payments_settings', array( $kosm->settings(), 'extend_settings' ) );
+			add_filter( 'wc_gateway_klarna_payments_settings', array( $kosm->settings(), 'extend_v2_settings' ) );
 
+			$this->settings_page           = new KP_Settings_Page();
 			$this->checkout                = new KP_Checkout();
 			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
+			$this->krokedil                = new KrokedilWooCommerce(
+				array(
+					'slug'         => 'klarna_payments',
+					'price_format' => 'minor',
+				)
+			);
 
 			$this->register_payment_block();
 
@@ -236,11 +260,12 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function plugin_action_links( $links ) {
 			$setting_link = $this->get_setting_link();
+			$support_link = add_query_arg( 'subsection', 'support', $setting_link );
 
 			$plugin_links = array(
 				'<a href="' . $setting_link . '">' . __( 'Settings', 'klarna-payments-for-woocommerce' ) . '</a>',
 				'<a href="https://docs.woocommerce.com/document/klarna-payments/">' . __( 'Docs', 'klarna-payments-for-woocommerce' ) . '</a>',
-				'<a href="https://krokedil.com/support/">' . __( 'Support', 'klarna-payments-for-woocommerce' ) . '</a>',
+				'<a href="' . $support_link . '">' . __( 'Support', 'klarna-payments-for-woocommerce' ) . '</a>',
 			);
 
 			return array_merge( $plugin_links, $links );
@@ -340,6 +365,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-subscriptions.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-klarna-express-checkout.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-settings-page.php';
 
 			// Requests.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests.php';
@@ -365,11 +391,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			// Includes.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/kp-functions.php';
-
-			if ( is_admin() ) {
-				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-klarna-for-woocommerce-addons.php';
-				include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-banners.php';
-			}
 		}
 
 		/**
@@ -378,15 +399,17 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @return bool|mixed
 		 */
 		public function init_composer() {
-			$autoloader = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
+			$autoloader              = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
+			$autoloader_dependencies = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/dependencies/scoper-autoload.php';
 
-			if ( ! is_readable( $autoloader ) ) {
+			if ( ! is_readable( $autoloader_dependencies ) || ! is_readable( $autoloader_dependencies ) ) {
 				self::missing_autoloader();
 				return false;
 			}
 
-			$autoloader_result = require $autoloader;
-			if ( ! $autoloader_result ) {
+			$autoloader_result              = require $autoloader;
+			$autoloader_dependencies_result = require $autoloader_dependencies;
+			if ( ! $autoloader_result || ! $autoloader_dependencies_result ) {
 				return false;
 			}
 

@@ -7,8 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Krokedil\WooCommerce\Cart\Cart;
-use Krokedil\WooCommerce\Order\Order;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\Cart\Cart;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\Order\Order;
 
 /**
  * Helper class to generate a Klarna payments request body for a order/session request.
@@ -45,7 +45,7 @@ class KP_Order_Data {
 	/**
 	 * The generated order data.
 	 *
-	 * @var \Krokedil\WooCommerce\OrderData
+	 * @var KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderData
 	 */
 	public $order_data;
 
@@ -74,7 +74,7 @@ class KP_Order_Data {
 	/**
 	 * Returns the request helper for the request based on if we have a order id passed or not.
 	 *
-	 * @return \Krokedil\WooCommerce\OrderData
+	 * @return KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderData
 	 */
 	public function get_order_data() {
 		$config = array(
@@ -139,19 +139,21 @@ class KP_Order_Data {
 			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
 		}
 
-		// Order Coupons/Giftcards.
-		foreach ( $this->order_data->get_line_coupons() as $item ) {
-			// Skip any that are not type discount or gift_card.
-			if ( ! in_array( $item->get_type(), array( 'discount', 'gift_card' ), true ) ) {
-				continue;
-			}
-
+		// Order compatibility, to support third party plugins that add orders lines that needs to be handled separately.
+		foreach ( $this->order_data->get_line_compatibility() as $item ) {
 			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
 		}
 
-		// Order compatibility, to support third party plugins that add orders lines that needs to be handled seperatly.
-		foreach ( $this->order_data->get_line_compatibility() as $item ) {
-			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
+		// Order Coupons/Giftcards.
+		foreach ( KP_WC()->krokedil->compatibility()->giftcards() as $giftcards ) {
+			if ( false !== ( strpos( get_class( $giftcards ), 'WCGiftCards', true ) ) && ! function_exists( 'WC_GC' ) ) {
+				continue;
+			}
+
+			$retrieved_giftcards = ! empty( $this->order ) ? $giftcards->get_order_giftcards( $this->order ) : $giftcards->get_cart_giftcards();
+			foreach ( $retrieved_giftcards as $retrieved_giftcard ) {
+				$klarna_order_lines[] = $this->get_klarna_order_line_object( $retrieved_giftcard );
+			}
 		}
 
 		if ( $this->separate_sales_tax ) {
@@ -174,7 +176,7 @@ class KP_Order_Data {
 	/**
 	 * Returns a formatted Klarna order line object.
 	 *
-	 * @param  \Krokedil\WooCommerce\OrderLineData $order_line The order line data.
+	 * @param  KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderLineData $order_line The order line data.
 	 * @return array
 	 */
 	public function get_klarna_order_line_object( $order_line ) {
@@ -196,7 +198,7 @@ class KP_Order_Data {
 		}
 
 		$klarna_item = array(
-			'image_url'             => $order_line->get_image_url(),
+			'image_url'             => $this->maybe_allow_order_line_url( $order_line->get_image_url() ),
 			'merchant_data'         => apply_filters( $order_line->get_filter_name( 'merchant_data' ), array(), $order_line ),
 			'name'                  => $order_line->get_name(),
 			'product_identifiers'   => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
@@ -234,7 +236,7 @@ class KP_Order_Data {
 	 * @return array
 	 */
 	public function get_klarna_customer_object( $customer_type = null ) {
-		if ( null === $customer_type ) {
+		if ( empty( $customer_type ) ) {
 			$customer_type = $this->customer_type;
 		}
 
@@ -296,5 +298,21 @@ class KP_Order_Data {
 	 */
 	public static function remove_null( $var ) {
 		return is_array( $var ) ? ! empty( $var ) : null !== $var; // If empty array, or if value is null return true to remove value.
+	}
+
+	/**
+	 * Maybe filters out product url for the order line before we send them to Klarna based on settings.
+	 *
+	 * @param string $url The URL to the product or product image.
+	 * @return string|null
+	 */
+	public function maybe_allow_order_line_url( $url ) {
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+		if ( 'yes' !== ( $settings['send_product_urls'] ?? 'no' ) ) {
+			$url = null;
+		}
+
+		return $url;
 	}
 }

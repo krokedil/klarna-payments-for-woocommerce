@@ -1,106 +1,167 @@
 jQuery(function ($) {
 	'use strict';
+	const kp_admin = {
+		openedIcon: "dashicons-arrow-up-alt2",
+		closedIcon: "dashicons-arrow-down-alt2",
 
-	var titles = $('h3.wc-settings-sub-title');
-	var tables = $('h3.wc-settings-sub-title + table.form-table');
-	var submit = $('.wrap.woocommerce p.submit');
+		toggleTestModeSelector: "#woocommerce_klarna_payments_testmode",
+		toggleEuSelector: "#woocommerce_klarna_payments_combine_eu_credentials",
 
-	titles.append(' <a href="#" style="font-size:12px; font-weight: normal; text-decoration: none">[expand]</a>');
-	tables.css('marginLeft', '20px').hide();
-	titles.find('a').addClass('collapsed');
-	titles.find('a').click(function (e) {
-		e.preventDefault();
+		init: function () {
+			$(document).on(
+				"click",
+				".kp_settings__fields_toggle",
+				this.toggleCredentials
+			);
 
-		if ($(this).hasClass('collapsed')) {
-			$(this).parent().next().show();
-			$(this).removeClass('collapsed');
-			$(this).text('[collapse]');
-		} else {
-			$(this).parent().next().hide();
-			$(this).addClass('collapsed');
-			$(this).text('[expand]');
-		}
-	});
+			$(document).on(
+				"click",
+				".kp_settings__section_toggle",
+				this.toggleSection
+			);
 
-	titles.first().before('<hr style="margin-top:2em;margin-bottom:2em" />');
-	titles.last().before('<hr style="margin-top:2em;margin-bottom:2em" />');
-	tables.last().after('<hr style="margin-top:2em;margin-bottom:2em" />');
+			$(document).on(
+				"change",
+				this.toggleTestModeSelector,
+				this.toggleTest
+			);
+
+			$(document).on(
+				"change",
+				"#woocommerce_klarna_payments_kec_theme, #woocommerce_klarna_payments_kec_shape",
+				this.changeKecPreview
+			);
+
+			$(document).on(
+				"change",
+				"#woocommerce_klarna_payments_placement_data_key_product, #woocommerce_klarna_payments_onsite_messaging_theme_product, #woocommerce_klarna_payments_placement_data_key_cart, #woocommerce_klarna_payments_onsite_messaging_theme_cart",
+				this.changeOsmPreview
+			);
+
+			$(document).on("change", this.toggleEuSelector, this.toggleEu);
+
+			// Trigger the change event to set the initial state.
+			$(this.toggleTestModeSelector).trigger("change");
+		},
+
+		toggleCredentials: function (e) {
+			e.preventDefault();
+			const $this = $(this);
+			const $td = $this.parent().parent().find("td");
+
+			// Toggle the kp_settings__credentials_field kp_settings__credentials_field_hidden class
+			$td.toggleClass("kp_settings__credentials_field_hidden");
+
+			// Toggle the icon
+			$this
+				.find("span")
+				.toggleClass(kp_admin.openedIcon)
+				.toggleClass(kp_admin.closedIcon);
+		},
+
+		toggleSection: function (e) {
+			e.preventDefault();
+			const $this = $(this);
+			const $section = $this.closest(".kp_settings__section");
+			// Get all the children of the section that is the toggle button.
+			const $toggle = $section.find(".kp_settings__section_toggle");
+			const $gradient = $section.find(".kp_settings__content_gradient");
+
+			$section.find("table").toggleClass("kp_settings__section_content_hidden");
+			$section.find(".kp_settings__section_previews").toggleClass("kp_settings__section_content_hidden");
+			$gradient.toggle();
+
+			// Toggle the icon
+			$toggle
+				.toggleClass(kp_admin.openedIcon)
+				.toggleClass(kp_admin.closedIcon);
+		},
+
+		toggleEu: function () {
+			const eu = $(kp_admin.toggleEuSelector).is(":checked");
+
+			const $wrappers = $(".kp_settings__credentials");
+			const $euRegion = $wrappers.filter("[data-eu-region]");
+			const $euCountry = $wrappers.filter("[data-eu-country]");
+
+			if (eu) {
+				$euRegion.show();
+				$euCountry.hide();
+			} else {
+				$euRegion.hide();
+				$euCountry.show();
+			}
+		},
+
+		toggleTest: function () {
+			const test = $(kp_admin.toggleTestModeSelector).is(":checked");
+
+			const $wrappers = $(".kp_settings__credentials");
+			const $prod = $wrappers.find(
+				".kp_settings__production_credentials"
+			);
+			const $test = $wrappers.find(".kp_settings__test_credentials");
+
+			if (test) {
+				$prod.hide();
+				$test.show();
+			} else {
+				$prod.show();
+				$test.hide();
+			}
+		},
+
+		changeKecPreview: function () {
+			let theme = $("#woocommerce_klarna_payments_kec_theme").val();
+			let shape = $("#woocommerce_klarna_payments_kec_shape").val();
+
+			if( '' === theme || 'default' === theme ) {
+				theme = 'dark';
+			}
+
+			const $img = $(
+				"#klarna-payments-settings-kec_settings .kp_settings__section_previews img"
+			);
+
+			const src = $img.attr("src").replace(/preview-(.*).png/, `preview-${shape}-${theme}.png`);
+
+			$img.attr("src", src);
+		},
+
+		changeOsmPreview: function (e) {
+			const type = e.target.id.includes("product") ? "product" : "cart";
+
+			let placement = $(`#woocommerce_klarna_payments_placement_data_key_${type}`).val();
+			let theme = $(`#woocommerce_klarna_payments_onsite_messaging_theme_${type}`).val();
+
+			const $previewImgs = $(
+				`#klarna-payments-settings-kosm .kp_settings__section_previews img`
+			);
+
+			// If we are changing the cart, its the first image, else the second.
+			const index = type === "cart" ? 0 : 1;
+			const $img = $previewImgs.eq(index);
+
+			// Get the img src.
+			const src = $img.attr("src");
+
+			// Split on the last / to get the path and the filename.
+			const parts = src.split("/");
+			const path = parts.slice(0, -1).join("/");
+
+			if ( 'default' === theme || 'custom' === theme || '' === theme ) {
+				theme = 'light';
+			}
+
+			if ("" === placement) {
+				placement = "credit-promotion-badge";
+			}
+
+			const filename = `preview-${type}-${theme}-${placement}.jpg`;
+
+			$img.attr("src", `${path}/${filename}`);
+		},
+	};
+
+	kp_admin.init();
 });
-
-/*document.addEventListener('DOMContentLoaded', () => {
-	// On page start, check if Testmode is enabled
-	const testmode_checkbox = document.getElementById('woocommerce_klarna_payments_testmode');
-	testmode_checkbox.addEventListener('change', () => {
-		checkButtonValues();
-	})
-
-	let test_merchat_ids = document.querySelectorAll('[id^=woocommerce_klarna_payments_test_merchant_]')
-	let test_shared_secrets = document.querySelectorAll('[id^=woocommerce_klarna_payments_test_shared_]')
-
-	let test_id_array = [];
-	let test_secret_array = [];
-
-	// Handle Merchant ID input fields logic
-	test_merchat_ids.forEach(element => {
-		element.addEventListener('change', () => {
-			if (element.value != '') {
-				if (!test_id_array.includes(element.id.slice(-2))) {
-					test_id_array.push(element.id.slice(-2))
-				}
-				checkButtonValues();
-			} else {
-				for (var i = test_id_array.length - 1; i >= 0; i--) {
-					if (test_id_array[i] === element.id.slice(-2)) {
-						test_id_array.splice(i, 1);
-					}
-				}
-				checkButtonValues();
-			}
-		})
-
-		if (element.value != '') {
-			test_id_array.push(element.id.slice(-2))
-		}
-	});
-
-	// Handle Shared Secret Key input fields logic
-	test_shared_secrets.forEach(element => {
-		element.addEventListener('change', () => {
-			if (element.value != '') {
-				if (!test_secret_array.includes(element.id.slice(-2))) {
-					test_secret_array.push(element.id.slice(-2))
-				}
-				checkButtonValues();
-			} else {
-				for (var i = test_secret_array.length - 1; i >= 0; i--) {
-					if (test_secret_array[i] === element.id.slice(-2)) {
-						test_secret_array.splice(i, 1);
-					}
-				}
-				checkButtonValues();
-			}
-		})
-
-		if (element.value != '') {
-			test_secret_array.push(element.id.slice(-2))
-		}
-	});
-
-	// Show/Hide Submit button logic
-	const checkButtonValues = () => {
-		if (testmode_checkbox.checked == true) {
-			const found = test_id_array.some(r => test_secret_array.includes(r))
-			if (found !== true) {
-				alert('Please insert both test credentials for at least one country')
-				save_button = document.getElementsByName('save');
-				save_button[0].setAttribute('disabled', true);
-			} else {
-				save_button = document.getElementsByName('save');
-				save_button[0].removeAttribute('disabled');
-			}
-		} else {
-			save_button = document.getElementsByName('save');
-			save_button[0].removeAttribute('disabled');
-		}
-	}
-})*/

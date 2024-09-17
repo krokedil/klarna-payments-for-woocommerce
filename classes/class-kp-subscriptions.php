@@ -377,12 +377,13 @@ class KP_Subscription {
 	 * @return void
 	 */
 	public function show_recurring_token( $order ) {
-		if ( 'shop_subscription' === $order->get_type() && $order->get_meta( self::RECURRING_TOKEN ) ) {
+		if ( 'shop_subscription' === $order->get_type() ) {
+			$recurring_token = $order->get_meta( self::RECURRING_TOKEN );
 			?>
 			<div class="order_data_column" style="clear:both; float:none; width:100%;">
 				<div class="address">
 					<p>
-						<strong><?php echo esc_html( 'Klarna recurring token' ); ?>:</strong><?php echo esc_html( $order->get_meta( self::RECURRING_TOKEN ) ); ?>
+						<strong><?php echo esc_html( 'Klarna recurring token' ); ?>:</strong><?php echo esc_html( $recurring_token ); ?>
 					</p>
 				</div>
 				<div class="edit_address">
@@ -390,8 +391,9 @@ class KP_Subscription {
 					woocommerce_wp_text_input(
 						array(
 							'id'            => self::RECURRING_TOKEN,
-							'label'         => __( 'Klarna recurring token', 'klarna-checkout-for-woocommerce' ),
+							'label'         => __( 'Klarna recurring token', 'klarna-payments-for-woocommerce' ),
 							'wrapper_class' => '_billing_company_field',
+							'value'         => $recurring_token,
 						)
 					);
 				?>

@@ -1,0 +1,363 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "bef47250909618e625a355af2afc0e22",
+    "packages": [
+        {
+            "name": "firebase/php-jwt",
+            "version": "v6.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/firebase/php-jwt.git",
+                "reference": "a49db6f0a5033aef5143295342f1c95521b075ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/a49db6f0a5033aef5143295342f1c95521b075ff",
+                "reference": "a49db6f0a5033aef5143295342f1c95521b075ff",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4||^8.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^6.5||^7.4",
+                "phpspec/prophecy-phpunit": "^2.0",
+                "phpunit/phpunit": "^9.5",
+                "psr/cache": "^1.0||^2.0",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0"
+            },
+            "suggest": {
+                "ext-sodium": "Support EdDSA (Ed25519) signatures",
+                "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Firebase\\JWT\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Neuman Vong",
+                    "email": "neuman+pear@twilio.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Anant Narayanan",
+                    "email": "anant@php.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
+            "homepage": "https://github.com/firebase/php-jwt",
+            "keywords": [
+                "jwt",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/firebase/php-jwt/issues",
+                "source": "https://github.com/firebase/php-jwt/tree/v6.10.0"
+            },
+            "time": "2023-12-01T16:26:39+00:00"
+        },
+        {
+            "name": "krokedil/klarna-express-checkout",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/krokedil/klarna-express-checkout.git",
+                "reference": "8d6cf9e0d41fb5c438d905e53688835a1509be8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/8d6cf9e0d41fb5c438d905e53688835a1509be8a",
+                "reference": "8d6cf9e0d41fb5c438d905e53688835a1509be8a",
+                "shasum": ""
+            },
+            "require": {
+                "firebase/php-jwt": "6.10.0",
+                "php": "~7.4 || ~8.0"
+            },
+            "require-dev": {
+                "10up/wp_mock": "^1.0",
+                "php-stubs/woocommerce-stubs": "^8.3",
+                "wp-coding-standards/wpcs": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\KlarnaExpressCheckout\\": "src/"
+                }
+            },
+            "archive": {
+                "exclude": [
+                    "tests/*",
+                    "phpunit.xml",
+                    "composer-lock.json",
+                    ".github/*",
+                    ".gitignore",
+                    ".gitattributes"
+                ]
+            },
+            "scripts": {
+                "phpcs": [
+                    "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+                ],
+                "phpcbf": [
+                    "phpcbf --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+                ],
+                "test": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml"
+                ],
+                "test-coverage-html": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage"
+                ],
+                "test-coverage-clover": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
+                ]
+            },
+            "license": [
+                "GPL-v3"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "A Klarna Express Checkout solution for WooCommerce",
+            "support": {
+                "source": "https://github.com/krokedil/klarna-express-checkout/tree/1.4.0",
+                "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
+            },
+            "time": "2024-09-11T09:27:32+00:00"
+        },
+        {
+            "name": "krokedil/klarna-onsite-messaging",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
+                "reference": "c864c0eb2a7fd8ccd57f7fa845219bcf72a88a2c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/c864c0eb2a7fd8ccd57f7fa845219bcf72a88a2c",
+                "reference": "c864c0eb2a7fd8ccd57f7fa845219bcf72a88a2c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.4 || ~8.0"
+            },
+            "require-dev": {
+                "10up/wp_mock": "^1.0",
+                "php-stubs/woocommerce-stubs": "^8.3",
+                "wp-coding-standards/wpcs": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\KlarnaOnsiteMessaging\\": "src/"
+                }
+            },
+            "archive": {
+                "exclude": [
+                    "tests/*",
+                    "phpunit.xml",
+                    "composer-lock.json",
+                    ".github/*",
+                    ".gitignore",
+                    ".gitattributes"
+                ]
+            },
+            "scripts": {
+                "phpcs": [
+                    "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+                ],
+                "phpcbf": [
+                    "phpcbf --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+                ],
+                "test": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml"
+                ],
+                "test-coverage-html": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage"
+                ],
+                "test-coverage-clover": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
+                ]
+            },
+            "license": [
+                "GPL-v3"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "Klarna On-Site Messaging for WooCommerce",
+            "support": {
+                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/1.2.0",
+                "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
+            },
+            "time": "2024-09-11T09:30:15+00:00"
+        },
+        {
+            "name": "krokedil/settings-page",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/krokedil/settings-page.git",
+                "reference": "9a3a96dae9509fb647fdf910e790b0ad3e28065d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/9a3a96dae9509fb647fdf910e790b0ad3e28065d",
+                "reference": "9a3a96dae9509fb647fdf910e790b0ad3e28065d",
+                "shasum": ""
+            },
+            "require-dev": {
+                "php-stubs/woocommerce-stubs": "dev-master",
+                "wp-coding-standards/wpcs": "dev-develop"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\SettingsPage\\": "src/"
+                }
+            },
+            "scripts": {
+                "makepot": [
+                    "wp --allow-root i18n make-pot ./src ./languages/krokedil-settings.pot --domain=krokedil-settings"
+                ]
+            },
+            "license": [
+                "GPL-V2"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "A package to help setup settings pages in WordPress and WooCommerce for Krokedil plugins to add the Addons and Support tabs",
+            "support": {
+                "source": "https://github.com/krokedil/settings-page/tree/1.1.0",
+                "issues": "https://github.com/krokedil/settings-page/issues"
+            },
+            "time": "2024-09-11T09:36:09+00:00"
+        },
+        {
+            "name": "krokedil/woocommerce",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/krokedil/woocommerce.git",
+                "reference": "aec179c982067431582c4a9c199ee9c6fd986d91"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/aec179c982067431582c4a9c199ee9c6fd986d91",
+                "reference": "aec179c982067431582c4a9c199ee9c6fd986d91",
+                "shasum": ""
+            },
+            "require-dev": {
+                "10up/wp_mock": "^1.0",
+                "php": "~7.4 || ~8.0",
+                "php-stubs/woocommerce-stubs": "^7.2",
+                "php-stubs/wordpress-stubs": "^6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\WooCommerce\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Krokedil\\WooCommerce\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "GPL-V2"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
+            "support": {
+                "source": "https://github.com/krokedil/woocommerce/tree/1.7.0",
+                "issues": "https://github.com/krokedil/woocommerce/issues"
+            },
+            "time": "2024-09-11T09:02:40+00:00"
+        },
+        {
+            "name": "krokedil/wp-api",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/krokedil/wp-api.git",
+                "reference": "a3ba33f7ac640456dad36a33d711d20091c71aea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/a3ba33f7ac640456dad36a33d711d20091c71aea",
+                "reference": "a3ba33f7ac640456dad36a33d711d20091c71aea",
+                "shasum": ""
+            },
+            "require-dev": {
+                "php": "~7.1 || ~8.0",
+                "php-stubs/woocommerce-stubs": "^7.2",
+                "php-stubs/wordpress-stubs": "^6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\WpApi\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-V2"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "A composer library for Krokedil WordPress plugins that contains classes for working with wp_remote_request to setup request classes. Also uses the WooCommerce logger to log request reponses.",
+            "support": {
+                "source": "https://github.com/krokedil/wp-api/tree/1.1.1",
+                "issues": "https://github.com/krokedil/wp-api/issues"
+            },
+            "time": "2024-04-22T09:03:39+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": true,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.4"
+    },
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.4"
+    },
+    "plugin-api-version": "2.6.0"
+}

@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.5.3
+Tested up to: 6.6.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 8.9.0
-Stable tag: 3.5.4
+WC tested up to: 9.2.3
+Stable tag: 3.7.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -115,7 +115,7 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * Feature       - [KOSM] Added support for Hungary.
 * Feature       - [KOSM] Added 'kosm_hide_placement' filter hook for conditionally hiding the placement.
 
-= 2024.05.13    = 2024.05.13    - version 3.5.4 =
+= 2024.05.13    - version 3.5.4 =
 * Fix           - Fixed a critical error due to undefined method call.
 
 = 2024.05.13    - version 3.5.3 =
@@ -130,7 +130,7 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 * Fix           - Update package version.
 
 = 2024.04.22    - version 3.5.1 =
-* Fix           - Fixed a critical error that happened under certain conditions if the KOSM plugin is active. 
+* Fix           - Fixed a critical error that happened under certain conditions if the KOSM plugin is active.
 
 = 2024.04.22    - version 3.5.0 =
 * Feature       - On-site messaging is now part of the Klarna Payments plugin. With this change we've moved to the new Web SDK and resolved deprecation warnings.

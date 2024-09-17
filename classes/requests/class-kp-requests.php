@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Krokedil\WpApi\Request;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Request;
 
 /**
  * Base class for all request classes.
@@ -53,8 +53,8 @@ abstract class KP_Requests extends Request {
 			'plugin_version'         => WC_KLARNA_PAYMENTS_VERSION,
 			'plugin_short_name'      => 'KP',
 			'plugin_user_agent_name' => 'KP',
-			'logging_enabled'        => 'yes' === $settings['logging'],
-			'extended_debugging'     => 'yes' === ( isset( $settings['extra_logging'] ) ? $settings['extra_logging'] : 'no' ),
+			'logging_enabled'        => 'no' !== $settings['logging'] ?? 'no',
+			'extended_debugging'     => 'extra' === ( isset( $settings['logging'] ) ? $settings['logging'] : 'no' ),
 			'base_url'               => $this->get_base_url( $arguments['country'], $settings ),
 		);
 
@@ -76,9 +76,10 @@ abstract class KP_Requests extends Request {
 	 */
 	protected function get_base_url( $country, $settings ) {
 		$country_data = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $country ?? '' ) ] ?? null;
+		$testmode     = wc_string_to_bool( $settings['testmode'] ?? 'no' ); // Get the testmode setting.
 
 		$region     = strtolower( apply_filters( 'klarna_base_region', $country_data['endpoint'] ?? '' ) ); // Get the region from the country parameters, blank for EU.
-		$playground = 'yes' === $settings['testmode'] ? '.playground' : ''; // If testmode is enabled, add playground to the subdomain.
+		$playground = $testmode ? '.playground' : ''; // If testmode is enabled, add playground to the subdomain.
 		$subdomain  = "api{$region}{$playground}"; // Combine the string to one subdomain.
 
 		return "https://{$subdomain}.klarna.com/"; // Return the full base url for the api.
@@ -88,18 +89,31 @@ abstract class KP_Requests extends Request {
 	 * Sets Klarna credentials.
 	 */
 	public function set_credentials() {
-		$prefix = 'yes' === $this->settings['testmode'] ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
-		$suffix = '_' . strtolower( $this->arguments['country'] ) ?? strtolower( kp_get_klarna_country() ); // Get the country from the arguments, or the fetch from helper method.
+		$country     = strtolower( $this->arguments['country'] ) ?? strtolower( kp_get_klarna_country() ); // Get the country from the arguments, or the fetch from helper method.
+		$combined_eu = isset( $this->settings['combine_eu_credentials'] ) ? ( 'yes' === $this->settings['combine_eu_credentials'] ) : false; // Check if we should combine the EU credentials.
+		$testmode    = wc_string_to_bool( $this->settings['testmode'] ?? 'no' ); // Get the testmode setting.
 
-		$merchant_id   = "{$prefix}merchant_id{$suffix}";
-		$shared_secret = "{$prefix}shared_secret{$suffix}";
+		// If the country is a EU country, check if we should get the credentials from the EU settings.
+		if ( $combined_eu && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
+			$country = 'eu';
+		}
+
+		$prefix = $testmode ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
+
+		$merchant_id   = "{$prefix}merchant_id_{$country}";
+		$shared_secret = "{$prefix}shared_secret_{$country}";
 
 		$this->merchant_id   = isset( $this->settings[ $merchant_id ] ) ? $this->settings[ $merchant_id ] : '';
 		$this->shared_secret = isset( $this->settings[ $shared_secret ] ) ? $this->settings[ $shared_secret ] : '';
 	}
 
+	/**
+	 * Calculates the auth header for the request.
+	 *
+	 * @return string
+	 */
 	public function calculate_auth() {
-		return 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
+		return 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
 	}
 
 	/**

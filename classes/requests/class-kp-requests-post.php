@@ -7,8 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Krokedil\WooCommerce\Cart\Cart;
-use Krokedil\WooCommerce\Order\Order;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\Cart\Cart;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\Order\Order;
 
 /**
  *  The main class for POST requests.
@@ -48,7 +48,7 @@ abstract class KP_Requests_Post extends KP_Requests {
 	/**
 	 * Returns the request helper for the request based on if we have a order id passed or not.
 	 *
-	 * @return \Krokedil\WooCommerce\OrderData
+	 * @return KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderData
 	 */
 	public function get_order_data() {
 		$config = array(

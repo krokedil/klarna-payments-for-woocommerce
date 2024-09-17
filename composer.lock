@@ -4,303 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9d9502d691a77d2cf199d65cdebd775",
-    "packages": [
-        {
-            "name": "firebase/php-jwt",
-            "version": "v6.10.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "a49db6f0a5033aef5143295342f1c95521b075ff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/a49db6f0a5033aef5143295342f1c95521b075ff",
-                "reference": "a49db6f0a5033aef5143295342f1c95521b075ff",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.4||^8.0"
-            },
-            "require-dev": {
-                "guzzlehttp/guzzle": "^6.5||^7.4",
-                "phpspec/prophecy-phpunit": "^2.0",
-                "phpunit/phpunit": "^9.5",
-                "psr/cache": "^1.0||^2.0",
-                "psr/http-client": "^1.0",
-                "psr/http-factory": "^1.0"
-            },
-            "suggest": {
-                "ext-sodium": "Support EdDSA (Ed25519) signatures",
-                "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Firebase\\JWT\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Neuman Vong",
-                    "email": "neuman+pear@twilio.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Anant Narayanan",
-                    "email": "anant@php.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
-            "homepage": "https://github.com/firebase/php-jwt",
-            "keywords": [
-                "jwt",
-                "php"
-            ],
-            "support": {
-                "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v6.10.0"
-            },
-            "time": "2023-12-01T16:26:39+00:00"
-        },
-        {
-            "name": "krokedil/klarna-express-checkout",
-            "version": "1.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "338f5ef98c1ea485a929b0888c86edd6039eed40"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/338f5ef98c1ea485a929b0888c86edd6039eed40",
-                "reference": "338f5ef98c1ea485a929b0888c86edd6039eed40",
-                "shasum": ""
-            },
-            "require": {
-                "firebase/php-jwt": "^6.10",
-                "php": "~7.4 || ~8.0"
-            },
-            "require-dev": {
-                "10up/wp_mock": "^1.0",
-                "php-stubs/woocommerce-stubs": "^8.3",
-                "wp-coding-standards/wpcs": "^3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Krokedil\\KlarnaExpressCheckout\\": "src/"
-                }
-            },
-            "archive": {
-                "exclude": [
-                    "tests/*",
-                    "phpunit.xml",
-                    "composer-lock.json",
-                    ".github/*",
-                    ".gitignore",
-                    ".gitattributes"
-                ]
-            },
-            "scripts": {
-                "phpcs": [
-                    "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
-                ],
-                "phpcbf": [
-                    "phpcbf --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
-                ],
-                "test": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml"
-                ],
-                "test-coverage-html": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage"
-                ],
-                "test-coverage-clover": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
-                ]
-            },
-            "license": [
-                "GPL-v3"
-            ],
-            "authors": [
-                {
-                    "name": "Krokedil AB",
-                    "email": "info@krokedil.se"
-                }
-            ],
-            "description": "A Klarna Express Checkout solution for WooCommerce",
-            "support": {
-                "source": "https://github.com/krokedil/klarna-express-checkout/tree/1.3.1",
-                "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
-            },
-            "time": "2024-04-22T08:34:28+00:00"
-        },
-        {
-            "name": "krokedil/klarna-onsite-messaging",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
-                "reference": "5f4f168d13a026f6b0da1671bcb370d6df89d7d7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/5f4f168d13a026f6b0da1671bcb370d6df89d7d7",
-                "reference": "5f4f168d13a026f6b0da1671bcb370d6df89d7d7",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~7.4 || ~8.0"
-            },
-            "require-dev": {
-                "10up/wp_mock": "^1.0",
-                "php-stubs/woocommerce-stubs": "^8.3",
-                "wp-coding-standards/wpcs": "^3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Krokedil\\KlarnaOnsiteMessaging\\": "src/"
-                }
-            },
-            "archive": {
-                "exclude": [
-                    "tests/*",
-                    "phpunit.xml",
-                    "composer-lock.json",
-                    ".github/*",
-                    ".gitignore",
-                    ".gitattributes"
-                ]
-            },
-            "scripts": {
-                "phpcs": [
-                    "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
-                ],
-                "phpcbf": [
-                    "phpcbf --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
-                ],
-                "test": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml"
-                ],
-                "test-coverage-html": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage"
-                ],
-                "test-coverage-clover": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
-                ]
-            },
-            "license": [
-                "GPL-v3"
-            ],
-            "authors": [
-                {
-                    "name": "Krokedil AB",
-                    "email": "info@krokedil.se"
-                }
-            ],
-            "description": "Klarna On-Site Messaging for WooCommerce",
-            "support": {
-                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/1.0.2",
-                "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
-            },
-            "time": "2024-05-13T08:40:49+00:00"
-        },
-        {
-            "name": "krokedil/woocommerce",
-            "version": "1.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "c603dc52f8e1d3d41ad9781a20744d4467a375b8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/c603dc52f8e1d3d41ad9781a20744d4467a375b8",
-                "reference": "c603dc52f8e1d3d41ad9781a20744d4467a375b8",
-                "shasum": ""
-            },
-            "require-dev": {
-                "10up/wp_mock": "^1.0",
-                "php": "~7.1 || ~8.0",
-                "php-stubs/woocommerce-stubs": "^7.2",
-                "php-stubs/wordpress-stubs": "^6.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Krokedil\\WooCommerce\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Krokedil\\WooCommerce\\Tests\\": "tests/"
-                }
-            },
-            "license": [
-                "GPL-V2"
-            ],
-            "authors": [
-                {
-                    "name": "Krokedil AB",
-                    "email": "info@krokedil.se"
-                }
-            ],
-            "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
-            "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.6.1",
-                "issues": "https://github.com/krokedil/woocommerce/issues"
-            },
-            "time": "2024-05-13T13:10:01+00:00"
-        },
-        {
-            "name": "krokedil/wp-api",
-            "version": "1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/krokedil/wp-api.git",
-                "reference": "a3ba33f7ac640456dad36a33d711d20091c71aea"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/a3ba33f7ac640456dad36a33d711d20091c71aea",
-                "reference": "a3ba33f7ac640456dad36a33d711d20091c71aea",
-                "shasum": ""
-            },
-            "require-dev": {
-                "php": "~7.1 || ~8.0",
-                "php-stubs/woocommerce-stubs": "^7.2",
-                "php-stubs/wordpress-stubs": "^6.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Krokedil\\WpApi\\": "src/"
-                }
-            },
-            "license": [
-                "GPL-V2"
-            ],
-            "authors": [
-                {
-                    "name": "Krokedil AB",
-                    "email": "info@krokedil.se"
-                }
-            ],
-            "description": "A composer library for Krokedil WordPress plugins that contains classes for working with wp_remote_request to setup request classes. Also uses the WooCommerce logger to log request reponses.",
-            "support": {
-                "source": "https://github.com/krokedil/wp-api/tree/1.1.1",
-                "issues": "https://github.com/krokedil/wp-api/issues"
-            },
-            "time": "2024-04-22T09:03:39+00:00"
-        }
-    ],
+    "content-hash": "6f6f11d2d6b76b6bfb0313dde06eeb4f",
+    "packages": [],
     "packages-dev": [
         {
             "name": "php-stubs/woocommerce-stubs",
@@ -348,27 +53,28 @@
         },
         {
             "name": "php-stubs/wordpress-stubs",
-            "version": "v6.5.3",
+            "version": "v6.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "e611a83292d02055a25f83291a98fadd0c21e092"
+                "reference": "86e8753e89d59849276dcdd91b9a7dd78bb4abe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/e611a83292d02055a25f83291a98fadd0c21e092",
-                "reference": "e611a83292d02055a25f83291a98fadd0c21e092",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/86e8753e89d59849276dcdd91b9a7dd78bb4abe2",
+                "reference": "86e8753e89d59849276dcdd91b9a7dd78bb4abe2",
                 "shasum": ""
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
                 "nikic/php-parser": "^4.13",
-                "php": "^7.4 || ~8.0.0",
+                "php": "^7.4 || ^8.0",
                 "php-stubs/generator": "^0.8.3",
-                "phpdocumentor/reflection-docblock": "5.3",
+                "phpdocumentor/reflection-docblock": "^5.4.1",
                 "phpstan/phpstan": "^1.10.49",
                 "phpunit/phpunit": "^9.5",
-                "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^0.11"
+                "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^1.0",
+                "wp-coding-standards/wpcs": "3.1.0 as 2.3.0"
             },
             "suggest": {
                 "paragonie/sodium_compat": "Pure PHP implementation of libsodium",
@@ -389,9 +95,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.5.3"
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.6.0"
             },
-            "time": "2024-05-08T02:12:31+00:00"
+            "time": "2024-07-17T08:50:38+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -399,12 +105,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "4fd52f75c8f29114423e9a379bf86fa894750bc3"
+                "reference": "c0e8f4de2884a52af95ee4f516e247ff1048413b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/4fd52f75c8f29114423e9a379bf86fa894750bc3",
-                "reference": "4fd52f75c8f29114423e9a379bf86fa894750bc3",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/c0e8f4de2884a52af95ee4f516e247ff1048413b",
+                "reference": "c0e8f4de2884a52af95ee4f516e247ff1048413b",
                 "shasum": ""
             },
             "require": {
@@ -472,7 +178,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-05-06T04:13:19+00:00"
+            "time": "2024-09-09T20:17:06+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -524,6 +230,106 @@
                 "wiki": "https://github.com/WordPress/WordPress-Coding-Standards/wiki"
             },
             "time": "2020-05-13T23:57:56+00:00"
+        },
+        {
+            "name": "wpify/php-scoper",
+            "version": "0.16.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wpify/php-scoper.git",
+                "reference": "ea51e75cee3a2ff2ac1aedb1b3c0631147360149"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wpify/php-scoper/zipball/ea51e75cee3a2ff2ac1aedb1b3c0631147360149",
+                "reference": "ea51e75cee3a2ff2ac1aedb1b3c0631147360149",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "bin": [
+                "bin/php-scoper.phar"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "mejta",
+                    "email": "daniel@mejta.net"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/wpify/php-scoper/issues",
+                "source": "https://github.com/wpify/php-scoper/tree/0.16.2"
+            },
+            "time": "2023-11-01T18:00:51+00:00"
+        },
+        {
+            "name": "wpify/scoper",
+            "version": "3.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wpify/scoper.git",
+                "reference": "bac861226cbb4d674213c89a63f7b79570033b31"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wpify/scoper/zipball/bac861226cbb4d674213c89a63f7b79570033b31",
+                "reference": "bac861226cbb4d674213c89a63f7b79570033b31",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.3",
+                "php": "^7.4 || ^8.0",
+                "wpify/php-scoper": "^0.16"
+            },
+            "require-dev": {
+                "composer/composer": "^2.6",
+                "jetbrains/phpstorm-stubs": "^v2023.2",
+                "johnpbloch/wordpress": "^6.3",
+                "nikic/php-parser": "^v4.17",
+                "woocommerce/action-scheduler": "^3.6",
+                "wpackagist-plugin/woocommerce": "^8.2",
+                "yahnis-elsts/plugin-update-checker": "^v5.2"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Wpify\\Scoper\\Plugin",
+                "wordpress-install-dir": "sources/wordpress",
+                "installer-paths": {
+                    "sources/plugin-{$name}/": [
+                        "type:wordpress-plugin"
+                    ],
+                    "sources/theme-{$name}/": [
+                        "type:wordpress-theme"
+                    ]
+                },
+                "textdomain": {
+                    "wpify-custom-fields": "some-new-textdomain"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wpify\\Scoper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Mejta",
+                    "email": "daniel@mejta.net"
+                }
+            ],
+            "description": "Composer plugin that scopes WordPress and WooCommerce dependencies for usage in WordPress plugins and themes.",
+            "support": {
+                "issues": "https://github.com/wpify/scoper/issues",
+                "source": "https://github.com/wpify/scoper/tree/3.1.3"
+            },
+            "time": "2023-11-02T15:10:42+00:00"
         }
     ],
     "aliases": [],
@@ -531,7 +337,12 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=7.4"
+    },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-overrides": {
+        "php": "7.4"
+    },
+    "plugin-api-version": "2.6.0"
 }
