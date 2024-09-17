@@ -73,7 +73,49 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
-= 2024.05.13    - version 3.5.4 =
+= 2024.09.13    - version 3.7.3 =
+* Fix           - Fix an issue with getting the correct credentials in some cases when not using the combined setting for EU countries.
+
+= 2024.09.12    - version 3.7.2 =
+* Fix           - Fixed a undefined index warning related to new settings.
+
+= 2024.09.11    - version 3.7.1 =
+* Fix           - Fixed a issue with getting the correct client id when not combining all EU countries into a single setting.
+* Tweak         - Bumped version for krokedil/woocommerce dependency.
+
+= 2024.09.11    - version 3.7.0 =
+* Changed       - Changed the settings page to follow a new design that's more streamlined and matching with Klarnas other products.
+* Changed       - Changed the payment method name to be Klarna instead of Klarna Payments.
+* Feature       - Added a setting to combine all EU country credentials into a single setting field, for cases where you use the same merchant id and secret for multiple countries that you sell to with Klarna Payments.
+* Feature       - Added settings for each region to have their own Client ID that can be used by On-Site Messaging, Express Checkout and other products from Klarna instead of these having to add the setting separately. This will also allow for more control of the regions these features are available in.
+* Feature       - Added a setting to set what countries are available for the payment method. This will be skipped if it is empty to prevent issues until stores can update the setting properly.
+* Feature       - Added a Support tab on the settings page for the gateway. This will allow stores to open a support ticket directly with Krokedil from the plugin, and has the ability to attach the system report. And has links to other resources such as plugin documentation and information.
+* Feature       - Added a Addons tab on the settings page for the gateway. This will show other plugins developed by Krokedil that work well together with the plugin that can provide additional features to the WooCommerce store.
+* Fix           - Fixed potential issues caused by other plugins having similar composer dependencies but with different versions by scoping the plugins dependencies.
+* Fix           - Fixed some issues in the credentials check that runs when settings are saved.
+
+= 2024.09.09    - version 3.6.2 =
+* Enhancement   - Performance improvements related to session management.
+
+= 2024.08.28    - version 3.6.1 =
+* Fix           - Fixed a critical error when retrieving PW gift card from a Woo order.
+* Fix           - Fixed a division by zero when calculating the tax rate.
+* Fix           - Fixed an undefined index warning by ensuring that PW gift card exists before attempting retrieval.
+* Fix           - Resolved an issue where Chrome ignored the autocomplete attribute for Australian credentials.
+* Fix           - Fixed an issue where the product image URLs where sent to Klarna even when the setting was disabled.
+* Tweak         - Updated the default Klarna logo.
+
+= 2024.08.19    - version 3.6.0 =
+* Feature       - Added compatibility with "Linear Checkout for WooCommerce" plugin.
+* Feature       - Added the 'kp_blocks_order_button_label' filter to change the order button label in the Klarna Payments block.
+* Fix           - Fixed divide by zero error when calculating the tax rate.
+* Tweak         - Addressed various Woo Quality Insights recommendations.
+* Tweak         - You can now overwrite the recurring payment token from the admin Subscription page.
+* Feature       - [KOSM] Added support for Slovakia.
+* Feature       - [KOSM] Added support for Hungary.
+* Feature       - [KOSM] Added 'kosm_hide_placement' filter hook for conditionally hiding the placement.
+
+= 2024.05.13    = 2024.05.13    - version 3.5.4 =
 * Fix           - Fixed a critical error due to undefined method call.
 
 = 2024.05.13    - version 3.5.3 =
