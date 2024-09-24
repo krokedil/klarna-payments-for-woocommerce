@@ -38,6 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
+use Krokedil\SignInWithKlarna\SignInWithKlarna;
 
 /**
  * Required minimums and constants
@@ -150,6 +151,14 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $krokedil = null;
 
 		/**
+		 * The Sign In With Klarna package from Krokedil.
+		 *
+		 * @var SignInWithKlarna
+		 * @since 3.7.3
+		 */
+		public $siwk = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -202,6 +211,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					'price_format' => 'minor',
 				)
 			);
+			$this->siwk                    = new SignInWithKlarna( $settings );
 
 			$this->register_payment_block();
 
