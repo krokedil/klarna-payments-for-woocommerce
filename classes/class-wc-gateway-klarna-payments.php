@@ -227,14 +227,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$klarna_country = kp_get_klarna_country( $order );
 		$country        = strtolower( $klarna_country );
-		$country_values = KP_Form_Fields::$kp_form_auto_countries[ $country ];
 
 		if ( ! isset( KP_Form_Fields::$kp_form_auto_countries[ $country ] ) ) {
 			kp_unset_session_values();
 			return new WP_Error( 'country', "Country ({$country}) is not supported by Klarna Payments." );
 		}
 
-		$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+		$country_values = KP_Form_Fields::$kp_form_auto_countries[ $country ];
+		$combined_eu    = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
 
 		// If the country is a EU country, check if we should get the credentials from the EU settings.
 		if ( $combined_eu && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
