@@ -135,7 +135,7 @@ jQuery(function ($) {
 			let theme = $(`#woocommerce_klarna_payments_onsite_messaging_theme_${type}`).val();
 
 			const $previewImgs = $(
-				`#klarna-payments-settings-kosm .kp_settings__section_previews img`
+				`#klarna-payments-settings-onsite_messaging .kp_settings__section_previews img`
 			);
 
 			// If we are changing the cart, its the first image, else the second.
