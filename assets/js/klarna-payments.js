@@ -243,6 +243,14 @@ jQuery(function ($) {
 			return false;
 		},
 
+		isTermsAccepted: function () {
+			if($('#terms').is(':checked')) {
+				return true;
+			}
+
+			return false;
+		},
+
 		setRadioButtonValues: function () {
 			$('input[name="payment_method"]').each(function () {
 				if ($(this).val().indexOf("klarna_payments") !== -1) {
@@ -500,8 +508,9 @@ jQuery(function ($) {
 		},
 
 		klarnaPayForOrder: function (event) {
-			if (klarna_payments.isKlarnaPaymentsSelected()) {
+			if (klarna_payments.isKlarnaPaymentsSelected() && klarna_payments.isTermsAccepted()) {
 				event.preventDefault();
+
 				klarna_payments.addresses = klarna_payments_params.addresses;
 				klarna_payments.authorizeKlarnaOrder(
 					klarna_payments_params.order_id,
@@ -556,6 +565,7 @@ jQuery(function ($) {
 							}
 						} catch (err) {
 							if (data.messages) {
+								alert("Failed with messages");
 								klarna_payments.logToFile(
 									"Checkout error | " + data.messages
 								);
@@ -600,6 +610,8 @@ jQuery(function ($) {
 		 * @param {string} event
 		 */
 		failOrder: function (event, error_message) {
+			alert(error_message);
+			console.log(error_message);
 			// Re-enable the form.
 			$("body").trigger("updated_checkout");
 			$("form.checkout").removeClass("processing");
