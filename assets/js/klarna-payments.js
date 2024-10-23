@@ -244,7 +244,7 @@ jQuery(function ($) {
 		},
 
 		isTermsAccepted: function () {
-			if($('#terms').is(':checked')) {
+			if(!$('#terms').length || $('#terms').is(':checked')) {
 				return true;
 			}
 
@@ -429,12 +429,15 @@ jQuery(function ($) {
 
 		printErrorMessage: function (message) {
 			$("#klarna-payments-error-notice").remove();
-			$("form.checkout").prepend(
+			const is_pay_for_order = (true == klarna_payments_params.pay_for_order);
+			const $target = is_pay_for_order ? $("div.woocommerce-notices-wrapper") : $("form.checkout");
+
+			$target.prepend(
 				'<div id="klarna-payments-error-notice" class="woocommerce-NoticeGroup"><ul class="woocommerce-error" role="alert"><li>' +
 					message +
 					"</li></ul></div>"
 			);
-			$.scroll_to_notices($("form.checkout"));
+			$.scroll_to_notices($target);
 		},
 
 		authorizeKlarnaOrder: function (order_id, order_key) {
@@ -508,8 +511,13 @@ jQuery(function ($) {
 		},
 
 		klarnaPayForOrder: function (event) {
-			if (klarna_payments.isKlarnaPaymentsSelected() && klarna_payments.isTermsAccepted()) {
+			if (klarna_payments.isKlarnaPaymentsSelected()) {
 				event.preventDefault();
+
+				if(!klarna_payments.isTermsAccepted()) {
+					klarna_payments.printErrorMessage(klarna_payments_params.i18n.terms_not_checked);
+					return;
+				}
 
 				klarna_payments.addresses = klarna_payments_params.addresses;
 				klarna_payments.authorizeKlarnaOrder(
@@ -565,7 +573,6 @@ jQuery(function ($) {
 							}
 						} catch (err) {
 							if (data.messages) {
-								alert("Failed with messages");
 								klarna_payments.logToFile(
 									"Checkout error | " + data.messages
 								);
@@ -610,8 +617,6 @@ jQuery(function ($) {
 		 * @param {string} event
 		 */
 		failOrder: function (event, error_message) {
-			alert(error_message);
-			console.log(error_message);
 			// Re-enable the form.
 			$("body").trigger("updated_checkout");
 			$("form.checkout").removeClass("processing");
