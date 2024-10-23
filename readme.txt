@@ -7,34 +7,51 @@ Tested up to: 6.6.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.2.3
-Stable tag: 3.7.3
+Stable tag: 3.7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-== DESCRIPTION ==
+Grow your business for increased sales and enhanced shopping experiences at no extra costs.
 
-*As opposed to Klarna Checkout, Payments are standalone payment methods. Complement your existing checkout experience with a Klarna hosted widget (e.g., Pay Later, Financing or Installments).*
 
-Choose the Klarna features you want – and only the features you want – to reduce purchase stress and improve your user experience. We have several financing and direct payment options to meet your needs, and they’re all easily integrated into your existing buying journey.
+== Description ==
+=== Millions shop and pay with Klarna ===
 
-=== Pay Now (direct payments) ===
-Customers who want to pay in full at checkout can do it quickly and securely with a credit/debit card.Friction-free direct purchases while maximising the value for your business thanks to guaranteed payments. If they have a Klarna account they can save their details and enjoy one-click purchases from then on.
+Klarna is the default checkout option for our partners, used (and loved) by millions of shoppers every month, both online and in-store.
 
-===  Pay later (invoice) ===
-Try it first, pay it later. Delayed payments for customers who like low friction purchases and to pay after delivery.
+| **85M Shoppers** | **2.5M Daily Transactions** | **550K Retailers Globally** |
+|-------------------|-----------------------------|-----------------------------|
 
-=== Slice it (installments) ===
-Installment, revolving and other flexible financing plans let customers pay when they can and when they want.
+
+=== More ways to pay, more purchases ===
+
+Grow your business with our flexible payment options and smart shopping solutions. Unlock higher purchase power for your customers by giving them the full flexibility of how and when they want to pay. 
+
+You’ll always be paid in full and upfront, while your customers pay at a later date. Klarna supports high value orders, and everyday purchases. Payment options include:
+
+| **Feature**                        | **Description**                                                                                                                |
+|------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| **Pay Now, with direct payments**  | Pay Now accepts all direct payments for a fast, convenient checkout.                                                           |
+| **Buy now, Pay Later**             | Pay Later is a deferred payment that will give shoppers an extra 14 or 30 days before they buy.                                |
+| **Pay In N**                       | Pay in N lets you split your payment in several payments, spread over a relatively short amount of time, typically less than 60 days, and does not carry interest. Two most common variations are Pay in 4 and Pay in 3. |
+| **Financing**                      | Financing offers long-term, monthly payments to make larger purchases possible for your customers. Available in 6, 12, 18, and 24 month terms. |
+Go to [Klarna](https://www.klarna.com) to get details about all payment methods and their availability by market.
+
+
 
 === How to Get Started ===
 * [Sign up for Klarna](https://www.klarna.com/international/business/woocommerce/).
-* [Install the plugin](https://wordpress.org/plugins/klarna-payments-for-woocommerce/) on your site. During this process you will be asked to download [Klarna Order Management](https://wordpress.org/plugins/klarna-order-management-for-woocommerce/) so you can handle orders in Klarna directly from WooCommerce.
-* Get your store approved by Klarna, and start selling.
+* Install the plugin on your site and download Klarna Order Management.
+
+=== Smart Solutions to Maximize Sales ===
+
+- **On-site messaging**: Personalized messaging throughout the shopper journey for higher conversion rates.
+- **Express checkout**: A faster checkout process to lower the threshold for purchase completion.
 
 === What's the difference between Klarna Checkout and Klarna Payments? ===
-Klarna as your single payment provider keeps everything under one roof. You’ll have one agreement, one point of contact, one settlement file, one payout with __Klarna Checkout__. It only takes a single integration to deliver the full Klarna hosted checkout experience through a widget placed on your site.
-
-__Klarna Payments__ removes the headaches of payments, for both consumers and merchants. Complement your checkout with a Klarna hosted widget located in your existing checkout which offers payment options for customers with a smooth user experience.
+- **Klarna Payments**: Standalone payment methods complementing your existing checkout with a Klarna hosted widget.
+- **Klarna Checkout**: Complete online checkout solution designed to increase sales and customer loyalty, with Klarna as your single payment provider.
+For more details, visit the [Klarna Payments page](https://woocommerce.com/products/klarna-payments/).
 
 == Installation ==
 1. Upload plugin folder to to the "/wp-content/plugins/" directory.
@@ -50,7 +67,19 @@ Klarna Payments works for merchants in Australia, Austria, Belgium, Canada, Czec
 For help setting up and configuring Klarna Payments for WooCommerce please refer to our [documentation](https://docs.krokedil.com/klarna-payments-for-woocommerce/).
 
 
+== Screenshots ==
+
+1. On-site messaging
+2. Express checkout
+
 == Changelog ==
+= 2024.10.23    - version 3.7.4 =
+* Fix           - Fixed an undefined index warning related to new settings.
+* Fix           - [KOSM] Fixed the On-site messaging preview not changing to reflect the selected theme.
+* Fix           - [KOSM] Fixed an uncaught error when rendering the On-site messaging preview.
+* Tweak         - [KEC] The Klarna Express Checkout ("KEC") button will now be hidden on a variable product page until a variant is selected.
+* Tweak         - [Settings] Added links to plugin and additional resources.
+
 = 2024.09.13    - version 3.7.3 =
 * Fix           - Fix an issue with getting the correct credentials in some cases when not using the combined setting for EU countries.
 
@@ -535,3 +564,8 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 = 1.0 =
 * Initial release.
+
+== Upgrade Notice ==
+
+= 3.5.4 =
+This version fixes a critical error due to undefined method call. Upgrade immediately

@@ -74,8 +74,8 @@ class KP_Settings_Page {
 				<h1 class="kp_settings__header_title"><?php esc_html_e( 'Klarna for WooCommerce', 'klarna-payments-for-woocommerce' ); ?></h1>
 				<p class="kp_settings__header_description"><?php esc_html_e( 'Supercharge your business with one single plugin for increased sales and enhanced shopping experiences.', 'klarna-payments-for-woocommerce' ); ?></p>
 				<p class="kp_settings__header_links">
-					<a href="https://krokedil.se" target="_blank" class="kp_settings__header_link"><?php esc_html_e( 'Set-up guidelines', 'klarna-payments-for-woocommerce' ); ?></a>
-					<a href="https://krokedil.se" target="_blank" class="kp_settings__header_link"><?php esc_html_e( 'Learn more about Klarna', 'klarna-payments-for-woocommerce' ); ?></a>
+					<a href="https://docs.klarna.com/platform-solutions/e-commerce-platforms/woocommerce/before-you-start" target="_blank" class="kp_settings__header_link"><?php esc_html_e( 'Set-up guidelines', 'klarna-payments-for-woocommerce' ); ?></a>
+					<a href="https://docs.klarna.com" target="_blank" class="kp_settings__header_link"><?php esc_html_e( 'Learn more about Klarna', 'klarna-payments-for-woocommerce' ); ?></a>
 				</p>
 			</div>
 		</div>
