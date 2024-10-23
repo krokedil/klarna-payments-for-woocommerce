@@ -214,16 +214,16 @@
         },
         {
             "name": "krokedil/settings-page",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/settings-page.git",
-                "reference": "9a3a96dae9509fb647fdf910e790b0ad3e28065d"
+                "reference": "9920eecacfaf34dd556887816790aff00d38b971"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/9a3a96dae9509fb647fdf910e790b0ad3e28065d",
-                "reference": "9a3a96dae9509fb647fdf910e790b0ad3e28065d",
+                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/9920eecacfaf34dd556887816790aff00d38b971",
+                "reference": "9920eecacfaf34dd556887816790aff00d38b971",
                 "shasum": ""
             },
             "require-dev": {
@@ -252,10 +252,10 @@
             ],
             "description": "A package to help setup settings pages in WordPress and WooCommerce for Krokedil plugins to add the Addons and Support tabs",
             "support": {
-                "source": "https://github.com/krokedil/settings-page/tree/1.1.0",
+                "source": "https://github.com/krokedil/settings-page/tree/1.2.0",
                 "issues": "https://github.com/krokedil/settings-page/issues"
             },
-            "time": "2024-09-11T09:36:09+00:00"
+            "time": "2024-10-23T11:23:33+00:00"
         },
         {
             "name": "krokedil/woocommerce",
