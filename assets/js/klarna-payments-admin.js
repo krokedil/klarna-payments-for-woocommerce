@@ -42,6 +42,9 @@ jQuery(function ($) {
 
 			// Trigger the change event to set the initial state.
 			$(this.toggleTestModeSelector).trigger("change");
+
+			// Update all previews on page load.
+			this.updatePreviews();
 		},
 
 		toggleCredentials: function (e) {
@@ -161,6 +164,11 @@ jQuery(function ($) {
 
 			$img.attr("src", `${path}/${filename}`);
 		},
+
+		updatePreviews: function () {
+			const $previewTargets = $("#woocommerce_klarna_payments_kec_theme, #woocommerce_klarna_payments_kec_shape, #woocommerce_klarna_payments_placement_data_key_product, #woocommerce_klarna_payments_onsite_messaging_theme_product, #woocommerce_klarna_payments_placement_data_key_cart, #woocommerce_klarna_payments_onsite_messaging_theme_cart");
+			$previewTargets.trigger("change");
+		}
 	};
 
 	kp_admin.init();
