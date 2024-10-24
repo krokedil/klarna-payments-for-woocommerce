@@ -478,7 +478,6 @@ jQuery(function ($) {
 					$("body").trigger("updated_checkout");
 					$("form.checkout").removeClass("processing");
 					$("form.checkout").unblock();
-					$(".form.checkout").unblock();
 
 					console.log("No authorization_token in response");
 					$("form.woocommerce-checkout")
@@ -604,7 +603,6 @@ jQuery(function ($) {
 			$("body").trigger("updated_checkout");
 			$("form.checkout").removeClass("processing");
 			$("form.checkout").unblock();
-			$(".form.checkout").unblock();
 
 			// Print error messages, and trigger checkout_error, and scroll to notices.
 			$(
