@@ -477,7 +477,8 @@ jQuery(function ($) {
 					// Re-enable the form.
 					$("body").trigger("updated_checkout");
 					$("form.checkout").removeClass("processing");
-					klarna_payments.customUnblock($("form.checkout"));
+					$("form.checkout").unblock();
+					$(".form.checkout").unblock();
 
 					console.log("No authorization_token in response");
 					$("form.woocommerce-checkout")
@@ -517,20 +518,6 @@ jQuery(function ($) {
 			}
 		},
 
-		customBlock: function ($target) {
-			$target.css({
-				'pointer-events': 'none',
-				'opacity': '0.6'
-			});
-		},
-
-		customUnblock: function ($target) {
-			$target.css({
-				'pointer-events': 'auto',
-				'opacity': '1'
-			});
-		},
-
 		orderSubmit: function (event) {
 			if (klarna_payments.isKlarnaPaymentsSelected()) {
 				event.preventDefault();
@@ -540,7 +527,13 @@ jQuery(function ($) {
 				}
 
 				$("form.checkout").addClass("processing");
-				klarna_payments.customBlock($("form.checkout"));
+				$("form.checkout").block({
+					message: null,
+					overlayCSS: {
+						background: "#fff",
+						opacity: 0.6,
+					},
+				});
 
 				$.ajax({
 					type: "POST",
@@ -610,7 +603,8 @@ jQuery(function ($) {
 			// Re-enable the form.
 			$("body").trigger("updated_checkout");
 			$("form.checkout").removeClass("processing");
-			klarna_payments.customUnblock($("form.checkout"));
+			$("form.checkout").unblock();
+			$(".form.checkout").unblock();
 
 			// Print error messages, and trigger checkout_error, and scroll to notices.
 			$(
