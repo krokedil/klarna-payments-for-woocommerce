@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bef47250909618e625a355af2afc0e22",
+    "content-hash": "071374db34a5e832e6d786d66760810f",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -256,6 +256,41 @@
                 "issues": "https://github.com/krokedil/settings-page/issues"
             },
             "time": "2024-10-23T11:23:33+00:00"
+        },
+        {
+            "name": "krokedil/sign-in-with-klarna",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/krokedil/sign-in-with-klarna.git",
+                "reference": "0d9ba3fd062e27c27c7b800c426a4638116b6807"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/0d9ba3fd062e27c27c7b800c426a4638116b6807",
+                "reference": "0d9ba3fd062e27c27c7b800c426a4638116b6807",
+                "shasum": ""
+            },
+            "require": {
+                "firebase/php-jwt": "^6.0.0"
+            },
+            "require-dev": {
+                "php-stubs/woocommerce-stubs": "^8.3",
+                "php-stubs/wordpress-stubs": "^6.0",
+                "wp-coding-standards/wpcs": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\SignInWithKlarna\\": "src/"
+                }
+            },
+            "description": "Add \"Sign in with Klarna\" compatibility with your WooCommerce plugin.",
+            "support": {
+                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/1.0.1",
+                "issues": "https://github.com/krokedil/sign-in-with-klarna/issues"
+            },
+            "time": "2024-10-25T08:07:18+00:00"
         },
         {
             "name": "krokedil/woocommerce",

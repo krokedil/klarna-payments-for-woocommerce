@@ -36,10 +36,17 @@ function kp_extract_error_message( $response ) {
  * @return array
  */
 function get_klarna_customer( $customer_type ) {
-	$type = ( 'b2b' === $customer_type ) ? 'organization' : 'person';
-	return array(
+	$type     = ( 'b2b' === $customer_type ) ? 'organization' : 'person';
+	$customer = array(
 		'type' => $type,
 	);
+
+	$access_token = KP_WC()->siwk->user->get_access_token( get_current_user_id() );
+	if ( ! empty( $access_token ) ) {
+		$customer['klarna_access_token'] = $access_token;
+	}
+
+	return $customer;
 }
 
 /**
