@@ -7,7 +7,7 @@ Tested up to: 6.6.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.2.3
-Stable tag: 3.7.4
+Stable tag: 3.8.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -73,6 +73,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2024.10.25    - version 3.8.0 =
+* Feature       - Added support for "Sign in with Klarna" for an improved way to drive shoppers straight to the checkout, with all their preferences already set.
+
 = 2024.10.23    - version 3.7.4 =
 * Fix           - Fixed an undefined index warning related to new settings.
 * Fix           - [KOSM] Fixed the On-site messaging preview not changing to reflect the selected theme.

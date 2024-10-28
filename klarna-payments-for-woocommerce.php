@@ -5,7 +5,7 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 3.7.4
+ * Version: 3.8.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
@@ -38,11 +38,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
+use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
 
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '3.7.4' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '3.8.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -150,6 +151,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $krokedil = null;
 
 		/**
+		 * The Sign-In With Klarna package from Krokedil.
+		 *
+		 * @var SignInWithKlarna
+		 */
+		public $siwk = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -202,6 +210,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					'price_format' => 'minor',
 				)
 			);
+			$this->siwk                    = new SignInWithKlarna( $settings );
 
 			$this->register_payment_block();
 
