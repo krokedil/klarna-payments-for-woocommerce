@@ -243,6 +243,14 @@ jQuery(function ($) {
 			return false;
 		},
 
+		isTermsAccepted: function () {
+			if(!$('#terms').length || $('#terms').is(':checked')) {
+				return true;
+			}
+
+			return false;
+		},
+
 		setRadioButtonValues: function () {
 			$('input[name="payment_method"]').each(function () {
 				if ($(this).val().indexOf("klarna_payments") !== -1) {
@@ -421,12 +429,15 @@ jQuery(function ($) {
 
 		printErrorMessage: function (message) {
 			$("#klarna-payments-error-notice").remove();
-			$("form.checkout").prepend(
+			const is_pay_for_order = (true == klarna_payments_params.pay_for_order);
+			const $target = is_pay_for_order ? $("div.woocommerce-notices-wrapper") : $("form.checkout");
+
+			$target.prepend(
 				'<div id="klarna-payments-error-notice" class="woocommerce-NoticeGroup"><ul class="woocommerce-error" role="alert"><li>' +
 					message +
 					"</li></ul></div>"
 			);
-			$.scroll_to_notices($("form.checkout"));
+			$.scroll_to_notices($target);
 		},
 
 		authorizeKlarnaOrder: function (order_id, order_key) {
@@ -501,6 +512,12 @@ jQuery(function ($) {
 		klarnaPayForOrder: function (event) {
 			if (klarna_payments.isKlarnaPaymentsSelected()) {
 				event.preventDefault();
+
+				if(!klarna_payments.isTermsAccepted()) {
+					klarna_payments.printErrorMessage(klarna_payments_params.i18n.terms_not_checked);
+					return;
+				}
+
 				klarna_payments.addresses = klarna_payments_params.addresses;
 				klarna_payments.authorizeKlarnaOrder(
 					klarna_payments_params.order_id,
