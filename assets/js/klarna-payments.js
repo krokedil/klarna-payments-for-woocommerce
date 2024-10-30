@@ -478,7 +478,6 @@ jQuery(function ($) {
 					$("body").trigger("updated_checkout");
 					$("form.checkout").removeClass("processing");
 					$("form.checkout").unblock();
-					$(".woocommerce-checkout-review-order-table").unblock();
 
 					console.log("No authorization_token in response");
 					$("form.woocommerce-checkout")
@@ -527,7 +526,7 @@ jQuery(function ($) {
 				}
 
 				$("form.checkout").addClass("processing");
-				$(".woocommerce-checkout-review-order-table").block({
+				$("form.checkout").block({
 					message: null,
 					overlayCSS: {
 						background: "#fff",
@@ -604,7 +603,6 @@ jQuery(function ($) {
 			$("body").trigger("updated_checkout");
 			$("form.checkout").removeClass("processing");
 			$("form.checkout").unblock();
-			$(".woocommerce-checkout-review-order-table").unblock();
 
 			// Print error messages, and trigger checkout_error, and scroll to notices.
 			$(
