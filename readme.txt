@@ -7,7 +7,7 @@ Tested up to: 6.6.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.2.3
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -25,7 +25,7 @@ Klarna is the default checkout option for our partners, used (and loved) by mill
 
 === More ways to pay, more purchases ===
 
-Grow your business with our flexible payment options and smart shopping solutions. Unlock higher purchase power for your customers by giving them the full flexibility of how and when they want to pay. 
+Grow your business with our flexible payment options and smart shopping solutions. Unlock higher purchase power for your customers by giving them the full flexibility of how and when they want to pay.
 
 You’ll always be paid in full and upfront, while your customers pay at a later date. Klarna supports high value orders, and everyday purchases. Payment options include:
 
@@ -73,6 +73,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2024.10.30    - version 3.8.1 =
+* Fix           - [SIWK] Fixed and issue with the "Sign in with Klarna" showing even when the feature was disabled.
+
 = 2024.10.25    - version 3.8.0 =
 * Feature       - Added support for "Sign in with Klarna" for an improved way to drive shoppers straight to the checkout, with all their preferences already set.
 
