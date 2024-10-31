@@ -398,7 +398,7 @@ class KP_Form_Fields {
 				'description' => __( 'Select the customer for the store.', 'klarna-payments-for-woocommerce' ),
 				'options'     => array(
 					'b2c' => __( 'Business to Consumer (B2C)', 'klarna-payments-for-woocommerce' ),
-					'b2b' => __( 'Business to Business ( B2B)', 'klarna-payments-for-woocommerce' ),
+					'b2b' => __( 'Business to Business (B2B)', 'klarna-payments-for-woocommerce' ),
 				),
 				'default'     => 'b2c',
 				'desc_tip'    => true,
