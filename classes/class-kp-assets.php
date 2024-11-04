@@ -19,7 +19,7 @@ class KP_Assets {
 	 */
 	public function __construct() {
 		/* Klarna Payments scripts */
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_script' ) );
+		add_action( 'wp', array( $this, 'enqueue_checkout_script' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_script' ) );
 
 		/* Klarna Express Checkout (aka Express Button). */
