@@ -257,7 +257,7 @@ class KP_Form_Fields {
 			),
 			'testmode'            => array(
 				'title'    => __( 'Test mode', 'klarna-payments-for-woocommerce' ),
-				'label'    => __( 'Enable Klarna Payments in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
+				'label'    => __( 'Enable Klarna in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
 				'default'  => 'no',
 				'desc_tip' => true,
@@ -327,7 +327,7 @@ class KP_Form_Fields {
 		$kp_section = array(
 			'general'              => array(
 				'id'          => 'general',
-				'title'       => 'Klarna Payments*',
+				'title'       => 'Klarna Payments',
 				'description' => __( 'Give your customers the ability to pay in flexible ways such as Buy now, Pay Later, Invoicing, Installments and Financing.', 'klarna-payments-for-woocommerce' ),
 				'links'       => array(
 					array(
@@ -385,9 +385,9 @@ class KP_Form_Fields {
 				'desc_tip' => true,
 			),
 			'add_to_email'         => array(
-				'title'    => __( 'Add Klarna Urls to order email', 'klarna-payments-for-woocommerce' ),
+				'title'    => __( 'Add Klarna URLs to order email', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
-				'label'    => __( 'This will add Klarna urls to the order emails that are sent. You can read more about this here: ', 'klarna-payments-for-woocommerce' ) . '<a href="https://docs.klarna.com/payments/web-payments/additional-resources/ux-guidelines/post-purchase-experience/" target="_blank">Klarna URLs</a>',
+				'label'    => __( 'This will add Klarna URLs to the order emails that are sent. You can read more about this here: ', 'klarna-payments-for-woocommerce' ) . '<a href="https://docs.klarna.com/payments/web-payments/additional-resources/ux-guidelines/post-purchase-experience/" target="_blank">Klarna URLs</a>',
 				'default'  => 'no',
 				'desc_tip' => false,
 			),
@@ -397,8 +397,8 @@ class KP_Form_Fields {
 				'label'       => __( 'Customer type', 'klarna-payments-for-woocommerce' ),
 				'description' => __( 'Select the customer for the store.', 'klarna-payments-for-woocommerce' ),
 				'options'     => array(
-					'b2c' => __( 'B2C', 'klarna-payments-for-woocommerce' ),
-					'b2b' => __( 'B2B', 'klarna-payments-for-woocommerce' ),
+					'b2c' => __( 'Business to Consumer (B2C)', 'klarna-payments-for-woocommerce' ),
+					'b2b' => __( 'Business to Business (B2B)', 'klarna-payments-for-woocommerce' ),
 				),
 				'default'     => 'b2c',
 				'desc_tip'    => true,
