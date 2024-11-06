@@ -55,8 +55,8 @@ class KP_Settings_Page {
 		}
 
 		?>
-		<link rel="preload" href="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/fonts/KlarnaSans-Regular.otf" as="font" type="font/otf" crossorigin>
-		<link rel="preload" href="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/fonts/KlarnaHeadline-Bold.otf" as="font" type="font/otf" crossorigin>
+		<link rel="preload" href="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/fonts/KlarnaText-Regular.otf" as="font" type="font/otf" crossorigin>
+		<link rel="preload" href="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/fonts/KlarnaText-Bold.otf" as="font" type="font/otf" crossorigin>
 		<?php
 	}
 
