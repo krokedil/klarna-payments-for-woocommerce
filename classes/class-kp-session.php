@@ -87,7 +87,7 @@ class KP_Session {
 		$this->set_session_data( $order );
 
 		// If we already have a Klarna session, and the session_country or session_locale has changed since our last request, reset all our params and a new session will be created.
-		if ( null !== $this->klarna_session && kp_get_klarna_country( $order ) !== $this->session_country || get_locale() !== $this->session_locale ) {
+		if ( null !== $this->klarna_session && ( kp_get_klarna_country( $order ) !== $this->session_country || get_locale() !== $this->session_locale ) ) {
 			$this->klarna_session  = null;
 			$this->session_hash    = null;
 			$this->session_country = null;
@@ -266,7 +266,7 @@ class KP_Session {
 		// The `get_totals` method can return non-numeric items which should be removed before using `array_sum`.
 		$cart_totals = array_filter(
 			WC()->cart->get_totals(),
-			function( $total ) {
+			function ( $total ) {
 				return is_numeric( $total );
 			}
 		);
