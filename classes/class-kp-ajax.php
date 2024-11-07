@@ -92,8 +92,8 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			}
 
 			$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $auth_token, $order_id );
-
 			if ( is_wp_error( $response ) ) {
+				$order->update_status( 'failed', __( 'Failed to create the Klarna order.', 'klarna-payments-for-woocommerce' ) );
 				wp_send_json_error( kp_extract_error_message( $response ) );
 			}
 
@@ -153,11 +153,13 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'unexpected form data' );
 			}
 
-			$show_form = 'true' === $show_form ? true : false;
+			// Indicates whether Klarna payments is available.
+			$show_form = wc_string_to_bool( $show_form );
 			if ( $show_form ) {
 				$order->add_order_note( __( 'Customer aborted purchase with Klarna.', 'klarna-payments-for-woocommerce' ) );
 			} else {
-				$order->add_order_note( __( 'Authorization rejected by Klarna.', 'klarna-payments-for-woocommerce' ) );
+				$order->update_status( 'failed', __( 'Authorization rejected by Klarna.', 'klarna-payments-for-woocommerce' ) );
+				$order->save();
 			}
 
 			wp_send_json_success();
