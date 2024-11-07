@@ -93,7 +93,8 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 
 			$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $auth_token, $order_id );
 			if ( is_wp_error( $response ) ) {
-				$order->update_status( 'failed', __( 'Failed to create the Klarna order.', 'klarna-payments-for-woocommerce' ) );
+				$status = apply_filters( 'kp_create_order_failed', 'on-hold' );
+				$order->update_status( $status, __( 'Failed to create the Klarna order.', 'klarna-payments-for-woocommerce' ) );
 				wp_send_json_error( kp_extract_error_message( $response ) );
 			}
 
@@ -158,7 +159,8 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			if ( $show_form ) {
 				$order->add_order_note( __( 'Customer aborted purchase with Klarna.', 'klarna-payments-for-woocommerce' ) );
 			} else {
-				$order->update_status( 'failed', __( 'Authorization rejected by Klarna.', 'klarna-payments-for-woocommerce' ) );
+				$status = apply_filters( 'kp_authorization_rejected', 'on-hold' );
+				$order->update_status( $status, __( 'Authorization rejected by Klarna.', 'klarna-payments-for-woocommerce' ) );
 				$order->save();
 			}
 

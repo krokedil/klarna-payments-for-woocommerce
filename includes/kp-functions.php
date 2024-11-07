@@ -170,7 +170,8 @@ function kp_process_pending( $order, $decoded ) {
  * @return array   $result  Payment result.
  */
 function kp_process_rejected( $order, $decoded ) {
-	$order->update_status( 'failed', __( 'Klarna order was rejected.', 'klarna-payments-for-woocommerce' ) );
+	$status = apply_filters( 'kp_authorization_rejected', 'on-hold' );
+	$order->update_status( $status, __( 'Klarna order was rejected.', 'klarna-payments-for-woocommerce' ) );
 	do_action( 'wc_klarna_payments_rejected', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_rejected', $order->get_id(), $decoded );
 	return array(
