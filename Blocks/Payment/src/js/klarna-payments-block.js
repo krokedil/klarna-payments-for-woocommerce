@@ -32,7 +32,7 @@ const KlarnaPaymentsOptions = {
     label: <Label />,
     content: <Content />,
     edit: <Content />,
-    placeOrderButtonLabel: klarna_payments_params.i18n.order_button_label,
+    placeOrderButtonLabel: settings.orderbuttonlabel,
     canMakePayment: canMakePayment,
     ariaLabel: title
 };

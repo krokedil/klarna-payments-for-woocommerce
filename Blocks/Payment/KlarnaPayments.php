@@ -27,6 +27,11 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 */
 	public function initialize() {
 		$this->settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		$assets_path    = dirname( __DIR__, 2 ) . '/build/klarna-payments-block.asset.php';
+		if ( file_exists( $assets_path ) ) {
+			$assets = require $assets_path;
+			wp_register_script( 'klarna-payments-block', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/blocks/build/klarna-payments-block.js', $assets['dependencies'], $assets['version'], true );
+		}
 	}
 
 	/**
@@ -97,9 +102,10 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 */
 	public function get_payment_method_data() {
 		return array(
-			'title'       => $this->get_setting( 'title' ),
-			'description' => $this->get_setting( 'description' ),
-			'iconurl'     => apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
+			'title'            => $this->get_setting( 'title' ),
+			'description'      => $this->get_setting( 'description' ),
+			'iconurl'          => apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
+			'orderbuttonlabel' => apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) ),
 		);
 	}
 }
