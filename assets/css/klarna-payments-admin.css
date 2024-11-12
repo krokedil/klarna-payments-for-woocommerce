@@ -1,13 +1,13 @@
 @font-face {
 	font-family: Klarna;
 	font-weight: 300;
-	src: url("../fonts/KlarnaSans-Regular.otf") format("opentype");
+	src: url("../fonts/KlarnaText-Regular.otf") format("opentype");
 }
 
 @font-face {
 	font-family: KlarnaHeadline;
 	font-weight: bold;
-	src: url("../fonts/KlarnaHeadline-Bold.otf") format("opentype");
+	src: url("../fonts/KlarnaText-Bold.otf") format("opentype");
 }
 
 /** New Settings page styling */

@@ -51,6 +51,13 @@ class KP_Session {
 	public $session_country = null;
 
 	/**
+	 * Get the locale used for the Klarna session.
+	 *
+	 * @var string
+	 */
+	public $session_locale = null;
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
@@ -79,11 +86,12 @@ class KP_Session {
 		// Set session data from WC Session or order meta if we have any.
 		$this->set_session_data( $order );
 
-		// If we already have a Klarna session, and the session_country has changed since our last request, reset all our params and a new session will be created.
-		if ( null !== $this->klarna_session && kp_get_klarna_country( $order ) !== $this->session_country ) {
+		// If we already have a Klarna session, and the session_country or session_locale has changed since our last request, reset all our params and a new session will be created.
+		if ( null !== $this->klarna_session && ( kp_get_klarna_country( $order ) !== $this->session_country || get_locale() !== $this->session_locale ) ) {
 			$this->klarna_session  = null;
 			$this->session_hash    = null;
 			$this->session_country = null;
+			$this->session_locale  = null;
 		}
 
 		// If we already have a Klarna session and session does not need an update, return the Klarna session.
@@ -139,6 +147,7 @@ class KP_Session {
 		$this->klarna_session  = $session_data['klarna_session'];
 		$this->session_hash    = $session_data['session_hash'];
 		$this->session_country = $session_data['session_country'];
+		$this->session_locale  = $session_data['session_locale'];
 	}
 
 	/**
@@ -158,6 +167,7 @@ class KP_Session {
 		$this->klarna_session  = ! empty( $result ) ? $result : $this->klarna_session; // If the result is empty, it was from a successfull update request. So no need to update the session data.
 		$this->session_hash    = null === $order ? $this->get_session_cart_hash() : $this->get_session_order_hash( $order );
 		$this->session_country = kp_get_klarna_country( $order );
+		$this->session_locale  = get_locale();
 
 		// Update the WC Session or the order meta with instance of class.
 		$this->update_session_data_in_wc( $order );
@@ -256,7 +266,7 @@ class KP_Session {
 		// The `get_totals` method can return non-numeric items which should be removed before using `array_sum`.
 		$cart_totals = array_filter(
 			WC()->cart->get_totals(),
-			function( $total ) {
+			function ( $total ) {
 				return is_numeric( $total );
 			}
 		);
