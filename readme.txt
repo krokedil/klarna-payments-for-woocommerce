@@ -7,7 +7,7 @@ Tested up to: 6.7
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.4.0
-Stable tag: 3.8.1
+Stable tag: 3.8.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,18 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2024.11.12    - version 3.8.3 =
+* Fix           - Fixed an issue where the customer could place an order on the pay for order page without consenting to the terms and conditions.
+* Tweak         - The checkout will be blocked while the checkout is being processed.
+* Tweak         - If the locale is modified, the existing session will be dropped, and a new one will be created. This should ensure that Klarna has the correct locale, and improve compatibility with i18n plugins.
+* Feature       - [KOSM] Added the 'kosm_show_everywhere' filter hook to allow the placement to be shown on all pages.
+* Tweak         - [KOSM] Updated the product description.
+* Tweak         - [KEC] The KEC button will remain hidden on a variable product page until a variant is selected.
+* Tweak         - [KEC] Updated the product description.
+* Tweak         - [SIWK] Updated the product description.
+* Fix           - [Settings] Fixed an issue where the preview would still show the old preview after updating the settings until the user refreshes the page.
+* Fix           - Bump release version.
+
 = 2024.11.12    - version 3.8.2 =
 * Fix           - Fixed an issue where the customer could place an order on the pay for order page without consenting to the terms and conditions.
 * Tweak         - The checkout will be blocked while the checkout is being processed.
