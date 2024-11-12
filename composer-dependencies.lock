@@ -71,16 +71,16 @@
         },
         {
             "name": "krokedil/klarna-express-checkout",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "8d6cf9e0d41fb5c438d905e53688835a1509be8a"
+                "reference": "42fe35c3329f551bf3cd05123ec8510cdfc13f5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/8d6cf9e0d41fb5c438d905e53688835a1509be8a",
-                "reference": "8d6cf9e0d41fb5c438d905e53688835a1509be8a",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/42fe35c3329f551bf3cd05123ec8510cdfc13f5f",
+                "reference": "42fe35c3329f551bf3cd05123ec8510cdfc13f5f",
                 "shasum": ""
             },
             "require": {
@@ -136,23 +136,23 @@
             ],
             "description": "A Klarna Express Checkout solution for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-express-checkout/tree/1.4.0",
+                "source": "https://github.com/krokedil/klarna-express-checkout/tree/1.4.1",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2024-09-11T09:27:32+00:00"
+            "time": "2024-11-12T10:50:36+00:00"
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
-                "reference": "c864c0eb2a7fd8ccd57f7fa845219bcf72a88a2c"
+                "reference": "65cd1c8675d80db600e7febdd3752b2b7d19dc5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/c864c0eb2a7fd8ccd57f7fa845219bcf72a88a2c",
-                "reference": "c864c0eb2a7fd8ccd57f7fa845219bcf72a88a2c",
+                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/65cd1c8675d80db600e7febdd3752b2b7d19dc5e",
+                "reference": "65cd1c8675d80db600e7febdd3752b2b7d19dc5e",
                 "shasum": ""
             },
             "require": {
@@ -207,10 +207,10 @@
             ],
             "description": "Klarna On-Site Messaging for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/1.2.0",
+                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/1.2.1",
                 "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
             },
-            "time": "2024-09-11T09:30:15+00:00"
+            "time": "2024-11-12T10:44:55+00:00"
         },
         {
             "name": "krokedil/settings-page",
@@ -259,16 +259,16 @@
         },
         {
             "name": "krokedil/sign-in-with-klarna",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/sign-in-with-klarna.git",
-                "reference": "d76c8d367105d4d9b9d8553b98b33fab765a604a"
+                "reference": "44f65ef5e450a474e7c76a7a20be34eb29627c12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/d76c8d367105d4d9b9d8553b98b33fab765a604a",
-                "reference": "d76c8d367105d4d9b9d8553b98b33fab765a604a",
+                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/44f65ef5e450a474e7c76a7a20be34eb29627c12",
+                "reference": "44f65ef5e450a474e7c76a7a20be34eb29627c12",
                 "shasum": ""
             },
             "require": {
@@ -287,23 +287,23 @@
             },
             "description": "Add \"Sign in with Klarna\" compatibility with your WooCommerce plugin.",
             "support": {
-                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/1.0.3",
+                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/1.0.4",
                 "issues": "https://github.com/krokedil/sign-in-with-klarna/issues"
             },
-            "time": "2024-10-30T10:12:09+00:00"
+            "time": "2024-11-12T10:40:34+00:00"
         },
         {
             "name": "krokedil/woocommerce",
-            "version": "1.7.0",
+            "version": "1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "aec179c982067431582c4a9c199ee9c6fd986d91"
+                "reference": "e2d32e503cfdbcfd574dbb6f06c5e5aaa3c87a2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/aec179c982067431582c4a9c199ee9c6fd986d91",
-                "reference": "aec179c982067431582c4a9c199ee9c6fd986d91",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/e2d32e503cfdbcfd574dbb6f06c5e5aaa3c87a2c",
+                "reference": "e2d32e503cfdbcfd574dbb6f06c5e5aaa3c87a2c",
                 "shasum": ""
             },
             "require-dev": {
@@ -334,10 +334,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.7.0",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.7.1",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2024-09-11T09:02:40+00:00"
+            "time": "2024-11-08T13:51:05+00:00"
         },
         {
             "name": "krokedil/wp-api",
@@ -384,13 +384,13 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "7.4"
     },
