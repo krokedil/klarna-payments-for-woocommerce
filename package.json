@@ -28,5 +28,8 @@
     "build": "npx wp-scripts build ./Blocks/Payment/klarna-payments-block.js",
     "start:webpack": "rimraf build/* && wp-scripts start ./Blocks/Payment/klarna-payments-block.js",
     "start:dev": "rimraf build/* && wp-scripts start ./Blocks/Payment/klarna-payments-block.js --dev"
+  },
+  "dependencies": {
+    "glob": "^11.0.0"
   }
 }
