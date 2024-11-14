@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@wordpress/html-entities':
+        specifier: ^4.11.0
+        version: 4.11.0
       glob:
         specifier: ^11.0.0
         version: 11.0.0
@@ -32,10 +35,10 @@ importers:
         version: 2.2.0(webpack@5.96.1)
       '@wordpress/components':
         specifier: ^21.3.0
-        version: 21.3.0(@types/react@18.3.12)(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
+        version: 21.3.0(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@wordpress/scripts':
         specifier: ^24.2.0
-        version: 24.6.0(@types/webpack@4.41.40)(@webpack-cli/generators@2.5.0)(encoding@0.1.13)(node-sass@7.0.3)(react-dom@18.3.1(react@17.0.2))(react@17.0.2)(type-fest@0.21.3)(typescript@5.6.3)
+        version: 24.6.0(@types/webpack@4.41.40)(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(encoding@0.1.13)(node-sass@7.0.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(type-fest@0.21.3)(typescript@5.6.3)
       babel-loader:
         specifier: ^8.2.5
         version: 8.4.1(@babel/core@7.26.0)(webpack@5.96.1)
@@ -56,7 +59,7 @@ importers:
         version: 5.96.1(webpack-cli@4.10.0)
       webpack-cli:
         specifier: ^4.10.0
-        version: 4.10.0(@webpack-cli/generators@2.5.0)(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
+        version: 4.10.0(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
       webpack-dev-server:
         specifier: ^4.11.1
         version: 4.15.2(webpack-cli@4.10.0)(webpack@5.96.1)
@@ -689,6 +692,10 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
+
+  '@babel/runtime@7.25.7':
+    resolution: {integrity: sha512-FjoyLe754PMiYsFaN5C94ttGiOmBNYTf6pLr4xXHAT5uctHb092PBszndLDR5XA/jghQvn4n7JMHl7dmTgbm9w==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.26.0':
     resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
@@ -1691,6 +1698,10 @@ packages:
   '@wordpress/hooks@3.58.0':
     resolution: {integrity: sha512-9LB0ZHnZRQlORttux9t/xbAskF+dk2ujqzPGsVzc92mSKpQP3K2a5Wy74fUnInguB1vLUNHT6nrNdkVom5qX1Q==}
     engines: {node: '>=12'}
+
+  '@wordpress/html-entities@4.11.0':
+    resolution: {integrity: sha512-OMpq/oP7CvfMojedgeI9unIAx0wuB8n10JwM72xi0CI/NYuymAcaOoD3OGkmS+4i6IW/geC3AooyWwRduzY85Q==}
+    engines: {node: '>=18.12.0', npm: '>=8.19.2'}
 
   '@wordpress/i18n@4.58.0':
     resolution: {integrity: sha512-VfvS3BWv/RDjRKD6PscIcvYfWKnGJcI/DEqyDgUMhxCM6NRwoL478CsUKTiGJIymeyRodNRfprdcF086DpGKYw==}
@@ -8121,6 +8132,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@babel/runtime@7.25.7':
+    dependencies:
+      regenerator-runtime: 0.14.1
+
   '@babel/runtime@7.26.0':
     dependencies:
       regenerator-runtime: 0.14.1
@@ -8206,17 +8221,17 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@emotion/react@11.13.3(@types/react@18.3.12)(react@17.0.2)':
+  '@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@emotion/babel-plugin': 11.12.0
       '@emotion/cache': 11.13.1
       '@emotion/serialize': 1.3.2
-      '@emotion/use-insertion-effect-with-fallbacks': 1.1.0(react@17.0.2)
+      '@emotion/use-insertion-effect-with-fallbacks': 1.1.0(react@18.3.1)
       '@emotion/utils': 1.4.1
       '@emotion/weak-memoize': 0.4.0
       hoist-non-react-statics: 3.3.2
-      react: 17.0.2
+      react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.12
     transitivePeerDependencies:
@@ -8232,16 +8247,16 @@ snapshots:
 
   '@emotion/sheet@1.4.0': {}
 
-  '@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@17.0.2))(@types/react@18.3.12)(react@17.0.2)':
+  '@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@emotion/babel-plugin': 11.12.0
       '@emotion/is-prop-valid': 1.3.1
-      '@emotion/react': 11.13.3(@types/react@18.3.12)(react@17.0.2)
+      '@emotion/react': 11.13.3(@types/react@18.3.12)(react@18.3.1)
       '@emotion/serialize': 1.3.2
-      '@emotion/use-insertion-effect-with-fallbacks': 1.1.0(react@17.0.2)
+      '@emotion/use-insertion-effect-with-fallbacks': 1.1.0(react@18.3.1)
       '@emotion/utils': 1.4.1
-      react: 17.0.2
+      react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.12
     transitivePeerDependencies:
@@ -8249,9 +8264,9 @@ snapshots:
 
   '@emotion/unitless@0.10.0': {}
 
-  '@emotion/use-insertion-effect-with-fallbacks@1.1.0(react@17.0.2)':
+  '@emotion/use-insertion-effect-with-fallbacks@1.1.0(react@18.3.1)':
     dependencies:
-      react: 17.0.2
+      react: 18.3.1
 
   '@emotion/utils@1.4.1': {}
 
@@ -8295,11 +8310,11 @@ snapshots:
       '@floating-ui/core': 1.6.8
       '@floating-ui/utils': 0.2.8
 
-  '@floating-ui/react-dom@1.3.0(react-dom@18.3.1(react@17.0.2))(react@17.0.2)':
+  '@floating-ui/react-dom@1.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@floating-ui/dom': 1.6.12
-      react: 17.0.2
-      react-dom: 18.3.1(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@floating-ui/utils@0.2.8': {}
 
@@ -9216,10 +9231,10 @@ snapshots:
 
   '@use-gesture/core@10.3.1': {}
 
-  '@use-gesture/react@10.3.1(react@17.0.2)':
+  '@use-gesture/react@10.3.1(react@18.3.1)':
     dependencies:
       '@use-gesture/core': 10.3.1
-      react: 17.0.2
+      react: 18.3.1
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -9300,12 +9315,12 @@ snapshots:
   '@webpack-cli/configtest@1.2.0(webpack-cli@4.10.0)(webpack@5.96.1)':
     dependencies:
       webpack: 5.96.1(webpack-cli@4.10.0)
-      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0)(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
+      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
 
   '@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2)':
     dependencies:
       webpack: 5.96.1(webpack-cli@4.10.0)
-      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0)(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
+      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
       yeoman-environment: 3.19.3
       yeoman-generator: 4.13.0(encoding@0.1.13)
     optionalDependencies:
@@ -9321,11 +9336,11 @@ snapshots:
   '@webpack-cli/info@1.5.0(webpack-cli@4.10.0)':
     dependencies:
       envinfo: 7.14.0
-      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0)(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
+      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
 
   '@webpack-cli/serve@1.7.0(webpack-cli@4.10.0)(webpack-dev-server@4.15.2)':
     dependencies:
-      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0)(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
+      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
     optionalDependencies:
       webpack-dev-server: 4.15.2(webpack-cli@4.10.0)(webpack@5.96.1)
 
@@ -9366,19 +9381,19 @@ snapshots:
 
   '@wordpress/browserslist-config@5.41.0': {}
 
-  '@wordpress/components@21.3.0(@types/react@18.3.12)(react-dom@18.3.1(react@17.0.2))(react@17.0.2)':
+  '@wordpress/components@21.3.0(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@emotion/cache': 11.13.1
       '@emotion/css': 11.13.4
-      '@emotion/react': 11.13.3(@types/react@18.3.12)(react@17.0.2)
+      '@emotion/react': 11.13.3(@types/react@18.3.12)(react@18.3.1)
       '@emotion/serialize': 1.3.2
-      '@emotion/styled': 11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@17.0.2))(@types/react@18.3.12)(react@17.0.2)
+      '@emotion/styled': 11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1)
       '@emotion/utils': 1.4.1
-      '@floating-ui/react-dom': 1.3.0(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
-      '@use-gesture/react': 10.3.1(react@17.0.2)
+      '@floating-ui/react-dom': 1.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@use-gesture/react': 10.3.1(react@18.3.1)
       '@wordpress/a11y': 3.58.0
-      '@wordpress/compose': 5.20.0(react@17.0.2)
+      '@wordpress/compose': 5.20.0(react@18.3.1)
       '@wordpress/date': 4.58.0
       '@wordpress/deprecated': 3.58.0
       '@wordpress/dom': 3.58.0
@@ -9390,33 +9405,33 @@ snapshots:
       '@wordpress/is-shallow-equal': 4.58.0
       '@wordpress/keycodes': 3.58.0
       '@wordpress/primitives': 3.56.0
-      '@wordpress/rich-text': 5.20.0(react@17.0.2)
+      '@wordpress/rich-text': 5.20.0(react@18.3.1)
       '@wordpress/warning': 2.58.0
       change-case: 4.1.2
       classnames: 2.5.1
       colord: 2.9.3
       date-fns: 2.30.0
       dom-scroll-into-view: 1.2.1
-      downshift: 6.1.12(react@17.0.2)
-      framer-motion: 6.5.1(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
+      downshift: 6.1.12(react@18.3.1)
+      framer-motion: 6.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       gradient-parser: 0.1.5
       highlight-words-core: 1.2.3
       lodash: 4.17.21
       memize: 1.1.0
-      re-resizable: 6.10.1(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
-      react: 17.0.2
-      react-colorful: 5.6.1(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
-      react-dom: 18.3.1(react@17.0.2)
-      reakit: 1.3.11(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
+      re-resizable: 6.10.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-colorful: 5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-dom: 18.3.1(react@18.3.1)
+      reakit: 1.3.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       remove-accents: 0.4.4
-      use-lilius: 2.0.5(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
+      use-lilius: 2.0.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       uuid: 8.3.2
-      valtio: 1.13.2(@types/react@18.3.12)(react@17.0.2)
+      valtio: 1.13.2(@types/react@18.3.12)(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
 
-  '@wordpress/compose@5.20.0(react@17.0.2)':
+  '@wordpress/compose@5.20.0(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@types/mousetrap': 1.6.15
@@ -9429,13 +9444,13 @@ snapshots:
       change-case: 4.1.2
       clipboard: 2.0.11
       mousetrap: 1.6.5
-      react: 17.0.2
-      use-memo-one: 1.1.3(react@17.0.2)
+      react: 18.3.1
+      use-memo-one: 1.1.3(react@18.3.1)
 
-  '@wordpress/data@7.6.0(react@17.0.2)':
+  '@wordpress/data@7.6.0(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@wordpress/compose': 5.20.0(react@17.0.2)
+      '@wordpress/compose': 5.20.0(react@18.3.1)
       '@wordpress/deprecated': 3.58.0
       '@wordpress/element': 4.20.0
       '@wordpress/is-shallow-equal': 4.58.0
@@ -9445,10 +9460,10 @@ snapshots:
       is-plain-object: 5.0.0
       is-promise: 4.0.0
       lodash: 4.17.21
-      react: 17.0.2
+      react: 18.3.1
       redux: 4.2.1
       turbo-combine-reducers: 1.0.2
-      use-memo-one: 1.1.3(react@17.0.2)
+      use-memo-one: 1.1.3(react@18.3.1)
 
   '@wordpress/date@4.58.0':
     dependencies:
@@ -9542,6 +9557,10 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.26.0
 
+  '@wordpress/html-entities@4.11.0':
+    dependencies:
+      '@babel/runtime': 7.25.7
+
   '@wordpress/i18n@4.58.0':
     dependencies:
       '@babel/runtime': 7.26.0
@@ -9614,22 +9633,22 @@ snapshots:
       redux: 4.2.1
       rungen: 0.3.2
 
-  '@wordpress/rich-text@5.20.0(react@17.0.2)':
+  '@wordpress/rich-text@5.20.0(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@wordpress/a11y': 3.58.0
-      '@wordpress/compose': 5.20.0(react@17.0.2)
-      '@wordpress/data': 7.6.0(react@17.0.2)
+      '@wordpress/compose': 5.20.0(react@18.3.1)
+      '@wordpress/data': 7.6.0(react@18.3.1)
       '@wordpress/deprecated': 3.58.0
       '@wordpress/element': 4.20.0
       '@wordpress/escape-html': 2.58.0
       '@wordpress/i18n': 4.58.0
       '@wordpress/keycodes': 3.58.0
       memize: 1.1.0
-      react: 17.0.2
+      react: 18.3.1
       rememo: 4.0.2
 
-  '@wordpress/scripts@24.6.0(@types/webpack@4.41.40)(@webpack-cli/generators@2.5.0)(encoding@0.1.13)(node-sass@7.0.3)(react-dom@18.3.1(react@17.0.2))(react@17.0.2)(type-fest@0.21.3)(typescript@5.6.3)':
+  '@wordpress/scripts@24.6.0(@types/webpack@4.41.40)(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(encoding@0.1.13)(node-sass@7.0.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(type-fest@0.21.3)(typescript@5.6.3)':
     dependencies:
       '@babel/core': 7.26.0
       '@pmmmwh/react-refresh-webpack-plugin': 0.5.15(@types/webpack@4.41.40)(react-refresh@0.10.0)(type-fest@0.21.3)(webpack-dev-server@4.15.2)(webpack@5.96.1)
@@ -9673,8 +9692,8 @@ snapshots:
       postcss-loader: 6.2.1(postcss@8.4.49)(webpack@5.96.1)
       prettier: wp-prettier@2.6.2
       puppeteer-core: 13.7.0(encoding@0.1.13)
-      react: 17.0.2
-      react-dom: 18.3.1(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
       react-refresh: 0.10.0
       read-pkg-up: 7.0.1
       resolve-bin: 0.4.3
@@ -9686,7 +9705,7 @@ snapshots:
       url-loader: 4.1.1(webpack@5.96.1)
       webpack: 5.96.1(webpack-cli@4.10.0)
       webpack-bundle-analyzer: 4.10.2
-      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0)(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
+      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
       webpack-dev-server: 4.15.2(webpack-cli@4.10.0)(webpack@5.96.1)
     transitivePeerDependencies:
       - '@rspack/core'
@@ -10892,9 +10911,9 @@ snapshots:
 
   depd@2.0.0: {}
 
-  derive-valtio@0.1.0(valtio@1.13.2(@types/react@18.3.12)(react@17.0.2)):
+  derive-valtio@0.1.0(valtio@1.13.2(@types/react@18.3.12)(react@18.3.1)):
     dependencies:
-      valtio: 1.13.2(@types/react@18.3.12)(react@17.0.2)
+      valtio: 1.13.2(@types/react@18.3.12)(react@18.3.1)
 
   destroy@1.2.0: {}
 
@@ -10983,12 +11002,12 @@ snapshots:
       moment: 2.30.1
     optional: true
 
-  downshift@6.1.12(react@17.0.2):
+  downshift@6.1.12(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.26.0
       compute-scroll-into-view: 1.0.20
       prop-types: 15.8.1
-      react: 17.0.2
+      react: 18.3.1
       react-is: 17.0.2
       tslib: 2.8.1
 
@@ -11725,14 +11744,14 @@ snapshots:
     dependencies:
       map-cache: 0.2.2
 
-  framer-motion@6.5.1(react-dom@18.3.1(react@17.0.2))(react@17.0.2):
+  framer-motion@6.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@motionone/dom': 10.12.0
       framesync: 6.0.1
       hey-listen: 1.0.8
       popmotion: 11.0.3
-      react: 17.0.2
-      react-dom: 18.3.1(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
       style-value-types: 5.0.0
       tslib: 2.8.1
     optionalDependencies:
@@ -14465,15 +14484,15 @@ snapshots:
       iconv-lite: 0.4.24
       unpipe: 1.0.0
 
-  re-resizable@6.10.1(react-dom@18.3.1(react@17.0.2))(react@17.0.2):
+  re-resizable@6.10.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      react: 17.0.2
-      react-dom: 18.3.1(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
-  react-colorful@5.6.1(react-dom@18.3.1(react@17.0.2))(react@17.0.2):
+  react-colorful@5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      react: 17.0.2
-      react-dom: 18.3.1(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   react-dom@17.0.2(react@17.0.2):
     dependencies:
@@ -14481,12 +14500,6 @@ snapshots:
       object-assign: 4.1.1
       react: 17.0.2
       scheduler: 0.20.2
-
-  react-dom@18.3.1(react@17.0.2):
-    dependencies:
-      loose-envify: 1.4.0
-      react: 17.0.2
-      scheduler: 0.23.2
 
   react-dom@18.3.1(react@18.3.1):
     dependencies:
@@ -14576,33 +14589,33 @@ snapshots:
 
   readdirp@4.0.2: {}
 
-  reakit-system@0.15.2(react-dom@18.3.1(react@17.0.2))(react@17.0.2):
+  reakit-system@0.15.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      react: 17.0.2
-      react-dom: 18.3.1(react@17.0.2)
-      reakit-utils: 0.15.2(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      reakit-utils: 0.15.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  reakit-utils@0.15.2(react-dom@18.3.1(react@17.0.2))(react@17.0.2):
+  reakit-utils@0.15.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      react: 17.0.2
-      react-dom: 18.3.1(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
-  reakit-warning@0.6.2(react-dom@18.3.1(react@17.0.2))(react@17.0.2):
+  reakit-warning@0.6.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      react: 17.0.2
-      reakit-utils: 0.15.2(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
+      react: 18.3.1
+      reakit-utils: 0.15.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     transitivePeerDependencies:
       - react-dom
 
-  reakit@1.3.11(react-dom@18.3.1(react@17.0.2))(react@17.0.2):
+  reakit@1.3.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@popperjs/core': 2.11.8
       body-scroll-lock: 3.1.5
-      react: 17.0.2
-      react-dom: 18.3.1(react@17.0.2)
-      reakit-system: 0.15.2(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
-      reakit-utils: 0.15.2(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
-      reakit-warning: 0.6.2(react-dom@18.3.1(react@17.0.2))(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      reakit-system: 0.15.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      reakit-utils: 0.15.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      reakit-warning: 0.6.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   rechoir@0.6.2:
     dependencies:
@@ -15793,19 +15806,19 @@ snapshots:
       querystringify: 2.2.0
       requires-port: 1.0.0
 
-  use-lilius@2.0.5(react-dom@18.3.1(react@17.0.2))(react@17.0.2):
+  use-lilius@2.0.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       date-fns: 3.6.0
-      react: 17.0.2
-      react-dom: 18.3.1(react@17.0.2)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
-  use-memo-one@1.1.3(react@17.0.2):
+  use-memo-one@1.1.3(react@18.3.1):
     dependencies:
-      react: 17.0.2
+      react: 18.3.1
 
-  use-sync-external-store@1.2.0(react@17.0.2):
+  use-sync-external-store@1.2.0(react@18.3.1):
     dependencies:
-      react: 17.0.2
+      react: 18.3.1
 
   use@3.1.1: {}
 
@@ -15834,14 +15847,14 @@ snapshots:
     dependencies:
       builtins: 1.0.3
 
-  valtio@1.13.2(@types/react@18.3.12)(react@17.0.2):
+  valtio@1.13.2(@types/react@18.3.12)(react@18.3.1):
     dependencies:
-      derive-valtio: 0.1.0(valtio@1.13.2(@types/react@18.3.12)(react@17.0.2))
+      derive-valtio: 0.1.0(valtio@1.13.2(@types/react@18.3.12)(react@18.3.1))
       proxy-compare: 2.6.0
-      use-sync-external-store: 1.2.0(react@17.0.2)
+      use-sync-external-store: 1.2.0(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.12
-      react: 17.0.2
+      react: 18.3.1
 
   vary@1.1.2: {}
 
@@ -15929,7 +15942,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  webpack-cli@4.10.0(@webpack-cli/generators@2.5.0)(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1):
+  webpack-cli@4.10.0(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1):
     dependencies:
       '@discoveryjs/json-ext': 0.5.7
       '@webpack-cli/configtest': 1.2.0(webpack-cli@4.10.0)(webpack@5.96.1)
@@ -15992,7 +16005,7 @@ snapshots:
       ws: 8.18.0
     optionalDependencies:
       webpack: 5.96.1(webpack-cli@4.10.0)
-      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0)(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
+      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -16033,7 +16046,7 @@ snapshots:
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     optionalDependencies:
-      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0)(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
+      webpack-cli: 4.10.0(@webpack-cli/generators@2.5.0(encoding@0.1.13)(webpack-dev-server@4.15.2)(webpack@5.96.1)(wp-prettier@2.6.2))(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.96.1)
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild

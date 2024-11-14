@@ -27,7 +27,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 */
 	public function initialize() {
 		$this->settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		$assets_path    = dirname( __DIR__, 2 ) . '/build/klarna-payments-block.asset.php';
+		$assets_path    = dirname( __DIR__, 2 ) . '/blocks/build/klarna-payments-block.asset.php';
 		if ( file_exists( $assets_path ) ) {
 			$assets = require $assets_path;
 			wp_register_script( 'klarna-payments-block', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/blocks/build/klarna-payments-block.js', $assets['dependencies'], $assets['version'], true );
@@ -62,7 +62,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 
 		wp_register_style(
 			'kp-checkout-block',
-			plugins_url( 'build/klarna-payments-block.css', __FILE__ ),
+			plugins_url( '../../build/klarna-payments-block.css', __FILE__ ),
 			array(),
 			WC_KLARNA_PAYMENTS_VERSION
 		);
@@ -86,7 +86,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 */
 	public function get_payment_method_script_handles() {
 		$version      = WC_KLARNA_PAYMENTS_VERSION;
-		$path         = plugins_url( 'build/klarna-payments-block.js', __FILE__ );
+		$path         = plugins_url( '../../build/klarna-payments-block.js', __FILE__ );
 		$handle       = 'kp-checkout-block';
 		$dependencies = array( 'wp-hooks' );
 

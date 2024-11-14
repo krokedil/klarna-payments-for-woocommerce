@@ -457,7 +457,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function register_payment_block() {
 			if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
-				require_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/Blocks/Payment/KlarnaPayments.php';
+				require_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/blocks/src/payment/KlarnaPayments.php';
 				KlarnaPayments::register();
 			}
 		}
