@@ -105,12 +105,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "d02c686c5ad72120a9b9b4a7f5f5963b32cedf2d"
+                "reference": "7f5d178f4ce5304fa211f322d6d1c8de5b39c75e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/d02c686c5ad72120a9b9b4a7f5f5963b32cedf2d",
-                "reference": "d02c686c5ad72120a9b9b4a7f5f5963b32cedf2d",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/7f5d178f4ce5304fa211f322d6d1c8de5b39c75e",
+                "reference": "7f5d178f4ce5304fa211f322d6d1c8de5b39c75e",
                 "shasum": ""
             },
             "require": {
@@ -178,7 +178,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-10-30T06:41:31+00:00"
+            "time": "2024-11-12T15:20:23+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -334,13 +334,13 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "7.4"
     },

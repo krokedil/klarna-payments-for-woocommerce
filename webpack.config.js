@@ -5,7 +5,6 @@ import * as glob from "glob";
 import path from "path";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 const isProduction = process.env.NODE_ENV == "production";
-
 // Common configuration settings
 const common = {
   mode: isProduction ? "production" : "development",
@@ -48,5 +47,4 @@ const blocksConfig = {
     filename: `[name].js`,
   },
 };
-
 export default [blocksConfig];
