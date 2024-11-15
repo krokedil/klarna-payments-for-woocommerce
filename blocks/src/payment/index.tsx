@@ -33,7 +33,7 @@ const Content: React.FC = () => {
 };
 
 interface LabelProps {
-  components: {
+  components?: {
     PaymentMethodLabel: React.ComponentType<any>;
   };
 }
@@ -50,7 +50,7 @@ const Label: React.FC<LabelProps> = ({ components }) => {
  */
 const KlarnaPaymentsOptions = {
   name: 'klarna_payments',
-  label: <Label components={{ PaymentMethodLabel: () => null }} />,
+  label: <Label />,
   content: <Content />,
   edit: <Content />,
   placeOrderButtonLabel: settings.orderbuttonlabel,

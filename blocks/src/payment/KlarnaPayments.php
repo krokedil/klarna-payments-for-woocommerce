@@ -27,7 +27,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 */
 	public function initialize() {
 		$this->settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		$assets_path    = dirname( __DIR__, 2 ) . '/blocks/build/payment.asset.php';
+		$assets_path    = dirname( __DIR__, 2 ) . '/build/payment.asset.php';
 		if ( file_exists( $assets_path ) ) {
 			$assets = require $assets_path;
 			wp_register_script( 'klarna-payments-block', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/blocks/build/payment.js', $assets['dependencies'], $assets['version'], true );

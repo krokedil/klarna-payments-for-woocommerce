@@ -38,8 +38,8 @@
     "webpack-dev-server": "^4.15.2"
   },
   "scripts": {
-    "build": "npx wp-scripts build ./blocks/src/payment/js/klarna-payments-block.tsx",
-    "start:webpack": "rimraf build/* && wp-scripts start ./blocks/src/payment/js/klarna-payments-block.tsx",
-    "start:dev": "rimraf build/* && wp-scripts start ./blocks/src/payment/js/klarna-payments-block.tsx --dev"
+    "build": "npx wp-scripts build",
+    "start:webpack": "wp-scripts start",
+    "start:dev": "wp-scripts start"
   }
 }
