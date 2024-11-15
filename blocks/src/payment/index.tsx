@@ -9,6 +9,7 @@ import { registerPaymentMethod } from "@woocommerce/blocks-registry";
 // @ts-ignore - Can't avoid this issue, but it's loaded in by Webpack
 import { getSetting } from "@woocommerce/settings";
 import { applyFilters } from "@wordpress/hooks";
+import "./style.scss";
 
 interface Settings {
   title: string;

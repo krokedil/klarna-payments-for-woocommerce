@@ -1,1 +1,0 @@
-{"version":3,"file":"klarna-payments-block.css","mappings":";;;AAAA;EACI;EACA;AACJ,C","sources":["webpack://klarna-payments-for-woocommerce/./Blocks/Payment/src/css/klarna-payments-block.scss"],"sourcesContent":["#radio-control-wc-payment-method-options-klarna_payments__label span img {\n    display: inline-block;\n    padding-right: 5px;\n}"],"names":[],"sourceRoot":""}
