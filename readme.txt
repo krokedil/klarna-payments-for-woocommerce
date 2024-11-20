@@ -1,31 +1,30 @@
-=== Klarna Payments for WooCommerce ===
+=== Klarna for WooCommerce ===
 Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.6.2
+Tested up to: 6.7
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 9.2.3
-Stable tag: 3.8.1
+WC tested up to: 9.4.0
+Stable tag: 3.8.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Grow your business for increased sales and enhanced shopping experiences at no extra costs.
 
-
 == Description ==
 === Millions shop and pay with Klarna ===
 
-Klarna is the default checkout option for our partners, used (and loved) by millions of shoppers every month, both online and in-store.
+Klarna is the preferred payment option for both brands and customers, used by millions of shoppers every month, online and in-store.
 
-| **85M Shoppers** | **2.5M Daily Transactions** | **550K Retailers Globally** |
-|-------------------|-----------------------------|-----------------------------|
-
+| **87M Shoppers** | **2.5M Daily Transactions** | **600+K Retailers Globally** |
 
 === More ways to pay, more purchases ===
 
-Grow your business with our flexible payment options and smart shopping solutions. Unlock higher purchase power for your customers by giving them the full flexibility of how and when they want to pay.
+Grow your business with our flexible payment options and smart shopping solutions. Unlock higher purchase power for your customers by giving them the full flexibility of how and when they want to pay. Brands using Klarna see:
+
+| **40%** increase in average order value | **20%** increase in conversion | **45%** higher purchase frequency |
 
 You’ll always be paid in full and upfront, while your customers pay at a later date. Klarna supports high value orders, and everyday purchases. Payment options include:
 
@@ -35,9 +34,8 @@ You’ll always be paid in full and upfront, while your customers pay at a later
 | **Buy now, Pay Later**             | Pay Later is a deferred payment that will give shoppers an extra 14 or 30 days before they buy.                                |
 | **Pay In N**                       | Pay in N lets you split your payment in several payments, spread over a relatively short amount of time, typically less than 60 days, and does not carry interest. Two most common variations are Pay in 4 and Pay in 3. |
 | **Financing**                      | Financing offers long-term, monthly payments to make larger purchases possible for your customers. Available in 6, 12, 18, and 24 month terms. |
+
 Go to [Klarna](https://www.klarna.com) to get details about all payment methods and their availability by market.
-
-
 
 === How to Get Started ===
 * [Sign up for Klarna](https://www.klarna.com/international/business/woocommerce/).
@@ -73,6 +71,29 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2024.11.12    - version 3.8.3 =
+* Fix           - Fixed an issue where the customer could place an order on the pay for order page without consenting to the terms and conditions.
+* Tweak         - The checkout will be blocked while the checkout is being processed.
+* Tweak         - If the locale is modified, the existing session will be dropped, and a new one will be created. This should ensure that Klarna has the correct locale, and improve compatibility with i18n plugins.
+* Feature       - [KOSM] Added the 'kosm_show_everywhere' filter hook to allow the placement to be shown on all pages.
+* Tweak         - [KOSM] Updated the product description.
+* Tweak         - [KEC] The KEC button will remain hidden on a variable product page until a variant is selected.
+* Tweak         - [KEC] Updated the product description.
+* Tweak         - [SIWK] Updated the product description.
+* Fix           - [Settings] Fixed an issue where the preview would still show the old preview after updating the settings until the user refreshes the page.
+* Fix           - Bump release version.
+
+= 2024.11.12    - version 3.8.2 =
+* Fix           - Fixed an issue where the customer could place an order on the pay for order page without consenting to the terms and conditions.
+* Tweak         - The checkout will be blocked while the checkout is being processed.
+* Tweak         - If the locale is modified, the existing session will be dropped, and a new one will be created. This should ensure that Klarna has the correct locale, and improve compatibility with i18n plugins.
+* Feature       - [KOSM] Added the 'kosm_show_everywhere' filter hook to allow the placement to be shown on all pages.
+* Tweak         - [KOSM] Updated the product description.
+* Tweak         - [KEC] The KEC button will remain hidden on a variable product page until a variant is selected.
+* Tweak         - [KEC] Updated the product description.
+* Tweak         - [SIWK] Updated the product description.
+* Fix           - [Settings] Fixed an issue where the preview would still show the old preview after updating the settings until the user refreshes the page.
+
 = 2024.10.30    - version 3.8.1 =
 * Fix           - [SIWK] Fixed and issue with the "Sign in with Klarna" showing even when the feature was disabled.
 
