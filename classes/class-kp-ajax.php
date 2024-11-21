@@ -158,6 +158,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				$order->add_order_note( __( 'Customer aborted purchase with Klarna.', 'klarna-payments-for-woocommerce' ) );
 			} else {
 				$order->add_order_note( __( 'Authorization rejected by Klarna.', 'klarna-payments-for-woocommerce' ) );
+				do_action( 'kp_authorization_rejected', $order );
 			}
 
 			wp_send_json_success();
