@@ -171,9 +171,18 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			add_filter( 'kosm_data_client_id', 'kp_get_client_id' );
 
-			// Load text domain.
+			add_action( 'init', array( $this, 'load_textdomain' ) );
+		}
+
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function load_textdomain() {
 			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
 		}
+
 
 		/**
 		 * Init the plugin after plugins_loaded so environment variables are set.
