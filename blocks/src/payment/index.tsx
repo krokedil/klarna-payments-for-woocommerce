@@ -3,11 +3,13 @@ import * as React from "react";
 /**
  * Wordpress/WooCommerce dependencies
  */
+// @ts-ignore - Can't avoid this issue, but it's loaded in by Webpack
 import { decodeEntities } from "@wordpress/html-entities";
 // @ts-ignore - Can't avoid this issue, but it's loaded in by Webpack
 import { registerPaymentMethod } from "@woocommerce/blocks-registry";
 // @ts-ignore - Can't avoid this issue, but it's loaded in by Webpack
 import { getSetting } from "@woocommerce/settings";
+// @ts-ignore - Can't avoid this issue, but it's loaded in by Webpack
 import { applyFilters } from "@wordpress/hooks";
 import "./style.scss";
 
@@ -41,7 +43,7 @@ interface LabelProps {
 const Label: React.FC<LabelProps> = ({ components }) => {
   const { PaymentMethodLabel } = components;
   const icon = <img src={iconUrl} alt={title} />;
-  
+
   return <PaymentMethodLabel className="kp-block-label" text={title} icon={icon} />;
 };
 
