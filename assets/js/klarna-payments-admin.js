@@ -45,6 +45,13 @@ jQuery(function ($) {
 
 			// Update all previews on page load.
 			this.updatePreviews();
+
+			$('.kp_settings__fields_mid, .kp_settings__fields_secret').on('change', function () {
+				const countryCredentials = kp_admin.collectCredentials();
+				if (countryCredentials.length > 0) {
+					kp_admin.updateCredentials(countryCredentials);
+				}
+			});
 		},
 
 		toggleCredentials: function (e) {
@@ -168,6 +175,66 @@ jQuery(function ($) {
 		updatePreviews: function () {
 			const $previewTargets = $("#woocommerce_klarna_payments_kec_theme, #woocommerce_klarna_payments_kec_shape, #woocommerce_klarna_payments_placement_data_key_product, #woocommerce_klarna_payments_onsite_messaging_theme_product, #woocommerce_klarna_payments_placement_data_key_cart, #woocommerce_klarna_payments_onsite_messaging_theme_cart");
 			$previewTargets.trigger("change");
+		},
+
+		collectCredentials: function () {
+			const countryCredentials = [];
+	
+			$('.kp_settings__credentials').each(function () {
+				const $countryCode = $(this).find('.kp_settings__fields_toggle').attr('data-field-key');
+				const $clientId = $(this).find('input[name^="woocommerce_klarna_payments_test_client_id_"]').val();
+				const $merchantId = $(this).find('input[name^="woocommerce_klarna_payments_test_merchant_id_"]').val();
+				const $secret = $(this).find('input[name^="woocommerce_klarna_payments_test_shared_secret_"]').val();
+	
+				if ($countryCode && $clientId && $merchantId && $secret) {
+					countryCredentials.push({
+						country_code: $countryCode,
+						client_id: $clientId,
+						merchant_id: $merchantId,
+						shared_secret: $secret
+					});
+				}
+			});
+	
+			return countryCredentials;
+		},
+	
+		updateCredentials: function (countryCredentials) {
+			$.ajax(klarna_payments_admin_params.get_unavailable_options, {
+				type: "POST",
+				dataType: "json",
+				async: true,
+				data: {
+					country_credentials: countryCredentials
+					// Nonce?
+				},
+				success: function (response) {
+					if (response.success) {
+						const unavailableOptions = response.data;
+						$('.kp_settings__section').removeClass('unavailable');
+	
+						unavailableOptions.forEach(option => {
+							const target = kp_admin.getUnavailableOptionTarget(option);
+							if (target) {
+								$(`#klarna-payments-settings-${target}`).addClass('unavailable');
+							}
+						});
+					}
+				},
+				error: function (response) {
+					console.log("get_unavailable_options error");
+					console.log(response);
+				}
+			});
+		},
+	
+		getUnavailableOptionTarget: function (option) {
+			switch (option) {
+				case 'platform-plugin-payments:payments':
+					return 'general';
+				default:
+					return false;
+			}
 		}
 	};
 

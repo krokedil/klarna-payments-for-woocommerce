@@ -400,3 +400,7 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	padding: 0 4px;
 	opacity: 1;
 }
+
+.kp_settings__section.unavailable {
+	display: none;
+}

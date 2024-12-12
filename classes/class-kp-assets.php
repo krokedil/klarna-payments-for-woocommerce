@@ -150,6 +150,11 @@ class KP_Assets {
 			array(),
 			WC_KLARNA_PAYMENTS_VERSION
 		);
+
+		$klarna_payments_admin_params = array(
+			'get_unavailable_options' => WC_AJAX::get_endpoint( 'kp_get_unavailable_options' ),
+		);
+		wp_localize_script( 'klarna_payments_admin', 'klarna_payments_admin_params', $klarna_payments_admin_params );
 	}
 
 	/**

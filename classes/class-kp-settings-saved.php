@@ -31,6 +31,7 @@ class KP_Settings_Saved {
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'check_api_credentials' ), 10 );
+		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'update_unavailable_features' ), 10 );
 	}
 
 	/**
@@ -164,6 +165,13 @@ class KP_Settings_Saved {
 				</div>
 				<?php
 		}
+	}
+	/**
+	 * Update the unavailable features.
+	 *
+	 * @return void
+	 */
+	public function update_unavailable_features() {
 	}
 }
 new KP_Settings_Saved();

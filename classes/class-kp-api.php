@@ -247,4 +247,22 @@ class KP_Api {
 		}
 		return $response;
 	}
+
+	/**
+	 * Get available options.
+	 *
+	 * @param array $credentials The credentials to use.
+	 * @return array
+	 */
+	public function get_settings_options( $credentials ) {
+		if ( ! get_option( 'kp_uuid4' ) ) {
+			add_option( 'kp_uuid4', wp_generate_uuid4() );
+		}
+		$plugin_uuid4 = get_option( 'kp_uuid4' );
+
+		$request  = new KP_Available_Features( 'klarna_test_api_key_here' );
+		$response = $request->request();
+
+		return self::check_for_api_error( $response ); // json_decode?
+	}
 }
