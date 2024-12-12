@@ -200,7 +200,7 @@ jQuery(function ($) {
 		},
 	
 		updateCredentials: function (countryCredentials) {
-			$.ajax(klarna_payments_admin_params.get_unavailable_options, {
+			$.ajax(klarna_payments_admin_params.get_unavailable_features, {
 				type: "POST",
 				dataType: "json",
 				async: true,
@@ -210,31 +210,30 @@ jQuery(function ($) {
 				},
 				success: function (response) {
 					if (response.success) {
-						const unavailableOptions = response.data;
+						const unavailableOptions = response.data ?? [];
 						$('.kp_settings__section').removeClass('unavailable');
-	
+						
+						if(!$('#klarna-payments-unavailable-features').length) {
+							$('#klarna-payments-settings-credentials').append('<input type="hidden" id="klarna-payments-unavailable-features" name="klarna-payments-unavailable-features" value="">');
+						}
+
+						$('#klarna-payments-unavailable-features').val(JSON.stringify(unavailableOptions));
+						
+						if(!unavailableOptions.length) {
+							return;
+						}
+
 						unavailableOptions.forEach(option => {
-							const target = kp_admin.getUnavailableOptionTarget(option);
-							if (target) {
-								$(`#klarna-payments-settings-${target}`).addClass('unavailable');
-							}
+							$(`#klarna-payments-settings-${option}`).addClass('unavailable');
+							
 						});
 					}
 				},
 				error: function (response) {
-					console.log("get_unavailable_options error");
+					console.log("get_unavailable_features error");
 					console.log(response);
 				}
 			});
-		},
-	
-		getUnavailableOptionTarget: function (option) {
-			switch (option) {
-				case 'platform-plugin-payments:payments':
-					return 'general';
-				default:
-					return false;
-			}
 		}
 	};
 

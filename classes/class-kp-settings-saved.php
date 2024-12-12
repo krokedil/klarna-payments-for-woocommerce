@@ -31,7 +31,6 @@ class KP_Settings_Saved {
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'check_api_credentials' ), 10 );
-		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'update_unavailable_features' ), 10 );
 	}
 
 	/**
@@ -86,6 +85,11 @@ class KP_Settings_Saved {
 			}
 
 			$this->maybe_handle_error();
+		}
+
+		$unavailable_features = kp_get_unavailable_features( $countries );
+		if ( is_array( $unavailable_features ) ) {
+			update_option( 'kp_unavailable_feature_ids', $unavailable_features );
 		}
 	}
 
@@ -165,13 +169,6 @@ class KP_Settings_Saved {
 				</div>
 				<?php
 		}
-	}
-	/**
-	 * Update the unavailable features.
-	 *
-	 * @return void
-	 */
-	public function update_unavailable_features() {
 	}
 }
 new KP_Settings_Saved();

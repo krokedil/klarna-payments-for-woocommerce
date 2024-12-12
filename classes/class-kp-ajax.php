@@ -26,11 +26,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function add_ajax_events() {
 			$ajax_events = array(
-				'kp_wc_place_order'          => true,
-				'kp_wc_auth_failed'          => true,
-				'kp_wc_log_js'               => true,
-				'kp_wc_express_button'       => true,
-				'kp_get_unavailable_options' => true,
+				'kp_wc_place_order'              => true,
+				'kp_wc_auth_failed'              => true,
+				'kp_wc_log_js'                   => true,
+				'kp_wc_express_button'           => true,
+				'kp_wc_get_unavailable_features' => true,
 
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -226,10 +226,10 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			wp_send_json_success( wc_get_checkout_url() );
 		}
 
-		public static function kp_get_unavailable_options() {
+		public static function kp_wc_get_unavailable_features() {
 			/*
 			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
-			if ( ! wp_verify_nonce( $nonce, 'kp_get_unavailable_options' ) ) {
+			if ( ! wp_verify_nonce( $nonce, 'kp_wc_get_unavailable_features' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 			}*/
 
@@ -239,47 +239,13 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'Missing credentials.' );
 			}
 
-			$collected_unavailable_options = array();
+			$unavailable_features = kp_get_unavailable_features( $country_credentials );
 
-			foreach ( $country_credentials as $credentials ) {
-
-				$settings_options = KP_WC()->api->get_settings_options( $credentials );
-
-				if ( is_wp_error( $settings_options ) ) {
-					wp_send_json_error( kp_extract_error_message( $settings_options ) );
-				}
-
-				// Extract all unavailable $settings_options for this country.
-				$unavailable_options = array_filter(
-					$settings_options['features'],
-					function ( $settings_option ) {
-						return 'UNAVAILABLE' === $settings_option['availability'];
-					}
-				);
-
-				// Extract all unavailable feature keys
-				$unavailable_feature_keys = array_map(
-					function ( $settings_option ) {
-						return $settings_option['feature_key'];
-					},
-					$unavailable_options
-				);
-
-				// Add the unavailable feature key with a count to the collected_unavailable_options array.
-				foreach ( $unavailable_feature_keys as $unavailable_feature_key ) {
-					++$collected_unavailable_options[ $unavailable_feature_key ];
-				}
+			if ( ! is_array( $unavailable_features ) ) {
+				wp_send_json_error( 'Failed to get unavailable features. Error message: ' . $unavailable_features );
 			}
 
-			// Return the options that are unavailable in all countries.
-			$universally_unavailable_options = array_filter(
-				$collected_unavailable_options,
-				function ( $unavailable_option ) use ( $country_credentials ) {
-					return $unavailable_option === count( $country_credentials );
-				}
-			);
-
-			wp_send_json_success( array_keys( $universally_unavailable_options ) );
+			wp_send_json_success( $unavailable_features );
 		}
 	}
 }

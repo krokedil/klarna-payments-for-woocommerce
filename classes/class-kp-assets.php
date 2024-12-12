@@ -152,7 +152,7 @@ class KP_Assets {
 		);
 
 		$klarna_payments_admin_params = array(
-			'get_unavailable_options' => WC_AJAX::get_endpoint( 'kp_get_unavailable_options' ),
+			'get_unavailable_features' => WC_AJAX::get_endpoint( 'kp_wc_get_unavailable_features' ),
 		);
 		wp_localize_script( 'klarna_payments_admin', 'klarna_payments_admin_params', $klarna_payments_admin_params );
 	}

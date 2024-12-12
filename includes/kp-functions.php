@@ -374,3 +374,72 @@ function kp_is_country_available( $country ) {
 	$is_available = in_array( $country, $available_countries, true );
 	return $is_available;
 }
+
+function kp_get_unavailable_features( $country_credentials ) {
+	$collected_unavailable_features = array();
+
+	foreach ( $country_credentials as $credentials ) {
+		$settings_features = KP_WC()->api->get_unavailable_features( $credentials );
+
+		if ( is_wp_error( $settings_features ) ) {
+			return kp_extract_error_message( $settings_features );
+		}
+
+		// Extract all unavailable $settings_features for this country.
+		$unavailable_features = array_filter(
+			$settings_features['features'],
+			function ( $settings_option ) {
+				return 'UNAVAILABLE' === $settings_option['availability'];
+			}
+		);
+
+		// Extract all unavailable feature keys
+		$unavailable_feature_keys = array_map(
+			function ( $settings_option ) {
+				return $settings_option['feature_key'];
+			},
+			$unavailable_features
+		);
+
+		if ( empty( $unavailable_feature_keys ) ) {
+			continue;
+		}
+
+		// Add the unavailable feature key with a count to the collected_unavailable_features array.
+		foreach ( $unavailable_feature_keys as $unavailable_feature_key ) {
+			++$collected_unavailable_features[ $unavailable_feature_key ];
+		}
+	}
+
+	if ( empty( $collected_unavailable_features ) ) {
+		return array();
+	}
+
+	// Return the options that are unavailable in all countries.
+	$universally_unavailable_features = array_filter(
+		$collected_unavailable_features,
+		function ( $unavailable_feature ) use ( $country_credentials ) {
+			return $unavailable_feature === count( $country_credentials );
+		}
+	);
+
+	return $universally_unavailable_features ? kp_map_unavailable_feature_ids( array_keys( $universally_unavailable_features ) ) : array();
+}
+
+function kp_map_unavailable_feature_ids( $unavailable_features ) {
+	$unavailable_feature_ids = array();
+
+	foreach ( $unavailable_features as $unavailable_feature ) {
+
+		switch ( $unavailable_feature ) {
+			case 'platform-plugin-payments:payments':
+				$unavailable_feature_ids[] = 'general';
+				array_push( $unavailable_feature_ids, 'general' );
+				break;
+			default:
+				break;
+		}
+	}
+
+	return $unavailable_feature_ids;
+}

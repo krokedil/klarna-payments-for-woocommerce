@@ -8,9 +8,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * KP_Available_Features class.
+ * KP_Unavailable_Features class.
  */
-class KP_Available_Features {
+class KP_Unavailable_Features {
 	/**
 	 * API Endpoint.
 	 *
