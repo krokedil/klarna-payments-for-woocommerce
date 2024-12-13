@@ -87,7 +87,7 @@ class KP_Settings_Saved {
 			$this->maybe_handle_error();
 		}
 
-		$unavailable_features = kp_get_unavailable_features( $countries );
+		$unavailable_features = kp_get_unavailable_feature_ids( $countries );
 		if ( is_array( $unavailable_features ) ) {
 			update_option( 'kp_unavailable_feature_ids', $unavailable_features );
 		}

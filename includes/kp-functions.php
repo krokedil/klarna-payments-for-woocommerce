@@ -375,7 +375,7 @@ function kp_is_country_available( $country ) {
 	return $is_available;
 }
 
-function kp_get_unavailable_features( $country_credentials ) {
+function kp_get_unavailable_feature_ids( $country_credentials ) {
 	$collected_unavailable_features = array();
 
 	foreach ( $country_credentials as $credentials ) {
@@ -430,11 +430,36 @@ function kp_map_unavailable_feature_ids( $unavailable_features ) {
 	$unavailable_feature_ids = array();
 
 	foreach ( $unavailable_features as $unavailable_feature ) {
-
 		switch ( $unavailable_feature ) {
 			case 'platform-plugin-payments:payments':
-				$unavailable_feature_ids[] = 'general';
 				array_push( $unavailable_feature_ids, 'general' );
+				break;
+			case 'platform-plugin-payments:recurring':
+				array_push( $unavailable_feature_ids, 'recurring' );
+				break;
+			case 'platform-plugin-on-site-messaging:product-page':
+				array_push( $unavailable_feature_ids, 'product-page' );
+				break;
+			case 'platform-plugin-on-site-messaging:cart-page':
+				array_push( $unavailable_feature_ids, 'cart-page' );
+				break;
+			case 'platform-plugin-on-site-messaging:promotional-banner':
+				array_push( $unavailable_feature_ids, 'promotional-banner' );
+				break;
+			case 'platform-plugin-klarna-express-checkout:1-step':
+				array_push( $unavailable_feature_ids, '1-step' );
+				break;
+			case 'platform-plugin-klarna-express-checkout:2-step':
+				array_push( $unavailable_feature_ids, '2-step' );
+				break;
+			case 'platform-plugin-sign-in-with-klarna:account-creation-page':
+				array_push( $unavailable_feature_ids, 'account-creation-page' );
+				break;
+			case 'platform-plugin-sign-in-with-klarna:authentication-page':
+				array_push( $unavailable_feature_ids, 'authentication-page' );
+				break;
+			case 'platform-plugin-supplementary-purchase-data':
+				array_push( $unavailable_feature_ids, 'supplementary-purchase-data' );
 				break;
 			default:
 				break;

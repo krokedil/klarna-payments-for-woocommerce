@@ -255,13 +255,20 @@ class KP_Api {
 	 * @return array
 	 */
 	public function get_unavailable_features( $credentials ) {
+		$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
+		$mode        = $kp_settings && 'yes' === $kp_settings['testmode'] ? 'test' : 'live';
+
 		if ( ! get_option( 'kp_uuid4' ) ) {
 			add_option( 'kp_uuid4', wp_generate_uuid4() );
 		}
-		$plugin_uuid4 = get_option( 'kp_uuid4' );
 
-		$response = ( new KP_Unavailable_Features( 'klarna_test_api_key_here' ) )->request();
+		$request_id = get_option( 'kp_uuid4' );
 
-		return self::check_for_api_error( $response ); // json_decode?
+		$response = ( new KP_Unavailable_Features(
+			$request_id,
+			$mode
+		) )->request();
+
+		return self::check_for_api_error( $response );
 	}
 }

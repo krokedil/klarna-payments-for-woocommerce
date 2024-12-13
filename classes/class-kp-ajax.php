@@ -239,7 +239,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'Missing credentials.' );
 			}
 
-			$unavailable_features = kp_get_unavailable_features( $country_credentials );
+			$unavailable_features = kp_get_unavailable_feature_ids( $country_credentials );
 
 			if ( ! is_array( $unavailable_features ) ) {
 				wp_send_json_error( 'Failed to get unavailable features. Error message: ' . $unavailable_features );

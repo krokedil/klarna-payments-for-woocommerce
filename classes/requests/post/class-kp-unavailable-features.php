@@ -19,20 +19,28 @@ class KP_Unavailable_Features {
 	private $endpoint;
 
 	/**
-	 * API Key.
+	 * The request ID.
 	 *
 	 * @var string
 	 */
-	private $api_key;
+	private $request_id;
+
+	/**
+	 * The mode.
+	 *
+	 * @var string
+	 */
+	private $mode;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param string $api_key API Key for authentication.
 	 */
-	public function __construct( $api_key ) {
-		$this->endpoint = '';
-		$this->api_key  = $api_key;
+	public function __construct( $request_id, $mode ) {
+		$this->request_id = $request_id;
+		$this->mode       = $mode;
+		$this->endpoint   = "https://api-global.{$mode}.klarna.com/v2/plugins/{$request_id}/features";
 	}
 
 	/**
@@ -65,8 +73,8 @@ class KP_Unavailable_Features {
 		return array(
 			'installation_data' => array(
 				'klarna_plugin_data' => array(
-					'plugin_identifier' => '',
-					'plugin_version'    => '',
+					'plugin_identifier' => 'klarna:plugins:woocommerce:klarna-plugin',
+					'plugin_version'    => '3.8.3',
 				),
 			),
 		);
