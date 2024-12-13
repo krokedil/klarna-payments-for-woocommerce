@@ -357,12 +357,6 @@ class KP_Form_Fields {
 				),
 				'desc_tip'    => true,
 			),
-			'title'                => array(
-				'title'    => __( 'Payment method title', 'klarna-payments-for-woocommerce' ),
-				'type'     => 'text',
-				'default'  => 'Klarna',
-				'desc_tip' => true,
-			),
 			'hide_what_is_klarna'  => array(
 				'title'    => __( 'Hide "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
