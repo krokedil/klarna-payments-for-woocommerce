@@ -93,13 +93,41 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function section_start_html( $section ) {
-		$link_count = count( $section['links'] ?? array() );
+		$link_count     = count( $section['links'] ?? array() );
+		$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
+		$settings_keys  = self::get_setting_by_section_id( $section['id'] );
+		$feature_status = false;
+
+		if ( ! empty( $settings_keys ) ) {
+			$feature_status = array(
+				'class' => '',
+				'title' => __( 'Not active', 'klarna-payments-for-woocommerce' ),
+			);
+
+			foreach ( $settings_keys as $setting_key ) {
+				if ( isset( $settings[ $setting_key ] ) && 'yes' === $settings[ $setting_key ] ) {
+					$feature_status = array(
+						'class' => 'active',
+						'title' => __( 'Active', 'klarna-payments-for-woocommerce' ),
+					);
+					break;
+				}
+			}
+		}
+
 		?>
 		<div id="klarna-payments-settings-<?php echo esc_attr( $section['id'] ); ?>" class="kp_settings__section">
 			<div class="kp_settings__section_info">
 				<h3 class="kp_settings__section_title">
 					<?php echo esc_html( $section['title'] ); ?>
 					<span class="kp_settings__section_toggle dashicons dashicons-arrow-up-alt2"></span>
+					<?php
+					if ( $feature_status ) {
+						?>
+						<span class="kp_settings__mode_badge <?php echo esc_attr( $feature_status['class'] ); ?>"><?php echo esc_html( $feature_status['title'] ); ?> </span>
+						<?php
+					}
+					?>
 				</h3>
 				<div class="kp_settings__section_info_text">
 					<p class="kp_settings__section_description"><?php echo esc_html( $section['description'] ?? '' ); ?></p>
@@ -219,9 +247,8 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function credentials_html( $args ) {
-		$key      = $args['key'] ?? '';
-		$settings = get_option( 'woocommerce_klarna_payments_settings' );
-
+		$key           = $args['key'] ?? '';
+		$settings      = get_option( 'woocommerce_klarna_payments_settings' );
 		$eu_countries  = KP_Form_Fields::available_countries( 'eu' );
 		$is_eu_country = key_exists( $key, $eu_countries );
 		$is_eu_region  = 'eu' === $key;
@@ -318,5 +345,34 @@ class KP_Settings_Page {
 		ob_start();
 		self::credentials_html( $args );
 		return ob_get_clean();
+	}
+
+	/**
+	 * Get the settings for a section.
+	 *
+	 * @param string $section_id The ID of the section.
+	 *
+	 * @return array
+	 */
+	public static function get_setting_by_section_id( $section_id ) {
+		switch ( $section_id ) {
+			// Credentials.
+			case 'credentials':
+				return array();
+			// Klarna Payments.
+			case 'general':
+				return array( 'enabled' );
+			// Onsite Messaging.
+			case 'onsite_messaging':
+				return array( 'onsite_messaging_enabled_product', 'onsite_messaging_enabled_cart' );
+			// Express Checkout.
+			case 'kec_settings':
+				return array( 'kec_enabled' );
+			// Sign in with Klarna.
+			case 'siwk':
+				return array( 'siwk_enabled' );
+			default:
+				return array();
+		}
 	}
 }
