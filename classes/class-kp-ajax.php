@@ -227,11 +227,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		}
 
 		public static function kp_wc_get_unavailable_features() {
-			/*
 			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+
 			if ( ! wp_verify_nonce( $nonce, 'kp_wc_get_unavailable_features' ) ) {
 				wp_send_json_error( 'bad_nonce' );
-			}*/
+			}
 
 			$country_credentials = filter_input( INPUT_POST, 'country_credentials', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY );
 

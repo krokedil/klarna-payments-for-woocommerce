@@ -385,37 +385,45 @@ function kp_get_unavailable_feature_ids( $country_credentials ) {
 			return kp_extract_error_message( $settings_features );
 		}
 
-		// Extract all unavailable $settings_features for this country.
-		$unavailable_features = array_filter(
-			$settings_features['features'],
-			function ( $settings_option ) {
-				return 'UNAVAILABLE' === $settings_option['availability'];
-			}
-		);
-
-		// Extract all unavailable feature keys
-		$unavailable_feature_keys = array_map(
-			function ( $settings_option ) {
-				return $settings_option['feature_key'];
-			},
-			$unavailable_features
-		);
+		$unavailable_feature_keys = kp_extract_unavailable_feature_keys( $settings_features );
 
 		if ( empty( $unavailable_feature_keys ) ) {
 			continue;
 		}
 
-		// Add the unavailable feature key with a count to the collected_unavailable_features array.
-		foreach ( $unavailable_feature_keys as $unavailable_feature_key ) {
-			++$collected_unavailable_features[ $unavailable_feature_key ];
-		}
+		kp_count_unavailable_features( $unavailable_feature_keys, $collected_unavailable_features );
 	}
 
 	if ( empty( $collected_unavailable_features ) ) {
 		return array();
 	}
 
-	// Return the options that are unavailable in all countries.
+	return kp_get_universally_unavailable_features( $collected_unavailable_features, $country_credentials );
+}
+
+function kp_extract_unavailable_feature_keys( $settings_features ) {
+	$unavailable_features = array_filter(
+		$settings_features['features'],
+		function ( $settings_option ) {
+			return 'UNAVAILABLE' === $settings_option['availability'];
+		}
+	);
+
+	return array_map(
+		function ( $settings_option ) {
+			return $settings_option['feature_key'];
+		},
+		$unavailable_features
+	);
+}
+
+function kp_count_unavailable_features( $unavailable_feature_keys, &$collected_unavailable_features ) {
+	foreach ( $unavailable_feature_keys as $unavailable_feature_key ) {
+		++$collected_unavailable_features[ $unavailable_feature_key ];
+	}
+}
+
+function kp_get_universally_unavailable_features( $collected_unavailable_features, $country_credentials ) {
 	$universally_unavailable_features = array_filter(
 		$collected_unavailable_features,
 		function ( $unavailable_feature ) use ( $country_credentials ) {

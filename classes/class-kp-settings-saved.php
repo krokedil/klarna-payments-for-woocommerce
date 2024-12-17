@@ -84,12 +84,19 @@ class KP_Settings_Saved {
 					$this->process_test_response( $test_response, self::TEST, $cc );
 			}
 
+			if ( $password ) {
+				$unavailable_features_credentials[] = array(
+					'mode'          => 'yes' === $options['testmode'] ? 'test' : 'live',
+					'shared_secret' => $password,
+				);
+			}
+
 			$this->maybe_handle_error();
 		}
 
-		$unavailable_features = kp_get_unavailable_feature_ids( $countries );
+		$unavailable_features = $unavailable_features_credentials ? kp_get_unavailable_feature_ids( $unavailable_features_credentials ) : false;
 		if ( is_array( $unavailable_features ) ) {
-			update_option( 'kp_unavailable_feature_ids', $unavailable_features );
+			update_option( 'kp_unavailable_feature_ids', array() );
 		}
 	}
 

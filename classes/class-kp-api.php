@@ -255,18 +255,25 @@ class KP_Api {
 	 * @return array
 	 */
 	public function get_unavailable_features( $credentials ) {
-		$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
-		$mode        = $kp_settings && 'yes' === $kp_settings['testmode'] ? 'test' : 'live';
+		$api_password = $credentials['shared_secret'] ?? false;
+
+		if ( ! $api_password ) {
+			return new WP_Error( 'missing_shared_secret', __( 'Missing shared secret.', 'woocommerce-klarna-payments' ) );
+		}
 
 		if ( ! get_option( 'kp_uuid4' ) ) {
 			add_option( 'kp_uuid4', wp_generate_uuid4() );
 		}
 
+		$mode       = $credentials['mode'] ?? 'live';
 		$request_id = get_option( 'kp_uuid4' );
 
 		$response = ( new KP_Unavailable_Features(
-			$request_id,
-			$mode
+			array(
+				'api_password' => $api_password,
+				'mode'         => $mode,
+				'request_id'   => $request_id,
+			)
 		) )->request();
 
 		return self::check_for_api_error( $response );

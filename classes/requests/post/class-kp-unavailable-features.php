@@ -10,14 +10,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * KP_Unavailable_Features class.
  */
-class KP_Unavailable_Features {
-	/**
-	 * API Endpoint.
-	 *
-	 * @var string
-	 */
-	private $endpoint;
-
+class KP_Unavailable_Features extends KP_Requests_Post {
 	/**
 	 * The request ID.
 	 *
@@ -33,35 +26,38 @@ class KP_Unavailable_Features {
 	private $mode;
 
 	/**
+	 * The API password.
+	 *
+	 * @var string
+	 */
+	private $api_password;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param string $api_key API Key for authentication.
+	 * @param array $arguments The request arguments.
+	 *
+	 * @return void
 	 */
-	public function __construct( $request_id, $mode ) {
-		$this->request_id = $request_id;
-		$this->mode       = $mode;
-		$this->endpoint   = "https://api-global.{$mode}.klarna.com/v2/plugins/{$request_id}/features";
+	public function __construct( $arguments ) {
+		$this->api_password = $arguments['api_password'];
+		$this->mode         = $arguments['mode'];
+		$this->request_id   = $arguments['request_id'];
+		parent::__construct( $arguments );
 	}
 
 	/**
-	 * Send the request.
+	 * Get the request url.
 	 *
-	 * @return array|WP_Error The response or WP_Error on failure.
+	 * @return string
 	 */
-	public function request() {
-		$args = array(
-			'headers' => $this->get_headers(),
-			'body'    => wp_json_encode( $this->get_body() ),
-			'method'  => 'POST',
-		);
+	protected function get_request_url() {
 
-		$response = wp_remote_request( $this->endpoint, $args );
-
-		if ( is_wp_error( $response ) ) {
-			return $response;
+		if ( 'test' === $this->mode ) {
+			return "https://api-global.test.klarna.com/v2/plugins/{$this->request_id}/features";
 		}
 
-		return json_decode( wp_remote_retrieve_body( $response ), true );
+		return "https://sample-ul.live.klarna.com/v2/plugins/{$this->request_id}/features";
 	}
 
 	/**
@@ -69,7 +65,7 @@ class KP_Unavailable_Features {
 	 *
 	 * @return array
 	 */
-	private function get_body() {
+	protected function get_body() {
 		return array(
 			'installation_data' => array(
 				'klarna_plugin_data' => array(
@@ -81,14 +77,28 @@ class KP_Unavailable_Features {
 	}
 
 	/**
-	 * Get the headers for the request.
+	 * Calculates the auth header for the request.
 	 *
-	 * @return array
+	 * @return string
 	 */
-	private function get_headers() {
-		return array(
-			'Authorization' => '',
-			'Content-Type'  => 'application/json',
-		);
+	public function calculate_auth() {
+		return 'basic ' . $this->api_password;
+	}
+
+	/**
+	 * Gets the error message from the Klarna payments response.
+	 *
+	 * @param array $response
+	 * @return WP_Error
+	 */
+	public function get_error_message( $response ) {
+		$error_message = '';
+		// Get the error messages.
+		if ( null !== json_decode( $response['body'], true ) ) {
+			$error_message = $response['body'];
+		}
+		$code          = wp_remote_retrieve_response_code( $response );
+		$error_message = empty( $error_message ) ? $response['response']['message'] : $error_message;
+		return new WP_Error( $code, $error_message );
 	}
 }
