@@ -107,7 +107,7 @@ class KP_Settings_Page {
 			foreach ( $settings_keys as $setting_key ) {
 				if ( isset( $settings[ $setting_key ] ) && 'yes' === $settings[ $setting_key ] ) {
 					$feature_status = array(
-						'class' => 'active',
+						'class' => ' active',
 						'title' => __( 'Active', 'klarna-payments-for-woocommerce' ),
 					);
 					break;
@@ -124,7 +124,7 @@ class KP_Settings_Page {
 					<?php
 					if ( $feature_status ) {
 						?>
-						<span class="kp_settings__mode_badge <?php echo esc_attr( $feature_status['class'] ); ?>"><?php echo esc_html( $feature_status['title'] ); ?> </span>
+						<span class="kp_settings__mode_badge<?php echo esc_attr( $feature_status['class'] ); ?>"><?php echo esc_html( $feature_status['title'] ); ?> </span>
 						<?php
 					}
 					?>
