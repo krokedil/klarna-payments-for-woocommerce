@@ -45,6 +45,13 @@ jQuery(function ($) {
 
 			// Update all previews on page load.
 			this.updatePreviews();
+
+			$('.kp_settings__fields_mid, .kp_settings__fields_secret').on('change', function () {
+				const countryCredentials = kp_admin.collectCredentials();
+				if (countryCredentials.length > 0) {
+					kp_admin.updateUnavailableFeatures(countryCredentials);
+				}
+			});
 		},
 
 		toggleCredentials: function (e) {
@@ -168,6 +175,69 @@ jQuery(function ($) {
 		updatePreviews: function () {
 			const $previewTargets = $("#woocommerce_klarna_payments_kec_theme, #woocommerce_klarna_payments_kec_shape, #woocommerce_klarna_payments_placement_data_key_product, #woocommerce_klarna_payments_onsite_messaging_theme_product, #woocommerce_klarna_payments_placement_data_key_cart, #woocommerce_klarna_payments_onsite_messaging_theme_cart");
 			$previewTargets.trigger("change");
+		},
+
+		collectCredentials: function () {
+			const countryCredentials = [];
+	
+			$('tr .kp_settings__credentials').each(function () {
+
+				// skip fields from hidden mode.
+				if($(this).css('display') === 'none') {
+					return;
+				}
+
+				const $countryCode = $(this).find('.kp_settings__fields_credentials').attr('data-field-key');
+				const $clientId = $(this).find('input.kp_settings__fields_mid').val();
+				const $secret = $(this).find('.kp_settings__fields_secret').val();
+				const mode = $(this).hasClass('kp_settings__test_credentials') ? 'test' : 'live';
+	
+				if ($countryCode && $clientId && $secret) {
+
+					countryCredentials.push({
+						country_code: $countryCode,
+						client_id: $clientId,
+						shared_secret: $secret,
+						mode: mode,
+					});
+				}
+			});
+	
+			return countryCredentials;
+		},
+	
+		updateUnavailableFeatures: function (countryCredentials) {
+			$.ajax(klarna_payments_admin_params.get_unavailable_features, {
+				type: "POST",
+				dataType: "json",
+				async: true,
+				data: {
+					country_credentials: countryCredentials,
+					nonce: klarna_payments_admin_params.get_unavailable_features_nonce
+				},
+				success: function (response) {
+					if (response.success) {
+						const unavailableOptions = response.data ?? [];
+						$('.kp_settings__section').removeClass('unavailable');
+						
+						if(!unavailableOptions.length) {
+							return;
+						}
+
+						unavailableOptions.forEach(option => {
+							$(`#klarna-payments-settings-${option}`).addClass('unavailable');
+							
+						});
+					} else {
+						console.log("Error updating unavailable features");
+						console.log(response);
+					}
+				},
+				error: function (response) {
+					console.log("Error updating unavailable features");
+					console.log(response);
+				}
+			});
 		}
 	};
 

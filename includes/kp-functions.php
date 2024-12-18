@@ -374,3 +374,105 @@ function kp_is_country_available( $country ) {
 	$is_available = in_array( $country, $available_countries, true );
 	return $is_available;
 }
+
+function kp_get_unavailable_feature_ids( $country_credentials ) {
+	$collected_unavailable_features = array();
+
+	foreach ( $country_credentials as $credentials ) {
+		$settings_features = KP_WC()->api->get_unavailable_features( $credentials );
+
+		if ( is_wp_error( $settings_features ) ) {
+			return kp_extract_error_message( $settings_features );
+		}
+
+		$unavailable_feature_keys = kp_extract_unavailable_feature_keys( $settings_features );
+
+		if ( empty( $unavailable_feature_keys ) ) {
+			continue;
+		}
+
+		kp_count_unavailable_features( $unavailable_feature_keys, $collected_unavailable_features );
+	}
+
+	if ( empty( $collected_unavailable_features ) ) {
+		return array();
+	}
+
+	return kp_get_universally_unavailable_features( $collected_unavailable_features, $country_credentials );
+}
+
+function kp_extract_unavailable_feature_keys( $settings_features ) {
+	$unavailable_features = array_filter(
+		$settings_features['features'],
+		function ( $settings_option ) {
+			return 'UNAVAILABLE' === $settings_option['availability'];
+		}
+	);
+
+	return array_map(
+		function ( $settings_option ) {
+			return $settings_option['feature_key'];
+		},
+		$unavailable_features
+	);
+}
+
+function kp_count_unavailable_features( $unavailable_feature_keys, &$collected_unavailable_features ) {
+	foreach ( $unavailable_feature_keys as $unavailable_feature_key ) {
+		++$collected_unavailable_features[ $unavailable_feature_key ];
+	}
+}
+
+function kp_get_universally_unavailable_features( $collected_unavailable_features, $country_credentials ) {
+	$universally_unavailable_features = array_filter(
+		$collected_unavailable_features,
+		function ( $unavailable_feature ) use ( $country_credentials ) {
+			return $unavailable_feature === count( $country_credentials );
+		}
+	);
+
+	return $universally_unavailable_features ? kp_map_unavailable_feature_ids( array_keys( $universally_unavailable_features ) ) : array();
+}
+
+function kp_map_unavailable_feature_ids( $unavailable_features ) {
+	$unavailable_feature_ids = array();
+
+	foreach ( $unavailable_features as $unavailable_feature ) {
+		switch ( $unavailable_feature ) {
+			case 'platform-plugin-payments:payments':
+				array_push( $unavailable_feature_ids, 'general' );
+				break;
+			case 'platform-plugin-payments:recurring':
+				array_push( $unavailable_feature_ids, 'recurring' );
+				break;
+			case 'platform-plugin-on-site-messaging:product-page':
+				array_push( $unavailable_feature_ids, 'product-page' );
+				break;
+			case 'platform-plugin-on-site-messaging:cart-page':
+				array_push( $unavailable_feature_ids, 'cart-page' );
+				break;
+			case 'platform-plugin-on-site-messaging:promotional-banner':
+				array_push( $unavailable_feature_ids, 'promotional-banner' );
+				break;
+			case 'platform-plugin-klarna-express-checkout:1-step':
+				array_push( $unavailable_feature_ids, '1-step' );
+				break;
+			case 'platform-plugin-klarna-express-checkout:2-step':
+				array_push( $unavailable_feature_ids, '2-step' );
+				break;
+			case 'platform-plugin-sign-in-with-klarna:account-creation-page':
+				array_push( $unavailable_feature_ids, 'account-creation-page' );
+				break;
+			case 'platform-plugin-sign-in-with-klarna:authentication-page':
+				array_push( $unavailable_feature_ids, 'authentication-page' );
+				break;
+			case 'platform-plugin-supplementary-purchase-data':
+				array_push( $unavailable_feature_ids, 'supplementary-purchase-data' );
+				break;
+			default:
+				break;
+		}
+	}
+
+	return $unavailable_feature_ids;
+}

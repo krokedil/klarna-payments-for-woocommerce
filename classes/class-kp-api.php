@@ -247,4 +247,35 @@ class KP_Api {
 		}
 		return $response;
 	}
+
+	/**
+	 * Get unavailable features.
+	 *
+	 * @param array $credentials The credentials to use.
+	 * @return array
+	 */
+	public function get_unavailable_features( $credentials ) {
+		$api_password = $credentials['shared_secret'] ?? false;
+
+		if ( ! $api_password ) {
+			return new WP_Error( 'missing_shared_secret', __( 'Missing shared secret.', 'woocommerce-klarna-payments' ) );
+		}
+
+		if ( ! get_option( 'kp_uuid4' ) ) {
+			add_option( 'kp_uuid4', wp_generate_uuid4() );
+		}
+
+		$mode       = $credentials['mode'] ?? 'live';
+		$request_id = get_option( 'kp_uuid4' );
+
+		$response = ( new KP_Unavailable_Features(
+			array(
+				'api_password' => $api_password,
+				'mode'         => $mode,
+				'request_id'   => $request_id,
+			)
+		) )->request();
+
+		return self::check_for_api_error( $response );
+	}
 }

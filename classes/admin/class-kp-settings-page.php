@@ -93,9 +93,11 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function section_start_html( $section ) {
-		$link_count = count( $section['links'] ?? array() );
+		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
+		$availability               = in_array( $section['id'], $kp_unavailable_feature_ids ) ? ' unavailable' : '';
+		$link_count                 = count( $section['links'] ?? array() );
 		?>
-		<div id="klarna-payments-settings-<?php echo esc_attr( $section['id'] ); ?>" class="kp_settings__section">
+		<div id="klarna-payments-settings-<?php echo esc_attr( $section['id'] ); ?>" class="kp_settings__section<?php echo esc_attr( $availability ); ?>">
 			<div class="kp_settings__section_info">
 				<h3 class="kp_settings__section_title">
 					<?php echo esc_html( $section['title'] ); ?>
