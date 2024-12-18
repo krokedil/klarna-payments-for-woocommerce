@@ -96,7 +96,7 @@ class KP_Settings_Saved {
 
 		$unavailable_features = $unavailable_features_credentials ? kp_get_unavailable_feature_ids( $unavailable_features_credentials ) : false;
 		if ( is_array( $unavailable_features ) ) {
-			update_option( 'kp_unavailable_feature_ids', array() );
+			update_option( 'kp_unavailable_feature_ids', $unavailable_features );
 		}
 	}
 
