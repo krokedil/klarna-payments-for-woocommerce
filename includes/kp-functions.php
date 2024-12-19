@@ -170,7 +170,8 @@ function kp_process_pending( $order, $decoded ) {
  * @return array   $result  Payment result.
  */
 function kp_process_rejected( $order, $decoded ) {
-	$order->update_status( 'on-hold', 'Klarna order was rejected.' );
+	$status = apply_filters( 'kp_order_rejected_status', 'failed' );
+	$order->update_status( $status, 'Klarna order was rejected.' );
 	do_action( 'wc_klarna_payments_rejected', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_rejected', $order->get_id(), $decoded );
 	return array(
