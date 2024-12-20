@@ -150,6 +150,12 @@ class KP_Assets {
 			array(),
 			WC_KLARNA_PAYMENTS_VERSION
 		);
+
+		$klarna_payments_admin_params = array(
+			'select_all_countries_title' => __( 'Select all', 'klarna-payments-for-woocommerce' ),
+		);
+
+		wp_localize_script( 'klarna_payments_admin', 'klarna_payments_admin_params', $klarna_payments_admin_params );
 	}
 
 	/**
