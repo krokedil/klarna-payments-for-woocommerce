@@ -196,7 +196,7 @@ jQuery(function ($) {
 			
 			// If not already added, add the select all option.
 			if(!$(`#${selectAllOption}`).length) {
-				$("#select2-woocommerce_klarna_payments_available_countries-results").prepend(`<li class='${select2Option}' id='${selectAllOption}'><span>Select all</span></li>`);
+				$("#select2-woocommerce_klarna_payments_available_countries-results").prepend(`<li class='${select2Option}' id='${selectAllOption}'><span>${klarna_payments_admin_params.select_all_countries_title}</span></li>`);
 			}
 			// If all countries are already selected, set the select all option as active.
 			$(`#${selectAllOption}`).toggleClass("active", allAreSelected);
