@@ -416,3 +416,27 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	border-color: #92ffaf;
 }
 
+#klarna_payments_select_all_countries {
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 10px;
+	padding: 0 10px;
+}
+
+#klarna_payments_select_all_countries.active, #klarna_payments_select_all_countries:hover {
+	background-color: #007cba;
+	color: #fff;
+}
+
+#klarna_payments_select_all_countries span {
+	width: calc(100% - 2px);
+	height: 100%;
+	border-bottom: solid 1px #dcdcde;
+	display: block;
+	padding: 10px 0;
+}
+
+#klarna_payments_select_all_countries.active span, #klarna_payments_select_all_countries:hover span {
+	border-color: #007cba;
+}
