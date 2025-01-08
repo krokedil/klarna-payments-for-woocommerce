@@ -73,7 +73,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 */
 	public function get_payment_method_data() {
 		return array(
-			'title'            => $this->get_setting( 'title' ),
+			'title'            => 'Klarna',
 			'description'      => $this->get_setting( 'description' ),
 			'iconurl'          => apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
 			'orderbuttonlabel' => apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) ),
