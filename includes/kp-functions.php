@@ -376,8 +376,8 @@ function kp_is_country_available( $country ) {
 }
 
 function kp_get_unavailable_feature_ids( $country_credentials ) {
-	$collected_unavailable_features = array();
-	$collected_errors               = array();
+	$collected_errors   = array();
+	$collected_features = array();
 
 	foreach ( $country_credentials as $credentials ) {
 		$settings_features = KP_WC()->api->get_unavailable_features( $credentials );
@@ -386,94 +386,80 @@ function kp_get_unavailable_feature_ids( $country_credentials ) {
 			$collected_errors[] = 'Error for credential country ' . $credentials['country'] . ': ' . kp_extract_error_message( $settings_features );
 			continue;
 		}
-
-		$unavailable_feature_keys = kp_extract_unavailable_feature_keys( $settings_features );
-
-		if ( empty( $unavailable_feature_keys ) ) {
-			continue;
-		}
-
-		kp_count_unavailable_features( $unavailable_feature_keys, $collected_unavailable_features );
+		$collected_features = array_merge(
+			$collected_features,
+			array_map(
+				function ( $feature ) {
+					return array(
+						'feature_key'  => $feature['feature_key'],
+						'availability' => $feature['availability'],
+					);
+				},
+				$settings_features['features']
+			)
+		);
 	}
 
+	error_log( print_r( kp_map_unavailable_features( $collected_features ), true ) );
+
 	return array(
-		'feature_ids' => ! empty( $collected_unavailable_features ) ? kp_get_universally_unavailable_features( $collected_unavailable_features, $country_credentials ) : array(),
+		'feature_ids' => kp_map_unavailable_features( $collected_features ),
 		'errors'      => $collected_errors,
 	);
 }
 
-function kp_extract_unavailable_feature_keys( $settings_features ) {
+function kp_map_unavailable_features( $collected_features ) {
+
+	$features = array(
+		'platform-plugin-payments'                => array(
+			'id'     => 'general',
+			'status' => null,
+		),
+		'platform-plugin-on-site-messaging'       => array(
+			'id'     => 'onsite_messaging',
+			'status' => null,
+		),
+		'platform-plugin-klarna-express-checkout' => array(
+			'id'     => 'kec_settings',
+			'status' => null,
+		),
+		'platform-plugin-sign-in-with-klarna'     => array(
+			'id'     => 'siwk',
+			'status' => null,
+		),
+	);
+
+	foreach ( $collected_features as $collected_feature ) {
+		$feature_category = explode( ':', $collected_feature['feature_key'] )[0];
+
+		if ( ! isset( $features[ $feature_category ] ) ) {
+			continue;
+		}
+
+		if ( null === $features[ $feature_category ]['status'] ) {
+			$features['platform-plugin-payments']['status'] = false;
+		}
+
+		if ( 'AVAILABLE' === $collected_feature['availability'] ) {
+			$features[ $feature_category ]['status'] = true;
+		}
+	}
+
+	// Filter out the features that are not available.
 	$unavailable_features = array_filter(
-		$settings_features['features'],
-		function ( $settings_option ) {
-			return 'UNAVAILABLE' === $settings_option['availability'];
+		$features,
+		function ( $feature ) {
+			return false === $feature['status'];
 		}
+	) ?? array();
+
+	// Return the identifying feature ids, of the features that should be hidden.
+	return array_values(
+		array_map(
+			function ( $feature ) {
+				return $feature['id'];
+			},
+			$unavailable_features
+		)
 	);
-
-	return array_map(
-		function ( $settings_option ) {
-			return $settings_option['feature_key'];
-		},
-		$unavailable_features
-	);
-}
-
-function kp_count_unavailable_features( $unavailable_feature_keys, &$collected_unavailable_features ) {
-	foreach ( $unavailable_feature_keys as $unavailable_feature_key ) {
-		++$collected_unavailable_features[ $unavailable_feature_key ];
-	}
-}
-
-function kp_get_universally_unavailable_features( $collected_unavailable_features, $country_credentials ) {
-	$universally_unavailable_features = array_filter(
-		$collected_unavailable_features,
-		function ( $unavailable_feature ) use ( $country_credentials ) {
-			return $unavailable_feature === count( $country_credentials );
-		}
-	);
-
-	return $universally_unavailable_features ? kp_map_unavailable_feature_ids( array_keys( $universally_unavailable_features ) ) : array();
-}
-
-function kp_map_unavailable_feature_ids( $unavailable_features ) {
-	$unavailable_feature_ids = array();
-
-	foreach ( $unavailable_features as $unavailable_feature ) {
-		switch ( $unavailable_feature ) {
-			case 'platform-plugin-payments:payments':
-				array_push( $unavailable_feature_ids, 'general' );
-				break;
-			case 'platform-plugin-payments:recurring':
-				array_push( $unavailable_feature_ids, 'recurring' );
-				break;
-			case 'platform-plugin-on-site-messaging:product-page':
-				array_push( $unavailable_feature_ids, 'product-page' );
-				break;
-			case 'platform-plugin-on-site-messaging:cart-page':
-				array_push( $unavailable_feature_ids, 'cart-page' );
-				break;
-			case 'platform-plugin-on-site-messaging:promotional-banner':
-				array_push( $unavailable_feature_ids, 'promotional-banner' );
-				break;
-			case 'platform-plugin-klarna-express-checkout:1-step':
-				array_push( $unavailable_feature_ids, '1-step' );
-				break;
-			case 'platform-plugin-klarna-express-checkout:2-step':
-				array_push( $unavailable_feature_ids, '2-step' );
-				break;
-			case 'platform-plugin-sign-in-with-klarna:account-creation-page':
-				array_push( $unavailable_feature_ids, 'account-creation-page' );
-				break;
-			case 'platform-plugin-sign-in-with-klarna:authentication-page':
-				array_push( $unavailable_feature_ids, 'authentication-page' );
-				break;
-			case 'platform-plugin-supplementary-purchase-data':
-				array_push( $unavailable_feature_ids, 'supplementary-purchase-data' );
-				break;
-			default:
-				break;
-		}
-	}
-
-	return $unavailable_feature_ids;
 }
