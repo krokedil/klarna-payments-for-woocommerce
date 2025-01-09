@@ -377,12 +377,14 @@ function kp_is_country_available( $country ) {
 
 function kp_get_unavailable_feature_ids( $country_credentials ) {
 	$collected_unavailable_features = array();
+	$collected_errors               = array();
 
 	foreach ( $country_credentials as $credentials ) {
 		$settings_features = KP_WC()->api->get_unavailable_features( $credentials );
 
 		if ( is_wp_error( $settings_features ) ) {
-			return kp_extract_error_message( $settings_features );
+			$collected_errors[] = 'Error for credential country ' . $credentials['country'] . ': ' . kp_extract_error_message( $settings_features );
+			continue;
 		}
 
 		$unavailable_feature_keys = kp_extract_unavailable_feature_keys( $settings_features );
@@ -394,11 +396,10 @@ function kp_get_unavailable_feature_ids( $country_credentials ) {
 		kp_count_unavailable_features( $unavailable_feature_keys, $collected_unavailable_features );
 	}
 
-	if ( empty( $collected_unavailable_features ) ) {
-		return array();
-	}
-
-	return kp_get_universally_unavailable_features( $collected_unavailable_features, $country_credentials );
+	return array(
+		'feature_ids' => ! empty( $collected_unavailable_features ) ? kp_get_universally_unavailable_features( $collected_unavailable_features, $country_credentials ) : array(),
+		'errors'      => $collected_errors,
+	);
 }
 
 function kp_extract_unavailable_feature_keys( $settings_features ) {

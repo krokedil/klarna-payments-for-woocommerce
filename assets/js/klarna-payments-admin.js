@@ -7,6 +7,8 @@ jQuery(function ($) {
 		toggleTestModeSelector: "#woocommerce_klarna_payments_testmode",
 		toggleEuSelector: "#woocommerce_klarna_payments_combine_eu_credentials",
 
+		storedCredentials: [],
+
 		init: function () {
 			$(document).on(
 				"click",
@@ -48,8 +50,21 @@ jQuery(function ($) {
 
 			$('.kp_settings__fields_mid, .kp_settings__fields_secret').on('change', function () {
 				const countryCredentials = kp_admin.collectCredentials();
+
 				if (countryCredentials.length > 0) {
-					kp_admin.updateUnavailableFeatures(countryCredentials);
+
+					// Remove duplicates of credentials that share the same client_id and shared_secret.
+					const uniqueCountryCredentials = countryCredentials.filter((v, i, a) => a.findIndex(t => (t.client_id === v.client_id && t.shared_secret === v.shared_secret)) === i);
+
+					// Remove credentials that are already stored.
+					const newCredentials = uniqueCountryCredentials.filter((v, i, a) => !kp_admin.storedCredentials.some(t => (t.client_id === v.client_id && t.shared_secret === v.shared_secret)));
+					
+					// If new credentials are found, update the unavailable features.
+					if(newCredentials.length > 0) {
+						kp_admin.updateUnavailableFeatures(newCredentials);
+						// Add the new credentials to the stored credentials.
+						kp_admin.storedCredentials = kp_admin.storedCredentials.concat(newCredentials);
+					}
 				}
 			});
 		},
@@ -193,7 +208,7 @@ jQuery(function ($) {
 				const mode = $(this).hasClass('kp_settings__test_credentials') ? 'test' : 'live';
 	
 				if ($countryCode && $clientId && $secret) {
-
+					
 					countryCredentials.push({
 						country_code: $countryCode,
 						client_id: $clientId,

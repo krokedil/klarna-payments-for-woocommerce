@@ -241,11 +241,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 
 			$unavailable_features = kp_get_unavailable_feature_ids( $country_credentials );
 
-			if ( ! is_array( $unavailable_features ) ) {
-				wp_send_json_error( 'Failed to get unavailable features. Error message: ' . $unavailable_features );
+			if ( empty( $unavailable_features['feature_ids'] ) && ! empty( $unavailable_features['errors'] ) ) {
+				wp_send_json_error( 'Failed to get unavailable features. Error messages: ' . implode( ', ', $unavailable_features['errors'] ) );
 			}
 
-			wp_send_json_success( $unavailable_features );
+			wp_send_json_success( $unavailable_features['feature_ids'] );
 		}
 	}
 }
