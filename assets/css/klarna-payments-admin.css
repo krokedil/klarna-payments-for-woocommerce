@@ -440,3 +440,10 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 #klarna_payments_select_all_countries.active span, #klarna_payments_select_all_countries:hover span {
 	border-color: #007cba;
 }
+
+.kp_settings__section_title {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 5px;
+}
