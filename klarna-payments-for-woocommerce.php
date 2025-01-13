@@ -10,7 +10,7 @@
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 9.4.0
+ * WC tested up to: 9.5.2
  * Requires Plugins: woocommerce
  *
  * Copyright (c) 2017-2024 Krokedil
