@@ -41,6 +41,7 @@ class KP_Settings_Saved {
 	public function check_api_credentials() {
 		// Get settings from KCO.
 		$options = get_option( 'woocommerce_klarna_payments_settings', array() );
+		update_option( 'kp_has_valid_credentials', false );
 
 		// If not enabled bail.
 		if ( $options && 'yes' !== $options['enabled'] ) {
@@ -99,6 +100,8 @@ class KP_Settings_Saved {
 	public function process_test_response( $test_response, $test, $cc ) {
 		// If this is not a WP Error then its ok.
 		if ( ! is_wp_error( $test_response ) ) {
+			// Set the valid credentials flag as there is at least one valid set of credentials.
+			update_option( 'kp_has_valid_credentials', true );
 			return;
 		}
 		$cc    = strtoupper( $cc );

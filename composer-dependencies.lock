@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "071374db34a5e832e6d786d66760810f",
+    "content-hash": "f3562d81fee2183ced886fe5922ea940",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -143,16 +143,16 @@
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
-            "version": "1.2.1",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
-                "reference": "65cd1c8675d80db600e7febdd3752b2b7d19dc5e"
+                "reference": "545d9cfe6010b72af75d0a327d75ffb21d1a352c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/65cd1c8675d80db600e7febdd3752b2b7d19dc5e",
-                "reference": "65cd1c8675d80db600e7febdd3752b2b7d19dc5e",
+                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/545d9cfe6010b72af75d0a327d75ffb21d1a352c",
+                "reference": "545d9cfe6010b72af75d0a327d75ffb21d1a352c",
                 "shasum": ""
             },
             "require": {
@@ -207,10 +207,10 @@
             ],
             "description": "Klarna On-Site Messaging for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/1.2.1",
+                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/1.3.1",
                 "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
             },
-            "time": "2024-11-12T10:44:55+00:00"
+            "time": "2025-01-14T09:17:43+00:00"
         },
         {
             "name": "krokedil/settings-page",
@@ -259,16 +259,16 @@
         },
         {
             "name": "krokedil/sign-in-with-klarna",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/sign-in-with-klarna.git",
-                "reference": "44f65ef5e450a474e7c76a7a20be34eb29627c12"
+                "reference": "d34cca23d813acd796bb9e2fdfc708eebb6b8475"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/44f65ef5e450a474e7c76a7a20be34eb29627c12",
-                "reference": "44f65ef5e450a474e7c76a7a20be34eb29627c12",
+                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/d34cca23d813acd796bb9e2fdfc708eebb6b8475",
+                "reference": "d34cca23d813acd796bb9e2fdfc708eebb6b8475",
                 "shasum": ""
             },
             "require": {
@@ -287,10 +287,10 @@
             },
             "description": "Add \"Sign in with Klarna\" compatibility with your WooCommerce plugin.",
             "support": {
-                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/1.0.4",
+                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/1.0.5",
                 "issues": "https://github.com/krokedil/sign-in-with-klarna/issues"
             },
-            "time": "2024-11-12T10:40:34+00:00"
+            "time": "2025-01-13T13:36:57+00:00"
         },
         {
             "name": "krokedil/woocommerce",

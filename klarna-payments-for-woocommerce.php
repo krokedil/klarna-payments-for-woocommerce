@@ -5,12 +5,12 @@
  * Description: Provides Klarna Payments as payment method to WooCommerce.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 3.8.3
+ * Version: 3.9.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 9.4.0
+ * WC tested up to: 9.5.2
  * Requires Plugins: woocommerce
  *
  * Copyright (c) 2017-2024 Krokedil
@@ -43,7 +43,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '3.8.3' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '3.9.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -171,9 +171,18 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			add_filter( 'kosm_data_client_id', 'kp_get_client_id' );
 
-			// Load text domain.
+			add_action( 'init', array( $this, 'load_textdomain' ) );
+		}
+
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @return void
+		 */
+		public function load_textdomain() {
 			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
 		}
+
 
 		/**
 		 * Init the plugin after plugins_loaded so environment variables are set.
@@ -457,7 +466,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function register_payment_block() {
 			if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
-				require_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/Blocks/Payment/KlarnaPayments.php';
+				require_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/blocks/src/payment/KlarnaPayments.php';
 				KlarnaPayments::register();
 			}
 		}

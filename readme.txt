@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.7.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 9.4.0
-Stable tag: 3.8.3
+WC tested up to: 9.5.2
+Stable tag: 3.9.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,20 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.01.13    - version 3.9.0 =
+* Feature       - Added active/inactive badge to features in settings.
+* Feature       - [KOSM] Added enable/disable setting for KOSM.
+* Tweak         - Orders rejected by Klarna after the order has been placed in WooCommerce will now receive status "failed".
+* Tweak         - Added "Select all" country option to credentials section in settings.
+* Tweak         - Removed filter for payment method title.
+* Fix           - Resolved the Klarna Payments block not showing for the twentytwentyfour theme's blocks checkout.
+* Fix           - Resolved "Incompatible with blocks" warning for Klarna Payments in the block checkout editor.
+* Fix           - Resolved "Textdomain was called incorrectly" notice.
+* Fix           - [KOSM] Resolved "Attempt to read property on null" warning.
+* Fix           - [KOSM] Resolved data-environment tag not being set correctly.
+* Fix           - [SIWK] Fixed faulty formatting for scope and removed invalid scope.
+* Fix           - Bumped release version.
+
 = 2024.11.12    - version 3.8.3 =
 * Fix           - Fixed an issue where the customer could place an order on the pay for order page without consenting to the terms and conditions.
 * Tweak         - The checkout will be blocked while the checkout is being processed.

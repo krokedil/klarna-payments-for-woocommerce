@@ -93,13 +93,26 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function section_start_html( $section ) {
-		$link_count = count( $section['links'] ?? array() );
+		$link_count        = count( $section['links'] ?? array() );
+		$setting_is_active = self::get_setting_status( $section['id'] );
+		$feature_status    = array(
+			'class' => $setting_is_active ? ' active' : '',
+			'title' => $setting_is_active ? __( 'Active', 'klarna-payments-for-woocommerce' ) : __( 'Not active', 'klarna-payments-for-woocommerce' ),
+		);
+
 		?>
 		<div id="klarna-payments-settings-<?php echo esc_attr( $section['id'] ); ?>" class="kp_settings__section">
 			<div class="kp_settings__section_info">
 				<h3 class="kp_settings__section_title">
 					<?php echo esc_html( $section['title'] ); ?>
 					<span class="kp_settings__section_toggle dashicons dashicons-arrow-up-alt2"></span>
+					<?php
+					if ( $feature_status ) {
+						?>
+						<span class="kp_settings__mode_badge<?php echo esc_attr( $feature_status['class'] ); ?>"><?php echo esc_html( $feature_status['title'] ); ?> </span>
+						<?php
+					}
+					?>
 				</h3>
 				<div class="kp_settings__section_info_text">
 					<p class="kp_settings__section_description"><?php echo esc_html( $section['description'] ?? '' ); ?></p>
@@ -117,6 +130,7 @@ class KP_Settings_Page {
 				<table class="form-table">
 		<?php
 	}
+
 
 	/**
 	 * Get the HTML as a string for a Klarna Payments section start.
@@ -219,9 +233,8 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function credentials_html( $args ) {
-		$key      = $args['key'] ?? '';
-		$settings = get_option( 'woocommerce_klarna_payments_settings' );
-
+		$key           = $args['key'] ?? '';
+		$settings      = get_option( 'woocommerce_klarna_payments_settings' );
 		$eu_countries  = KP_Form_Fields::available_countries( 'eu' );
 		$is_eu_country = key_exists( $key, $eu_countries );
 		$is_eu_region  = 'eu' === $key;
@@ -318,5 +331,63 @@ class KP_Settings_Page {
 		ob_start();
 		self::credentials_html( $args );
 		return ob_get_clean();
+	}
+
+	/**
+	 * Get the status of a setting.
+	 *
+	 * @param string $section_id The ID of the section.
+	 *
+	 * @return bool
+	 */
+	public static function get_setting_status( $section_id ) {
+		$setting_key = self::get_setting_by_section_id( $section_id );
+		$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+		if ( 'kom_enabled' === $setting_key ) {
+			return true;
+		}
+
+		if ( isset( $settings[ $setting_key ] ) && 'yes' === $settings[ $setting_key ] ) {
+			return true;
+		}
+
+		if ( 'credentials' === $setting_key && get_option( 'kp_has_valid_credentials' ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the setting key by the section ID.
+	 *
+	 * @param string $section_id The ID of the section.
+	 *
+	 * @return string
+	 */
+	public static function get_setting_by_section_id( $section_id ) {
+
+		switch ( $section_id ) {
+			// Credentials.
+			case 'credentials':
+				return 'credentials';
+			// Klarna Payments.
+			case 'general':
+				return 'enabled';
+			// Onsite Messaging.
+			case 'onsite_messaging':
+				return 'onsite_messaging_enabled';
+			// Express Checkout.
+			case 'kec_settings':
+				return 'kec_enabled';
+			// Sign in with Klarna.
+			case 'siwk':
+				return 'siwk_enabled';
+			case 'kom':
+				return 'kom_enabled';
+			default:
+				'';
+		}
 	}
 }
