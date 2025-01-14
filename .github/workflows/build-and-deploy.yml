@@ -24,6 +24,12 @@ jobs:
         npm ci
         npm run build
 
+    # Install SVN ( Subversion )
+    - name: Install SVN ( Subversion )
+      run: |
+        sudo apt-get update
+        sudo apt-get install subversion
+
     # Deploy the plugin to WordPress.org
     - name: WordPress Plugin Deploy
       id: deploy
