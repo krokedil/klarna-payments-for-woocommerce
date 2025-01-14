@@ -344,6 +344,10 @@ class KP_Settings_Page {
 		$setting_key = self::get_setting_by_section_id( $section_id );
 		$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
 
+		if ( 'kom_enabled' === $setting_key ) {
+			return true;
+		}
+
 		if ( isset( $settings[ $setting_key ] ) && 'yes' === $settings[ $setting_key ] ) {
 			return true;
 		}
@@ -380,6 +384,8 @@ class KP_Settings_Page {
 			// Sign in with Klarna.
 			case 'siwk':
 				return 'siwk_enabled';
+			case 'kom':
+				return 'kom_enabled';
 			default:
 				'';
 		}
