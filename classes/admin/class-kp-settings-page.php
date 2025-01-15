@@ -341,18 +341,31 @@ class KP_Settings_Page {
 	 * @return bool
 	 */
 	public static function get_setting_status( $section_id ) {
+		// If kp_has_valid_credentials is not set, check credentials once & set option accordingly.
+		if ( ! get_option( 'kp_has_valid_credentials' ) ) {
+			$kp_settings = new KP_Settings_Saved();
+			$kp_settings->check_api_credentials();
+		}
+
 		$setting_key = self::get_setting_by_section_id( $section_id );
 		$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
 
+		// If the KOM plugin is active and therefore has a settings section, it is always active.
 		if ( 'kom_enabled' === $setting_key ) {
 			return true;
 		}
 
-		if ( isset( $settings[ $setting_key ] ) && 'yes' === $settings[ $setting_key ] ) {
+		// Credentials section is active if any valid credentials are set.
+		if ( 'credentials' === $setting_key && 'yes' === get_option( 'kp_has_valid_credentials' ) ) {
 			return true;
 		}
 
-		if ( 'credentials' === $setting_key && get_option( 'kp_has_valid_credentials' ) ) {
+		// If no setting is yet set for KOSM, always default to enabled.
+		if ( 'onsite_messaging_enabled' === $setting_key && ! isset( $settings[ $setting_key ] ) ) {
+			return true;
+		}
+
+		if ( isset( $settings[ $setting_key ] ) && 'yes' === $settings[ $setting_key ] ) {
 			return true;
 		}
 
@@ -384,6 +397,7 @@ class KP_Settings_Page {
 			// Sign in with Klarna.
 			case 'siwk':
 				return 'siwk_enabled';
+			// Order Management.
 			case 'kom':
 				return 'kom_enabled';
 			default:
