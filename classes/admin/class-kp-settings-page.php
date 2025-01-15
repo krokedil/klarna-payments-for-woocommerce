@@ -105,11 +105,12 @@ class KP_Settings_Page {
 			<div class="kp_settings__section_info">
 				<h3 class="kp_settings__section_title">
 					<?php echo esc_html( $section['title'] ); ?>
-			<?php echo esc_html( $section['title'] ); ?>
 					<span class="kp_settings__section_toggle dashicons dashicons-arrow-up-alt2"></span>
-			<?php
-			if ( $feature_status ) {
+					<?php
+					if ( $feature_status ) {
+						?>
 						<span class="kp_settings__mode_badge<?php echo esc_attr( $feature_status['class'] ); ?>"><?php echo esc_html( $feature_status['title'] ); ?> </span>
+						<?php
 					}
 					?>
 				</h3>
@@ -128,7 +129,6 @@ class KP_Settings_Page {
 				<div class="kp_settings__content_gradient"></div>
 				<table class="form-table">
 		<?php
-			<?php
 	}
 
 
@@ -161,7 +161,6 @@ class KP_Settings_Page {
 			</div>
 			<div class="kp_settings__section_previews">
 				<?php foreach ( $previews as $preview ) : ?>
-		<?php foreach ( $previews as $preview ) : ?>
 					<div class="kp_settings_section_preview">
 						<?php if ( isset( $preview['title'] ) ) : ?>
 							<h3 class="kp_settings__preview_title"><?php echo esc_html( $preview['title'] ); ?></h3>
@@ -264,11 +263,12 @@ class KP_Settings_Page {
 					class="kp_settings__fields_toggle <?php echo esc_attr( $args['class'] ?? '' ); ?>"
 				>
 					<?php echo wp_kses_post( $args['title'] ?? '' ); ?>
-			<?php echo wp_kses_post( $args['title'] ?? '' ); ?>
 					<span class="dashicons dashicons-arrow-down-alt2"></span>
 				</label>
 			</th>
 			<td class="forminp kp_settings__credentials_field_hidden">
+				<?php self::credentials_fields_html( $key, false, ! $test_enabled ); ?>
+				<?php self::credentials_fields_html( $key, true, $test_enabled ); ?>
 			</td>
 		<?php
 	}
