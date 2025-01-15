@@ -105,12 +105,11 @@ class KP_Settings_Page {
 			<div class="kp_settings__section_info">
 				<h3 class="kp_settings__section_title">
 					<?php echo esc_html( $section['title'] ); ?>
+			<?php echo esc_html( $section['title'] ); ?>
 					<span class="kp_settings__section_toggle dashicons dashicons-arrow-up-alt2"></span>
-					<?php
-					if ( $feature_status ) {
-						?>
+			<?php
+			if ( $feature_status ) {
 						<span class="kp_settings__mode_badge<?php echo esc_attr( $feature_status['class'] ); ?>"><?php echo esc_html( $feature_status['title'] ); ?> </span>
-						<?php
 					}
 					?>
 				</h3>
@@ -129,6 +128,7 @@ class KP_Settings_Page {
 				<div class="kp_settings__content_gradient"></div>
 				<table class="form-table">
 		<?php
+			<?php
 	}
 
 
@@ -161,6 +161,7 @@ class KP_Settings_Page {
 			</div>
 			<div class="kp_settings__section_previews">
 				<?php foreach ( $previews as $preview ) : ?>
+		<?php foreach ( $previews as $preview ) : ?>
 					<div class="kp_settings_section_preview">
 						<?php if ( isset( $preview['title'] ) ) : ?>
 							<h3 class="kp_settings__preview_title"><?php echo esc_html( $preview['title'] ); ?></h3>
@@ -263,12 +264,11 @@ class KP_Settings_Page {
 					class="kp_settings__fields_toggle <?php echo esc_attr( $args['class'] ?? '' ); ?>"
 				>
 					<?php echo wp_kses_post( $args['title'] ?? '' ); ?>
+			<?php echo wp_kses_post( $args['title'] ?? '' ); ?>
 					<span class="dashicons dashicons-arrow-down-alt2"></span>
 				</label>
 			</th>
 			<td class="forminp kp_settings__credentials_field_hidden">
-				<?php self::credentials_fields_html( $key, false, ! $test_enabled ); ?>
-				<?php self::credentials_fields_html( $key, true, $test_enabled ); ?>
 			</td>
 		<?php
 	}
@@ -341,18 +341,31 @@ class KP_Settings_Page {
 	 * @return bool
 	 */
 	public static function get_setting_status( $section_id ) {
+		// If kp_has_valid_credentials is not set, check credentials once & set option accordingly.
+		if ( ! get_option( 'kp_has_valid_credentials' ) ) {
+			$kp_settings = new KP_Settings_Saved();
+			$kp_settings->check_api_credentials();
+		}
+
 		$setting_key = self::get_setting_by_section_id( $section_id );
 		$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
 
+		// If the KOM plugin is active and therefore has a settings section, it is always active.
 		if ( 'kom_enabled' === $setting_key ) {
 			return true;
 		}
 
-		if ( isset( $settings[ $setting_key ] ) && 'yes' === $settings[ $setting_key ] ) {
+		// Credentials section is active if any valid credentials are set.
+		if ( 'credentials' === $setting_key && 'yes' === get_option( 'kp_has_valid_credentials' ) ) {
 			return true;
 		}
 
-		if ( 'credentials' === $setting_key && get_option( 'kp_has_valid_credentials' ) ) {
+		// If no setting is yet set for KOSM, always default to enabled.
+		if ( 'onsite_messaging_enabled' === $setting_key && ! isset( $settings[ $setting_key ] ) ) {
+			return true;
+		}
+
+		if ( isset( $settings[ $setting_key ] ) && 'yes' === $settings[ $setting_key ] ) {
 			return true;
 		}
 
@@ -384,6 +397,7 @@ class KP_Settings_Page {
 			// Sign in with Klarna.
 			case 'siwk':
 				return 'siwk_enabled';
+			// Order Management.
 			case 'kom':
 				return 'kom_enabled';
 			default:
