@@ -110,6 +110,8 @@ function kp_save_order_meta_data( $order, $response ) {
 	$order->set_payment_method_title( 'Klarna' );
 	$order->set_payment_method( 'klarna_payments' );
 
+	OrderUtility::add_environment_info( $order, WC_KLARNA_PAYMENTS_VERSION, null, false );
+
 	$order->save();
 }
 
