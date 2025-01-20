@@ -7,7 +7,7 @@ Tested up to: 6.7.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.5.2
-Stable tag: 3.9.0
+Stable tag: 3.9.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.01.20    - version 3.9.1 =
+* Fix           - Fixed active/inactive badge not always showing the expected status.
+
 = 2025.01.13    - version 3.9.0 =
 * Feature       - Added active/inactive badge to features in settings.
 * Feature       - [KOSM] Added enable/disable setting for KOSM.
