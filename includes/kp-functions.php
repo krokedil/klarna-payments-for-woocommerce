@@ -391,7 +391,7 @@ function kp_get_unavailable_feature_ids( $country_credentials ) {
 		$settings_features = KP_WC()->api->get_unavailable_features( $credentials );
 
 		if ( is_wp_error( $settings_features ) ) {
-			$collected_errors[] = 'Error for credential country ' . $credentials['country'] . ': ' . kp_extract_error_message( $settings_features );
+			$collected_errors[] = 'Error for credential country ' . $credentials['country_code'] . ': ' . kp_extract_error_message( $settings_features );
 			continue;
 		}
 		$collected_features = array_merge(
