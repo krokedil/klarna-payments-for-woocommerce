@@ -47,7 +47,7 @@ abstract class KP_Requests extends Request {
 	 * @param mixed $arguments The request arguments.
 	 */
 	public function __construct( $arguments ) {
-		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		$settings = get_option( 'woocommerce_klarna_payments_settings' );
 		$config   = array(
 			'slug'                   => 'klarna_payments',
 			'plugin_version'         => WC_KLARNA_PAYMENTS_VERSION,
