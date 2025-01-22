@@ -101,7 +101,7 @@ class KP_Settings_Saved {
 			return;
 		}
 
-		update_option( 'kp_unavailable_feature_ids', empty( $unavailable_features['feature_ids'] ) ?? array() );
+		update_option( 'kp_unavailable_feature_ids', $unavailable_features['feature_ids'] ?? array() );
 	}
 
 	/**
