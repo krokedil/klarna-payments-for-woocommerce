@@ -234,7 +234,7 @@ class KP_Settings_Page {
 	 */
 	public static function credentials_html( $args ) {
 		$key           = $args['key'] ?? '';
-		$settings      = get_option( 'woocommerce_klarna_payments_settings' );
+		$settings      = get_option( 'woocommerce_klarna_payments_settings', array() );
 		$eu_countries  = KP_Form_Fields::available_countries( 'eu' );
 		$is_eu_country = key_exists( $key, $eu_countries );
 		$is_eu_region  = 'eu' === $key;
@@ -283,7 +283,7 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function credentials_fields_html( $key, $test_mode, $hide ) {
-		$settings = get_option( 'woocommerce_klarna_payments_settings' );
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 		$prefix   = $test_mode ? 'test_' : '';
 
 		$mid_key           = "{$prefix}merchant_id_{$key}";
