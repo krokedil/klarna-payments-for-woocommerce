@@ -67,6 +67,25 @@ jQuery(function ($) {
 					}
 				}
 			});
+
+			$(document).on(
+				"click", 
+				"#woocommerce_klarna_payments_available_countries + .select2",
+				this.addSelectAllCountries
+			);
+
+			$(document).on(
+				"click", 
+				"#klarna_payments_select_all_countries",
+				this.toggleSelectAll
+			);
+		
+			$(document).on(
+				"mouseover", 
+				"#klarna_payments_select_all_countries",
+				$('.select2-results__option').removeClass('select2-results__option--highlighted')
+			);
+		
 		},
 
 		toggleCredentials: function (e) {
@@ -253,6 +272,32 @@ jQuery(function ($) {
 					console.log(response);
 				}
 			});
+
+		addSelectAllCountries: function() {
+			const selectAllOption = 'klarna_payments_select_all_countries';
+			const select2Option = 'select2-results__option';
+			const allAreSelected = !$(`.${select2Option}:not(#${selectAllOption})[data-selected="false"]`).length;
+			
+			// If not already added, add the select all option.
+			if(!$(`#${selectAllOption}`).length) {
+				$("#select2-woocommerce_klarna_payments_available_countries-results").prepend(`<li class='${select2Option}' id='${selectAllOption}'><span>${klarna_payments_admin_params.select_all_countries_title}</span></li>`);
+			}
+			// If all countries are already selected, set the select all option as active.
+			$(`#${selectAllOption}`).toggleClass("active", allAreSelected);
+		},
+		
+		toggleSelectAll: function() {
+			const selectAllOption = '#klarna_payments_select_all_countries';
+			const isSelectAll = $(`${selectAllOption}`).hasClass("active");
+			const countrySelector = "#woocommerce_klarna_payments_available_countries";
+
+			// Toggle needed attributes of the country selector dropdown.
+			$(`${countrySelector} option`).prop("selected", !isSelectAll);
+			$(`#select2-woocommerce_klarna_payments_available_countries-results .select2-results__option:not(${selectAllOption})`).attr("data-selected", !isSelectAll);
+			$(`${selectAllOption}`).toggleClass("active", !isSelectAll);
+			// Trigger needed events to update the country selector dropdown.
+			$(countrySelector).trigger("change");
+			$(".select2-selection__rendered").trigger("scroll");
 		}
 	};
 
