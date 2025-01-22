@@ -85,10 +85,11 @@ class KP_Settings_Saved {
 					$this->process_test_response( $test_response, self::TEST, $cc );
 			}
 
-			if ( $password ) {
+			if ( ! empty( $password ) ) {
 				$unavailable_features_credentials[] = array(
 					'mode'          => 'yes' === $options['testmode'] ? 'test' : 'live',
 					'shared_secret' => $password,
+					'country_code'  => $cc,
 				);
 			}
 

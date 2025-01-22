@@ -136,10 +136,11 @@ abstract class KP_Requests extends Request {
 	 * @return WP_Error
 	 */
 	public function get_error_message( $response ) {
-		$error_message = '';
+		$error_message    = '';
+		$decoded_response = json_decode( $response['body'], true );
 		// Get the error messages.
-		if ( null !== json_decode( $response['body'], true ) ) {
-			foreach ( json_decode( $response['body'], true )['error_messages'] as $error ) {
+		if ( null !== $decoded_response && isset( $decoded_response['error_messages'] ) ) {
+			foreach ( $decoded_response['error_messages'] as $error ) {
 				$error_message = "$error_message $error";
 			}
 		}
