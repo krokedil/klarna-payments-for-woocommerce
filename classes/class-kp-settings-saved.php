@@ -95,13 +95,13 @@ class KP_Settings_Saved {
 			$this->maybe_handle_error();
 		}
 
-		$unavailable_features = $unavailable_features_credentials ? kp_get_unavailable_feature_ids( $unavailable_features_credentials ) : false;
+		$unavailable_features = $unavailable_features_credentials ? kp_get_unavailable_feature_ids( $unavailable_features_credentials ) : array();
 
 		if ( empty( $unavailable_features['feature_ids'] ) && ! empty( $unavailable_features['errors'] ) ) {
 			return;
 		}
 
-		update_option( 'kp_unavailable_feature_ids', $unavailable_features['feature_ids'] );
+		update_option( 'kp_unavailable_feature_ids', empty( $unavailable_features['feature_ids'] ) ?? array() );
 	}
 
 	/**

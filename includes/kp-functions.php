@@ -376,6 +376,13 @@ function kp_is_country_available( $country ) {
 	return $is_available;
 }
 
+/**
+ * Get the ids of the features that are not available for the given country credentials.
+ *
+ * @param string $country_credentials The country credentials.
+ *
+ * @return array
+ */
 function kp_get_unavailable_feature_ids( $country_credentials ) {
 	$collected_errors   = array();
 	$collected_features = array();
@@ -401,14 +408,19 @@ function kp_get_unavailable_feature_ids( $country_credentials ) {
 		);
 	}
 
-	error_log( print_r( kp_map_unavailable_features( $collected_features ), true ) );
-
 	return array(
 		'feature_ids' => kp_map_unavailable_features( $collected_features ),
 		'errors'      => $collected_errors,
 	);
 }
 
+/**
+ * Maps the features that are not available to the feature ids that should be hidden.
+ *
+ * @param array $collected_features The collected features.
+ *
+ * @return array
+ */
 function kp_map_unavailable_features( $collected_features ) {
 
 	$features = array(
