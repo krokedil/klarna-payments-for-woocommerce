@@ -341,14 +341,14 @@ class KP_Settings_Page {
 	 * @return bool
 	 */
 	public static function get_setting_status( $section_id ) {
+		$setting_key = self::get_setting_by_section_id( $section_id );
+		$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
+
 		// If kp_has_valid_credentials is not set, check credentials once & set option accordingly.
-		if ( ! get_option( 'kp_has_valid_credentials' ) ) {
+		if ( ! get_option( 'kp_has_valid_credentials' ) && ! empty( $settings ) ) {
 			$kp_settings = new KP_Settings_Saved();
 			$kp_settings->check_api_credentials();
 		}
-
-		$setting_key = self::get_setting_by_section_id( $section_id );
-		$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
 
 		// If the KOM plugin is active and therefore has a settings section, it is always active.
 		if ( 'kom_enabled' === $setting_key ) {
