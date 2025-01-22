@@ -272,6 +272,7 @@ jQuery(function ($) {
 					console.log(response);
 				}
 			});
+		},
 
 		addSelectAllCountries: function() {
 			const selectAllOption = 'klarna_payments_select_all_countries';
