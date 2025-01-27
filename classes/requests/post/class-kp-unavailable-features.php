@@ -101,4 +101,17 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 		$error_message = empty( $error_message ) ? $response['response']['message'] : $error_message;
 		return new WP_Error( $code, $error_message );
 	}
+
+	/**
+	 * Logs the response from the request.
+	 *
+	 * @param array|\WP_Error $response The response from the request.
+	 * @param array           $request_args The request args.
+	 * @param string          $request_url The request URL.
+	 * @return void
+	 */
+	protected function log_response( $response, $request_args, $request_url ) {
+		$this->arguments['api_password'] = '[REDACTED]';
+		parent::log_response( $response, $request_args, $request_url );
+	}
 }

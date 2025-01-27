@@ -42,6 +42,7 @@ class KP_Settings_Saved {
 		// Get settings from KCO.
 		$options = get_option( 'woocommerce_klarna_payments_settings', array() );
 		update_option( 'kp_has_valid_credentials', 'no' );
+		$eu_countries = KP_Form_Fields::available_countries( 'eu' );
 
 		// If not enabled bail.
 		if ( $options && 'yes' !== $options['enabled'] ) {
@@ -51,6 +52,17 @@ class KP_Settings_Saved {
 
 		foreach ( $countries as $cc ) {
 			$cc = 'uk' === $cc ? 'gb' : $cc;
+
+			// Skip EU countries if the option is enabled to combine them.
+			if ( 'yes' === $options['combine_eu_credentials'] && isset( $eu_countries[ $cc ] ) ) {
+				// If kp_has_valid_credentials is not set or set to no, then set it to yes.
+
+				if ( 'yes' !== get_option( 'kp_has_valid_credentials' ) ?? 'no' ) {
+					update_option( 'kp_has_valid_credentials', 'yes' );
+				}
+
+				continue;
+			}
 
 			if ( 'yes' !== $options['testmode'] ) {
 				// Live.
@@ -96,17 +108,7 @@ class KP_Settings_Saved {
 			$this->maybe_handle_error();
 		}
 
-		// If no valid credentials are found, clear the unavailable features.
-		if ( 'no' === get_option( 'kp_has_valid_credentials' ) ) {
-			update_option( 'kp_unavailable_feature_ids', array() );
-			return;
-		}
-
 		$unavailable_features = $unavailable_features_credentials ? kp_get_unavailable_feature_ids( $unavailable_features_credentials ) : array();
-
-		if ( empty( $unavailable_features['feature_ids'] ) && ! empty( $unavailable_features['errors'] ) ) {
-			return;
-		}
 
 		update_option( 'kp_unavailable_feature_ids', $unavailable_features['feature_ids'] ?? array() );
 	}
@@ -123,7 +125,9 @@ class KP_Settings_Saved {
 		// If this is not a WP Error then its ok.
 		if ( ! is_wp_error( $test_response ) ) {
 			// Set the valid credentials flag as there is at least one valid set of credentials.
-			update_option( 'kp_has_valid_credentials', 'yes' );
+			if ( 'yes' !== get_option( 'kp_has_valid_credentials' ) ?? 'no' ) {
+				update_option( 'kp_has_valid_credentials', 'yes' );
+			}
 			return;
 		}
 		$cc    = strtoupper( $cc );
