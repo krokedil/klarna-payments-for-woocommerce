@@ -265,11 +265,13 @@ jQuery(function ($) {
 					} else {
 						console.log("Error updating unavailable features");
 						console.log(response);
+						$('.kp_settings__section').removeClass('unavailable');
 					}
 				},
 				error: function (response) {
 					console.log("Error updating unavailable features");
 					console.log(response);
+					$('.kp_settings__section').removeClass('unavailable');
 				}
 			});
 		},

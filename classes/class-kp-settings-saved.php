@@ -96,6 +96,12 @@ class KP_Settings_Saved {
 			$this->maybe_handle_error();
 		}
 
+		// If no valid credentials are found, clear the unavailable features.
+		if ( 'no' === get_option( 'kp_has_valid_credentials' ) ) {
+			update_option( 'kp_unavailable_feature_ids', array() );
+			return;
+		}
+
 		$unavailable_features = $unavailable_features_credentials ? kp_get_unavailable_feature_ids( $unavailable_features_credentials ) : array();
 
 		if ( empty( $unavailable_features['feature_ids'] ) && ! empty( $unavailable_features['errors'] ) ) {
