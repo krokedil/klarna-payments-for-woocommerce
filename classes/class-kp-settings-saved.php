@@ -42,7 +42,8 @@ class KP_Settings_Saved {
 		// Get settings from KCO.
 		$options = get_option( 'woocommerce_klarna_payments_settings', array() );
 		update_option( 'kp_has_valid_credentials', 'no' );
-		$eu_countries = KP_Form_Fields::available_countries( 'eu' );
+		$eu_countries                     = KP_Form_Fields::available_countries( 'eu' );
+		$unavailable_features_credentials = array();
 
 		// If not enabled bail.
 		if ( $options && 'yes' !== $options['enabled'] ) {
@@ -51,8 +52,10 @@ class KP_Settings_Saved {
 		$countries = array_keys( KP_Form_Fields::$kp_form_auto_countries );
 
 		foreach ( $countries as $cc ) {
-			$cc = 'yes' === $options['combine_eu_credentials'] && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
-			$cc = 'uk' === $cc ? 'gb' : $cc;
+			$cc       = 'yes' === $options['combine_eu_credentials'] && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
+			$cc       = 'uk' === $cc ? 'gb' : $cc;
+			$password = '';
+			$username = '';
 
 			if ( 'yes' !== $options['testmode'] ) {
 				// Live.
@@ -99,8 +102,8 @@ class KP_Settings_Saved {
 				}
 			}
 
-			if ( ! empty( $password ) ) {
-				$unavailable_features_credentials[] = array(
+			if ( ! empty( $password ) && ! isset( $unavailable_features_credentials[ $cc ] ) ) {
+				$unavailable_features_credentials[ $cc ] = array(
 					'mode'          => 'yes' === $options['testmode'] ? 'test' : 'live',
 					'shared_secret' => $password,
 					'country_code'  => $cc,

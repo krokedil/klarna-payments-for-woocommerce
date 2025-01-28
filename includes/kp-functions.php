@@ -379,7 +379,7 @@ function kp_is_country_available( $country ) {
 /**
  * Get the ids of the features that are not available for the given country credentials.
  *
- * @param string $country_credentials The country credentials.
+ * @param array $country_credentials The country credentials.
  *
  * @return array
  */
