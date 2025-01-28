@@ -51,18 +51,8 @@ class KP_Settings_Saved {
 		$countries = array_keys( KP_Form_Fields::$kp_form_auto_countries );
 
 		foreach ( $countries as $cc ) {
+			$cc = 'yes' === $options['combine_eu_credentials'] && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
 			$cc = 'uk' === $cc ? 'gb' : $cc;
-
-			// Skip EU countries if the option is enabled to combine them.
-			if ( 'yes' === $options['combine_eu_credentials'] && isset( $eu_countries[ $cc ] ) ) {
-				// If kp_has_valid_credentials is not set or set to no, then set it to yes.
-
-				if ( 'yes' !== get_option( 'kp_has_valid_credentials' ) ?? 'no' ) {
-					update_option( 'kp_has_valid_credentials', 'yes' );
-				}
-
-				continue;
-			}
 
 			if ( 'yes' !== $options['testmode'] ) {
 				// Live.
@@ -78,23 +68,35 @@ class KP_Settings_Saved {
 						'testmode' => false,
 					);
 
-					$test_response = ( new KP_Test_Credentials( $args ) )->request();
-					$this->process_test_response( $test_response, self::PROD, $cc );
+					if ( 'eu' !== $cc ) {
+						$test_response = ( new KP_Test_Credentials( $args ) )->request();
+						$this->process_test_response( $test_response, self::PROD, $cc );
+					}
 				}
 			} elseif ( '' !== $options[ 'test_merchant_id_' . $cc ] ?? '' ) { // Test.
-					$username = $options[ 'test_merchant_id_' . $cc ] ?? '';
-					$password = $options[ 'test_shared_secret_' . $cc ] ?? '';
+				$username = $options[ 'test_merchant_id_' . $cc ] ?? '';
+				$password = $options[ 'test_shared_secret_' . $cc ] ?? '';
 
-					// Create request arguments.
-					$args = array(
-						'username' => $username,
-						'password' => $password,
-						'country'  => $cc,
-						'testmode' => true,
-					);
+				// Create request arguments.
+				$args = array(
+					'username' => $username,
+					'password' => $password,
+					'country'  => $cc,
+					'testmode' => true,
+				);
 
+				if ( 'eu' !== $cc ) {
 					$test_response = ( new KP_Test_Credentials( $args ) )->request();
 					$this->process_test_response( $test_response, self::TEST, $cc );
+				}
+			}
+
+			// If the password and username is set and combined EU credentials are enabled, set the valid credentials flag.
+			if ( 'eu' === $cc && ! empty( $password ) && ! empty( $username ) ) {
+
+				if ( 'yes' !== get_option( 'kp_has_valid_credentials' ) ?? 'no' ) {
+					update_option( 'kp_has_valid_credentials', 'yes' );
+				}
 			}
 
 			if ( ! empty( $password ) ) {
@@ -103,9 +105,9 @@ class KP_Settings_Saved {
 					'shared_secret' => $password,
 					'country_code'  => $cc,
 				);
-			}
 
-			$this->maybe_handle_error();
+				$this->maybe_handle_error();
+			}
 		}
 
 		$unavailable_features = $unavailable_features_credentials ? kp_get_unavailable_feature_ids( $unavailable_features_credentials ) : array();
