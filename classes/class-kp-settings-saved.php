@@ -115,7 +115,12 @@ class KP_Settings_Saved {
 
 		$unavailable_features = $unavailable_features_credentials ? kp_get_unavailable_feature_ids( $unavailable_features_credentials ) : array();
 
-		update_option( 'kp_unavailable_feature_ids', $unavailable_features['feature_ids'] ?? array() );
+		// If we have any collected errors, save the unavailable features as a empty array.
+		if ( ! empty( $unavailable_features['errors'] ?? array() ) ) {
+			update_option( 'kp_unavailable_feature_ids', array() );
+		} else {
+			update_option( 'kp_unavailable_feature_ids', $unavailable_features['feature_ids'] ?? array() );
+		}
 	}
 
 	/**
