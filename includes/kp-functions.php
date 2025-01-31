@@ -9,7 +9,7 @@
  * Unsets all Klarna Payments sessions.
  */
 function kp_unset_session_values() {
-	if( ! WC()->session ) {
+	if ( ! WC()->session ) {
 		return;
 	}
 
@@ -36,10 +36,17 @@ function kp_extract_error_message( $response ) {
  * @return array
  */
 function get_klarna_customer( $customer_type ) {
-	$type = ( 'b2b' === $customer_type ) ? 'organization' : 'person';
-	return array(
+	$type     = ( 'b2b' === $customer_type ) ? 'organization' : 'person';
+	$customer = array(
 		'type' => $type,
 	);
+
+	$access_token = KP_WC()->siwk->user->get_access_token( get_current_user_id() );
+	if ( ! empty( $access_token ) ) {
+		$customer['klarna_access_token'] = $access_token;
+	}
+
+	return $customer;
 }
 
 /**
@@ -50,12 +57,20 @@ function get_klarna_customer( $customer_type ) {
  */
 function kp_get_klarna_country( $order = false ) {
 	if ( ! empty( $order ) ) {
-		return apply_filters( 'wc_klarna_payments_country', $order->get_billing_country() );
+		$country = $order->get_billing_country();
+
+		// If the billing_country field is unset, $country will be empty.
+		if ( ! empty( $country ) ) {
+			return apply_filters( 'wc_klarna_payments_country', $country );
+		}
 	}
 
-	/* The billing country selected on the checkout page is to prefer over the store's base location. It makse more sense that we check for available payment methods based on the customer's country. */
-	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer ) && ! empty( WC()->customer->get_billing_country() ) ) {
-		return apply_filters( 'wc_klarna_payments_country', WC()->customer->get_billing_country() );
+	/* The billing country selected on the checkout page is to prefer over the store's base location. It makes more sense that we check for available payment methods based on the customer's country. */
+	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer ) ) {
+		$country = WC()->customer->get_billing_country();
+		if ( ! empty( $country ) ) {
+			return apply_filters( 'wc_klarna_payments_country', $country );
+		}
 	}
 
 	/* Ignores whatever country the customer selects on the checkout page, and always uses the store's base location. Only used as fallback. */
@@ -65,22 +80,61 @@ function kp_get_klarna_country( $order = false ) {
 }
 
 /**
+ * Process the response from a Klarna request to store meta data about an order.
+ *
+ * Also used for processing authorization or callback response for accepted or pending Klarna orders.
+ *
+ * @param WC_Order $order The WooCommerce order.
+ * @param array    $response Response from Klarna request that contain order details.
+ *
+ * @return void
+ */
+function kp_save_order_meta_data( $order, $response ) {
+	$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
+	$testmode    = wc_string_to_bool( $settings['testmode'] ?? 'no' );
+	$environment = $testmode ? 'test' : 'live';
+
+	$klarna_country = kp_get_klarna_country( $order );
+
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+	// If EU credentials are combined, we should use the EU country code.
+	$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+	if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
+		$klarna_country = 'EU';
+	}
+
+	$order->update_meta_data( '_wc_klarna_environment', $environment );
+	$order->update_meta_data( '_wc_klarna_country', $klarna_country );
+	$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
+	$order->set_transaction_id( $response['order_id'] );
+	$order->set_payment_method_title( 'Klarna' );
+	$order->set_payment_method( 'klarna_payments' );
+
+	$order->save();
+}
+
+/**
  * Process accepted Klarna Payments order.
  *
- * @param WC_Order $order WooCommerce order.
- * @param array    $decoded Klarna order.
+ * @param WC_Order    $order WooCommerce order.
+ * @param array       $decoded Klarna order.
+ * @param string|bool $recurring_token Recurring token.
  *
  * @return array   $result  Payment result.
  */
-function kp_process_accepted( $order, $decoded ) {
+function kp_process_accepted( $order, $decoded, $recurring_token = false ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
-	update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
-	update_post_meta( $order->get_id(), '_payment_method', 'klarna_payments' );
-	update_post_meta( $order->get_id(), '_payment_method_title', 'Klarna' );
+	kp_save_order_meta_data( $order, $decoded );
+
+	if ( $recurring_token ) {
+		KP_Subscription::save_recurring_token( $order->get_id(), $recurring_token );
+	}
+
 	do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
+
 	return array(
 		'result'   => 'success',
 		'redirect' => $kp_gateway->get_return_url( $order ),
@@ -98,8 +152,7 @@ function kp_process_accepted( $order, $decoded ) {
 function kp_process_pending( $order, $decoded ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded['order_id'] );
-	update_post_meta( $order->get_id(), '_wc_klarna_order_id', $decoded['order_id'], true );
-	update_post_meta( $order->get_id(), '_transaction_id', $decoded['order_id'], true );
+	kp_save_order_meta_data( $order, $decoded );
 	do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_pending', $order->get_id(), $decoded );
 	return array(
@@ -117,7 +170,8 @@ function kp_process_pending( $order, $decoded ) {
  * @return array   $result  Payment result.
  */
 function kp_process_rejected( $order, $decoded ) {
-	$order->update_status( 'on-hold', 'Klarna order was rejected.' );
+	$status = apply_filters( 'kp_order_rejected_status', 'failed' );
+	$order->update_status( $status, 'Klarna order was rejected.' );
 	do_action( 'wc_klarna_payments_rejected', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_rejected', $order->get_id(), $decoded );
 	return array(
@@ -127,7 +181,6 @@ function kp_process_rejected( $order, $decoded ) {
 	);
 }
 
-
 /**
  * Formats the locale to match Klarnas api.
  *
@@ -135,7 +188,7 @@ function kp_process_rejected( $order, $decoded ) {
  */
 function kp_get_locale() {
 	$locale = get_locale();
-	// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formated to fi_fi.
+	// Format exceptions. For example. Finish is returned as fi from WordPress, needs to be formatted to fi_fi.
 	switch ( $locale ) {
 		case 'fi':
 			$locale = 'fi_fi';
@@ -165,10 +218,8 @@ function kp_print_error_message( $wp_error ) {
 		if ( function_exists( 'wc_add_notice' ) ) {
 			wc_add_notice( $error_message, 'error' );
 		}
-	} else {
-		if ( function_exists( 'wc_print_notice' ) ) {
+	} elseif ( function_exists( 'wc_print_notice' ) ) {
 			wc_print_notice( $error_message, 'error' );
-		}
 	}
 }
 
@@ -222,4 +273,105 @@ function kp_is_order_pay_page() {
  */
 function kp_is_wc_blocks_order( $order ) {
 	return $order && $order->is_created_via( 'store-api' );
+}
+
+/**
+ * Get the client id for Klarna Payments from the settings based on the customer country.
+ *
+ * @param string|null $country The customer country.
+ *
+ * @return string
+ */
+function kp_get_client_id( $country = null ) {
+	$country  = strtolower( $country ? $country : kp_get_klarna_country() );
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+	$eu_combined = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+	$test_mode   = 'yes' === ( isset( $settings['testmode'] ) ? $settings['testmode'] : 'no' );
+
+	if ( ! kp_is_country_available( $country ) ) {
+		return '';
+	}
+
+	// If the country is in the EU and the EU combined setting is enabled, we should use the EU combined client id.
+	if ( $eu_combined && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
+		$country = 'eu';
+	}
+	$prefix      = $test_mode ? 'test_' : '';
+	$setting_key = "{$prefix}client_id_{$country}";
+	return $settings[ $setting_key ] ?? '';
+}
+
+/**
+ * Get the client id based on the currency.
+ *
+ * @param string|null $currency The currency code to get the client id for, if null the current currency will be used.
+ *
+ * @return string
+ */
+function kp_get_client_id_by_currency( $currency = null ) {
+	if ( empty( $currency ) ) {
+		$currency = get_woocommerce_currency();
+	}
+
+	$country = null;
+	// If the currency is EUR, we should maybe get the client id based on the locale for the customer.
+	if ( 'EUR' === $currency ) {
+		$country = kp_get_klarna_country();
+	} else {
+		foreach ( KP_Form_Fields::$kp_form_auto_countries as $cc => $country_data ) {
+			if ( $country_data['currency'] === $currency ) {
+				$country = $cc;
+				break;
+			}
+		}
+	}
+
+	return kp_get_client_id( $country );
+}
+
+/**
+ * Check if the country is available for Klarna Payments.
+ *
+ * @param string $country The country code.
+ *
+ * @return bool
+ */
+function kp_is_country_available( $country ) {
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+	/**
+	 * Get the available countries from the settings. This is actually an array, even if the method says it's a string.
+	 *
+	 * @var array $available_countries The available countries.
+	 */
+	$available_countries = $settings['available_countries'] ?? array();
+
+	$country = strtolower( $country );
+	if ( empty( $available_countries ) ) {
+		// See if the country has values saved from the old settings, before the available countries setting was added.
+		$testmode = wc_string_to_bool( $settings['testmode'] ?? 'no' );
+		$prefix   = $testmode ? 'test_' : '';
+
+		// If the country is a EU country, check if we are using the combined EU credentials.
+		if ( key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
+			$eu_combined = 'yes' === ( $settings['combine_eu_credentials'] ?? 'no' );
+			if ( $eu_combined ) {
+				$country = 'eu';
+			}
+		}
+
+		$merchant_id = $settings[ "{$prefix}merchant_id_{$country}" ] ?? '';
+		$secret      = $settings[ "{$prefix}shared_secret_{$country}" ] ?? '';
+
+		// If we have the merchant id and secret, the country is available.
+		if ( ! empty( $merchant_id ) && ! empty( $secret ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	$is_available = in_array( $country, $available_countries, true );
+	return $is_available;
 }

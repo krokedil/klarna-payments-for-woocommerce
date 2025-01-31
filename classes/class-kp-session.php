@@ -24,7 +24,7 @@ class KP_Session {
 	 *          {
 	 *              'name'        => string         - The name of the payment method category.
 	 *              'identifier'  => string         - The identifier of the payment method category.
-	 *              'assets_urls' => array(         - The assets urls for the payment method category. Array of objects describing the assets urls.
+	 *              'asset_urls' => array(         - The assets urls for the payment method category. Array of objects describing the assets urls.
 	 *                 'descriptive' => string,     - The descriptive assets url.
 	 *                 'standard'    => string,     - The standard assets url.
 	 *              ),
@@ -51,25 +51,32 @@ class KP_Session {
 	public $session_country = null;
 
 	/**
+	 * Get the locale used for the Klarna session.
+	 *
+	 * @var string
+	 */
+	public $session_locale = null;
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
-		add_action( 'woocommerce_after_calculate_totals', array( $this, 'get_session' ), 9999 ); // Maybe update session on after_calculate_totals.
+		add_action( 'woocommerce_after_calculate_totals', array( $this, 'get_session' ), 999999 ); // Maybe update session on after_calculate_totals.
 	}
 
 	/**
-	 * Gets a Klarna sessios. Creates or updates the Klarna session if needed.
+	 * Gets a Klarna sessions. Creates or updates the Klarna session if needed.
 	 *
 	 * @param int|WC_Order|null $order The WooCommerce order or order id. Null if we are working with a cart.
 	 */
 	public function get_session( $order = null ) {
-		if ( ! kp_is_available() || ! kp_is_checkout_page() ) {
+		if ( ( ! kp_is_available() || ! kp_is_checkout_page() ) && ! KP_Subscription::is_change_payment_method() ) {
 			return;
 		}
 
 		// Check if we get an order.
 		$order    = $this->maybe_get_order( $order );
-		$order_id = $order ? $order->get_id() : null;
+		$order_id = ! ( empty( $order ) || is_wp_error( $order ) ) ? $order->get_id() : null;
 
 		// Return WP Error if we get one.
 		if ( is_wp_error( $order ) ) {
@@ -79,11 +86,12 @@ class KP_Session {
 		// Set session data from WC Session or order meta if we have any.
 		$this->set_session_data( $order );
 
-		// If we already have a Klarna session, and the session_country has changed since our last request, reset all our params and a new session will be created.
-		if ( null !== $this->klarna_session && kp_get_klarna_country( $order ) !== $this->session_country ) {
+		// If we already have a Klarna session, and the session_country or session_locale has changed since our last request, reset all our params and a new session will be created.
+		if ( null !== $this->klarna_session && ( kp_get_klarna_country( $order ) !== $this->session_country || get_locale() !== $this->session_locale ) ) {
 			$this->klarna_session  = null;
 			$this->session_hash    = null;
 			$this->session_country = null;
+			$this->session_locale  = null;
 		}
 
 		// If we already have a Klarna session and session does not need an update, return the Klarna session.
@@ -107,11 +115,11 @@ class KP_Session {
 	/**
 	 * Sets session data from a WC session or order meta.
 	 *
-	 * @param WC_Order|int|null $order The WooCommerce order or order id. Null if we are working with a cart.
+	 * @param WC_Order|int|null $order The WooCommerce order or order id. Null if we are working with a cart (default).
 	 * @return void
 	 * @throws Exception If we get an error when trying to get the session data.
 	 */
-	public function set_session_data( $order ) {
+	public function set_session_data( $order = null ) {
 		// Maybe get the order from order id.
 		$order = $this->maybe_get_order( $order );
 
@@ -139,6 +147,7 @@ class KP_Session {
 		$this->klarna_session  = $session_data['klarna_session'];
 		$this->session_hash    = $session_data['session_hash'];
 		$this->session_country = $session_data['session_country'];
+		$this->session_locale  = $session_data['session_locale'];
 	}
 
 	/**
@@ -158,6 +167,7 @@ class KP_Session {
 		$this->klarna_session  = ! empty( $result ) ? $result : $this->klarna_session; // If the result is empty, it was from a successfull update request. So no need to update the session data.
 		$this->session_hash    = null === $order ? $this->get_session_cart_hash() : $this->get_session_order_hash( $order );
 		$this->session_country = kp_get_klarna_country( $order );
+		$this->session_locale  = get_locale();
 
 		// Update the WC Session or the order meta with instance of class.
 		$this->update_session_data_in_wc( $order );
@@ -173,10 +183,11 @@ class KP_Session {
 	 */
 	private function update_session_data_in_wc( $order ) {
 		// Update the WC Session or the order meta with instance of class.
-		if ( null === $order ) {
+		if ( empty( $order ) ) {
 			WC()->session->set( 'kp_session_data', wp_json_encode( $this ) );
 		} else {
 			$order->update_meta_data( '_kp_session_data', wp_json_encode( $this ) );
+			$order->save();
 		}
 	}
 
@@ -192,6 +203,7 @@ class KP_Session {
 			WC()->session->__unset( 'kp_session_data' );
 		} else {
 			$order->delete_meta_data( '_kp_session_data' );
+			$order->save();
 		}
 	}
 
@@ -251,8 +263,16 @@ class KP_Session {
 	 * @return string
 	 */
 	private function get_session_cart_hash() {
+		// The `get_totals` method can return non-numeric items which should be removed before using `array_sum`.
+		$cart_totals = array_filter(
+			WC()->cart->get_totals(),
+			function ( $total ) {
+				return is_numeric( $total );
+			}
+		);
+
 		// Get values to use for the combined hash calculation.
-		$total            = array_sum( WC()->cart->get_totals() );
+		$total            = array_sum( $cart_totals );
 		$billing_address  = WC()->customer->get_billing();
 		$shipping_address = WC()->customer->get_shipping();
 		$shipping_method  = WC()->session->get( 'chosen_shipping_methods' );

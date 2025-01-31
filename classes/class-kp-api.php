@@ -102,6 +102,135 @@ class KP_Api {
 		return self::check_for_api_error( $response );
 	}
 
+
+	/**
+	 * Create a customer token (required for creating subscriptions).
+	 *
+	 * @param mixed $country The Klarna country to use.
+	 * @param mixed $auth_token The Klarna auth token for the session.
+	 * @param mixed $order_id The WooCommerce order id.
+	 * @return WP_Error|array
+	 */
+	public function create_customer_token( $country, $auth_token, $order_id ) {
+		$request  = new KP_Create_Customer_Token(
+			array(
+				'country'    => $country,
+				'auth_token' => $auth_token,
+				'order_id'   => $order_id,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
+	/**
+	 * Create recurring order (subscription).
+	 *
+	 * @param mixed $country The Klarna country to use.
+	 * @param mixed $recurring_token The recurring token for the subscription (referred to as customer token in docs).
+	 * @param mixed $order_id The WooCommerce order id.
+	 * @return WP_Error|array
+	 */
+	public function create_recurring_order( $country, $recurring_token, $order_id ) {
+		$request  = new KP_Create_Recurring(
+			array(
+				'country'         => $country,
+				'recurring_token' => $recurring_token,
+				'order_id'        => $order_id,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
+
+	/**
+	 * Cancel recurring order (subscription).
+	 * This is used when a subscription is cancelled in WooCommerce.
+	 *
+	 * @param mixed $country The Klarna country to use.
+	 * @param mixed $recurring_token The recurring token for the subscription (referred to as customer token in docs).
+	 * @return WP_Error|array
+	 */
+	public function cancel_recurring_order( $country, $recurring_token ) {
+		$request  = new KP_Cancel_Recurring(
+			array(
+				'country'         => $country,
+				'recurring_token' => $recurring_token,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
+	/**
+	 * Get the Klarna order from the order management API.
+	 *
+	 * @param string $country The Klarna country to use.
+	 * @param string $klarna_order_id The Klarna order id.
+	 *
+	 * @return array|WP_Error The response from Klarna.
+	 */
+	public function get_klarna_om_order( $country, $klarna_order_id ) {
+		$request  = new KP_Get_Order(
+			array(
+				'country'         => $country,
+				'klarna_order_id' => $klarna_order_id,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
+	/**
+	 * Upsell the klarna order.
+	 *
+	 * @param string $country The Klarna country to use.
+	 * @param string $klarna_order_id The Klarna order id.
+	 * @param int    $order_id The WooCommerce order id.
+	 *
+	 * @return array|WP_Error The response from Klarna.
+	 */
+	public function upsell_klarna_order( $country, $klarna_order_id, $order_id ) {
+		$request  = new KP_Upsell_Order(
+			array(
+				'country'         => $country,
+				'klarna_order_id' => $klarna_order_id,
+				'order_id'        => $order_id,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
+	/**
+	 * Return the session from Klarna Payments.
+	 *
+	 * @param string $session_id The Klarna session id.
+	 * @param string $country The Klarna country to use.
+	 * @return array|WP_Error The response from Klarna.
+	 */
+	public function get_session( $session_id, $country = null ) {
+		if ( ! $country ) {
+			$country = kp_get_klarna_country();
+		}
+
+		$request  = new KP_Get_Session(
+			array(
+				'session_id' => $session_id,
+				'country'    => $country,
+			)
+		);
+		$response = $request->request();
+
+		return self::check_for_api_error( $response );
+	}
+
 	/**
 	 * Checks for WP Errors and returns either the response or a WP Error..
 	 *
@@ -109,12 +238,13 @@ class KP_Api {
 	 * @return array|WP_Error
 	 */
 	private static function check_for_api_error( $response ) {
-		if ( is_wp_error( $response ) ) {
+		$is_testmode = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'];
+
+		if ( is_wp_error( $response ) && $is_testmode ) {
 			if ( ! is_admin() ) {
 				kp_print_error_message( $response );
 			}
 		}
 		return $response;
 	}
-
 }

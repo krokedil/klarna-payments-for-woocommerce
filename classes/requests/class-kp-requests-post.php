@@ -7,8 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Krokedil\WooCommerce\Cart\Cart;
-use Krokedil\WooCommerce\Order\Order;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\Cart\Cart;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\Order\Order;
 
 /**
  *  The main class for POST requests.
@@ -16,7 +16,7 @@ use Krokedil\WooCommerce\Order\Order;
 abstract class KP_Requests_Post extends KP_Requests {
 
 	/**
-	 * Qliro_One_Request_Post constructor.
+	 * KP_Requests_Post constructor.
 	 *
 	 * @param  array $arguments  The request arguments.
 	 */
@@ -48,7 +48,7 @@ abstract class KP_Requests_Post extends KP_Requests {
 	/**
 	 * Returns the request helper for the request based on if we have a order id passed or not.
 	 *
-	 * @return \Krokedil\WooCommerce\OrderData
+	 * @return KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderData
 	 */
 	public function get_order_data() {
 		$config = array(
@@ -71,12 +71,12 @@ abstract class KP_Requests_Post extends KP_Requests {
 	 */
 	protected function get_body() {
 		$order_id      = $this->arguments['order_id'] ?? null;
-		$customer_type = $this->arguments['customer_type'] ?? 'b2c';
+		$customer_type = $this->arguments['customer_type'] ?? get_option( 'woocommerce_klarna_payments_settings', array( 'customer_type' => 'b2c' ) )['customer_type'];
 		$order_data    = new KP_Order_Data( $customer_type, $order_id );
 
-
-		return apply_filters( 'kp_wc_api_request_args',
-			$order_data->get_klarna_order_object( $this->iframe_options ),
+		return apply_filters(
+			'kp_wc_api_request_args',
+			$order_data->get_klarna_order_object( $this->iframe_options )
 		);
 	}
 }

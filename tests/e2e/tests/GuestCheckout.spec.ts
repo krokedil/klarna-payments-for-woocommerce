@@ -1,9 +1,9 @@
 import { test, expect, APIRequestContext } from '@playwright/test';
-import { KlarnaPaymentsIframe } from '../locators/KlarnaPaymentsIFrame';
 import { GetWcApiClient, WcPages } from '@krokedil/wc-test-helper';
 import { VerifyOrderRecieved } from '../utils/VerifyOrder';
-import { KlarnaHPP } from '../pages/KlarnaHPP';
+import { KlarnaPopup } from '../pages/KlarnaPopup';
 import { gt, valid } from 'semver';
+import { HandleKpPopup } from '../utils/Utils';
 
 const {
 	BASE_URL,
@@ -34,7 +34,6 @@ test.describe('Guest Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25', 'simple-25', 'simple-25', 'simple-25', 'simple-25', 'simple-25']);
@@ -50,11 +49,8 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
@@ -69,7 +65,6 @@ test.describe('Guest Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25', 'simple-12', 'simple-06', 'simple-00']);
@@ -85,11 +80,8 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
@@ -104,7 +96,6 @@ test.describe('Guest Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page);
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-virtual-downloadable-25', 'simple-virtual-downloadable-12', 'simple-virtual-downloadable-06', 'simple-virtual-downloadable-00']);
@@ -120,11 +111,8 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
@@ -139,7 +127,6 @@ test.describe('Guest Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['variable-25-blue', 'variable-12-red', 'variable-12-red', 'variable-25-black', 'variable-12-black']);
@@ -155,11 +142,8 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
@@ -174,7 +158,6 @@ test.describe('Guest Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25']);
@@ -193,11 +176,8 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
@@ -212,7 +192,6 @@ test.describe('Guest Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25']);
@@ -231,11 +210,8 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
@@ -250,7 +226,6 @@ test.describe('Guest Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25']);
@@ -269,11 +244,8 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
@@ -288,7 +260,6 @@ test.describe('Guest Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25']);
@@ -307,11 +278,8 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
@@ -326,7 +294,6 @@ test.describe('Guest Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25']);
@@ -345,11 +312,8 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
@@ -364,7 +328,6 @@ test.describe('Guest Checkout @shortcode', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.Checkout(page);
-		const iframe = new KlarnaPaymentsIframe(page)
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25']);
@@ -383,11 +346,8 @@ test.describe('Guest Checkout @shortcode', () => {
 		// Place the order.
 		await checkoutPage.placeOrder();
 
-		// Fill in the NIN.
-		await iframe.fillNin();
-
-		// Confirm the order.
-		await iframe.clickConfirm();
+		// A new window should open with the Klarna payment popup.
+		await HandleKpPopup(page);
 
 		// Verify that the order was placed.
 		await expect(page).toHaveURL(/order-received/);
@@ -402,7 +362,7 @@ test.describe('Guest Checkout @shortcode', () => {
 test.describe('Guest Checkout @checkoutBlock', () => {
 	test.skip(
 		valid(process.env.WC_VERSION) && // And it is not an empty string
-		!gt(process.env.WC_VERSION, '6.0.0'), // And
+		!gt(process.env.WC_VERSION, '6.0.0'), // And it is not greater than 6.0.0
 		'Skipping guest checkout tests with checkout blocks for WooCommerce < 6.0.0');
 
 	test.use({ storageState: process.env.GUESTSTATE });
@@ -425,7 +385,7 @@ test.describe('Guest Checkout @checkoutBlock', () => {
 		const cartPage = new WcPages.Cart(page, wcApiClient);
 		const orderRecievedPage = new WcPages.OrderReceived(page, wcApiClient);
 		const checkoutPage = new WcPages.CheckoutBlock(page);
-		const klarnaHPP = new KlarnaHPP(page);
+		const klarnaHPP = new KlarnaPopup(page, true);
 
 		// Add products to the cart.
 		await cartPage.addtoCart(['simple-25', 'simple-25', 'simple-25', 'simple-25', 'simple-25', 'simple-25']);
@@ -436,6 +396,9 @@ test.describe('Guest Checkout @checkoutBlock', () => {
 		// Fill in the Address fields.
 		await checkoutPage.fillShippingAddress();
 		await checkoutPage.fillBillingAddress();
+
+		// Wait for 5 seconds, sadly this is needed because WooCommerce batches up all changes if we make them too quickly, and disables the butten unpredictably.
+		await page.waitForTimeout(5000);
 
 		// Place the order.
 		await checkoutPage.placeOrder();

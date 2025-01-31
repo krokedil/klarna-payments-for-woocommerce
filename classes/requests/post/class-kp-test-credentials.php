@@ -40,11 +40,11 @@ class KP_Test_Credentials extends KP_Requests_Post {
 	 * @return array
 	 */
 	protected function get_body() {
-		$country_data = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $this->arguments['country'] ?? '' ) ] ?? null;
+		$country_data = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $this->arguments['country'] ?? '' ) ] ?? array();
 
 		return array(
 			'purchase_country'  => strtoupper( $this->arguments['country'] ),
-			'purchase_currency' => $country_data['currency'],
+			'purchase_currency' => $country_data['currency'] ?? get_woocommerce_currency(),
 			'locale'            => 'en-US',
 			'order_amount'      => 100,
 			'order_lines'       => array(

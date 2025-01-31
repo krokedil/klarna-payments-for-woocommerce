@@ -47,15 +47,51 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return void
 		 */
 		public static function kp_wc_place_order() {
-			$order_id   = filter_input( INPUT_POST, 'order_id', FILTER_SANITIZE_SPECIAL_CHARS );
+			$order_key  = filter_input( INPUT_POST, 'order_key', FILTER_SANITIZE_SPECIAL_CHARS );
+			$order_id   = filter_input( INPUT_POST, 'order_id', FILTER_SANITIZE_NUMBER_INT );
 			$auth_token = filter_input( INPUT_POST, 'auth_token', FILTER_SANITIZE_SPECIAL_CHARS );
 
-			if ( empty( $order_id ) || empty( $auth_token ) ) {
-				wp_send_json_error( 'missing_data' );
+			if ( empty( $order_key ) || empty( $order_id ) || empty( $auth_token ) ) {
+				wp_send_json_error( 'missing params' );
 			}
 
-			$order    = wc_get_order( $order_id );
-			$response = KP_WC()->api->place_order( kp_get_klarna_country(), $auth_token, $order_id );
+			$order = wc_get_order( $order_id );
+			if ( empty( $order ) ) {
+				wp_send_json_error( 'no order found' );
+			}
+
+			if ( ! hash_equals( $order->get_order_key(), $order_key ) ) {
+				wp_send_json_error( 'order id and key do not match order' );
+			}
+
+			// Prevent further processing if the order has already been processed once.
+			if ( ! empty( $order->get_date_paid() ) ) {
+				wp_send_json_success( $order->get_checkout_order_received_url() );
+			}
+
+			$recurring_token = false;
+			if ( KP_Subscription::order_has_subscription( $order ) ) {
+				$response = KP_WC()->api->create_customer_token( kp_get_klarna_country( $order ), $auth_token, $order_id );
+				if ( is_wp_error( $response ) ) {
+					wp_send_json_error( 'customer_token_failed' );
+				}
+
+				$recurring_token = $response['token_id'];
+
+				/* translators: Recurring token. */
+				$order->add_order_note( sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $recurring_token ) );
+
+				if ( 0.0 === floatval( $order->get_total() ) ) {
+					$order->payment_complete();
+					KP_Subscription::save_recurring_token( $order_id, $recurring_token );
+					$order->add_order_note( __( 'The order contains a free or trial subscription, and no Klarna order is associated with this purchase. A Klarna order will only be registered once the subscriber is charged.', 'klarna-payments-for-woocommerce' ) );
+
+					kp_unset_session_values();
+					wp_send_json_success( $order->get_checkout_order_received_url() );
+				}
+			}
+
+			$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $auth_token, $order_id );
 
 			if ( is_wp_error( $response ) ) {
 				wp_send_json_error( kp_extract_error_message( $response ) );
@@ -64,7 +100,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			$fraud_status = $response['fraud_status'];
 			switch ( $fraud_status ) {
 				case 'ACCEPTED':
-					kp_process_accepted( $order, $response );
+					kp_process_accepted( $order, $response, $recurring_token );
 					kp_unset_session_values();
 					wp_send_json_success( $response['redirect_url'] );
 					break;
@@ -83,7 +119,6 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 					wp_send_json_error( $order->get_cancel_order_url_raw() );
 					break;
 			}
-			wp_send_json_success();
 		}
 
 		/**
@@ -96,15 +131,34 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			if ( ! wp_verify_nonce( $nonce, 'kp_wc_auth_failed' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 			}
-			// @codingStandardsIgnoreStart
-			$order_id = $_POST['order_id'];
-			$show_form = $_POST['show_form'];
+
+			$order_key = filter_input( INPUT_POST, 'order_key', FILTER_SANITIZE_SPECIAL_CHARS );
+			$order_id  = filter_input( INPUT_POST, 'order_id', FILTER_SANITIZE_NUMBER_INT );
+			$show_form = filter_input( INPUT_POST, 'show_form', FILTER_SANITIZE_SPECIAL_CHARS );
+
+			if ( empty( $_POST['order_key'] ) || empty( $_POST['order_id'] ) || empty( $_POST['show_form'] ) ) {
+				wp_send_json_error( 'missing params' );
+			}
+
 			$order = wc_get_order( $order_id );
-			// @codingStandardsIgnoreEnd
-			if ( 'true' === $show_form ) {
+			if ( empty( $order ) ) {
+				wp_send_json_error( 'no order found' );
+			}
+
+			if ( ! hash_equals( $order->get_order_key(), $order_key ) ) {
+				wp_send_json_error( 'order id and key do not match order' );
+			}
+
+			if ( ! in_array( $show_form, array( 'false', 'true' ), true ) ) {
+				wp_send_json_error( 'unexpected form data' );
+			}
+
+			$show_form = 'true' === $show_form ? true : false;
+			if ( $show_form ) {
 				$order->add_order_note( __( 'Customer aborted purchase with Klarna.', 'klarna-payments-for-woocommerce' ) );
 			} else {
 				$order->add_order_note( __( 'Authorization rejected by Klarna.', 'klarna-payments-for-woocommerce' ) );
+				do_action( 'kp_authorization_rejected', $order );
 			}
 
 			wp_send_json_success();
@@ -120,6 +174,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			if ( ! wp_verify_nonce( $nonce, 'kp_wc_log_js' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 			}
+
 			$posted_message    = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
 			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
 			$message           = "Frontend JS $klarna_session_id: $posted_message";

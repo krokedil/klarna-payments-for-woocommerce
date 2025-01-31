@@ -1,40 +1,55 @@
-=== Klarna Payments for WooCommerce ===
+=== Klarna for WooCommerce ===
 Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
-Requires at least: 4.0
-Tested up to: 6.1.1
-Requires PHP: 7.0
+Requires at least: 5.0
+Tested up to: 6.7.1
+Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 7.4.0
-Stable tag: 2.12.1
+WC tested up to: 9.5.2
+Stable tag: 3.9.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-== DESCRIPTION ==
+Grow your business for increased sales and enhanced shopping experiences at no extra costs.
 
-*As opposed to Klarna Checkout, Payments are standalone payment methods. Complement your existing checkout experience with a Klarna hosted widget (e.g., Pay Later, Financing or Installments).*
+== Description ==
+=== Millions shop and pay with Klarna ===
 
-Choose the Klarna features you want – and only the features you want – to reduce purchase stress and improve your user experience. We have several financing and direct payment options to meet your needs, and they’re all easily integrated into your existing buying journey.
+Klarna is the preferred payment option for both brands and customers, used by millions of shoppers every month, online and in-store.
 
-=== Pay Now (direct payments) ===
-Customers who want to pay in full at checkout can do it quickly and securely with a credit/debit card.Friction-free direct purchases while maximising the value for your business thanks to guaranteed payments. If they have a Klarna account they can save their details and enjoy one-click purchases from then on.
+| **87M Shoppers** | **2.5M Daily Transactions** | **600+K Retailers Globally** |
 
-===  Pay later (invoice) ===
-Try it first, pay it later. Delayed payments for customers who like low friction purchases and to pay after delivery.
+=== More ways to pay, more purchases ===
 
-=== Slice it (installments) ===
-Installment, revolving and other flexible financing plans let customers pay when they can and when they want.
+Grow your business with our flexible payment options and smart shopping solutions. Unlock higher purchase power for your customers by giving them the full flexibility of how and when they want to pay. Brands using Klarna see:
+
+| **40%** increase in average order value | **20%** increase in conversion | **45%** higher purchase frequency |
+
+You’ll always be paid in full and upfront, while your customers pay at a later date. Klarna supports high value orders, and everyday purchases. Payment options include:
+
+| **Feature**                        | **Description**                                                                                                                |
+|------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| **Pay Now, with direct payments**  | Pay Now accepts all direct payments for a fast, convenient checkout.                                                           |
+| **Buy now, Pay Later**             | Pay Later is a deferred payment that will give shoppers an extra 14 or 30 days before they buy.                                |
+| **Pay In N**                       | Pay in N lets you split your payment in several payments, spread over a relatively short amount of time, typically less than 60 days, and does not carry interest. Two most common variations are Pay in 4 and Pay in 3. |
+| **Financing**                      | Financing offers long-term, monthly payments to make larger purchases possible for your customers. Available in 6, 12, 18, and 24 month terms. |
+
+Go to [Klarna](https://www.klarna.com) to get details about all payment methods and their availability by market.
 
 === How to Get Started ===
 * [Sign up for Klarna](https://www.klarna.com/international/business/woocommerce/).
-* [Install the plugin](https://wordpress.org/plugins/klarna-payments-for-woocommerce/) on your site. During this process you will be asked to download [Klarna Order Management](https://wordpress.org/plugins/klarna-order-management-for-woocommerce/) so you can handle orders in Klarna directly from WooCommerce.
-* Get your store approved by Klarna, and start selling.
+* Install the plugin on your site and download Klarna Order Management.
+
+=== Smart Solutions to Maximize Sales ===
+
+- **On-site messaging**: Personalized messaging throughout the shopper journey for higher conversion rates.
+- **Express checkout**: A faster checkout process to lower the threshold for purchase completion.
 
 === What's the difference between Klarna Checkout and Klarna Payments? ===
-Klarna as your single payment provider keeps everything under one roof. You’ll have one agreement, one point of contact, one settlement file, one payout with __Klarna Checkout__. It only takes a single integration to deliver the full Klarna hosted checkout experience through a widget placed on your site.
-
-__Klarna Payments__ removes the headaches of payments, for both consumers and merchants. Complement your checkout with a Klarna hosted widget located in your existing checkout which offers payment options for customers with a smooth user experience.
+- **Klarna Payments**: Standalone payment methods complementing your existing checkout with a Klarna hosted widget.
+- **Klarna Checkout**: Complete online checkout solution designed to increase sales and customer loyalty, with Klarna as your single payment provider.
+For more details, visit the [Klarna Payments page](https://woocommerce.com/products/klarna-payments/).
 
 == Installation ==
 1. Upload plugin folder to to the "/wp-content/plugins/" directory.
@@ -44,13 +59,236 @@ __Klarna Payments__ removes the headaches of payments, for both consumers and me
 
 == Frequently Asked Questions ==
 = Which countries does this payment gateway support? =
-Klarna Payments works for merchants in Australia, Austria, Belgium, Canada, Czech Republic, Denmark, Finland, France, Germany, Greece, Ireland (Republic of Ireland), Italy, Netherlands, New Zealand, Norway, Poland, Portugal, Spain, Sweden, Switzerland, United Kingdom and United States.
+Klarna Payments works for merchants in Australia, Austria, Belgium, Canada, Czech Republic, Denmark, Finland, France, Germany, Greece, Ireland (Republic of Ireland), Italy, Netherlands, New Zealand, Norway, Poland, Portugal, Romania, Spain, Sweden, Switzerland, United Kingdom and United States.
 
 = Where can I find Klarna Payments for WooCommerce documentation? =
 For help setting up and configuring Klarna Payments for WooCommerce please refer to our [documentation](https://docs.krokedil.com/klarna-payments-for-woocommerce/).
 
 
+== Screenshots ==
+
+1. On-site messaging
+2. Express checkout
+
 == Changelog ==
+= 2025.01.20    - version 3.9.1 =
+* Fix           - Fixed active/inactive badge not always showing the expected status.
+
+= 2025.01.13    - version 3.9.0 =
+* Feature       - Added active/inactive badge to features in settings.
+* Feature       - [KOSM] Added enable/disable setting for KOSM.
+* Tweak         - Orders rejected by Klarna after the order has been placed in WooCommerce will now receive status "failed".
+* Tweak         - Added "Select all" country option to credentials section in settings.
+* Tweak         - Removed filter for payment method title.
+* Fix           - Resolved the Klarna Payments block not showing for the twentytwentyfour theme's blocks checkout.
+* Fix           - Resolved "Incompatible with blocks" warning for Klarna Payments in the block checkout editor.
+* Fix           - Resolved "Textdomain was called incorrectly" notice.
+* Fix           - [KOSM] Resolved "Attempt to read property on null" warning.
+* Fix           - [KOSM] Resolved data-environment tag not being set correctly.
+* Fix           - [SIWK] Fixed faulty formatting for scope and removed invalid scope.
+* Fix           - Bumped release version.
+
+= 2024.11.12    - version 3.8.3 =
+* Fix           - Fixed an issue where the customer could place an order on the pay for order page without consenting to the terms and conditions.
+* Tweak         - The checkout will be blocked while the checkout is being processed.
+* Tweak         - If the locale is modified, the existing session will be dropped, and a new one will be created. This should ensure that Klarna has the correct locale, and improve compatibility with i18n plugins.
+* Feature       - [KOSM] Added the 'kosm_show_everywhere' filter hook to allow the placement to be shown on all pages.
+* Tweak         - [KOSM] Updated the product description.
+* Tweak         - [KEC] The KEC button will remain hidden on a variable product page until a variant is selected.
+* Tweak         - [KEC] Updated the product description.
+* Tweak         - [SIWK] Updated the product description.
+* Fix           - [Settings] Fixed an issue where the preview would still show the old preview after updating the settings until the user refreshes the page.
+* Fix           - Bump release version.
+
+= 2024.11.12    - version 3.8.2 =
+* Fix           - Fixed an issue where the customer could place an order on the pay for order page without consenting to the terms and conditions.
+* Tweak         - The checkout will be blocked while the checkout is being processed.
+* Tweak         - If the locale is modified, the existing session will be dropped, and a new one will be created. This should ensure that Klarna has the correct locale, and improve compatibility with i18n plugins.
+* Feature       - [KOSM] Added the 'kosm_show_everywhere' filter hook to allow the placement to be shown on all pages.
+* Tweak         - [KOSM] Updated the product description.
+* Tweak         - [KEC] The KEC button will remain hidden on a variable product page until a variant is selected.
+* Tweak         - [KEC] Updated the product description.
+* Tweak         - [SIWK] Updated the product description.
+* Fix           - [Settings] Fixed an issue where the preview would still show the old preview after updating the settings until the user refreshes the page.
+
+= 2024.10.30    - version 3.8.1 =
+* Fix           - [SIWK] Fixed and issue with the "Sign in with Klarna" showing even when the feature was disabled.
+
+= 2024.10.25    - version 3.8.0 =
+* Feature       - Added support for "Sign in with Klarna" for an improved way to drive shoppers straight to the checkout, with all their preferences already set.
+
+= 2024.10.23    - version 3.7.4 =
+* Fix           - Fixed an undefined index warning related to new settings.
+* Fix           - [KOSM] Fixed the On-site messaging preview not changing to reflect the selected theme.
+* Fix           - [KOSM] Fixed an uncaught error when rendering the On-site messaging preview.
+* Tweak         - [KEC] The Klarna Express Checkout ("KEC") button will now be hidden on a variable product page until a variant is selected.
+* Tweak         - [Settings] Added links to plugin and additional resources.
+
+= 2024.09.13    - version 3.7.3 =
+* Fix           - Fix an issue with getting the correct credentials in some cases when not using the combined setting for EU countries.
+
+= 2024.09.12    - version 3.7.2 =
+* Fix           - Fixed a undefined index warning related to new settings.
+
+= 2024.09.11    - version 3.7.1 =
+* Fix           - Fixed a issue with getting the correct client id when not combining all EU countries into a single setting.
+* Tweak         - Bumped version for krokedil/woocommerce dependency.
+
+= 2024.09.11    - version 3.7.0 =
+* Changed       - Changed the settings page to follow a new design that's more streamlined and matching with Klarnas other products.
+* Changed       - Changed the payment method name to be Klarna instead of Klarna Payments.
+* Feature       - Added a setting to combine all EU country credentials into a single setting field, for cases where you use the same merchant id and secret for multiple countries that you sell to with Klarna Payments.
+* Feature       - Added settings for each region to have their own Client ID that can be used by On-Site Messaging, Express Checkout and other products from Klarna instead of these having to add the setting separately. This will also allow for more control of the regions these features are available in.
+* Feature       - Added a setting to set what countries are available for the payment method. This will be skipped if it is empty to prevent issues until stores can update the setting properly.
+* Feature       - Added a Support tab on the settings page for the gateway. This will allow stores to open a support ticket directly with Krokedil from the plugin, and has the ability to attach the system report. And has links to other resources such as plugin documentation and information.
+* Feature       - Added a Addons tab on the settings page for the gateway. This will show other plugins developed by Krokedil that work well together with the plugin that can provide additional features to the WooCommerce store.
+* Fix           - Fixed potential issues caused by other plugins having similar composer dependencies but with different versions by scoping the plugins dependencies.
+* Fix           - Fixed some issues in the credentials check that runs when settings are saved.
+
+= 2024.09.09    - version 3.6.2 =
+* Enhancement   - Performance improvements related to session management.
+
+= 2024.08.28    - version 3.6.1 =
+* Fix           - Fixed a critical error when retrieving PW gift card from a Woo order.
+* Fix           - Fixed a division by zero when calculating the tax rate.
+* Fix           - Fixed an undefined index warning by ensuring that PW gift card exists before attempting retrieval.
+* Fix           - Resolved an issue where Chrome ignored the autocomplete attribute for Australian credentials.
+* Fix           - Fixed an issue where the product image URLs where sent to Klarna even when the setting was disabled.
+* Tweak         - Updated the default Klarna logo.
+
+= 2024.08.19    - version 3.6.0 =
+* Feature       - Added compatibility with "Linear Checkout for WooCommerce" plugin.
+* Feature       - Added the 'kp_blocks_order_button_label' filter to change the order button label in the Klarna Payments block.
+* Fix           - Fixed divide by zero error when calculating the tax rate.
+* Tweak         - Addressed various Woo Quality Insights recommendations.
+* Tweak         - You can now overwrite the recurring payment token from the admin Subscription page.
+* Feature       - [KOSM] Added support for Slovakia.
+* Feature       - [KOSM] Added support for Hungary.
+* Feature       - [KOSM] Added 'kosm_hide_placement' filter hook for conditionally hiding the placement.
+
+= 2024.05.13    - version 3.5.4 =
+* Fix           - Fixed a critical error due to undefined method call.
+
+= 2024.05.13    - version 3.5.3 =
+* Fix           - [KOSM] Restored the theme setting "custom" (previously known as "none").
+* Fix           - [KOSM] Resolved deprecation warning in PHP 8.2.
+* Fix           - [KOSM] The disable KOSM admin banner will now only show if the KOSM plugin is enabled (previously it would always show as long as the KOSM plugin is installed).
+* Fix           - [KOSM] The shortcode should now work as intended on non-shop pages.
+* Tweak         - Enhanced compatibility with third-party gift card and coupon plugins.
+* Tweak         - The "Klarna order id" label will now only be added to the email template if the Klarna order ID is set.
+
+= 2024.04.23    - version 3.5.2 =
+* Fix           - Update package version.
+
+= 2024.04.22    - version 3.5.1 =
+* Fix           - Fixed a critical error that happened under certain conditions if the KOSM plugin is active.
+
+= 2024.04.22    - version 3.5.0 =
+* Feature       - On-site messaging is now part of the Klarna Payments plugin. With this change we've moved to the new Web SDK and resolved deprecation warnings.
+* Tweak         - Redacted sensitive information from the log.
+* Fix           - Fixed an issue where multiple KEC buttons would appear on a variable product page every time the user picked a different variant option.
+* Fix           - Moved to client_key which should resolve the client_id deprecation warning.
+
+= 2024.04.02    - version 3.4.2 =
+* Fix           - Retrieve the currency from the order where applicable. This should enhance compatibility with custom currency switchers.
+* Fix           - Prevent order from being processed more than once through callbacks.
+* Fix           - Resolve an issue where if the customer was redirected back to the store from the hosted payment page, an HTTP 409 error could occur.
+* Tweak         - Use shipping country if the billing country field is unset. Defaults to store location if none is available.
+
+= 2024.03.12    - version 3.4.1 =
+* Fix           - Fixed an issue where the name of the previous payment gateway was set on the order after changing to, and paying with Klarna Payments.
+* Fix           - Setting multiple tax rates with different priorities in WooCommerce tax settings should now work as expected.
+* Fix           - Fixed an issue introduced in WooCommerce version 8.7.0 where a critical error would occur if the cart contained any coupon.
+
+= 2024.01.31    - version 3.4.0 =
+* Feature       - Add support to pass locale to Klarna Express Checkout.
+* Fix           - Klarna Express Checkout will no longer compare the shipping address to the KEC provided address when delivery address is forced to be the billing address.
+* Fix           - Fixed an issue with WooCommerce Subscriptions that would cause a recursion error when canceling a subscription with a Klarna Payments payment method.
+
+= 2024.01.16    - version 3.3.1 =
+* Fix           - Remove the required flag from the KEC client identifier setting.
+
+= 2024.01.15    - version 3.3.0 =
+* Feature       - Added support for Klarna Express Checkout.
+* Feature       - Added support for Post Purchase Upsell.
+* Fix           - Fixed an issue with a undefined index when reading the enabled setting before it has been saved.
+* Tweak         - Changed author and author uri for the plugin.
+
+= 2023.12.06    - version 3.2.4 =
+* Fix           – Added a check to ensure that a Klarna order is always, at most, processed once. This should prevent accidental order re-processing.
+* Fix           - Fixed PHP 8 deprecation warnings.
+* Tweak         - The API password fields in the plugin settings is now treated as a password field.
+* Tweak         - Improved performance when retrieving the order. This is especially noticeable in stores with many orders (thanks @fitimvata!).
+* Tweak         - Added an extra integrity check when verifying AJAX requests.
+
+= 2023.11.07    - version 3.2.3 =
+* Fix           - If Klarna Payment is the preferred payment gateway, the first payment category should be selected by default rather than the last one (current behavior).
+
+= 2023.10.09    - version 3.2.2 =
+* Fix           - Fixed a critical error due to the class "KP_Api" being undefined.
+* Fix           - The plugin will no longer cause a critical error when its dependency, WooCommerce, is disabled.
+* Fix           - Fixed an issue related to subscriptions where the incorrect "intent" would be set.
+* Fix           - Pay for order should now work as expected.
+
+= 2023.08.31    - version 3.2.1 =
+* Fix           - Fix fatal error due to subscriptions class not available.
+
+= 2023.08.31    - version 3.2.0 =
+* Feature       - Added support for WC subscriptions.
+* Enhancement   - You can now use the 'klarna_base_region' filter to change the regional endpoint (EU, US or OC).
+* Tweak         - The KP regions in the settings should now appear in alphabetic order.
+* Fix           - Revert changes related to the setting "What is Klarna". Enabling the setting should now hide the link (like it used to) instead of making it appear.
+
+= 2023.07.26    - version 3.1.3 =
+* Fix           - Fixed an issue where the customer type defaulted to B2C even when B2B was chosen in the settings.
+
+= 2023.07.25    - version 3.1.2 =
+* Fix           - The Klarna logo will now correctly be fetched from the session as originally intended, rather than defaulting to the use of the standard logo.
+- Tweak         - We have removed the settings tab from the "Klarna Add-ons" page because its functionalities have been transferred to the plugin.
+* Tweak         - We will now validate the API credentials based on the active mode, whether it's test or production. This enhancement should prevent the plugin from inaccurately attempting to verify production credentials when the test mode is in operation.
+
+= 2023.06.28    - version 3.1.1 =
+* Fix           - Fixed an issue with how we made our meta queries when trying to find orders based on a the Klarna session ID.
+* Enhancement   - Added a validation to ensure that the order returned by our meta query actually is the correct order by verifying that the Klarna session ID stored matches the one we searched for.
+
+= 2023.06.20    - version 3.1.0 =
+* Feature       - The plugin now supports WooCommerce's "High-Performance Order Storage" ("HPOS") feature.
+* Feature       - Added support for Hungary.
+* Enhancement   - We will now use the WooCommerce JavaScript method $.scroll_to_notices() to scroll to notices when errors happen during checkout. This allows for custom overrides of the method. Thank you [@oxyc](https://github.com/oxyc)!
+* Fix           - Fixed the compatibility with YITH Giftcards.
+* Fix           - Fixed the compatibility with WooCommerce Advanced Shipping Packages
+
+
+= 2023.05.16    - version 3.0.7 =
+* Fix           - Fixed a critical error related to calculating the cart total sum. Previously, a fatal error would occur on certain PHP versions if a non-numeric item was encountered during the calculation (thanks @tobyaherbert!)
+* Fix           - Fixed an issue where essential meta data required for proper order management was missing during the pay for order payment process.
+* Fix           - Fixed an issue where the table rate shipping method used a different identifier during checkout compared to order management.
+
+= 2023.04.11    - version 3.0.6 =
+* Fix           - Fixed an issue where the client token would disappear due to a conflict with a third-party plugin, causing the Klarna payment options to not appear.
+* Fix           - Pay for order should now work as expected.
+* Fix           - When the order is being placed, the billing country should now be retrieved from the order directly. This should fix an issue with "Fluid Checkout PRO".
+* Tweak         - API errors are now only displayed on the front-end if test mode is enabled. They will still be logged provided that logging is enabled.
+
+= 2023.03.02    - version 3.0.5 =
+* Fix           - Fixed an issue where using Smart Coupons would cause a BAD_VALUE if the coupon amount was greater than the total sum of the cart content.
+* Fix           - Removed an extraneous comma which would result in a fatal error when using PHP version older than 7.3. Note: the minimum PHP version is 7.4.
+
+= 2023.02.27    - version 3.0.4 =
+* Fix           - Fixed an error message that could happen when updating your settings.
+* Fix           - Fixed an issue where we would sometimes attempt to create sessions with Klarna for countries that you do not have settings for.
+* Fix           - Fixed an issue in the logger where WordPress returns a boolean for the current WP_Hook instead of an array.
+
+= 2023.02.24    - version 3.0.3 =
+* Fix           - Fixed an issue with shipping not being present when loading the checkout page if the cart needs shipping.
+
+= 2023.02.22    - version 3.0.2 =
+* Fix           - Fixed an issue with cart fees not being processed properly, causing a potential error.
+* Fix           - Fixed a notice caused by a new setting not being set.
+
+= 2023.02.21    - version 3.0.1 =
+* Fix           - Fixed an issue with the live api url for Klarna Payments.
+
 = 2023.02.20    - version 3.0.0 =
 * Feature       - Added support for WooCommerce Checkout blocks using Klarna Payments.
 * Feature       - Added support for Romania.
@@ -370,3 +608,8 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 = 1.0 =
 * Initial release.
+
+== Upgrade Notice ==
+
+= 3.5.4 =
+This version fixes a critical error due to undefined method call. Upgrade immediately

@@ -18,6 +18,7 @@ class KP_Checkout {
 	public function __construct() {
 		add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'add_token_fragment' ) );
 		add_action( 'woocommerce_review_order_before_submit', array( $this, 'html_client_token' ) );
+		add_action( 'woocommerce_pay_order_before_submit', array( $this, 'html_client_token' ) );
 	}
 
 	/**
@@ -27,6 +28,7 @@ class KP_Checkout {
 	 * @return array
 	 */
 	public function add_token_fragment( $fragments ) {
+		KP_WC()->session->set_session_data();
 		$session_token = KP_WC()->session->get_klarna_client_token();
 		if ( empty( $session_token ) ) {
 			return $fragments;
@@ -48,10 +50,11 @@ class KP_Checkout {
 	 */
 	public function html_client_token( $session_token = false ) {
 		if ( ! $session_token ) {
+			KP_WC()->session->set_session_data();
 			$session_token = KP_WC()->session->get_klarna_client_token();
 		}
 		?>
 		<input type="hidden" id="kp_client_token" value="<?php echo esc_html( $session_token ); ?>" >
 		<?php
 	}
-} new KP_Checkout();
+}

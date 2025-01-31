@@ -10,18 +10,25 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@master
 
-      # Install all composer dependencies for the plugin.
-    - name: Install Composer dependencies
-      uses: php-actions/composer@v6
-      with:
-        dev: no
-        php_version: 7.4
+    # Build the plugin with dev dependencies to scope the dependency packages.
+    - name: Composer Install (Dev)
+      run: composer install
+
+    # Build the plugin for release.
+    - name: Composer Install (Prod)
+      run: composer install --no-dev
 
     # Install and build Block release.
     - name: Build block release versions.
       run: |
         npm ci
         npm run build
+
+    # Install SVN ( Subversion )
+    - name: Install SVN ( Subversion )
+      run: |
+        sudo apt-get update
+        sudo apt-get install subversion
 
     # Deploy the plugin to WordPress.org
     - name: WordPress Plugin Deploy

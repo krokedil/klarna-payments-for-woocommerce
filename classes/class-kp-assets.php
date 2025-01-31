@@ -35,12 +35,13 @@ class KP_Assets {
 	 * @hook wp_enqueue_scripts
 	 */
 	public function enqueue_checkout_script() {
-		if ( ! kp_is_checkout_page() ) {
+		// We do not need to enqueue scripts on the change subscription payment method page since we'll redirect the customer to Klarna's HPP.
+		if ( ! kp_is_checkout_page() || KP_Subscription::is_change_payment_method() ) {
 			return;
 		}
 
 		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		if ( 'yes' !== $settings['enabled'] ?? 'no' ) {
+		if ( 'yes' !== ( $settings['enabled'] ?? 'no' ) ) {
 			return;
 		}
 
@@ -70,8 +71,16 @@ class KP_Assets {
 	private function get_checkout_params( $settings ) {
 		// Set needed variables for the order pay page handling.
 		$pay_for_order = kp_is_order_pay_page();
-		$key           = $pay_for_order ? filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS ) : null;
-		$order_id      = $pay_for_order ? wc_get_order_id_by_order_key( $key ) : null;
+		$order_id      = $pay_for_order ? absint( get_query_var( 'order-pay', 0 ) ) : null;
+		$order_key     = null;
+		if ( ! empty( $order_id ) ) {
+			$order     = wc_get_order( $order_id );
+			$order_key = $order->get_order_key();
+		}
+
+		$customer_type = $settings['customer_type'] ?? 'b2c';
+		$order_data    = new KP_Order_Data( $customer_type, $order_id );
+		$customer      = $order_data->get_klarna_customer_object();
 
 		// Create the params array.
 		$klarna_payments_params = array(
@@ -88,16 +97,22 @@ class KP_Assets {
 			'submit_order'           => WC_AJAX::get_endpoint( 'checkout' ),
 			// Params.
 			'testmode'               => $settings['testmode'] ?? 'no',
-			'customer_type'          => $settings['customer_type'] ?? 'b2c',
+			'customer_type'          => $customer_type,
 			'remove_postcode_spaces' => ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no',
 			'client_token'           => KP_WC()->session->get_klarna_client_token(),
 			'order_pay_page'         => $pay_for_order,
 			'pay_for_order'          => $pay_for_order,
 			'order_id'               => $order_id,
+			'order_key'              => $order_key,
 			'addresses'              => $pay_for_order ? array(
-				'billing'  => WC()->customer->get_billing_address(),
-				'shipping' => WC()->customer->get_shipping_address(),
+				'billing'  => $customer['billing'],
+				'shipping' => $customer['shipping'],
 			) : null,
+			// i18n.
+			'i18n'                   => array(
+				'order_button_label' => apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) ),
+				'terms_not_checked'  => __( 'Please read and accept the terms and conditions to proceed with your order.', 'woocommerce' ),
+			),
 		);
 
 		// Return with filter incase some people want to modify the params.
@@ -128,6 +143,19 @@ class KP_Assets {
 			WC_KLARNA_PAYMENTS_VERSION,
 			false
 		);
+
+		wp_enqueue_style(
+			'klarna_payments_admin_style',
+			plugins_url( 'assets/css/klarna-payments-admin.css', WC_KLARNA_PAYMENTS_MAIN_FILE ),
+			array(),
+			WC_KLARNA_PAYMENTS_VERSION
+		);
+
+		$klarna_payments_admin_params = array(
+			'select_all_countries_title' => __( 'Select all', 'klarna-payments-for-woocommerce' ),
+		);
+
+		wp_localize_script( 'klarna_payments_admin', 'klarna_payments_admin_params', $klarna_payments_admin_params );
 	}
 
 	/**
@@ -154,7 +182,6 @@ class KP_Assets {
 
 		$this->enqueue_express_button_scripts();
 		$this->enqueue_express_button_styles();
-
 	}
 
 	/**
@@ -313,9 +340,7 @@ class KP_Assets {
 		);
 
 		wp_enqueue_style( 'klarna_express_button_styles' );
-
 	}
-
 }
 
 new KP_Assets();

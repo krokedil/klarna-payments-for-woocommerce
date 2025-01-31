@@ -7,8 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Krokedil\WooCommerce\Cart\Cart;
-use Krokedil\WooCommerce\Order\Order;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\Cart\Cart;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\Order\Order;
 
 /**
  * Helper class to generate a Klarna payments request body for a order/session request.
@@ -42,11 +42,11 @@ class KP_Order_Data {
 	 */
 	private $customer_type;
 
-    /**
-     * The generated order data.
-     *
-     * @var \Krokedil\WooCommerce\OrderData
-     */
+	/**
+	 * The generated order data.
+	 *
+	 * @var KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderData
+	 */
 	public $order_data;
 
 	/**
@@ -56,25 +56,25 @@ class KP_Order_Data {
 	 */
 	private $separate_sales_tax;
 
-    /**
-     * Class constructor.
-     *
-     * @param string   $customer_type The Customer type to use for KP. Either B2B or B2C. Based on the setting in the plugin.
-     * @param int|null $order_id The WooCommerce order it used to calculate the order data. If null the cart will be used instead.
-     */
-    public function __construct( $customer_type, $order_id = null ) {
+	/**
+	 * Class constructor.
+	 *
+	 * @param string   $customer_type The Customer type to use for KP. Either B2B or B2C. Based on the setting in the plugin.
+	 * @param int|null $order_id The WooCommerce order it used to calculate the order data. If null the cart will be used instead.
+	 */
+	public function __construct( $customer_type, $order_id = null ) {
 		$this->customer_type      = $customer_type;
-        $this->order_id           = $order_id;
+		$this->order_id           = $order_id;
 		$this->order              = $this->order_id ? wc_get_order( $this->order_id ) : null;
 		$this->klarna_country     = kp_get_klarna_country( $this->order );
 		$this->order_data         = $this->get_order_data();
-		$this->separate_sales_tax = "US" === $this->klarna_country;
-    }
+		$this->separate_sales_tax = 'US' === $this->klarna_country;
+	}
 
 	/**
 	 * Returns the request helper for the request based on if we have a order id passed or not.
 	 *
-	 * @return \Krokedil\WooCommerce\OrderData
+	 * @return KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderData
 	 */
 	public function get_order_data() {
 		$config = array(
@@ -91,17 +91,17 @@ class KP_Order_Data {
 	}
 
 	/**
-	 * Returns a formated Klarna order object.
+	 * Returns a formatted Klarna order object.
 	 *
-     * @param KP_IFrame $iframe_options The options to use for the Klarna Payments iframes.
+	 * @param KP_IFrame $iframe_options The options to use for the Klarna Payments iframes.
 	 * @return array
 	 */
-    public function get_klarna_order_object( $iframe_options ) {
+	public function get_klarna_order_object( $iframe_options = null ) {
 		$customer = $this->get_klarna_customer_object();
 
 		return array(
 			'purchase_country'  => $this->klarna_country,
-			'purchase_currency' => get_woocommerce_currency(),
+			'purchase_currency' => empty( $order ) ? get_woocommerce_currency() : $order->get_currency(),
 			'locale'            => kp_get_locale(),
 			'order_amount'      => $this->order_data->get_total(),
 			'order_tax_amount'  => $this->order_data->get_total_tax(),
@@ -109,12 +109,12 @@ class KP_Order_Data {
 			'customer'          => get_klarna_customer( $this->customer_type ),
 			'billing_address'   => $customer['billing'],
 			'shipping_address'  => $customer['shipping'],
-			'options'           => $iframe_options->get_kp_color_options(),
+			'options'           => $iframe_options ? $iframe_options->get_kp_color_options() : array(),
 			'merchant_urls'     => array(
 				'authorization' => home_url( '/wc-api/KP_WC_AUTHORIZATION' ),
 			),
 		);
-    }
+	}
 
 	/**
 	 * Returns an array of Klarna order line objects.
@@ -139,17 +139,24 @@ class KP_Order_Data {
 			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
 		}
 
-		// Order Coupons/Giftcards.
-		foreach ( $this->order_data->get_line_coupons() as $item ) {
-			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
-		}
-
-		// Order compatibility, to support third party plugins that add orders lines that needs to be handled seperatly.
+		// Order compatibility, to support third party plugins that add orders lines that needs to be handled separately.
 		foreach ( $this->order_data->get_line_compatibility() as $item ) {
 			$klarna_order_lines[] = $this->get_klarna_order_line_object( $item );
 		}
 
-		if( $this->separate_sales_tax ) {
+		// Order Coupons/Giftcards.
+		foreach ( KP_WC()->krokedil->compatibility()->giftcards() as $giftcards ) {
+			if ( false !== ( strpos( get_class( $giftcards ), 'WCGiftCards', true ) ) && ! function_exists( 'WC_GC' ) ) {
+				continue;
+			}
+
+			$retrieved_giftcards = ! empty( $this->order ) ? $giftcards->get_order_giftcards( $this->order ) : $giftcards->get_cart_giftcards();
+			foreach ( $retrieved_giftcards as $retrieved_giftcard ) {
+				$klarna_order_lines[] = $this->get_klarna_order_line_object( $retrieved_giftcard );
+			}
+		}
+
+		if ( $this->separate_sales_tax ) {
 			$klarna_order_lines[] = array(
 				'name'                  => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
 				'quantity'              => 1,
@@ -167,9 +174,9 @@ class KP_Order_Data {
 	}
 
 	/**
-	 * Returns a formated Klarna order line object.
+	 * Returns a formatted Klarna order line object.
 	 *
-	 * @param  \Krokedil\WooCommerce\OrderLineData $order_line The order line data.
+	 * @param  KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderLineData $order_line The order line data.
 	 * @return array
 	 */
 	public function get_klarna_order_line_object( $order_line ) {
@@ -190,38 +197,48 @@ class KP_Order_Data {
 				break;
 		}
 
-		return array_filter(
-			array(
-				'image_url'             => $order_line->get_image_url(),
-				'merchant_data'         => apply_filters( $order_line->get_filter_name( 'merchant_data' ), array(), $order_line ),
-				'name'                  => $order_line->get_name(),
-				'product_identifiers'   => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
-				'product_url'           => $order_line->get_product_url(),
-				'quantity'              => $order_line->get_quantity(),
-				'quantity_unit'         => apply_filters( $order_line->get_filter_name( 'quantity_unit' ), 'pcs', $order_line ),
-				'reference'             => $order_line->get_sku(),
-				'tax_rate'              => $this->separate_sales_tax ? 0 : $order_line->get_tax_rate(),
-				'total_amount'          => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
-				'total_discount_amount' => $this->separate_sales_tax ? $order_line->get_total_discount_amount() : $order_line->get_total_discount_amount() + $order_line->get_total_discount_tax_amount(),
-				'total_tax_amount'      => $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount(),
-				'type'                  => $type,
-				'unit_price'            => $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount(),
-				'subscription'          => apply_filters( $order_line->get_filter_name( 'subscription' ), array(), $order_line ),
-			),
-			'KP_Order_Data::remove_null' );
-		;
+		$klarna_item = array(
+			'image_url'             => $this->maybe_allow_order_line_url( $order_line->get_image_url() ),
+			'merchant_data'         => apply_filters( $order_line->get_filter_name( 'merchant_data' ), array(), $order_line ),
+			'name'                  => $order_line->get_name(),
+			'product_identifiers'   => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
+			'product_url'           => $order_line->get_product_url(),
+			'quantity'              => $order_line->get_quantity(),
+			'quantity_unit'         => apply_filters( $order_line->get_filter_name( 'quantity_unit' ), 'pcs', $order_line ),
+			'reference'             => $order_line->get_sku(),
+			'tax_rate'              => $this->separate_sales_tax ? 0 : $order_line->get_tax_rate(),
+			'total_amount'          => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
+			'total_discount_amount' => $this->separate_sales_tax ? $order_line->get_total_discount_amount() : $order_line->get_total_discount_amount() + $order_line->get_total_discount_tax_amount(),
+			'total_tax_amount'      => $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount(),
+			'type'                  => $type,
+			'unit_price'            => $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount(),
+			'subscription'          => apply_filters( $order_line->get_filter_name( 'subscription' ), array(), $order_line ),
+		);
+
+		if ( isset( $order_line->product ) ) {
+			$product = $order_line->product;
+			if ( class_exists( 'WC_Subscriptions_Product' ) && WC_Subscriptions_Product::is_subscription( $product ) ) {
+				$klarna_item['subscription'] = array(
+					'name'           => $klarna_item['name'],
+					'interval'       => strtoupper( WC_Subscriptions_Product::get_period( $product ) ),
+					'interval_count' => absint( WC_Subscriptions_Product::get_interval( $product ) ),
+				);
+			}
+		}
+
+		return array_filter( $klarna_item, 'KP_Order_Data::remove_null' );
 	}
 
 	/**
-	 * Returns a formated Klarna customer object.
+	 * Returns a formatted Klarna customer object.
 	 *
 	 * @param  string|null $customer_type The customer type to use for generating the data. If empty it will use the class property instead.
 	 * @return array
 	 */
 	public function get_klarna_customer_object( $customer_type = null ) {
-        if( null === $customer_type ) {
+		if ( empty( $customer_type ) ) {
 			$customer_type = $this->customer_type;
-        }
+		}
 
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
 		$customer_data         = $this->order_data->customer;
@@ -236,7 +253,7 @@ class KP_Order_Data {
 			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_billing_postcode() : str_replace( ' ', '', $customer_data->get_billing_postcode() ),
 			'city'            => $customer_data->get_billing_city(),
 			'region'          => $customer_data->get_billing_state(),
-			'country'         => $customer_data->get_billing_country(),
+			'country'         => empty( $customer_data->get_billing_country() ) ? kp_get_klarna_country() : $customer_data->get_billing_country(),
 		);
 
 		$shipping = array(
@@ -253,21 +270,21 @@ class KP_Order_Data {
 		);
 
 		if ( 'b2b' === $customer_type ) {
-			$customer['billing']['organization_name']  = $customer_data->get_billing_company();
-			$customer['shipping']['organization_name'] = $customer_data->get_shipping_company();
+			$billing['organization_name']  = $customer_data->get_billing_company();
+			$shipping['organization_name'] = $customer_data->get_shipping_company();
 		}
 
-		foreach( $shipping as $key => $value ) {
-			if( ! empty( $value ) ) {
+		foreach ( $shipping as $key => $value ) {
+			if ( ! empty( $value ) ) {
 				continue;
 			}
 
 			$shipping[ $key ] = $billing[ $key ];
 		}
 
-		$customer              = array(
+		$customer = array(
 			'billing'  => $billing,
-			'shipping' => $shipping
+			'shipping' => $shipping,
 		);
 
 		return $customer;
@@ -281,5 +298,21 @@ class KP_Order_Data {
 	 */
 	public static function remove_null( $var ) {
 		return is_array( $var ) ? ! empty( $var ) : null !== $var; // If empty array, or if value is null return true to remove value.
+	}
+
+	/**
+	 * Maybe filters out product url for the order line before we send them to Klarna based on settings.
+	 *
+	 * @param string $url The URL to the product or product image.
+	 * @return string|null
+	 */
+	public function maybe_allow_order_line_url( $url ) {
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+		if ( 'yes' !== ( $settings['send_product_urls'] ?? 'no' ) ) {
+			$url = null;
+		}
+
+		return $url;
 	}
 }

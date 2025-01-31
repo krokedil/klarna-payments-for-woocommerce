@@ -45,37 +45,43 @@ class KP_Callbacks {
 	 * @return void
 	 */
 	public function kp_wc_authorization( $data ) {
-		$query_args = array(
-			'fields'      => 'ids',
-			'post_type'   => wc_get_order_types(),
-			'post_status' => array_keys( wc_get_order_statuses() ),
-			'meta_key'    => '_kp_session_id', // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
-			'meta_value'  => $data['session_id'], // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
-			'date_query'  => array(
-				array(
-					'after'  => '5 minute ago',
-					'column' => 'post_date',
-				),
-			),
+		$order = wc_get_orders(
+			array(
+				'meta_key'   => '_kp_session_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value' => $data['session_id'],
+				'limit'      => 1,
+				'orderby'    => 'date',
+				'order'      => 'DESC',
+			)
 		);
 
-		$orders = get_posts( $query_args );
+		$order = reset( $order );
 
-		if ( empty( $orders ) ) {
+		// Verify that the meta data is correct with what we just searched for.
+		if ( $order && $order->get_meta( '_kp_session_id', true ) !== $data['session_id'] ) {
+			$order = null;
+		}
+
+		if ( empty( $order ) ) {
 			return;
 		}
 
 		$auth_token = $data['authorization_token'];
-		$order_id   = $orders[0];
-		$order      = wc_get_order( $order_id );
-		$country    = $order->get_billing_country();
+		$country    = kp_get_klarna_country( $order );
 
-		// Dont do anything if the order has been processed.
-		if ( $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+		// Check if the PURCHASE has already been completed by the customer.
+		if ( ! empty( $order->get_date_paid() ) ) {
 			return;
 		}
 
-		$response = KP_WC()->api->place_order( $country, $auth_token, $order_id );
+		// For free or trial subscriptions, authorization can be safely ignored as we do not need to act upon it
+		// since no Klarna order is associated with the purchase, only a Klarna customer token.
+		if ( KP_Subscription::order_has_subscription( $order ) && 0.0 === floatval( $order->get_total() ) ) {
+			$order->payment_complete();
+			return;
+		}
+
+		$response = KP_WC()->api->place_order( $country, $auth_token, $order->get_id() );
 		if ( is_wp_error( $response ) ) {
 			/**
 			 * WordPress error handling.
@@ -125,6 +131,11 @@ class KP_Callbacks {
 		$order_id = wc_get_order_id_by_order_key( $order_key );
 		$order    = wc_get_order( $order_id );
 		$country  = $order->get_billing_country();
+
+		// Check if the order has already been processed.
+		if ( ! empty( $order->get_date_paid() ) ) {
+			return;
+		}
 
 		// Trigger place order on the auth token with KP.
 		$response = KP_WC()->api->place_order( $country, $auth_token, $order_id );
