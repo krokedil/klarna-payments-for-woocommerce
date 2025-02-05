@@ -45,7 +45,7 @@
   },
   "scripts": {
     "prebuild": "npx grunt makepot && npx grunt cssmin",
-    "format": "pnpx wp-prettier assets/js --paren-spacing --tab-width 4 --print-width 120 --no-semi --write",
+    "format": "npx wp-prettier assets/js --paren-spacing --tab-width 4 --print-width 120 --no-semi --write",
     "build": "npx wp-scripts build",
     "start:webpack": "wp-scripts start",
     "start:dev": "wp-scripts start"
