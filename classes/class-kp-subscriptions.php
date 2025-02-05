@@ -81,6 +81,7 @@ class KP_Subscription {
 		$response = KP_WC()->api->create_recurring_order( kp_get_klarna_country( $renewal_order ), $recurring_token, $renewal_order->get_id() );
 		if ( ! is_wp_error( $response ) ) {
 			$klarna_order_id = $response['order_id'];
+			// Translators: Klarna order id.
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Klarna. Klarna order id: %s', 'klarna-payments-for-woocommerce' ), $klarna_order_id ) );
 			kp_save_order_meta_data( $renewal_order, $response );
 		} else {
