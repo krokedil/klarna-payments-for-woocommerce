@@ -125,7 +125,7 @@ class KP_Session {
 
 		// Return WP Error if we get one.
 		if ( is_wp_error( $order ) ) {
-			throw new Exception( $order->get_error_message() );
+			throw new Exception( esc_html( $order->get_error_message() ) );
 		}
 
 		// If we have an order, get the Klarna session from order meta.

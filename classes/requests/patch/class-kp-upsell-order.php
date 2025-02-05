@@ -42,7 +42,7 @@ class KP_Upsell_Order extends KP_Requests_Patch {
 		return array(
 			'order_lines'  => empty( $order_lines ) ? null : $order_lines, // Null the values if they are empty force an error.
 			'order_amount' => 0 === $order_total ? null : $order_total, // Null the values if they are empty force an error.
-			'description'  => __( 'Upsell from thankyou page', 'klarna-upsell-for-woocommerce' ),
+			'description'  => __( 'Upsell from thankyou page', 'klarna-payments-for-woocommerce' ),
 		);
 	}
 }
