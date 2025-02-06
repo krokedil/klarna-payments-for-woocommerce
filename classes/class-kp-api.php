@@ -246,7 +246,6 @@ class KP_Api {
 			}
 		}
 
-		KP_WC()->support()->request( $response );
-		return $response;
+		return KP_WC()->support()->request( $response );
 	}
 }
