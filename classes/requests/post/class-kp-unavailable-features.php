@@ -57,7 +57,7 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 			return "https://api-global.test.klarna.com/v2/plugins/{$this->request_id}/features";
 		}
 
-		return "https://sample-ul.live.klarna.com/v2/plugins/{$this->request_id}/features";
+		return "https://api-global.klarna.com/v2/plugins/{$this->request_id}/features";
 	}
 
 	/**
