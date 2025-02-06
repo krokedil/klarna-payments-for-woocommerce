@@ -39,6 +39,7 @@ use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
+use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 
 /**
  * Required minimums and constants
@@ -91,6 +92,15 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @return void
 		 */
 		public function __wakeup() {
+		}
+
+		/**
+		 * System report instance.
+		 *
+		 * @return SystemReport
+		 */
+		public function support() {
+			return $this->support;
 		}
 
 		/**
@@ -158,6 +168,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $siwk = null;
 
 		/**
+		 * System report class.
+		 *
+		 * @var SystemReport
+		 */
+		private $support = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -182,7 +199,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public function load_textdomain() {
 			load_plugin_textdomain( 'klarna-payments-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
 		}
-
 
 		/**
 		 * Init the plugin after plugins_loaded so environment variables are set.
@@ -220,6 +236,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				)
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
+			$this->support                 = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce' );
 
 			$this->register_payment_block();
 

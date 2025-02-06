@@ -245,6 +245,8 @@ class KP_Api {
 				kp_print_error_message( $response );
 			}
 		}
+
+		KP_WC()->support()->request( $response );
 		return $response;
 	}
 }
