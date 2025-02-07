@@ -467,7 +467,7 @@ function kp_map_unavailable_features( $collected_features ) {
 	) ?? array();
 
 	// Return the identifying feature ids, of the features that should be hidden.
-	return array_values(
+	$unavailable_features = array_values(
 		array_map(
 			function ( $feature ) {
 				return $feature['id'];
@@ -475,4 +475,11 @@ function kp_map_unavailable_features( $collected_features ) {
 			$unavailable_features
 		)
 	);
+
+	// If KP is unavailable, we should also hide the Klarna Order Management feature.
+	if ( in_array( 'general', $unavailable_features, true ) ) {
+		$unavailable_features[] = 'kom';
+	}
+
+	return $unavailable_features;
 }
