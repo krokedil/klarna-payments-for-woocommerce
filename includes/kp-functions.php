@@ -272,7 +272,7 @@ function kp_is_order_pay_page() {
  * @return bool
  */
 function kp_is_wc_blocks_order( $order ) {
-	return $order && $order->is_created_via( 'store-api' );
+	return $order && method_exists( $order, 'is_created_via' ) && $order->is_created_via( 'store-api' );
 }
 
 /**
