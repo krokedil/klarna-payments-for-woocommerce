@@ -229,7 +229,7 @@ class KP_Form_Fields {
 
 		$merchant_portal_html = '<a href="https://portal.klarna.com" target="_blank">' . __( 'Klarna Merchant Portal', 'klarna-payments-for-woocommerce' ) . '</a>';
 
-		$privacy_policy_html = '<a href="https://portal.klarna.com" target="_blank">' . __( 'Klarna Merchant Privacy Notice', 'klarna-payments-for-woocommerce' ) . '</a>';
+		$privacy_policy_html = '<a href="https://portal.klarna.com/privacy-policy" target="_blank">' . __( 'Klarna Merchant Privacy Notice', 'klarna-payments-for-woocommerce' ) . '</a>';
 		// translators: %s: privacy policy link.
 		$credentials_html = sprintf( __( 'By activating Klarna using API credentials you agree to and accept the %s.', 'klarna-payments-for-woocommerce' ), $privacy_policy_html );
 
