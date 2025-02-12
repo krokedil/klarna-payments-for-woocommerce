@@ -39,6 +39,7 @@ use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
+use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement;
 
 /**
  * Required minimums and constants
@@ -158,6 +159,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $siwk = null;
 
 		/**
+		 * The Klarna Order Management package from Krokedil.
+		 *
+		 * @var KlarnaOrderManagement
+		 */
+		public $order_management = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -257,7 +265,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * Show admin notice if Order Management plugin is not active.
 		 */
 		public function order_management_check() {
-			if ( ! class_exists( 'WC_Klarna_Order_Management' ) ) {
+			if ( ! class_exists( 'WC_Klarna_Order_Management' && ! class_exists( 'KlarnaOrderManagement' ) ) ) {
 				$current_screen = get_current_screen();
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
