@@ -1,8 +1,8 @@
 <?php // phpcs:ignore
 /**
- * Plugin Name: Klarna Payments for WooCommerce
+ * Plugin Name: Klarna for WooCommerce
  * Plugin URI: https://krokedil.com/klarna-payments/
- * Description: Provides Klarna Payments as payment method to WooCommerce.
+ * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
  * Version: 3.9.1
