@@ -5,6 +5,8 @@
  * @package WC_Klarna_Payments/Includes
  */
 
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderUtility;
+
 /**
  * Unsets all Klarna Payments sessions.
  */
