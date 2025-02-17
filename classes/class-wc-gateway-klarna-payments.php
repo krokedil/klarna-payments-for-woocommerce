@@ -185,7 +185,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	private function get_settings_page_args() {
 		$args = get_transient( 'klarna_payments_settings_page_config' );
 		if ( ! $args ) {
-			$args = wp_remote_get( 'https://kroconnect.blob.core.windows.net/krokedil/plugin-settings/klarna-payments.json' );
+			$args = wp_remote_get( 'https://krokedil-settings-page-configs.s3.eu-north-1.amazonaws.com/main/configs/klarna-payments-for-woocommerce.json' );
 
 			if ( is_wp_error( $args ) ) {
 				KP_Logger::log( 'Failed to fetch Klarna Payments settings page config from remote source.' );

@@ -1,5 +1,5 @@
-jQuery(function ($) {
-	'use strict';
+jQuery( function ( $ ) {
+	"use strict"
 	const kp_admin = {
 		openedIcon: "dashicons-arrow-up-alt2",
 		closedIcon: "dashicons-arrow-down-alt2",
@@ -8,214 +8,192 @@ jQuery(function ($) {
 		toggleEuSelector: "#woocommerce_klarna_payments_combine_eu_credentials",
 
 		init: function () {
-			$(document).on(
-				"click",
-				".kp_settings__fields_toggle",
-				this.toggleCredentials
-			);
+			$( document ).on( "click", ".kp_settings__fields_toggle", this.toggleCredentials )
 
-			$(document).on(
-				"click",
-				".kp_settings__section_toggle",
-				this.toggleSection
-			);
+			$( document ).on( "click", ".kp_settings__section_toggle", this.toggleSection )
 
-			$(document).on(
-				"change",
-				this.toggleTestModeSelector,
-				this.toggleTest
-			);
+			$( document ).on( "change", this.toggleTestModeSelector, this.toggleTest )
 
-			$(document).on(
+			$( document ).on(
 				"change",
 				"#woocommerce_klarna_payments_kec_theme, #woocommerce_klarna_payments_kec_shape",
-				this.changeKecPreview
-			);
+				this.changeKecPreview,
+			)
 
-			$(document).on(
+			$( document ).on(
 				"change",
 				"#woocommerce_klarna_payments_placement_data_key_product, #woocommerce_klarna_payments_onsite_messaging_theme_product, #woocommerce_klarna_payments_placement_data_key_cart, #woocommerce_klarna_payments_onsite_messaging_theme_cart",
-				this.changeOsmPreview
-			);
+				this.changeOsmPreview,
+			)
 
-			$(document).on("change", this.toggleEuSelector, this.toggleEu);
+			$( document ).on( "change", this.toggleEuSelector, this.toggleEu )
 
 			// Trigger the change event to set the initial state.
-			$(this.toggleTestModeSelector).trigger("change");
+			$( this.toggleTestModeSelector ).trigger( "change" )
 
 			// Update all previews on page load.
-			this.updatePreviews();
+			this.updatePreviews()
 
-			$(document).on(
-				"click", 
+			$( document ).on(
+				"click",
 				"#woocommerce_klarna_payments_available_countries + .select2",
-				this.addSelectAllCountries
-			);
+				this.addSelectAllCountries,
+			)
 
-			$(document).on(
-				"click", 
+			$( document ).on( "click", "#klarna_payments_select_all_countries", this.toggleSelectAll )
+
+			$( document ).on(
+				"mouseover",
 				"#klarna_payments_select_all_countries",
-				this.toggleSelectAll
-			);
-		
-			$(document).on(
-				"mouseover", 
-				"#klarna_payments_select_all_countries",
-				$('.select2-results__option').removeClass('select2-results__option--highlighted')
-			);
-		
+				$( ".select2-results__option" ).removeClass( "select2-results__option--highlighted" ),
+			)
 		},
 
-		toggleCredentials: function (e) {
-			e.preventDefault();
-			const $this = $(this);
-			const $td = $this.parent().parent().find("td");
+		toggleCredentials: function ( e ) {
+			e.preventDefault()
+			const $this = $( this )
+			const $td = $this.parent().parent().find( "td" )
 
 			// Toggle the kp_settings__credentials_field kp_settings__credentials_field_hidden class
-			$td.toggleClass("kp_settings__credentials_field_hidden");
+			$td.toggleClass( "kp_settings__credentials_field_hidden" )
 
 			// Toggle the icon
-			$this
-				.find("span")
-				.toggleClass(kp_admin.openedIcon)
-				.toggleClass(kp_admin.closedIcon);
+			$this.find( "span" ).toggleClass( kp_admin.openedIcon ).toggleClass( kp_admin.closedIcon )
 		},
 
-		toggleSection: function (e) {
-			e.preventDefault();
-			const $this = $(this);
-			const $section = $this.closest(".kp_settings__section");
+		toggleSection: function ( e ) {
+			e.preventDefault()
+			const $this = $( this )
+			const $section = $this.closest( ".kp_settings__section" )
 			// Get all the children of the section that is the toggle button.
-			const $toggle = $section.find(".kp_settings__section_toggle");
-			const $gradient = $section.find(".kp_settings__content_gradient");
+			const $toggle = $section.find( ".kp_settings__section_toggle" )
+			const $gradient = $section.find( ".kp_settings__content_gradient" )
 
-			$section.find("table").toggleClass("kp_settings__section_content_hidden");
-			$section.find(".kp_settings__section_previews").toggleClass("kp_settings__section_content_hidden");
-			$gradient.toggle();
+			$section.find( "table" ).toggleClass( "kp_settings__section_content_hidden" )
+			$section.find( ".kp_settings__section_previews" ).toggleClass( "kp_settings__section_content_hidden" )
+			$gradient.toggle()
 
 			// Toggle the icon
-			$toggle
-				.toggleClass(kp_admin.openedIcon)
-				.toggleClass(kp_admin.closedIcon);
+			$toggle.toggleClass( kp_admin.openedIcon ).toggleClass( kp_admin.closedIcon )
 		},
 
 		toggleEu: function () {
-			const eu = $(kp_admin.toggleEuSelector).is(":checked");
+			const eu = $( kp_admin.toggleEuSelector ).is( ":checked" )
 
-			const $wrappers = $(".kp_settings__credentials");
-			const $euRegion = $wrappers.filter("[data-eu-region]");
-			const $euCountry = $wrappers.filter("[data-eu-country]");
+			const $wrappers = $( ".kp_settings__credentials" )
+			const $euRegion = $wrappers.filter( "[data-eu-region]" )
+			const $euCountry = $wrappers.filter( "[data-eu-country]" )
 
-			if (eu) {
-				$euRegion.show();
-				$euCountry.hide();
+			if ( eu ) {
+				$euRegion.show()
+				$euCountry.hide()
 			} else {
-				$euRegion.hide();
-				$euCountry.show();
+				$euRegion.hide()
+				$euCountry.show()
 			}
 		},
 
 		toggleTest: function () {
-			const test = $(kp_admin.toggleTestModeSelector).is(":checked");
+			const test = $( kp_admin.toggleTestModeSelector ).is( ":checked" )
 
-			const $wrappers = $(".kp_settings__credentials");
-			const $prod = $wrappers.find(
-				".kp_settings__production_credentials"
-			);
-			const $test = $wrappers.find(".kp_settings__test_credentials");
+			const $wrappers = $( ".kp_settings__credentials" )
+			const $prod = $wrappers.find( ".kp_settings__production_credentials" )
+			const $test = $wrappers.find( ".kp_settings__test_credentials" )
 
-			if (test) {
-				$prod.hide();
-				$test.show();
+			if ( test ) {
+				$prod.hide()
+				$test.show()
 			} else {
-				$prod.show();
-				$test.hide();
+				$prod.show()
+				$test.hide()
 			}
 		},
 
 		changeKecPreview: function () {
-			let theme = $("#woocommerce_klarna_payments_kec_theme").val();
-			let shape = $("#woocommerce_klarna_payments_kec_shape").val();
+			let theme = $( "#woocommerce_klarna_payments_kec_theme" ).val()
+			let shape = $( "#woocommerce_klarna_payments_kec_shape" ).val()
 
-			if( '' === theme || 'default' === theme ) {
-				theme = 'dark';
+			if ( "" === theme || "default" === theme ) {
+				theme = "dark"
 			}
 
-			const $img = $(
-				"#klarna-payments-settings-kec_settings .kp_settings__section_previews img"
-			);
+			const $img = $( "#klarna-payments-settings-kec_settings .kp_settings__section_previews img" )
 
-			const src = $img.attr("src").replace(/preview-(.*).png/, `preview-${shape}-${theme}.png`);
+			const src = $img.attr( "src" ).replace( /preview-(.*).png/, `preview-${ shape }-${ theme }.png` )
 
-			$img.attr("src", src);
+			$img.attr( "src", src )
 		},
 
-		changeOsmPreview: function (e) {
-			const type = e.target.id.includes("product") ? "product" : "cart";
+		changeOsmPreview: function ( e ) {
+			const type = e.target.id.includes( "product" ) ? "product" : "cart"
 
-			let placement = $(`#woocommerce_klarna_payments_placement_data_key_${type}`).val();
-			let theme = $(`#woocommerce_klarna_payments_onsite_messaging_theme_${type}`).val();
+			let placement = $( `#woocommerce_klarna_payments_placement_data_key_${ type }` ).val()
+			let theme = $( `#woocommerce_klarna_payments_onsite_messaging_theme_${ type }` ).val()
 
-			const $previewImgs = $(
-				`#klarna-payments-settings-onsite_messaging .kp_settings__section_previews img`
-			);
+			const $previewImgs = $( `#klarna-payments-settings-onsite_messaging .kp_settings__section_previews img` )
 
 			// If we are changing the cart, its the first image, else the second.
-			const index = type === "cart" ? 0 : 1;
-			const $img = $previewImgs.eq(index);
+			const index = type === "cart" ? 0 : 1
+			const $img = $previewImgs.eq( index )
 
 			// Get the img src.
-			const src = $img.attr("src");
+			const src = $img.attr( "src" )
 
 			// Split on the last / to get the path and the filename.
-			const parts = src.split("/");
-			const path = parts.slice(0, -1).join("/");
+			const parts = src.split( "/" )
+			const path = parts.slice( 0, -1 ).join( "/" )
 
-			if ( 'default' === theme || 'custom' === theme || '' === theme ) {
-				theme = 'light';
+			if ( "default" === theme || "custom" === theme || "" === theme ) {
+				theme = "light"
 			}
 
-			if ("" === placement) {
-				placement = "credit-promotion-badge";
+			if ( "" === placement ) {
+				placement = "credit-promotion-badge"
 			}
 
-			const filename = `preview-${type}-${theme}-${placement}.jpg`;
+			const filename = `preview-${ type }-${ theme }-${ placement }.jpg`
 
-			$img.attr("src", `${path}/${filename}`);
+			$img.attr( "src", `${ path }/${ filename }` )
 		},
 
 		updatePreviews: function () {
-			const $previewTargets = $("#woocommerce_klarna_payments_kec_theme, #woocommerce_klarna_payments_kec_shape, #woocommerce_klarna_payments_placement_data_key_product, #woocommerce_klarna_payments_onsite_messaging_theme_product, #woocommerce_klarna_payments_placement_data_key_cart, #woocommerce_klarna_payments_onsite_messaging_theme_cart");
-			$previewTargets.trigger("change");
+			const $previewTargets = $(
+				"#woocommerce_klarna_payments_kec_theme, #woocommerce_klarna_payments_kec_shape, #woocommerce_klarna_payments_placement_data_key_product, #woocommerce_klarna_payments_onsite_messaging_theme_product, #woocommerce_klarna_payments_placement_data_key_cart, #woocommerce_klarna_payments_onsite_messaging_theme_cart",
+			)
+			$previewTargets.trigger( "change" )
 		},
 
-		addSelectAllCountries: function() {
-			const selectAllOption = 'klarna_payments_select_all_countries';
-			const select2Option = 'select2-results__option';
-			const allAreSelected = !$(`.${select2Option}:not(#${selectAllOption})[data-selected="false"]`).length;
-			
+		addSelectAllCountries: function () {
+			const selectAllOption = "klarna_payments_select_all_countries"
+			const select2Option = "select2-results__option"
+			const allAreSelected = ! $( `.${ select2Option }:not(#${ selectAllOption })[data-selected="false"]` ).length
+
 			// If not already added, add the select all option.
-			if(!$(`#${selectAllOption}`).length) {
-				$("#select2-woocommerce_klarna_payments_available_countries-results").prepend(`<li class='${select2Option}' id='${selectAllOption}'><span>${klarna_payments_admin_params.select_all_countries_title}</span></li>`);
+			if ( ! $( `#${ selectAllOption }` ).length ) {
+				$( "#select2-woocommerce_klarna_payments_available_countries-results" ).prepend(
+					`<li class='${ select2Option }' id='${ selectAllOption }'><span>${ klarna_payments_admin_params.select_all_countries_title }</span></li>`,
+				)
 			}
 			// If all countries are already selected, set the select all option as active.
-			$(`#${selectAllOption}`).toggleClass("active", allAreSelected);
+			$( `#${ selectAllOption }` ).toggleClass( "active", allAreSelected )
 		},
-		
-		toggleSelectAll: function() {
-			const selectAllOption = '#klarna_payments_select_all_countries';
-			const isSelectAll = $(`${selectAllOption}`).hasClass("active");
-			const countrySelector = "#woocommerce_klarna_payments_available_countries";
+
+		toggleSelectAll: function () {
+			const selectAllOption = "#klarna_payments_select_all_countries"
+			const isSelectAll = $( `${ selectAllOption }` ).hasClass( "active" )
+			const countrySelector = "#woocommerce_klarna_payments_available_countries"
 
 			// Toggle needed attributes of the country selector dropdown.
-			$(`${countrySelector} option`).prop("selected", !isSelectAll);
-			$(`#select2-woocommerce_klarna_payments_available_countries-results .select2-results__option:not(${selectAllOption})`).attr("data-selected", !isSelectAll);
-			$(`${selectAllOption}`).toggleClass("active", !isSelectAll);
+			$( `${ countrySelector } option` ).prop( "selected", ! isSelectAll )
+			$(
+				`#select2-woocommerce_klarna_payments_available_countries-results .select2-results__option:not(${ selectAllOption })`,
+			).attr( "data-selected", ! isSelectAll )
+			$( `${ selectAllOption }` ).toggleClass( "active", ! isSelectAll )
 			// Trigger needed events to update the country selector dropdown.
-			$(countrySelector).trigger("change");
-			$(".select2-selection__rendered").trigger("scroll");
-		}
-	};
+			$( countrySelector ).trigger( "change" )
+			$( ".select2-selection__rendered" ).trigger( "scroll" )
+		},
+	}
 
-	kp_admin.init();
-});
+	kp_admin.init()
+} )

@@ -5,6 +5,8 @@
  * @package WC_Klarna_Payments/Includes
  */
 
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderUtility;
+
 /**
  * Unsets all Klarna Payments sessions.
  */
@@ -109,6 +111,8 @@ function kp_save_order_meta_data( $order, $response ) {
 	$order->set_transaction_id( $response['order_id'] );
 	$order->set_payment_method_title( 'Klarna' );
 	$order->set_payment_method( 'klarna_payments' );
+
+	OrderUtility::add_environment_info( $order, WC_KLARNA_PAYMENTS_VERSION, null, false );
 
 	$order->save();
 }
@@ -272,7 +276,7 @@ function kp_is_order_pay_page() {
  * @return bool
  */
 function kp_is_wc_blocks_order( $order ) {
-	return $order && $order->is_created_via( 'store-api' );
+	return $order && is_a( $order, WC_Order::class ) && $order->is_created_via( 'store-api' );
 }
 
 /**
