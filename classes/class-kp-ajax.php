@@ -26,10 +26,12 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function add_ajax_events() {
 			$ajax_events = array(
-				'kp_wc_place_order'    => true,
-				'kp_wc_auth_failed'    => true,
-				'kp_wc_log_js'         => true,
-				'kp_wc_express_button' => true,
+				'kp_wc_place_order'              => true,
+				'kp_wc_auth_failed'              => true,
+				'kp_wc_log_js'                   => true,
+				'kp_wc_express_button'           => true,
+				'kp_wc_get_unavailable_features' => true,
+
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -223,6 +225,28 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			WC()->session->set( 'chosen_payment_method', 'klarna_payments' );
 
 			wp_send_json_success( wc_get_checkout_url() );
+		}
+
+		public static function kp_wc_get_unavailable_features() {
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+
+			if ( ! wp_verify_nonce( $nonce, 'kp_wc_get_unavailable_features' ) ) {
+				wp_send_json_error( 'bad_nonce' );
+			}
+
+			$country_credentials = filter_input( INPUT_POST, 'country_credentials', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY );
+
+			if ( ! $country_credentials ) {
+				wp_send_json_error( 'Missing credentials.' );
+			}
+
+			$unavailable_features = kp_get_unavailable_feature_ids( $country_credentials );
+
+			if ( empty( $unavailable_features['feature_ids'] ) && ! empty( $unavailable_features['errors'] ) ) {
+				wp_send_json_error( 'Failed to get unavailable features. Error messages: ' . implode( ', ', $unavailable_features['errors'] ) );
+			}
+
+			wp_send_json_success( $unavailable_features['feature_ids'] );
 		}
 	}
 }

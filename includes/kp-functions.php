@@ -379,3 +379,111 @@ function kp_is_country_available( $country ) {
 	$is_available = in_array( $country, $available_countries, true );
 	return $is_available;
 }
+
+/**
+ * Get the ids of the features that are not available for the given country credentials.
+ *
+ * @param array $country_credentials The country credentials.
+ *
+ * @return array
+ */
+function kp_get_unavailable_feature_ids( $country_credentials ) {
+	$collected_errors   = array();
+	$collected_features = array();
+
+	foreach ( $country_credentials as $credentials ) {
+		$settings_features = KP_WC()->api->get_unavailable_features( $credentials );
+
+		if ( is_wp_error( $settings_features ) ) {
+			$collected_errors[] = 'Error for credential country ' . $credentials['country_code'] . ': ' . kp_extract_error_message( $settings_features );
+			continue;
+		}
+		$collected_features = array_merge(
+			$collected_features,
+			array_map(
+				function ( $feature ) {
+					return array(
+						'feature_key'  => $feature['feature_key'],
+						'availability' => $feature['availability'],
+					);
+				},
+				$settings_features['features']
+			)
+		);
+	}
+
+	return array(
+		'feature_ids' => kp_map_unavailable_features( $collected_features ),
+		'errors'      => $collected_errors,
+	);
+}
+
+/**
+ * Maps the features that are not available to the feature ids that should be hidden.
+ *
+ * @param array $collected_features The collected features.
+ *
+ * @return array
+ */
+function kp_map_unavailable_features( $collected_features ) {
+
+	$features = array(
+		'platform-plugin-payments'                => array(
+			'id'     => 'general',
+			'status' => null,
+		),
+		'platform-plugin-on-site-messaging'       => array(
+			'id'     => 'onsite_messaging',
+			'status' => null,
+		),
+		'platform-plugin-klarna-express-checkout' => array(
+			'id'     => 'kec_settings',
+			'status' => null,
+		),
+		'platform-plugin-sign-in-with-klarna'     => array(
+			'id'     => 'siwk',
+			'status' => null,
+		),
+	);
+
+	foreach ( $collected_features as $collected_feature ) {
+		$feature_category = explode( ':', $collected_feature['feature_key'] )[0];
+
+		if ( ! isset( $features[ $feature_category ] ) ) {
+			continue;
+		}
+
+		if ( null === $features[ $feature_category ]['status'] ) {
+			$features['platform-plugin-payments']['status'] = false;
+		}
+
+		if ( 'AVAILABLE' === $collected_feature['availability'] ) {
+			$features[ $feature_category ]['status'] = true;
+		}
+	}
+
+	// Filter out the features that are not available.
+	$unavailable_features = array_filter(
+		$features,
+		function ( $feature ) {
+			return false === $feature['status'];
+		}
+	) ?? array();
+
+	// Return the identifying feature ids, of the features that should be hidden.
+	$unavailable_features = array_values(
+		array_map(
+			function ( $feature ) {
+				return $feature['id'];
+			},
+			$unavailable_features
+		)
+	);
+
+	// If KP is unavailable, we should also hide the Klarna Order Management feature.
+	if ( in_array( 'general', $unavailable_features, true ) ) {
+		$unavailable_features[] = 'kom';
+	}
+
+	return $unavailable_features;
+}
