@@ -1,11 +1,11 @@
 <?php // phpcs:ignore
 /**
- * Plugin Name: Klarna Payments for WooCommerce
+ * Plugin Name: Klarna for WooCommerce
  * Plugin URI: https://krokedil.com/klarna-payments/
- * Description: Provides Klarna Payments as payment method to WooCommerce.
+ * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 3.9.1
+ * Version: 3.9.2
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
@@ -43,7 +43,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '3.9.1' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '3.9.2' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );

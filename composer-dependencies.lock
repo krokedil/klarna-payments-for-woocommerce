@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f3562d81fee2183ced886fe5922ea940",
+    "content-hash": "caa5045fd63765f5b0aa36e2aa1b27ec",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -294,16 +294,16 @@
         },
         {
             "name": "krokedil/woocommerce",
-            "version": "1.7.1",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "e2d32e503cfdbcfd574dbb6f06c5e5aaa3c87a2c"
+                "reference": "bba7b6132b25e4e547aa82246b4d28fc8ebfd8c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/e2d32e503cfdbcfd574dbb6f06c5e5aaa3c87a2c",
-                "reference": "e2d32e503cfdbcfd574dbb6f06c5e5aaa3c87a2c",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/bba7b6132b25e4e547aa82246b4d28fc8ebfd8c5",
+                "reference": "bba7b6132b25e4e547aa82246b4d28fc8ebfd8c5",
                 "shasum": ""
             },
             "require-dev": {
@@ -334,10 +334,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.7.1",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.8.0",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2024-11-08T13:51:05+00:00"
+            "time": "2025-02-05T14:02:57+00:00"
         },
         {
             "name": "krokedil/wp-api",
