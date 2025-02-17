@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "27f32faacb65a1230d9dac09f1b6c5ce78a6e61a"
+                "reference": "c04f96cb232fab12a3cbcccf5a47767f0665c3f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/27f32faacb65a1230d9dac09f1b6c5ce78a6e61a",
-                "reference": "27f32faacb65a1230d9dac09f1b6c5ce78a6e61a",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/c04f96cb232fab12a3cbcccf5a47767f0665c3f4",
+                "reference": "c04f96cb232fab12a3cbcccf5a47767f0665c3f4",
                 "shasum": ""
             },
             "require-dev": {
@@ -97,7 +97,7 @@
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
                 "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.7.2"
             },
-            "time": "2025-02-05T17:57:54+00:00"
+            "time": "2025-02-12T04:51:58+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -105,12 +105,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "5e5e6dc923f266b92d76c95e8ecd112554c5bb75"
+                "reference": "f117c2b556be7fe74dd95b6da43fa3e52a7c37b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/5e5e6dc923f266b92d76c95e8ecd112554c5bb75",
-                "reference": "5e5e6dc923f266b92d76c95e8ecd112554c5bb75",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/f117c2b556be7fe74dd95b6da43fa3e52a7c37b1",
+                "reference": "f117c2b556be7fe74dd95b6da43fa3e52a7c37b1",
                 "shasum": ""
             },
             "require": {
@@ -182,7 +182,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-02-05T22:04:25+00:00"
+            "time": "2025-02-15T23:53:04+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
