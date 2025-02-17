@@ -74,7 +74,6 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 = 2025.02.17    - version 3.9.2 =
 * Feature       - Added support for subscriptions in the block-based checkout.
 * Tweak         - Added a privacy notice under the Credentials section.
-* Tweak         - Updated the example environment.
 * Tweak         - Added environmental information to the order.
 * Fix           - Fixed potential for fatal error on check if order is created via block-based checkout or not.
 
