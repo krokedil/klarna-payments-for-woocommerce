@@ -7,7 +7,7 @@ Tested up to: 6.7.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.5.2
-Stable tag: 3.9.2
+Stable tag: 4.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.02.18    - version 4.0.0 =
+* Feature       - Added credential-based visibility for the different Klarna features.
+
 = 2025.02.17    - version 3.9.2 =
 * Feature       - Added support for subscriptions in the block-based checkout.
 * Tweak         - Added a privacy notice under the Credentials section.

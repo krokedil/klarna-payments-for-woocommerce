@@ -270,6 +270,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
+		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
+		if ( in_array( 'general', $kp_unavailable_feature_ids ) ) {
+			return false;
+		}
+
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			return true;
 		}

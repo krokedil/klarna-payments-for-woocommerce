@@ -401,6 +401,10 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	opacity: 1;
 }
 
+.kp_settings__section.unavailable {
+	display: none;
+}
+
 .kp_settings__mode_badge {
 	background-color: #e3e5e9;
 	border: solid 1px #1d2327;

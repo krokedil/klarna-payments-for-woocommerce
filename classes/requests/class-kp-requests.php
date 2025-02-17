@@ -47,13 +47,13 @@ abstract class KP_Requests extends Request {
 	 * @param mixed $arguments The request arguments.
 	 */
 	public function __construct( $arguments ) {
-		$settings = get_option( 'woocommerce_klarna_payments_settings' );
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 		$config   = array(
 			'slug'                   => 'klarna_payments',
 			'plugin_version'         => WC_KLARNA_PAYMENTS_VERSION,
 			'plugin_short_name'      => 'KP',
 			'plugin_user_agent_name' => 'KP',
-			'logging_enabled'        => 'no' !== $settings['logging'] ?? 'no',
+			'logging_enabled'        => 'no' !== ( $settings['logging'] ?? 'no' ),
 			'extended_debugging'     => 'extra' === ( isset( $settings['logging'] ) ? $settings['logging'] : 'no' ),
 			'base_url'               => $this->get_base_url( $arguments['country'], $settings ),
 		);
@@ -136,10 +136,11 @@ abstract class KP_Requests extends Request {
 	 * @return WP_Error
 	 */
 	public function get_error_message( $response ) {
-		$error_message = '';
+		$error_message    = '';
+		$decoded_response = json_decode( $response['body'], true );
 		// Get the error messages.
-		if ( null !== json_decode( $response['body'], true ) ) {
-			foreach ( json_decode( $response['body'], true )['error_messages'] as $error ) {
+		if ( null !== $decoded_response && isset( $decoded_response['error_messages'] ) ) {
+			foreach ( $decoded_response['error_messages'] as $error ) {
 				$error_message = "$error_message $error";
 			}
 		}
