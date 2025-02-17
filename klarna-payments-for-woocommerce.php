@@ -228,6 +228,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				)
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
+			$this->order_management        = new KlarnaOrderManagement();
 
 			$this->register_payment_block();
 
