@@ -106,7 +106,7 @@ class KP_Order_Data {
 			'order_amount'      => $this->order_data->get_total(),
 			'order_tax_amount'  => $this->order_data->get_total_tax(),
 			'order_lines'       => $this->get_klarna_order_lines_array(),
-			'customer'          => get_klarna_customer( $this->customer_type ),
+			'customer'          => apply_filters( 'kp_set_customer_type', get_klarna_customer( $this->customer_type ), $this->customer_type ),
 			'billing_address'   => $customer['billing'],
 			'shipping_address'  => $customer['shipping'],
 			'options'           => $iframe_options ? $iframe_options->get_kp_color_options() : array(),
