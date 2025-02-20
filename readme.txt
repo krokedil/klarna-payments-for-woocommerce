@@ -7,7 +7,7 @@ Tested up to: 6.7.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.5.2
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.02.20    - version 4.0.2 =
+* Fix           - Bumped release version.
+
 = 2025.02.20    - version 4.0.1 =
 * Fix           - Resolved issue where users with some unavailable Klarna feature set for their credentials, sometimes had KP made unavailable when saving their settings. Settings needs to be saved again for an update to take place, where this is an issue.
 
