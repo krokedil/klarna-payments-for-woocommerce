@@ -5,7 +5,7 @@
  * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 4.0.0
+ * Version: 4.0.1
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
