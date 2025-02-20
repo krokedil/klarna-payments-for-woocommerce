@@ -454,7 +454,7 @@ function kp_map_unavailable_features( $collected_features ) {
 		}
 
 		if ( null === $features[ $feature_category ]['status'] ) {
-			$features['platform-plugin-payments']['status'] = false;
+			$features[ $feature_category ]['status'] = false;
 		}
 
 		if ( 'AVAILABLE' === $collected_feature['availability'] ) {
