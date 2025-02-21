@@ -354,7 +354,19 @@ class KP_Subscription {
 			return false;
 		}
 
-		return ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || ( function_exists( 'wcs_cart_contains_failed_renewal_order_payment' ) && wcs_cart_contains_failed_renewal_order_payment() );
+		$cart          = WC()->cart->get_cart();
+		$product_types = array_values(
+			array_unique(
+				array_map(
+					function ( $item ) {
+						return wc_get_product( $item['product_id'] )->get_type();
+					},
+					$cart
+				)
+			)
+		);
+
+		return array_intersect( array( 'subscription', 'subscription_variation' ), $product_types );
 	}
 
 	/**
