@@ -67,15 +67,8 @@ async function getBaseUrl() {
 
 	const data = await res.json();
 
-	// Get the first tunnel that has a HTTPS protocol.
-	const tunnel = data.tunnels.find((tunnel: any) => tunnel.proto === "https");
-
-	if (tunnel) {
-		return tunnel.public_url;
-	} else {
-		throw new Error("No HTTPS tunnel found.");
-	}
-	
+	// Return the public url.
+	return data.tunnels[0].public_url;
 }
 
 
