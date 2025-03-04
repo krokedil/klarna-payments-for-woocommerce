@@ -68,10 +68,21 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 	protected function get_body() {
 		return array(
 			'installation_data' => array(
-				'klarna_plugin_data' => array(
-					'plugin_identifier' => 'klarna:plugins:woocommerce:klarna-plugin',
-					'plugin_version'    => '3.8.3',
+				'platform_data'      => array(
+					'platform_name'        => 'woocommerce',
+					'platform_version'     => WC()->version,
+					'platform_plugin_name' => 'woocommerce_klarna_payments',
 				),
+				'klarna_plugin_data' => array(
+					'plugin_identifier' => 'woocommerce_klarna_payments',
+					'plugin_version'    => WC_KLARNA_PAYMENTS_VERSION,
+				),
+				'store_data'         => array(
+					'store_urls' => array(
+						'base_url' => get_site_url(),
+					),
+				),
+				'metadata'           => array(),
 			),
 		);
 	}
