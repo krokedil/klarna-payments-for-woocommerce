@@ -111,7 +111,7 @@ class KP_Assets {
 			// i18n.
 			'i18n'                   => array(
 				'order_button_label' => apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) ),
-				'terms_not_checked'  => __( 'Please read and accept the terms and conditions to proceed with your order.', 'woocommerce' ),
+				'terms_not_checked'  => __( 'Please read and accept the terms and conditions to proceed with your order.', 'klarna-payments-for-woocommerce' ),
 			),
 		);
 
@@ -152,6 +152,8 @@ class KP_Assets {
 		);
 
 		$klarna_payments_admin_params = array(
+			'get_unavailable_features'       => WC_AJAX::get_endpoint( 'kp_wc_get_unavailable_features' ),
+			'get_unavailable_features_nonce' => wp_create_nonce( 'kp_wc_get_unavailable_features' ),
 			'select_all_countries_title' => __( 'Select all', 'klarna-payments-for-woocommerce' ),
 		);
 

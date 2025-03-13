@@ -238,7 +238,7 @@ class KP_Api {
 	 * @return array|WP_Error
 	 */
 	private static function check_for_api_error( $response ) {
-		$is_testmode = 'yes' === get_option( 'woocommerce_klarna_payments_settings' )['testmode'];
+		$is_testmode = 'yes' === ( get_option( 'woocommerce_klarna_payments_settings', array() )['testmode'] ?? 'no' );
 
 		if ( is_wp_error( $response ) && $is_testmode ) {
 			if ( ! is_admin() ) {
@@ -246,5 +246,37 @@ class KP_Api {
 			}
 		}
 		return $response;
+	}
+
+	/**
+	 * Get unavailable features.
+	 *
+	 * @param array $credentials The credentials to use.
+	 * @return array
+	 */
+	public function get_unavailable_features( $credentials ) {
+		$api_password = $credentials['shared_secret'] ?? false;
+
+		if ( ! $api_password ) {
+			return new WP_Error( 'missing_shared_secret', __( 'Missing shared secret.', 'woocommerce-klarna-payments' ) );
+		}
+
+		if ( ! get_option( 'kp_uuid4' ) ) {
+			add_option( 'kp_uuid4', wp_generate_uuid4() );
+		}
+
+		$mode       = $credentials['mode'] ?? 'live';
+		$request_id = get_option( 'kp_uuid4' );
+
+		$response = ( new KP_Unavailable_Features(
+			array(
+				'api_password' => $api_password,
+				'mode'         => $mode,
+				'request_id'   => $request_id,
+				'country'      => $credentials['country_code'],
+			)
+		) )->request();
+
+		return self::check_for_api_error( $response );
 	}
 }

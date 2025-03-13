@@ -228,7 +228,12 @@ class KP_Form_Fields {
 		$saved_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 
 		$merchant_portal_html = '<a href="https://portal.klarna.com" target="_blank">' . __( 'Klarna Merchant Portal', 'klarna-payments-for-woocommerce' ) . '</a>';
-		$credentials_section  = array(
+
+		$privacy_policy_html = '<a href="https://portal.klarna.com/privacy-policy" target="_blank">' . __( 'Klarna Merchant Privacy Notice', 'klarna-payments-for-woocommerce' ) . '</a>';
+		// translators: %s: privacy policy link.
+		$credentials_html = sprintf( __( 'By activating Klarna using API credentials you agree to and accept the %s.', 'klarna-payments-for-woocommerce' ), $privacy_policy_html );
+
+		$credentials_section = array(
 			'credentials'         => array(
 				'id'          => 'credentials',
 				'title'       => 'Credentials',
@@ -245,7 +250,7 @@ class KP_Form_Fields {
 				'type'        => 'kp_text_info',
 				'title'       => __( 'Client Identifier & API Credentials', 'klarna-payments-for-woocommerce' ),
 				// translators: %s: merchant portal link.
-				'description' => sprintf( __( 'Enter the credentials for production and test for each market Klarna is used. Get the client identifier and API credentials from the %s, under Settings.', 'klarna-payments-for-woocommerce' ), $merchant_portal_html ),
+				'description' => sprintf( __( 'Enter the credentials for production and test for each market Klarna is used. Get the client identifier and API credentials from the %1$s, under Settings. <br><br><b>%2$s</b>', 'klarna-payments-for-woocommerce' ), $merchant_portal_html, $credentials_html ),
 			),
 			'available_countries' => array(
 				'title'       => __( 'Enter the countries where Klarna will be available', 'klarna-payments-for-woocommerce' ) . ':',

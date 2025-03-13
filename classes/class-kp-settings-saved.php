@@ -42,6 +42,8 @@ class KP_Settings_Saved {
 		// Get settings from KCO.
 		$options = get_option( 'woocommerce_klarna_payments_settings', array() );
 		update_option( 'kp_has_valid_credentials', 'no' );
+		$eu_countries                     = KP_Form_Fields::available_countries( 'eu' );
+		$unavailable_features_credentials = array();
 
 		// If not enabled bail.
 		if ( $options && 'yes' !== $options['enabled'] ) {
@@ -50,7 +52,10 @@ class KP_Settings_Saved {
 		$countries = array_keys( KP_Form_Fields::$kp_form_auto_countries );
 
 		foreach ( $countries as $cc ) {
-			$cc = 'uk' === $cc ? 'gb' : $cc;
+			$cc       = 'yes' === $options['combine_eu_credentials'] && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
+			$cc       = 'uk' === $cc ? 'gb' : $cc;
+			$password = '';
+			$username = '';
 
 			if ( 'yes' !== $options['testmode'] ) {
 				// Live.
@@ -66,26 +71,55 @@ class KP_Settings_Saved {
 						'testmode' => false,
 					);
 
-					$test_response = ( new KP_Test_Credentials( $args ) )->request();
-					$this->process_test_response( $test_response, self::PROD, $cc );
+					if ( 'eu' !== $cc ) {
+						$test_response = ( new KP_Test_Credentials( $args ) )->request();
+						$this->process_test_response( $test_response, self::PROD, $cc );
+					}
 				}
 			} elseif ( '' !== $options[ 'test_merchant_id_' . $cc ] ?? '' ) { // Test.
-					$username = $options[ 'test_merchant_id_' . $cc ] ?? '';
-					$password = $options[ 'test_shared_secret_' . $cc ] ?? '';
+				$username = $options[ 'test_merchant_id_' . $cc ] ?? '';
+				$password = $options[ 'test_shared_secret_' . $cc ] ?? '';
 
-					// Create request arguments.
-					$args = array(
-						'username' => $username,
-						'password' => $password,
-						'country'  => $cc,
-						'testmode' => true,
-					);
+				// Create request arguments.
+				$args = array(
+					'username' => $username,
+					'password' => $password,
+					'country'  => $cc,
+					'testmode' => true,
+				);
 
+				if ( 'eu' !== $cc ) {
 					$test_response = ( new KP_Test_Credentials( $args ) )->request();
 					$this->process_test_response( $test_response, self::TEST, $cc );
+				}
 			}
 
-			$this->maybe_handle_error();
+			// If the password and username is set and combined EU credentials are enabled, set the valid credentials flag.
+			if ( 'eu' === $cc && ! empty( $password ) && ! empty( $username ) ) {
+
+				if ( 'yes' !== get_option( 'kp_has_valid_credentials' ) ?? 'no' ) {
+					update_option( 'kp_has_valid_credentials', 'yes' );
+				}
+			}
+
+			if ( ! empty( $password ) && ! isset( $unavailable_features_credentials[ $cc ] ) ) {
+				$unavailable_features_credentials[ $cc ] = array(
+					'mode'          => 'yes' === $options['testmode'] ? 'test' : 'live',
+					'shared_secret' => $password,
+					'country_code'  => $cc,
+				);
+
+				$this->maybe_handle_error();
+			}
+		}
+
+		$unavailable_features = $unavailable_features_credentials ? kp_get_unavailable_feature_ids( $unavailable_features_credentials ) : array();
+
+		// If we have any collected errors, save the unavailable features as a empty array.
+		if ( ! empty( $unavailable_features['errors'] ?? array() ) ) {
+			update_option( 'kp_unavailable_feature_ids', array() );
+		} else {
+			update_option( 'kp_unavailable_feature_ids', $unavailable_features['feature_ids'] ?? array() );
 		}
 	}
 
@@ -101,7 +135,9 @@ class KP_Settings_Saved {
 		// If this is not a WP Error then its ok.
 		if ( ! is_wp_error( $test_response ) ) {
 			// Set the valid credentials flag as there is at least one valid set of credentials.
-			update_option( 'kp_has_valid_credentials', 'yes' );
+			if ( 'yes' !== get_option( 'kp_has_valid_credentials' ) ?? 'no' ) {
+				update_option( 'kp_has_valid_credentials', 'yes' );
+			}
 			return;
 		}
 		$cc    = strtoupper( $cc );

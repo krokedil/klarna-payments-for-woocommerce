@@ -18,6 +18,7 @@ interface Settings {
   description: string;
   iconurl: string;
   orderbuttonlabel: string;
+  features: string[];
 }
 
 const settings: Settings = getSetting('klarna_payments_data', {} as Settings);
@@ -25,6 +26,7 @@ const settings: Settings = getSetting('klarna_payments_data', {} as Settings);
 const title: string = applyFilters('kp_blocks_title', decodeEntities(settings.title || 'Klarna'), settings) as string;
 const description: string = applyFilters('kp_blocks_description', decodeEntities(settings.description || ''), settings) as string;
 const iconUrl: string = settings.iconurl;
+const features: string[] = settings.features;
 
 const canMakePayment = (): boolean => {
   return applyFilters('kp_blocks_enabled', true, settings) as boolean;
@@ -58,6 +60,9 @@ const KlarnaPaymentsOptions = {
   placeOrderButtonLabel: settings.orderbuttonlabel,
   canMakePayment: canMakePayment,
   ariaLabel: title,
+  supports: {
+    features
+  }
 };
 
 registerPaymentMethod(KlarnaPaymentsOptions);

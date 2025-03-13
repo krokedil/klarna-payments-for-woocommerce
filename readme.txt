@@ -7,7 +7,7 @@ Tested up to: 6.7.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.5.2
-Stable tag: 3.9.1
+Stable tag: 4.0.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,21 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.02.20    - version 4.0.2 =
+* Fix           - Bumped release version.
+
+= 2025.02.20    - version 4.0.1 =
+* Fix           - Resolved issue where users with some unavailable Klarna feature set for their credentials, sometimes had KP made unavailable when saving their settings. Settings needs to be saved again for an update to take place, where this is an issue.
+
+= 2025.02.18    - version 4.0.0 =
+* Feature       - Added credential-based visibility for the different Klarna features.
+
+= 2025.02.17    - version 3.9.2 =
+* Feature       - Added support for subscriptions in the block-based checkout.
+* Tweak         - Added a privacy notice under the Credentials section.
+* Tweak         - Added environmental information to the order.
+* Fix           - Fixed potential for fatal error on check if order is created via block-based checkout or not.
+
 = 2025.01.20    - version 3.9.1 =
 * Fix           - Fixed active/inactive badge not always showing the expected status.
 
