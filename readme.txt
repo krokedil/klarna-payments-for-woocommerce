@@ -72,7 +72,7 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 == Changelog ==
 = 2025.03.14    - version 4.0.3 =
-* Fix           - Limit the max size of a log message from the frontend to 1000 to prevent large logs from being created.
+* Fix           - Limit the max size of a log message from the frontend to 1000 characters to prevent large logs from being created.
 
 = 2025.02.20    - version 4.0.2 =
 * Fix           - Bumped release version.
