@@ -10,7 +10,6 @@ jQuery( function ( $ ) {
 		checkout_values: {},
 		addresses: {},
 		debug: klarna_payments_params.debug === "yes" ? true : false,
-		self: this,
 
 		check_changes: function () {
 			$(
@@ -161,7 +160,7 @@ jQuery( function ( $ ) {
 			}
 
 			var klarna_payments_container_selector_id = "#" + klarna_payments.getSelectorContainerID()
-			self.debug && console.debug( klarna_payments_container_selector_id )
+			this.debug && console.debug( klarna_payments_container_selector_id )
 
 			if ( klarna_payments_container_selector_id ) {
 				var klarnaLoadedInterval = setInterval( function () {
@@ -170,7 +169,7 @@ jQuery( function ( $ ) {
 					try {
 						Klarna = window.Klarna
 					} catch ( e ) {
-						self.debug && console.debug( e )
+						this.debug && console.debug( e )
 					}
 
 					if ( Klarna && Klarna.Payments ) {
@@ -251,7 +250,7 @@ jQuery( function ( $ ) {
 			var selected_category = $( 'input[name="payment_method"]:checked' )
 				.attr( "id" )
 				.replace( "payment_method_", "" )
-			self.debug && console.debug( selected_category )
+			this.debug && console.debug( selected_category )
 			return selected_category.replace( "klarna_payments_", "" )
 		},
 
@@ -411,8 +410,8 @@ jQuery( function ( $ ) {
 						},
 						success: function ( response ) {
 							// Log the success.
-							self.debug && console.debug( "kp_place_order success" )
-							self.debug && console.debug( response )
+							this.debug && console.debug( "kp_place_order success" )
+							this.debug && console.debug( response )
 						},
 						error: function ( response ) {
 							// Log the error.
@@ -572,7 +571,7 @@ jQuery( function ( $ ) {
 		 * @param {string} message
 		 */
 		logToFile: function ( message, type = "error" ) {
-			if ( self.debug ) {
+			if ( this.debug ) {
 				try {
 					console[ type.toLowerCase() ]( message )
 				} catch ( e ) {
