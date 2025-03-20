@@ -71,7 +71,7 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 				'platform_data'      => array(
 					'platform_name'        => 'woocommerce',
 					'platform_version'     => WC()->version,
-					'platform_plugin_name' => 'woocommerce_klarna_checkout_plugin',
+					'platform_plugin_name' => 'woocommerce_klarna_plugin',
 				),
 				'klarna_plugin_data' => array(
 					'plugin_identifier' => 'klarna:plugins:woocommerce:klarna-plugin',
