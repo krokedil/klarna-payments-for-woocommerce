@@ -158,6 +158,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $siwk = null;
 
 		/**
+		 * The Klarna Interoperability token class instance.
+		 *
+		 * @var KP_Interoperability_Token
+		 */
+		public $interoperability_token = null;
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -220,6 +227,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				)
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
+			$this->interoperability_token  = new KP_Interoperability_Token();
 
 			$this->register_payment_block();
 
@@ -382,6 +390,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-subscriptions.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-klarna-express-checkout.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-interoperability-token.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-settings-page.php';
 
