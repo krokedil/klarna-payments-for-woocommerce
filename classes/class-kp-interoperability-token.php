@@ -9,6 +9,17 @@ defined( 'ABSPATH' ) || exit;
 
 class KP_Interoperability_Token {
 	/**
+	 * Class constructor.
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		// Clear the token from the session when they place an order.
+		add_action( 'woocommerce_checkout_order_processed', array( $this, 'clear_token' ) );
+		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'clear_token' ) );
+	}
+
+	/**
 	 * Get the token from the WooCommerce session.
 	 *
 	 * @return string|null
@@ -36,5 +47,18 @@ class KP_Interoperability_Token {
 		}
 
 		WC()->session->set( 'klarna_interoperability_token', $token );
+	}
+
+	/**
+	 * Clear the token from the WooCommerce session.
+	 *
+	 * @return void
+	 */
+	public function clear_token() {
+		if( null === WC()->session ) {
+			return;
+		}
+
+		WC()->session->__unset( 'klarna_interoperability_token' );
 	}
 }
