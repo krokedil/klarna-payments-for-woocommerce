@@ -262,7 +262,6 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function kp_wc_set_interoperability_token() {
 			// Verify the nonce.
-			error_log( var_export( $_POST, true ) );
 			check_ajax_referer( 'kp_wc_set_interoperability_token', 'nonce' );
 			$token = filter_input( INPUT_POST, 'token', FILTER_SANITIZE_SPECIAL_CHARS );
 
