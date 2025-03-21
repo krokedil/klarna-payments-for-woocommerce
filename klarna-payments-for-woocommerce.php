@@ -266,7 +266,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * Show admin notice if Order Management plugin is not active.
 		 */
 		public function order_management_check() {
-			if ( ! class_exists( 'WC_Klarna_Order_Management' && ! class_exists( 'KlarnaOrderManagement' ) ) ) {
+			if ( ! class_exists( 'WC_Klarna_Order_Management' ) && ! class_exists( 'KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement' ) ) {
 				$current_screen = get_current_screen();
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
