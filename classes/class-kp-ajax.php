@@ -172,15 +172,21 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return void
 		 */
 		public static function kp_wc_log_js() {
-			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
-			if ( ! wp_verify_nonce( $nonce, 'kp_wc_log_js' ) ) {
-				wp_send_json_error( 'bad_nonce' );
+			check_ajax_referer( 'kp_wc_log_js', 'nonce' );
+			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
+
+			// Get the content size of the request.
+			$post_size = (int) $_SERVER['CONTENT_LENGTH'] ?? 0;
+
+			// If the post data is to long, log a error message and return.
+			if ( $post_size > 1024 ) {
+				KP_logger::log( "Frontend JS $klarna_session_id: message to long and can't be logged." );
+				wp_send_json_success(); // Return success to not stop anything in the frontend if this happens.
 			}
 
-			$posted_message    = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
-			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
-			$message           = "Frontend JS $klarna_session_id: $posted_message";
-			KP_Logger::log( $message );
+			$posted_message = filter_input( INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+			$message        = "Frontend JS $klarna_session_id: $posted_message";
+			KP_logger::log( $message );
 			wp_send_json_success();
 		}
 

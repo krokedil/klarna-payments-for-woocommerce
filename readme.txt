@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.7.1
+Tested up to: 6.7.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 9.5.2
-Stable tag: 4.0.2
+WC tested up to: 9.7.1
+Stable tag: 4.0.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.03.14    - version 4.0.3 =
+* Fix           - Limit the max size of a log message from the frontend to 1000 characters to prevent large logs from being created.
+
 = 2025.02.20    - version 4.0.2 =
 * Fix           - Bumped release version.
 

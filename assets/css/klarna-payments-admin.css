@@ -413,6 +413,7 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	padding: 5px 10px;
 	font-size: 12px;
 	font-weight: 700;
+	white-space: nowrap;
 }
 
 .kp_settings__mode_badge.active {
@@ -447,7 +448,7 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 
 .kp_settings__section_title {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	align-items: center;
 	gap: 5px;
 }
