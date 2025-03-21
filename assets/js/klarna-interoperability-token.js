@@ -22,7 +22,6 @@ jQuery(function ($) {
                 setTimeout(kp_interoperability_token.bindKlarnaEvents, 250);
                 return;
             }
-            console.log('Klarna Interoperability Token: Binding Klarna Events');
             Klarna.Interoperability.on('tokenupdate', kp_interoperability_token.updateSessionToken);
 
             // If we did not get a token from Klarna yet, trigger the token request.
@@ -41,7 +40,6 @@ jQuery(function ($) {
         },
 
         updateSessionToken: function (token) {
-            console.log('Klarna Interoperability Token: Updating Token:', token);
             const interoperabilityToken = token.interoperabilityToken;
             const { url, nonce } = kp_interoperability_token.params.ajax;
 
