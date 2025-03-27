@@ -26,12 +26,12 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function add_ajax_events() {
 			$ajax_events = array(
-				'kp_wc_place_order'              => true,
-				'kp_wc_auth_failed'              => true,
-				'kp_wc_log_js'                   => true,
-				'kp_wc_express_button'           => true,
-				'kp_wc_get_unavailable_features' => true,
-
+				'kp_wc_place_order'                => true,
+				'kp_wc_auth_failed'                => true,
+				'kp_wc_log_js'                     => true,
+				'kp_wc_express_button'             => true,
+				'kp_wc_get_unavailable_features'   => true,
+				'kp_wc_set_interoperability_token' => true,
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -253,6 +253,25 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			}
 
 			wp_send_json_success( $unavailable_features['feature_ids'] );
+		}
+
+		/**
+		 * Set the interoperability token in the session for the current user.
+		 *
+		 * @return void
+		 */
+		public static function kp_wc_set_interoperability_token() {
+			// Verify the nonce.
+			check_ajax_referer( 'kp_wc_set_interoperability_token', 'nonce' );
+			$token = filter_input( INPUT_POST, 'token', FILTER_SANITIZE_SPECIAL_CHARS );
+
+			if ( empty( $token ) ) {
+				wp_send_json_error( 'missing token' );
+			}
+
+			KP_Interoperability_Token::set_token( $token );
+
+			wp_send_json_success();
 		}
 	}
 }
