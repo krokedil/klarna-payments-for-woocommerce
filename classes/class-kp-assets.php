@@ -18,6 +18,8 @@ class KP_Assets {
 	 * Class constructor.
 	 */
 	public function __construct() {
+		add_action( 'init', array( $this, 'register_klarna_websdk' ) );
+
 		/* Klarna Payments scripts */
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_script' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_script' ) );
@@ -27,7 +29,49 @@ class KP_Assets {
 		add_action( 'script_loader_tag', array( $this, 'express_button_script_tag' ), 10, 2 );
 		add_action( 'woocommerce_proceed_to_checkout', array( $this, 'express_button_placement' ) );
 		add_action( 'woocommerce_widget_shopping_cart_buttons', array( $this, 'express_button_placement' ), 15 );
+
+		/* Klarna Interoperability scripts */
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_interoperability_token' ) );
 	}
+
+	/**
+	 * Register the Klarna Web SDK.
+	 *
+	 * @hook init
+	 * @return void
+	 */
+	public function register_klarna_websdk() {
+		wp_register_script(
+			'klarnapayments',
+			'https://x.klarnacdn.net/kp/lib/v1/api.js',
+			array(),
+			null,
+			true
+		);
+
+		add_filter( 'script_loader_tag', array( $this, 'add_data_attributes' ), 10, 2 );
+	}
+
+	/**
+	 * Add data attributes to the Klarna Web SDK script tag.
+	 *
+	 * @param string $tag The <script> tag for the enqueued script.
+	 * @param string $handle The script's registered handle.
+	 * @return string
+	 */
+	public function add_data_attributes( $tag, $handle ) {
+		if ( 'klarnapayments' !== $handle ) {
+			return $tag;
+		}
+
+		$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
+		$environment    = isset( $settings['testmode'] ) && 'yes' === $settings['testmode'] ? 'playground' : 'production';
+		$data_client_id = apply_filters( 'kp_websdk_data_client_id', kp_get_client_id() );
+		$tag            = str_replace( ' src', ' async src', $tag );
+		$tag            = str_replace( '></script>', " data-environment={$environment} data-client-id='{$data_client_id}'></script>", $tag );
+		return $tag;
+	}
+
 
 	/**
 	 * Enqueue payment scripts.
@@ -50,16 +94,13 @@ class KP_Assets {
 		wp_register_script(
 			'klarna_payments',
 			plugins_url( 'assets/js/klarna-payments.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
-			array( 'jquery', 'wc-checkout', 'jquery-blockui' ),
+			array( 'jquery', 'wc-checkout', 'jquery-blockui', 'klarnapayments' ),
 			WC_KLARNA_PAYMENTS_VERSION,
 			true
 		);
 
 		wp_localize_script( 'klarna_payments', 'klarna_payments_params', $klarna_payments_params );
 		wp_enqueue_script( 'klarna_payments' );
-
-		wp_register_script( 'klarnapayments', 'https://x.klarnacdn.net/kp/lib/v1/api.js', array(), null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-		wp_enqueue_script( 'klarnapayments' );
 	}
 
 	/**
@@ -111,7 +152,7 @@ class KP_Assets {
 			// i18n.
 			'i18n'                   => array(
 				'order_button_label' => apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) ),
-				'terms_not_checked'  => __( 'Please read and accept the terms and conditions to proceed with your order.', 'woocommerce' ),
+				'terms_not_checked'  => __( 'Please read and accept the terms and conditions to proceed with your order.', 'klarna-payments-for-woocommerce' ),
 			),
 		);
 
@@ -154,7 +195,7 @@ class KP_Assets {
 		$klarna_payments_admin_params = array(
 			'get_unavailable_features'       => WC_AJAX::get_endpoint( 'kp_wc_get_unavailable_features' ),
 			'get_unavailable_features_nonce' => wp_create_nonce( 'kp_wc_get_unavailable_features' ),
-			'select_all_countries_title' => __( 'Select all', 'klarna-payments-for-woocommerce' ),
+			'select_all_countries_title'     => __( 'Select all', 'klarna-payments-for-woocommerce' ),
 		);
 
 		wp_localize_script( 'klarna_payments_admin', 'klarna_payments_admin_params', $klarna_payments_admin_params );
@@ -292,6 +333,31 @@ class KP_Assets {
 
 		// phpcs:ignore -- The variables are already escaped.
 		echo "<klarna-express-button data-locale='$locale' data-theme='$theme' data-shape='$shape' data-label='$label'" . ( ! empty( $style ) ? "style='$style'" : '' ) . '></klarna-express-button>';
+	}
+
+	/**
+	 * Enqueue the interoperability token script.
+	 *
+	 * @return void
+	 */
+	public function enqueue_interoperability_token() {
+		wp_register_script(
+			'klarna_interoperability_token',
+			plugins_url( 'assets/js/klarna-interoperability-token.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
+			array( 'jquery', 'klarnapayments' ),
+			WC_KLARNA_PAYMENTS_VERSION,
+			true
+		);
+
+		$params = array(
+			'token' => KP_Interoperability_Token::get_token(),
+			'ajax'  => array(
+				'url'   => WC_AJAX::get_endpoint( 'kp_wc_set_interoperability_token' ),
+				'nonce' => wp_create_nonce( 'kp_wc_set_interoperability_token' ),
+			),
+		);
+		wp_localize_script( 'klarna_interoperability_token', 'klarna_interoperability_token_params', $params );
+		wp_enqueue_script( 'klarna_interoperability_token' );
 	}
 
 	/**

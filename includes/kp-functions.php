@@ -48,7 +48,7 @@ function get_klarna_customer( $customer_type ) {
 		$customer['klarna_access_token'] = $access_token;
 	}
 
-	return $customer;
+	return apply_filters( 'kp_get_customer_type', $customer, $customer_type );
 }
 
 /**

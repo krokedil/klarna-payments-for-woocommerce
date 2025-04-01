@@ -517,6 +517,9 @@ jQuery( function ( $ ) {
 							if ( data.messages ) {
 								klarna_payments.logToFile( "Checkout error | " + data.messages )
 								klarna_payments.failOrder( "submission", data.messages )
+								// If requested, reload the page.
+							} else if ( true === data.reload ) {
+								window.location.reload()
 							} else {
 								klarna_payments.logToFile( "Checkout error | " + err )
 								klarna_payments.failOrder(
