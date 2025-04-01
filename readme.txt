@@ -7,7 +7,7 @@ Tested up to: 6.7.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.7.1
-Stable tag: 4.0.3
+Stable tag: 4.1.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.04.01    - version 4.1.0 =
+* Feature       - Added the 'kp_get_customer_type' filter for modifying the customer type.
+* Feature       - Added the Klarna interoperability token.
+* Fix           - Added a control to check whether the checkout should be reloaded. This should address the issue where if placing orders without an account is disabled caused a checkout error.
+* Tweak         - Updated the platform plugin data.
+
 = 2025.03.14    - version 4.0.3 =
 * Fix           - Limit the max size of a log message from the frontend to 1000 characters to prevent large logs from being created.
 

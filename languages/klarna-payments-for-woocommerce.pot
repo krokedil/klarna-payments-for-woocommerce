@@ -1,18 +1,22 @@
-# Copyright (C) 2024 
+# Copyright (C) 2025 
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2024-11-12 10:55:47+00:00\n"
+"POT-Creation-Date: 2025-04-01 08:26:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2025-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
+
+#: blocks/src/payment/KlarnaPayments.php:86 classes/class-kp-assets.php:154
+msgid "Pay with Klarna"
+msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:166
 msgid "Austria"
@@ -122,192 +126,198 @@ msgstr ""
 msgid "Klarna Merchant Portal"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:235
-msgid "To unlock the plugin's features, enter your credentials"
+#: classes/admin/class-kp-form-fields.php:232
+msgid "Klarna Merchant Privacy Notice"
+msgstr ""
+
+#: classes/admin/class-kp-form-fields.php:234
+#. translators: %s: privacy policy link.
+msgid "By activating Klarna using API credentials you agree to and accept the %s."
 msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:240
-#: classes/admin/class-kp-form-fields.php:335
+msgid "To unlock the plugin's features, enter your credentials"
+msgstr ""
+
+#: classes/admin/class-kp-form-fields.php:245
+#: classes/admin/class-kp-form-fields.php:340
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:125
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:118
 msgid "Documentation"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:246
+#: classes/admin/class-kp-form-fields.php:251
 msgid "Client Identifier & API Credentials"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:248
+#: classes/admin/class-kp-form-fields.php:253
 #. translators: %s: merchant portal link.
 msgid ""
 "Enter the credentials for production and test for each market Klarna is "
-"used. Get the client identifier and API credentials from the %s, under "
-"Settings."
+"used. Get the client identifier and API credentials from the %1$s, under "
+"Settings. <br><br><b>%2$s</b>"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:251
+#: classes/admin/class-kp-form-fields.php:256
 msgid "Enter the countries where Klarna will be available"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:255
+#: classes/admin/class-kp-form-fields.php:260
 msgid "Start typing"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:259
+#: classes/admin/class-kp-form-fields.php:264
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:54
 msgid "Test mode"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:260
+#: classes/admin/class-kp-form-fields.php:265
 msgid "Enable Klarna in Klarna's test environment."
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:266
+#: classes/admin/class-kp-form-fields.php:271
 msgid "European Market"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:274
+#: classes/admin/class-kp-form-fields.php:279
 msgid "Credentials for Europe"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:281
+#: classes/admin/class-kp-form-fields.php:286
 msgid "Combine EU credentials"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:282
+#: classes/admin/class-kp-form-fields.php:287
 msgid "Combine all EU country credentials into a single"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:290
+#: classes/admin/class-kp-form-fields.php:295
 msgid "North American Market"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:294
+#: classes/admin/class-kp-form-fields.php:299
 msgid "Credentials for the US"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:295
+#: classes/admin/class-kp-form-fields.php:300
 msgid "Credentials for Canada"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:296
+#: classes/admin/class-kp-form-fields.php:301
 msgid "Credentials for Mexico"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:302
+#: classes/admin/class-kp-form-fields.php:307
 msgid "Oceania Market"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:306
+#: classes/admin/class-kp-form-fields.php:311
 msgid "Credentials for Australia"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:307
+#: classes/admin/class-kp-form-fields.php:312
 msgid "Credentials for New Zealand"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:331
+#: classes/admin/class-kp-form-fields.php:336
 msgid ""
 "Give your customers the ability to pay in flexible ways such as Buy now, "
 "Pay Later, Invoicing, Installments and Financing."
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:341
+#: classes/admin/class-kp-form-fields.php:346
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:125
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:118
 msgid "Enable/Disable"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:342
+#: classes/admin/class-kp-form-fields.php:347
 msgid "Enable Klarna Payments"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:348
+#: classes/admin/class-kp-form-fields.php:353
 msgid "Logging"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:349
+#: classes/admin/class-kp-form-fields.php:354
 msgid "Log debug messages"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:351
+#: classes/admin/class-kp-form-fields.php:356
 msgid "Save debug messages to the WooCommerce System Status log."
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:354
+#: classes/admin/class-kp-form-fields.php:359
 msgid "No"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:355
+#: classes/admin/class-kp-form-fields.php:360
 msgid "Yes"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:356
+#: classes/admin/class-kp-form-fields.php:361
 msgid "Yes (with extra debug data)"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:361
-msgid "Payment method title"
-msgstr ""
-
-#: classes/admin/class-kp-form-fields.php:367
+#: classes/admin/class-kp-form-fields.php:366
 msgid "Hide \"What is Klarna?\" link"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:369
+#: classes/admin/class-kp-form-fields.php:368
 msgid "If checked, \"What is Klarna?\" will not be shown."
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:374
+#: classes/admin/class-kp-form-fields.php:373
 msgid "Float \"What is Klarna?\" link"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:376
+#: classes/admin/class-kp-form-fields.php:375
 msgid "If checked, \"What is Klarna?\" will be floated right."
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:381
+#: classes/admin/class-kp-form-fields.php:380
 msgid "Product URLs"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:383
+#: classes/admin/class-kp-form-fields.php:382
 msgid "Send product and product image URLs to Klarna"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:388
+#: classes/admin/class-kp-form-fields.php:387
 msgid "Add Klarna URLs to order email"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:390
+#: classes/admin/class-kp-form-fields.php:389
 msgid ""
 "This will add Klarna URLs to the order emails that are sent. You can read "
 "more about this here: "
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:395
-#: classes/admin/class-kp-form-fields.php:397
+#: classes/admin/class-kp-form-fields.php:394
+#: classes/admin/class-kp-form-fields.php:396
 msgid "Customer type"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:398
+#: classes/admin/class-kp-form-fields.php:397
 msgid "Select the customer for the store."
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:400
+#: classes/admin/class-kp-form-fields.php:399
 msgid "Business to Consumer (B2C)"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:401
+#: classes/admin/class-kp-form-fields.php:400
 msgid "Business to Business (B2B)"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:410
+#: classes/admin/class-kp-form-fields.php:409
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:125
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:118
 msgid "Preview"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:430
+#: classes/admin/class-kp-form-fields.php:429
 #. translators: %s: country name.
 msgid "Credentials for %s:"
 msgstr ""
@@ -332,53 +342,66 @@ msgstr ""
 msgid "Learn more about Klarna"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:286
+#: classes/admin/class-kp-settings-page.php:103
+#: dependencies/krokedil/settings-page/src/Addons.php:244
+msgid "Active"
+msgstr ""
+
+#: classes/admin/class-kp-settings-page.php:103
+msgid "Not active"
+msgstr ""
+
+#: classes/admin/class-kp-settings-page.php:302
 msgid "(Test)"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:286
+#: classes/admin/class-kp-settings-page.php:302
 msgid "(Production)"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:292
+#: classes/admin/class-kp-settings-page.php:308
 msgid "Username"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:296
+#: classes/admin/class-kp-settings-page.php:312
 msgid "Password"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:301
+#: classes/admin/class-kp-settings-page.php:317
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:55
 msgid "Client ID"
 msgstr ""
 
-#: classes/class-kp-ajax.php:82 classes/class-kp-subscriptions.php:201
+#: classes/class-kp-ajax.php:84 classes/class-kp-subscriptions.php:202
 #. translators: Recurring token.
 msgid "Recurring token created: %s"
 msgstr ""
 
-#: classes/class-kp-ajax.php:87
+#: classes/class-kp-ajax.php:89
 msgid ""
 "The order contains a free or trial subscription, and no Klarna order is "
 "associated with this purchase. A Klarna order will only be registered once "
 "the subscriber is charged."
 msgstr ""
 
-#: classes/class-kp-ajax.php:158
+#: classes/class-kp-ajax.php:160
 msgid "Customer aborted purchase with Klarna."
 msgstr ""
 
-#: classes/class-kp-ajax.php:160
+#: classes/class-kp-ajax.php:162
 msgid "Authorization rejected by Klarna."
 msgstr ""
 
-#: classes/class-kp-assets.php:113
-msgid "Pay with Klarna"
+#: classes/class-kp-api.php:261
+msgid "Missing shared secret."
 msgstr ""
 
-#: classes/class-kp-assets.php:114
+#: classes/class-kp-assets.php:155
 msgid "Please read and accept the terms and conditions to proceed with your order."
+msgstr ""
+
+#: classes/class-kp-assets.php:198
+msgid "Select all"
 msgstr ""
 
 #: classes/class-kp-callbacks.php:91 classes/class-kp-callbacks.php:110
@@ -441,30 +464,31 @@ msgstr ""
 msgid "Order was not found"
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:84
+#: classes/class-kp-subscriptions.php:85
+#. Translators: Klarna order id.
 msgid "Subscription payment made with Klarna. Klarna order id: %s"
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:89
+#: classes/class-kp-subscriptions.php:90
 #. Translators: Error message.
 msgid "Subscription payment failed with Klarna. Reason: %1$s"
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:128
+#: classes/class-kp-subscriptions.php:129
 msgid "Subscription cancelled with Klarna Payments."
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:132
+#: classes/class-kp-subscriptions.php:133
 #. Translators: Error message.
 msgid "Subscription cancellation failed with Klarna Payments. Reason: %1$s"
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:195
+#: classes/class-kp-subscriptions.php:196
 #. translators: Error message.
 msgid "Failed to create recurring token. Reason: %s"
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:394
+#: classes/class-kp-subscriptions.php:395
 msgid "Klarna recurring token"
 msgstr ""
 
@@ -472,19 +496,19 @@ msgstr ""
 msgid "What is Klarna?"
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:382
+#: classes/class-wc-gateway-klarna-payments.php:387
 msgid "Failed to get required data from the Klarna session. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:445
+#: classes/class-wc-gateway-klarna-payments.php:450
 msgid "Failed to create a session with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:475
+#: classes/class-wc-gateway-klarna-payments.php:480
 msgid "Failed to create a hosted payment page with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:616
+#: classes/class-wc-gateway-klarna-payments.php:621
 msgid "Klarna did not accept the new order amount, the order has not been updated"
 msgstr ""
 
@@ -528,15 +552,15 @@ msgstr ""
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:125
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:118
 msgid "Dark"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:125
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:118
 msgid "Light"
 msgstr ""
@@ -585,7 +609,7 @@ msgstr ""
 msgid "Cart page"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:92
+#: dependencies/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:96
 msgid ""
 "The \"Klarna On-Site Messaging for WooCommerce\" plugin is now integrated "
 "into Klarna Payments. Please disable the plugin."
@@ -616,42 +640,42 @@ msgid "Product On-Site Messaging placement"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
 msgid "Select where to display the widget in your product pages"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
 msgid "Above Title"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
 msgid "Between Title and Price"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
 msgid "Between Price and Excerpt"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
 msgid "Between Excerpt and Add to cart button"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
 msgid "Between Add to cart button and Product meta"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
 msgid "Between Product meta and Product sharing buttons"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
 msgid "After Product sharing buttons"
 msgstr ""
 
@@ -670,8 +694,8 @@ msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
 msgid "Custom"
 msgstr ""
 
@@ -692,32 +716,32 @@ msgid "Cart On-Site Messaging placement"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
 msgid "Select where to display the widget on your cart page"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
 msgid "Above cross sell"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
 msgid "Above cart totals"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
 msgid "Between cart totals and proceed to checkout button"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
 msgid "After proceed to checkout button"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
 msgid "Bottom of the page"
 msgstr ""
 
@@ -726,7 +750,7 @@ msgid "Cart Placement Theme"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
 msgid "Select which theme to use for the cart page."
 msgstr ""
 
@@ -763,66 +787,70 @@ msgid "Further customization is possible in the Klarna Merchant Portal."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
-msgid "Cart Page Placement"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
-msgid "Select the placement for the cart page."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
-msgid "Don't show"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
-msgid "Show with Klarna badge  (recommended)"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
-msgid "Show without Klarna badge"
+msgid "Enable On-site Messaging"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
-msgid "Cart Page Location"
+msgid "Cart Page Placement"
+msgstr ""
+
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
+msgid "Select the placement for the cart page."
+msgstr ""
+
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+msgid "Don't show"
+msgstr ""
+
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
+msgid "Show with Klarna badge  (recommended)"
+msgstr ""
+
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+msgid "Show without Klarna badge"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
+msgid "Cart Page Location"
+msgstr ""
+
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
 msgid "Cart Page Theme"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
 msgid "Product Page Placement"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
 msgid "Select the placement type that you want to show on the product pages."
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
 msgid "Show with Klarna badge (recommended)"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
 msgid "Product Page Location"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
 msgid "Product Page Theme"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
 msgid ""
 "The On-site messaging placements come in Light and Dark theme to fit into "
 "the look and feel of your website."
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:87
 msgid "Cart preview"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
+#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:87
 msgid "Product preview"
 msgstr ""
 
@@ -865,10 +893,6 @@ msgstr ""
 msgid "Free"
 msgstr ""
 
-#: dependencies/krokedil/settings-page/src/Addons.php:244
-msgid "Active"
-msgstr ""
-
 #: dependencies/krokedil/settings-page/src/Addons.php:248
 msgid "Activate"
 msgstr ""
@@ -883,7 +907,7 @@ msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Navigation.php:54
 #: dependencies/krokedil/settings-page/src/Support.php:30
-#: klarna-payments-for-woocommerce.php:277
+#: klarna-payments-for-woocommerce.php:294
 msgid "Support"
 msgstr ""
 
@@ -1083,33 +1107,33 @@ msgstr ""
 msgid "Test Countries"
 msgstr ""
 
-#: includes/kp-functions.php:28
+#: includes/kp-functions.php:30
 msgid "Klarna Payments API Error: "
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:256
+#: klarna-payments-for-woocommerce.php:273
 msgid ""
 "Klarna Order Management is not active. Please activate it so you can "
 "capture, cancel, update and refund Klarna orders."
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:275
+#: klarna-payments-for-woocommerce.php:292
 msgid "Settings"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:276
+#: klarna-payments-for-woocommerce.php:293
 msgid "Docs"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:318
+#: klarna-payments-for-woocommerce.php:335
 msgid "The WooCommerce plugin must be active for Klarna Payments to work."
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:336
+#: klarna-payments-for-woocommerce.php:353
 msgid "Dismiss"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:343
+#: klarna-payments-for-woocommerce.php:360
 #. translators: URL to docs.
 msgid ""
 "It looks as if you don't have pretty permalinks enabled in WordPress. In "
@@ -1117,12 +1141,12 @@ msgid ""
 "setting needs to be enabled. <a href=\"%1$s\">Learn more</a>"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:344
+#: klarna-payments-for-woocommerce.php:361
 msgid "https://wordpress.org/support/article/using-permalinks/"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:436
-#: klarna-payments-for-woocommerce.php:445
+#: klarna-payments-for-woocommerce.php:455
+#: klarna-payments-for-woocommerce.php:464
 msgid ""
 "Your installation of Klarna Payments is not complete. If you installed this "
 "plugin directly from Github please refer to the README.DEV.md file in the "

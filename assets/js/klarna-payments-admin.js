@@ -36,28 +36,37 @@ jQuery( function ( $ ) {
 			// Update all previews on page load.
 			this.updatePreviews()
 
-			$('.kp_settings__fields_mid, .kp_settings__fields_secret').on('change', function () {
-				const countryCredentials = kp_admin.collectCredentials();
+			$( ".kp_settings__fields_mid, .kp_settings__fields_secret" ).on( "change", function () {
+				const countryCredentials = kp_admin.collectCredentials()
 
-				if (countryCredentials.length > 0) {
-
+				if ( countryCredentials.length > 0 ) {
 					// Remove duplicates of credentials that share the same client_id and shared_secret.
-					const uniqueCountryCredentials = countryCredentials.filter((v, i, a) => a.findIndex(t => (t.client_id === v.client_id && t.shared_secret === v.shared_secret)) === i);
+					const uniqueCountryCredentials = countryCredentials.filter(
+						( v, i, a ) =>
+							a.findIndex(
+								( t ) => t.client_id === v.client_id && t.shared_secret === v.shared_secret,
+							) === i,
+					)
 
 					// Remove credentials that are already stored.
-					const newCredentials = uniqueCountryCredentials.filter((v, i, a) => !kp_admin.storedCredentials.some(t => (t.client_id === v.client_id && t.shared_secret === v.shared_secret)));
-					
+					const newCredentials = uniqueCountryCredentials.filter(
+						( v, i, a ) =>
+							! kp_admin.storedCredentials.some(
+								( t ) => t.client_id === v.client_id && t.shared_secret === v.shared_secret,
+							),
+					)
+
 					// If new credentials are found, update the unavailable features.
-					if(newCredentials.length > 0) {
-						kp_admin.updateUnavailableFeatures(newCredentials);
+					if ( newCredentials.length > 0 ) {
+						kp_admin.updateUnavailableFeatures( newCredentials )
 						// Add the new credentials to the stored credentials.
-						kp_admin.storedCredentials = kp_admin.storedCredentials.concat(newCredentials);
+						kp_admin.storedCredentials = kp_admin.storedCredentials.concat( newCredentials )
 					}
 				}
-			});
+			} )
 
-			$(document).on(
-				"click", 
+			$( document ).on(
+				"click",
 				"#woocommerce_klarna_payments_available_countries + .select2",
 				this.addSelectAllCountries,
 			)
@@ -186,75 +195,72 @@ jQuery( function ( $ ) {
 		},
 
 		collectCredentials: function () {
-			const countryCredentials = [];
-	
-			$('tr .kp_settings__credentials').each(function () {
+			const countryCredentials = []
 
+			$( "tr .kp_settings__credentials" ).each( function () {
 				// skip fields from hidden mode.
-				if($(this).css('display') === 'none') {
-					return;
+				if ( $( this ).css( "display" ) === "none" ) {
+					return
 				}
 
-				const $countryCode = $(this).find('.kp_settings__fields_credentials').attr('data-field-key');
-				const $clientId = $(this).find('input.kp_settings__fields_mid').val();
-				const $secret = $(this).find('.kp_settings__fields_secret').val();
-				const mode = $(this).hasClass('kp_settings__test_credentials') ? 'test' : 'live';
-	
-				if ($countryCode && $clientId && $secret) {
-					
-					countryCredentials.push({
+				const $countryCode = $( this ).find( ".kp_settings__fields_credentials" ).attr( "data-field-key" )
+				const $clientId = $( this ).find( "input.kp_settings__fields_mid" ).val()
+				const $secret = $( this ).find( ".kp_settings__fields_secret" ).val()
+				const mode = $( this ).hasClass( "kp_settings__test_credentials" ) ? "test" : "live"
+
+				if ( $countryCode && $clientId && $secret ) {
+					countryCredentials.push( {
 						country_code: $countryCode,
 						client_id: $clientId,
 						shared_secret: $secret,
 						mode: mode,
-					});
+					} )
 				}
-			});
-	
-			return countryCredentials;
+			} )
+
+			return countryCredentials
 		},
-	
-		updateUnavailableFeatures: function (countryCredentials) {
-			$.ajax(klarna_payments_admin_params.get_unavailable_features, {
+
+		updateUnavailableFeatures: function ( countryCredentials ) {
+			$.ajax( klarna_payments_admin_params.get_unavailable_features, {
 				type: "POST",
 				dataType: "json",
 				async: true,
 				data: {
 					country_credentials: countryCredentials,
-					nonce: klarna_payments_admin_params.get_unavailable_features_nonce
+					nonce: klarna_payments_admin_params.get_unavailable_features_nonce,
 				},
-				success: function (response) {
-					if (response.success) {
-						const unavailableOptions = response.data ?? [];
-						$('.kp_settings__section').removeClass('unavailable');
-						
-						if(!unavailableOptions.length) {
-							return;
+				success: function ( response ) {
+					if ( response.success ) {
+						const unavailableOptions = response.data ?? []
+						$( ".kp_settings__section" ).removeClass( "unavailable" )
+
+						if ( ! unavailableOptions.length ) {
+							return
 						}
 
-						unavailableOptions.forEach(option => {
-							$(`#klarna-payments-settings-${option}`).addClass('unavailable');
-							
-						});
+						unavailableOptions.forEach( ( option ) => {
+							$( `#klarna-payments-settings-${ option }` ).addClass( "unavailable" )
+						} )
 					} else {
-						console.log("Error updating unavailable features");
-						console.log(response);
-						$('.kp_settings__section').removeClass('unavailable');
+						console.log( "Error updating unavailable features" )
+						console.log( response )
+						$( ".kp_settings__section" ).removeClass( "unavailable" )
 					}
 				},
-				error: function (response) {
-					console.log("Error updating unavailable features");
-					console.log(response);
-					$('.kp_settings__section').removeClass('unavailable');
-				}
-			});
+				error: function ( response ) {
+					console.log( "Error updating unavailable features" )
+					console.log( response )
+					$( ".kp_settings__section" ).removeClass( "unavailable" )
+				},
+			} )
 		},
 
-		addSelectAllCountries: function() {
-			const selectAllOption = 'klarna_payments_select_all_countries';
-			const select2Option = 'select2-results__option';
-			const allAreSelected = !$(`.${select2Option}:not(#${selectAllOption})[data-selected="false"]`).length;
-			
+		addSelectAllCountries: function () {
+			const selectAllOption = "klarna_payments_select_all_countries"
+			const select2Option = "select2-results__option"
+			const allAreSelected = ! $( `.${ select2Option }:not(#${ selectAllOption })[data-selected="false"]` ).length
+
 			// If not already added, add the select all option.
 			if ( ! $( `#${ selectAllOption }` ).length ) {
 				$( "#select2-woocommerce_klarna_payments_available_countries-results" ).prepend(
@@ -282,5 +288,5 @@ jQuery( function ( $ ) {
 		},
 	}
 
-	kp_admin.init();
-});
+	kp_admin.init()
+} )
