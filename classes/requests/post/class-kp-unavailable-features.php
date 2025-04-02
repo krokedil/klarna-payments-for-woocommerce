@@ -82,7 +82,6 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 						get_site_url(),
 					),
 				),
-				'metadata'           => array(),
 			),
 		);
 	}
