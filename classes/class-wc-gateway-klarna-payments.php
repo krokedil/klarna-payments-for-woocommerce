@@ -342,149 +342,26 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
-		if ( function_exists( 'wcs_is_subscription' ) && wcs_is_subscription( $order_id ) ) {
-			return $this->process_subscription( $order );
+		try {
+			$payment_processor = KP_Payment_Processor::get_processor( $order );
+			return $payment_processor->process_payment();
 		}
-		// Check if the order was created using WooCommerce blocks.
-		if ( kp_is_wc_blocks_order( $order ) ) {
-			return $this->process_blocks_order( $order );
-		}
-
-		return $this->process_checkout_order( $order );
-	}
-
-	/**
-	 * Create a session for Klarna Hosted Payment Page, and redirect the customer there.
-	 *
-	 * @param mixed $order The WooCommerce order.
-	 * @return array
-	 */
-	private function process_subscription( $order ) {
-		return $this->process_blocks_order( $order );
-	}
-
-	/**
-	 * Process WooCommerce checkout order.
-	 *
-	 * @param WC_Order $order The WooCommerce order.
-	 * @return array
-	 */
-	private function process_checkout_order( $order ) {
-		$kec_client_token = KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\Session::get_client_token();
-		$order_key        = $order->get_order_key();
-		$order_id         = $order->get_id();
-
-		if ( empty( $kec_client_token ) ) {
-			// Load any session data that we might have. Pass null instead of order identifier to load session from WC()->session.
-			KP_WC()->session->set_session_data( null );
-			$klarna_country    = KP_WC()->session->get_klarna_session_country( $order );
-			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
-
-			if ( empty( $klarna_country ) || empty( $klarna_session_id ) ) {
-				return array(
-					'result'   => 'error',
-					'messages' => array(
-						__( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' ),
-					),
-				);
-			}
-		} else {
-			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
-			$klarna_country = kp_get_klarna_country( $order );
-
-			// If EU credentials are combined, we should use the EU country code.
-			$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
-			if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
-				$klarna_country = 'EU';
-			}
-
-			$klarna_session_id = $kec_client_token;
-		}
-
-		// Set the order meta data.
-		$environment = $this->testmode ? 'test' : 'live';
-		$order->add_meta_data( '_wc_klarna_environment', $environment, true );
-		$order->add_meta_data( '_wc_klarna_country', $klarna_country, true );
-		$order->add_meta_data( '_kp_session_id', $klarna_session_id, true );
-
-		// Save the order.
-		$order->save();
-
-		$order_data = new KP_Order_Data( $this->customer_type );
-		$customer   = $order_data->get_klarna_customer_object();
-
-		// Return success without redirect URL since our script handles the return instead of WooCommerce.
-		$return = array(
-			'result'    => 'success',
-			'order_id'  => $order_id,
-			'order_key' => $order_key,
-			'addresses' => array(
-				'billing'  => $customer['billing'],
-				'shipping' => $customer['shipping'],
-			),
-		);
-
-		// If KEC is enabled, we should pass the payload with the result.
-		if ( ! empty( $kec_client_token ) ) {
-			$return['payload'] = KP_WC()->klarna_express_checkout->get_payload();
-		}
-
-		return $return;
-	}
-
-	/**
-	 * Process WooCommerce blocks order.
-	 *
-	 * @param WC_Order $order The WooCommerce order.
-	 * @return array
-	 */
-	private function process_blocks_order( $order ) {
-		// Create a session for the order.
-		$session = KP_WC()->session->get_session( $order );
-
-		// Check for any errors.
-		if ( is_wp_error( $session ) ) {
+		catch (WP_Exception $e) {
 			return array(
 				'result'   => 'error',
-				'redirect' => '#',
-				'message'  => __( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
+				'messages' => array(
+					$e->getMessage(),
+				),
 			);
 		}
-
-		$session_id     = KP_WC()->session->get_klarna_session_id();
-		$klarna_country = kp_get_klarna_country( $order );
-
-		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		// If EU credentials are combined, we should use the EU country code.
-		$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
-		if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
-			$klarna_country = 'EU';
-		}
-
-		// Create a HPP url.
-		$hpp = KP_WC()->api->create_hpp( $klarna_country, $session_id, $order->get_id() );
-
-		// Set the order meta data.
-		$environment = $this->testmode ? 'test' : 'live';
-		$order->add_meta_data( '_wc_klarna_environment', $environment, true );
-		$order->add_meta_data( '_wc_klarna_country', $klarna_country, true );
-		$order->add_meta_data( '_kp_session_id', $session_id, true );
-
-		// Save the order.
-		$order->save();
-
-		if ( is_wp_error( $hpp ) ) {
+		catch (Exception $e) {
 			return array(
 				'result'   => 'error',
-				'redirect' => '#',
-				'message'  => __( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
+				'messages' => array(
+					__( 'Failed to process the order. Please try again.', 'klarna-payments-for-woocommerce' ),
+				),
 			);
 		}
-
-		return array(
-			'result'   => 'success',
-			'redirect' => $hpp['redirect_url'],
-		);
 	}
 
 	/**
