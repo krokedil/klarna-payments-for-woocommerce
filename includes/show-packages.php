@@ -11,24 +11,43 @@ add_action(
 			add_action(
 				'wp_footer',
 				function () {
-					// Hämta och visa paketinformation
-					$file_path = plugin_dir_path( __FILE__ ) . '../composer-dependencies.json';
-					if ( file_exists( $file_path ) ) {
-						$composer_data = json_decode( file_get_contents( $file_path ), true );
-						if ( json_last_error() === JSON_ERROR_NONE ) {
+					// Hämta och visa paketinformation från dependencies-mappen
+					$dependencies_path = plugin_dir_path( __FILE__ ) . '../dependencies/';
+					if ( is_dir( $dependencies_path ) ) {
+						$packages = scandir( $dependencies_path );
+						if ( $packages !== false ) {
+							$found_packages = false; // Flagga för att kontrollera om några paket hittas
 							echo '<div style="background: #f9f9f9; padding: 20px; border: 1px solid #ddd; margin: 20px 0;">';
 							echo '<h3>Composer Packages</h3>';
 							echo '<ul>';
-							foreach ( $composer_data['require'] as $package => $version ) {
-								echo '<li><strong>' . esc_html( $package ) . ':</strong> ' . esc_html( $version ) . '</li>';
+							foreach ( $packages as $package ) {
+								if ( $package !== '.' && $package !== '..' ) {
+									$found_packages = true; // Paket hittades
+									$package_path   = $dependencies_path . $package;
+									$version        = 'Unknown';
+
+									// Kontrollera om changelog.md finns i paketmappen
+									$changelog_file = $package_path . '/changelog.md';
+									if ( file_exists( $changelog_file ) ) {
+										$changelog_content = file_get_contents( $changelog_file );
+										if ( preg_match( '/## \[(\d+\.\d+\.\d+)\]/', $changelog_content, $matches ) ) {
+											$version = $matches[1]; // Hämta första matchande version
+										}
+									}
+
+									echo '<li><strong>' . esc_html( $package ) . '</strong> - Version: ' . esc_html( $version ) . '</li>';
+								}
 							}
 							echo '</ul>';
+							if ( ! $found_packages ) {
+								echo '<p style="color: orange;">No packages found in the dependencies directory.</p>';
+							}
 							echo '</div>';
 						} else {
-							echo '<div style="color: red;">Error: Could not parse composer-dependencies.json.</div>';
+							echo '<div style="color: red;">Error: Could not read dependencies directory.</div>';
 						}
 					} else {
-						echo '<div style="color: red;">Error: composer-dependencies.json not found.</div>';
+						echo '<div style="color: red;">Error: dependencies directory not found.</div>';
 					}
 				}
 			);
