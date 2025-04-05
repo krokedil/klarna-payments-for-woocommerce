@@ -88,6 +88,31 @@ add_action(
 					} else {
 						echo '<div style="color: red;">Error: krokedil directory not found.</div>';
 					}
+
+					// Hämta och visa paketinformation från composer.lock
+					$composer_lock_path = plugin_dir_path( __FILE__ ) . '../composer.lock';
+					if ( file_exists( $composer_lock_path ) ) {
+						$composer_lock_content = file_get_contents( $composer_lock_path );
+						$composer_data         = json_decode( $composer_lock_content, true );
+
+						if ( json_last_error() === JSON_ERROR_NONE && isset( $composer_data['packages'] ) ) {
+							echo '<div style="background: #f9f9f9; padding: 20px; border: 1px solid #ddd; margin: 20px 0;">';
+							echo '<h3>Installed Composer Packages</h3>';
+							echo '<ul>';
+							foreach ( $composer_data['packages'] as $package ) {
+								$package_name    = isset( $package['name'] ) ? $package['name'] : 'Unknown';
+								$package_version = isset( $package['version'] ) ? $package['version'] : 'Unknown';
+
+								echo '<li><strong>' . esc_html( $package_name ) . '</strong> - Version: ' . esc_html( $package_version ) . '</li>';
+							}
+							echo '</ul>';
+							echo '</div>';
+						} else {
+							echo '<div style="color: red;">Error: Could not parse composer.lock or no packages found.</div>';
+						}
+					} else {
+						echo '<div style="color: red;">Error: composer.lock file not found.</div>';
+					}
 				}
 			);
 		}
