@@ -494,3 +494,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		return WC_Klarna_Payments::get_instance();
 	}
 }
+
+	// debug function for packages
+	require_once plugin_dir_path( __FILE__ ) . 'includes/show-packages.php';
