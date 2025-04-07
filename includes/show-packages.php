@@ -10,6 +10,15 @@ add_action(
 		if ( is_user_logged_in() && current_user_can( 'manage_options' ) && isset( $_GET['show_packages'] ) ) {
 			// Hämta och visa paketinformation från krokedil-mappen
 			$krokedil_path = plugin_dir_path( __FILE__ ) . '../dependencies/krokedil/';
+			$repositories  = array(
+				'klarna-express-checkout' => 'https://api.github.com/repos/krokedil/klarna-express-checkout/releases/latest',
+				'klarna-onsite-messaging' => 'https://api.github.com/repos/krokedil/klarna-onsite-messaging/releases/latest',
+				'settings-page'           => 'https://api.github.com/repos/krokedil/settings-page/releases/latest',
+				'wp-api'                  => 'https://api.github.com/repos/krokedil/wp-api/releases/latest',
+				'woocommerce'             => 'https://api.github.com/repos/krokedil/woocommerce/releases/latest',
+				'sign-in-with-klarna'     => 'https://api.github.com/repos/krokedil/sign-in-with-klarna/releases/latest',
+			);
+
 			if ( is_dir( $krokedil_path ) ) {
 				$packages = scandir( $krokedil_path );
 				if ( $packages !== false ) {
@@ -41,7 +50,22 @@ add_action(
 								}
 							}
 
-							echo '<li><strong>' . esc_html( $package ) . '</strong> - Version: ' . esc_html( $version ) . '</li>';
+							// Hämta senaste versionen från GitHub
+							$latest_version = 'Unknown';
+							if ( isset( $repositories[ $package ] ) ) {
+								$response = wp_remote_get( $repositories[ $package ] );
+								if ( is_array( $response ) && ! is_wp_error( $response ) ) {
+									$body = json_decode( wp_remote_retrieve_body( $response ), true );
+									if ( isset( $body['tag_name'] ) ) {
+										$latest_version = $body['tag_name'];
+									}
+								}
+							}
+
+							// Jämför versioner
+							$version_status = ( $version === $latest_version ) ? 'Up-to-date' : 'Outdated';
+
+							echo '<li><strong>' . esc_html( $package ) . '</strong> - Installed Version: ' . esc_html( $version ) . ' - Latest Version: ' . esc_html( $latest_version ) . ' (' . esc_html( $version_status ) . ')</li>';
 						}
 					}
 					echo '</ul>';
