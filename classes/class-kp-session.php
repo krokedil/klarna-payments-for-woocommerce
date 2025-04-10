@@ -276,9 +276,10 @@ class KP_Session {
 		$billing_address  = WC()->customer->get_billing();
 		$shipping_address = WC()->customer->get_shipping();
 		$shipping_method  = WC()->session->get( 'chosen_shipping_methods' );
+		$cart_hash        = WC()->cart->get_cart_hash();
 
 		// Calculate a hash from the values.
-		$hash = md5( wp_json_encode( array( $total, $billing_address, $shipping_address, $shipping_method ) ) );
+		$hash = md5( wp_json_encode( array( $total, $billing_address, $shipping_address, $shipping_method, $cart_hash ) ) );
 
 		return $hash;
 	}
