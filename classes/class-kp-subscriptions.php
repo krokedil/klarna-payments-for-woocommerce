@@ -345,7 +345,7 @@ class KP_Subscription {
 	}
 
 	/**
-	 * Check if a cart contains a subscription.
+	 * Check if a cart contains a subscription-related item.
 	 *
 	 * @return bool
 	 */
@@ -354,19 +354,15 @@ class KP_Subscription {
 			return false;
 		}
 
-		$cart          = WC()->cart->get_cart();
-		$product_types = array_values(
-			array_unique(
-				array_map(
-					function ( $item ) {
-						return wc_get_product( $item['product_id'] )->get_type();
-					},
-					$cart
-				)
-			)
+		return (
+		( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) ||
+		( function_exists( 'wcs_cart_contains_renewal' ) && wcs_cart_contains_renewal() ) ||
+		( function_exists( 'wcs_cart_contains_failed_renewal_order_payment' ) && wcs_cart_contains_failed_renewal_order_payment() ) ||
+		( function_exists( 'wcs_cart_contains_resubscribe' ) && wcs_cart_contains_resubscribe() ) ||
+		( function_exists( 'wcs_cart_contains_subscription_switch' ) && wcs_cart_contains_subscription_switch() ) ||
+		( function_exists( 'wcs_cart_contains_early_renewal' ) && wcs_cart_contains_early_renewal() ) ||
+		( function_exists( 'wcs_cart_contains_switches' ) && wcs_cart_contains_switches() )
 		);
-
-		return array_intersect( array( 'subscription', 'subscription_variation' ), $product_types );
 	}
 
 	/**
