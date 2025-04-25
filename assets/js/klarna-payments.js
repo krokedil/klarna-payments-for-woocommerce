@@ -2,12 +2,6 @@
 jQuery( function ( $ ) {
 	"use strict"
 
-	const log = (...args) => {
-        if (klarna_payments_params.debug) { 
-            console.log(...args)
-        }
-	}
-
 	var klarna_payments = {
 		authorization_response: {},
 		iframe_loaded: false,
@@ -15,6 +9,11 @@ jQuery( function ( $ ) {
 		klarna_container_selector: "#klarna_container_2",
 		checkout_values: {},
 		addresses: {},
+		log: ( ...args ) => {
+			if ( klarna_payments_params.debug ) {
+				console.log( ...args )
+			}
+		},
 
 		check_changes: function () {
 			$(
@@ -165,7 +164,7 @@ jQuery( function ( $ ) {
 			}
 
 			var klarna_payments_container_selector_id = "#" + klarna_payments.getSelectorContainerID()
-			log( klarna_payments_container_selector_id )
+			klarna_payments.log( klarna_payments_container_selector_id )
 
 			if ( klarna_payments_container_selector_id ) {
 				var klarnaLoadedInterval = setInterval( function () {
@@ -174,7 +173,7 @@ jQuery( function ( $ ) {
 					try {
 						Klarna = window.Klarna
 					} catch ( e ) {
-						log( e )
+						klarna_payments.log( e )
 					}
 
 					if ( Klarna && Klarna.Payments ) {
@@ -255,7 +254,7 @@ jQuery( function ( $ ) {
 			var selected_category = $( 'input[name="payment_method"]:checked' )
 				.attr( "id" )
 				.replace( "payment_method_", "" )
-			log( selected_category )
+			klarna_payments.log( selected_category )
 			return selected_category.replace( "klarna_payments_", "" )
 		},
 
@@ -415,8 +414,8 @@ jQuery( function ( $ ) {
 						},
 						success: function ( response ) {
 							// Log the success.
-							log( "kp_place_order success" )
-							log( response )
+							klarna_payments.log( "kp_place_order success" )
+							klarna_payments.log( response )
 						},
 						error: function ( response ) {
 							// Log the error.
@@ -444,7 +443,9 @@ jQuery( function ( $ ) {
 					$( "form.checkout" ).unblock()
 
 					const reason = response.show_form ? "aborted by customer" : "rejected by Klarna"
-					klarna_payments.logToFile( `(Order ${ order_id }): No authorization_token in response. Reason: ${ reason }.`)
+					klarna_payments.logToFile(
+						`(Order ${ order_id }): No authorization_token in response. Reason: ${ reason }.`,
+					)
 					$( "form.woocommerce-checkout" ).removeClass( "processing" ).unblock()
 					$.ajax( klarna_payments_params.auth_failed_url, {
 						type: "POST",
@@ -511,7 +512,9 @@ jQuery( function ( $ ) {
 					success: function ( data ) {
 						try {
 							if ( "success" === data.result ) {
-								klarna_payments.logToFile( "Successfully placed order. Starting authorization with Klarna")
+								klarna_payments.logToFile(
+									"Successfully placed order. Starting authorization with Klarna",
+								)
 								klarna_payments.addresses = data.addresses
 								klarna_payments.authorizeKlarnaOrder( data.order_id, data.order_key )
 							} else {
@@ -570,8 +573,8 @@ jQuery( function ( $ ) {
 		 * Logs the message to the klarna payments log in WooCommerce.
 		 * @param {string} message
 		 */
-		logToFile: function (message) {
-			log(message)
+		logToFile: function ( message ) {
+			klarna_payments.log( message )
 			$.ajax( {
 				url: klarna_payments_params.log_to_file_url,
 				type: "POST",
