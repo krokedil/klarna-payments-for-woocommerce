@@ -214,11 +214,6 @@ class KP_Session {
 	 * @return WC_Order|null|WP_Error
 	 */
 	private function maybe_get_order( $order ) {
-		// If the order is already null, just return.
-		if ( null === $order ) {
-			return null;
-		}
-
 		// If we get passed a cart by the WooCommerce actions, then we treat that the same as null.
 		if ( is_a( $order, 'WC_Cart' ) ) {
 			return null;
@@ -229,13 +224,22 @@ class KP_Session {
 			return $order;
 		}
 
-		// Attempt to get the order from WooCommerce.
-		$tmp_order = wc_get_order( $order );
-		if ( ! $tmp_order ) {
+		if ( empty( $order ) ) {
+			// Since this set_session_data can be invoked with null whereas there is an order (see `html_client_token` func), we should check if we can retrieve the order ID from the query variable.
+			$order = absint( get_query_var( 'order-pay', 0 ) );
+		}
+
+		// If it is still null (or zero), we'll retrieve the session data from the existing checkout session.
+		if ( empty( $order ) ) {
+			return null;
+		}
+
+		$order = wc_get_order( $order );
+		if ( empty( $order ) ) {
 			return new WP_Error( 'kp_order_not_found', __( 'Order was not found', 'klarna-payments-for-woocommerce' ), $order );
 		}
 
-		return $tmp_order;
+		return $order;
 	}
 
 	/**
@@ -276,9 +280,11 @@ class KP_Session {
 		$billing_address  = WC()->customer->get_billing();
 		$shipping_address = WC()->customer->get_shipping();
 		$shipping_method  = WC()->session->get( 'chosen_shipping_methods' );
+		$coupon_code      = WC()->cart->applied_coupons ? implode( ',', WC()->cart->applied_coupons ) : '';
+		$cart_hash        = WC()->cart->get_cart_hash() ?? '';
 
 		// Calculate a hash from the values.
-		$hash = md5( wp_json_encode( array( $total, $billing_address, $shipping_address, $shipping_method ) ) );
+		$hash = md5( wp_json_encode( array( $total, $billing_address, $shipping_address, $shipping_method, $coupon_code, $cart_hash ) ) );
 
 		return $hash;
 	}
