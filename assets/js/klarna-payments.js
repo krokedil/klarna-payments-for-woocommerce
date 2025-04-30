@@ -582,15 +582,15 @@ jQuery( function ( $ ) {
 		},
 	}
 	klarna_payments.start()
-	$( "body" ).ready( function () {
+	$( document ).ready( function () {
 		klarna_payments.setRadioButtonValues()
 	} )
 
-	$( "body" ).ajaxComplete( function () {
+	$( document ).ajaxComplete( function () {
 		klarna_payments.setRadioButtonValues()
 	} )
 
-	$( "body" ).on( "click", "input#place_order, button#place_order", function ( e ) {
+	$( document ).on( "click", "input#place_order, button#place_order", function ( e ) {
 		// No strict comparison: wp_localize_script() converts booleans to strings "1", respectively, "0".
 		if ( true == klarna_payments_params.pay_for_order ) {
 			klarna_payments.klarnaPayForOrder( e )
