@@ -243,56 +243,31 @@ class KP_Order_Data {
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
 		$customer_data         = $this->order_data->customer;
 
-		// Check if all products in the cart are virtual, if so we can skip the address data.
-		$only_virtual = true;
-		foreach ( WC()->cart->get_cart() as $cart_item ) {
-			if ( ! $cart_item['data']->is_virtual() ) {
-				$only_virtual = false;
-				break;
-			}
-		}
-
 		$billing = array(
-			'given_name'  => $customer_data->get_billing_first_name(),
-			'family_name' => $customer_data->get_billing_last_name(),
-			'email'       => $customer_data->get_billing_email(),
+			'given_name'      => $customer_data->get_billing_first_name(),
+			'family_name'     => $customer_data->get_billing_last_name(),
+			'email'           => $customer_data->get_billing_email(),
+			'phone'           => $customer_data->get_billing_phone(),
+			'street_address'  => $customer_data->get_billing_address_1(),
+			'street_address2' => $customer_data->get_billing_address_2(),
+			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_billing_postcode() : str_replace( ' ', '', $customer_data->get_billing_postcode() ),
+			'city'            => $customer_data->get_billing_city(),
+			'region'          => $customer_data->get_billing_state(),
+			'country'         => empty( $customer_data->get_billing_country() ) ? kp_get_klarna_country() : $customer_data->get_billing_country(),
 		);
-
-		if ( ! $only_virtual ) {
-			$billing = array_merge(
-				$billing,
-				array(
-					'phone'           => $customer_data->get_billing_phone(),
-					'street_address'  => $customer_data->get_billing_address_1(),
-					'street_address2' => $customer_data->get_billing_address_2(),
-					'postal_code'     => $strip_postcode_spaces ? $customer_data->get_billing_postcode() : str_replace( ' ', '', $customer_data->get_billing_postcode() ),
-					'city'            => $customer_data->get_billing_city(),
-					'region'          => $customer_data->get_billing_state(),
-					'country'         => empty( $customer_data->get_billing_country() ) ? kp_get_klarna_country() : $customer_data->get_billing_country(),
-				)
-			);
-		}
 
 		$shipping = array(
-			'given_name'  => $customer_data->get_shipping_first_name(),
-			'family_name' => $customer_data->get_shipping_last_name(),
-			'email'       => $customer_data->get_shipping_email(),
+			'given_name'      => $customer_data->get_shipping_first_name(),
+			'family_name'     => $customer_data->get_shipping_last_name(),
+			'email'           => $customer_data->get_shipping_email(),
+			'phone'           => $customer_data->get_shipping_phone(),
+			'street_address'  => $customer_data->get_shipping_address_1(),
+			'street_address2' => $customer_data->get_shipping_address_2(),
+			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_shipping_postcode() : str_replace( ' ', '', $customer_data->get_shipping_postcode() ),
+			'city'            => $customer_data->get_shipping_city(),
+			'region'          => $customer_data->get_shipping_state(),
+			'country'         => $customer_data->get_shipping_country(),
 		);
-
-		if ( ! $only_virtual ) {
-			$shipping = array_merge(
-				$shipping,
-				array(
-					'phone'           => $customer_data->get_shipping_phone(),
-					'street_address'  => $customer_data->get_shipping_address_1(),
-					'street_address2' => $customer_data->get_shipping_address_2(),
-					'postal_code'     => $strip_postcode_spaces ? $customer_data->get_shipping_postcode() : str_replace( ' ', '', $customer_data->get_shipping_postcode() ),
-					'city'            => $customer_data->get_shipping_city(),
-					'region'          => $customer_data->get_shipping_state(),
-					'country'         => $customer_data->get_shipping_country(),
-				)
-			);
-		}
 
 		if ( 'b2b' === $customer_type ) {
 			$billing['organization_name']  = $customer_data->get_billing_company();
