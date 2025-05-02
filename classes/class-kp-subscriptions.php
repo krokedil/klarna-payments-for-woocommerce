@@ -359,7 +359,6 @@ class KP_Subscription {
 		( function_exists( 'wcs_cart_contains_renewal' ) && wcs_cart_contains_renewal() ) ||
 		( function_exists( 'wcs_cart_contains_failed_renewal_order_payment' ) && wcs_cart_contains_failed_renewal_order_payment() ) ||
 		( function_exists( 'wcs_cart_contains_resubscribe' ) && wcs_cart_contains_resubscribe() ) ||
-		( function_exists( 'wcs_cart_contains_subscription_switch' ) && wcs_cart_contains_subscription_switch() ) ||
 		( function_exists( 'wcs_cart_contains_early_renewal' ) && wcs_cart_contains_early_renewal() ) ||
 		( function_exists( 'wcs_cart_contains_switches' ) && wcs_cart_contains_switches() )
 		);
