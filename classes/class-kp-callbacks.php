@@ -138,23 +138,14 @@ class KP_Callbacks {
 
 		$recurring_token = false;
 		if ( KP_Subscription::order_has_subscription( $order ) ) {
-			$response = KP_WC()->api->create_customer_token( kp_get_klarna_country( $order ), $auth_token, $order_id );
-			if ( is_wp_error( $response ) ) {
-				$order->add_order_note( __( 'Failed to create a recurring token when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) . $response->get_error_message() );
-				return;
-			}
+			try {
+				KP_WC()->subscription->create_customer_token( $order, $auth_token );
+			} catch ( Exception $e ) {
+				if ( 'TOKEN_FAILED' === $e->getCode() ) {
+					$order->add_order_note( __( 'Failed to create a recurring token when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) . $e->getMessage() );
+				}
 
-			$recurring_token = $response['token_id'];
-
-			/* translators: Recurring token. */
-			$order->add_order_note( sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $recurring_token ) );
-
-			if ( 0.0 === floatval( $order->get_total() ) ) {
-				$order->payment_complete();
-				KP_Subscription::save_recurring_token( $order_id, $recurring_token );
-				$order->add_order_note( __( 'The order contains a free or trial subscription, and no Klarna order is associated with this purchase. A Klarna order will only be registered once the subscriber is charged.', 'klarna-payments-for-woocommerce' ) );
-
-				kp_unset_session_values();
+				// We must return here since a call to 'place_order' will fail if the customer token fails to be created or if the intent is only 'tokenize'.
 				return;
 			}
 		}

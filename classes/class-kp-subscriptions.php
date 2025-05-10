@@ -47,6 +47,40 @@ class KP_Subscription {
 	}
 
 	/**
+	 * Create a customer token for the order.
+	 *
+	 * @param WC_Order $order The WooCommerce order.
+	 * @param string   $auth_token The authorization token.
+	 * @throws Exception Throws an exception if the customer token could not be created or should not be processed any further.
+	 * - throws `TOKEN_FAILED` code if the customer token could not be created.
+	 * - throws `FREE_TRIAL` code if the order should not be processed any further.
+	 * @return string The recurring token.
+	 */
+	public function create_customer_token( $order, $auth_token ) {
+		$order_id = $order->get_id();
+
+		$response = KP_WC()->api->create_customer_token( kp_get_klarna_country( $order ), $auth_token, $order_id );
+		if ( is_wp_error( $response ) ) {
+			throw new Exception( 'TOKEN_FAILED', 'TOKEN_FAILED' );
+		}
+
+		$recurring_token = $response['token_id'];
+
+		/* translators: Recurring token. */
+		$order->add_order_note( sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $recurring_token ) );
+
+		if ( 0.0 === floatval( $order->get_total() ) ) {
+			$order->payment_complete();
+			self::save_recurring_token( $order_id, $recurring_token );
+			$order->add_order_note( __( 'The order contains a free or trial subscription, and no Klarna order is associated with this purchase. A Klarna order will only be registered once the subscriber is charged.', 'klarna-payments-for-woocommerce' ) );
+
+			throw new Exception( 'FREE_TRIAL', 'FREE_TRIAL' );
+		}
+
+		return $recurring_token;
+	}
+
+	/**
 	 * Flags a free or trial subscription parent order as captured.
 	 *
 	 * This is required to prevent Klarna Order Management from attempting to process the order for capture when the customer sets the order to completed as there is nothing to capture.
