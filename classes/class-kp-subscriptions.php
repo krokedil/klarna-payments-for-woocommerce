@@ -71,7 +71,7 @@ class KP_Subscription {
 	/**
 	 * Process subscription renewal.
 	 *
-	 * @param float    $amount_to_charge
+	 * @param float    $amount_to_charge The amount to charge the customer.
 	 * @param WC_Order $renewal_order The WooCommerce order that will be created as a result of the renewal.
 	 * @return void
 	 */
@@ -151,10 +151,16 @@ class KP_Subscription {
 			return $request;
 		}
 
-		$key          = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS );
-		$order_id     = wc_get_order_id_by_order_key( $key );
+		$key      = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS );
+		$body     = json_decode( $request['body'], true );
+		$order_id = wc_get_order_id_by_order_key( $key );
+
+		/**
+		 * The subscription object or false if not applicable.
+		 *
+		 * @var WC_Subscription $subscription WC subscription or false.
+		 */
 		$subscription = wc_get_order( $order_id );
-		$body         = json_decode( $request['body'], true );
 
 		$success_url           = add_query_arg(
 			array(
