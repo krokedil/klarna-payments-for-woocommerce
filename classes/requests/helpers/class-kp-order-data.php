@@ -283,8 +283,8 @@ class KP_Order_Data {
 		}
 
 		$customer = array(
-			'billing'  => $billing,
-			'shipping' => $shipping,
+			'billing'  => array_filter( $billing ),
+			'shipping' => array_filter( $shipping ),
 		);
 
 		return $customer;
