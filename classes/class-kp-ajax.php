@@ -252,6 +252,8 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'Failed to get unavailable features. Error messages: ' . implode( ', ', $unavailable_features['errors'] ) );
 			}
 
+			kp_set_is_psp_merchant( $unavailable_features['is_psp_merchant'] );
+
 			wp_send_json_success( $unavailable_features['feature_ids'] );
 		}
 

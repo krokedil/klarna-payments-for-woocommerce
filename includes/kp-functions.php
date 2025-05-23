@@ -411,10 +411,12 @@ function kp_get_unavailable_feature_ids( $country_credentials ) {
 			)
 		);
 	}
+	$unavailable_features = kp_map_unavailable_features( $collected_features );
 
 	return array(
-		'feature_ids' => kp_map_unavailable_features( $collected_features ),
-		'errors'      => $collected_errors,
+		'feature_ids'     => $unavailable_features,
+		'is_psp_merchant' => ! empty( $unavailable_features ) ?? false,
+		'errors'          => $collected_errors,
 	);
 }
 
@@ -482,8 +484,13 @@ function kp_map_unavailable_features( $collected_features ) {
 
 	// If KP is unavailable, we should also hide the Klarna Order Management feature.
 	if ( in_array( 'general', $unavailable_features, true ) ) {
+		kp_set_is_psp_merchant( true );
 		$unavailable_features[] = 'kom';
 	}
 
 	return $unavailable_features;
+}
+
+function kp_set_is_psp_merchant( $is_psp_merchant ) {
+	update_option( 'kp_is_psp_merchant', $is_psp_merchant ? 'yes' : 'no' );
 }
