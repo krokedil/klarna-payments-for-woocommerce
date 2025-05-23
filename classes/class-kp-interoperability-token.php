@@ -14,6 +14,11 @@ class KP_Interoperability_Token {
 	 * @return void
 	 */
 	public function __construct() {
+		// Interoperability token should only be used for PSP merchants.
+		if ( ! get_option( 'kp_is_psp_merchant', false ) ) {
+			return;
+		}
+
 		// Clear the token from the session when they place an order.
 		add_action( 'woocommerce_checkout_order_processed', array( $this, 'clear_token' ) );
 		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'clear_token' ) );
@@ -55,7 +60,7 @@ class KP_Interoperability_Token {
 	 * @return void
 	 */
 	public function clear_token() {
-		if( null === WC()->session ) {
+		if ( null === WC()->session ) {
 			return;
 		}
 
