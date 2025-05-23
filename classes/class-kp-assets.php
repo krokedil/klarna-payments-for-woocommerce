@@ -138,6 +138,7 @@ class KP_Assets {
 			'submit_order'           => WC_AJAX::get_endpoint( 'checkout' ),
 			// Params.
 			'testmode'               => $settings['testmode'] ?? 'no',
+			'debug'                  => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
 			'customer_type'          => $customer_type,
 			'remove_postcode_spaces' => ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no',
 			'client_token'           => KP_WC()->session->get_klarna_client_token(),
