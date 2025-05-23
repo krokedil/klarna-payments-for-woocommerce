@@ -242,31 +242,32 @@ class KP_Order_Data {
 
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
 		$customer_data         = $this->order_data->customer;
+		$checkout              = WC()->checkout();
 
 		$billing = array(
 			'given_name'      => $customer_data->get_billing_first_name(),
 			'family_name'     => $customer_data->get_billing_last_name(),
 			'email'           => $customer_data->get_billing_email(),
-			'phone'           => $customer_data->get_billing_phone(),
-			'street_address'  => $customer_data->get_billing_address_1(),
-			'street_address2' => $customer_data->get_billing_address_2(),
-			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_billing_postcode() : str_replace( ' ', '', $customer_data->get_billing_postcode() ),
-			'city'            => $customer_data->get_billing_city(),
-			'region'          => $customer_data->get_billing_state(),
-			'country'         => empty( $customer_data->get_billing_country() ) ? kp_get_klarna_country() : $customer_data->get_billing_country(),
+			'phone'           => ! empty( $checkout->get_value( 'billing_phone' ) ) ? $customer_data->get_billing_phone() : null,
+			'street_address'  => ! empty( $checkout->get_value( 'billing_address_1' ) ) ? $customer_data->get_billing_address_1() : null,
+			'street_address2' => ! empty( $checkout->get_value( 'billing_address_2' ) ) ? $customer_data->get_billing_address_2() : null,
+			'postal_code'     => ! empty( $checkout->get_value( 'billing_postcode' ) ) ? ( $strip_postcode_spaces ? $customer_data->get_billing_postcode() : str_replace( ' ', '', $customer_data->get_billing_postcode() ) ) : null,
+			'city'            => ! empty( $checkout->get_value( 'billing_city' ) ) ? $customer_data->get_billing_city() : null,
+			'region'          => ! empty( $checkout->get_value( 'billing_state' ) ) ? $customer_data->get_billing_state() : null,
+			'country'         => ! empty( $checkout->get_value( 'billing_country' ) ) ? ( empty( $customer_data->get_billing_country() ) ? kp_get_klarna_country() : $customer_data->get_billing_country() ) : null,
 		);
 
 		$shipping = array(
 			'given_name'      => $customer_data->get_shipping_first_name(),
 			'family_name'     => $customer_data->get_shipping_last_name(),
 			'email'           => $customer_data->get_shipping_email(),
-			'phone'           => $customer_data->get_shipping_phone(),
-			'street_address'  => $customer_data->get_shipping_address_1(),
-			'street_address2' => $customer_data->get_shipping_address_2(),
-			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_shipping_postcode() : str_replace( ' ', '', $customer_data->get_shipping_postcode() ),
-			'city'            => $customer_data->get_shipping_city(),
-			'region'          => $customer_data->get_shipping_state(),
-			'country'         => $customer_data->get_shipping_country(),
+			'phone'           => ! empty( $checkout->get_value( 'shipping_phone' ) ) ? $customer_data->get_shipping_phone() : null,
+			'street_address'  => ! empty( $checkout->get_value( 'shipping_address_1' ) ) ? $customer_data->get_shipping_address_1() : null,
+			'street_address2' => ! empty( $checkout->get_value( 'shipping_address_2' ) ) ? $customer_data->get_shipping_address_2() : null,
+			'postal_code'     => ! empty( $checkout->get_value( 'shipping_postcode' ) ) ? ( $strip_postcode_spaces ? $customer_data->get_shipping_postcode() : str_replace( ' ', '', $customer_data->get_shipping_postcode() ) ) : null,
+			'city'            => ! empty( $checkout->get_value( 'shipping_city' ) ) ? $customer_data->get_shipping_city() : null,
+			'region'          => ! empty( $checkout->get_value( 'shipping_state' ) ) ? $customer_data->get_shipping_state() : null,
+			'country'         => ! empty( $checkout->get_value( 'shipping_country' ) ) ? ( empty( $customer_data->get_shipping_country() ) ? kp_get_klarna_country() : $customer_data->get_shipping_country() ) : null,
 		);
 
 		if ( 'b2b' === $customer_type ) {
