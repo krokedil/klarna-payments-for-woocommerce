@@ -415,7 +415,7 @@ function kp_get_unavailable_feature_ids( $country_credentials ) {
 
 	return array(
 		'feature_ids'     => $unavailable_features,
-		'is_psp_merchant' => ! empty( $unavailable_features ) ?? false,
+		'is_psp_merchant' => ! empty( $unavailable_features ) ? true : false,
 		'errors'          => $collected_errors,
 	);
 }
