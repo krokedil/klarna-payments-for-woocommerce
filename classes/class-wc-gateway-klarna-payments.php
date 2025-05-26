@@ -272,6 +272,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
 		if ( in_array( 'general', $kp_unavailable_feature_ids ) ) {
+			kp_set_is_psp_merchant( true );
 			return false;
 		}
 
