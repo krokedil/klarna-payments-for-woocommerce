@@ -15,7 +15,7 @@ class KP_Interoperability_Token {
 	 */
 	public function __construct() {
 		// Interoperability token should only be used for PSP merchants.
-		if ( ! get_option( 'kp_is_psp_merchant', false ) ) {
+		if ( 'yes' !== get_option( 'kp_is_psp_merchant', 'no' ) ) {
 			return;
 		}
 

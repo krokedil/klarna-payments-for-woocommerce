@@ -343,7 +343,7 @@ class KP_Assets {
 	 */
 	public function enqueue_interoperability_token() {
 		// Interoperability token should only be used for PSP merchants.
-		if ( ! get_option( 'kp_is_psp_merchant', false ) ) {
+		if ( 'yes' !== get_option( 'kp_is_psp_merchant', 'no' ) ) {
 			return;
 		}
 
