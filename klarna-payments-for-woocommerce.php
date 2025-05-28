@@ -39,6 +39,8 @@ use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
+use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
+use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 
 /**
  * Required minimums and constants
@@ -165,6 +167,38 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $interoperability_token = null;
 
 		/**
+		 * Logger instance.
+		 *
+		 * @var Logger
+		 */
+		private $logger;
+
+		/**
+		 * SystemReport instance.
+		 *
+		 * @var SystemReport
+		 */
+		private $system_report;
+
+		/**
+		 * Logger instance.
+		 *
+		 * @return Logger
+		 */
+		public function logger() {
+			return $this->logger;
+		}
+
+		/**
+		 * System report.
+		 *
+		 * @return SystemReport
+		 */
+		public function report() {
+			return $this->system_report;
+		}
+
+		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
 		 */
@@ -228,6 +262,23 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
 			$this->interoperability_token  = new KP_Interoperability_Token();
+			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
+
+			$report_about = array(
+				array(
+					'type'       => 'kp_section_start',
+					'is_section' => true,
+				),
+				array( 'type' => 'select' ),
+				array(
+					'type'    => 'checkbox',
+					'exclude' => array(
+						'empty' => 'title',
+					),
+				),
+
+			);
+			$this->system_report = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $report_about );
 
 			$this->register_payment_block();
 
