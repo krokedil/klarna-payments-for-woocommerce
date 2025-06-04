@@ -64,8 +64,6 @@ services:
         condition: service_healthy
       wp:
         condition: service_healthy
-      ngrok:
-        condition: service_healthy
     build:
       context: .
       dockerfile: Dockerfile-wpcli
@@ -77,7 +75,7 @@ services:
       WORDPRESS_TABLE_PREFIX: wp_
       WC_VERSION: ${WC_VERSION-}
     restart: on-failure
-    user: xfs
+    user: root
     volumes:
       - "../../:/var/www/html/wp-content/plugins/klarna-payments-for-woocommerce"
       - "wordpress:/var/www/html"
@@ -87,21 +85,13 @@ services:
         condition: service_healthy
       wp:
         condition: service_healthy
-    image: wernight/ngrok
+    image: ngrok/ngrok:latest
     restart: always
-    links:
-      - wp
     ports:
       - "4444:4040"
-    entrypoint: ngrok http --region=eu --authtoken=${NGROK_AUTH} wp
+    command: http wp:80
     environment:
-      NGROK_AUTH: ${NGROK_AUTH}
-    healthcheck:
-      test: [ "CMD", 'curl', '-f', 'ngrok:4040' ]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
+      NGROK_AUTHTOKEN: ${NGROK_AUTH}
 volumes:
   db:
   wordpress:
