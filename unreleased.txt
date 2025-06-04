@@ -1,3 +1,2 @@
 == Unreleased ==
-= 2025-05-23     - version 4.1.3 =
 * Tweak          - Added support for placing orders without an address when address information isn't required, such as for virtual products.
