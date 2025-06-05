@@ -52,10 +52,11 @@ class KP_Settings_Saved {
 		$countries = array_keys( KP_Form_Fields::$kp_form_auto_countries );
 
 		foreach ( $countries as $cc ) {
-			$cc       = 'yes' === $options['combine_eu_credentials'] && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
-			$cc       = 'uk' === $cc ? 'gb' : $cc;
-			$password = '';
-			$username = '';
+			$combine_eu_credentials = $options['combine_eu_credentials'] ?? 'no';
+			$cc                     = 'yes' === $combine_eu_credentials && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
+			$cc                     = 'uk' === $cc ? 'gb' : $cc;
+			$password               = '';
+			$username               = '';
 
 			if ( 'yes' !== $options['testmode'] ) {
 				// Live.
