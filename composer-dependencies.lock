@@ -143,16 +143,16 @@
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
-            "version": "1.3.1",
+            "version": "1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
-                "reference": "545d9cfe6010b72af75d0a327d75ffb21d1a352c"
+                "reference": "65c959f292cde24466a82c9198948942fb904370"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/545d9cfe6010b72af75d0a327d75ffb21d1a352c",
-                "reference": "545d9cfe6010b72af75d0a327d75ffb21d1a352c",
+                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/65c959f292cde24466a82c9198948942fb904370",
+                "reference": "65c959f292cde24466a82c9198948942fb904370",
                 "shasum": ""
             },
             "require": {
@@ -207,23 +207,23 @@
             ],
             "description": "Klarna On-Site Messaging for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/1.3.1",
+                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/1.3.2",
                 "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
             },
-            "time": "2025-01-14T09:17:43+00:00"
+            "time": "2025-06-09T14:16:49+00:00"
         },
         {
             "name": "krokedil/settings-page",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/settings-page.git",
-                "reference": "9920eecacfaf34dd556887816790aff00d38b971"
+                "reference": "05e56133014345c577ec97fd2c2681e1bc33e97d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/9920eecacfaf34dd556887816790aff00d38b971",
-                "reference": "9920eecacfaf34dd556887816790aff00d38b971",
+                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/05e56133014345c577ec97fd2c2681e1bc33e97d",
+                "reference": "05e56133014345c577ec97fd2c2681e1bc33e97d",
                 "shasum": ""
             },
             "require-dev": {
@@ -252,23 +252,23 @@
             ],
             "description": "A package to help setup settings pages in WordPress and WooCommerce for Krokedil plugins to add the Addons and Support tabs",
             "support": {
-                "source": "https://github.com/krokedil/settings-page/tree/1.2.0",
+                "source": "https://github.com/krokedil/settings-page/tree/1.2.1",
                 "issues": "https://github.com/krokedil/settings-page/issues"
             },
-            "time": "2024-10-23T11:23:33+00:00"
+            "time": "2025-06-10T09:35:57+00:00"
         },
         {
             "name": "krokedil/sign-in-with-klarna",
-            "version": "1.0.5",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/sign-in-with-klarna.git",
-                "reference": "d34cca23d813acd796bb9e2fdfc708eebb6b8475"
+                "reference": "9ee3e20c1749df0048a3c800a9138f3392f6594b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/d34cca23d813acd796bb9e2fdfc708eebb6b8475",
-                "reference": "d34cca23d813acd796bb9e2fdfc708eebb6b8475",
+                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/9ee3e20c1749df0048a3c800a9138f3392f6594b",
+                "reference": "9ee3e20c1749df0048a3c800a9138f3392f6594b",
                 "shasum": ""
             },
             "require": {
@@ -287,23 +287,23 @@
             },
             "description": "Add \"Sign in with Klarna\" compatibility with your WooCommerce plugin.",
             "support": {
-                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/1.0.5",
+                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/1.0.6",
                 "issues": "https://github.com/krokedil/sign-in-with-klarna/issues"
             },
-            "time": "2025-01-13T13:36:57+00:00"
+            "time": "2025-06-09T14:36:46+00:00"
         },
         {
             "name": "krokedil/support",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/support.git",
-                "reference": "1f8421d25619cc52f066394a6568c7fca078eda3"
+                "reference": "0913e5c00fd36f8f9b2b9757eb4c3f4bad6a5dea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/support/zipball/1f8421d25619cc52f066394a6568c7fca078eda3",
-                "reference": "1f8421d25619cc52f066394a6568c7fca078eda3",
+                "url": "https://api.github.com/repos/krokedil/support/zipball/0913e5c00fd36f8f9b2b9757eb4c3f4bad6a5dea",
+                "reference": "0913e5c00fd36f8f9b2b9757eb4c3f4bad6a5dea",
                 "shasum": ""
             },
             "require": {
@@ -343,23 +343,23 @@
             ],
             "description": "The support library allows you to extend your plugin with logging that can be optionally toggled through your plugin settings, generate an entry in the system report from your plugin settings, and report issues to the system report.",
             "support": {
-                "source": "https://github.com/krokedil/support/tree/1.0.0",
+                "source": "https://github.com/krokedil/support/tree/1.0.1",
                 "issues": "https://github.com/krokedil/support/issues"
             },
-            "time": "2025-05-28T12:47:50+00:00"
+            "time": "2025-06-10T08:18:26+00:00"
         },
         {
             "name": "krokedil/woocommerce",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "bba7b6132b25e4e547aa82246b4d28fc8ebfd8c5"
+                "reference": "d008878feeba072cb952d95cadd68ad93cbae727"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/bba7b6132b25e4e547aa82246b4d28fc8ebfd8c5",
-                "reference": "bba7b6132b25e4e547aa82246b4d28fc8ebfd8c5",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/d008878feeba072cb952d95cadd68ad93cbae727",
+                "reference": "d008878feeba072cb952d95cadd68ad93cbae727",
                 "shasum": ""
             },
             "require-dev": {
@@ -390,10 +390,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.8.0",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.8.1",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2025-02-05T14:02:57+00:00"
+            "time": "2025-06-03T09:31:00+00:00"
         },
         {
             "name": "krokedil/wp-api",
