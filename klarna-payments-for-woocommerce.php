@@ -264,7 +264,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->interoperability_token  = new KP_Interoperability_Token();
 			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
 
-			$report_about = array(
+			// Includes the selectable, and checkbox settings, but excludes those whose title is empty. The 'kp_section_start' will appear as a section header in the system report.
+			$included_settings_fields = array(
 				array(
 					'type'       => 'kp_section_start',
 					'is_section' => true,
@@ -278,7 +279,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				),
 
 			);
-			$this->system_report = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $report_about );
+			$this->system_report = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $included_settings_fields );
 
 			$this->register_payment_block();
 
