@@ -173,7 +173,7 @@ abstract class KP_Requests extends Request {
 			$arguments['password'] = '[REDACTED]';
 		}
 
-		KP_WC()->logger()->debug(
+		KP_WC()->logger()->info(
 			wp_json_encode(
 				array(
 					'type'        => $this->method,

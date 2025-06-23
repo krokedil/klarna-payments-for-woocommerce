@@ -29,7 +29,7 @@ class KP_Logger {
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 		if ( 'no' !== $kp_settings['logging'] ) {
 			$message = self::format_data( $data );
-			KP_WC()->logger()->debug( wp_json_encode( $message ) );
+			KP_WC()->logger()->info( wp_json_encode( $message ) );
 		}
 
 		if ( isset( $data['response']['code'] ) && ( $data['response']['code'] < 200 || $data['response']['code'] > 299 ) ) {
