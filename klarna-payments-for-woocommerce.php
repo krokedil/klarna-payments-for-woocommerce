@@ -5,12 +5,12 @@
  * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 4.1.3
+ * Version: 4.1.4
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 9.8.4
+ * WC tested up to: 9.9.5
  * Requires Plugins: woocommerce
  *
  * Copyright (c) 2017-2025 Krokedil
@@ -43,7 +43,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '4.1.3' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '4.1.4' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
