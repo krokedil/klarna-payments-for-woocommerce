@@ -7,7 +7,7 @@ Tested up to: 6.8.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.9.5
-Stable tag: 4.1.3
+Stable tag: 4.1.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.06.25    - version 4.1.4 =
+* Fix           - [KOSM] Resolved a '_load_textdomain_just_in_time' notice.
+* Fix           - [SIWK] Resolved a '_load_textdomain_just_in_time' notice.
+* Fix           - Resolved an error that could occur when attempting to set the product type for order line items.
+* Fix           - Resolved an 'Undefined array key' warning.
+
 = 2025.05.12    - version 4.1.3 =
 * Fix           - Resolved issue with subscription renewal from 'My account' for WooCommerce Subscriptions.
 * Fix           - Resolved issue that in certain circumstances could cause the checkout to reload infinitely.
