@@ -121,6 +121,7 @@ class KP_Settings_Saved {
 			update_option( 'kp_unavailable_feature_ids', array() );
 		} else {
 			update_option( 'kp_unavailable_feature_ids', $unavailable_features['feature_ids'] ?? array() );
+			kp_set_is_psp_merchant( $unavailable_features['is_psp_merchant'] );
 		}
 	}
 
