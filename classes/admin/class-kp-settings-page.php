@@ -97,7 +97,7 @@ class KP_Settings_Page {
 		$link_count                 = count( $section['links'] ?? array() );
 		$link_count                 = count( $section['links'] ?? array() );
 		$setting_is_active          = self::get_setting_status( $section['id'] );
-		$credentials_are_valid      = 'credentials' !== $section['id'] && 'no' === get_option( 'kp_has_valid_credentials' ) ? ' invalid_credentials' : '';
+		$credentials_are_valid      = 'credentials' !== $section['id'] && 'no' === get_option( 'kp_has_valid_credentials', 'no' ) ? ' invalid_credentials' : '';
 		$feature_is_available       = in_array( $section['id'], $kp_unavailable_feature_ids ) ? ' unavailable' : '';
 		$feature_status             = array(
 			'class' => $setting_is_active ? ' active' : '',
