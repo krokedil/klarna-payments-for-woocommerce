@@ -8,6 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Request;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Logger;
 
 /**
  * Base class for all request classes.
@@ -147,5 +148,48 @@ abstract class KP_Requests extends Request {
 		$code          = wp_remote_retrieve_response_code( $response );
 		$error_message = empty( $error_message ) ? $response['response']['message'] : $error_message;
 		return new WP_Error( $code, $error_message );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function log_response( $response, $request_args, $request_url ) {
+		$code = wp_remote_retrieve_response_code( $response );
+
+		// Get the response body if its not a WP_Error.
+		$response_body = is_wp_error( $response ) ? array() : json_decode( wp_remote_retrieve_body( $response ), true );
+
+		// Parse the Request body into an array if its json format.
+		$request_body         = $request_args['body'] ?? '';
+		$decoded_body         = json_decode( $request_body );
+		$request_args['body'] = $decoded_body ?? $request_args['body'] ?? null;
+		$request_args         = $this->sanitize_request_args( $request_args );
+
+		$arguments = $this->arguments;
+		if ( isset( $arguments['username'] ) ) {
+			$arguments['username'] = '[REDACTED]';
+		}
+		if ( isset( $arguments['password'] ) ) {
+			$arguments['password'] = '[REDACTED]';
+		}
+
+		KP_WC()->logger()->info(
+			wp_json_encode(
+				array(
+					'type'        => $this->method,
+					'title'       => $this->log_title,
+					'arguments'   => $arguments,
+					'request'     => $request_args,
+					'request_url' => $request_url,
+					'response'    => array(
+					'body' => $response_body,
+					'code' => $code,
+					),
+					'timestamp'   => date( 'Y-m-d H:i:s' ),    // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
+				'stack'           => Logger::get_stack( $this->config['extended_debugging'] ),
+				'plugin_version'  => $this->config['plugin_version'],
+				)
+			)
+		);
 	}
 }
