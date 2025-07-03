@@ -487,3 +487,31 @@ function kp_map_unavailable_features( $collected_features ) {
 
 	return $unavailable_features;
 }
+
+/**
+ * Checks if any Klarna Payments credentials are set in the settings.
+ *
+ * @return bool
+ */
+function kp_has_credentials() {
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+	$merchant_ids   = array_filter(
+		$settings,
+		function ( $value, $key ) {
+			return str_contains( $key, 'merchant_id_' ) && ! empty( $value ) && ! is_array( $value ) && ! is_object( $value );
+		},
+		ARRAY_FILTER_USE_BOTH
+	);
+	$shared_secrets = array_filter(
+		$settings,
+		function ( $value, $key ) {
+			return str_contains( $key, 'shared_secret_' ) && ! empty(
+				$value
+			) && ! is_array( $value ) && ! is_object( $value );
+		},
+		ARRAY_FILTER_USE_BOTH
+	);
+
+	return ! empty( $merchant_ids ) && ! empty( $shared_secrets );
+}

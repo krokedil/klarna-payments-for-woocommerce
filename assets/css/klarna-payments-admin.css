@@ -401,7 +401,7 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	opacity: 1;
 }
 
-.kp_settings__section.unavailable, .kp_settings__section.invalid_credentials {
+.kp_settings__section.unavailable, .kp_settings__section.no_credentials {
 	display: none;
 }
 

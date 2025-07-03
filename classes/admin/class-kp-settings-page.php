@@ -97,7 +97,7 @@ class KP_Settings_Page {
 		$link_count                 = count( $section['links'] ?? array() );
 		$link_count                 = count( $section['links'] ?? array() );
 		$setting_is_active          = self::get_setting_status( $section['id'] );
-		$credentials_are_valid      = 'credentials' !== $section['id'] && 'no' === get_option( 'kp_has_valid_credentials', 'no' ) ? ' invalid_credentials' : '';
+		$has_credentials            = 'credentials' !== $section['id'] && ! kp_has_credentials() ? ' no_credentials' : '';
 		$feature_is_available       = in_array( $section['id'], $kp_unavailable_feature_ids ) ? ' unavailable' : '';
 		$feature_status             = array(
 			'class' => $setting_is_active ? ' active' : '',
@@ -105,7 +105,7 @@ class KP_Settings_Page {
 		);
 
 		?>
-		<div id="klarna-payments-settings-<?php echo esc_attr( $section['id'] ); ?>" class="kp_settings__section<?php echo esc_attr( $feature_is_available . $credentials_are_valid ); ?>">
+		<div id="klarna-payments-settings-<?php echo esc_attr( $section['id'] ); ?>" class="kp_settings__section<?php echo esc_attr( $feature_is_available . $has_credentials ); ?>">
 			<div class="kp_settings__section_info">
 				<h3 class="kp_settings__section_title">
 					<?php echo esc_html( $section['title'] ); ?>
