@@ -18,7 +18,7 @@ Grow your business for increased sales and enhanced shopping experiences at no e
 
 Klarna is the preferred payment option for both brands and customers, used by millions of shoppers every month, online and in-store.
 
-| **100M+ Shoppers** | **2.9M+ Daily Transactions** | **720M+ Retailers Globally** |
+| **100M+ Shoppers** | **2.9M+ Daily Transactions** | **720K+ Retailers Globally** |
 
 === More ways to pay, more purchases ===
 
