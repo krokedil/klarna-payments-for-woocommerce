@@ -144,7 +144,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 				$country = substr( get_locale(), 2 );
 				// Change link for Switzerland.
-				if ( stripos( $country, 'ch' ) !== false ) {
+				if ( strpos( $country, '_CH' ) !== false ) {
 					$link_url = 'https://www.klarna.com/ch/';
 				}
 
