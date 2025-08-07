@@ -12,6 +12,8 @@ echo "NGROK_URL: $NGROK_URL"
 
 wp core install --url=$NGROK_URL --title='Krokedil E2E Test' --admin_user='admin' --admin_password='password' --admin_email='e2e@krokedil.se' --skip-email --skip-plugins --skip-themes --allow-root
 wp rewrite structure '/%postname%/' --hard --allow-root
+wp option update siteurl "$NGROK_URL" --allow-root
+wp option update home "$NGROK_URL" --allow-root
 if [ -z "${WC_VERSION}" ]; then
     wp plugin install woocommerce --activate --allow-root
 else
