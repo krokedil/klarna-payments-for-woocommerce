@@ -168,7 +168,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_title() {
-		$title    = parent::get_title();
 		$order_id = kp_get_the_ID();
 
 		if ( ! empty( $order_id ) ) {
@@ -178,7 +177,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			}
 		}
 
-		return $title;
+		return parent::get_title();
 	}
 
 	/**
