@@ -124,7 +124,7 @@ class KP_Callbacks {
 		$order_key  = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS );
 
 		// Return if anything is null.
-		if ( null === $session_id || null === $auth_token || null === $order_key ) {
+		if ( ! isset($session_id, $auth_token, $order_key) ) {
 			return;
 		}
 
