@@ -142,11 +142,18 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				$what_is_klarna_text = __( 'What is Klarna?', 'klarna-payments-for-woocommerce' );
 				$link_url            = 'https://www.klarna.com';
 
+				$country = substr( get_locale(), 2 );
+				// Change link for Switzerland.
+				if ( strpos( $country, '_CH' ) !== false ) {
+					$link_url = 'https://www.klarna.com/ch/';
+				}
+
+				$locale = substr( get_locale(), 0, 2 );
 				// Change text for Germany.
-				$locale = get_locale();
-				if ( stripos( $locale, 'de' ) !== false ) {
+				if ( 'de' === $locale ) {
 					$what_is_klarna_text = 'Was ist Klarna?';
 				}
+
 				$icon_html .= '<a ' . $link_css . ' href="' . $link_url . '" onclick="window.open(\'' . $link_url . '\',\'WIKlarna\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700\'); return false;">' . $what_is_klarna_text . '</a>';
 			}
 		} else {
@@ -267,6 +274,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function is_available() {
 		if ( 'yes' !== $this->enabled ) {
+			return false;
+		}
+
+		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
+		if ( in_array( 'general', $kp_unavailable_feature_ids ) ) {
 			return false;
 		}
 

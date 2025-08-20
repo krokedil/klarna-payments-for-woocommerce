@@ -81,6 +81,7 @@ class KP_Subscription {
 		$response = KP_WC()->api->create_recurring_order( kp_get_klarna_country( $renewal_order ), $recurring_token, $renewal_order->get_id() );
 		if ( ! is_wp_error( $response ) ) {
 			$klarna_order_id = $response['order_id'];
+			// Translators: Klarna order id.
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Klarna. Klarna order id: %s', 'klarna-payments-for-woocommerce' ), $klarna_order_id ) );
 			kp_save_order_meta_data( $renewal_order, $response );
 		} else {
@@ -345,7 +346,7 @@ class KP_Subscription {
 	}
 
 	/**
-	 * Check if a cart contains a subscription.
+	 * Check if a cart contains a subscription-related item.
 	 *
 	 * @return bool
 	 */
@@ -354,7 +355,14 @@ class KP_Subscription {
 			return false;
 		}
 
-		return ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || ( function_exists( 'wcs_cart_contains_failed_renewal_order_payment' ) && wcs_cart_contains_failed_renewal_order_payment() );
+		return (
+		( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) ||
+		( function_exists( 'wcs_cart_contains_renewal' ) && wcs_cart_contains_renewal() ) ||
+		( function_exists( 'wcs_cart_contains_failed_renewal_order_payment' ) && wcs_cart_contains_failed_renewal_order_payment() ) ||
+		( function_exists( 'wcs_cart_contains_resubscribe' ) && wcs_cart_contains_resubscribe() ) ||
+		( function_exists( 'wcs_cart_contains_early_renewal' ) && wcs_cart_contains_early_renewal() ) ||
+		( function_exists( 'wcs_cart_contains_switches' ) && wcs_cart_contains_switches() )
+		);
 	}
 
 	/**

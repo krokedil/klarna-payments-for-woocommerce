@@ -72,11 +72,19 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 * @return array
 	 */
 	public function get_payment_method_data() {
+		$features = array();
+		$gateways = WC()->payment_gateways()->payment_gateways();
+		if ( isset( $gateways['klarna_payments'] ) ) {
+			$gateway  = $gateways['klarna_payments'];
+			$features = $gateway->supports;
+		}
+
 		return array(
 			'title'            => 'Klarna',
 			'description'      => $this->get_setting( 'description' ),
 			'iconurl'          => apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
 			'orderbuttonlabel' => apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) ),
+			'features'         => $features,
 		);
 	}
 }

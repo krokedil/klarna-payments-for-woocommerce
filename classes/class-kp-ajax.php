@@ -26,10 +26,12 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function add_ajax_events() {
 			$ajax_events = array(
-				'kp_wc_place_order'    => true,
-				'kp_wc_auth_failed'    => true,
-				'kp_wc_log_js'         => true,
-				'kp_wc_express_button' => true,
+				'kp_wc_place_order'                => true,
+				'kp_wc_auth_failed'                => true,
+				'kp_wc_log_js'                     => true,
+				'kp_wc_express_button'             => true,
+				'kp_wc_get_unavailable_features'   => true,
+				'kp_wc_set_interoperability_token' => true,
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -170,15 +172,21 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return void
 		 */
 		public static function kp_wc_log_js() {
-			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
-			if ( ! wp_verify_nonce( $nonce, 'kp_wc_log_js' ) ) {
-				wp_send_json_error( 'bad_nonce' );
+			check_ajax_referer( 'kp_wc_log_js', 'nonce' );
+			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
+
+			// Get the content size of the request.
+			$post_size = (int) $_SERVER['CONTENT_LENGTH'] ?? 0;
+
+			// If the post data is to long, log a error message and return.
+			if ( $post_size > 1024 ) {
+				KP_logger::log( "Frontend JS $klarna_session_id: message to long and can't be logged." );
+				wp_send_json_success(); // Return success to not stop anything in the frontend if this happens.
 			}
 
-			$posted_message    = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
-			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
-			$message           = "Frontend JS $klarna_session_id: $posted_message";
-			KP_Logger::log( $message );
+			$posted_message = filter_input( INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+			$message        = "Frontend JS $klarna_session_id: $posted_message";
+			KP_logger::log( $message );
 			wp_send_json_success();
 		}
 
@@ -223,6 +231,47 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			WC()->session->set( 'chosen_payment_method', 'klarna_payments' );
 
 			wp_send_json_success( wc_get_checkout_url() );
+		}
+
+		public static function kp_wc_get_unavailable_features() {
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+
+			if ( ! wp_verify_nonce( $nonce, 'kp_wc_get_unavailable_features' ) ) {
+				wp_send_json_error( 'bad_nonce' );
+			}
+
+			$country_credentials = filter_input( INPUT_POST, 'country_credentials', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY );
+
+			if ( ! $country_credentials ) {
+				wp_send_json_error( 'Missing credentials.' );
+			}
+
+			$unavailable_features = kp_get_unavailable_feature_ids( $country_credentials );
+
+			if ( empty( $unavailable_features['feature_ids'] ) && ! empty( $unavailable_features['errors'] ) ) {
+				wp_send_json_error( 'Failed to get unavailable features. Error messages: ' . implode( ', ', $unavailable_features['errors'] ) );
+			}
+
+			wp_send_json_success( $unavailable_features['feature_ids'] );
+		}
+
+		/**
+		 * Set the interoperability token in the session for the current user.
+		 *
+		 * @return void
+		 */
+		public static function kp_wc_set_interoperability_token() {
+			// Verify the nonce.
+			check_ajax_referer( 'kp_wc_set_interoperability_token', 'nonce' );
+			$token = filter_input( INPUT_POST, 'token', FILTER_SANITIZE_SPECIAL_CHARS );
+
+			if ( empty( $token ) ) {
+				wp_send_json_error( 'missing token' );
+			}
+
+			KP_Interoperability_Token::set_token( $token );
+
+			wp_send_json_success();
 		}
 	}
 }

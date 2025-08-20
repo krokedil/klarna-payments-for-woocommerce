@@ -1,19 +1,19 @@
 <?php // phpcs:ignore
 /**
- * Plugin Name: Klarna Payments for WooCommerce
+ * Plugin Name: Klarna for WooCommerce
  * Plugin URI: https://krokedil.com/klarna-payments/
- * Description: Provides Klarna Payments as payment method to WooCommerce.
+ * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 3.9.1
+ * Version: 4.1.4
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 9.5.2
+ * WC tested up to: 9.9.5
  * Requires Plugins: woocommerce
  *
- * Copyright (c) 2017-2024 Krokedil
+ * Copyright (c) 2017-2025 Krokedil
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagem
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '3.9.1' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '4.1.4' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -159,6 +159,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $siwk = null;
 
 		/**
+		 * The Klarna Interoperability token class instance.
+		 *
+		 * @var KP_Interoperability_Token
+		 */
+		public $interoperability_token = null;
+
+		/**
 		 * The Klarna Order Management package from Krokedil.
 		 *
 		 * @var KlarnaOrderManagement
@@ -228,6 +235,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				)
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
+			$this->interoperability_token  = new KP_Interoperability_Token();
 			$this->order_management        = new KlarnaOrderManagement();
 
 			$this->register_payment_block();
@@ -351,7 +359,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					<div class="kp-message notice woocommerce-message notice-error">
 						<a class="woocommerce-message-close notice-dismiss"
 							href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>">
-							<?php esc_html_e( 'Dismiss', 'woocommerce' ); ?>
+							<?php esc_html_e( 'Dismiss', 'klarna-payments-for-woocommerce' ); ?>
 						</a>
 						<?php
 						echo wp_kses_post(
@@ -391,6 +399,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-subscriptions.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-klarna-express-checkout.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-interoperability-token.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-settings-page.php';
 
@@ -410,6 +419,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-hpp.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-customer-token.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-recurring.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-unavailable-features.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/get/class-kp-get-session.php';
 
 			// Request helpers.
