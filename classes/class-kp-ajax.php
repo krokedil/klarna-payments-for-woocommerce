@@ -73,8 +73,8 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 
 			$recurring_token = false;
 			if ( KP_Subscription::order_has_subscription( $order ) ) {
-				$customer_token = KP_Subscription::create_customer_token( $order, $auth_token );
-				if ( is_wp_error( $customer_token ) ) {
+				$recurring_token = KP_Subscription::create_customer_token( $order, $auth_token );
+				if ( is_wp_error( $recurring_token ) ) {
 					wp_send_json_error( 'customer_token_failed' );
 				}
 
