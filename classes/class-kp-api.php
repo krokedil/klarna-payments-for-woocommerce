@@ -246,7 +246,7 @@ class KP_Api {
 				kp_print_error_message( $response );
 			}
 		}
-		return $response;
+		return KP_WC()->report()->request( $response );
 	}
 
 	/**
