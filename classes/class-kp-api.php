@@ -99,6 +99,7 @@ class KP_Api {
 		);
 		$response = $request->request();
 
+		do_action( 'kp_after_place_order', $response, $order_id, $auth_token );
 		return self::check_for_api_error( $response );
 	}
 
