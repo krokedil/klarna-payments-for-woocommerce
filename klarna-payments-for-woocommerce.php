@@ -40,6 +40,8 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessag
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
 use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement;
+use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
+use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 
 /**
  * Required minimums and constants
@@ -172,6 +174,38 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public $order_management = null;
 
+		/*
+		 * Logger instance.
+		 *
+		 * @var Logger
+		 */
+		private $logger;
+
+		/**
+		 * SystemReport instance.
+		 *
+		 * @var SystemReport
+		 */
+		private $system_report;
+
+		/**
+		 * Logger instance.
+		 *
+		 * @return Logger
+		 */
+		public function logger() {
+			return $this->logger;
+		}
+
+		/**
+		 * System report.
+		 *
+		 * @return SystemReport
+		 */
+		public function report() {
+			return $this->system_report;
+		}
+
 		/**
 		 * Protected constructor to prevent creating a new instance of the
 		 * *Singleton* via the `new` operator from outside of this class.
@@ -237,6 +271,24 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->siwk                    = new SignInWithKlarna( $settings );
 			$this->interoperability_token  = new KP_Interoperability_Token();
 			$this->order_management        = new KlarnaOrderManagement();
+			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
+
+			// Includes the selectable, and checkbox settings, but excludes those whose title is empty. The 'kp_section_start' will appear as a section header in the system report.
+			$included_settings_fields = array(
+				array(
+					'type'       => 'kp_section_start',
+					'is_section' => true,
+				),
+				array( 'type' => 'select' ),
+				array(
+					'type'    => 'checkbox',
+					'exclude' => array(
+						'empty' => 'title',
+					),
+				),
+
+			);
+			$this->system_report = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $included_settings_fields );
 
 			$this->register_payment_block();
 
