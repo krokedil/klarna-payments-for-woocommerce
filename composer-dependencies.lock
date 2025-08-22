@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0dd47b9f3dbd85374f56ad9e8ff8c823",
+    "content-hash": "534407c01a1feba2f0929a27c35e1f0d",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -357,6 +357,62 @@
                 "issues": "https://github.com/krokedil/sign-in-with-klarna/issues"
             },
             "time": "2025-06-09T14:36:46+00:00"
+        },
+        {
+            "name": "krokedil/support",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/krokedil/support.git",
+                "reference": "0913e5c00fd36f8f9b2b9757eb4c3f4bad6a5dea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/support/zipball/0913e5c00fd36f8f9b2b9757eb4c3f4bad6a5dea",
+                "reference": "0913e5c00fd36f8f9b2b9757eb4c3f4bad6a5dea",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.4 || ~8.0"
+            },
+            "require-dev": {
+                "php-stubs/woocommerce-stubs": "^8.1",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^9.6",
+                "wp-coding-standards/wpcs": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\Support\\": "src/"
+                }
+            },
+            "scripts": {
+                "phpcs": [
+                    "phpcs --extensions=php -s -p"
+                ],
+                "phpcbf": [
+                    "phpcbf -p"
+                ],
+                "phpunit": [
+                    "phpunit --configuration phpunit.xml"
+                ]
+            },
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "The support library allows you to extend your plugin with logging that can be optionally toggled through your plugin settings, generate an entry in the system report from your plugin settings, and report issues to the system report.",
+            "support": {
+                "source": "https://github.com/krokedil/support/tree/1.0.1",
+                "issues": "https://github.com/krokedil/support/issues"
+            },
+            "time": "2025-06-10T08:18:26+00:00"
         },
         {
             "name": "krokedil/woocommerce",
