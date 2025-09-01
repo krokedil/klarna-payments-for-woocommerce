@@ -39,6 +39,7 @@ use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
+use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 
@@ -167,6 +168,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $interoperability_token = null;
 
 		/**
+		 * The Klarna Order Management package from Krokedil.
+		 *
+		 * @var KlarnaOrderManagement
+		 */
+		public $order_management = null;
+
+		/*
 		 * Logger instance.
 		 *
 		 * @var Logger
@@ -262,6 +270,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
 			$this->interoperability_token  = new KP_Interoperability_Token();
+			$this->order_management        = new KlarnaOrderManagement();
 			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
 
 			// Includes the selectable, and checkbox settings, but excludes those whose title is empty. The 'kp_section_start' will appear as a section header in the system report.
@@ -317,7 +326,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * Show admin notice if Order Management plugin is not active.
 		 */
 		public function order_management_check() {
-			if ( ! class_exists( 'WC_Klarna_Order_Management' ) ) {
+			if ( ! class_exists( 'WC_Klarna_Order_Management' ) && ! class_exists( 'KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement' ) ) {
 				$current_screen = get_current_screen();
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
