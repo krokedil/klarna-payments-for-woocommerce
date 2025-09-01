@@ -128,9 +128,9 @@ function kp_save_order_meta_data( $order, $response ) {
  */
 function kp_process_accepted( $order, $decoded, $recurring_token = false ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
+	kp_save_order_meta_data( $order, $decoded );
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
-	kp_save_order_meta_data( $order, $decoded );
 
 	if ( $recurring_token ) {
 		KP_Subscription::save_recurring_token( $order->get_id(), $recurring_token );

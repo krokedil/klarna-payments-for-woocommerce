@@ -44,6 +44,40 @@ class KP_Subscription {
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'show_recurring_token' ) );
 		// Ensure wp_safe_redirect do not redirect back to default dashboard or home page.
 		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
+
+		// Creates and saves the customer token after the order is successfully placed.
+		add_action( 'kp_after_place_order', array( $this, 'add_recurring_token_to_order' ), 10, 3 );
+	}
+
+	/**
+	 * Add the recurring token to the order after successfully placing the order provided it has a subscription.
+	 *
+	 * @param array|WP_Error $response The response from the API.
+	 * @param int            $order_id The order ID.
+	 * @param string         $auth_token The authorization token.
+	 * @return void
+	 * */
+	public function add_recurring_token_to_order( $response, $order_id, $auth_token ) {
+		if ( is_wp_error( $response ) ) {
+			return;
+		}
+
+		$order = wc_get_order( $order_id );
+		if ( ! self::order_has_subscription( $order ) ) {
+			return;
+		}
+
+		$token_from_order = $order->get_meta( self::RECURRING_TOKEN, true );
+		if ( ! empty( $token_from_order ) ) {
+			return;
+		}
+
+		$customer_token = self::create_customer_token( $order, $auth_token );
+		if ( ! is_wp_error( $customer_token ) ) {
+			self::save_recurring_token( $order_id, $customer_token );
+			/* translators: Recurring token. */
+			$order->add_order_note( sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $customer_token ) );
+		}
 	}
 
 	/**
@@ -258,6 +292,19 @@ class KP_Subscription {
 
 		$request['body'] = wp_json_encode( $body );
 		return $request;
+	}
+
+	/**
+	 * Create a customer token from a given authorization token.
+	 *
+	 * @param WC_Order $order The WooCommerce order.
+	 * @param string   $auth_token The Klarna auth token for the session.
+	 * @return string|WP_Error The token ID or the WP_Error associated with the failed request.
+	 */
+	public static function create_customer_token( $order, $auth_token ) {
+		$country  = kp_get_klarna_country( $order );
+		$response = KP_WC()->api->create_customer_token( $country, $auth_token, $order->get_id() );
+		return is_wp_error( $response ) ? $response : $response['token_id'];
 	}
 
 	/**
