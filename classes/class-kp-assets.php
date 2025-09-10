@@ -49,6 +49,14 @@ class KP_Assets {
 			true
 		);
 
+		wp_register_script(
+			'klarna_websdk',
+			'https://js.klarna.com/web-sdk/v2/klarna.js',
+			array(),
+			null,
+			false // Load in the header.
+		);
+
 		add_filter( 'script_loader_tag', array( $this, 'add_data_attributes' ), 10, 2 );
 	}
 
@@ -60,15 +68,18 @@ class KP_Assets {
 	 * @return string
 	 */
 	public function add_data_attributes( $tag, $handle ) {
-		if ( 'klarnapayments' !== $handle ) {
+		if ( 'klarnapayments' === $handle ) {
+			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
+			$environment    = isset( $settings['testmode'] ) && 'yes' === $settings['testmode'] ? 'playground' : 'production';
+			$data_client_id = apply_filters( 'kp_websdk_data_client_id', kp_get_client_id() );
+			$tag            = str_replace( ' src', ' async src', $tag );
+			$tag            = str_replace( '></script>', " data-environment={$environment} data-client-id='{$data_client_id}'></script>", $tag );
+			return $tag;
+		} else if( 'klarna_websdk' === $handle ) {
+			$tag = str_replace( ' src', ' defer src', $tag );
 			return $tag;
 		}
 
-		$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
-		$environment    = isset( $settings['testmode'] ) && 'yes' === $settings['testmode'] ? 'playground' : 'production';
-		$data_client_id = apply_filters( 'kp_websdk_data_client_id', kp_get_client_id() );
-		$tag            = str_replace( ' src', ' async src', $tag );
-		$tag            = str_replace( '></script>', " data-environment={$environment} data-client-id='{$data_client_id}'></script>", $tag );
 		return $tag;
 	}
 
