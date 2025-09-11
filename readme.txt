@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.8.1
+Tested up to: 6.8.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 9.9.5
-Stable tag: 4.1.4
+WC tested up to: 10.1.2
+Stable tag: 4.2.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,14 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.09.01    - version 4.2.0 =
+* Feature       - Implemented a support package integration, to enable optional logging and issue reporting in the system report.
+* Feature       - Scheduled actions for the current order are now displayed on the admin order view.
+* Fix           - Resolved issue with processing subscription renewals in the block checkout.
+* Fix           - Resolved issue where virtual product-only orders could be set to order status 'on hold', when using combined EU credentials.
+* Tweak         - Tweaked the design of the plugin settings page tabs.
+* Tweak         - Updated the 'What is Klarna' link to be unique for Switzerland.
+
 = 2025.06.25    - version 4.1.4 =
 * Fix           - [KOSM] Resolved a '_load_textdomain_just_in_time' notice.
 * Fix           - [SIWK] Resolved a '_load_textdomain_just_in_time' notice.
