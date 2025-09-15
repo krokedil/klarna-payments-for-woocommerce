@@ -14,6 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class KP_Assets {
 
+	const KP_SCRIPT_HANDLE = 'klarnapayments';
+	const KP_WEBSDK_HANDLE_V1 = 'klarna_websdk_v1';
+	const KP_WEBSDK_HANDLE_V2 = 'klarna_websdk_v2';
+
 	/**
 	 * Class constructor.
 	 */
@@ -26,7 +30,7 @@ class KP_Assets {
 
 		/* Klarna Express Checkout (aka Express Button). */
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_express_button' ) );
-		add_action( 'script_loader_tag', array( $this, 'express_button_script_tag' ), 10, 2 );
+		//add_action( 'script_loader_tag', array( $this, 'express_button_script_tag' ), 10, 2 );
 		add_action( 'woocommerce_proceed_to_checkout', array( $this, 'express_button_placement' ) );
 		add_action( 'woocommerce_widget_shopping_cart_buttons', array( $this, 'express_button_placement' ), 15 );
 
@@ -42,7 +46,7 @@ class KP_Assets {
 	 */
 	public function register_klarna_websdk() {
 		wp_register_script(
-			'klarnapayments',
+			self::KP_SCRIPT_HANDLE,
 			'https://x.klarnacdn.net/kp/lib/v1/api.js',
 			array(),
 			null,
@@ -50,7 +54,7 @@ class KP_Assets {
 		);
 
 		wp_register_script(
-			'klarna_websdk',
+			self::KP_WEBSDK_HANDLE_V2,
 			'https://js.klarna.com/web-sdk/v2/klarna.js',
 			array(),
 			null,
@@ -68,15 +72,50 @@ class KP_Assets {
 	 * @return string
 	 */
 	public function add_data_attributes( $tag, $handle ) {
-		if ( 'klarnapayments' === $handle ) {
+		if ( self::KP_SCRIPT_HANDLE === $handle ) {
 			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
 			$environment    = isset( $settings['testmode'] ) && 'yes' === $settings['testmode'] ? 'playground' : 'production';
 			$data_client_id = apply_filters( 'kp_websdk_data_client_id', kp_get_client_id() );
 			$tag            = str_replace( ' src', ' async src', $tag );
 			$tag            = str_replace( '></script>', " data-environment={$environment} data-client-id='{$data_client_id}'></script>", $tag );
 			return $tag;
-		} else if( 'klarna_websdk' === $handle ) {
-			$tag = str_replace( ' src', ' defer src', $tag );
+		} else if( self::KP_WEBSDK_HANDLE_V2 === $handle ) {
+			// Allow other plugins to hook in an additional attributes to the script tag.
+			$attributes = apply_filters( 'kp_websdk_v2_data_attributes', array(
+				'defer' => null,
+			) );
+			// Add any additional attributes.
+			if ( ! empty( $attributes ) ) {
+				foreach( $attributes as $key => $value ) {
+					// If the value is null, just add the key as a boolean attribute.
+					if ( is_null( $value ) ) {
+						$tag = str_replace( 'src', " {$key} src", $tag );
+						continue;
+					}
+					// Otherwise, add the key and value.
+					$tag = str_replace( 'src', " {$key}='{$value}' src", $tag );
+				}
+			}
+
+			return $tag;
+		} else if( self::KP_WEBSDK_HANDLE_V1 === $handle ) {
+			// Allow other plugins to hook in an additional attributes to the script tag.
+			$attributes = apply_filters( 'kp_websdk_v1_data_attributes', array(
+				'defer' => null,
+			) );
+			// Add any additional attributes.
+			if ( ! empty( $attributes ) ) {
+				foreach( $attributes as $key => $value ) {
+					// If the value is null, just add the key as a boolean attribute.
+					if ( is_null( $value ) ) {
+						$tag = str_replace( 'src', " {$key} src", $tag );
+						continue;
+					}
+					// Otherwise, add the key and value.
+					$tag = str_replace( 'src', " {$key}='{$value}' src", $tag );
+				}
+			}
+
 			return $tag;
 		}
 
@@ -105,7 +144,7 @@ class KP_Assets {
 		wp_register_script(
 			'klarna_payments',
 			plugins_url( 'assets/js/klarna-payments.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
-			array( 'jquery', 'wc-checkout', 'jquery-blockui', 'klarnapayments' ),
+			array( 'jquery', 'wc-checkout', 'jquery-blockui', self::KP_SCRIPT_HANDLE ),
 			WC_KLARNA_PAYMENTS_VERSION,
 			true
 		);
