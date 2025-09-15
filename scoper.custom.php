@@ -10,6 +10,7 @@ function customize_php_scoper_config( array $config ): array {
 	$config['exclude-classes'][] = 'Klarna_OnSite_Messaging_For_WooCommerce';
 	$config['exclude-classes'][] = 'WC_Product';
 	$config['exclude-classes'][] = 'KP_Form_Fields';
+	$config['exclude-classes'][] = 'KP_Assets';
 
 	$functions = array(
 		'KP_WC',
@@ -35,6 +36,7 @@ function customize_php_scoper_config( array $config ): array {
 
 	$config['exclude-functions'] = array_merge( $config['exclude-functions'] ?? array(), $functions );
 	$config['exclude-namespaces'][] = 'Automattic';
+	$config['exclude-namespaces'][] = 'Krokedil\Klarna';
 
 	return $config;
 }
