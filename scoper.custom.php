@@ -11,6 +11,7 @@ function customize_php_scoper_config( array $config ): array {
 	$config['exclude-classes'][] = 'WC_Product';
 	$config['exclude-classes'][] = 'KP_Form_Fields';
 	$config['exclude-classes'][] = 'KP_Assets';
+	$config['exclude-classes'][] = 'KP_Requests';
 
 	$functions = array(
 		'KP_WC',

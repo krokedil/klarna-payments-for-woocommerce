@@ -1,4 +1,6 @@
-<?php // phpcs:ignore
+<?php
+
+use Krokedil\Klarna\Api\Registry;// phpcs:ignore
 /**
  * Plugin Name: Klarna for WooCommerce
  * Plugin URI: https://krokedil.com/klarna-payments/
@@ -283,6 +285,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$this->register_payment_block();
 
+			// Initialize the API registry.
+			new Registry();
+
 			add_action( 'before_woocommerce_init', array( $this, 'declare_wc_compatibility' ) );
 		}
 
@@ -463,7 +468,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-customer-token.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-recurring.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-unavailable-features.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-create-notifications.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/post/class-kp-simulate-notifications.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/get/class-kp-get-session.php';
 
 			// Request helpers.

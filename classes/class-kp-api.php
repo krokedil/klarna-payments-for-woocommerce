@@ -280,29 +280,4 @@ class KP_Api {
 
 		return self::check_for_api_error( $response );
 	}
-
-	/**
-	 * Create notifications in Klarna.
-	 *
-	 * @param string $url The URL to receive notifications on.
-	 * @param array $event_types The event types to subscribe to.
-	 * @param string $event_version The event version to use.
-	 * @param string $signing_key_id The signing key id to use.
-	 *
-	 * @return array|WP_Error The response from Klarna.
-	 */
-	public function create_notifications( $url, $event_types, $event_version, $signing_key_id ) {
-		$request = new KP_Create_Notifications(
-			array(
-				'url'            => $url,
-				'event_types'    => $event_types,
-				'event_version'  => $event_version,
-				'signing_key_id' => $signing_key_id,
-				'country'        => kp_get_klarna_country(),
-			)
-		);
-		$response = $request->request();
-
-		return self::check_for_api_error( $response );
-	}
 }
