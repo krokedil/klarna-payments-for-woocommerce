@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7a1d0776d686511132f3453452489c0",
+    "content-hash": "a2f4ea405edf217f6be5228241a2a866",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -211,6 +211,72 @@
                 "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
             },
             "time": "2025-06-09T14:16:49+00:00"
+        },
+        {
+            "name": "krokedil/klarna-order-management",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/krokedil/klarna-order-management.git",
+                "reference": "94b3f3f2176d390feea8c5a6e2f28958a4e27f95"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/klarna-order-management/zipball/94b3f3f2176d390feea8c5a6e2f28958a4e27f95",
+                "reference": "94b3f3f2176d390feea8c5a6e2f28958a4e27f95",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.4 || ~8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\KlarnaOrderManagement\\": "src/"
+                }
+            },
+            "archive": {
+                "exclude": [
+                    "tests/*",
+                    "phpunit.xml",
+                    "composer-lock.json",
+                    ".github/*",
+                    ".gitignore",
+                    ".gitattributes"
+                ]
+            },
+            "scripts": {
+                "phpcs": [
+                    "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+                ],
+                "phpcbf": [
+                    "phpcbf --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+                ],
+                "test": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml"
+                ],
+                "test-coverage-html": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage"
+                ],
+                "test-coverage-clover": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
+                ]
+            },
+            "license": [
+                "GPL-v3"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "Klarna Order Management",
+            "support": {
+                "source": "https://github.com/krokedil/klarna-order-management/tree/1.0.0",
+                "issues": "https://github.com/krokedil/klarna-order-management/issues"
+            },
+            "time": "2025-09-15T06:48:31+00:00"
         },
         {
             "name": "krokedil/settings-page",
