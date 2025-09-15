@@ -117,12 +117,17 @@ class Notifications extends Controller {
 		}
 
 		// Get the signing key from the settings.
-		$settings    = get_option( 'woocommerce_klarna_payments_settings', array( 'notification_signing_key' => '' ) );
-		$signing_key = $settings['kec_notification_signing_key'] ?? '';
+		$settings              = get_option( 'kec_notifications_signing_key', array() );
+		$stored_signing_key_id = $settings['signing_key_id'] ?? '';
+		$stored_signing_key    = $settings['signing_key'] ?? '';
+
+		// Ensure the signing key id matches the stored one.
+		if ( $signing_key_id !== $stored_signing_key_id ) {
+			return false;
+		}
 
 		// Validate the body using the signing key and signature from the header using HMAC-SHA256.
-		$calculated_signature = base64_encode( hash_hmac( 'sha256', $body, $signing_key, true ) );
-
+		$calculated_signature = hash_hmac( 'sha256', $body, $stored_signing_key, false );
 		if ( ! hash_equals( $calculated_signature, $signature ) ) {
 			return false;
 		}
