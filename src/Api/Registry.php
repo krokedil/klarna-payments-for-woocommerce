@@ -21,6 +21,7 @@ class Registry {
 	 */
 	public function __construct() {
 		$this->init();
+		$this->controllers = apply_filters( 'klarna_register_api_controller', array() );
 		add_action( 'rest_api_init', array( $this, 'register_controller_routes' ) );
 	}
 
@@ -30,8 +31,20 @@ class Registry {
 	 * @return void
 	 */
 	public function init() {
-		// Register the controllers.
-		$this->register_controller( new Notifications() );
+		foreach ( $this->controllers as $controller ) {
+			// Ensure the controller is an instance of Controller before registering.
+			if ( ! $controller instanceof Controller ) {
+				wc_doing_it_wrong( __METHOD__, sprintf(
+					/* translators: 1: The name of the incorrect class. 2: The name of the base Controller class. */
+					__( 'The controller %1$s must extend the %2$s class.', 'krokedil-klarna' ),
+					is_object( $controller ) ? get_class( $controller ) : gettype( $controller ),
+					Controller::class
+				), '1.0.0' ); // @TODO update version number.
+				continue;
+			}
+
+			$this->register_controller( $controller );
+		}
 	}
 
 	/**
