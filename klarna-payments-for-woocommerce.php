@@ -541,6 +541,20 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				KlarnaPayments::register();
 			}
 		}
+
+		/**
+		 * Get the pay button label depending on cart total.
+		 *
+		 * @return string
+		 */
+		public static function get_pay_button_label() {
+
+			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) {
+				return apply_filters( 'kp_blocks_order_button_label_free', __( 'Pay with Klarna (free)', 'klarna-payments-for-woocommerce' ) );
+			}
+
+			return apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) );
+		}
 	}
 	WC_Klarna_Payments::get_instance();
 

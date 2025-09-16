@@ -8,6 +8,7 @@
 namespace KlarnaPayments\Blocks\Payments;
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
+use WC_Klarna_Payments;
 
 /**
  * Class for KP Payment Blocks.
@@ -83,7 +84,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 			'title'            => 'Klarna',
 			'description'      => $this->get_setting( 'description' ),
 			'iconurl'          => apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
-			'orderbuttonlabel' => apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) ),
+			'orderbuttonlabel' => WC_Klarna_Payments::get_pay_button_label(),
 			'features'         => $features,
 		);
 	}
