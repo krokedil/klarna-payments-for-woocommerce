@@ -104,16 +104,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "dev-master",
+            "version": "3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "243243670f0303793a698dae582bf40b2203a5b2"
+                "reference": "91fbbd54f66dc1bd40f0e7e4271be5c4ca9df955"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/243243670f0303793a698dae582bf40b2203a5b2",
-                "reference": "243243670f0303793a698dae582bf40b2203a5b2",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/91fbbd54f66dc1bd40f0e7e4271be5c4ca9df955",
+                "reference": "91fbbd54f66dc1bd40f0e7e4271be5c4ca9df955",
                 "shasum": ""
             },
             "require": {
@@ -130,11 +130,6 @@
                 "bin/phpcs"
             ],
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
@@ -184,7 +179,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-09-14T05:03:09+00:00"
+            "time": "2025-09-19T23:00:16+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
