@@ -1,0 +1,2 @@
+== Unreleased ==
+* Tweak          - Added support for placing orders without an address when address information isn't required, such as for virtual products.

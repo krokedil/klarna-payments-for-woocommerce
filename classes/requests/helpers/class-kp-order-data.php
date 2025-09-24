@@ -240,38 +240,39 @@ class KP_Order_Data {
 			$customer_type = $this->customer_type;
 		}
 
-		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
-		$customer_data         = $this->order_data->customer;
+		$customer_data    = $this->order_data->customer;
+		$billing_country  = $this->get_address_field_value( 'billing', 'country', $customer_data ) ?: kp_get_klarna_country();
+		$shipping_country = $this->get_address_field_value( 'shipping', 'country', $customer_data ) ?: kp_get_klarna_country();
 
 		$billing = array(
-			'given_name'      => $customer_data->get_billing_first_name(),
-			'family_name'     => $customer_data->get_billing_last_name(),
-			'email'           => $customer_data->get_billing_email(),
-			'phone'           => $customer_data->get_billing_phone(),
-			'street_address'  => $customer_data->get_billing_address_1(),
-			'street_address2' => $customer_data->get_billing_address_2(),
-			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_billing_postcode() : str_replace( ' ', '', $customer_data->get_billing_postcode() ),
-			'city'            => $customer_data->get_billing_city(),
-			'region'          => $customer_data->get_billing_state(),
-			'country'         => empty( $customer_data->get_billing_country() ) ? kp_get_klarna_country() : $customer_data->get_billing_country(),
+			'given_name'      => $this->get_address_field_value( 'billing', 'first_name', $customer_data ),
+			'family_name'     => $this->get_address_field_value( 'billing', 'last_name', $customer_data ),
+			'email'           => $this->get_address_field_value( 'billing', 'email', $customer_data ),
+			'phone'           => $this->get_address_field_value( 'billing', 'phone', $customer_data ),
+			'street_address'  => $this->get_address_field_value( 'billing', 'address_1', $customer_data ),
+			'street_address2' => $this->get_address_field_value( 'billing', 'address_2', $customer_data ),
+			'postal_code'     => wc_format_postcode( $this->get_address_field_value( 'billing', 'postcode', $customer_data ), $billing_country ),
+			'city'            => $this->get_address_field_value( 'billing', 'city', $customer_data ),
+			'region'          => $this->get_address_field_value( 'billing', 'state', $customer_data ),
+			'country'         => $billing_country,
 		);
 
 		$shipping = array(
-			'given_name'      => $customer_data->get_shipping_first_name(),
-			'family_name'     => $customer_data->get_shipping_last_name(),
-			'email'           => $customer_data->get_shipping_email(),
-			'phone'           => $customer_data->get_shipping_phone(),
-			'street_address'  => $customer_data->get_shipping_address_1(),
-			'street_address2' => $customer_data->get_shipping_address_2(),
-			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_shipping_postcode() : str_replace( ' ', '', $customer_data->get_shipping_postcode() ),
-			'city'            => $customer_data->get_shipping_city(),
-			'region'          => $customer_data->get_shipping_state(),
-			'country'         => $customer_data->get_shipping_country(),
+			'given_name'      => $this->get_address_field_value( 'shipping', 'first_name', $customer_data ),
+			'family_name'     => $this->get_address_field_value( 'shipping', 'last_name', $customer_data ),
+			'email'           => $this->get_address_field_value( 'shipping', 'email', $customer_data ),
+			'phone'           => $this->get_address_field_value( 'shipping', 'phone', $customer_data ),
+			'street_address'  => $this->get_address_field_value( 'shipping', 'address_1', $customer_data ),
+			'street_address2' => $this->get_address_field_value( 'shipping', 'address_2', $customer_data ),
+			'postal_code'     => wc_format_postcode( $this->get_address_field_value( 'shipping', 'postcode', $customer_data ), $shipping_country ),
+			'city'            => $this->get_address_field_value( 'shipping', 'city', $customer_data ),
+			'region'          => $this->get_address_field_value( 'shipping', 'state', $customer_data ),
+			'country'         => $shipping_country,
 		);
 
 		if ( 'b2b' === $customer_type ) {
-			$billing['organization_name']  = $customer_data->get_billing_company();
-			$shipping['organization_name'] = $customer_data->get_shipping_company();
+			$billing['organization_name']  = $this->get_address_field_value( 'billing', 'company', $customer_data );
+			$shipping['organization_name'] = $this->get_address_field_value( 'shipping', 'company', $customer_data );
 		}
 
 		foreach ( $shipping as $key => $value ) {
@@ -283,8 +284,8 @@ class KP_Order_Data {
 		}
 
 		$customer = array(
-			'billing'  => $billing,
-			'shipping' => $shipping,
+			'billing'  => array_filter( $billing ),
+			'shipping' => array_filter( $shipping ),
 		);
 
 		return $customer;
@@ -314,5 +315,27 @@ class KP_Order_Data {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Helper method to get the value from the customer data object for a specific address field.
+	 *
+	 * @param string       $key
+	 * @param CustomerData $customer_data
+	 *
+	 * @return string|null
+	 */
+	private function get_address_field_value( $key, $field, $customer_data ) {
+		$func = "get_{$key}_{$field}";
+		if ( $this->order === null && method_exists( $customer_data, $func ) ) {
+			$fields = WC()->checkout()->get_checkout_fields( $key );
+			if ( isset( $fields[ "{$key}_{$field}" ] ) ) {
+				return $customer_data->$func() ?: null;
+			}
+		} elseif ( $this->order !== null && method_exists( $this->order, $func ) ) {
+			return $this->order->$func() ?: null;
+		}
+
+		return null;
 	}
 }
