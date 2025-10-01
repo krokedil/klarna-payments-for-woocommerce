@@ -71,16 +71,16 @@
         },
         {
             "name": "krokedil/klarna-express-checkout",
-            "version": "1.4.1",
+            "version": "1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "42fe35c3329f551bf3cd05123ec8510cdfc13f5f"
+                "reference": "b1208f6db370dcc212875f65fda10e94c7bf71d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/42fe35c3329f551bf3cd05123ec8510cdfc13f5f",
-                "reference": "42fe35c3329f551bf3cd05123ec8510cdfc13f5f",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/b1208f6db370dcc212875f65fda10e94c7bf71d1",
+                "reference": "b1208f6db370dcc212875f65fda10e94c7bf71d1",
                 "shasum": ""
             },
             "require": {
@@ -136,10 +136,10 @@
             ],
             "description": "A Klarna Express Checkout solution for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-express-checkout/tree/1.4.1",
+                "source": "https://github.com/krokedil/klarna-express-checkout/tree/1.4.3",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2024-11-12T10:50:36+00:00"
+            "time": "2025-10-01T13:03:25+00:00"
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
