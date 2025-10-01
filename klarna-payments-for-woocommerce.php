@@ -5,12 +5,12 @@
  * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 4.2.0
+ * Version: 4.3.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 10.1.2
+ * WC tested up to: 10.2.2
  * Requires Plugins: woocommerce
  *
  * Copyright (c) 2017-2025 Krokedil
@@ -39,13 +39,14 @@ use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
+use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '4.2.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '4.3.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -167,6 +168,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $interoperability_token = null;
 
 		/**
+		 * The Klarna Order Management package from Krokedil.
+		 *
+		 * @var KlarnaOrderManagement
+		 */
+		public $order_management = null;
+
+		/*
 		 * Logger instance.
 		 *
 		 * @var Logger
@@ -262,6 +270,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
 			$this->interoperability_token  = new KP_Interoperability_Token();
+			$this->order_management        = new KlarnaOrderManagement();
 			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
 
 			// Includes the selectable, and checkbox settings, but excludes those whose title is empty. The 'kp_section_start' will appear as a section header in the system report.
@@ -317,7 +326,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * Show admin notice if Order Management plugin is not active.
 		 */
 		public function order_management_check() {
-			if ( ! class_exists( 'WC_Klarna_Order_Management' ) ) {
+			if ( ! class_exists( 'WC_Klarna_Order_Management' ) && ! class_exists( 'KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement' ) ) {
 				$current_screen = get_current_screen();
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>
@@ -531,6 +540,20 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				require_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/blocks/src/payment/KlarnaPayments.php';
 				KlarnaPayments::register();
 			}
+		}
+
+		/**
+		 * Get the pay button label depending on cart total.
+		 *
+		 * @return string
+		 */
+		public static function get_pay_button_label() {
+
+			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) {
+				return apply_filters( 'kp_blocks_order_button_label_free', __( 'Pay with Klarna (free)', 'klarna-payments-for-woocommerce' ) );
+			}
+
+			return apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) );
 		}
 	}
 	WC_Klarna_Payments::get_instance();

@@ -104,16 +104,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "dev-master",
+            "version": "3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "ca606d9f60838b9a96ceb12dec7b935d5d64efce"
+                "reference": "63b78c49263a84007cd2fb131b83d63cf3b4e65d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/ca606d9f60838b9a96ceb12dec7b935d5d64efce",
-                "reference": "ca606d9f60838b9a96ceb12dec7b935d5d64efce",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/63b78c49263a84007cd2fb131b83d63cf3b4e65d",
+                "reference": "63b78c49263a84007cd2fb131b83d63cf3b4e65d",
                 "shasum": ""
             },
             "require": {
@@ -125,17 +125,11 @@
             "require-dev": {
                 "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.3.4"
             },
-            "default-branch": true,
             "bin": [
                 "bin/phpcbf",
                 "bin/phpcs"
             ],
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
@@ -185,7 +179,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-08-21T23:53:01+00:00"
+            "time": "2025-09-30T00:00:15+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",

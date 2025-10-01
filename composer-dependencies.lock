@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7a1d0776d686511132f3453452489c0",
+    "content-hash": "a2f4ea405edf217f6be5228241a2a866",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -71,16 +71,16 @@
         },
         {
             "name": "krokedil/klarna-express-checkout",
-            "version": "1.4.1",
+            "version": "1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "42fe35c3329f551bf3cd05123ec8510cdfc13f5f"
+                "reference": "b1208f6db370dcc212875f65fda10e94c7bf71d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/42fe35c3329f551bf3cd05123ec8510cdfc13f5f",
-                "reference": "42fe35c3329f551bf3cd05123ec8510cdfc13f5f",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/b1208f6db370dcc212875f65fda10e94c7bf71d1",
+                "reference": "b1208f6db370dcc212875f65fda10e94c7bf71d1",
                 "shasum": ""
             },
             "require": {
@@ -136,10 +136,10 @@
             ],
             "description": "A Klarna Express Checkout solution for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-express-checkout/tree/1.4.1",
+                "source": "https://github.com/krokedil/klarna-express-checkout/tree/1.4.3",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2024-11-12T10:50:36+00:00"
+            "time": "2025-10-01T13:03:25+00:00"
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
@@ -211,6 +211,72 @@
                 "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
             },
             "time": "2025-06-09T14:16:49+00:00"
+        },
+        {
+            "name": "krokedil/klarna-order-management",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/krokedil/klarna-order-management.git",
+                "reference": "4914f91efbf244261d519215023680632d679570"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/krokedil/klarna-order-management/zipball/4914f91efbf244261d519215023680632d679570",
+                "reference": "4914f91efbf244261d519215023680632d679570",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.4 || ~8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Krokedil\\KlarnaOrderManagement\\": "src/"
+                }
+            },
+            "archive": {
+                "exclude": [
+                    "tests/*",
+                    "phpunit.xml",
+                    "composer-lock.json",
+                    ".github/*",
+                    ".gitignore",
+                    ".gitattributes"
+                ]
+            },
+            "scripts": {
+                "phpcs": [
+                    "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+                ],
+                "phpcbf": [
+                    "phpcbf --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
+                ],
+                "test": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml"
+                ],
+                "test-coverage-html": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage"
+                ],
+                "test-coverage-clover": [
+                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
+                ]
+            },
+            "license": [
+                "GPL-v3"
+            ],
+            "authors": [
+                {
+                    "name": "Krokedil AB",
+                    "email": "info@krokedil.se"
+                }
+            ],
+            "description": "Klarna Order Management",
+            "support": {
+                "source": "https://github.com/krokedil/klarna-order-management/tree/1.0.3",
+                "issues": "https://github.com/krokedil/klarna-order-management/issues"
+            },
+            "time": "2025-10-01T12:37:31+00:00"
         },
         {
             "name": "krokedil/settings-page",

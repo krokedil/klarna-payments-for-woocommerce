@@ -7,7 +7,8 @@
     "krokedil/klarna-express-checkout": "^1.4.0",
     "krokedil/klarna-onsite-messaging": "^1.3.2",
     "krokedil/settings-page": "^1.1.0",
-    "krokedil/sign-in-with-klarna": "^1.0.6"
+    "krokedil/sign-in-with-klarna": "^1.0.6",
+    "krokedil/klarna-order-management": "^1.0.0"
   },
   "config": {
     "platform": {
@@ -42,6 +43,10 @@
     {
       "type": "vcs",
       "url": "git@github.com:krokedil/sign-in-with-klarna.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:krokedil/klarna-order-management.git"
     }
   ],
   "minimum-stability": "dev",
