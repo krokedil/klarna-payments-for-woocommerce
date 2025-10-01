@@ -1,6 +1,10 @@
 *** Klarna for WooCommerce Changelog ***
 
-= 2025-09-01    - version 4.2.0 =
+= 2025-10-01    - version 4.3.0
+* Feature       - Klarna Order Management is now built into the plugin.
+* Fix           - [KEC] Fixed a potential issue that could happen if we tried to initialize the KEC button before the Klarna Payments script was loaded and had registered the 'Klarna.Payments.Buttons' object in the window.
+
+= 2025-09-01    - version 4.2.0
 * Feature       - Implemented a support package integration, to enable optional logging and issue reporting in the system report.
 * Feature       - Scheduled actions for the current order are now displayed on the admin order view.
 * Fix           - Resolved issue with processing subscription renewals in the block checkout.
