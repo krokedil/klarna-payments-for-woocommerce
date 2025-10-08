@@ -7,7 +7,7 @@ Tested up to: 6.8.3
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 10.2.2
-Stable tag: 4.3.0
+Stable tag: 4.3.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -71,6 +71,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.10.08    - version 4.3.1 =
+* Fix           - Resolved a fatal error that could occur when clearing stored logs using the support package.
+
 = 2025.10.01    - version 4.3.0 =
 * Feature       - Klarna Order Management is now built into the plugin.
 * Fix           - [KEC] Fixed a potential issue that could happen if we tried to initialize the KEC button before the Klarna Payments script was loaded and had registered the 'Klarna.Payments.Buttons' object in the window.
