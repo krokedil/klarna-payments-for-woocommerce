@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "87d9a2cb8e890207f2ba200d00562a77",
+    "content-hash": "fbb600688e3da04df0ecf0115084aee2",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -214,16 +214,16 @@
         },
         {
             "name": "krokedil/klarna-order-management",
-            "version": "1.0.3",
+            "version": "dev-main-filter-scheduled-actions",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-order-management.git",
-                "reference": "4914f91efbf244261d519215023680632d679570"
+                "reference": "1aa9bc626996df6757b4c2354411e47dbd6f1185"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-order-management/zipball/4914f91efbf244261d519215023680632d679570",
-                "reference": "4914f91efbf244261d519215023680632d679570",
+                "url": "https://api.github.com/repos/krokedil/klarna-order-management/zipball/1aa9bc626996df6757b4c2354411e47dbd6f1185",
+                "reference": "1aa9bc626996df6757b4c2354411e47dbd6f1185",
                 "shasum": ""
             },
             "require": {
@@ -273,10 +273,10 @@
             ],
             "description": "Klarna Order Management",
             "support": {
-                "source": "https://github.com/krokedil/klarna-order-management/tree/1.0.3",
+                "source": "https://github.com/krokedil/klarna-order-management/tree/main-filter-scheduled-actions",
                 "issues": "https://github.com/krokedil/klarna-order-management/issues"
             },
-            "time": "2025-10-01T12:37:31+00:00"
+            "time": "2025-10-13T14:01:50+00:00"
         },
         {
             "name": "krokedil/settings-page",
@@ -506,7 +506,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "krokedil/klarna-order-management": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

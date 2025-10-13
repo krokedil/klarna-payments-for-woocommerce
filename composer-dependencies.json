@@ -8,7 +8,7 @@
     "krokedil/klarna-onsite-messaging": "^1.3.2",
     "krokedil/settings-page": "^1.1.0",
     "krokedil/sign-in-with-klarna": "^1.0.6",
-    "krokedil/klarna-order-management": "^1.0.0"
+    "krokedil/klarna-order-management": "dev-main-filter-scheduled-actions"
   },
   "config": {
     "platform": {
