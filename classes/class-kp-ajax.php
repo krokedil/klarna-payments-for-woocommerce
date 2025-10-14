@@ -254,6 +254,18 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			wp_send_json_success( $unavailable_features['feature_ids'] );
 		}
 
+		public static function kp_wc_connect_account() {
+			check_ajax_referer( 'kp_wc_connect_account', 'nonce' );
+
+			$connected_account_credentials = KP_Account_Connection::connect_account();
+
+			if ( is_wp_error( $connected_account_credentials ) ) {
+				wp_send_json_error( 'failed to get connected account credentials' );
+			}
+
+			wp_send_json_success( $connected_account_credentials );
+		}
+
 		/**
 		 * Set the interoperability token in the session for the current user.
 		 *

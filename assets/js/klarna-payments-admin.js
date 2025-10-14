@@ -290,3 +290,43 @@ jQuery( function ( $ ) {
 
 	kp_admin.init()
 } )
+
+
+jQuery( document ).ready( function ( $ ) {
+	$( '#kp-connect-account' ).on( 'click', function ( e ) {
+		e.preventDefault();
+
+		$.ajax( klarna_payments_admin_params.connect_account_url, {
+				type: "POST",
+				dataType: "json",
+				async: true,
+				data: {
+					country_credentials: countryCredentials,
+					nonce: klarna_payments_admin_params.get_unavailable_features_nonce,
+				},
+				success: function ( response ) {
+					if ( response.success ) {
+						const unavailableOptions = response.data ?? []
+						$( ".kp_settings__section" ).removeClass( "unavailable" )
+
+						if ( ! unavailableOptions.length ) {
+							return
+						}
+
+						unavailableOptions.forEach( ( option ) => {
+							$( `#klarna-payments-settings-${ option }` ).addClass( "unavailable" )
+						} )
+					} else {
+						console.log( "Error updating unavailable features" )
+						console.log( response )
+						$( ".kp_settings__section" ).removeClass( "unavailable" )
+					}
+				},
+				error: function ( response ) {
+					console.log( "Error updating unavailable features" )
+					console.log( response )
+					$( ".kp_settings__section" ).removeClass( "unavailable" )
+				},
+			} )
+	});
+});

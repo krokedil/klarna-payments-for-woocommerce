@@ -96,9 +96,9 @@ class KP_Settings_Page {
 		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
 		$availability               = in_array( $section['id'], $kp_unavailable_feature_ids ) ? ' unavailable' : '';
 		$link_count                 = count( $section['links'] ?? array() );
-		$link_count        = count( $section['links'] ?? array() );
-		$setting_is_active = self::get_setting_status( $section['id'] );
-		$feature_status    = array(
+		$link_count                 = count( $section['links'] ?? array() );
+		$setting_is_active          = self::get_setting_status( $section['id'] );
+		$feature_status             = array(
 			'class' => $setting_is_active ? ' active' : '',
 			'title' => $setting_is_active ? __( 'Active', 'klarna-payments-for-woocommerce' ) : __( 'Not active', 'klarna-payments-for-woocommerce' ),
 		);

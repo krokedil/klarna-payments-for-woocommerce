@@ -214,6 +214,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function settings_page_content() {
 		KP_Settings_Saved::maybe_show_errors();
 		KP_Settings_Page::header_html();
+		$setup = true;
+		if ( $setup ) {
+			echo $this->print_activation_flow();
+			return;
+		}
+
 		echo $this->generate_settings_html( $this->get_form_fields(), false ); // phpcs:ignore
 	}
 
@@ -630,6 +636,38 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		return true;
+	}
+
+	public function print_activation_flow() {
+		ob_start(); ?>
+
+		<div class="kp-setup-wrap">
+			<div class="kp-setup-inner">
+				<div class="kp-setup-text">
+					<div class="kp-setup-text-section">
+						<h2>Set up Klarna</h2>
+						<p>
+							Setup is quick and fully automated. Just sign in with your Klarna
+							account or payment service provider to unlock the plugin features.
+						</p>
+					</div>
+					<div class="kp-setup-text-section">
+						<a id="kp-connect-account" href="#" class="button button-primary kp-connect-btn">Connect account</a>
+						<p class="kp-manual-link">
+							Using a Client ID? <a href="#">Configure manually</a>
+						</p>
+				</div>
+				</div>
+				<div class="kp-setup-image">
+				<img
+					src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/klarna_activation_flow.png"
+					alt="Klarna setup illustration"
+				/>
+				</div>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
 	}
 }
 
