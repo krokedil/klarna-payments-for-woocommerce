@@ -136,6 +136,20 @@ class KP_Callbacks {
 			return;
 		}
 
+		$recurring_token = false;
+		if ( KP_Subscription::order_has_subscription( $order ) ) {
+			try {
+				KP_WC()->subscription->create_customer_token( $order, $auth_token );
+			} catch ( Exception $e ) {
+				if ( 'TOKEN_FAILED' === $e->getCode() ) {
+					$order->add_order_note( __( 'Failed to create a recurring token when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) . $e->getMessage() );
+				}
+
+				// We must return here since a call to 'place_order' will fail if the customer token fails to be created or if the intent is only 'tokenize'.
+				return;
+			}
+		}
+
 		// Trigger place order on the auth token with KP.
 		$response = KP_WC()->api->place_order( $country, $auth_token, $order_id );
 		if ( is_wp_error( $response ) ) {
@@ -151,7 +165,7 @@ class KP_Callbacks {
 		$fraud_status = $response['fraud_status'];
 		switch ( $fraud_status ) {
 			case 'ACCEPTED':
-				kp_process_accepted( $order, $response );
+				kp_process_accepted( $order, $response, $recurring_token );
 				$order->add_order_note( __( 'The Klarna order was successfully completed', 'klarna-payments-for-woocommerce' ) );
 				kp_unset_session_values();
 				break;
