@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.8.1
+Tested up to: 6.8.3
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 9.9.5
-Stable tag: 4.1.4
+WC tested up to: 10.2.2
+Stable tag: 4.3.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,7 +18,7 @@ Grow your business for increased sales and enhanced shopping experiences at no e
 
 Klarna is the preferred payment option for both brands and customers, used by millions of shoppers every month, online and in-store.
 
-| **87M Shoppers** | **2.5M Daily Transactions** | **600+K Retailers Globally** |
+| **100M+ Shoppers** | **2.9M+ Daily Transactions** | **720K+ Retailers Globally** |
 
 === More ways to pay, more purchases ===
 
@@ -71,6 +71,22 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.10.08    - version 4.3.1 =
+* Fix           - Resolved a fatal error that could occur when clearing stored logs using the support package.
+
+= 2025.10.01    - version 4.3.0 =
+* Feature       - Klarna Order Management is now built into the plugin.
+* Fix           - [KEC] Fixed a potential issue that could happen if we tried to initialize the KEC button before the Klarna Payments script was loaded and had registered the 'Klarna.Payments.Buttons' object in the window.
+* Tweak         - The pay button text in the block checkout now displays a different label for free orders: 'Pay with Klarna (free)'. This can be customized using the 'kp_blocks_order_button_label_free' filter.
+
+= 2025.09.01    - version 4.2.0 =
+* Feature       - Implemented a support package integration, to enable optional logging and issue reporting in the system report.
+* Feature       - Scheduled actions for the current order are now displayed on the admin order view.
+* Fix           - Resolved issue with processing subscription renewals in the block checkout.
+* Fix           - Resolved issue where virtual product-only orders could be set to order status 'on hold', when using combined EU credentials.
+* Tweak         - Tweaked the design of the plugin settings page tabs.
+* Tweak         - Updated the 'What is Klarna' link to be unique for Switzerland.
+
 = 2025.06.25    - version 4.1.4 =
 * Fix           - [KOSM] Resolved a '_load_textdomain_just_in_time' notice.
 * Fix           - [SIWK] Resolved a '_load_textdomain_just_in_time' notice.

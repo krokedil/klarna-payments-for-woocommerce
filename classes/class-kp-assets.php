@@ -152,7 +152,7 @@ class KP_Assets {
 			) : null,
 			// i18n.
 			'i18n'                   => array(
-				'order_button_label' => apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) ),
+				'order_button_label' => WC_Klarna_Payments::get_pay_button_label(),
 				'terms_not_checked'  => __( 'Please read and accept the terms and conditions to proceed with your order.', 'klarna-payments-for-woocommerce' ),
 			),
 		);
