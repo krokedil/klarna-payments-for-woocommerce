@@ -557,7 +557,14 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	justify-content: space-between;
 	padding: 20px;
 	margin: 20px 0;
-	max-width: 815px;
+	width: calc(100% - 40px);
+}
+
+@media (min-width: 1300px) {
+    .kp-all-set-up {
+        max-width: 1220px;
+        width: calc(100% - 478px);
+    }
 }
 
 .kp-all-set-up #kp-close-setup span {
