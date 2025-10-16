@@ -493,7 +493,7 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	font-family: Klarna;	
 	color: #555;
 	margin-bottom: 1em;
-	font-size: 1.1em;
+	font-size: 1.2em;
 }
 
 .button.button-primary.kp-connect-btn {
@@ -504,7 +504,7 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	border: none;
 	padding: 10px 18px;
 	text-decoration: none;
-	font-size: 1.1em;
+	font-size: 1.2em;
 }
 
 .kp-connect-btn:hover {
@@ -537,4 +537,66 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 		text-align: center;
 		margin-top: 20px;
 	}
+}
+
+.kp-settings-activation.hidden {
+	display: none;
+}
+
+.kp-settings-content.hidden {
+	display: none;
+}
+
+.kp-all-set-up.hidden {
+	display: none;
+}
+
+.kp-all-set-up {
+	display: flex;
+	background-color: #d4eeff;
+	justify-content: space-between;
+	padding: 20px;
+	margin: 20px 0;
+	max-width: 815px;
+}
+
+.kp-all-set-up #kp-close-setup span {
+	font-size: 30px;
+	margin-top: -3px;
+	margin-left: 4px;
+	margin-right: 4px;
+	cursor: pointer;
+}
+.kp-all-set-up #kp-close-setup p {
+	font-family: KlarnaHeadline;
+	font-weight: bold;
+	font-size: 1.3em;
+	margin: 0;
+}
+
+.kp-all-set-up img {
+	width: 70px;
+	max-width: none !important;
+	height: auto;
+	object-fit: contain;
+}
+
+.kp-all-set-up .inner-message {
+	padding: 0 20px;
+	flex: 1;
+}
+
+.kp-all-set-up p, .kp-all-set-up, .kp-all-set-up span {
+	font-size: 1em;
+}
+
+.kp-all-set-up p {
+	font-family: Klarna;
+}
+
+.kp-all-set-up .inner-message h2 {
+	font-family: KlarnaHeadline;
+	font-size: 1.7em;
+	font-weight: bold;
+	margin: 0 0 10px 0;
 }

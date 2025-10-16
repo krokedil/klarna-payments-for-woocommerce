@@ -487,3 +487,31 @@ function kp_map_unavailable_features( $collected_features ) {
 
 	return $unavailable_features;
 }
+
+function kp_has_stored_credentials() {
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+	$testmode = wc_string_to_bool( $settings['testmode'] ?? 'no' );
+	$prefix   = $testmode ? 'test_' : '';
+
+	foreach ( KP_Form_Fields::$kp_form_auto_countries as $cc => $country_data ) {
+		$merchant_id = $settings[ "{$prefix}merchant_id_{$cc}" ] ?? '';
+		$secret      = $settings[ "{$prefix}shared_secret_{$cc}" ] ?? '';
+
+		if ( ! empty( $merchant_id ) && ! empty( $secret ) ) {
+			return true;
+		}
+	}
+
+	// Check for EU combined credentials.
+	$eu_combined = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+	if ( $eu_combined ) {
+		$merchant_id = $settings[ "{$prefix}merchant_id_eu" ] ?? '';
+		$secret      = $settings[ "{$prefix}shared_secret_eu" ] ?? '';
+
+		if ( ! empty( $merchant_id ) && ! empty( $secret ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}

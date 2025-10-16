@@ -32,6 +32,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				'kp_wc_express_button'             => true,
 				'kp_wc_get_unavailable_features'   => true,
 				'kp_wc_set_interoperability_token' => true,
+				'kp_wc_connect_account'            => true,
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -257,7 +258,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		public static function kp_wc_connect_account() {
 			check_ajax_referer( 'kp_wc_connect_account', 'nonce' );
 
-			$connected_account_credentials = KP_Account_Connection::connect_account();
+			$connected_account_credentials = KP_WC()->api->get_kp_account();
 
 			if ( is_wp_error( $connected_account_credentials ) ) {
 				wp_send_json_error( 'failed to get connected account credentials' );

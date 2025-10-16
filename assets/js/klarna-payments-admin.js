@@ -291,42 +291,84 @@ jQuery( function ( $ ) {
 	kp_admin.init()
 } )
 
-
 jQuery( document ).ready( function ( $ ) {
+	$('#kp-close-setup span').on('click', function() {
+		$('.kp-all-set-up').hide();
+	});
+
+	$('#kp-manual-config').on('click', function(e) {
+		e.preventDefault();
+		$('.kp-settings-activation').addClass('hidden');
+		$('.kp-settings-content').removeClass('hidden');
+	});
+
 	$( '#kp-connect-account' ).on( 'click', function ( e ) {
 		e.preventDefault();
+		let activationUrl = $( this ).attr( 'href' );
+		const kpActivationWindow = window.open(activationUrl, '_blank');
 
-		$.ajax( klarna_payments_admin_params.connect_account_url, {
-				type: "POST",
-				dataType: "json",
-				async: true,
-				data: {
-					country_credentials: countryCredentials,
-					nonce: klarna_payments_admin_params.get_unavailable_features_nonce,
-				},
-				success: function ( response ) {
-					if ( response.success ) {
-						const unavailableOptions = response.data ?? []
-						$( ".kp_settings__section" ).removeClass( "unavailable" )
+		window.addEventListener('message', function(event) {
+			const activationParams = event.data.param;
 
-						if ( ! unavailableOptions.length ) {
-							return
+			if (activationParams) {
+				const url = new URL(window.location);
+				url.searchParams.set('klarna-account-activated', activationParams);
+				window.history.replaceState({}, '', url);
+
+				$.ajax( klarna_payments_admin_params.connect_account_url, {
+					type: "POST",
+					dataType: "json",
+					async: true,
+					data: {
+						nonce: klarna_payments_admin_params.connect_account_nonce,
+					},
+					success: function ( response ) {
+						if ( response.success ) {
+							const connectedCredentials = response.data ?? null;
+
+							if ( ! connectedCredentials ) {
+								console.log( "Error connecting account: No credentials returned" );
+								return;
+							}
+
+							$('.kp-settings-activation').addClass('hidden');
+							$('.kp-settings-content').removeClass('hidden');
+							$('.kp-all-set-up').removeClass('hidden');
+
+							console.log( connectedCredentials)
+
+							$.each( connectedCredentials, ( index, credential ) => {
+								const country = credential.country_code.toLowerCase();
+								const merchant_id = credential.merchant_id;
+								const client_id = credential.client_id;
+								const shared_secret = credential.shared_secret;
+								const mode = credential.mode;
+
+								const $countryRow = $(`label[data-field-key="${country}"]`).closest('.kp_settings__credentials');
+								const modeClass = mode === 'test' ? '.kp_settings__test_credentials' : '.kp_settings__production_credentials';
+								$countryRow.find('.forminp').removeClass('kp_settings__credentials_field_hidden');
+								// dashicons dashicons-arrow-down-alt2
+								$countryRow.find('.dashicons').removeClass('dashicons-arrow-down-alt2').addClass('dashicons-arrow-up-alt2');
+								const $credentialsWrapper = $countryRow.find(modeClass);
+
+								if ( $credentialsWrapper.length ) {
+									$credentialsWrapper.find(`#${mode}_merchant_id_${country}`).val(merchant_id);
+									$credentialsWrapper.find(`#${mode}_client_id_${country}`).val(client_id);
+									$credentialsWrapper.find(`#${mode}_shared_secret_${country}`).val(shared_secret);
+								}
+							});
+
+						} else {
+							console.log( "Error connecting account" );
+							console.log( response );
 						}
-
-						unavailableOptions.forEach( ( option ) => {
-							$( `#klarna-payments-settings-${ option }` ).addClass( "unavailable" )
-						} )
-					} else {
-						console.log( "Error updating unavailable features" )
-						console.log( response )
-						$( ".kp_settings__section" ).removeClass( "unavailable" )
-					}
-				},
-				error: function ( response ) {
-					console.log( "Error updating unavailable features" )
-					console.log( response )
-					$( ".kp_settings__section" ).removeClass( "unavailable" )
-				},
-			} )
+					},
+					error: function ( response ) {
+						console.log( "Error connecting account" );
+						console.log( response );
+					},
+				} );
+			}
+		});
 	});
 });

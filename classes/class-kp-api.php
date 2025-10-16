@@ -280,4 +280,33 @@ class KP_Api {
 
 		return self::check_for_api_error( $response );
 	}
+
+	/**
+	 * Connect the account by clearing the transient and reloading the page.
+	 *
+	 * @return void
+	 */
+	public function get_kp_account() {
+		// $response = ( new KP_Account_Connection( array() )->request() );
+
+		// Sample response, remove later.
+		$response = array(
+			array(
+				'country_code'  => 'SE',
+				'mode'          => 'test',
+				'merchant_id'   => 'MERCHANT_ID_PLACEHOLDER',
+				'shared_secret' => 'SHARED_SECRET_PLACEHOLDER',
+				'client_id'     => 'CLIENT_ID_PLACEHOLDER',
+			),
+			array(
+				'country_code'  => 'NO',
+				'mode'          => 'test',
+				'merchant_id'   => 'MERCHANT_ID_PLACEHOLDER',
+				'shared_secret' => 'SHARED_SECRET_PLACEHOLDER',
+				'client_id'     => 'CLIENT_ID_PLACEHOLDER',
+			),
+		);
+
+		return $response;
+	}
 }

@@ -214,13 +214,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function settings_page_content() {
 		KP_Settings_Saved::maybe_show_errors();
 		KP_Settings_Page::header_html();
-		$setup = true;
-		if ( $setup ) {
-			echo $this->print_activation_flow();
-			return;
-		}
+		$has_credentials = kp_has_stored_credentials();
 
-		echo $this->generate_settings_html( $this->get_form_fields(), false ); // phpcs:ignore
+		echo '<div class="kp-all-set-up hidden"><img src="' . WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/check.png" alt="Klarna" style="max-width:39px;"/><div class="inner-message"><h2>All set!</h2><p>We\'ve installed Klarna on your WooCommerce store using our recommended settings.<br>No action needed. Want to customize the look and feel? Tweak the plugin settings to match your brand.</p></div><div id="kp-close-setup"><p>Close ' . wp_kses_post( '<span class="dashicons dashicons-no"></span>' ) . '</p></div></div>';
+		echo '<div class="kp-settings-activation ' . ( $has_credentials ? 'hidden' : '' ) . '">' . $this->print_activation_flow() . '</div>';
+		echo '<div class="kp-settings-content ' . ( $has_credentials ? '' : 'hidden' ) . '">' . $this->generate_settings_html( $this->get_form_fields(), false ) . '</div>';
 	}
 
 	/**
@@ -639,6 +637,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	public function print_activation_flow() {
+		$link_params    = array(
+			'plugin'        => 'Klarna Payments for WooCommerce',
+			'version'       => WC_KLARNA_PAYMENTS_VERSION,
+			'platform'      => 'WooCommerce',
+			'redirectUrl'   => admin_url( 'admin.php?page=wc-settings&tab=checkout&section=klarna_payments' ),
+			'codeChallenge' => 12345,
+		);
+		$activation_url = add_query_arg( $link_params, 'sample-url.php' );
 		ob_start(); ?>
 
 		<div class="kp-setup-wrap">
@@ -652,9 +658,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 						</p>
 					</div>
 					<div class="kp-setup-text-section">
-						<a id="kp-connect-account" href="#" class="button button-primary kp-connect-btn">Connect account</a>
+						<a id="kp-connect-account" href="<?php echo esc_url( $activation_url ); ?>" class="button button-primary kp-connect-btn">Connect account</a>
 						<p class="kp-manual-link">
-							Using a Client ID? <a href="#">Configure manually</a>
+							Using a Client ID? <a id="kp-manual-config" href="#">Configure manually</a>
 						</p>
 				</div>
 				</div>
