@@ -253,7 +253,7 @@ class KP_Api {
 	 * Get unavailable features.
 	 *
 	 * @param array $credentials The credentials to use.
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	public function get_unavailable_features( $credentials ) {
 		$api_password = $credentials['shared_secret'] ?? false;
