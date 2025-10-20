@@ -1,6 +1,4 @@
-<?php
-
-use Krokedil\Klarna\Api\Registry;// phpcs:ignore
+<?php // phpcs:ignore
 /**
  * Plugin Name: Klarna for WooCommerce
  * Plugin URI: https://krokedil.com/klarna-payments/
@@ -29,9 +27,12 @@ use Krokedil\Klarna\Api\Registry;// phpcs:ignore
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- * @package WC_Klarna_Payments
- */
+*
+* @package WC_Klarna_Payments
+*/
+
+use Krokedil\Klarna\Api\Registry;
+use Krokedil\Klarna\PluginFeatures;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -183,6 +184,13 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		private $system_report;
 
 		/**
+		 * PluginFeatures instance.
+		 *
+		 * @var PluginFeatures
+		 */
+		private $plugin_features;
+
+		/**
 		 * Logger instance.
 		 *
 		 * @return Logger
@@ -198,6 +206,15 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function report() {
 			return $this->system_report;
+		}
+
+		/**
+		 * Plugin features.
+		 *
+		 * @return PluginFeatures
+		 */
+		public function plugin_features() {
+			return $this->plugin_features;
 		}
 
 		/**
@@ -281,8 +298,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				),
 
 			);
-			$this->system_report = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $included_settings_fields );
-
+			$this->system_report   = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $included_settings_fields );
+			$this->plugin_features = new PluginFeatures();
 			$this->register_payment_block();
 
 			// Initialize the API registry.
