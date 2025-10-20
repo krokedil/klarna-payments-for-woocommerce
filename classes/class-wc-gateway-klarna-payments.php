@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Krokedil\Klarna\Features;
+use Krokedil\Klarna\PluginFeatures;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
 
 /**
@@ -277,8 +279,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
-		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
-		if ( in_array( 'general', $kp_unavailable_feature_ids ) ) {
+		// If neither Payments or KEC is available, we should not show the gateway.
+		if ( ! PluginFeatures::is_available( Features::PAYMENTS ) && ! PluginFeatures::is_available( Features::KEC ) ) {
 			return false;
 		}
 
