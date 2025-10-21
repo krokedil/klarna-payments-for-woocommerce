@@ -214,19 +214,20 @@
         },
         {
             "name": "krokedil/klarna-order-management",
-            "version": "1.0.3",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-order-management.git",
-                "reference": "4914f91efbf244261d519215023680632d679570"
+                "reference": "e84acb97600dc2c7bf20fa158f73860a6578b2e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-order-management/zipball/4914f91efbf244261d519215023680632d679570",
-                "reference": "4914f91efbf244261d519215023680632d679570",
+                "url": "https://api.github.com/repos/krokedil/klarna-order-management/zipball/e84acb97600dc2c7bf20fa158f73860a6578b2e8",
+                "reference": "e84acb97600dc2c7bf20fa158f73860a6578b2e8",
                 "shasum": ""
             },
             "require": {
+                "krokedil/woocommerce": "^1.8.0",
                 "php": "~7.4 || ~8.0"
             },
             "type": "library",
@@ -273,10 +274,10 @@
             ],
             "description": "Klarna Order Management",
             "support": {
-                "source": "https://github.com/krokedil/klarna-order-management/tree/1.0.3",
+                "source": "https://github.com/krokedil/klarna-order-management/tree/1.1.0",
                 "issues": "https://github.com/krokedil/klarna-order-management/issues"
             },
-            "time": "2025-10-01T12:37:31+00:00"
+            "time": "2025-10-20T13:42:38+00:00"
         },
         {
             "name": "krokedil/settings-page",
