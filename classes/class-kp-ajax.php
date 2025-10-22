@@ -248,8 +248,12 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			$unavailable_features = kp_get_unavailable_feature_ids( $country_credentials );
 
 			if ( empty( $unavailable_features['feature_ids'] ) && ! empty( $unavailable_features['errors'] ) ) {
+				// If no unavailable features were found, the merchant should not be a PSP merchant.
+				kp_set_is_psp_merchant( false );
 				wp_send_json_error( 'Failed to get unavailable features. Error messages: ' . implode( ', ', $unavailable_features['errors'] ) );
 			}
+
+			kp_set_is_psp_merchant( $unavailable_features['is_psp_merchant'] );
 
 			wp_send_json_success( $unavailable_features['feature_ids'] );
 		}

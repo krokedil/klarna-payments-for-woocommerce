@@ -342,6 +342,11 @@ class KP_Assets {
 	 * @return void
 	 */
 	public function enqueue_interoperability_token() {
+		// Interoperability token should only be used for PSP merchants.
+		if ( 'yes' !== get_option( 'kp_is_psp_merchant', 'no' ) ) {
+			return;
+		}
+
 		wp_register_script(
 			'klarna_interoperability_token',
 			plugins_url( 'assets/js/klarna-interoperability-token.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
