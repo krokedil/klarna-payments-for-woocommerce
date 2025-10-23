@@ -335,19 +335,6 @@ class KP_Subscription {
 	}
 
 	/**
-	 * Create a customer token from a given authorization token.
-	 *
-	 * @param WC_Order $order The WooCommerce order.
-	 * @param string   $auth_token The Klarna auth token for the session.
-	 * @return string|WP_Error The token ID or the WP_Error associated with the failed request.
-	 */
-	public static function create_customer_token( $order, $auth_token ) {
-		$country  = kp_get_klarna_country( $order );
-		$response = KP_WC()->api->create_customer_token( $country, $auth_token, $order->get_id() );
-		return is_wp_error( $response ) ? $response : $response['token_id'];
-	}
-
-	/**
 	 * Save the payment and recurring token to the order and its subscription(s).
 	 *
 	 * @param string $order_id The WooCommerce order id.
