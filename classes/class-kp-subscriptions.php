@@ -83,17 +83,16 @@ class KP_Subscription {
 	 *
 	 * @param WC_Order $order The WooCommerce order.
 	 * @param string   $auth_token The authorization token.
-	 * @throws Exception Throws an exception if the customer token could not be created or should not be processed any further.
-	 * - throws `TOKEN_FAILED` code if the customer token could not be created.
-	 * - throws `FREE_TRIAL` code if the order should not be processed any further.
-	 * @return string The recurring token.
+	 * @return string|WP_Error The recurring token or a WP_Error if the customer token could not be created or should not be processed any further.
+	 * - `TOKEN_FAILED` code if the customer token could not be created.
+	 * - `FREE_TRIAL` code if the order should not be processed any further.
 	 */
 	public function create_customer_token( $order, $auth_token ) {
 		$order_id = $order->get_id();
 
 		$response = KP_WC()->api->create_customer_token( kp_get_klarna_country( $order ), $auth_token, $order_id );
 		if ( is_wp_error( $response ) ) {
-			throw new Exception( 'TOKEN_FAILED', 'TOKEN_FAILED' );
+			return new WP_Error( 'TOKEN_FAILED', $response->get_error_message() );
 		}
 
 		$recurring_token = $response['token_id'];
@@ -106,7 +105,7 @@ class KP_Subscription {
 			self::save_recurring_token( $order_id, $recurring_token );
 			$order->add_order_note( __( 'The order contains a free or trial subscription, and no Klarna order is associated with this purchase. A Klarna order will only be registered once the subscriber is charged.', 'klarna-payments-for-woocommerce' ) );
 
-			throw new Exception( 'FREE_TRIAL', 'FREE_TRIAL' );
+			return new WP_Error( 'FREE_TRIAL', 'The order contains a free or trial subscription. No further processing is required.' );
 		}
 
 		return $recurring_token;
@@ -262,7 +261,7 @@ class KP_Subscription {
 
 		$subscription = wcs_get_subscription( $subscription_id );
 		$response     = KP_WC()->api->create_customer_token( kp_get_klarna_country( $subscription ), $auth_token, $subscription_id );
-		if ( is_wp_error( $response ) ) {
+		if ( is_wp_error( $response ) && 'TOKEN_FAILED' === $response->get_error_code() ) {
 			$message = sprintf(
 				/* translators: Error message. */
 				__( 'Failed to create recurring token. Reason: %s', 'klarna-payments-for-woocommerce' ),

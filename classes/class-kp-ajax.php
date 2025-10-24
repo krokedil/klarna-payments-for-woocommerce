@@ -73,22 +73,17 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 
 			$recurring_token = false;
 			if ( KP_Subscription::order_has_subscription( $order ) ) {
-				try {
-					$recurring_token = KP_WC()->subscription->create_customer_token( $order, $auth_token );
-				} catch ( Exception $e ) {
-					if ( 'FREE_TRIAL' === $e->getCode() ) {
+				$recurring_token = KP_WC()->subscription->create_customer_token( $order, $auth_token );
+				if ( is_wp_error( $recurring_token ) ) {
+					if ( 'FREE_TRIAL' === $recurring_token->get_error_code() ) {
 						kp_unset_session_values();
-						$order->add_order_note( $e->getMessage() );
 
 						// If the intent is only 'tokenize', we should not proceed further as 'place_order' only allows 'buy_and_tokenize' intent.
 						wp_send_json_success( $order->get_checkout_order_received_url() );
+					} else {
+						KP_Logger::log( sprintf( '[AJAX]: Order ID: %s. Auth token: %s. %s', $order->get_id(), $auth_token, $recurring_token->get_error_message() ) );
+						wp_send_json_error( 'customer_token_failed' );
 					}
-
-					if ( 'TOKEN_FAILED' === $e->getCode() ) {
-						KP_Logger::log( sprintf( '[AJAX]: Order ID: %s. Auth token: %s. %s', $order->get_id(), $auth_token, $e->getMessage() ) );
-					}
-
-					wp_send_json_error( 'customer_token_failed' );
 				}
 			}
 

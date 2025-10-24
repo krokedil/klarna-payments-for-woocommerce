@@ -138,14 +138,18 @@ class KP_Callbacks {
 
 		$recurring_token = false;
 		if ( KP_Subscription::order_has_subscription( $order ) ) {
-			try {
-				KP_WC()->subscription->create_customer_token( $order, $auth_token );
-			} catch ( Exception $e ) {
-				if ( 'TOKEN_FAILED' === $e->getCode() ) {
-					$order->add_order_note( __( 'Failed to create a recurring token when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) . $e->getMessage() );
+			$recurring_token = KP_WC()->subscription->create_customer_token( $order, $auth_token );
+			if ( is_wp_error( $recurring_token ) ) {
+				if ( 'FREE_TRIAL' === $recurring_token->get_error_code() ) {
+					kp_unset_session_values();
+				} else {
+					$order->add_order_note( __( 'Failed to create a recurring token when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) . $recurring_token->get_error_message() );
+
+					KP_Logger::log( sprintf( '[AJAX]: Order ID: %s. Auth token: %s. %s', $order->get_id(), $auth_token, $recurring_token->get_error_message() ) );
 				}
 
-				// We must return here since a call to 'place_order' will fail if the customer token fails to be created or if the intent is only 'tokenize'.
+				// If the intent is only 'tokenize', we should not proceed further as 'place_order' only allows 'buy_and_tokenize' intent.
+				// We may also return here since a call to 'place_order' will fail if the customer token fails to be created or if the intent is only 'tokenize'.
 				return;
 			}
 		}
