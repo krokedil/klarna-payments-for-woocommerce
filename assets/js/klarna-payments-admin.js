@@ -356,6 +356,9 @@ jQuery( document ).ready( function ( $ ) {
 									$credentialsWrapper.find(`#${mode}_client_id_${country}`).val(client_id);
 									$credentialsWrapper.find(`#${mode}_shared_secret_${country}`).val(shared_secret);
 								}
+								// Default to enabling OSM and KEC for the connected account.
+								$('#woocommerce_klarna_payments_onsite_messaging_enabled').prop('checked', true).trigger('change');
+								$('#woocommerce_klarna_payments_kec_enabled').prop('checked', true).trigger('change');
 							});
 
 						} else {
