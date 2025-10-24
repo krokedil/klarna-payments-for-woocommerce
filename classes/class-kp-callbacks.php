@@ -165,7 +165,7 @@ class KP_Callbacks {
 		$fraud_status = $response['fraud_status'];
 		switch ( $fraud_status ) {
 			case 'ACCEPTED':
-				kp_process_accepted( $order, $response, $recurring_token );
+				kp_process_accepted( $order, $response );
 				$order->add_order_note( __( 'The Klarna order was successfully completed', 'klarna-payments-for-woocommerce' ) );
 				kp_unset_session_values();
 				break;

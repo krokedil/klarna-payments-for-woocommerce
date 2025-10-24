@@ -75,8 +75,6 @@ class KP_Subscription {
 		$customer_token = self::create_customer_token( $order, $auth_token );
 		if ( ! is_wp_error( $customer_token ) ) {
 			self::save_recurring_token( $order_id, $customer_token );
-			/* translators: Recurring token. */
-			$order->add_order_note( sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $customer_token ) );
 		}
 	}
 
@@ -99,9 +97,9 @@ class KP_Subscription {
 		}
 
 		$recurring_token = $response['token_id'];
-
 		/* translators: Recurring token. */
 		$order->add_order_note( sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $recurring_token ) );
+		self::save_recurring_token( $order_id, $recurring_token );
 
 		if ( 0.0 === floatval( $order->get_total() ) ) {
 			$order->payment_complete();
@@ -271,12 +269,6 @@ class KP_Subscription {
 				$response->get_error_message()
 			);
 		} else {
-			$message = sprintf(
-			/* translators: Recurring token. */
-				__( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ),
-				$response['token_id']
-			);
-
 			self::save_recurring_token( $subscription_id, $response['token_id'] );
 		}
 
