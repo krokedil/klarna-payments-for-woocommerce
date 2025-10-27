@@ -44,7 +44,7 @@ class KP_Klarna_Express_Checkout {
 	public function maybe_add_pay_button_support( $supports ) {
 
 		// Do not display the pay button if on the cart page, and no payment is needed.
-		if ( is_cart() && ! WC()->cart->needs_payment() ) {
+		if ( is_cart() && WC()->cart && ! WC()->cart->needs_payment() ) {
 			return $supports;
 		}
 

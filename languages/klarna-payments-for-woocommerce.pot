@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2025-10-08 12:58:58+00:00\n"
+"POT-Creation-Date: 2025-10-23 17:14:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -874,115 +874,118 @@ msgstr ""
 msgid "Placement Theme:"
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:71
+#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:78
 msgid "Klarna Order Management is now included in Klarna for WooCommerce."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:74
+#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:81
 msgid ""
 "Starting with version 4.3.0, you no longer need the separate Klarna Order "
 "Management plugin – unless you are also using the Kustom Checkout plugin "
 "(formerly Klarna Checkout)."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:80
+#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:87
 msgid "Read more about this change here."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:242
+#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:253
 #. translators: 1: User name, 2: Existing token, 3: New token.
 msgid "%1$s updated the subscription recurring token from \"%2$s\" to \"%3$s\"."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:282
+#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:293
 #. translators: %s: error message from Klarna.
 msgid "Could not update Klarna order lines: %s."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:284
+#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:295
 msgid "Could not update Klarna order lines. An unknown error occurred."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:374
+#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:385
 msgid ""
 "Klarna could not charge the customer. Please try again later. If that still "
 "fails, the customer may have to create a new subscription or add funds to "
 "their payment method if they wish to continue."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:382
+#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:393
 #. translators: %s: Error message from Klarna.
 msgid "Could not capture Klarna order. %s"
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:55
-msgid "Klarna Order Management"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:74
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:96
 msgid "The payment has not been finalized with Klarna."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:81
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:103
 msgid "Failed to retrieve the order from Klarna."
 msgstr ""
 
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:125
+msgid "Klarna Environment"
+msgstr ""
+
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:126
+msgid "Klarna order status"
+msgstr ""
+
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:127
+msgid "Initial Payment method"
+msgstr ""
+
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:132
+msgid "Scheduled actions"
+msgstr ""
+
 #: dependencies/krokedil/klarna-order-management/src/MetaBox.php:135
-msgid "Klarna Environment: "
+msgid "Advanced"
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:144
-msgid "Klarna order status: "
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:153
-msgid "Initial Payment method: "
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:174
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:160
 msgid "Choose an action..."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:183
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:216
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:167
 msgid "Apply"
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:233
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:211
+msgid "Order management"
+msgstr ""
+
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:212
 msgid ""
 "Disable this to turn off the automatic synchronization with the Klarna "
 "Merchant Portal. When disabled, any changes in either system have to be "
 "done manually."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:247
-msgid "OK"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:368
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:382
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:326
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:340
 msgid "Capture order"
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:382
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:340
 msgid "Activates the order with Klarna."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:396
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:410
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:354
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:368
 msgid "Cancel order"
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:410
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:368
 msgid "Cancels the order with Klarna."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:424
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:438
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:382
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:396
 msgid "Get customer"
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:438
+#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:396
 msgid "Gets the customer data from Klarna and saves it to the WooCommerce order."
 msgstr ""
 
@@ -998,15 +1001,15 @@ msgstr ""
 msgid "Invalid JSON response from the server."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/ScheduledActions.php:43
+#: dependencies/krokedil/klarna-order-management/src/ScheduledActions.php:47
 msgid "Scheduled actions "
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/ScheduledActions.php:47
+#: dependencies/krokedil/klarna-order-management/src/ScheduledActions.php:51
 msgid "See all actions scheduled for this order."
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/ScheduledActions.php:58
+#: dependencies/krokedil/klarna-order-management/src/ScheduledActions.php:61
 #. translators: %1$d: number of completed orders, %2$d: number of failed
 #. orders, %3$d: number of pending orders.
 msgid "%1$d completed, %2$d failed, %3$d pending"

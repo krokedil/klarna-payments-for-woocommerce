@@ -1,0 +1,40 @@
+{
+  "system_id": "partner-woocommerce",
+  "system_dependencies": [
+    {
+      "system_id": "global-api-routing",
+      "sla_impact": "IMMEDIATE",
+      "description": "Handling all API requests"
+    },
+    {
+      "system_id": "order-management-api",
+      "sla_impact": "IMMEDIATE",
+      "description": "Handling post-order-placement actions like capture, cancel and refund"
+    },
+    {
+      "system_id": "klarna-payments-client",
+      "sla_impact": "IMMEDIATE",
+      "description": "Frontend component for Klarna Payments so that the whole workflow is working"
+    },
+    {
+      "system_id": "payments-acquiring-service",
+      "sla_impact": "IMMEDIATE",
+      "description": "Backend component for Klarna Payments so that the whole workflow is working"
+    },
+    {
+      "system_id": "osm-frontends",
+      "sla_impact": "AFTER_24_HOURS",
+      "description": "Showing Klarna OSM banner and information"
+    },
+    {
+      "system_id": "klarna-login-button",
+      "sla_impact": "AFTER_24_HOURS",
+      "description": "Customers can use the Klarna product Express Button"
+    },
+    {
+      "system_id": "sign-in-with-klarna",
+      "sla_impact": "AFTER_24_HOURS",
+      "description": "Customers can sign in with Klarna"
+    }
+  ]
+}
