@@ -154,9 +154,6 @@ class KP_Settings_Saved {
 				case 401:
 					$message = "Your Klarna $cc $test credentials are not authorized. Please verify the credentials and environment (production or test mode) or remove these credentials and save again. API credentials only work in either production or test, not both environments. ";
 					break;
-				case 403:
-					$message = "It seems like your Klarna $cc $test API credentials are not working for the Klarna Payments plugin, please verify your Klarna contract is for the Klarna Payments solution.  If your Klarna contract is for Klarna Checkout, please instead use the <a href='https://docs.woocommerce.com/document/klarna-checkout/'>Klarna Checkout for WooCommerce</a> plugin. ";
-					break;
 			}
 			$message .= "API error code: $code, Klarna API error message: $error";
 
