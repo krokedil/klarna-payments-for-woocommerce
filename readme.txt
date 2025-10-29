@@ -39,16 +39,14 @@ Go to [Klarna](https://www.klarna.com) to get details about all payment methods 
 
 === How to Get Started ===
 * [Sign up for Klarna](https://www.klarna.com/international/business/woocommerce/).
-* Install the plugin on your site and download Klarna Order Management.
+* Install the plugin on your site.
 
 === Smart Solutions to Maximize Sales ===
 
 - **On-site messaging**: Personalized messaging throughout the shopper journey for higher conversion rates.
 - **Express checkout**: A faster checkout process to lower the threshold for purchase completion.
 
-=== What's the difference between Klarna Checkout and Klarna Payments? ===
-- **Klarna Payments**: Standalone payment methods complementing your existing checkout with a Klarna hosted widget.
-- **Klarna Checkout**: Complete online checkout solution designed to increase sales and customer loyalty, with Klarna as your single payment provider.
+=== Standalone payment methods complementing your existing checkout with a Klarna hosted widget ===
 For more details, visit the [Klarna Payments page](https://woocommerce.com/products/klarna-payments/).
 
 == Installation ==
