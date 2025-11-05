@@ -109,7 +109,7 @@ function kp_save_order_meta_data( $order, $response ) {
 	$order->update_meta_data( '_wc_klarna_country', $klarna_country );
 	$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
 	$order->set_transaction_id( $response['order_id'] );
-	kp_set_payment_method_title( $order, $response['authorized_payment_method']['type'] );
+	kp_set_payment_method_title( $order, $response );
 	$order->set_payment_method( 'klarna_payments' );
 
 	OrderUtility::add_environment_info( $order, WC_KLARNA_PAYMENTS_VERSION, null, false );
@@ -492,31 +492,37 @@ function kp_map_unavailable_features( $collected_features ) {
  * Set the payment method title for a Klarna order.
  *
  * @param WC_Order $order WooCommerce order.
- * @param string   $payment_method_type The Klarna payment method type (name).
+ * @param array    $klarna_place_order_response The Klarna place order response.
  * @return void
  */
-function kp_set_payment_method_title( $order, $payment_method_type ) {
-	$payment_method = null;
-	switch ( $payment_method_type ) {
-		case 'invoice':
-			$payment_method = 'Pay Later';
-			break;
-		case 'base_account':
-			$payment_method = 'Slice It';
-			break;
-		case 'direct_debit':
-			$payment_method = 'Direct Debit';
-			break;
-		default:
-			break;
+function kp_set_payment_method_title( $order, $klarna_place_order_response ) {
+	$klarna_order_id = $klarna_place_order_response['order_id'];
+	$response        = KP_WC()->api->get_klarna_om_order( $order->get_billing_country(), $klarna_order_id );
+	if ( is_wp_error( $response ) || ! isset( $response['initial_payment_method']['description'] ) ) {
+		$klarna_method = $klarna_place_order_response['authorized_payment_method']['type'];
+		switch ( $klarna_method ) {
+			case 'invoice':
+				$klarna_method = 'Pay Later';
+				break;
+			case 'base_account':
+				$klarna_method = 'Slice It';
+				break;
+			case 'direct_debit':
+				$klarna_method = 'Direct Debit';
+				break;
+			default:
+				$klarna_method = null;
+		}
+	} else {
+		$klarna_method = $response['initial_payment_method']['description'];
 	}
 
 	$title = $order->get_payment_method_title();
 	$title = empty( $title ) ? 'Klarna' : $title;
 
-	if ( $payment_method ) {
-		$order->update_meta_data( '_kp_payment_method', $payment_method );
-		$title = "$title - $payment_method";
+	if ( $klarna_method ) {
+		$order->update_meta_data( '_kp_payment_method', $klarna_method );
+		$title = "$title - $klarna_method";
 	}
 
 	$order->set_payment_method_title( $title );
