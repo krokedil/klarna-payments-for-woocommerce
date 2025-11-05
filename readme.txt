@@ -6,8 +6,8 @@ Requires at least: 5.0
 Tested up to: 6.8.3
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.2.2
-Stable tag: 4.3.1
+WC tested up to: 10.3.4
+Stable tag: 4.4.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -39,16 +39,14 @@ Go to [Klarna](https://www.klarna.com) to get details about all payment methods 
 
 === How to Get Started ===
 * [Sign up for Klarna](https://www.klarna.com/international/business/woocommerce/).
-* Install the plugin on your site and download Klarna Order Management.
+* Install the plugin on your site.
 
 === Smart Solutions to Maximize Sales ===
 
 - **On-site messaging**: Personalized messaging throughout the shopper journey for higher conversion rates.
 - **Express checkout**: A faster checkout process to lower the threshold for purchase completion.
 
-=== What's the difference between Klarna Checkout and Klarna Payments? ===
-- **Klarna Payments**: Standalone payment methods complementing your existing checkout with a Klarna hosted widget.
-- **Klarna Checkout**: Complete online checkout solution designed to increase sales and customer loyalty, with Klarna as your single payment provider.
+=== Standalone payment methods complementing your existing checkout with a Klarna hosted widget ===
 For more details, visit the [Klarna Payments page](https://woocommerce.com/products/klarna-payments/).
 
 == Installation ==
@@ -71,6 +69,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.10.27    - version 4.4.0 =
+* Feature       - [KOM] Integrated the metabox package to enhance the order management metabox functionality.
+* Feature       - [KOM] Added filter 'kom_skip_scheduled_actions' to allow disabling the display of scheduled actions on the admin order page.
+* Fix           - Fixed a fatal error that could occur when accessing the edit cart page from the WordPress admin.
+
 = 2025.10.08    - version 4.3.1 =
 * Fix           - Resolved a fatal error that could occur when clearing stored logs using the support package.
 

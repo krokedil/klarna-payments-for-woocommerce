@@ -1,6 +1,6 @@
 {
   "name": "klarna-payments-for-woocommerce",
-  "version": "4.3.1",
+  "version": "4.4.0",
   "description": "Klarna Payments for WooCommerce",
   "main": "gulpfile.js",
   "repository": "https://github.com/krokedil/klarna-payments-for-woocommerce.git",
