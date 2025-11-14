@@ -1,4 +1,7 @@
 <?php
+
+use Krokedil\Klarna\Features;
+use Krokedil\Klarna\PluginFeatures;
 /**
  * Used for inserting JavaScript and CSS files, conditionally.
  *
@@ -16,7 +19,7 @@ class KP_Assets {
 
 	const KP_SCRIPT_HANDLE = 'klarnapayments';
 	const KP_WEBSDK_HANDLE_V1 = 'klarna_websdk_v1';
-	const KP_WEBSDK_HANDLE_V2 = 'klarna_websdk_v2';
+	const KP_WEBSDK_HANDLE_V2 = '@klarna/websdk_v2';
 
 	/**
 	 * Class constructor.
@@ -53,12 +56,11 @@ class KP_Assets {
 			true
 		);
 
-		wp_register_script(
+		wp_register_script_module(
 			self::KP_WEBSDK_HANDLE_V2,
-			'https://js.klarna.com/web-sdk/v2/klarna.js',
+			'https://js.klarna.com/web-sdk/v2/klarna.mjs',
 			array(),
-			null,
-			false // Load in the header.
+			null
 		);
 
 		add_filter( 'script_loader_tag', array( $this, 'add_data_attributes' ), 10, 2 );
@@ -392,23 +394,45 @@ class KP_Assets {
 	 * @return void
 	 */
 	public function enqueue_interoperability_token() {
-		wp_register_script(
-			'klarna_interoperability_token',
+		wp_register_script_module(
+			'@klarna/interoperability_token',
 			plugins_url( 'assets/js/klarna-interoperability-token.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
-			array( 'jquery', 'klarnapayments' ),
-			WC_KLARNA_PAYMENTS_VERSION,
-			true
+			array( self::KP_WEBSDK_HANDLE_V2 ),
+			WC_KLARNA_PAYMENTS_VERSION
 		);
 
 		$params = array(
-			'token' => KP_Interoperability_Token::get_token(),
-			'ajax'  => array(
+			'client_id' => kp_get_client_id(),
+			'token'     => KP_Interoperability_Token::get_token(),
+			'ajax'      => array(
 				'url'   => WC_AJAX::get_endpoint( 'kp_wc_set_interoperability_token' ),
 				'nonce' => wp_create_nonce( 'kp_wc_set_interoperability_token' ),
 			),
 		);
-		wp_localize_script( 'klarna_interoperability_token', 'klarna_interoperability_token_params', $params );
-		wp_enqueue_script( 'klarna_interoperability_token' );
+
+		KP_Assets::register_module_data( $params, '@klarna/interoperability_token' );
+
+		// Only enqueue the script if the customer is a AP merchant, meaning Klarna Payments is not used as a payment method.
+		if ( PluginFeatures::is_available( Features::PAYMENTS ) ) {
+			wp_enqueue_script_module( '@klarna/interoperability_token' );
+		}
+	}
+
+	/**
+	 * Localize script data for modules.
+	 *
+	 * @param array $data The data attributes to enqueue with the script.
+	 * @param string $handle The script handle.
+	 *
+	 * @return void
+	 */
+	public static function register_module_data( $data, $handle ) {
+		add_filter(
+			"script_module_data_{$handle}",
+			function ( $existing_data ) use ( $data ) {
+				return array_merge( $existing_data, $data );
+			}
+		);
 	}
 
 	/**
