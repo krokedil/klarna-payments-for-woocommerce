@@ -16,6 +16,11 @@
       "wpify/scoper": true
     }
   },
+  "autoload": {
+    "psr-4": {
+      "Krokedil\\Klarna\\": "src/"
+    }
+  },
   "extra": {
     "wpify-scoper": {
       "prefix": "KrokedilKlarnaPaymentsDeps",
