@@ -31,16 +31,6 @@ class PluginFeatures {
 	protected $features = [];
 
 	/**
-	 * Class constructor.
-	 *
-	 * @return void
-	 */
-	public function __construct() {
-		// Initialize features early early to be available for other classes.
-		add_action( 'init', [ $this, 'init_features' ], 5 );
-	}
-
-	/**
 	 * Initialize the features and their availability.
 	 *
 	 * @return void

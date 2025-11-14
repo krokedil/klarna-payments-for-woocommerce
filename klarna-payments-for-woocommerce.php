@@ -306,6 +306,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			new Registry();
 
 			add_action( 'before_woocommerce_init', array( $this, 'declare_wc_compatibility' ) );
+
+			$this->plugin_features->init_features();
 		}
 
 		/**
