@@ -4,10 +4,10 @@
     "krokedil/wp-api": "^1.0",
     "krokedil/woocommerce": "^1.8.0",
     "krokedil/support": "^1.0.2",
-    "krokedil/klarna-express-checkout": "^1.4.0",
-    "krokedil/klarna-onsite-messaging": "^1.3.2",
+    "krokedil/klarna-express-checkout": "dev-develop-one-step-checkout",
+    "krokedil/klarna-onsite-messaging": "dev-develop-websdk-refactor",
     "krokedil/settings-page": "^1.1.0",
-    "krokedil/sign-in-with-klarna": "^1.0.6",
+    "krokedil/sign-in-with-klarna": "dev-develop-websdk-refactor",
     "krokedil/klarna-order-management": "^1.0.0"
   },
   "config": {
