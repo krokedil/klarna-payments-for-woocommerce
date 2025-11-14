@@ -279,8 +279,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
-		// If neither Payments or KEC is available, we should not show the gateway.
-		if ( ! PluginFeatures::is_available( Features::PAYMENTS ) && ! PluginFeatures::is_available( Features::KEC ) ) {
+		// If payments is not available as a feature, don't show the gateway.
+		if ( ! PluginFeatures::is_available( Features::PAYMENTS ) ) {
 			return false;
 		}
 
