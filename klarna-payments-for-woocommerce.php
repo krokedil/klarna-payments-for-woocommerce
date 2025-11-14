@@ -272,6 +272,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$this->settings_page           = new KP_Settings_Page();
 			$this->checkout                = new KP_Checkout();
+			$this->plugin_features         = new PluginFeatures();
 			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
 			$this->krokedil                = new KrokedilWooCommerce(
 				array(
@@ -299,7 +300,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			);
 			$this->system_report   = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $included_settings_fields );
-			$this->plugin_features = new PluginFeatures();
 			$this->register_payment_block();
 
 			// Initialize the API registry.
