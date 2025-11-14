@@ -76,22 +76,17 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 
 			$recurring_token = false;
 			if ( KP_Subscription::order_has_subscription( $order ) ) {
-				$recurring_token = KP_Subscription::create_customer_token( $order, $auth_token );
+				$recurring_token = KP_WC()->subscription->create_customer_token( $order, $auth_token );
 				if ( is_wp_error( $recurring_token ) ) {
-					wp_send_json_error( 'customer_token_failed' );
-				}
+					if ( 'FREE_TRIAL' === $recurring_token->get_error_code() ) {
+						kp_unset_session_values();
 
-				KP_Subscription::save_recurring_token( $order_id, $recurring_token );
-
-				/* translators: Recurring token. */
-				$order->add_order_note( sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $recurring_token ) );
-
-				if ( 0.0 === floatval( $order->get_total() ) ) {
-					$order->payment_complete();
-					$order->add_order_note( __( 'The order contains a free or trial subscription, and no Klarna order is associated with this purchase. A Klarna order will only be registered once the subscriber is charged.', 'klarna-payments-for-woocommerce' ) );
-
-					kp_unset_session_values();
-					wp_send_json_success( $order->get_checkout_order_received_url() );
+						// If the intent is only 'tokenize', we should not proceed further as 'place_order' only allows 'buy_and_tokenize' intent.
+						wp_send_json_success( $order->get_checkout_order_received_url() );
+					} else {
+						KP_Logger::log( sprintf( '[AJAX]: Order ID: %s. Auth token: %s. %s', $order->get_id(), $auth_token, $recurring_token->get_error_message() ) );
+						wp_send_json_error( 'customer_token_failed' );
+					}
 				}
 			}
 

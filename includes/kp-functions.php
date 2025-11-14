@@ -6,7 +6,7 @@
  */
 
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderUtility;
-
+use Automattic\WooCommerce\Utilities\OrderUtil;
 /**
  * Unsets all Klarna Payments sessions.
  */
@@ -109,7 +109,7 @@ function kp_save_order_meta_data( $order, $response ) {
 	$order->update_meta_data( '_wc_klarna_country', $klarna_country );
 	$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
 	$order->set_transaction_id( $response['order_id'] );
-	$order->set_payment_method_title( 'Klarna' );
+	kp_set_payment_method_title( $order, $response );
 	$order->set_payment_method( 'klarna_payments' );
 
 	OrderUtility::add_environment_info( $order, WC_KLARNA_PAYMENTS_VERSION, null, false );
@@ -120,21 +120,16 @@ function kp_save_order_meta_data( $order, $response ) {
 /**
  * Process accepted Klarna Payments order.
  *
- * @param WC_Order    $order WooCommerce order.
- * @param array       $decoded Klarna order.
- * @param string|bool $recurring_token Recurring token.
+ * @param WC_Order $order WooCommerce order.
+ * @param array    $decoded Klarna order.
  *
  * @return array   $result  Payment result.
  */
-function kp_process_accepted( $order, $decoded, $recurring_token = false ) {
+function kp_process_accepted( $order, $decoded ) {
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	kp_save_order_meta_data( $order, $decoded );
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
-
-	if ( $recurring_token ) {
-		KP_Subscription::save_recurring_token( $order->get_id(), $recurring_token );
-	}
 
 	do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
 	do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
@@ -486,4 +481,71 @@ function kp_map_unavailable_features( $collected_features ) {
 	}
 
 	return $unavailable_features;
+}
+
+/**
+ * Set the payment method title for a Klarna order.
+ *
+ * @param WC_Order $order WooCommerce order.
+ * @param array    $klarna_place_order_response The Klarna place order response.
+ * @return void
+ */
+function kp_set_payment_method_title( $order, $klarna_place_order_response ) {
+	$klarna_order_id = $klarna_place_order_response['order_id'];
+	$response        = KP_WC()->api->get_klarna_om_order( $order->get_billing_country(), $klarna_order_id );
+	if ( is_wp_error( $response ) || ! isset( $response['initial_payment_method']['description'] ) ) {
+		$klarna_method = $klarna_place_order_response['authorized_payment_method']['type'];
+		switch ( $klarna_method ) {
+			case 'invoice':
+				$klarna_method = 'Pay Later';
+				break;
+			case 'base_account':
+				$klarna_method = 'Slice It';
+				break;
+			case 'direct_debit':
+				$klarna_method = 'Direct Debit';
+				break;
+			default:
+				$klarna_method = null;
+		}
+	} else {
+		$klarna_method = $response['initial_payment_method']['description'];
+	}
+
+	$title = $order->get_payment_method_title();
+	$title = empty( $title ) ? 'Klarna' : $title;
+
+	if ( $klarna_method ) {
+		$order->update_meta_data( '_kp_payment_method', $klarna_method );
+		$title = "$title - $klarna_method";
+	}
+
+	$order->set_payment_method_title( $title );
+}
+
+/**
+ * Whether HPOS is enabled.
+ *
+ * @return bool
+ */
+function kp_is_hpos_enabled() {
+	if ( class_exists( OrderUtil::class ) ) {
+		return OrderUtil::custom_orders_table_usage_is_enabled();
+	}
+	return false;
+}
+
+/**
+ * Equivalent to WP's get_the_ID() with HPOS support.
+ *
+ * @return int|false|int the order ID if the ID exist, otherwise false or zero.
+ */
+   //phpcs:ignore
+  function kp_get_the_ID() {
+	$hpos_enabled = kp_is_hpos_enabled();
+	$order_id     = $hpos_enabled ? filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT ) : get_the_ID();
+	if ( empty( $order_id ) ) {
+		$order_id = filter_input( INPUT_POST, 'post', FILTER_SANITIZE_NUMBER_INT );
+	}
+	return empty( $order_id ) ? false : absint( $order_id );
 }

@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 5.0
-Tested up to: 6.8.2
+Tested up to: 6.8.3
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.1.2
-Stable tag: 4.2.0
+WC tested up to: 10.3.4
+Stable tag: 4.4.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,7 +18,7 @@ Grow your business for increased sales and enhanced shopping experiences at no e
 
 Klarna is the preferred payment option for both brands and customers, used by millions of shoppers every month, online and in-store.
 
-| **87M Shoppers** | **2.5M Daily Transactions** | **600+K Retailers Globally** |
+| **100M+ Shoppers** | **2.9M+ Daily Transactions** | **720K+ Retailers Globally** |
 
 === More ways to pay, more purchases ===
 
@@ -39,16 +39,14 @@ Go to [Klarna](https://www.klarna.com) to get details about all payment methods 
 
 === How to Get Started ===
 * [Sign up for Klarna](https://www.klarna.com/international/business/woocommerce/).
-* Install the plugin on your site and download Klarna Order Management.
+* Install the plugin on your site.
 
 === Smart Solutions to Maximize Sales ===
 
 - **On-site messaging**: Personalized messaging throughout the shopper journey for higher conversion rates.
 - **Express checkout**: A faster checkout process to lower the threshold for purchase completion.
 
-=== What's the difference between Klarna Checkout and Klarna Payments? ===
-- **Klarna Payments**: Standalone payment methods complementing your existing checkout with a Klarna hosted widget.
-- **Klarna Checkout**: Complete online checkout solution designed to increase sales and customer loyalty, with Klarna as your single payment provider.
+=== Standalone payment methods complementing your existing checkout with a Klarna hosted widget ===
 For more details, visit the [Klarna Payments page](https://woocommerce.com/products/klarna-payments/).
 
 == Installation ==
@@ -71,6 +69,19 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.10.27    - version 4.4.0 =
+* Feature       - [KOM] Integrated the metabox package to enhance the order management metabox functionality.
+* Feature       - [KOM] Added filter 'kom_skip_scheduled_actions' to allow disabling the display of scheduled actions on the admin order page.
+* Fix           - Fixed a fatal error that could occur when accessing the edit cart page from the WordPress admin.
+
+= 2025.10.08    - version 4.3.1 =
+* Fix           - Resolved a fatal error that could occur when clearing stored logs using the support package.
+
+= 2025.10.01    - version 4.3.0 =
+* Feature       - Klarna Order Management is now built into the plugin.
+* Fix           - [KEC] Fixed a potential issue that could happen if we tried to initialize the KEC button before the Klarna Payments script was loaded and had registered the 'Klarna.Payments.Buttons' object in the window.
+* Tweak         - The pay button text in the block checkout now displays a different label for free orders: 'Pay with Klarna (free)'. This can be customized using the 'kp_blocks_order_button_label_free' filter.
+
 = 2025.09.01    - version 4.2.0 =
 * Feature       - Implemented a support package integration, to enable optional logging and issue reporting in the system report.
 * Feature       - Scheduled actions for the current order are now displayed on the admin order view.

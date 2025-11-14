@@ -9,9 +9,12 @@ function customize_php_scoper_config( array $config ): array {
 	$config['exclude-classes'][] = 'Klarna_OnSite_Messaging';
 	$config['exclude-classes'][] = 'Klarna_OnSite_Messaging_For_WooCommerce';
 	$config['exclude-classes'][] = 'WC_Product';
+	$config['exclude-classes'][] = 'WC_Klarna_Order_Management';
 	$config['exclude-classes'][] = 'KP_Form_Fields';
 	$config['exclude-classes'][] = 'KP_Assets';
 	$config['exclude-classes'][] = 'KP_Requests';
+	$config['exclude-classes'][] = 'KP_Subscription';
+	$config['exclude-classes'][] = 'KCO';
 
 	$functions = array(
 		'KP_WC',
