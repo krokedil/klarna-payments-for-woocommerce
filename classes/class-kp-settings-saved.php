@@ -1,4 +1,7 @@
 <?php
+
+use Krokedil\Klarna\Features;
+use Krokedil\Klarna\PluginFeatures;
 /**
  * File for checking settings on save.
  *
@@ -30,7 +33,17 @@ class KP_Settings_Saved {
 	 * Class constructor.
 	 */
 	public function __construct() {
+		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'update_credential_features' ), 5 );
 		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'check_api_credentials' ), 10 );
+	}
+
+	/**
+	 * Update the credentials feature availability when they are saved.
+	 *
+	 * @return void
+	 */
+	public function update_credential_features() {
+		KP_WC()->plugin_features()->process_all_api_credentials();
 	}
 
 	/**
@@ -50,13 +63,18 @@ class KP_Settings_Saved {
 			return;
 		}
 		$countries = array_keys( KP_Form_Fields::$kp_form_auto_countries );
+		$combine_eu_credentials = $options['combine_eu_credentials'] ?? 'no';
 
 		foreach ( $countries as $cc ) {
-			$combine_eu_credentials = $options['combine_eu_credentials'] ?? 'no';
 			$cc                     = 'yes' === $combine_eu_credentials && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
 			$cc                     = 'uk' === $cc ? 'gb' : $cc;
 			$password               = '';
 			$username               = '';
+
+			// If the credentials does not have the Payments feature enabled, skip them from testing.
+			if ( ! PluginFeatures::is_available( Features::PAYMENTS, $cc ) ) {
+				continue;
+			}
 
 			if ( 'yes' !== $options['testmode'] ) {
 				// Live.
@@ -113,8 +131,6 @@ class KP_Settings_Saved {
 				$this->maybe_handle_error();
 			}
 		}
-
-		KP_WC()->plugin_features()->process_all_api_credentials();
 	}
 
 	/**
