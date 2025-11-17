@@ -358,7 +358,7 @@ class KP_Assets {
 			),
 		);
 		wp_localize_script( 'klarna_interoperability_token', 'klarna_interoperability_token_params', $params );
-		wp_enqueue_script( 'klarna_interoperability_token' );
+		// wp_enqueue_script( 'klarna_interoperability_token' );
 	}
 
 	/**
