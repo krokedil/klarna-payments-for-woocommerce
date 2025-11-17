@@ -1,5 +1,8 @@
 *** Klarna for WooCommerce Changelog ***
 
+2025-11-17      - version 4.4.1
+* Fix           - Temporarily disabled the interoperability token feature.
+
 2025-10-27      - version 4.4.0
 * Feature       - [KOM] Integrated the metabox package to enhance the order management metabox functionality.
 * Feature       - [KOM] Added filter 'kom_skip_scheduled_actions' to allow disabling the display of scheduled actions on the admin order page.
