@@ -549,3 +549,8 @@ function kp_is_hpos_enabled() {
 	}
 	return empty( $order_id ) ? false : absint( $order_id );
 }
+
+
+function kp_get_maybe_filtered_customer_type( $customer_type ) {
+	return apply_filters( 'kp_set_custom_customer_type', $customer_type );
+}
