@@ -375,6 +375,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return $this->process_blocks_order( $order );
 		}
 
+		$settings      = get_option( 'woocommerce_klarna_payments_settings', array() );
+		$checkout_flow = isset( $settings['checkout_flow'] ) ? $settings['checkout_flow'] : 'popout';
+
+		if ( 'redirect' === $checkout_flow ) {
+			return $this->process_blocks_order( $order );
+		}
+
 		return $this->process_checkout_order( $order );
 	}
 
