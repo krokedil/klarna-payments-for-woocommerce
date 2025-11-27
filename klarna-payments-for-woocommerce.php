@@ -199,6 +199,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		private $plugin_features;
 
 		/**
+		 * API Registry instance.
+		 */
+		private $api_registry;
+
+		/**
 		 * Logger instance.
 		 *
 		 * @return Logger
@@ -223,6 +228,15 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function plugin_features() {
 			return $this->plugin_features;
+		}
+
+		/**
+		 * API Registry instance.
+		 *
+		 * @return Registry
+		 */
+		public function api_registry() {
+			return $this->api_registry;
 		}
 
 		/**
@@ -312,7 +326,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->register_payment_block();
 
 			// Initialize the API registry.
-			new Registry();
+			$this->api_registry = new Registry();
 
 			add_action( 'before_woocommerce_init', array( $this, 'declare_wc_compatibility' ) );
 
