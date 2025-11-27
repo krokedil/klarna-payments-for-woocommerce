@@ -550,7 +550,12 @@ function kp_is_hpos_enabled() {
 	return empty( $order_id ) ? false : absint( $order_id );
 }
 
-
-function kp_get_maybe_filtered_customer_type( $customer_type ) {
-	return apply_filters( 'kp_set_custom_customer_type', $customer_type );
+/**
+ * Get the customer type for Klarna Payments.
+ *
+ * @param string $customer_type The customer type from the settings.
+ * @return string
+ */
+function klarna_get_customer_type( $customer_type ) {
+	return apply_filters( 'klarna_get_customer_type', $customer_type );
 }
