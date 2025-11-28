@@ -75,12 +75,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "d01e1277d9a353da5de35f6a8a7b51d2c232aca9"
+                "reference": "a05421ba3730dffc8ea9ea2f6b2548fd93af54ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/d01e1277d9a353da5de35f6a8a7b51d2c232aca9",
-                "reference": "d01e1277d9a353da5de35f6a8a7b51d2c232aca9",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/a05421ba3730dffc8ea9ea2f6b2548fd93af54ad",
+                "reference": "a05421ba3730dffc8ea9ea2f6b2548fd93af54ad",
                 "shasum": ""
             },
             "require": {
@@ -139,7 +139,7 @@
                 "source": "https://github.com/krokedil/klarna-express-checkout/tree/develop-one-step-checkout",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2025-11-14T15:57:10+00:00"
+            "time": "2025-11-28T10:03:49+00:00"
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
