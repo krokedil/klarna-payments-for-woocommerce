@@ -3,6 +3,7 @@
 /.wordpress-org
 /node_modules
 /languages/*-backup-*.po
+/languages/*-backup-*.po~
 /tests
 .babelrc
 .editorconfig
