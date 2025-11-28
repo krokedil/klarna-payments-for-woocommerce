@@ -105,6 +105,11 @@ class PluginFeatures {
 			$features[ $key ]['availability']  = $availability === 'AVAILABLE';
 			$features[ $key ]['available_for'] = $available_for;
 		}
+
+		// Store the acquiring_partner_key if present in the response.
+		if ( isset( $response['acquiring_partner_key'] ) && ! empty( $response['acquiring_partner_key'] ) ) {
+			update_option( 'klarna_acquiring_partner_key', $response['acquiring_partner_key'] );
+		}
 	}
 
 	/**
@@ -235,6 +240,15 @@ class PluginFeatures {
 		}
 
 		return KP_WC()->plugin_features()->is_feature_available( $feature_key, $country_code );
+	}
+
+	/**
+	 * Get the acquiring partner key.
+	 *
+	 * @return string|null The acquiring partner key, or null if not set.
+	 */
+	public static function get_acquiring_partner_key() {
+		return get_option( 'klarna_acquiring_partner_key', null );
 	}
 
 	/**
