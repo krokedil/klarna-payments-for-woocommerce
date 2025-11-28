@@ -1,12 +1,12 @@
 <?php
-
-use Krokedil\Klarna\Features;
-use Krokedil\Klarna\PluginFeatures;
 /**
  * Settings page class.
  *
  * @package Klarna_Payments_For_WooCommerce/Classes/Admin
  */
+
+use Krokedil\Klarna\Features;
+use Krokedil\Klarna\PluginFeatures;
 
 defined( 'ABSPATH' ) || exit;
 

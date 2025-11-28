@@ -48,7 +48,7 @@ class KP_Callbacks {
 		$order = wc_get_orders(
 			array(
 				'meta_key'   => '_kp_session_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-				'meta_value' => $data['session_id'],
+				'meta_value' => $data['session_id'], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 				'limit'      => 1,
 				'orderby'    => 'date',
 				'order'      => 'DESC',

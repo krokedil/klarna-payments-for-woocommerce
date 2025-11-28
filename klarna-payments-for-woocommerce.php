@@ -27,9 +27,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*
-* @package WC_Klarna_Payments
-*/
+ *
+ * @package WC_Klarna_Payments
+ */
 
 use Krokedil\Klarna\Api\Registry;
 use Krokedil\Klarna\PluginFeatures;
@@ -177,7 +177,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public $order_management = null;
 
-		/*
+		/**
 		 * Logger instance.
 		 *
 		 * @var Logger
@@ -200,6 +200,8 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 		/**
 		 * API Registry instance.
+		 *
+		 * @var Registry
 		 */
 		private $api_registry;
 
@@ -322,7 +324,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				),
 
 			);
-			$this->system_report   = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $included_settings_fields );
+			$this->system_report = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $included_settings_fields );
 			$this->register_payment_block();
 
 			// Initialize the API registry.
@@ -587,7 +589,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public static function get_pay_button_label() {
 
-			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) {
+			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) { // phpcs:ignore
 				return apply_filters( 'kp_blocks_order_button_label_free', __( 'Pay with Klarna (free)', 'klarna-payments-for-woocommerce' ) );
 			}
 

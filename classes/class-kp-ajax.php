@@ -1,12 +1,11 @@
 <?php
-
-use Krokedil\Klarna\Features;
-use Krokedil\Klarna\PluginFeatures;
 /**
  * Klarna Payments AJAX class file.
  *
  * @package WC_Klarna_Payments/Classes
  */
+
+use Krokedil\Klarna\PluginFeatures;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -230,6 +229,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			wp_send_json_success( wc_get_checkout_url() );
 		}
 
+		/**
+		 * Get the unavailable features from the Klarna plugins API.
+		 *
+		 * @return void
+		 */
 		public static function kp_wc_get_unavailable_features() {
 			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
 
@@ -244,8 +248,8 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			}
 
 			$sections_to_hide = array();
-			foreach( $country_credentials as $credentials ) {
-				$features = KP_WC()->plugin_features()->process_api_credentials( $credentials );
+			foreach ( $country_credentials as $credentials ) {
+				$features         = KP_WC()->plugin_features()->process_api_credentials( $credentials );
 				$sections_to_hide = PluginFeatures::get_sections_to_hide( $features );
 			}
 

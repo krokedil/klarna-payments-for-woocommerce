@@ -3,6 +3,10 @@ namespace Krokedil\Klarna\Api\Controllers;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Abstract controller class.
+ * Contains common methods and properties for all controllers.
+ */
 abstract class Controller {
 	/**
 	 * The namespace of the controller.
@@ -36,9 +40,7 @@ abstract class Controller {
 	}
 
 	/**
-	 * Get the request path for a specific endpoint.
-	 *
-	 * @param string $endpoint The endpoint to get the path for.
+	 * Get the request path.
 	 *
 	 * @return string
 	 */
@@ -51,7 +53,7 @@ abstract class Controller {
 	 * Send a response.
 	 *
 	 * @param object|array|null|\WP_Error $response Response object.
-	 * @param int                        $status_code Status code.
+	 * @param int                         $status_code Status code.
 	 *
 	 * @return void
 	 */

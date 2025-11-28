@@ -1,12 +1,12 @@
 <?php
-
-use Krokedil\Klarna\Features;
-use Krokedil\Klarna\PluginFeatures;
 /**
  * File for checking settings on save.
  *
  * @package Klarna_Checkout/Classes
  */
+
+use Krokedil\Klarna\Features;
+use Krokedil\Klarna\PluginFeatures;
 
 /**
  * Class for checking settings on save.
@@ -62,14 +62,14 @@ class KP_Settings_Saved {
 		if ( $options && 'yes' !== $options['enabled'] ) {
 			return;
 		}
-		$countries = array_keys( KP_Form_Fields::$kp_form_auto_countries );
+		$countries              = array_keys( KP_Form_Fields::$kp_form_auto_countries );
 		$combine_eu_credentials = $options['combine_eu_credentials'] ?? 'no';
 
 		foreach ( $countries as $cc ) {
-			$cc                     = 'yes' === $combine_eu_credentials && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
-			$cc                     = 'uk' === $cc ? 'gb' : $cc;
-			$password               = '';
-			$username               = '';
+			$cc       = 'yes' === $combine_eu_credentials && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
+			$cc       = 'uk' === $cc ? 'gb' : $cc;
+			$password = '';
+			$username = '';
 
 			// If the credentials does not have the Payments feature enabled, skip them from testing.
 			if ( ! PluginFeatures::is_available( Features::PAYMENTS, $cc ) ) {

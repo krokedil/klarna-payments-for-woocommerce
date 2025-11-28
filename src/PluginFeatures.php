@@ -11,16 +11,56 @@ class PluginFeatures {
 	 * @var array
 	 */
 	protected $default_features = [
-		Features::PAYMENTS                    => [ "availability" => true, "markets" => [], "available_for" => [] ],
-		Features::OSM_PRODUCT_PAGE            => [ "availability" => true, "markets" => [], "available_for" => [] ],
-		Features::OSM_CART_PAGE               => [ "availability" => true, "markets" => [], "available_for" => [] ],
-		Features::OSM_PROMOTIONAL_BANNER      => [ "availability" => true, "markets" => [], "available_for" => [] ],
-		Features::KEC_ONE_STEP                => [ "availability" => true, "markets" => [], "available_for" => [] ],
-		Features::KEC_TWO_STEP                => [ "availability" => true, "markets" => [], "available_for" => [] ],
-		Features::SIWK_ACCOUNT_CREATION_PAGE  => [ "availability" => true, "markets" => [], "available_for" => [] ],
-		Features::SIWK_AUTHENTICATION_PAGE    => [ "availability" => true, "markets" => [], "available_for" => [] ],
-		Features::SIWK_CART_PAGE              => [ "availability" => true, "markets" => [], "available_for" => [] ],
-		Features::SUPPLEMENTARY_PURCHASE_DATA => [ "availability" => true, "markets" => [], "available_for" => [] ],
+		Features::PAYMENTS                    => [
+			'availability'  => true,
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::OSM_PRODUCT_PAGE            => [
+			'availability'  => true,
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::OSM_CART_PAGE               => [
+			'availability'  => true,
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::OSM_PROMOTIONAL_BANNER      => [
+			'availability'  => true,
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::KEC_ONE_STEP                => [
+			'availability'  => true,
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::KEC_TWO_STEP                => [
+			'availability'  => true,
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::SIWK_ACCOUNT_CREATION_PAGE  => [
+			'availability'  => true,
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::SIWK_AUTHENTICATION_PAGE    => [
+			'availability'  => true,
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::SIWK_CART_PAGE              => [
+			'availability'  => true,
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::SUPPLEMENTARY_PURCHASE_DATA => [
+			'availability'  => true,
+			'markets'       => [],
+			'available_for' => [],
+		],
 	];
 
 	/**
@@ -72,21 +112,21 @@ class PluginFeatures {
 	 * @return void
 	 */
 	public function process_api_response( $response, $credentials, &$features ) {
-		foreach( $response['features'] ?? [] as $feature ) {
+		foreach ( $response['features'] ?? [] as $feature ) {
 			$key           = str_replace( 'platform-plugin-', '', $feature['feature_key'] ?? '' );
-			$availability  = $feature['availability'] ?? 'AVAILABLE'; // Default to AVAILABLE if not set
+			$availability  = $feature['availability'] ?? 'AVAILABLE'; // Default to AVAILABLE if not set.
 			$markets       = $feature['markets'] ?? [];
 			$available_for = $features[ $key ]['available_for'] ?? []; // Get the existing available_for list from the saved features.
 
 			// Add or remove the country code from the available_for list based on availability.
-			if ( $availability === 'AVAILABLE' ) {
+			if ( 'AVAILABLE' === $availability ) {
 				// If it is available, add the country code if not already present.
-				if ( ! in_array( $credentials['country_code'] ?? 'unknown', $available_for ) ) {
+				if ( ! in_array( $credentials['country_code'] ?? 'unknown', $available_for, true ) ) {
 					$available_for[] = $credentials['country_code'] ?? 'unknown';
 				}
 			} else {
 				// If it is unavailable, remove the country code if present.
-				if ( in_array( $credentials['country_code'] ?? 'unknown', $available_for ) ) {
+				if ( in_array( $credentials['country_code'] ?? 'unknown', $available_for, true ) ) {
 					$available_for = array_diff( $available_for, [ $credentials['country_code'] ?? 'unknown' ] );
 				}
 			}
@@ -98,12 +138,12 @@ class PluginFeatures {
 
 			// If we have markets, merge them with the existing ones and make them unique.
 			if ( ! empty( $markets ) ) {
-				$features[ $key ]['markets'] = array_unique ( array_merge ( $features[ $key ]['markets'] ?? [], $markets));
+				$features[ $key ]['markets'] = array_unique( array_merge( $features[ $key ]['markets'] ?? [], $markets ) );
 			}
 
-			// Update the feature availability and available_for list.
-			$features[ $key ]['availability']  = $availability === 'AVAILABLE';
-			$features[ $key ]['available_for'] = $available_for;
+			// Update the feature availability and available_for list. Ensure available_for is uppercase.
+			$features[ $key ]['availability']  = 'AVAILABLE' === $availability;
+			$features[ $key ]['available_for'] = array_map( 'strtoupper', $available_for );
 		}
 
 		// Store the acquiring_partner_key if present in the response.
@@ -116,6 +156,7 @@ class PluginFeatures {
 	 * Get the availability of all credentials stored in the settings,
 	 * and update the option kp_plugin_features with the result.
 	 *
+	 * @throws \WP_Exception If there is an error when trying to get the feature availability from Klarna.
 	 * @return void
 	 */
 	public function process_all_api_credentials() {
@@ -128,7 +169,14 @@ class PluginFeatures {
 
 				// If we get an error, throw an error and reset the features to default.
 				if ( is_wp_error( $response ) ) {
-					throw new \WP_Exception( __( 'There was an error when trying to get the feature availability from Klarna. Please check your API credentials and try again. Error: ' . $response->get_error_message(), 'klarna-payments-for-woocommerce' ) );
+					$error_message = $response->get_error_message();
+					throw new \WP_Exception(
+						sprintf(
+							// translators: %s: The error message from the API request.
+							__( 'There was an error when trying to get the feature availability from Klarna. Please check your API credentials and try again. Error: %s', 'klarna-payments-for-woocommerce' ),
+							$error_message
+						)
+					);
 				}
 				$this->process_api_response( $response, $credentials, $features );
 			}
@@ -149,17 +197,25 @@ class PluginFeatures {
 	 *
 	 * @param array $credentials The API credentials to test.
 	 *
+	 * @throws \WP_Exception If there is an error when trying to get the feature availability from Klarna.
 	 * @return array
 	 */
 	public function process_api_credentials( $credentials ) {
-		try{
+		try {
 			// Use the stored features as a base since we might have other features that are available from other credentials.
 			$features = $this->features;
 			$response = KP_WC()->api->get_unavailable_features( $credentials );
 
 			// If we get an error, throw an error and reset the features to default.
 			if ( is_wp_error( $response ) ) {
-				throw new \WP_Exception( __( 'There was an error when trying to get the feature availability from Klarna. Please check your API credentials and try again. Error: ' . $response->get_error_message(), 'klarna-payments-for-woocommerce' ) );
+				$error_message = $response->get_error_message();
+				throw new \WP_Exception(
+					sprintf(
+						// translators: %s: The error message from the API request.
+						__( 'There was an error when trying to get the feature availability from Klarna. Please check your API credentials and try again. Error: %s', 'klarna-payments-for-woocommerce' ),
+						$error_message
+					)
+				);
 			}
 
 			$this->process_api_response( $response, $credentials, $features );
@@ -184,7 +240,7 @@ class PluginFeatures {
 		foreach ( $features as $feature_key => $feature_data ) {
 			$new_hidden_sections = [];
 
-			switch( $feature_key ) {
+			switch ( $feature_key ) {
 				case Features::PAYMENTS:
 				case Features::PAYMENTS_RECURRING:
 					$new_hidden_sections[] = 'general';
@@ -225,7 +281,7 @@ class PluginFeatures {
 	 * Check if a feature is available or not.
 	 *
 	 * @param string|array $feature_key The feature(s) key to test.
-	 * @param string|null $country_code The country code to test for. Optional. If not passed we will check general availability instead.
+	 * @param string|null  $country_code The country code to test for. Optional. If not passed we will check general availability instead.
 	 *
 	 * @return bool True if the feature(s) is available, false otherwise. If an array is passed, if any feature is available, true is returned.
 	 */
@@ -254,14 +310,16 @@ class PluginFeatures {
 	/**
 	 * Check if a feature is available or not. Private method called by the static method is_available.
 	 *
-	 * @param string $feature_key The feature key to test.
+	 * @param string      $feature_key The feature key to test.
 	 * @param string|null $country_code The country code to test for. Optional. If not passed we will check general availability instead.
 	 *
 	 * @return bool True if the feature is available, false otherwise.
 	 */
 	private function is_feature_available( $feature_key, $country_code = null ) {
+		// If the country code is set, check if the feature is available for that country.
 		if ( $country_code ) {
-			return isset( $this->features[ $feature_key ] ) && in_array( $country_code, $this->features[ $feature_key ]['available_for'] );
+			// Ensure the country code is uppercase for comparison, since it will always be stored as uppercase.
+			return isset( $this->features[ $feature_key ] ) && in_array( strtoupper( $country_code ), $this->features[ $feature_key ]['available_for'], true );
 		}
 		return isset( $this->features[ $feature_key ] ) && $this->features[ $feature_key ]['availability'];
 	}
