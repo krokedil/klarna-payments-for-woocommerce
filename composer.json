@@ -32,5 +32,11 @@
       ]
     }
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "scripts": {
+    "lint": "vendor/bin/phpcs . --standard=phpcs.ruleset.xml --extensions=php -q",
+    "lint:fix": "vendor/bin/phpcbf . --standard=phpcs.ruleset.xml --extensions=php -q",
+    "lint:changes": "git diff --name-only HEAD~1 | grep '\\.php$' | xargs vendor/bin/phpcs --standard=phpcs.ruleset.xml --extensions=php -q",
+    "lint:fix:changes": "git diff --name-only HEAD~1 | grep '\\.php$' | xargs vendor/bin/phpcbf --standard=phpcs.ruleset.xml --extensions=php -q"
+  }
 }
