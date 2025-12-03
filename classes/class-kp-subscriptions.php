@@ -391,7 +391,7 @@ class KP_Subscription {
 	 * @return bool
 	 */
 	public static function is_change_payment_method() {
-		return isset( $_GET['change_payment_method'] );
+		return isset( $_GET['change_payment_method'] ); // phpcs:ignore WordPress.Security.NonceVerification
 	}
 
 

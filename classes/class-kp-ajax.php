@@ -5,6 +5,8 @@
  * @package WC_Klarna_Payments/Classes
  */
 
+use Krokedil\Klarna\PluginFeatures;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -227,6 +229,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			wp_send_json_success( wc_get_checkout_url() );
 		}
 
+		/**
+		 * Get the unavailable features from the Klarna plugins API.
+		 *
+		 * @return void
+		 */
 		public static function kp_wc_get_unavailable_features() {
 			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
 
@@ -240,13 +247,13 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'Missing credentials.' );
 			}
 
-			$unavailable_features = kp_get_unavailable_feature_ids( $country_credentials );
-
-			if ( empty( $unavailable_features['feature_ids'] ) && ! empty( $unavailable_features['errors'] ) ) {
-				wp_send_json_error( 'Failed to get unavailable features. Error messages: ' . implode( ', ', $unavailable_features['errors'] ) );
+			$sections_to_hide = array();
+			foreach ( $country_credentials as $credentials ) {
+				$features         = KP_WC()->plugin_features()->process_api_credentials( $credentials );
+				$sections_to_hide = PluginFeatures::get_sections_to_hide( $features );
 			}
 
-			wp_send_json_success( $unavailable_features['feature_ids'] );
+			wp_send_json_success( $sections_to_hide );
 		}
 
 		/**

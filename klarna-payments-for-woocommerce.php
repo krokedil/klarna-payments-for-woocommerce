@@ -31,6 +31,9 @@
  * @package WC_Klarna_Payments
  */
 
+use Krokedil\Klarna\Api\Registry;
+use Krokedil\Klarna\PluginFeatures;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -174,7 +177,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public $order_management = null;
 
-		/*
+		/**
 		 * Logger instance.
 		 *
 		 * @var Logger
@@ -187,6 +190,20 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @var SystemReport
 		 */
 		private $system_report;
+
+		/**
+		 * PluginFeatures instance.
+		 *
+		 * @var PluginFeatures
+		 */
+		private $plugin_features;
+
+		/**
+		 * API Registry instance.
+		 *
+		 * @var Registry
+		 */
+		private $api_registry;
 
 		/**
 		 * Logger instance.
@@ -204,6 +221,24 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function report() {
 			return $this->system_report;
+		}
+
+		/**
+		 * Plugin features.
+		 *
+		 * @return PluginFeatures
+		 */
+		public function plugin_features() {
+			return $this->plugin_features;
+		}
+
+		/**
+		 * API Registry instance.
+		 *
+		 * @return Registry
+		 */
+		public function api_registry() {
+			return $this->api_registry;
 		}
 
 		/**
@@ -261,6 +296,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$this->settings_page           = new KP_Settings_Page();
 			$this->checkout                = new KP_Checkout();
+			$this->plugin_features         = new PluginFeatures();
 			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
 			$this->krokedil                = new KrokedilWooCommerce(
 				array(
@@ -289,10 +325,14 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			);
 			$this->system_report = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $included_settings_fields );
-
 			$this->register_payment_block();
 
+			// Initialize the API registry.
+			$this->api_registry = new Registry();
+
 			add_action( 'before_woocommerce_init', array( $this, 'declare_wc_compatibility' ) );
+
+			$this->plugin_features->init_features();
 		}
 
 		/**
@@ -549,7 +589,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public static function get_pay_button_label() {
 
-			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) {
+			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) { // phpcs:ignore
 				return apply_filters( 'kp_blocks_order_button_label_free', __( 'Pay with Klarna (free)', 'klarna-payments-for-woocommerce' ) );
 			}
 

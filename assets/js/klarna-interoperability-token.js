@@ -1,64 +1,72 @@
-jQuery( function ( $ ) {
-	"use strict"
+"use strict"
+const { KlarnaSDK } = await import("@klarna/websdk_v2");
+const $ = jQuery;
+let configData = {};
 
-	const kp_interoperability_token = {
-		params: null,
-		klarnaBindAttempts: 0,
+const params = document.getElementById(
+	'wp-script-module-data-@klarna/interoperability_token'
+);
 
-		init: function () {
-			this.params = klarna_interoperability_token_params
-			this.updateGlobalToken( this.params.token )
-			this.bindKlarnaEvents()
-		},
+if (params?.textContent) {
+	try { configData = JSON.parse(params.textContent); } catch { }
+}
 
-		bindKlarnaEvents: function () {
-			// Ensure the Klarna object exists in the global scope.
-			if ( typeof window.Klarna === "undefined" || typeof window.Klarna.Interoperability === "undefined" ) {
-				if ( kp_interoperability_token.klarnaBindAttempts >= 10 ) {
-					return
-				}
+const kp_interoperability_token = {
+	params: null,
+	Klarna: null,
 
-				kp_interoperability_token.klarnaBindAttempts++
-				setTimeout( kp_interoperability_token.bindKlarnaEvents, 250 )
-				return
-			}
-			Klarna.Interoperability.on( "tokenupdate", kp_interoperability_token.updateSessionToken )
+	init: async function () {
+		this.params = configData;
+		this.updateGlobalToken( this.params.token )
+		this.Klarna = await KlarnaSDK({
+			clientId: this.params.client_id,
+			environment: 'playground'
+		});
+		this.bindKlarnaEvents();
 
-			// If we did not get a token from Klarna yet, trigger the token request.
-			if ( undefined === window.klarna_interoperability_token ) {
-				Klarna.Interoperability.token()
-			}
-		},
+		// Set the klarna object to the window for other scripts to use as well.
+		$('body').trigger({ type: 'klarna_wc_sdk_loaded', Klarna: kp_interoperability_token.Klarna });
+	},
 
-		updateGlobalToken: function ( token ) {
-			// If the token is not set, return.
-			if ( ! token || token === "" ) {
-				return
-			}
+	bindKlarnaEvents: async function () {
+		kp_interoperability_token.Klarna.Interoperability.on( "tokenupdate", kp_interoperability_token.updateSessionToken )
 
-			window.klarna_interoperability_token = token
-		},
+		// If we did not get a token from Klarna yet, trigger the token request.
+		if ( undefined === window.klarna_interoperability_token ) {
+			const result = await kp_interoperability_token.Klarna.Interoperability.token()
+			kp_interoperability_token.updateSessionToken( { interoperabilityToken: result } )
+		}
+	},
 
-		updateSessionToken: function ( token ) {
-			const interoperabilityToken = token.interoperabilityToken
-			const { url, nonce } = kp_interoperability_token.params.ajax
+	updateGlobalToken: function ( token ) {
+		// If the token is not set, return.
+		if ( ! token || token === "" ) {
+			return
+		}
 
-			$.ajax( {
-				url: url,
-				type: "POST",
-				data: {
-					token: interoperabilityToken,
-					nonce: nonce,
-				},
-				success: function ( response ) {
-					kp_interoperability_token.updateGlobalToken( interoperabilityToken )
-				},
-				error: function ( error ) {
-					console.error( "Error updating Interoperability Token:", error )
-				},
-			} )
-		},
-	}
+		window.klarna_interoperability_token = token
+	},
 
-	kp_interoperability_token.init()
-} )
+	updateSessionToken: async function ( token ) {
+		const interoperabilityToken = token.interoperabilityToken
+		const { url, nonce } = kp_interoperability_token.params.ajax
+		await $.ajax( {
+			url: url,
+			type: "POST",
+			data: {
+				token: interoperabilityToken,
+				nonce: nonce,
+			},
+			async: true,
+			success: function ( response ) {
+				kp_interoperability_token.updateGlobalToken( interoperabilityToken )
+			},
+			error: function ( error ) {
+				console.error( "Error updating Interoperability Token:", error )
+			},
+		} )
+	},
+}
+
+kp_interoperability_token.init();
+export const klarna_interoperability = kp_interoperability_token;

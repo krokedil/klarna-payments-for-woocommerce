@@ -2,7 +2,7 @@
 /**
  * Create KP recurring order.
  *
- * https://docs.klarna.com/api/customertoken/#operation/createOrder
+ * @see https://docs.klarna.com/api/customertoken/#operation/createOrder
  *
  * @package WC_Klarna_Payments/Classes/Requests/POST
  */
@@ -32,7 +32,6 @@ class KP_Create_Recurring extends KP_Requests_Post {
 	/**
 	 * Gets the request body.
 	 *
-	 * @param int $order_id The WooCommerce order id.
 	 * @return array
 	 */
 	protected function get_body() {
