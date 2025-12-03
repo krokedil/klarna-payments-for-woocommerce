@@ -6,8 +6,8 @@ Requires at least: 5.0
 Tested up to: 6.8.3
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.3.4
-Stable tag: 4.4.0
+WC tested up to: 10.3.5
+Stable tag: 4.4.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.11.17    - version 4.4.1 =
+* Fix           - Temporarily disabled the interoperability token feature.
+
 = 2025.10.27    - version 4.4.0 =
 * Feature       - [KOM] Integrated the metabox package to enhance the order management metabox functionality.
 * Feature       - [KOM] Added filter 'kom_skip_scheduled_actions' to allow disabling the display of scheduled actions on the admin order page.
