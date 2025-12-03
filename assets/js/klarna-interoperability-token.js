@@ -19,8 +19,7 @@ const kp_interoperability_token = {
 		this.params = configData;
 		this.updateGlobalToken( this.params.token )
 		this.Klarna = await KlarnaSDK({
-			clientId: this.params.client_id,
-			environment: 'playground'
+			clientId: this.params.client_id
 		});
 		this.bindKlarnaEvents();
 
