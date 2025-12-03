@@ -71,10 +71,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 == Changelog ==
 = 2025.12.03    - version 4.5.0 =
 * Feature       - [KEC] Add support for Klarna Express Checkout one step checkout for AP partners using the V2 WebSDK.
+* Feature       - Set the payment method title for the WooCommerce order based on the payment method used from Klarna.
 * Change        - [SIWK, KOSM] Migrated Sign-in with Klarna, Onsite messaging and Klarna interoperability token to Klarna's V2 WebSDK.
 * Enhancement   - Updated how we store feature availability in Klarna for API credentials.
 * Enhancement   - Improved when we load some Klarna features to prevent them from loading on each page.
 * Fix           - Removed a reference to Klarna Checkout in an error message when getting a 403 error from Klarna's API.
+* Fix           - Fixed an issue where the customer token was missing for HPP purchases for subscriptions when using the block checkout.
 
 = 2025.11.17    - version 4.4.1 =
 * Fix           - Temporarily disabled the interoperability token feature.
