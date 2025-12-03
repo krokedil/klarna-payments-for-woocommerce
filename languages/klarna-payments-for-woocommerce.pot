@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2025-11-17 10:26:24+00:00\n"
+"POT-Creation-Date: 2025-12-03 12:52:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -137,7 +137,7 @@ msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:245
 #: classes/admin/class-kp-form-fields.php:340
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
 msgid "Documentation"
 msgstr ""
@@ -222,7 +222,7 @@ msgid ""
 msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:346
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
 msgid "Enable/Disable"
@@ -309,7 +309,7 @@ msgid "Business to Business (B2B)"
 msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:409
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
 msgid "Preview"
 msgstr ""
@@ -319,74 +319,61 @@ msgstr ""
 msgid "Credentials for %s:"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:74
-#: classes/class-wc-gateway-klarna-payments.php:67
+#: classes/admin/class-kp-settings-page.php:77
+#: classes/class-wc-gateway-klarna-payments.php:69
 msgid "Klarna for WooCommerce"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:75
-#: classes/class-wc-gateway-klarna-payments.php:68
+#: classes/admin/class-kp-settings-page.php:78
+#: classes/class-wc-gateway-klarna-payments.php:70
 msgid ""
 "Supercharge your business with one single plugin for increased sales and "
 "enhanced shopping experiences."
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:77
+#: classes/admin/class-kp-settings-page.php:80
 msgid "Set-up guidelines"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:78
+#: classes/admin/class-kp-settings-page.php:81
 msgid "Learn more about Klarna"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:103
+#: classes/admin/class-kp-settings-page.php:105
 #: dependencies/krokedil/settings-page/src/Addons.php:241
 msgid "Active"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:103
+#: classes/admin/class-kp-settings-page.php:105
 msgid "Not active"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:302
+#: classes/admin/class-kp-settings-page.php:304
 msgid "(Test)"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:302
+#: classes/admin/class-kp-settings-page.php:304
 msgid "(Production)"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:308
+#: classes/admin/class-kp-settings-page.php:310
 msgid "Username"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:312
+#: classes/admin/class-kp-settings-page.php:314
 msgid "Password"
 msgstr ""
 
-#: classes/admin/class-kp-settings-page.php:317
+#: classes/admin/class-kp-settings-page.php:319
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:55
 msgid "Client ID"
 msgstr ""
 
-#: classes/class-kp-ajax.php:84 classes/class-kp-subscriptions.php:79
-#: classes/class-kp-subscriptions.php:236
-#. translators: Recurring token.
-msgid "Recurring token created: %s"
-msgstr ""
-
-#: classes/class-kp-ajax.php:88
-msgid ""
-"The order contains a free or trial subscription, and no Klarna order is "
-"associated with this purchase. A Klarna order will only be registered once "
-"the subscriber is charged."
-msgstr ""
-
-#: classes/class-kp-ajax.php:159
+#: classes/class-kp-ajax.php:156
 msgid "Customer aborted purchase with Klarna."
 msgstr ""
 
-#: classes/class-kp-ajax.php:161
+#: classes/class-kp-ajax.php:158
 msgid "Authorization rejected by Klarna."
 msgstr ""
 
@@ -394,11 +381,11 @@ msgstr ""
 msgid "Missing shared secret."
 msgstr ""
 
-#: classes/class-kp-assets.php:156
+#: classes/class-kp-assets.php:213
 msgid "Please read and accept the terms and conditions to proceed with your order."
 msgstr ""
 
-#: classes/class-kp-assets.php:199
+#: classes/class-kp-assets.php:256
 msgid "Select all"
 msgstr ""
 
@@ -410,7 +397,7 @@ msgstr ""
 msgid "The Klarna order was successfully completed by the authorization callback"
 msgstr ""
 
-#: classes/class-kp-callbacks.php:103 classes/class-kp-callbacks.php:160
+#: classes/class-kp-callbacks.php:103 classes/class-kp-callbacks.php:178
 msgid "The Klarna order is pending approval by Klarna"
 msgstr ""
 
@@ -418,15 +405,21 @@ msgstr ""
 msgid "The Klarna order was rejected during the authorization by Klarna"
 msgstr ""
 
-#: classes/class-kp-callbacks.php:147 classes/class-kp-callbacks.php:169
+#: classes/class-kp-callbacks.php:146
+msgid ""
+"Failed to create a recurring token when returning from the hosted payment "
+"page."
+msgstr ""
+
+#: classes/class-kp-callbacks.php:165 classes/class-kp-callbacks.php:187
 msgid "Failed to complete the order when returning from the hosted payment page."
 msgstr ""
 
-#: classes/class-kp-callbacks.php:155
+#: classes/class-kp-callbacks.php:173
 msgid "The Klarna order was successfully completed"
 msgstr ""
 
-#: classes/class-kp-callbacks.php:165
+#: classes/class-kp-callbacks.php:183
 msgid "The Klarna order was rejected by Klarna"
 msgstr ""
 
@@ -450,11 +443,11 @@ msgid ""
 "payments via Klarna.com or in the %2$s"
 msgstr ""
 
-#: classes/class-kp-klarna-express-checkout.php:117
+#: classes/class-kp-klarna-express-checkout.php:132
 msgid "Invalid order."
 msgstr ""
 
-#: classes/class-kp-klarna-express-checkout.php:122
+#: classes/class-kp-klarna-express-checkout.php:137
 msgid "Invalid order key."
 msgstr ""
 
@@ -462,51 +455,63 @@ msgstr ""
 msgid "Order was not found"
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:119
+#: classes/class-kp-subscriptions.php:100
+#. translators: Recurring token.
+msgid "Recurring token created: %s"
+msgstr ""
+
+#: classes/class-kp-subscriptions.php:106
+msgid ""
+"The order contains a free or trial subscription, and no Klarna order is "
+"associated with this purchase. A Klarna order will only be registered once "
+"the subscriber is charged."
+msgstr ""
+
+#: classes/class-kp-subscriptions.php:150
 #. Translators: Klarna order id.
 msgid "Subscription payment made with Klarna. Klarna order id: %s"
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:124
+#: classes/class-kp-subscriptions.php:155
 #. Translators: Error message.
 msgid "Subscription payment failed with Klarna. Reason: %1$s"
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:163
+#: classes/class-kp-subscriptions.php:194
 msgid "Subscription cancelled with Klarna Payments."
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:167
+#: classes/class-kp-subscriptions.php:198
 #. Translators: Error message.
 msgid "Subscription cancellation failed with Klarna Payments. Reason: %1$s"
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:230
+#: classes/class-kp-subscriptions.php:267
 #. translators: Error message.
 msgid "Failed to create recurring token. Reason: %s"
 msgstr ""
 
-#: classes/class-kp-subscriptions.php:449
+#: classes/class-kp-subscriptions.php:467
 msgid "Klarna recurring token"
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:142
+#: classes/class-wc-gateway-klarna-payments.php:144
 msgid "What is Klarna?"
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:394
+#: classes/class-wc-gateway-klarna-payments.php:414
 msgid "Failed to get required data from the Klarna session. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:457
+#: classes/class-wc-gateway-klarna-payments.php:477
 msgid "Failed to create a session with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:487
+#: classes/class-wc-gateway-klarna-payments.php:507
 msgid "Failed to create a hosted payment page with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:628
+#: classes/class-wc-gateway-klarna-payments.php:618
 msgid "Klarna did not accept the new order amount, the order has not been updated"
 msgstr ""
 
@@ -521,35 +526,44 @@ msgstr ""
 msgid "Upsell from thankyou page"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Api/Notifications/PaymentStateExpired.php:32
+msgid "Order cancelled due to expired payment request."
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/OneStepCheckout.php:52
+#: dependencies/krokedil/klarna-express-checkout/src/OneStepCheckout.php:60
+msgid "Your order could not be processed"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid ""
 "Offer a 5x faster check-out process that lowers the threshold for shoppers "
 "to complete a purchase."
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid "Enable Klarna Express Checkout"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid "Placements & button style"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid ""
 "Tailor the express checkout button to fit your brand by adjusting the "
 "button theme, shape and selecting placements."
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid "Theme"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid "Select the theme for the Klarna Express Checkout."
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
@@ -558,58 +572,129 @@ msgstr ""
 msgid "Dark"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
 msgid "Light"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
 msgid "Outlined"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid "Shape"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid "Select the shape for the Klarna Express Checkout."
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
 msgid "Rounded"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
 msgid "Rectangular"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
 msgid "Pill"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid "Placements"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid "All (recommended)"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid "Product pages"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:129
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
 msgid "Cart page"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:96
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
+msgid "Webhook %s"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:178
+msgid ""
+"For one step Express Checkout to function, Klarna needs to be able to send "
+"callbacks to your store. Enable the callbacks and configure a signing key "
+"to use for the authentication."
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:208
+msgid "Created"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:210
+msgid "Not Created"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:237
+msgid "Test Webhook"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:244
+msgid "Remove Webhook"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:257
+msgid "Create the necessary webhook in Klarna for the Express Checkout."
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:263
+msgid "Create Webhook"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:121
+msgid "Could not send test webhook"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:124
+msgid "Test webhook sent successfully."
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:143
+msgid "Could not remove webhook"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:151
+msgid "Could not remove signing key"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:155
+msgid "Webhook removed successfully."
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:166
+msgid "Could not create signing key"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:191
+msgid "Could not create a signing key with Klarna for the webhook."
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:199
+msgid "Could not create webhook with Klarna"
+msgstr ""
+
+#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:204
+msgid "Webhook created successfully."
+msgstr ""
+
+#: dependencies/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:111
 msgid ""
 "The \"Klarna On-Site Messaging for WooCommerce\" plugin is now integrated "
 "into Klarna Payments. Please disable the plugin."
@@ -854,23 +939,23 @@ msgstr ""
 msgid "Product preview"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:18
+#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:25
 msgid "Klarna On-Site Messaging"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:20
+#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:27
 msgid "Displays a Klarna banner in your store."
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:67
+#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:74
 msgid "Title:"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:81
+#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:88
 msgid "Placement Key"
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:97
+#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:104
 msgid "Placement Theme:"
 msgstr ""
 
@@ -1073,7 +1158,7 @@ msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Navigation.php:54
 #: dependencies/krokedil/settings-page/src/Support.php:30
-#: klarna-payments-for-woocommerce.php:355
+#: klarna-payments-for-woocommerce.php:395
 msgid "Support"
 msgstr ""
 
@@ -1321,29 +1406,29 @@ msgstr ""
 msgid "Klarna Payments API Error: "
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:334
+#: klarna-payments-for-woocommerce.php:374
 msgid ""
 "Klarna Order Management is not active. Please activate it so you can "
 "capture, cancel, update and refund Klarna orders."
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:353
+#: klarna-payments-for-woocommerce.php:393
 msgid "Settings"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:354
+#: klarna-payments-for-woocommerce.php:394
 msgid "Docs"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:396
+#: klarna-payments-for-woocommerce.php:436
 msgid "The WooCommerce plugin must be active for Klarna Payments to work."
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:414
+#: klarna-payments-for-woocommerce.php:454
 msgid "Dismiss"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:421
+#: klarna-payments-for-woocommerce.php:461
 #. translators: URL to docs.
 msgid ""
 "It looks as if you don't have pretty permalinks enabled in WordPress. In "
@@ -1351,22 +1436,35 @@ msgid ""
 "setting needs to be enabled. <a href=\"%1$s\">Learn more</a>"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:422
+#: klarna-payments-for-woocommerce.php:462
 msgid "https://wordpress.org/support/article/using-permalinks/"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:516
-#: klarna-payments-for-woocommerce.php:525
+#: klarna-payments-for-woocommerce.php:556
+#: klarna-payments-for-woocommerce.php:565
 msgid ""
 "Your installation of Klarna Payments is not complete. If you installed this "
 "plugin directly from Github please refer to the README.DEV.md file in the "
 "plugin."
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:553
+#: klarna-payments-for-woocommerce.php:593
 msgid "Pay with Klarna (free)"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:556
+#: klarna-payments-for-woocommerce.php:596
 msgid "Pay with Klarna"
+msgstr ""
+
+#: src/Api/Registry.php:45
+#. translators: 1: The name of the incorrect class. 2: The name of the base
+#. Controller class.
+msgid "The controller %1$s must extend the %2$s class."
+msgstr ""
+
+#: src/PluginFeatures.php:176 src/PluginFeatures.php:215
+#. translators: %s: The error message from the API request.
+msgid ""
+"There was an error when trying to get the feature availability from Klarna. "
+"Please check your API credentials and try again. Error: %s"
 msgstr ""
