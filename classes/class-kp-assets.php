@@ -387,7 +387,7 @@ class KP_Assets {
 		self::register_module_data( $params, '@klarna/interoperability_token' );
 
 		// Only enqueue the script if the customer is a AP merchant, meaning Klarna Payments is not used as a payment method.
-		if ( PluginFeatures::is_available( Features::PAYMENTS ) ) {
+		if ( ! PluginFeatures::is_available( Features::PAYMENTS ) ) {
 			wp_enqueue_script_module( '@klarna/interoperability_token' );
 		}
 	}
