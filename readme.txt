@@ -69,7 +69,7 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
-= 2025.12.03    - version 4.5.0 =
+= 2025.12.04    - version 4.5.0 =
 * Feature       - [KEC] Add support for Klarna Express Checkout one step checkout for AP partners using the V2 WebSDK.
 * Feature       - Set the payment method title for the WooCommerce order based on the payment method used from Klarna.
 * Change        - [SIWK, KOSM] Migrated Sign-in with Klarna, Onsite messaging and Klarna interoperability token to Klarna's V2 WebSDK.
