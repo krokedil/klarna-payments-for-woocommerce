@@ -2,12 +2,12 @@
 Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
-Requires at least: 5.0
-Tested up to: 6.8.3
+Requires at least: 6.7
+Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.3.5
-Stable tag: 4.4.1
+WC tested up to: 10.3.6
+Stable tag: 4.5.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -39,16 +39,14 @@ Go to [Klarna](https://www.klarna.com) to get details about all payment methods 
 
 === How to Get Started ===
 * [Sign up for Klarna](https://www.klarna.com/international/business/woocommerce/).
-* Install the plugin on your site and download Klarna Order Management.
+* Install the plugin on your site.
 
 === Smart Solutions to Maximize Sales ===
 
 - **On-site messaging**: Personalized messaging throughout the shopper journey for higher conversion rates.
 - **Express checkout**: A faster checkout process to lower the threshold for purchase completion.
 
-=== What's the difference between Klarna Checkout and Klarna Payments? ===
-- **Klarna Payments**: Standalone payment methods complementing your existing checkout with a Klarna hosted widget.
-- **Klarna Checkout**: Complete online checkout solution designed to increase sales and customer loyalty, with Klarna as your single payment provider.
+=== Standalone payment methods complementing your existing checkout with a Klarna hosted widget ===
 For more details, visit the [Klarna Payments page](https://woocommerce.com/products/klarna-payments/).
 
 == Installation ==
@@ -71,6 +69,15 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2025.12.04    - version 4.5.0 =
+* Feature       - [KEC] Add support for Klarna Express Checkout one step checkout for AP partners using the V2 WebSDK.
+* Feature       - Set the payment method title for the WooCommerce order based on the payment method used from Klarna.
+* Change        - [SIWK, KOSM] Migrated Sign-in with Klarna, Onsite messaging and Klarna interoperability token to Klarna's V2 WebSDK.
+* Enhancement   - Updated how we store feature availability in Klarna for API credentials.
+* Enhancement   - Improved when we load some Klarna features to prevent them from loading on each page.
+* Fix           - Removed a reference to Klarna Checkout in an error message when getting a 403 error from Klarna's API.
+* Fix           - Fixed an issue where the customer token was missing for HPP purchases for subscriptions when using the block checkout.
+
 = 2025.11.17    - version 4.4.1 =
 * Fix           - Temporarily disabled the interoperability token feature.
 

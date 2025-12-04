@@ -11,6 +11,8 @@ function customize_php_scoper_config( array $config ): array {
 	$config['exclude-classes'][] = 'WC_Product';
 	$config['exclude-classes'][] = 'WC_Klarna_Order_Management';
 	$config['exclude-classes'][] = 'KP_Form_Fields';
+	$config['exclude-classes'][] = 'KP_Assets';
+	$config['exclude-classes'][] = 'KP_Requests';
 	$config['exclude-classes'][] = 'KP_Subscription';
 	$config['exclude-classes'][] = 'KCO';
 
@@ -38,6 +40,7 @@ function customize_php_scoper_config( array $config ): array {
 
 	$config['exclude-functions'] = array_merge( $config['exclude-functions'] ?? array(), $functions );
 	$config['exclude-namespaces'][] = 'Automattic';
+	$config['exclude-namespaces'][] = 'Krokedil\Klarna';
 
 	return $config;
 }

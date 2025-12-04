@@ -48,7 +48,7 @@ class KP_Callbacks {
 		$order = wc_get_orders(
 			array(
 				'meta_key'   => '_kp_session_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-				'meta_value' => $data['session_id'],
+				'meta_value' => $data['session_id'], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 				'limit'      => 1,
 				'orderby'    => 'date',
 				'order'      => 'DESC',
@@ -134,6 +134,24 @@ class KP_Callbacks {
 		// Check if the order has already been processed.
 		if ( ! empty( $order->get_date_paid() ) ) {
 			return;
+		}
+
+		$recurring_token = false;
+		if ( KP_Subscription::order_has_subscription( $order ) ) {
+			$recurring_token = KP_WC()->subscription->create_customer_token( $order, $auth_token );
+			if ( is_wp_error( $recurring_token ) ) {
+				if ( 'FREE_TRIAL' === $recurring_token->get_error_code() ) {
+					kp_unset_session_values();
+				} else {
+					$order->add_order_note( __( 'Failed to create a recurring token when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) . $recurring_token->get_error_message() );
+
+					KP_Logger::log( sprintf( '[AJAX]: Order ID: %s. Auth token: %s. %s', $order->get_id(), $auth_token, $recurring_token->get_error_message() ) );
+				}
+
+				// If the intent is only 'tokenize', we should not proceed further as 'place_order' only allows 'buy_and_tokenize' intent.
+				// We may also return here since a call to 'place_order' will fail if the customer token fails to be created or if the intent is only 'tokenize'.
+				return;
+			}
 		}
 
 		// Trigger place order on the auth token with KP.

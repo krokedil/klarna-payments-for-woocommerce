@@ -47,5 +47,5 @@ abstract class KP_Requests_Patch extends KP_Requests {
 	 *
 	 * @return array
 	 */
-	abstract function get_body();
+	abstract public function get_body();
 }

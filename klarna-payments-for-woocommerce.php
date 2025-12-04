@@ -5,12 +5,12 @@
  * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 4.4.1
+ * Version: 4.5.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 10.3.5
+ * WC tested up to: 10.3.6
  * Requires Plugins: woocommerce
  *
  * Copyright (c) 2017-2025 Krokedil
@@ -31,6 +31,9 @@
  * @package WC_Klarna_Payments
  */
 
+use Krokedil\Klarna\Api\Registry;
+use Krokedil\Klarna\PluginFeatures;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -46,7 +49,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '4.4.1' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '4.5.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -174,7 +177,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public $order_management = null;
 
-		/*
+		/**
 		 * Logger instance.
 		 *
 		 * @var Logger
@@ -187,6 +190,20 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * @var SystemReport
 		 */
 		private $system_report;
+
+		/**
+		 * PluginFeatures instance.
+		 *
+		 * @var PluginFeatures
+		 */
+		private $plugin_features;
+
+		/**
+		 * API Registry instance.
+		 *
+		 * @var Registry
+		 */
+		private $api_registry;
 
 		/**
 		 * Logger instance.
@@ -204,6 +221,24 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function report() {
 			return $this->system_report;
+		}
+
+		/**
+		 * Plugin features.
+		 *
+		 * @return PluginFeatures
+		 */
+		public function plugin_features() {
+			return $this->plugin_features;
+		}
+
+		/**
+		 * API Registry instance.
+		 *
+		 * @return Registry
+		 */
+		public function api_registry() {
+			return $this->api_registry;
 		}
 
 		/**
@@ -261,6 +296,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			$this->settings_page           = new KP_Settings_Page();
 			$this->checkout                = new KP_Checkout();
+			$this->plugin_features         = new PluginFeatures();
 			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
 			$this->krokedil                = new KrokedilWooCommerce(
 				array(
@@ -289,10 +325,14 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			);
 			$this->system_report = new SystemReport( 'klarna_payments', 'Klarna for WooCommerce', $included_settings_fields );
-
 			$this->register_payment_block();
 
+			// Initialize the API registry.
+			$this->api_registry = new Registry();
+
 			add_action( 'before_woocommerce_init', array( $this, 'declare_wc_compatibility' ) );
+
+			$this->plugin_features->init_features();
 		}
 
 		/**
@@ -549,7 +589,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public static function get_pay_button_label() {
 
-			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) {
+			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) { // phpcs:ignore
 				return apply_filters( 'kp_blocks_order_button_label_free', __( 'Pay with Klarna (free)', 'klarna-payments-for-woocommerce' ) );
 			}
 

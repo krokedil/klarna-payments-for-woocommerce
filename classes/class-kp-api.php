@@ -253,13 +253,13 @@ class KP_Api {
 	 * Get unavailable features.
 	 *
 	 * @param array $credentials The credentials to use.
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	public function get_unavailable_features( $credentials ) {
 		$api_password = $credentials['shared_secret'] ?? false;
 
 		if ( ! $api_password ) {
-			return new WP_Error( 'missing_shared_secret', __( 'Missing shared secret.', 'woocommerce-klarna-payments' ) );
+			return new WP_Error( 'missing_shared_secret', __( 'Missing shared secret.', 'klarna-payments-for-woocommerce' ) );
 		}
 
 		if ( ! get_option( 'kp_uuid4' ) ) {

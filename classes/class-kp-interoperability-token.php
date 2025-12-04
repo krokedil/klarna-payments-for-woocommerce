@@ -7,6 +7,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class for managing the Klarna Interoperability token.
+ */
 class KP_Interoperability_Token {
 	/**
 	 * Class constructor.
@@ -55,7 +58,7 @@ class KP_Interoperability_Token {
 	 * @return void
 	 */
 	public function clear_token() {
-		if( null === WC()->session ) {
+		if ( null === WC()->session ) {
 			return;
 		}
 

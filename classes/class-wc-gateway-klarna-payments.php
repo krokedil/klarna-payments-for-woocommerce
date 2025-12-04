@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Krokedil\Klarna\Features;
+use Krokedil\Klarna\PluginFeatures;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
 
 /**
@@ -163,6 +165,24 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Get payment gateway title.
+	 *
+	 * @return string
+	 */
+	public function get_title() {
+		$order_id = kp_get_the_ID();
+
+		if ( ! empty( $order_id ) ) {
+			$order = wc_get_order( $order_id );
+			if ( ! empty( $order ) ) {
+				return apply_filters( 'woocommerce_gateway_title', $order->get_payment_method_title(), $this->id );
+			}
+		}
+
+		return parent::get_title();
+	}
+
+	/**
 	 * Add sidebar to the settings page.
 	 */
 	public function admin_options() {
@@ -277,8 +297,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
-		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
-		if ( in_array( 'general', $kp_unavailable_feature_ids ) ) {
+		// If payments is not available as a feature, don't show the gateway.
+		if ( ! PluginFeatures::is_available( Features::PAYMENTS ) ) {
 			return false;
 		}
 
@@ -529,36 +549,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function address_notice( $order ) {
 		if ( $this->id === $order->get_payment_method() ) {
 			echo '<div style="margin: 10px 0; padding: 10px; border: 1px solid #B33A3A; font-size: 12px">Order address should not be changed and any changes you make will not be reflected in Klarna system.</div>';
-		}
-	}
-
-	/**
-	 * Set payment method title for order.
-	 *
-	 * @param WC_Order $order WooCommerce order.
-	 * @param array    $klarna_place_order_response The Klarna place order response.
-	 * @return void
-	 * @todo Change it so that it dynamically gets information from Klarna.
-	 */
-	public function set_payment_method_title( $order, $klarna_place_order_response ) {
-		$title         = $order->get_payment_method_title();
-		$klarna_method = $klarna_place_order_response['authorized_payment_method']['type'];
-		switch ( $klarna_method ) {
-			case 'invoice':
-				$klarna_method = 'Pay Later';
-				break;
-			case 'base_account':
-				$klarna_method = 'Slice It';
-				break;
-			case 'direct_debit':
-				$klarna_method = 'Direct Debit';
-				break;
-			default:
-				$klarna_method = null;
-		}
-		if ( null !== $klarna_method ) {
-			$new_title = $title . ' - ' . $klarna_method;
-			$order->set_payment_method_title( $new_title );
 		}
 	}
 
