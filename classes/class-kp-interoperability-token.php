@@ -37,19 +37,35 @@ class KP_Interoperability_Token {
 	}
 
 	/**
-	 * Set the token in the WooCommerce session.
+	 * Set the token and other interoperability data in the WooCommerce session.
 	 *
 	 * @param string $token The token to set.
 	 *
 	 * @return void
 	 */
 	public static function set_token( $token ) {
-		// Maybe start the WooCommerce session if it's not already started for the current user.
 		if ( ! WC()->session->has_session() ) {
 			WC()->session->set_customer_session_cookie( true );
 		}
 
-		WC()->session->set( 'klarna_interoperability_token', $token );
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+		// Send shopping data as default, if not set.
+		if ( WC()->cart && ( ! isset( $settings['send_shopping_data'] ) || 'yes' === $settings['send_shopping_data'] ) ) {
+			$customer_type         = $settings['customer_type'] ?? 'b2c';
+			$order_data            = new KP_Order_Data( $customer_type );
+			$interoperability_data = $order_data->get_klarna_order_lines_array();
+		}
+
+		WC()->session->set(
+			'klarna_interoperability_token',
+			array(
+				'interoperability_token' => $token,
+				'interoperability_data'  => array(
+					'line_items' => $interoperability_data ?? array(),
+				),
+			)
+		);
 	}
 
 	/**
