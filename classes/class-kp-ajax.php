@@ -271,8 +271,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			}
 
 			KP_Interoperability_Token::set_token( $token );
+			KP_Interoperability_Token::set_data();
 
-			wp_send_json_success();
+			$interoperability_data = KP_Interoperability_Token::get_data();
+
+			wp_send_json_success( $interoperability_data );
 		}
 	}
 }

@@ -18,6 +18,7 @@ const kp_interoperability_token = {
 	init: async function () {
 		this.params = configData;
 		this.updateGlobalToken( this.params.token )
+		this.updateGlobalData( this.params.data )
 		this.Klarna = await KlarnaSDK({
 			clientId: this.params.client_id
 		});
@@ -46,6 +47,15 @@ const kp_interoperability_token = {
 		window.klarna_interoperability_token = token
 	},
 
+	updateGlobalData: async function ( data ) {
+		// If the data is not set, return.
+		if ( ! data || data === "" ) {
+			return
+		}
+
+		window.klarna_interoperability_data = data
+	},
+
 	updateSessionToken: async function ( token ) {
 		const interoperabilityToken = token.interoperabilityToken
 		const { url, nonce } = kp_interoperability_token.params.ajax
@@ -58,7 +68,9 @@ const kp_interoperability_token = {
 			},
 			async: true,
 			success: function ( response ) {
+				const interoperabilityData = response.data
 				kp_interoperability_token.updateGlobalToken( interoperabilityToken )
+				kp_interoperability_token.updateGlobalData( interoperabilityData )
 			},
 			error: function ( error ) {
 				console.error( "Error updating Interoperability Token:", error )
