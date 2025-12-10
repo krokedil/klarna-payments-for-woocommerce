@@ -26,6 +26,9 @@ const kp_interoperability_token = {
 
 		// Set the klarna object to the window for other scripts to use as well.
 		$('body').trigger({ type: 'klarna_wc_sdk_loaded', Klarna: kp_interoperability_token.Klarna });
+
+		// Update the session data when cart totals are updated.
+		$( document.body ).on( "updated_cart_totals", kp_interoperability_token.updateSessionData );
 	},
 
 	bindKlarnaEvents: async function () {
@@ -58,22 +61,41 @@ const kp_interoperability_token = {
 
 	updateSessionToken: async function ( token ) {
 		const interoperabilityToken = token.interoperabilityToken
-		const { url, nonce } = kp_interoperability_token.params.ajax
+		const { token_url, token_nonce } = kp_interoperability_token.params.ajax
 		await $.ajax( {
-			url: url,
+			url: token_url,
 			type: "POST",
 			data: {
 				token: interoperabilityToken,
-				nonce: nonce,
+				nonce: token_nonce,
 			},
 			async: true,
 			success: function ( response ) {
-				const interoperabilityData = response.data
 				kp_interoperability_token.updateGlobalToken( interoperabilityToken )
-				kp_interoperability_token.updateGlobalData( interoperabilityData )
+				kp_interoperability_token.updateSessionData()
 			},
 			error: function ( error ) {
 				console.error( "Error updating Interoperability Token:", error )
+			},
+		} )
+	},
+
+	updateSessionData: async function () {
+		const { data_url, data_nonce } = kp_interoperability_token.params.ajax
+		await $.ajax( {
+			url: data_url,
+			type: "POST",
+			data: {
+				nonce: data_nonce,
+			},
+			async: true,
+			success: function ( response ) {
+				const updatedData = response.data
+				kp_interoperability_token.updateGlobalData( updatedData )
+
+			},
+			error: function ( error ) {
+				console.error( "Error updating Interoperability data:", error )
 			},
 		} )
 	},
