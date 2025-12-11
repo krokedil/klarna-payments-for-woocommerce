@@ -118,15 +118,15 @@ class KP_Interoperability_Token {
 	 */
 	public static function should_send_data() {
 		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		if ( ! isset( $settings['send_shopping_data'] ) || 'yes' === $settings['send_shopping_data'] ) {
-			return true;
+		if ( $settings['send_shopping_data'] ?? 'yes' ) {
+			return false;
 		}
 
 		$is_partner = PluginFeatures::get_acquiring_partner_key();
-		if ( $is_partner ) {
-			return true;
+		if ( ! $is_partner ) {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 }
