@@ -206,25 +206,15 @@ class KP_Order_Data {
 	 */
 	public function get_klarna_order_line_object_interoperability( $order_line, $shipping_reference ) {
 
-		if ( $this->separate_sales_tax ) {
-			$total_amount     = $order_line->get_total_amount() - $order_line->get_total_discount_amount();
-			$unit_price       = $order_line->get_subtotal_unit_price() - ( $order_line->get_total_discount_amount() / max( 1, $order_line->get_quantity() ) );
-			$total_tax_amount = 0;
-		} else {
-			$total_amount     = $order_line->get_total_amount() + $order_line->get_total_tax_amount() - ( $order_line->get_total_discount_amount() + $order_line->get_total_discount_tax_amount() );
-			$unit_price       = $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount() - ( ( $order_line->get_total_discount_amount() + $order_line->get_total_discount_tax_amount() ) / max( 1, $order_line->get_quantity() ) );
-			$total_tax_amount = $order_line->get_total_tax_amount() - $order_line->get_total_discount_tax_amount();
-		}
-
 		$klarna_interoperability_item = array(
 			'name'               => $order_line->get_name(),
 			'quantity'           => $order_line->get_quantity(),
-			'total_amount'       => $total_amount,
-			'unit_price'         => $unit_price,
-			'total_tax_amount'   => $total_tax_amount,
+			'total_amount'       => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
+			'unit_price'         => $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount(),
+			'total_tax_amount'   => $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount(),
 			'product_url'        => $order_line->get_product_url(),
 			'image_url'          => $this->maybe_allow_order_line_url( $order_line->get_image_url() ),
-			'product_identifier' => \apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
+			'product_identifier' => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
 			'reference'          => $order_line->get_sku(),
 			'shipping_reference' => $shipping_reference,
 		);
