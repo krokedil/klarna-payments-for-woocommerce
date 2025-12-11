@@ -28,9 +28,9 @@ const kp_interoperability_token = {
 		$('body').trigger({ type: 'klarna_wc_sdk_loaded', Klarna: kp_interoperability_token.Klarna });
 
 		// Check if we should send shopping data to Klarna.
-		if ( true === this.params.send_data ) {
+		if ( true === kp_interoperability_token.params.send_data ) {
 			// Update the session data when cart or checkout is updated.
-			$( document.body ).on( "updated_cart_totals, added_to_cart, removed_from_cart, updated_checkout, wc-blocks_added_to_cart, wc-blocks_removed_from_cart", kp_interoperability_token.updateSessionData );
+			$( document.body ).on( "updated_cart_totals added_to_cart removed_from_cart updated_checkout wc-blocks_added_to_cart wc-blocks_removed_from_cart", kp_interoperability_token.updateSessionData );
 		}
 	},
 
@@ -76,7 +76,7 @@ const kp_interoperability_token = {
 			success: function ( response ) {
 				kp_interoperability_token.updateGlobalToken( interoperabilityToken )
 				// Check if we should send shopping data to Klarna.
-				if ( true === this.params.send_data ) {
+				if ( true === kp_interoperability_token.params.send_data ) {
 					kp_interoperability_token.updateSessionData()
 				}
 			},

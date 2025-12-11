@@ -118,7 +118,7 @@ class KP_Interoperability_Token {
 	 */
 	public static function should_send_data() {
 		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		if ( $settings['send_shopping_data'] ?? 'yes' ) {
+		if ( 'no' === $settings['send_shopping_data'] ?? 'yes' ) {
 			return false;
 		}
 
