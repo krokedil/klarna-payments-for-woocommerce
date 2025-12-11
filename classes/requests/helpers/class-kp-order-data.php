@@ -210,7 +210,7 @@ class KP_Order_Data {
 			'name'               => $order_line->get_name(),
 			'quantity'           => $order_line->get_quantity(),
 			'total_amount'       => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
-			'unit_price'         => $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount(),
+			'unit_price'         => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
 			'total_tax_amount'   => $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount(),
 			'product_url'        => $order_line->get_product_url(),
 			'image_url'          => $this->maybe_allow_order_line_url( $order_line->get_image_url() ),
