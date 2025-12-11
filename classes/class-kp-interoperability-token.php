@@ -7,6 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Krokedil\Klarna\PluginFeatures;
+
 /**
  * Class for managing the Klarna Interoperability token.
  */
@@ -20,6 +22,14 @@ class KP_Interoperability_Token {
 		// Clear the token from the session when they place an order.
 		add_action( 'woocommerce_checkout_order_processed', array( $this, 'clear_token' ) );
 		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'clear_token' ) );
+		add_action(
+			'woocommerce_after_calculate_totals',
+			function () {
+				if ( self::should_send_data() ) {
+					self::set_data();
+				}
+			}
+		);
 	}
 
 	/**
@@ -84,7 +94,7 @@ class KP_Interoperability_Token {
 		$order_data            = new KP_Order_Data( $customer_type );
 		$interoperability_data = $order_data->get_klarna_order_lines_interoperability();
 
-		WC()->session->set( 'klarna_interoperability_data', array( 'line_items' => $interoperability_data ) );
+		WC()->session->set( 'klarna_interoperability_data', $interoperability_data );
 	}
 
 	/**
@@ -99,5 +109,24 @@ class KP_Interoperability_Token {
 
 		WC()->session->__unset( 'klarna_interoperability_token' );
 		WC()->session->__unset( 'klarna_interoperability_data' );
+	}
+
+	/**
+	 * Determine if we should send interoperability data.
+	 *
+	 * @return bool
+	 */
+	public static function should_send_data() {
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		if ( ! isset( $settings['send_shopping_data'] ) || 'yes' === $settings['send_shopping_data'] ) {
+			return true;
+		}
+
+		$is_partner = PluginFeatures::get_acquiring_partner_key();
+		if ( $is_partner ) {
+			return true;
+		}
+
+		return false;
 	}
 }

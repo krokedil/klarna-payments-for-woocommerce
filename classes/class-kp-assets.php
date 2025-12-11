@@ -379,11 +379,12 @@ class KP_Assets {
 			'client_id' => kp_get_client_id(),
 			'token'     => KP_Interoperability_Token::get_token(),
 			'data'      => KP_Interoperability_Token::get_data(),
+			'send_data' => KP_Interoperability_Token::should_send_data(),
 			'ajax'      => array(
 				'token_url'   => WC_AJAX::get_endpoint( 'kp_wc_set_interoperability_token' ),
 				'token_nonce' => wp_create_nonce( 'kp_wc_set_interoperability_token' ),
-				'data_url'    => WC_AJAX::get_endpoint( 'kp_wc_set_interoperability_data' ),
-				'data_nonce'  => wp_create_nonce( 'kp_wc_set_interoperability_data' ),
+				'data_url'    => WC_AJAX::get_endpoint( 'kp_wc_get_interoperability_data' ),
+				'data_nonce'  => wp_create_nonce( 'kp_wc_get_interoperability_data' ),
 			),
 		);
 

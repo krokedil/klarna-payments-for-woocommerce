@@ -34,7 +34,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				'kp_wc_express_button'             => true,
 				'kp_wc_get_unavailable_features'   => true,
 				'kp_wc_set_interoperability_token' => true,
-				'kp_wc_set_interoperability_data'  => true,
+				'kp_wc_get_interoperability_data'  => true,
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -281,11 +281,10 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 *
 		 * @return void
 		 */
-		public static function kp_wc_set_interoperability_data() {
+		public static function kp_wc_get_interoperability_data() {
 			// Verify the nonce.
-			check_ajax_referer( 'kp_wc_set_interoperability_data', 'nonce' );
+			check_ajax_referer( 'kp_wc_get_interoperability_data', 'nonce' );
 
-			KP_Interoperability_Token::set_data();
 			$interoperability_data = KP_Interoperability_Token::get_data();
 
 			wp_send_json_success( $interoperability_data );
