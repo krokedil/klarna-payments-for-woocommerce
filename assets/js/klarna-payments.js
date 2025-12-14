@@ -9,6 +9,7 @@ jQuery( function ( $ ) {
 		klarna_container_selector: "#klarna_container_2",
 		checkout_values: {},
 		addresses: {},
+		submit_button_selectors: klarna_payments_params.submit_button_selectors.join(', '),
 		log: ( ...args ) => {
 			if ( klarna_payments_params.debug ) {
 				console.log( ...args )
@@ -598,7 +599,7 @@ jQuery( function ( $ ) {
 		klarna_payments.setRadioButtonValues()
 	} )
 
-	$( document ).on( "click", "input#place_order, button#place_order", function ( e ) {
+	$( document ).on( "click", klarna_payments.submit_button_selectors, function ( e ) {
 		// No strict comparison: wp_localize_script() converts booleans to strings "1", respectively, "0".
 		if ( true == klarna_payments_params.pay_for_order ) {
 			klarna_payments.klarnaPayForOrder( e )
