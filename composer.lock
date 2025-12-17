@@ -53,16 +53,16 @@
         },
         {
             "name": "php-stubs/wordpress-stubs",
-            "version": "v6.8.3",
+            "version": "v6.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "abeb5a8b58fda7ac21f15ee596f302f2959a7114"
+                "reference": "5171cb6650e6c583a96943fd6ea0dfa3e1089a8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/abeb5a8b58fda7ac21f15ee596f302f2959a7114",
-                "reference": "abeb5a8b58fda7ac21f15ee596f302f2959a7114",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/5171cb6650e6c583a96943fd6ea0dfa3e1089a8a",
+                "reference": "5171cb6650e6c583a96943fd6ea0dfa3e1089a8a",
                 "shasum": ""
             },
             "conflict": {
@@ -98,9 +98,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.8.3"
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.9.0"
             },
-            "time": "2025-09-30T20:58:47+00:00"
+            "time": "2025-12-03T23:06:24+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -108,12 +108,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "dd5483b3b298a47bb831b9fe70f701cab2fb2171"
+                "reference": "be57d1c389be29ff78445a37ae33d07e94ab3c07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/dd5483b3b298a47bb831b9fe70f701cab2fb2171",
-                "reference": "dd5483b3b298a47bb831b9fe70f701cab2fb2171",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/be57d1c389be29ff78445a37ae33d07e94ab3c07",
+                "reference": "be57d1c389be29ff78445a37ae33d07e94ab3c07",
                 "shasum": ""
             },
             "require": {
@@ -179,7 +179,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-12-01T06:53:04+00:00"
+            "time": "2025-12-08T20:25:33+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -335,13 +335,13 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "7.4"
     },
