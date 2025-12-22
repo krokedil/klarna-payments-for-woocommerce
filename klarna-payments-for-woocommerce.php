@@ -33,6 +33,7 @@
 
 use Krokedil\Klarna\Api\Registry;
 use Krokedil\Klarna\PluginFeatures;
+use Krokedil\Klarna\Compatibility;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -185,13 +186,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		private $logger;
 
 		/**
-		 * Fluid Checkout compatibility class instance.
-		 *
-		 * @var KP_Compatibility_Fluid_Checkout
-		 */
-		public $fluid_checkout_compatibility = null;
-
-		/**
 		 * SystemReport instance.
 		 *
 		 * @var SystemReport
@@ -301,21 +295,21 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$kosm     = new KlarnaOnsiteMessaging( $settings );
 			add_filter( 'wc_gateway_klarna_payments_settings', array( $kosm->settings(), 'extend_v2_settings' ) );
 
-			$this->settings_page                = new KP_Settings_Page();
-			$this->checkout                     = new KP_Checkout();
-			$this->plugin_features              = new PluginFeatures();
-			$this->klarna_express_checkout      = new KP_Klarna_Express_Checkout();
-			$this->krokedil                     = new KrokedilWooCommerce(
+			$this->settings_page           = new KP_Settings_Page();
+			$this->checkout                = new KP_Checkout();
+			$this->plugin_features         = new PluginFeatures();
+			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
+			$this->krokedil                = new KrokedilWooCommerce(
 				array(
 					'slug'         => 'klarna_payments',
 					'price_format' => 'minor',
 				)
 			);
-			$this->siwk                         = new SignInWithKlarna( $settings );
-			$this->interoperability_token       = new KP_Interoperability_Token();
-			$this->order_management             = new KlarnaOrderManagement();
-			$this->logger                       = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
-			$this->fluid_checkout_compatibility = new KP_Compatibility_Fluid_Checkout();
+			$this->siwk                    = new SignInWithKlarna( $settings );
+			$this->interoperability_token  = new KP_Interoperability_Token();
+			$this->order_management        = new KlarnaOrderManagement();
+			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
+			Compatibility::register();
 
 			// Includes the selectable, and checkbox settings, but excludes those whose title is empty. The 'kp_section_start' will appear as a section header in the system report.
 			$included_settings_fields = array(
@@ -502,9 +496,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-interoperability-token.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-settings-page.php';
-
-			// Compatibility classes.
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/compatibility/class-kp-compatibility-fluid-checkout.php';
 
 			// Requests.
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/requests/class-kp-requests.php';
