@@ -1,7 +1,7 @@
 <?php
 namespace Krokedil\Klarna;
 
-use Krokedil\Klarna\Compatibility\CompatibilityFluidCheckout;
+use Krokedil\Klarna\Compatibility\FluidCheckout;
 
 /**
  * Compatibility class.
@@ -22,6 +22,6 @@ class Compatibility {
 	 */
 	public static function register() {
 		// Initialize Fluid Checkout compatibility.
-		CompatibilityFluidCheckout::init();
+		FluidCheckout::init();
 	}
 }

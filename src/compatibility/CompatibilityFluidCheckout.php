@@ -3,7 +3,7 @@ namespace Krokedil\Klarna\Compatibility;
 
 defined( 'ABSPATH' ) || exit;
 
-class CompatibilityFluidCheckout {
+class FluidCheckout {
 
 	/**
 	 * Selector for Fluid Checkout's place order button.
