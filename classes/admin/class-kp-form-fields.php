@@ -409,7 +409,7 @@ class KP_Form_Fields {
 				'class'       => 'kp_settings__send_shopping_data',
 				'description' => sprintf(
 					/* translators: %s: link to Klarna's privacy policy */
-					__( 'Sharing your customer\'s data with Klarna improves the customer\'s experience and makes disputes easier to handle. Learn more about <a href="%s" target="_blank">how we handle customer data</a>.', 'klarna-payments-for-woocommerce' ),
+					__( 'Sharing your customer\'s data with Klarna improves the customer\'s experience and makes disputes easier to handle. Learn more about <a href="%s" target="_blank">how we handle customer data</a>. The recipient\'s name, email, phone number, and shipping address (street, postal code, city, and country) will be included in this data.', 'klarna-payments-for-woocommerce' ),
 					'https://portal.klarna.com/privacy-policy'
 				),
 			),
