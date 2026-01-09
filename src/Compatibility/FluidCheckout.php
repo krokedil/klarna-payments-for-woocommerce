@@ -3,6 +3,11 @@ namespace Krokedil\Klarna\Compatibility;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Compatibility class for the Fluid Checkout for WooCommerce plugin.
+ *
+ * @see https://wordpress.org/plugins/fluid-checkout/
+ */
 class FluidCheckout {
 
 	/**
