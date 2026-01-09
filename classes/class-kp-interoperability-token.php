@@ -22,14 +22,7 @@ class KP_Interoperability_Token {
 		// Clear the token from the session when they place an order.
 		add_action( 'woocommerce_checkout_order_processed', array( $this, 'clear_token' ) );
 		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'clear_token' ) );
-		add_action(
-			'woocommerce_after_calculate_totals',
-			function () {
-				if ( self::should_send_data() ) {
-					self::set_data();
-				}
-			}
-		);
+		add_action( 'woocommerce_after_calculate_totals', array( $this, 'set_data' ) );
 	}
 
 	/**
@@ -49,15 +42,15 @@ class KP_Interoperability_Token {
 	/**
 	 * Get the interoperability data from the WooCommerce session.
 	 *
-	 * @return string|null
+	 * @return array|null
 	 */
 	public static function get_data() {
 		// If we don't have a session, we dont have a token.
 		if ( null === WC()->session || ! WC()->session->has_session() ) {
-			return array();
+			return null;
 		}
 
-		return WC()->session->get( 'klarna_interoperability_data' ) ?? array();
+		return WC()->session->get( 'klarna_interoperability_data' ) ?? null;
 	}
 
 	/**
@@ -68,6 +61,7 @@ class KP_Interoperability_Token {
 	 * @return void
 	 */
 	public static function set_token( $token ) {
+		// Maybe start the WooCommerce session if it's not already started for the current user.
 		if ( ! WC()->session->has_session() ) {
 			WC()->session->set_customer_session_cookie( true );
 		}
@@ -85,8 +79,15 @@ class KP_Interoperability_Token {
 	public static function set_data() {
 		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 
-		// Send shopping data as default, if not set.
-		if ( ! WC()->cart || 'no' === $settings['send_shopping_data'] ?? 'yes' ) {
+		if ( null === WC()->session ) {
+			return;
+		}
+
+		// Clear any existing data.
+		WC()->session->__unset( 'klarna_interoperability_data' );
+
+		// Make sure we have a cart and should send data.
+		if ( ! WC()->cart || ! self::should_send_data() ) {
 			return;
 		}
 
