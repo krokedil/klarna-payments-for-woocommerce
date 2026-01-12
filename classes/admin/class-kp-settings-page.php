@@ -204,7 +204,7 @@ class KP_Settings_Page {
 	 */
 	public static function text_info_html( $args ) {
 		?>
-		<tr class="kp_settings__text_info" valign="top">
+		<tr class="kp_settings__text_info <?php echo esc_attr( $args['class'] ?? '' ); ?>" valign="top">
 			<th scope="row" class="titledesc">
 				<h4><?php echo wp_kses_post( $args['title'] ?? '' ); ?></h4>
 			</th>
