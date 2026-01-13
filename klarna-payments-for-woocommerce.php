@@ -33,6 +33,7 @@
 
 use Krokedil\Klarna\Api\Registry;
 use Krokedil\Klarna\PluginFeatures;
+use Krokedil\Klarna\Compatibility;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -308,6 +309,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->interoperability_token  = new KP_Interoperability_Token();
 			$this->order_management        = new KlarnaOrderManagement();
 			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
+			Compatibility::register();
 
 			// Includes the selectable, and checkbox settings, but excludes those whose title is empty. The 'kp_section_start' will appear as a section header in the system report.
 			$included_settings_fields = array(
