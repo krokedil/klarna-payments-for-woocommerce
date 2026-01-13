@@ -233,30 +233,23 @@ class KP_Order_Data {
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
 
 		$recipient = array(
-			'given_name'  => $customer_data->get_shipping_first_name(),
-			'family_name' => $customer_data->get_shipping_last_name(),
-			'email'       => $customer_data->get_shipping_email(),
-			'phone'       => $customer_data->get_shipping_phone(),
+			'given_name'  => $customer_data->get_shipping_first_name() ?? '',
+			'family_name' => $customer_data->get_shipping_last_name() ?? '',
+			'email'       => $customer_data->get_shipping_email() ?? '',
+			'phone'       => $customer_data->get_shipping_phone() ?? '',
 		);
 
 		$address = array(
-			'street_address' => $customer_data->get_shipping_address_1(),
-			'postal_code'    => $strip_postcode_spaces ? $customer_data->get_shipping_postcode() : str_replace( ' ', '', $customer_data->get_shipping_postcode() ),
-			'city'           => $customer_data->get_shipping_city(),
-			'country'        => $customer_data->get_shipping_country(),
-		);
-
-		$shipping_option = array(
-			'shipping_type'            => '', // What to put here?
-			'shipping_type_attributes' => '', // What to put here?
-			'shipping_carrier'         => '', // What to put here?
+			'street_address' => $customer_data->get_shipping_address_1() ?? '',
+			'postal_code'    => $strip_postcode_spaces ? $customer_data->get_shipping_postcode() ?? '' : str_replace( ' ', '', $customer_data->get_shipping_postcode() ?? '' ),
+			'city'           => $customer_data->get_shipping_city() ?? '',
+			'country'        => $customer_data->get_shipping_country() ?? '',
 		);
 
 		return array(
-			'shipping_reference' => $shipping_line->get_sku(),
+			'shipping_reference' => $shipping_line->get_sku() ?? '',
 			'recipient'          => $recipient,
 			'address'            => $address,
-			'shipping_option'    => $shipping_option,
 		);
 	}
 
