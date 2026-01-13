@@ -247,7 +247,7 @@ class KP_Order_Data {
 		);
 
 		return array(
-			'shipping_reference' => $shipping_line->get_sku() ?? '',
+			'shipping_reference' => $shipping_line ? $shipping_line->get_sku() : '',
 			'recipient'          => $recipient,
 			'address'            => $address,
 		);
