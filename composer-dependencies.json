@@ -4,7 +4,7 @@
     "krokedil/wp-api": "^1.0",
     "krokedil/woocommerce": "^1.8.0",
     "krokedil/support": "^1.0.2",
-    "krokedil/klarna-express-checkout": "2.0.0",
+    "krokedil/klarna-express-checkout": "dev-kec-fix-one-step-priority",
     "krokedil/klarna-onsite-messaging": "2.0.0",
     "krokedil/settings-page": "^1.1.0",
     "krokedil/sign-in-with-klarna": "2.0.0",
