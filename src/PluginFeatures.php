@@ -71,6 +71,15 @@ class PluginFeatures {
 	protected $features = [];
 
 	/**
+	 * If the credentials we have parsed had a AP key or not.
+	 * Only used when processing all API credentials, and can not be used
+	 * to determine if we have an AP key or not in general.
+	 *
+	 * @var bool
+	 */
+	protected $check_has_acquiring_partner_key = false;
+
+	/**
 	 * Initialize the features and their availability.
 	 *
 	 * @return void
@@ -148,6 +157,7 @@ class PluginFeatures {
 
 		// Store the acquiring_partner_key if present in the response.
 		if ( isset( $response['acquiring_partner_key'] ) && ! empty( $response['acquiring_partner_key'] ) ) {
+			$this->check_has_acquiring_partner_key = true;
 			update_option( 'klarna_acquiring_partner_key', $response['acquiring_partner_key'] );
 		}
 	}
@@ -185,6 +195,11 @@ class PluginFeatures {
 			$features = $this->default_features;
 			KP_WC()->logger()->error( 'Error when trying to get the feature availability from Klarna: ' . $e->getMessage() );
 		} finally {
+			// If we did not have an acquiring partner key from the processed credentials, ensure we delete any existing one to ensure we do not have a stale key.
+			if ( ! $this->check_has_acquiring_partner_key ) {
+				delete_option( 'klarna_acquiring_partner_key' );
+			}
+
 			// Update the features option.
 			update_option( 'kp_plugin_features', array_merge( $this->default_features, $features ) );
 			// Re-initialize the features.
