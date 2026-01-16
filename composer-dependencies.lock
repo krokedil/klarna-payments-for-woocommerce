@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72454884483d8213122ccc7a72750289",
+    "content-hash": "b770863aaedf00cd827401ab686ef0c1",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -71,16 +71,16 @@
         },
         {
             "name": "krokedil/klarna-express-checkout",
-            "version": "dev-kec-fix-one-step-priority",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "00c0ff5bad5feff14938a3c8a351cf59c3306d4a"
+                "reference": "41656a73f69c1337e26fa4ea7632fbcf0d8371a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/00c0ff5bad5feff14938a3c8a351cf59c3306d4a",
-                "reference": "00c0ff5bad5feff14938a3c8a351cf59c3306d4a",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/41656a73f69c1337e26fa4ea7632fbcf0d8371a4",
+                "reference": "41656a73f69c1337e26fa4ea7632fbcf0d8371a4",
                 "shasum": ""
             },
             "require": {
@@ -136,10 +136,10 @@
             ],
             "description": "A Klarna Express Checkout solution for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-express-checkout/tree/kec-fix-one-step-priority",
+                "source": "https://github.com/krokedil/klarna-express-checkout/tree/2.1.0",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2026-01-15T09:28:44+00:00"
+            "time": "2026-01-16T15:15:17+00:00"
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
@@ -507,9 +507,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "krokedil/klarna-express-checkout": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
