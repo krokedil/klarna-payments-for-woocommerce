@@ -5,6 +5,9 @@
  * @package Klarna_Checkout/Classes
  */
 
+use Krokedil\Klarna\Features;
+use Krokedil\Klarna\PluginFeatures;
+
 /**
  * Class for checking settings on save.
  */
@@ -30,7 +33,17 @@ class KP_Settings_Saved {
 	 * Class constructor.
 	 */
 	public function __construct() {
+		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'update_credential_features' ), 5 );
 		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'check_api_credentials' ), 10 );
+	}
+
+	/**
+	 * Update the credentials feature availability when they are saved.
+	 *
+	 * @return void
+	 */
+	public function update_credential_features() {
+		KP_WC()->plugin_features()->process_all_api_credentials();
 	}
 
 	/**
@@ -49,14 +62,19 @@ class KP_Settings_Saved {
 		if ( $options && 'yes' !== $options['enabled'] ) {
 			return;
 		}
-		$countries = array_keys( KP_Form_Fields::$kp_form_auto_countries );
+		$countries              = array_keys( KP_Form_Fields::$kp_form_auto_countries );
+		$combine_eu_credentials = $options['combine_eu_credentials'] ?? 'no';
 
 		foreach ( $countries as $cc ) {
-			$combine_eu_credentials = $options['combine_eu_credentials'] ?? 'no';
-			$cc                     = 'yes' === $combine_eu_credentials && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
-			$cc                     = 'uk' === $cc ? 'gb' : $cc;
-			$password               = '';
-			$username               = '';
+			$cc       = 'yes' === $combine_eu_credentials && isset( $eu_countries[ $cc ] ) ? 'eu' : $cc;
+			$cc       = 'uk' === $cc ? 'gb' : $cc;
+			$password = '';
+			$username = '';
+
+			// If the credentials does not have the Payments feature enabled, skip them from testing.
+			if ( ! PluginFeatures::is_available( Features::PAYMENTS, $cc ) ) {
+				continue;
+			}
 
 			if ( 'yes' !== $options['testmode'] ) {
 				// Live.
@@ -112,15 +130,6 @@ class KP_Settings_Saved {
 
 				$this->maybe_handle_error();
 			}
-		}
-
-		$unavailable_features = $unavailable_features_credentials ? kp_get_unavailable_feature_ids( $unavailable_features_credentials ) : array();
-
-		// If we have any collected errors, save the unavailable features as a empty array.
-		if ( ! empty( $unavailable_features['errors'] ?? array() ) ) {
-			update_option( 'kp_unavailable_feature_ids', array() );
-		} else {
-			update_option( 'kp_unavailable_feature_ids', $unavailable_features['feature_ids'] ?? array() );
 		}
 	}
 

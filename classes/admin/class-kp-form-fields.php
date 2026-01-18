@@ -234,7 +234,7 @@ class KP_Form_Fields {
 		$credentials_html = sprintf( __( 'By activating Klarna using API credentials you agree to and accept the %s.', 'klarna-payments-for-woocommerce' ), $privacy_policy_html );
 
 		$credentials_section = array(
-			'credentials'         => array(
+			'credentials'              => array(
 				'id'          => 'credentials',
 				'title'       => 'Credentials',
 				'description' => __( 'To unlock the plugin\'s features, enter your credentials', 'klarna-payments-for-woocommerce' ),
@@ -246,13 +246,13 @@ class KP_Form_Fields {
 					),
 				),
 			),
-			'credentials_info'    => array(
+			'credentials_info'         => array(
 				'type'        => 'kp_text_info',
 				'title'       => __( 'Client Identifier & API Credentials', 'klarna-payments-for-woocommerce' ),
 				// translators: %s: merchant portal link.
 				'description' => sprintf( __( 'Enter the credentials for production and test for each market Klarna is used. Get the client identifier and API credentials from the %1$s, under Settings. <br><br><b>%2$s</b>', 'klarna-payments-for-woocommerce' ), $merchant_portal_html, $credentials_html ),
 			),
-			'available_countries' => array(
+			'available_countries'      => array(
 				'title'       => __( 'Enter the countries where Klarna will be available', 'klarna-payments-for-woocommerce' ) . ':',
 				'type'        => 'multiselect',
 				'class'       => 'wc-enhanced-select',
@@ -260,14 +260,29 @@ class KP_Form_Fields {
 				'placeholder' => __( 'Start typing', 'klarna-payments-for-woocommerce' ),
 				'default'     => '',
 			),
-			'testmode'            => array(
+			'testmode'                 => array(
 				'title'    => __( 'Test mode', 'klarna-payments-for-woocommerce' ),
 				'label'    => __( 'Enable Klarna in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
 				'default'  => 'no',
 				'desc_tip' => true,
 			),
-			'eu_credentials'      => array(
+			'send_shopping_data_title' => array(
+				'title'       => __( 'Shopping data', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'kp_text_info',
+				'class'       => 'kp_settings__send_shopping_data',
+				'description' => sprintf(
+					/* translators: %s: link to Klarna's privacy policy */
+					__( 'Sharing your customer\'s data with Klarna improves the customer\'s experience and makes disputes easier to handle. Learn more about <a href="%s" target="_blank">how we handle customer data</a>. The recipient\'s name, email, phone number, and shipping address (street, postal code, city, and country) will be included in this data.', 'klarna-payments-for-woocommerce' ),
+					'https://www.klarna.com/international/privacy-policy/'
+				),
+			),
+			'send_shopping_data'       => array(
+				'type'    => 'checkbox',
+				'label'   => __( 'Share shopping data with Klarna', 'klarna-payments-for-woocommerce' ),
+				'default' => 'yes',
+			),
+			'eu_credentials'           => array(
 				'title' => __( 'European Market', 'klarna-payments-for-woocommerce' ),
 				'type'  => 'kp_text_info',
 			),

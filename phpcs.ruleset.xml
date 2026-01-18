@@ -5,6 +5,8 @@
     <!-- Exclude vendor and node_modules from all rules -->
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/dependencies/*</exclude-pattern>
+    <exclude-pattern>*/blocks/build/*</exclude-pattern>
 
     <!-- Exclude the tests folder -->
     <exclude-pattern>tests/*</exclude-pattern>
@@ -47,7 +49,7 @@
     </rule>
 
     <!-- Allow the usage of shorthand arrays -->
-    <rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
+    <rule ref="Generic.Arrays.DisallowShortArraySyntax">
         <exclude-pattern>src/</exclude-pattern>
     </rule>
 </ruleset>

@@ -2,7 +2,7 @@
 /**
  * Cancel KP recurring order.
  *
- * https://docs.klarna.com/klarna-payments/other-actions/cancel-a-customer-token/
+ * @see https://docs.klarna.com/klarna-payments/other-actions/cancel-a-customer-token/
  *
  * @package WC_Klarna_Payments/Classes/Requests/PATCH
  */
@@ -32,7 +32,6 @@ class KP_Cancel_Recurring extends KP_Requests_Patch {
 	/**
 	 * Gets the request body.
 	 *
-	 * @param int $order_id The WooCommerce order id.
 	 * @return array
 	 */
 	public function get_body() {

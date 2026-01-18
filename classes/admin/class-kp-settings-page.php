@@ -5,6 +5,9 @@
  * @package Klarna_Payments_For_WooCommerce/Classes/Admin
  */
 
+use Krokedil\Klarna\Features;
+use Krokedil\Klarna\PluginFeatures;
+
 defined( 'ABSPATH' ) || exit;
 
 use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
@@ -93,9 +96,8 @@ class KP_Settings_Page {
 	 * @return void
 	 */
 	public static function section_start_html( $section ) {
-		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
-		$availability               = in_array( $section['id'], $kp_unavailable_feature_ids ) ? ' unavailable' : '';
-		$link_count                 = count( $section['links'] ?? array() );
+		$availability      = self::is_section_available( $section['id'] ) ? '' : ' unavailable';
+		$link_count        = count( $section['links'] ?? array() );
 		$link_count        = count( $section['links'] ?? array() );
 		$setting_is_active = self::get_setting_status( $section['id'] );
 		$feature_status    = array(
@@ -202,7 +204,7 @@ class KP_Settings_Page {
 	 */
 	public static function text_info_html( $args ) {
 		?>
-		<tr class="kp_settings__text_info" valign="top">
+		<tr class="kp_settings__text_info <?php echo esc_attr( $args['class'] ?? '' ); ?>" valign="top">
 			<th scope="row" class="titledesc">
 				<h4><?php echo wp_kses_post( $args['title'] ?? '' ); ?></h4>
 			</th>
@@ -405,6 +407,29 @@ class KP_Settings_Page {
 				return 'kom_enabled';
 			default:
 				'';
+		}
+	}
+
+	/**
+	 * Check if the section is available based on the feature availability settings.
+	 *
+	 * @param string $section_id The ID of the section.
+	 *
+	 * @return bool
+	 */
+	public static function is_section_available( $section_id ) {
+		switch ( $section_id ) {
+			case 'general': // Payments.
+			case 'kom':     // Order management.
+				return PluginFeatures::is_available( Features::PAYMENTS );
+			case 'onsite_messaging': // Klarna Onsite Messaging.
+				return PluginFeatures::is_available( Features::OSM );
+			case 'kec_settings': // Klarna Express Checkout.
+				return PluginFeatures::is_available( Features::KEC );
+			case 'siwk': // Sign in with Klarna.
+				return PluginFeatures::is_available( Features::SIWK );
+			default:
+				return true;
 		}
 	}
 }

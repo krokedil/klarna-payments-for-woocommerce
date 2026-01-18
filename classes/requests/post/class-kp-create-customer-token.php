@@ -2,7 +2,7 @@
 /**
  * Class for the issuing a customer token required for subscriptions.
  *
- * https://docs.klarna.com/api/payments/#operation/purchaseToken
+ * @see https://docs.klarna.com/api/payments/#operation/purchaseToken
  *
  * @package WC_Klarna_Payments/Classes/Requests/POST
  */

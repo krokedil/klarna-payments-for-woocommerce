@@ -98,7 +98,8 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 	/**
 	 * Gets the error message from the Klarna payments response.
 	 *
-	 * @param array $response
+	 * @param array $response The response from the request.
+	 *
 	 * @return WP_Error
 	 */
 	public function get_error_message( $response ) {

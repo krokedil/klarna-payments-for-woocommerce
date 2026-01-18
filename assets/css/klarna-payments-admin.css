@@ -452,3 +452,11 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	align-items: center;
 	gap: 5px;
 }
+
+.woocommerce .kp_settings__section table.form-table tr.kp_settings__send_shopping_data + tr {
+	padding-top: 0;
+}
+
+.kp_settings__send_shopping_data + tr .titledesc {
+	display: none;
+}
