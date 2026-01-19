@@ -1,5 +1,8 @@
 *** Klarna for WooCommerce Changelog ***
-2026.01.04    - version 4.6.0
+2026.01.20    - version 4.6.1
+* Fix         - Resolved a PHP warning ("Undefined array key 'send_shopping_data'") that could occur if plugin settings had not been saved after the latest update.
+
+2026.01.19    - version 4.6.0
 * Feature     - Added setting "Share shopping data with Klarna" to enable Supplementary Purchase Data being sent to Klarna, providing additional transaction context to improve payment outcomes and customer experience.
 * Feature     - Added support for the Fluid Checkout for WooCommerce plugin.
 * Feature     - [KEC] Added setting to select which flow to use for KEC when both one step checkout and two step flows are available and a AP key exists.

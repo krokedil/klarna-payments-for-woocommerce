@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 10.4.3
-Stable tag: 4.6.0
+Stable tag: 4.6.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026.01.20    - version 4.6.1 =
+* Fix           - Resolved a PHP warning ("Undefined array key 'send_shopping_data'") that could occur if plugin settings had not been saved after the latest update.
+
 = 2026.01.19    - version 4.6.0 =
 * Feature       - Added setting "Share shopping data with Klarna" to enable Supplementary Purchase Data being sent to Klarna, providing additional transaction context to improve payment outcomes and customer experience.
 * Feature       - Added support for the Fluid Checkout for WooCommerce plugin.
