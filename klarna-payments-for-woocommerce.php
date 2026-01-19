@@ -5,15 +5,15 @@
  * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 4.5.0
+ * Version: 4.6.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 10.3.6
+ * WC tested up to: 10.4.3
  * Requires Plugins: woocommerce
  *
- * Copyright (c) 2017-2025 Krokedil
+ * Copyright (c) 2017-2026 Krokedil
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 
 use Krokedil\Klarna\Api\Registry;
 use Krokedil\Klarna\PluginFeatures;
+use Krokedil\Klarna\Compatibility;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -49,7 +50,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '4.5.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '4.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -308,6 +309,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->interoperability_token  = new KP_Interoperability_Token();
 			$this->order_management        = new KlarnaOrderManagement();
 			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
+			Compatibility::register();
 
 			// Includes the selectable, and checkbox settings, but excludes those whose title is empty. The 'kp_section_start' will appear as a section header in the system report.
 			$included_settings_fields = array(

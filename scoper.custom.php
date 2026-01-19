@@ -5,6 +5,10 @@ function customize_php_scoper_config( array $config ): array {
 	$config['exclude-constants'][] = 'ABSPATH';
 	$config['exclude-constants'][] = 'KOSM_VERSION';
 	$config['exclude-constants'][] = 'SIWK_VERSION';
+	$config['exclude-constants'][] = 'KLARNA_ORDER_MANAGEMENT_VERSION';
+	$config['exclude-constants'][] = 'KLARNA_ORDER_MANAGEMENT_MIN_PHP_VER';
+	$config['exclude-constants'][] = 'KLARNA_ORDER_MANAGEMENT_MIN_WC_VER';
+	$config['exclude-constants'][] = 'KLARNA_ORDER_MANAGEMENT_CHECKOUT_URL';
 	$config['exclude-classes'][] = 'WooCommerce';
 	$config['exclude-classes'][] = 'Klarna_OnSite_Messaging';
 	$config['exclude-classes'][] = 'Klarna_OnSite_Messaging_For_WooCommerce';

@@ -31,7 +31,8 @@ class KP_Subscription {
 		add_filter( 'wc_klarna_payments_update_session_args', array( $this, 'set_tokenize_intent' ) );
 
 		// For free or trial subscription, we set the order as captured to prevent KOM from setting the order to on-hold when the merchant set the order to "Completed".
-		add_filter( 'woocommerce_payment_complete', array( $this, 'set_subscription_as_captured' ) );
+		// NOTE: we cannot use the 'woocommerce_payment_complete' hook as it is triggered after the order is marked as completed, which is too late.
+		add_filter( 'woocommerce_pre_payment_complete', array( $this, 'set_subscription_as_captured' ) );
 
 		// Override the redirect URLs to redirect back to the change payment method page on failure or to the subscription view on success.
 		add_filter( 'wc_klarna_payments_create_hpp_args', array( $this, 'set_subscription_order_redirect_urls' ) );
@@ -125,9 +126,12 @@ class KP_Subscription {
 			return $order_id;
 		}
 
+		// Attempting to capture a free trial order will result in an API error from the order management.
+		// This check is generic as the issue isn't related to the type of subscription, but rather the total amount.
+		// Similarly, a synchronized subscription may also be zero if subscription settings is set to never charge the full amount at sign-up.
 		if ( self::order_has_subscription( $order ) && 0.0 === floatval( $order->get_total() ) ) {
 			$order->update_meta_data( '_wc_klarna_capture_id', 'trial' );
-			$order->save();
+			$order->save_meta_data();
 		}
 
 		return $order_id;
