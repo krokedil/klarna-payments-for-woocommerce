@@ -1,9 +1,9 @@
 <?php
-namespace Krokedil\KlarnaOrderManagement\Request\Post;
+namespace Krokedil\Klarna\OrderManagement\Request\Post;
 
-use Krokedil\KlarnaOrderManagement\KlarnaOrderManagement;
-use Krokedil\KlarnaOrderManagement\OrderLines;
-use Krokedil\KlarnaOrderManagement\Request\RequestPost;
+use Krokedil\Klarna\OrderManagement\KlarnaOrderManagement;
+use Krokedil\Klarna\OrderManagement\OrderLines;
+use Krokedil\Klarna\OrderManagement\Request\RequestPost;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

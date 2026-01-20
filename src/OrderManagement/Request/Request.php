@@ -1,8 +1,8 @@
 <?php
-namespace Krokedil\KlarnaOrderManagement\Request;
+namespace Krokedil\Klarna\OrderManagement\Request;
 
-use Krokedil\KlarnaOrderManagement\KlarnaOrderManagement;
-use Krokedil\KlarnaOrderManagement\Logger;
+use Krokedil\Klarna\OrderManagement\KlarnaOrderManagement;
+use Krokedil\Klarna\OrderManagement\Logger;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

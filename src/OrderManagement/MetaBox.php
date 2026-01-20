@@ -1,5 +1,5 @@
 <?php
-namespace Krokedil\KlarnaOrderManagement;
+namespace Krokedil\Klarna;
 
 use Krokedil\WooCommerce\OrderMetabox;
 

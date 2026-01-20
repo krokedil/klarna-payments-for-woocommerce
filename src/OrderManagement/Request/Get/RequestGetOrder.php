@@ -1,7 +1,7 @@
 <?php
-namespace Krokedil\KlarnaOrderManagement\Request\Get;
+namespace Krokedil\Klarna\OrderManagement\Request\Get;
 
-use Krokedil\KlarnaOrderManagement\Request\RequestGet;
+use Krokedil\Klarna\OrderManagement\Request\RequestGet;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -1,8 +1,8 @@
 <?php
-namespace Krokedil\KlarnaOrderManagement\Request\Patch;
+namespace Krokedil\Klarna\OrderManagement\Request\Patch;
 
-use Krokedil\KlarnaOrderManagement\OrderLines;
-use Krokedil\KlarnaOrderManagement\Request\RequestPatch;
+use Krokedil\Klarna\OrderManagement\OrderLines;
+use Krokedil\Klarna\OrderManagement\Request\RequestPatch;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
