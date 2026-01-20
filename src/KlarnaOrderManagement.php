@@ -1,6 +1,6 @@
 <?php
 
-namespace Krokedil\KlarnaOrderManagement;
+namespace Krokedil\Klarna;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,14 +15,15 @@ define( 'KLARNA_ORDER_MANAGEMENT_MIN_PHP_VER', '5.3.0' );
 define( 'KLARNA_ORDER_MANAGEMENT_MIN_WC_VER', '3.3.0' );
 define( 'KLARNA_ORDER_MANAGEMENT_CHECKOUT_URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 
-use Krokedil\KlarnaOrderManagement\Settings;
-use Krokedil\KlarnaOrderManagement\Request\Get\RequestGetOrder;
-use Krokedil\KlarnaOrderManagement\Request\Post\RequestPostRefund;
-use Krokedil\KlarnaOrderManagement\Request\Post\RequestPostCapture;
-use Krokedil\KlarnaOrderManagement\Request\Patch\RequestPatchUpdate;
-use Krokedil\KlarnaOrderManagement\Request\Post\RequestPostCancel;
-use Krokedil\KlarnaOrderManagement\MetaBox;
-use Krokedil\KlarnaOrderManagement\Ajax;
+
+use Krokedil\Klarna\OrderManagement\Settings;
+use Krokedil\Klarna\OrderManagement\Request\Get\RequestGetOrder;
+use Krokedil\Klarna\OrderManagement\Request\Post\RequestPostRefund;
+use Krokedil\Klarna\OrderManagement\Request\Post\RequestPostCapture;
+use Krokedil\Klarna\OrderManagement\Request\Patch\RequestPatchUpdate;
+use Krokedil\Klarna\OrderManagement\Request\Post\RequestPostCancel;
+use Krokedil\Klarna\OrderManagement\MetaBox;
+use Krokedil\Klarna\OrderManagement\Ajax;
 
 /**
  * Klarna Order Management class.
