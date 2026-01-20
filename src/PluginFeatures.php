@@ -84,9 +84,9 @@ class PluginFeatures {
 	 *
 	 * @return void
 	 */
-	public function init_features() {
+	public function init_features( $force = false ) {
 		// Ensure we only initialize once per request.
-		if ( did_action( 'kp_plugin_features_initialized' ) ) {
+		if ( ! $force && did_action( 'kp_plugin_features_initialized' ) ) {
 			return;
 		}
 
@@ -203,7 +203,7 @@ class PluginFeatures {
 			// Update the features option.
 			update_option( 'kp_plugin_features', array_merge( $this->default_features, $features ) );
 			// Re-initialize the features.
-			$this->init_features();
+			$this->init_features( true );
 		}
 	}
 
