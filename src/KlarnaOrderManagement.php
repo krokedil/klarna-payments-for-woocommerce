@@ -24,6 +24,7 @@ use Krokedil\Klarna\OrderManagement\Request\Patch\RequestPatchUpdate;
 use Krokedil\Klarna\OrderManagement\Request\Post\RequestPostCancel;
 use Krokedil\Klarna\OrderManagement\MetaBox;
 use Krokedil\Klarna\OrderManagement\Ajax;
+use Krokedil\Klarna\OrderManagement\Utility;
 
 /**
  * Klarna Order Management class.

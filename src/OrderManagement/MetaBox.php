@@ -1,7 +1,7 @@
 <?php
-namespace Krokedil\Klarna;
+namespace Krokedil\Klarna\OrderManagement;
 
-use Krokedil\WooCommerce\OrderMetabox;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderMetabox;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
