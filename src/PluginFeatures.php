@@ -10,65 +10,65 @@ class PluginFeatures {
 	 *
 	 * @var array
 	 */
-	protected $default_features = array(
-		Features::PAYMENTS                    => array(
+	protected $default_features = [
+		Features::PAYMENTS                    => [
 			'availability'  => true,
-			'markets'       => array(),
-			'available_for' => array(),
-		),
-		Features::OSM_PRODUCT_PAGE            => array(
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::OSM_PRODUCT_PAGE            => [
 			'availability'  => true,
-			'markets'       => array(),
-			'available_for' => array(),
-		),
-		Features::OSM_CART_PAGE               => array(
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::OSM_CART_PAGE               => [
 			'availability'  => true,
-			'markets'       => array(),
-			'available_for' => array(),
-		),
-		Features::OSM_PROMOTIONAL_BANNER      => array(
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::OSM_PROMOTIONAL_BANNER      => [
 			'availability'  => true,
-			'markets'       => array(),
-			'available_for' => array(),
-		),
-		Features::KEC_ONE_STEP                => array(
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::KEC_ONE_STEP                => [
 			'availability'  => true,
-			'markets'       => array(),
-			'available_for' => array(),
-		),
-		Features::KEC_TWO_STEP                => array(
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::KEC_TWO_STEP                => [
 			'availability'  => true,
-			'markets'       => array(),
-			'available_for' => array(),
-		),
-		Features::SIWK_ACCOUNT_CREATION_PAGE  => array(
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::SIWK_ACCOUNT_CREATION_PAGE  => [
 			'availability'  => true,
-			'markets'       => array(),
-			'available_for' => array(),
-		),
-		Features::SIWK_AUTHENTICATION_PAGE    => array(
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::SIWK_AUTHENTICATION_PAGE    => [
 			'availability'  => true,
-			'markets'       => array(),
-			'available_for' => array(),
-		),
-		Features::SIWK_CART_PAGE              => array(
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::SIWK_CART_PAGE              => [
 			'availability'  => true,
-			'markets'       => array(),
-			'available_for' => array(),
-		),
-		Features::SUPPLEMENTARY_PURCHASE_DATA => array(
+			'markets'       => [],
+			'available_for' => [],
+		],
+		Features::SUPPLEMENTARY_PURCHASE_DATA => [
 			'availability'  => true,
-			'markets'       => array(),
-			'available_for' => array(),
-		),
-	);
+			'markets'       => [],
+			'available_for' => [],
+		],
+	];
 
 	/**
 	 * List of all features and their availability.
 	 *
 	 * @var array
 	 */
-	protected $features = array();
+	protected $features = [];
 
 	/**
 	 * If the credentials we have parsed had a AP key or not.
@@ -84,9 +84,9 @@ class PluginFeatures {
 	 *
 	 * @return void
 	 */
-	public function init_features( $force = false ) {
+	public function init_features() {
 		// Ensure we only initialize once per request.
-		if ( ! $force && did_action( 'kp_plugin_features_initialized' ) ) {
+		if ( did_action( 'kp_plugin_features_initialized' ) ) {
 			return;
 		}
 
@@ -121,11 +121,11 @@ class PluginFeatures {
 	 * @return void
 	 */
 	public function process_api_response( $response, $credentials, &$features ) {
-		foreach ( $response['features'] ?? array() as $feature ) {
+		foreach ( $response['features'] ?? [] as $feature ) {
 			$key           = str_replace( 'platform-plugin-', '', $feature['feature_key'] ?? '' );
 			$availability  = $feature['availability'] ?? 'AVAILABLE'; // Default to AVAILABLE if not set.
-			$markets       = $feature['markets'] ?? array();
-			$available_for = $features[ $key ]['available_for'] ?? array(); // Get the existing available_for list from the saved features.
+			$markets       = $feature['markets'] ?? [];
+			$available_for = $features[ $key ]['available_for'] ?? []; // Get the existing available_for list from the saved features.
 
 			// Add or remove the country code from the available_for list based on availability.
 			if ( 'AVAILABLE' === $availability ) {
@@ -136,7 +136,7 @@ class PluginFeatures {
 			} else {
 				// If it is unavailable, remove the country code if present.
 				if ( in_array( $credentials['country_code'] ?? 'unknown', $available_for, true ) ) {
-					$available_for = array_diff( $available_for, array( $credentials['country_code'] ?? 'unknown' ) );
+					$available_for = array_diff( $available_for, [ $credentials['country_code'] ?? 'unknown' ] );
 				}
 			}
 
@@ -147,7 +147,7 @@ class PluginFeatures {
 
 			// If we have markets, merge them with the existing ones and make them unique.
 			if ( ! empty( $markets ) ) {
-				$features[ $key ]['markets'] = array_unique( array_merge( $features[ $key ]['markets'] ?? array(), $markets ) );
+				$features[ $key ]['markets'] = array_unique( array_merge( $features[ $key ]['markets'] ?? [], $markets ) );
 			}
 
 			// Update the feature availability and available_for list. Ensure available_for is uppercase.
@@ -171,7 +171,7 @@ class PluginFeatures {
 	 */
 	public function process_all_api_credentials() {
 		try {
-			$features        = array();
+			$features        = [];
 			$api_credentials = $this->get_api_credentials();
 
 			foreach ( $api_credentials as $credentials ) {
@@ -203,7 +203,7 @@ class PluginFeatures {
 			// Update the features option.
 			update_option( 'kp_plugin_features', array_merge( $this->default_features, $features ) );
 			// Re-initialize the features.
-			$this->init_features( true );
+			$this->init_features();
 		}
 	}
 
@@ -251,9 +251,9 @@ class PluginFeatures {
 	 * @return string[] The list of sections to hide.
 	 */
 	public static function get_sections_to_hide( $features ) {
-		$sections_to_hide = array();
+		$sections_to_hide = [];
 		foreach ( $features as $feature_key => $feature_data ) {
-			$new_hidden_sections = array();
+			$new_hidden_sections = [];
 
 			switch ( $feature_key ) {
 				case Features::PAYMENTS:
@@ -345,11 +345,11 @@ class PluginFeatures {
 	 * @return array The API credentials.
 	 */
 	private function get_api_credentials() {
-		$settings        = get_option( 'woocommerce_klarna_payments_settings', array() );
+		$settings        = get_option( 'woocommerce_klarna_payments_settings', [] );
 		$country_codes   = array_keys( \KP_Form_Fields::available_countries() );
 		$combined_eu     = wc_string_to_bool( $settings['combine_eu_credentials'] ?? 'no' );
 		$testmode        = wc_string_to_bool( $settings['testmode'] ?? 'no' );
-		$api_credentials = array();
+		$api_credentials = [];
 
 		// If combined eu credentials is active, filter out any EU countries from the list of countries to check, and add 'eu' instead.
 		if ( $combined_eu ) {
@@ -368,12 +368,12 @@ class PluginFeatures {
 				continue;
 			}
 
-			$api_credentials[] = array(
+			$api_credentials[] = [
 				'country_code'  => $cc,
 				'merchant_id'   => $merchant_id,
 				'shared_secret' => $shared_secret,
 				'mode'          => $testmode ? 'test' : 'live',
-			);
+			];
 		}
 
 		return $api_credentials;
@@ -385,7 +385,7 @@ class PluginFeatures {
 	 * @return void
 	 */
 	public function maybe_migrate_legacy_unavailable_features() {
-		$legacy_unavailable_features = get_option( 'kp_unavailable_feature_ids', array() );
+		$legacy_unavailable_features = get_option( 'kp_unavailable_feature_ids', [] );
 
 		// If the legacy option is empty, or not an array, we have nothing to migrate.
 		if ( empty( $legacy_unavailable_features ) || ! is_array( $legacy_unavailable_features ) ) {
@@ -422,15 +422,16 @@ class PluginFeatures {
 		switch ( $legacy_key ) {
 			case 'general':
 			case 'kom':
-				return array( Features::PAYMENTS );
+				return [ Features::PAYMENTS ];
 			case 'onsite_messaging':
-				return array( Features::OSM_CART_PAGE, Features::OSM_PRODUCT_PAGE, Features::OSM_PROMOTIONAL_BANNER );
+				return [ Features::OSM_CART_PAGE, Features::OSM_PRODUCT_PAGE, Features::OSM_PROMOTIONAL_BANNER ];
 			case 'kec_settings':
-				return array( Features::KEC_ONE_STEP, Features::KEC_TWO_STEP );
+				return [ Features::KEC_ONE_STEP, Features::KEC_TWO_STEP ];
 			case 'siwk':
-				return array( Features::SIWK_ACCOUNT_CREATION_PAGE, Features::SIWK_AUTHENTICATION_PAGE );
+				return [ Features::SIWK_ACCOUNT_CREATION_PAGE, Features::SIWK_AUTHENTICATION_PAGE ];
 			default:
-				return array();
+				return [];
 		}
 	}
+
 }
