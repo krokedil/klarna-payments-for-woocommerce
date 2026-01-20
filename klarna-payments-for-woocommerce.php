@@ -307,7 +307,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
 			$this->interoperability_token  = new KP_Interoperability_Token();
-			$this->order_management        = new KlarnaOrderManagement();
+			$this->order_management        = new KlarnaOrderManagement( 'klarna_payments', $this );
 			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
 			Compatibility::register();
 
