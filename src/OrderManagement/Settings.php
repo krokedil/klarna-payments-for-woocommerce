@@ -15,7 +15,6 @@ class Settings {
 	 */
 	public function __construct() {
 		add_filter( 'wc_gateway_klarna_payments_settings', array( $this, 'extend_settings' ) );
-		add_filter( 'kco_wc_gateway_settings', array( $this, 'extend_settings' ) );
 	}
 
 	/**
@@ -90,7 +89,7 @@ class Settings {
 	/**
 	 * Retrieve the plugin settings.
 	 *
-	 * If the plugin's settings could not be found, we'll default to KP's or KCO's settings depending on the payment method.
+	 * If the plugin's settings could not be found, we'll default to KP's settings depending on the payment method.
 	 *
 	 * @param int $order_id WooCommerce order ID.
 	 * @return array|false
@@ -116,9 +115,7 @@ class Settings {
 		$order          = wc_get_order( $order_id );
 		$payment_method = $order->get_payment_method();
 
-		if ( 'kco' === $payment_method ) {
-			return get_option( 'woocommerce_kco_settings', array() );
-		} elseif ( 'klarna_payments' === $payment_method ) {
+		if ( 'klarna_payments' === $payment_method ) {
 			return get_option( 'woocommerce_klarna_payments_settings', array() );
 		} else {
 			return get_option( 'kom_settings', array() );

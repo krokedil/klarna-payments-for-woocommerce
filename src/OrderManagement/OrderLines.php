@@ -186,12 +186,6 @@ class OrderLines {
 
 			$this->order_lines[] = $order_item;
 		}
-
-		$added_surcharge = json_decode( $this->order->get_meta( '_kco_added_surcharge', true ), true );
-
-		if ( ! empty( $added_surcharge ) ) {
-			$this->order_lines[] = $added_surcharge;
-		}
 	}
 
 	/**
@@ -214,11 +208,6 @@ class OrderLines {
 			'total_tax_amount'      => $this->get_item_tax_amount( $order_item ),
 		);
 
-		$product_urls = Utility::maybe_add_product_urls( $order_item );
-		if ( ! empty( $product_urls ) ) {
-			$order_line = array_merge( $order_line, $product_urls );
-		}
-
 		return $order_line;
 	}
 
@@ -230,10 +219,9 @@ class OrderLines {
 	 * @return array
 	 */
 	public function process_order_item_shipping( $order_item, $order ) {
-		$reference = json_decode( $this->order->get_meta( '_kco_kss_data', true ), true );
 
 		return array(
-			'reference'             => ( isset( $reference['id'] ) ) ? $reference['id'] : $this->get_item_reference( $order_item ),
+			'reference'             => $this->get_item_reference( $order_item ),
 			'type'                  => 'shipping_fee',
 			'name'                  => $this->get_item_name( $order_item ),
 			'quantity'              => 1,
@@ -370,7 +358,7 @@ class OrderLines {
 				$item_reference = $order_line_item->get_name();
 			}
 		} elseif ( 'shipping' === $order_line_item->get_type() ) {
-			// Matching the shipping reference from KCO order.
+			// Matching the shipping reference from Klarna order.
 			$item_reference = $order_line_item->get_method_id() . ':' . $order_line_item->get_instance_id();
 		} elseif ( 'coupon' === $order_line_item->get_type() ) {
 			$item_reference = 'Discount';
@@ -391,7 +379,7 @@ class OrderLines {
 	 * @return string $order_line_item_name Order line item name.
 	 */
 	public function get_item_name( $order_line_item ) {
-		// Matching the item name from KCO order.
+		// Matching the item name from Klarna order.
 		$order_line_item_name = $order_line_item->get_name();
 
 		return (string) wp_strip_all_tags( $order_line_item_name );

@@ -518,8 +518,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Notification listener for Pending orders. This plugin doesn't handle pending orders, but it does allow Klarna
 	 * Order Management plugin to hook in and process pending orders.
 	 *
-	 * @link https://developers.klarna.com/en/us/kco-v3/pending-orders
-	 *
 	 * @hook woocommerce_api_wc_gateway_klarna_payments
 	 */
 	public function notification_listener() {

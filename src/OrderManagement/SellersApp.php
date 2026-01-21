@@ -73,18 +73,18 @@ class SellersApp {
 			return;
 		}
 
-		// Check that this is an update, and that we have a transaction number, and that the payment method is set to KCO or KP.
+		// Check that this is an update, and that we have a transaction number, and that the payment method is set to KP.
 		$order = wc_get_order( $post_id );
 		if ( empty( $order ) ) {
 			return;
 		}
 
 		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( self::$order_management->plugin_instance, $order->get_payment_method() ) ) {
+		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
 			return;
 		}
 
-		if ( $update && ! empty( $order->get_transaction_id() ) && in_array( $order->get_payment_method(), array( 'kco', 'klarna_payments' ), true ) ) {
+		if ( $update && ! empty( $order->get_transaction_id() ) && 'klarna_payments' === $order->get_payment_method() ) {
 			// Set post metas.
 			$order->update_meta_data( '_wc_klarna_order_id', $order->get_transaction_id() );
 			$order->update_meta_data( '_wc_klarna_country', wc_get_base_location()['country'] );

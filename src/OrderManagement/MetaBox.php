@@ -61,7 +61,7 @@ class MetaBox extends OrderMetabox {
 	}
 
 	/**
-	 * Adds meta box to the side of a KCO or KP order.
+	 * Adds meta box to the side of a Klarna order.
 	 *
 	 * @param string $post_type The WordPress post type.
 	 * @return void
@@ -72,11 +72,11 @@ class MetaBox extends OrderMetabox {
 			$order    = wc_get_order( $order_id );
 
 			// If the order was not paid using the plugin that instanced this class, bail.
-			if ( ! Utility::check_plugin_instance( $this->order_management->plugin_instance, $order->get_payment_method() ) ) {
+			if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
 				return;
 			}
 
-			if ( in_array( $order->get_payment_method(), array( 'kco', 'klarna_payments' ), true ) ) {
+			if ( 'klarna_payments' === $order->get_payment_method() ) {
 				add_meta_box(
 					$this->id,
 					$this->title,
@@ -101,7 +101,7 @@ class MetaBox extends OrderMetabox {
 		$order    = wc_get_order( $order_id );
 
 		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( $this->order_management->plugin_instance, $order->get_payment_method() ) ) {
+		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
 			return;
 		}
 
@@ -135,7 +135,7 @@ class MetaBox extends OrderMetabox {
 		$order    = wc_get_order( $order_id );
 
 		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( $this->order_management->plugin_instance, $order->get_payment_method() ) ) {
+		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
 			return;
 		}
 
@@ -193,7 +193,7 @@ class MetaBox extends OrderMetabox {
 		<ul class="kom_order_actions_wrapper submitbox">
 			<?php if ( $actions['any'] ) : ?>
 				<li class="wide" id="kom-capture">
-					<select class="kco_order_actions" name="kom_order_actions" id="kom_order_actions">
+					<select class="klarna_order_actions" name="kom_order_actions" id="kom_order_actions">
 						<option value=""><?php esc_attr_e( 'Choose an action...', 'woocommerce' ); ?></option>
 						<?php do_action( 'kom_meta_action_options', $order_id, $klarna_order, $actions ); ?>
 					</select>
@@ -339,7 +339,7 @@ class MetaBox extends OrderMetabox {
 	}
 
 	/**
-	 * Capture option for kco_order_actions action list.
+	 * Capture option for klarna_order_actions action list.
 	 *
 	 * @param  int    $order_id The ID of the order being considered.
 	 * @param  object $klarna_order The Klarna order object associated with this order.
@@ -367,7 +367,7 @@ class MetaBox extends OrderMetabox {
 	}
 
 	/**
-	 * Cancel option for kco_order_actions action list.
+	 * Cancel option for klarna_order_actions action list.
 	 *
 	 * @param  int    $order_id The ID of the order being considered.
 	 * @param  object $klarna_order The Klarna order object associated with this order.
@@ -395,7 +395,7 @@ class MetaBox extends OrderMetabox {
 	}
 
 	/**
-	 * Sync option for kco_order_actions action list.
+	 * Sync option for klarna_order_actions action list.
 	 *
 	 * @param  int    $order_id The ID of the order being considered.
 	 * @param  object $klarna_order The Klarna order object associated with this order.

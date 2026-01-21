@@ -52,7 +52,7 @@ class KP_Settings_Saved {
 	 * @return void
 	 */
 	public function check_api_credentials() {
-		// Get settings from KCO.
+		// Get settings from the Klarna Payments settings.
 		$options = get_option( 'woocommerce_klarna_payments_settings', array() );
 		update_option( 'kp_has_valid_credentials', 'no' );
 		$eu_countries                     = KP_Form_Fields::available_countries( 'eu' );

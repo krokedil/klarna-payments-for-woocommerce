@@ -17,14 +17,9 @@ class PendingOrders {
 	 *
 	 * @param string $klarna_order_id Klarna order ID.
 	 * @param array  $data The data for the order.
-	 *
-	 * @link https://developers.klarna.com/en/us/kco-v3/pending-orders
 	 */
 	public static function notification_listener( $klarna_order_id = null, $data = null ) {
 		$order_id = filter_input( INPUT_GET, 'order_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		if ( empty( $klarna_order_id ) ) {
-			$klarna_order_id = filter_input( INPUT_GET, 'kco_wc_order_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		}
 
 		// Get order id from klarna order id.
 		if ( empty( $order_id ) && ! empty( $klarna_order_id ) ) {

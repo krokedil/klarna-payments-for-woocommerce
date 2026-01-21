@@ -121,7 +121,7 @@ class RequestPostRefund extends RequestPost {
 					 *  and the default check will fail resulting in an fatal error, creating the Refund with WC but not sending it to Klarna
 					 *  This fallback allows DEVs to provide the product type which they saved before.
 					 *
-					 *  Alternatively KOM or KCO could save this information on order creation.
+					 *  Alternatively KOM could save this information on order creation.
 					 */
 
 					if ( is_object( $product ) && method_exists( $product, 'is_downloadable' ) ) {
@@ -149,11 +149,6 @@ class RequestPostRefund extends RequestPost {
 						'total_discount_amount' => $total_discount,
 						'total_tax_amount'      => $refund_tax_amount,
 					);
-
-					$product_urls = Utility::maybe_add_product_urls( $item );
-					if ( ! empty( $product_urls ) ) {
-						$item_data = array_merge( $item_data, Utility::maybe_add_product_urls( $item ) );
-					}
 
 					// Do not add order lines if separate sales tax and no refund amount entered.
 					if ( ! ( $separate_sales_tax && '0' == $refund_price_amount ) ) { // phpcs:ignore WordPress.PHP.StrictComparisons -- Can be float *or* integer, so non-strict is required.

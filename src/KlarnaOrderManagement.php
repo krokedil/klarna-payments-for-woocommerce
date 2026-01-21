@@ -55,19 +55,9 @@ class KlarnaOrderManagement {
 	public $ajax;
 
 	/**
-	 * Klarna Order Management plugin instance.
-	 *
-	 * @var string $plugin_instance
-	 */
-	public $plugin_instance;
-
-	/**
 	 * Constructor.
-	 *
-	 * @param string $plugin_instance The plugin instance to use, either 'klarna_payments' or 'kco'.
 	 */
-	public function __construct( $plugin_instance = 'klarna_payments' ) {
-		$this->plugin_instance = $plugin_instance;
+	public function __construct() {
 		$this->init();
 	}
 
@@ -114,17 +104,8 @@ class KlarnaOrderManagement {
 		$this->metabox  = new MetaBox( $this );
 		$this->ajax     = new Ajax();
 
-		// Add refunds support to Klarna Payments or Klarna Checkout gateways. If not one of these plugins, do nothing.
-		switch ( $this->plugin_instance ) {
-			case 'klarna_payments':
-				add_action( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
-				break;
-			case 'kco':
-				add_action( 'kco_wc_supports', array( $this, 'add_gateway_support' ) );
-				break;
-			default:
-				return;
-		}
+		// Add refunds support to Klarna for WooCommerce.
+		add_action( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
 
 		// Cancel order.
 		add_action( 'woocommerce_order_status_cancelled', array( $this, 'cancel_klarna_order' ) );
@@ -194,7 +175,7 @@ class KlarnaOrderManagement {
 			$order = wc_get_order( $order_id );
 
 			// If the order was not paid using the plugin that instanced this class, bail.
-			if ( ! Utility::check_plugin_instance( $this->plugin_instance, $order->get_payment_method() ) ) {
+			if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
 				return;
 			}
 
@@ -208,9 +189,9 @@ class KlarnaOrderManagement {
 				return new \WP_Error( 'not_paid', 'Order has not been paid.' );
 			}
 
-			// Not going to do this for non-KP and non-KCO orders.
-			if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
-				return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments or kco payment method.' );
+			// Not going to do this for non-Klarna orders.
+			if ( 'klarna_payments' !== $order->get_payment_method() ) {
+				return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments payment method.' );
 			}
 
 			// Don't do this if the order is being rejected in pending flow.
@@ -272,17 +253,17 @@ class KlarnaOrderManagement {
 		$order   = wc_get_order( $order_id );
 
 		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( $this->plugin_instance, $order->get_payment_method() ) ) {
+		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
 			return;
 		}
 
-		if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
-			return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments or kco payment method.' );
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
+			return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments payment method.' );
 		}
 
 		// Are we on the subscription page?
 		if ( 'shop_subscription' === $order->get_type() ) {
-			$token_key = 'klarna_payments' === $order->get_payment_method() ? \KP_Subscription::RECURRING_TOKEN : '_kco_recurring_token';
+			$token_key = KP_Subscription::RECURRING_TOKEN;
 
 			// Did the customer update the subscription's recurring token?
 			$recurring_token = wc_get_var( $items[ $token_key ] );
@@ -376,7 +357,7 @@ class KlarnaOrderManagement {
 		$order   = wc_get_order( $order_id );
 
 		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( $this->plugin_instance, $order->get_payment_method() ) ) {
+		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
 			return;
 		}
 
@@ -392,9 +373,9 @@ class KlarnaOrderManagement {
 				return new \WP_Error( 'not_paid', 'Order has not been paid.' );
 			}
 
-			// Not going to do this for non-KP and non-KCO orders.
-			if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
-				return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments or kco payment method.' );
+			// Not going to do this for non-Klarna orders.
+			if ( 'klarna_payments' !== $order->get_payment_method() ) {
+				return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments payment method.' );
 			}
 			// Do nothing if Klarna order was already captured.
 			if ( $order->get_meta( '_wc_klarna_capture_id', true ) ) {
@@ -497,7 +478,7 @@ class KlarnaOrderManagement {
 		$order = wc_get_order( $order_id );
 
 		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( $this->plugin_instance, $order->get_payment_method() ) ) {
+		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
 			return;
 		}
 
@@ -506,9 +487,9 @@ class KlarnaOrderManagement {
 			return new \WP_Error( 'order_sync_off', 'Order management is disabled' );
 		}
 
-		// Not going to do this for non-KP and non-KCO orders.
-		if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
-			return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments or kco payment method.' );
+		// Not going to do this for non-Klarna orders.
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
+			return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments payment method.' );
 		}
 
 		// Do nothing if Klarna order is not captured.

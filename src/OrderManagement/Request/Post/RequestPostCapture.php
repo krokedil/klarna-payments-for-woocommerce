@@ -57,12 +57,6 @@ class RequestPostCapture extends RequestPost {
 			'captured_amount' => ( $force_capture_full_order ) ? $this->klarna_order->remaining_authorized_amount : round( $order->get_total() * 100, 0 ),
 		);
 
-		$kss_shipment_data = $this->get_kss_shipment_data();
-		if ( isset( $kss_shipment_data ) && ! empty( $kss_shipment_data ) ) {
-			$kss_shipment_arr['shipping_info'] = array( $kss_shipment_data );
-			$data                              = array_merge( $kss_shipment_arr, $data );
-		}
-
 		// Don't add order lines if we are forcing a full order capture.
 		if ( ! $force_capture_full_order ) {
 
@@ -75,25 +69,5 @@ class RequestPostCapture extends RequestPost {
 		}
 
 		return apply_filters( 'kom_order_capture_args', $data, $this->order_id );
-	}
-
-	/**
-	 * Returns KSS shipment information.
-	 *
-	 * @return array
-	 */
-	protected function get_kss_shipment_data() {
-		$kss_shipment_data = array();
-		$order             = wc_get_order( $this->order_id );
-
-		$kco_kss_data     = json_decode( $order->get_meta( '_kco_kss_data', true ), true );
-		$kss_tracking_id  = $order->get_meta( '_kss_tracking_id', true );
-		$kss_tracking_url = $order->get_meta( '_kss_tracking_url', true );
-		isset( $kco_kss_data['delivery_details']['carrier'] ) ? $kss_shipment_data['shipping_company'] = $kco_kss_data['delivery_details']['carrier'] : '';
-		isset( $kco_kss_data['shipping_method'] ) ? $kss_shipment_data['shipping_method']              = $kco_kss_data['shipping_method'] : '';
-		isset( $kss_tracking_id ) ? $kss_shipment_data['tracking_number']                              = $kss_tracking_id : '';
-		isset( $kss_tracking_url ) ? $kss_shipment_data['tracking_uri']                                = $kss_tracking_url : '';
-
-		return $kss_shipment_data;
 	}
 }
