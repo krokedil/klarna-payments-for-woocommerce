@@ -244,7 +244,7 @@ abstract class Request {
 	protected function calculate_auth() {
 		$variant = $this->get_klarna_variant();
 		if ( ! $variant ) {
-			return new \WP_Error( 'wrong_gateway', 'This order was not create via Klarna Payments or Klarna Checkout for WooCommerce.' );
+			return new \WP_Error( 'wrong_gateway', 'This order was not create via Klarna for WooCommerce.' );
 		}
 
 		$merchant_id   = $this->get_auth_component( 'merchant_id' );

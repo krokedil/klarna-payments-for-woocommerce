@@ -327,7 +327,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Override checkout form template if Klarna Checkout is the selected payment method.
+	 * Override checkout form template if Klarna Payments is selected.
 	 *
 	 * @param string $located Target template file location.
 	 * @param string $template_name The name of the template.
