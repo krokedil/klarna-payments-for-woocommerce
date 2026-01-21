@@ -87,7 +87,7 @@ class KP_Klarna_Express_Checkout {
 	 */
 	public function get_order_data_helper() {
 		$settings          = get_option( 'woocommerce_klarna_payments_settings', array() );
-		$customer_type     = $settings['customer_type'] ?? 'b2c';
+		$customer_type     = klarna_get_customer_type( $settings['customer_type'] ?? 'b2c' );
 		$order_data_helper = new KP_Order_Data( $customer_type ); // Should always use the cart.
 
 		return $order_data_helper;
