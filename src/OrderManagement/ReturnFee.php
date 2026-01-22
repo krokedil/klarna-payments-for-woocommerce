@@ -52,7 +52,7 @@ class ReturnFee {
 	public function add_return_fee_order_lines_html( $order_id ) {
 		$order = wc_get_order( $order_id );
 
-		if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 
@@ -71,7 +71,7 @@ class ReturnFee {
 				<td class="thumb"><div></div></td>
 				<td class="name" >
 					<div class="view">
-					<?php esc_html_e( 'Klarna return fee', 'klarna-order-management' ); ?>
+					<?php esc_html_e( 'Klarna return fee', 'klarna-payments-for-woocommerce' ); ?>
 					</div>
 				</td>
 				<td class="item_cost" width="1%">&nbsp;</td>
@@ -172,7 +172,7 @@ class ReturnFee {
 		}
 
 		// If the order is not a Klarna order, just return.
-		if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 
@@ -246,7 +246,7 @@ class ReturnFee {
 		}
 
 		// If the order is not a Klarna order, just return.
-		if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 
@@ -285,7 +285,7 @@ class ReturnFee {
 
 		// Create the fee item.
 		$fee = new \WC_Order_Item_Fee();
-		$fee->set_name( __( 'Return Fee', 'klarna-order-management' ) );
+		$fee->set_name( __( 'Return Fee', 'klarna-payments-for-woocommerce' ) );
 		$fee->set_tax_class( $tax_class_slug );
 		$fee->set_tax_status( 'taxable' );
 
@@ -335,7 +335,7 @@ class ReturnFee {
 		}
 
 		// If the order is not a Klarna order, just return the reason.
-		if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return $reason;
 		}
 
@@ -360,7 +360,7 @@ class ReturnFee {
 
 		return sprintf(
 		/* translators: %1$s: return fee amount, %2$s: refund reason */
-			__( 'Return fee: %1$s.<br>%2$s', 'klarna-order-management' ),
+			__( 'Return fee: %1$s.<br>%2$s', 'klarna-payments-for-woocommerce' ),
 			wc_price( $total, array( 'currency' => $order->get_currency() ) ),
 			$reason
 		);
@@ -379,7 +379,7 @@ class ReturnFee {
 		$order = wc_get_order( $order_id );
 
 		// If the order is not a Klarna order, just return the original value.
-		if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return $is_partially_refunded;
 		}
 

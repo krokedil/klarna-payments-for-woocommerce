@@ -213,7 +213,7 @@ abstract class Request {
 			'http_headers_useragent',
 			'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' )
 			. ' - WooCommerce: ' . WC()->version
-			. ' - OM: ' . \KLARNA_ORDER_MANAGEMENT_VERSION
+			. ' - OM: ' . WC_KLARNA_PAYMENTS_VERSION
 			. ' - PHP Version: ' . phpversion()
 			. ' - Krokedil'
 		);

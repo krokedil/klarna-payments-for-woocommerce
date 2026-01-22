@@ -6,16 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Required minimums and constants
- */
-define( 'KLARNA_ORDER_MANAGEMENT_VERSION', '1.1.0' );
-
-define( 'KLARNA_ORDER_MANAGEMENT_MIN_PHP_VER', '5.3.0' );
-define( 'KLARNA_ORDER_MANAGEMENT_MIN_WC_VER', '3.3.0' );
-define( 'KLARNA_ORDER_MANAGEMENT_CHECKOUT_URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
-
-
 use Krokedil\Klarna\OrderManagement\Settings;
 use Krokedil\Klarna\OrderManagement\Request\Get\RequestGetOrder;
 use Krokedil\Klarna\OrderManagement\Request\Post\RequestPostRefund;
@@ -101,12 +91,12 @@ class KlarnaOrderManagement {
 						?>
 						<div class="notice notice-error">
 				
-								<p><strong><?php esc_html_e( 'Klarna Order Management is now included in Klarna for WooCommerce.', 'klarna-order-management' ); ?></strong></p>
-								<p><?php esc_html_e( 'Starting with version 4.3.0, you no longer need the separate Klarna Order Management plugin – unless you are also using the Kustom Checkout plugin (formerly Klarna Checkout).', 'klarna-order-management' ); ?></p>
+								<p><strong><?php esc_html_e( 'Klarna Order Management is now included in Klarna for WooCommerce.', 'klarna-payments-for-woocommerce' ); ?></strong></p>
+								<p><?php esc_html_e( 'Starting with version 4.3.0, you no longer need the separate Klarna Order Management plugin – unless you are also using the Kustom Checkout plugin (formerly Klarna Checkout).', 'klarna-payments-for-woocommerce' ); ?></p>
 
 								<p>
 									<a href="https://docs.krokedil.com/klarna-for-woocommerce/get-started/order-management/#important-please-read" target="_blank">
-										<?php esc_html_e( 'Read more about this change here.', 'klarna-order-management' ); ?>
+										<?php esc_html_e( 'Read more about this change here.', 'klarna-payments-for-woocommerce' ); ?>
 									</a>
 								</p>
 
@@ -183,14 +173,14 @@ class KlarnaOrderManagement {
 		}
 
 		$order = wc_get_order( $order_id );
-		if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 
 		$params = array(
 			'ajax_url'                                => admin_url( 'admin-ajax.php' ),
-			'with_return_fee_text'                    => __( 'minus a return fee of', 'klarna-order-management' ),
-			'refund_amount_less_than_return_fee_text' => __( 'Refund amount is less than the return fee.', 'klarna-order-management' ),
+			'with_return_fee_text'                    => __( 'minus a return fee of', 'klarna-payments-for-woocommerce' ),
+			'refund_amount_less_than_return_fee_text' => __( 'Refund amount is less than the return fee.', 'klarna-payments-for-woocommerce' ),
 		);
 
 		if ( isset( $this->metabox ) ) {
@@ -209,12 +199,12 @@ class KlarnaOrderManagement {
 			);
 		}
 
-		wp_enqueue_style( 'kom-admin-style', KLARNA_ORDER_MANAGEMENT_CHECKOUT_URL . '/assets/css/klarna-order-management.css', array(), KLARNA_ORDER_MANAGEMENT_VERSION );
+		wp_enqueue_style( 'kom-admin-style', plugin_dir_url( __FILE__ ) . 'assets/css/klarna-order-management.css', array(), WC_KLARNA_PAYMENTS_VERSION );
 		wp_register_script(
 			'kom-admin-js',
-			KLARNA_ORDER_MANAGEMENT_CHECKOUT_URL . '/assets/js/klarna-order-management.js',
+			plugin_dir_url( __FILE__ ) . 'assets/js/klarna-order-management.js',
 			array( 'jquery' ),
-			KLARNA_ORDER_MANAGEMENT_VERSION,
+			WC_KLARNA_PAYMENTS_VERSION,
 			true
 		);
 
@@ -355,7 +345,7 @@ class KlarnaOrderManagement {
 				$order->add_order_note(
 					sprintf(
 					// translators: 1: User name, 2: Existing token, 3: New token.
-						__( '%1$s updated the subscription recurring token from "%2$s" to "%3$s".', 'klarna-order-management' ),
+						__( '%1$s updated the subscription recurring token from "%2$s" to "%3$s".', 'klarna-payments-for-woocommerce' ),
 						ucfirst( wp_get_current_user()->display_name ),
 						$existing_token,
 						$recurring_token
@@ -411,9 +401,9 @@ class KlarnaOrderManagement {
 					$reason = $response->get_error_message();
 					if ( ! empty( $reason ) ) {
 						// translators: %s: error message from Klarna.
-						$order_note = sprintf( __( 'Could not update Klarna order lines: %s.', 'klarna-order-management' ), $reason );
+						$order_note = sprintf( __( 'Could not update Klarna order lines: %s.', 'klarna-payments-for-woocommerce' ), $reason );
 					} else {
-						$order_note = __( 'Could not update Klarna order lines. An unknown error occurred.', 'klarna-order-management' );
+						$order_note = __( 'Could not update Klarna order lines. An unknown error occurred.', 'klarna-payments-for-woocommerce' );
 					}
 
 					$order->add_order_note( $order_note );
@@ -523,7 +513,7 @@ class KlarnaOrderManagement {
 
 				/* The suggested approach by Klarna is to try again after some time. If that still fails, the merchant should inform the customer, and ask them to either "create a new subscription or add funds to their payment method if they wish to continue." */
 				if ( isset( $response->get_error_data()['code'] ) && 403 === $response->get_error_data()['code'] && 'PAYMENT_METHOD_FAILED' === $response->get_error_code() ) {
-					$order->update_status( 'on-hold', __( 'Klarna could not charge the customer. Please try again later. If that still fails, the customer may have to create a new subscription or add funds to their payment method if they wish to continue.', 'klarna-order-management' ) );
+					$order->update_status( 'on-hold', __( 'Klarna could not charge the customer. Please try again later. If that still fails, the customer may have to create a new subscription or add funds to their payment method if they wish to continue.', 'klarna-payments-for-woocommerce' ) );
 					return new \WP_Error( 'capture_failed', 'Capture failed. Please try again later.' );
 				} else {
 					$error_message = $response->get_error_message();
@@ -533,7 +523,7 @@ class KlarnaOrderManagement {
 					}
 
 					// translators: %s: Error message from Klarna.
-					$order->update_status( 'on-hold', sprintf( __( 'Could not capture Klarna order. %s', 'klarna-order-management' ), $error_message ) );
+					$order->update_status( 'on-hold', sprintf( __( 'Could not capture Klarna order. %s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 					return new \WP_Error( 'capture_failed', 'Capture failed.', $error_message );
 				}
 
@@ -576,7 +566,7 @@ class KlarnaOrderManagement {
 
 		// Do nothing if Klarna order is not captured.
 		if ( ! $order->get_meta( '_wc_klarna_capture_id', true ) ) {
-			$order->add_order_note( __( 'Klarna order has not been captured and cannot be refunded.', 'klarna-order-management' ) );
+			$order->add_order_note( __( 'Klarna order has not been captured and cannot be refunded.', 'klarna-payments-for-woocommerce' ) );
 			$order->save();
 
 			return new \WP_Error( 'not_captured', 'Order has not been captured and cannot be refunded.' );
@@ -587,7 +577,7 @@ class KlarnaOrderManagement {
 
 		if ( is_wp_error( $klarna_order ) ) {
 			// translators: %s Klarna error message.
-			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-order-management' ), $klarna_order->get_error_message() ) );
+			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-payments-for-woocommerce' ), $klarna_order->get_error_message() ) );
 			$order->save();
 
 			return new \WP_Error( 'object_error', 'Klarna order object is of type WP_Error.', $klarna_order );
@@ -595,7 +585,7 @@ class KlarnaOrderManagement {
 
 		// We've checked for the metadata `_wc_klarna_capture_id`, now we check for the Klarna status.
 		if ( ! in_array( $klarna_order->status, array( 'CAPTURED', 'PART_CAPTURED' ), true ) ) {
-			$order->add_order_note( __( 'Klarna order has not been captured and cannot be refunded.', 'klarna-order-management' ) );
+			$order->add_order_note( __( 'Klarna order has not been captured and cannot be refunded.', 'klarna-payments-for-woocommerce' ) );
 			$order->save();
 
 			return new \WP_Error( 'not_captured', 'Order has not been captured and cannot be refunded.' );
@@ -607,7 +597,7 @@ class KlarnaOrderManagement {
 
 		// Check that the refund order is valid.
 		if ( ! $refund_order ) {
-			$order->add_order_note( __( 'Could not retrieve the refund order.', 'klarna-order-management' ) );
+			$order->add_order_note( __( 'Could not retrieve the refund order.', 'klarna-payments-for-woocommerce' ) );
 			$order->save();
 			return new \WP_Error( 'invalid_refund_order', 'Refund order is not valid.' );
 		}
@@ -626,7 +616,7 @@ class KlarnaOrderManagement {
 		$response   = $request->request();
 		if ( is_wp_error( $response ) ) {
 			// translators: %s Klarna error message.
-			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-order-management' ), $klarna_order->get_error_message() ) );
+			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-payments-for-woocommerce' ), $klarna_order->get_error_message() ) );
 			$order->save();
 
 			return new \WP_Error( 'unknown_error', 'Response object is of type WP_Error.', $response );
@@ -635,7 +625,7 @@ class KlarnaOrderManagement {
 		$applied_return_fees = apply_filters( 'klarna_applied_return_fees', array() );
 
 		// translators: refund amount, refund id.
-		$text = __( 'Processing a refund of %1$s with Klarna', 'klarna-order-management' );
+		$text = __( 'Processing a refund of %1$s with Klarna', 'klarna-payments-for-woocommerce' );
 		if ( ! empty( \floatval( $applied_return_fees['amount'] ?? 0 ) ) ) {
 			$total_return_fee_amount     = $applied_return_fees['amount'] ?? 0;
 			$total_return_fee_tax_amount = $applied_return_fees['tax_amount'] ?? 0;
@@ -645,7 +635,7 @@ class KlarnaOrderManagement {
 			$formatted_total_return_fees = wc_price( $total_return_fees, array( 'currency' => $order->get_currency() ) );
 
 			// translators: 1: original amount, 2: return fee amount.
-			$extra_text = \sprintf( __( ' (original amount of %1$s - return fee of %2$s)', 'klarna-order-management' ), $original_amount, $formatted_total_return_fees );
+			$extra_text = \sprintf( __( ' (original amount of %1$s - return fee of %2$s)', 'klarna-payments-for-woocommerce' ), $original_amount, $formatted_total_return_fees );
 			$text      .= $extra_text;
 		}
 
