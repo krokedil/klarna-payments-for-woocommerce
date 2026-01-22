@@ -198,11 +198,10 @@ class KlarnaOrderManagement {
 				)
 			);
 		}
-
-		wp_enqueue_style( 'kom-admin-style', plugin_dir_url( __FILE__ ) . 'assets/css/klarna-order-management.css', array(), WC_KLARNA_PAYMENTS_VERSION );
+		wp_enqueue_style( 'kom-admin-style', plugin_dir_url( __FILE__ ) . 'OrderManagement/assets/css/klarna-order-management.css', array(), WC_KLARNA_PAYMENTS_VERSION );
 		wp_register_script(
 			'kom-admin-js',
-			plugin_dir_url( __FILE__ ) . 'assets/js/klarna-order-management.js',
+			plugin_dir_url( __FILE__ ) . 'OrderManagement/assets/js/klarna-order-management.js',
 			array( 'jquery' ),
 			WC_KLARNA_PAYMENTS_VERSION,
 			true
