@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b77aa97dec8a9c9ee4600ad0770f034d",
+    "content-hash": "040a3f4f44f5bb9aedce2da78c4a51c8",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -294,16 +294,16 @@
         },
         {
             "name": "krokedil/support",
-            "version": "1.0.2",
+            "version": "dev-develop-export-order",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/support.git",
-                "reference": "99059b1b27cc4ed7667c1d04968aec45413fe533"
+                "reference": "57a7baeb6b156050e0c8202b0deaf8006701c1f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/support/zipball/99059b1b27cc4ed7667c1d04968aec45413fe533",
-                "reference": "99059b1b27cc4ed7667c1d04968aec45413fe533",
+                "url": "https://api.github.com/repos/krokedil/support/zipball/57a7baeb6b156050e0c8202b0deaf8006701c1f6",
+                "reference": "57a7baeb6b156050e0c8202b0deaf8006701c1f6",
                 "shasum": ""
             },
             "require": {
@@ -343,10 +343,10 @@
             ],
             "description": "The support library allows you to extend your plugin with logging that can be optionally toggled through your plugin settings, generate an entry in the system report from your plugin settings, and report issues to the system report.",
             "support": {
-                "source": "https://github.com/krokedil/support/tree/1.0.2",
+                "source": "https://github.com/krokedil/support/tree/develop-export-order",
                 "issues": "https://github.com/krokedil/support/issues"
             },
-            "time": "2025-10-08T12:47:46+00:00"
+            "time": "2026-01-16T16:05:43+00:00"
         },
         {
             "name": "krokedil/woocommerce",
@@ -440,7 +440,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "krokedil/support": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

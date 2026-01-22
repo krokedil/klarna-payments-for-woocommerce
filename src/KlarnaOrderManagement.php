@@ -25,6 +25,9 @@ use Krokedil\Klarna\OrderManagement\Request\Post\RequestPostCancel;
 use Krokedil\Klarna\OrderManagement\MetaBox;
 use Krokedil\Klarna\OrderManagement\Ajax;
 use Krokedil\Klarna\OrderManagement\Utility;
+use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
+use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
+use Krokedil\Klarna\OrderManagement\ReturnFee;
 
 /**
  * Klarna Order Management class.
@@ -53,6 +56,27 @@ class KlarnaOrderManagement {
 	 * @var Ajax $ajax
 	 */
 	public $ajax;
+
+	/**
+	 * Klarna Order Management return fee handler.
+	 *
+	 * @var ReturnFee $return_fee
+	 */
+	public $return_fee;
+
+	/**
+	 * Logger instance.
+	 *
+	 * @var Logger
+	 */
+	private $logger;
+
+	/**
+	 * SystemReport instance.
+	 *
+	 * @var SystemReport
+	 */
+	private $system_report;
 
 	/**
 	 * Constructor.
@@ -100,12 +124,25 @@ class KlarnaOrderManagement {
 			return;
 		}
 
-		$this->settings = new Settings();
-		$this->metabox  = new MetaBox( $this );
-		$this->ajax     = new Ajax();
+		$this->settings   = new Settings();
+		$this->metabox    = new MetaBox( $this );
+		$this->ajax       = new Ajax();
+		$this->return_fee = new ReturnFee();
 
 		// Add refunds support to Klarna for WooCommerce.
 		add_action( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
+
+		$this->logger = new Logger( 'klarna_order_management', wc_string_to_bool( $settings['logging'] ?? false ) );
+		$report_about = array(
+			array( 'id' => 'kom_auto_capture' ),
+			array( 'id' => 'kom_auto_cancel' ),
+			array( 'id' => 'kom_auto_update' ),
+			array( 'id' => 'kom_auto_order_sync' ),
+			array( 'id' => 'kom_force_full_capture' ),
+			array( 'id' => 'kom_debug_log' ),
+
+		);
+		$this->system_report = new SystemReport( 'klarna_payments', 'Klarna Order Management for WooCommerce', $report_about );
 
 		// Cancel order.
 		add_action( 'woocommerce_order_status_cancelled', array( $this, 'cancel_klarna_order' ) );
@@ -140,11 +177,54 @@ class KlarnaOrderManagement {
 	 * @return void
 	 */
 	public function enqueue_admin() {
-		wp_enqueue_style( 'kom-admin-style', plugin_dir_url( __FILE__ ) . 'assets/css/klarna-order-management.css', array(), '1.0.0' );
-		wp_enqueue_script( 'kom-admin-js', plugin_dir_url( __FILE__ ) . 'assets/js/klarna-order-management.js', array( 'jquery' ), '1.0.0', true );
-		if ( isset( $this->metabox ) && method_exists( $this->metabox, 'maybe_localize_script' ) ) {
-			$this->metabox->maybe_localize_script( 'kom-admin-js' );
+		$order_id = Utility::get_the_ID();
+		if ( empty( $order_id ) ) {
+			return;
 		}
+
+		$order = wc_get_order( $order_id );
+		if ( ! in_array( $order->get_payment_method(), array( 'klarna_payments', 'kco' ), true ) ) {
+			return;
+		}
+
+		$params = array(
+			'ajax_url'                                => admin_url( 'admin-ajax.php' ),
+			'with_return_fee_text'                    => __( 'minus a return fee of', 'klarna-order-management' ),
+			'refund_amount_less_than_return_fee_text' => __( 'Refund amount is less than the return fee.', 'klarna-order-management' ),
+		);
+
+		if ( isset( $this->metabox ) ) {
+			$params = array_merge(
+				$params,
+				array(
+					'ajax'    => array(
+						'setOrderSync' => array(
+							'url'    => admin_url( 'admin-ajax.php' ),
+							'action' => 'woocommerce_kom_wc_set_order_sync',
+							'nonce'  => wp_create_nonce( 'kom_wc_set_order_sync' ),
+						),
+					),
+					'orderId' => $order_id,
+				)
+			);
+		}
+
+		wp_enqueue_style( 'kom-admin-style', KLARNA_ORDER_MANAGEMENT_CHECKOUT_URL . '/assets/css/klarna-order-management.css', array(), KLARNA_ORDER_MANAGEMENT_VERSION );
+		wp_register_script(
+			'kom-admin-js',
+			KLARNA_ORDER_MANAGEMENT_CHECKOUT_URL . '/assets/js/klarna-order-management.js',
+			array( 'jquery' ),
+			KLARNA_ORDER_MANAGEMENT_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'kom-admin-js',
+			'komAdminParams',
+			$params
+		);
+
+		wp_enqueue_script( 'kom-admin-js' );
 	}
 
 	/**
@@ -220,7 +300,7 @@ class KlarnaOrderManagement {
 				return new \WP_Error( 'already_cancelled', 'Klarna order is already cancelled.' );
 			} else {
 				$request  = new RequestPostCancel( $this, array( 'order_id' => $order_id ) );
-				$response = $request->request();
+				$response = $this->report()->request( $request->request() );
 
 				if ( ! is_wp_error( $response ) ) {
 					$order->add_order_note( 'Klarna order cancelled.' );
@@ -237,6 +317,8 @@ class KlarnaOrderManagement {
 				}
 			}
 		}
+
+		return true;
 	}
 
 	/**
@@ -246,7 +328,7 @@ class KlarnaOrderManagement {
 	 * @param array $items Order items.
 	 * @param bool  $action If this was triggered by an action.
 	 *
-	 * @return WP_Error|true Returns true if updating was successful or a WP_Error object if not.
+	 * @return WP_Error|null Returns true if updating was successful or a WP_Error object if not.
 	 */
 	public function update_klarna_order_items( $order_id, $items, $action = false ) {
 		$options = $this->settings->get_settings( $order_id );
@@ -321,7 +403,7 @@ class KlarnaOrderManagement {
 						'klarna_order' => $klarna_order,
 					)
 				);
-				$response = $request->request();
+				$response = $this->report()->request( $request->request() );
 				if ( ! is_wp_error( $response ) ) {
 					$order->add_order_note( 'Klarna order updated.' );
 					$order->save();
@@ -350,7 +432,7 @@ class KlarnaOrderManagement {
 	 * @param int  $order_id Order ID.
 	 * @param bool $action If this was triggered by an action.
 	 *
-	 * @return bool|WP_Error Returns bool true if capture was successful or a WP_Error object if not.
+	 * @return bool|null|\WP_Error Returns bool true if capture was successful or a WP_Error object if not.
 	 */
 	public function capture_klarna_order( $order_id, $action = false ) {
 		$options = $this->settings->get_settings( $order_id );
@@ -430,31 +512,31 @@ class KlarnaOrderManagement {
 						'klarna_order' => $klarna_order,
 					)
 				);
-				$response = $request->request();
+				$response = $this->report()->request( $request->request() );
 
 				if ( ! is_wp_error( $response ) ) {
 					$order->add_order_note( 'Klarna order captured. Capture amount: ' . $order->get_formatted_order_total( '', false ) . '. Capture ID: ' . $response );
 					$order->update_meta_data( '_wc_klarna_capture_id', $response );
 					$order->save();
 					return true;
-				} else {
-
-					/* The suggested approach by Klarna is to try again after some time. If that still fails, the merchant should inform the customer, and ask them to either "create a new subscription or add funds to their payment method if they wish to continue." */
-					if ( isset( $response->get_error_data()['code'] ) && 403 === $response->get_error_data()['code'] && 'PAYMENT_METHOD_FAILED' === $response->get_error_code() ) {
-						$order->update_status( 'on-hold', __( 'Klarna could not charge the customer. Please try again later. If that still fails, the customer may have to create a new subscription or add funds to their payment method if they wish to continue.', 'klarna-order-management' ) );
-						return new \WP_Error( 'capture_failed', 'Capture failed. Please try again later.' );
-					} else {
-						$error_message = $response->get_error_message();
-
-						if ( ! is_array( $error_message ) && false !== strpos( $error_message, 'Captured amount is higher than the remaining authorized amount.' ) ) {
-							$error_message = str_replace( '. Capture not possible.', sprintf( ': %s %s.', $klarna_order->remaining_authorized_amount / 100, $klarna_order->purchase_currency ), $error_message );
-						}
-
-						// translators: %s: Error message from Klarna.
-						$order->update_status( 'on-hold', sprintf( __( 'Could not capture Klarna order. %s', 'klarna-order-management' ), $error_message ) );
-						return new \WP_Error( 'capture_failed', 'Capture failed.', $error_message );
-					}
 				}
+
+				/* The suggested approach by Klarna is to try again after some time. If that still fails, the merchant should inform the customer, and ask them to either "create a new subscription or add funds to their payment method if they wish to continue." */
+				if ( isset( $response->get_error_data()['code'] ) && 403 === $response->get_error_data()['code'] && 'PAYMENT_METHOD_FAILED' === $response->get_error_code() ) {
+					$order->update_status( 'on-hold', __( 'Klarna could not charge the customer. Please try again later. If that still fails, the customer may have to create a new subscription or add funds to their payment method if they wish to continue.', 'klarna-order-management' ) );
+					return new \WP_Error( 'capture_failed', 'Capture failed. Please try again later.' );
+				} else {
+					$error_message = $response->get_error_message();
+
+					if ( ! is_array( $error_message ) && false !== strpos( $error_message, 'Captured amount is higher than the remaining authorized amount.' ) ) {
+						$error_message = str_replace( '. Capture not possible.', sprintf( ': %s %s.', $klarna_order->remaining_authorized_amount / 100, $klarna_order->purchase_currency ), $error_message );
+					}
+
+					// translators: %s: Error message from Klarna.
+					$order->update_status( 'on-hold', sprintf( __( 'Could not capture Klarna order. %s', 'klarna-order-management' ), $error_message ) );
+					return new \WP_Error( 'capture_failed', 'Capture failed.', $error_message );
+				}
+
 				if ( $order->save() ) {
 					return true;
 				} else {
@@ -472,7 +554,7 @@ class KlarnaOrderManagement {
 	 * @param null|string $amount Refund amount, full order amount if null.
 	 * @param string      $reason Refund reason.
 	 *
-	 * @return bool|WP_Error Returns bool true if refund was successful or a WP_Error object if not.
+	 * @return bool|null|\WP_Error Returns bool true if refund was successful or a WP_Error object if not.
 	 */
 	public function refund_klarna_order( $result, $order_id, $amount = null, $reason = '' ) {
 		$order = wc_get_order( $order_id );
@@ -494,7 +576,7 @@ class KlarnaOrderManagement {
 
 		// Do nothing if Klarna order is not captured.
 		if ( ! $order->get_meta( '_wc_klarna_capture_id', true ) ) {
-			$order->add_order_note( 'Klarna order has not been captured and cannot be refunded.' );
+			$order->add_order_note( __( 'Klarna order has not been captured and cannot be refunded.', 'klarna-order-management' ) );
 			$order->save();
 
 			return new \WP_Error( 'not_captured', 'Order has not been captured and cannot be refunded.' );
@@ -504,33 +586,73 @@ class KlarnaOrderManagement {
 		$klarna_order = $this->retrieve_klarna_order( $order_id );
 
 		if ( is_wp_error( $klarna_order ) ) {
-			$order->add_order_note( 'Could not capture Klarna order. ' . $klarna_order->get_error_message() . '.' );
+			// translators: %s Klarna error message.
+			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-order-management' ), $klarna_order->get_error_message() ) );
 			$order->save();
 
 			return new \WP_Error( 'object_error', 'Klarna order object is of type WP_Error.', $klarna_order );
 		}
 
-		if ( in_array( $klarna_order->status, array( 'CAPTURED', 'PART_CAPTURED' ), true ) ) {
-			$request  = new RequestPostRefund(
-				$this,
-				array(
-					'order_id'      => $order_id,
-					'refund_amount' => $amount,
-					'refund_reason' => $reason,
-				)
-			);
-			$response = $request->request();
+		// We've checked for the metadata `_wc_klarna_capture_id`, now we check for the Klarna status.
+		if ( ! in_array( $klarna_order->status, array( 'CAPTURED', 'PART_CAPTURED' ), true ) ) {
+			$order->add_order_note( __( 'Klarna order has not been captured and cannot be refunded.', 'klarna-order-management' ) );
+			$order->save();
 
-			if ( ! is_wp_error( $response ) ) {
-				$order->add_order_note( wc_price( $amount, array( 'currency' => $order->get_currency() ) ) . ' refunded via Klarna.' );
-				$order->save();
-				return true;
-			} else {
-				$order->add_order_note( 'Could not refund Klarna order. ' . $response->get_error_message() . '.' );
-				$order->save();
-				return new \WP_Error( 'unknown_error', 'Response object is of type WP_Error.', $response );
-			}
+			return new \WP_Error( 'not_captured', 'Order has not been captured and cannot be refunded.' );
 		}
+
+		// Get the refund order ID.
+		$refund_order_id = $order->get_refunds()[0]->get_id();
+		$refund_order    = wc_get_order( $refund_order_id );
+
+		// Check that the refund order is valid.
+		if ( ! $refund_order ) {
+			$order->add_order_note( __( 'Could not retrieve the refund order.', 'klarna-order-management' ) );
+			$order->save();
+			return new \WP_Error( 'invalid_refund_order', 'Refund order is not valid.' );
+		}
+
+		$return_fee = $this->get_return_fee_from_post();
+		$request    = new RequestPostRefund(
+			$this,
+			array(
+				'order_id'      => $order_id,
+				'refund_amount' => $amount,
+				'refund_reason' => $reason,
+				'return_fee'    => $return_fee,
+				'refund_id'     => $refund_order_id,
+			)
+		);
+		$response   = $request->request();
+		if ( is_wp_error( $response ) ) {
+			// translators: %s Klarna error message.
+			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-order-management' ), $klarna_order->get_error_message() ) );
+			$order->save();
+
+			return new \WP_Error( 'unknown_error', 'Response object is of type WP_Error.', $response );
+		}
+
+		$applied_return_fees = apply_filters( 'klarna_applied_return_fees', array() );
+
+		// translators: refund amount, refund id.
+		$text = __( 'Processing a refund of %1$s with Klarna', 'klarna-order-management' );
+		if ( ! empty( \floatval( $applied_return_fees['amount'] ?? 0 ) ) ) {
+			$total_return_fee_amount     = $applied_return_fees['amount'] ?? 0;
+			$total_return_fee_tax_amount = $applied_return_fees['tax_amount'] ?? 0;
+			$total_return_fees           = $total_return_fee_amount + $total_return_fee_tax_amount;
+			$original_amount             = wc_price( $amount + $total_return_fees, array( 'currency' => $order->get_currency() ) );
+
+			$formatted_total_return_fees = wc_price( $total_return_fees, array( 'currency' => $order->get_currency() ) );
+
+			// translators: 1: original amount, 2: return fee amount.
+			$extra_text = \sprintf( __( ' (original amount of %1$s - return fee of %2$s)', 'klarna-order-management' ), $original_amount, $formatted_total_return_fees );
+			$text      .= $extra_text;
+		}
+
+		$formatted_text = \sprintf( $text, wc_price( $amount, array( 'currency' => $order->get_currency() ) ) );
+		$order->add_order_note( "$formatted_text." );
+
+		return true;
 	}
 
 	/**
@@ -550,5 +672,50 @@ class KlarnaOrderManagement {
 		$klarna_order = $request->request();
 
 		return $klarna_order;
+	}
+
+	/**
+	 * Get the return fee from the posted data.
+	 *
+	 * @return array
+	 */
+	public static function get_return_fee_from_post() {
+		$return_fee = array(
+			'amount'      => 0,
+			'tax_amount'  => 0,
+			'tax_rate_id' => 0,
+		);
+
+		$line_item_totals_json     = filter_input( INPUT_POST, 'line_item_totals', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$line_item_tax_totals_json = filter_input( INPUT_POST, 'line_item_tax_totals', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+
+		$line_item_totals     = json_decode( htmlspecialchars_decode( $line_item_totals_json ), true ) ?? array();
+		$line_item_tax_totals = json_decode( htmlspecialchars_decode( $line_item_tax_totals_json ), true ) ?? array();
+
+		foreach ( $line_item_totals as $key => $total ) {
+			if ( 'klarna_return_fee' === $key ) {
+				$return_fee['amount'] = str_replace( ',', '.', $total );
+			}
+		}
+
+		foreach ( $line_item_tax_totals as $key => $tax_line ) {
+			if ( 'klarna_return_fee' === $key ) {
+				// Get the rate id from the tax by the first key in the line.
+				$tax_rate_id               = array_keys( $tax_line )[0];
+				$return_fee['tax_rate_id'] = $tax_rate_id;
+				$return_fee['tax_amount']  = str_replace( ',', '.', $tax_line[ $tax_rate_id ] );
+			}
+		}
+
+		return $return_fee;
+	}
+
+	/**
+	 * System report.
+	 *
+	 * @return SystemReport
+	 */
+	public function report() {
+		return $this->system_report;
 	}
 }

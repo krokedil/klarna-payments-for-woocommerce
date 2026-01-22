@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class RequestPostRefund extends RequestPost {
 
-
 	/**
 	 * The Refund Reason
 	 *
@@ -30,6 +29,20 @@ class RequestPostRefund extends RequestPost {
 	protected $refund_amount;
 
 	/**
+	 * The Return Fee
+	 *
+	 * @var array
+	 */
+	protected $return_fee;
+
+	/**
+	 * The Refund ID
+	 *
+	 * @var string
+	 */
+	protected $refund_id;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param KlarnaOrderManagement $order_management The order management instance.
@@ -40,6 +53,8 @@ class RequestPostRefund extends RequestPost {
 		$this->log_title     = 'Refund Klarna order';
 		$this->refund_reason = $arguments['refund_reason'];
 		$this->refund_amount = $arguments['refund_amount'];
+		$this->return_fee    = $arguments['return_fee'] ?? array();
+		$this->refund_id     = $arguments['refund_id'] ?? '';
 	}
 
 	/**
@@ -61,6 +76,15 @@ class RequestPostRefund extends RequestPost {
 			'refunded_amount' => round( $this->refund_amount * 100 ),
 			'description'     => $this->refund_reason,
 		);
+
+		// Get the original order number.
+		$order        = wc_get_order( $this->order_id );
+		$order_number = empty( $order ) ? $this->order_id : $order->get_order_number();
+
+		// Add the order number and refund id if available.
+		if ( ! empty( $this->refund_id ) ) {
+			$data['reference'] = "{$order_number}|{$this->refund_id}";
+		}
 
 		$refund_order_lines = $this->get_refund_order_lines();
 
@@ -214,6 +238,33 @@ class RequestPostRefund extends RequestPost {
 				);
 
 				$data[] = $sales_tax;
+			}
+
+			// If return fees are set.
+			if ( ! empty( $this->return_fee ) ) {
+				add_filter( 'klarna_applied_return_fees', fn( $fees ) => array_merge( $fees, $this->return_fee ), 10, 1 );
+
+				// Calculate the tax rate for the return fee.
+				$return_fee_tax_rate = 0;
+				$tax_rate_id         = $this->return_fee['tax_rate_id'] ?? 0;
+				if ( $tax_rate_id ) {
+					$tax_rate_data = WC_Tax::_get_tax_rate( $tax_rate_id );
+					if ( $tax_rate_data && isset( $tax_rate_data['tax_rate'] ) ) {
+						$return_fee_tax_rate = round( floatval( $tax_rate_data['tax_rate'] ) * 100 );
+					}
+				}
+
+				$return_fee = array(
+					'type'             => 'return_fee',
+					'name'             => __( 'Return fee', 'klarna-order-management' ),
+					'quantity'         => 1,
+					'unit_price'       => round( -1 * ( abs( $this->return_fee['amount'] + $this->return_fee['tax_amount'] ) * 100 ) ),
+					'tax_rate'         => $return_fee_tax_rate,
+					'total_amount'     => round( -1 * ( abs( $this->return_fee['amount'] + $this->return_fee['tax_amount'] ) * 100 ) ),
+					'total_tax_amount' => round( -1 * ( abs( $this->return_fee['tax_amount'] ) * 100 ) ),
+				);
+
+				$data[] = $return_fee;
 			}
 		}
 
