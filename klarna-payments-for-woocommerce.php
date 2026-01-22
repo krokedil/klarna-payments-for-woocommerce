@@ -34,6 +34,7 @@
 use Krokedil\Klarna\Api\Registry;
 use Krokedil\Klarna\PluginFeatures;
 use Krokedil\Klarna\Compatibility;
+use Krokedil\Klarna\KlarnaOrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -43,7 +44,6 @@ use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
-use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 
@@ -368,7 +368,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 * Show admin notice if Order Management plugin is not active.
 		 */
 		public function order_management_check() {
-			if ( ! class_exists( 'WC_Klarna_Order_Management' ) && ! class_exists( 'KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement' ) ) {
+			if ( ! class_exists( 'WC_Klarna_Order_Management' ) && ! class_exists( 'Krokedil\Klarna\KlarnaOrderManagement' ) ) {
 				$current_screen = get_current_screen();
 				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
 					?>

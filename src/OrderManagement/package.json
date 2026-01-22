@@ -1,0 +1,14 @@
+{
+    "name": "klarna-order-management",
+    "version": "1.1.0",
+    "author": "Krokedil <info@krokedil.se>",
+    "repository": "git@github.com:krokedil/klarna-order-management.git",
+    "scripts": {
+      "lint": "npx prettier src/assets/js --paren-spacing --tab-width 4 --print-width 120 --no-semi --write",
+      "build": "npm run lint"
+    },
+    "devDependencies": {
+      "prettier": "npm:wp-prettier@^3.0.3"
+    }
+  }
+  

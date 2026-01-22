@@ -3,12 +3,11 @@
     "php": ">=7.4",
     "krokedil/wp-api": "^1.0",
     "krokedil/woocommerce": "^1.8.0",
-    "krokedil/support": "^1.0.2",
+    "krokedil/support": "dev-develop-export-order",
     "krokedil/klarna-express-checkout": "2.1.0",
     "krokedil/klarna-onsite-messaging": "2.0.0",
     "krokedil/settings-page": "^1.1.0",
-    "krokedil/sign-in-with-klarna": "2.0.0",
-    "krokedil/klarna-order-management": "^1.0.0"
+    "krokedil/sign-in-with-klarna": "2.0.0"
   },
   "config": {
     "platform": {
@@ -43,10 +42,6 @@
     {
       "type": "vcs",
       "url": "git@github.com:krokedil/sign-in-with-klarna.git"
-    },
-    {
-      "type": "vcs",
-      "url": "git@github.com:krokedil/klarna-order-management.git"
     }
   ],
   "minimum-stability": "dev",
