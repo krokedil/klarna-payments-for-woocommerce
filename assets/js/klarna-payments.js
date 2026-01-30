@@ -187,6 +187,9 @@ jQuery( function ( $ ) {
 								klarna_payments.getSelectedPaymentCategory() === "klarna_payments"
 									? ""
 									: klarna_payments.getSelectedPaymentCategory(),
+							// The purchase amount is in minor units.
+							// It is used on the checkout page in any of Klarna payment methods that show a cost breakdown (the "Learn more" OSM widget).
+							purchase_amount: klarna_payments_params.purchase_amount,
 						}
 
 						if ( "US" === $( "#billing_country" ).val() ) {
