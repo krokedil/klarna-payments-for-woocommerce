@@ -9,7 +9,7 @@ jQuery( function ( $ ) {
 		klarna_container_selector: "#klarna_container_2",
 		checkout_values: {},
 		addresses: {},
-		submit_button_selectors: klarna_payments_params.submit_button_selectors.join(', '),
+		submit_button_selectors: klarna_payments_params.submit_button_selectors.join( ", " ),
 		log: ( ...args ) => {
 			if ( klarna_payments_params.debug ) {
 				console.log( ...args )
