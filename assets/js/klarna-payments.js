@@ -9,6 +9,7 @@ jQuery( function ( $ ) {
 		klarna_container_selector: "#klarna_container_2",
 		checkout_values: {},
 		addresses: {},
+		cart_total: klarna_payments_params.cart_total, // in minor units
 		submit_button_selectors: klarna_payments_params.submit_button_selectors.join( ", " ),
 		log: ( ...args ) => {
 			if ( klarna_payments_params.debug ) {
@@ -187,9 +188,14 @@ jQuery( function ( $ ) {
 								klarna_payments.getSelectedPaymentCategory() === "klarna_payments"
 									? ""
 									: klarna_payments.getSelectedPaymentCategory(),
-							// The purchase amount is in minor units.
-							// It is used on the checkout page in any of Klarna payment methods that show a cost breakdown (the "Learn more" OSM widget).
-							purchase_amount: fragments?.kp_cart_total ?? klarna_payments_params.cart_total,
+							// purchased_amount is used on the checkout page in any of Klarna payment methods that show a cost breakdown (the "Learn more" OSM widget).
+							purchase_amount: klarna_payments.cart_total,
+						}
+
+						if ( fragments && fragments.kp_cart_total ) {
+							// Update the global instance. If we don't do this, the initial cart total will be used on further loads.
+							klarna_payments.cart_total = fragments.kp_cart_total
+							options.purchase_amount = klarna_payments.cart_total
 						}
 
 						if ( "US" === $( "#billing_country" ).val() ) {

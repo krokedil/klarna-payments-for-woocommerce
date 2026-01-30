@@ -176,10 +176,10 @@ class KP_Assets {
 			$order_key = $order->get_order_key();
 		}
 
-		$customer_type   = $settings['customer_type'] ?? 'b2c';
-		$order_data      = new KP_Order_Data( $customer_type, $order_id );
-		$customer        = $order_data->get_klarna_customer_object();
-		$purchase_amount = intval( floatval( WC()->cart->get_total( 'edit' ) ) * 100 );
+		$customer_type = $settings['customer_type'] ?? 'b2c';
+		$order_data    = new KP_Order_Data( $customer_type, $order_id );
+		$customer      = $order_data->get_klarna_customer_object();
+		$cart_total    = intval( floatval( WC()->cart->get_total( 'edit' ) ) * 100 );
 
 		// Create the params array.
 		$klarna_payments_params = array(
@@ -195,7 +195,7 @@ class KP_Assets {
 			'log_to_file_nonce'       => wp_create_nonce( 'kp_wc_log_js' ),
 			'submit_order'            => WC_AJAX::get_endpoint( 'checkout' ),
 			// Params.
-			'purchase_amount'         => $purchase_amount,
+			'cart_total'              => $cart_total,
 			'testmode'                => $settings['testmode'] ?? 'no',
 			'debug'                   => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
 			'customer_type'           => $customer_type,
