@@ -63,7 +63,7 @@ jQuery( function ( $ ) {
 			 * When WooCommerce updates checkout
 			 * Happens on initial page load, country, state and postal code changes
 			 */
-			$( "body" ).on( "updated_checkout", function () {
+			$( "body" ).on( "updated_checkout", function ( event, data ) {
 				// Unblock the payments element if blocked
 				var blocked_el = $( ".woocommerce-checkout-payment" )
 				var blocked_el_data = blocked_el.data()
@@ -76,7 +76,7 @@ jQuery( function ( $ ) {
 
 				if ( klarna_payments.isKlarnaPaymentsSelected() ) {
 					klarna_payments.initKlarnaCredit()
-					klarna_payments.load().then( klarna_payments.loadHandler )
+					klarna_payments.load( data.fragments ).then( klarna_payments.loadHandler )
 				}
 			} )
 
@@ -156,7 +156,7 @@ jQuery( function ( $ ) {
 			} )
 		},
 
-		load: function () {
+		load: function ( fragments = null ) {
 			var $defer = $.Deferred()
 
 			// Dont run load during checkout completion.
@@ -189,7 +189,7 @@ jQuery( function ( $ ) {
 									: klarna_payments.getSelectedPaymentCategory(),
 							// The purchase amount is in minor units.
 							// It is used on the checkout page in any of Klarna payment methods that show a cost breakdown (the "Learn more" OSM widget).
-							purchase_amount: klarna_payments_params.purchase_amount,
+							purchase_amount: fragments?.kp_cart_total ?? klarna_payments_params.cart_total,
 						}
 
 						if ( "US" === $( "#billing_country" ).val() ) {
