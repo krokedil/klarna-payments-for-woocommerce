@@ -1,14 +1,14 @@
 "use strict"
-const { KlarnaSDK } = await import("@klarna/websdk_v2");
-const $ = jQuery;
-let configData = {};
+const { KlarnaSDK } = await import( "@klarna/websdk_v2" )
+const $ = jQuery
+let configData = {}
 
-const params = document.getElementById(
-	'wp-script-module-data-@klarna/interoperability_token'
-);
+const params = document.getElementById( "wp-script-module-data-@klarna/interoperability_token" )
 
-if (params?.textContent) {
-	try { configData = JSON.parse(params.textContent); } catch { }
+if ( params?.textContent ) {
+	try {
+		configData = JSON.parse( params.textContent )
+	} catch {}
 }
 
 const kp_interoperability_token = {
@@ -16,26 +16,32 @@ const kp_interoperability_token = {
 	Klarna: null,
 
 	init: async function () {
-		this.params = configData;
+		this.params = configData
 		this.updateGlobalToken( this.params.token )
 		this.updateGlobalData( this.params.data )
-		this.Klarna = await KlarnaSDK({
-			clientId: this.params.client_id
-		});
-		this.bindKlarnaEvents();
+		this.Klarna = await KlarnaSDK( {
+			clientId: this.params.client_id,
+		} )
+		this.bindKlarnaEvents()
 
 		// Set the klarna object to the window for other scripts to use as well.
-		$('body').trigger({ type: 'klarna_wc_sdk_loaded', Klarna: kp_interoperability_token.Klarna });
+		$( "body" ).trigger( { type: "klarna_wc_sdk_loaded", Klarna: kp_interoperability_token.Klarna } )
 
 		// Check if we should send shopping data to Klarna.
 		if ( true === kp_interoperability_token.params.send_data ) {
 			// Update the session data when cart or checkout is updated.
-			$( document.body ).on( "updated_cart_totals added_to_cart removed_from_cart updated_checkout wc-blocks_added_to_cart wc-blocks_removed_from_cart", kp_interoperability_token.updateSessionData );
+			$( document.body ).on(
+				"updated_cart_totals added_to_cart removed_from_cart updated_checkout wc-blocks_added_to_cart wc-blocks_removed_from_cart",
+				kp_interoperability_token.updateSessionData,
+			)
 		}
 	},
 
 	bindKlarnaEvents: async function () {
-		kp_interoperability_token.Klarna.Interoperability.on( "tokenupdate", kp_interoperability_token.updateSessionToken )
+		kp_interoperability_token.Klarna.Interoperability.on(
+			"tokenupdate",
+			kp_interoperability_token.updateSessionToken,
+		)
 
 		// If we did not get a token from Klarna yet, trigger the token request.
 		if ( undefined === window.klarna_interoperability_token ) {
@@ -98,7 +104,6 @@ const kp_interoperability_token = {
 			success: function ( response ) {
 				const updatedData = response.data
 				kp_interoperability_token.updateGlobalData( updatedData )
-
 			},
 			error: function ( error ) {
 				console.error( "Error updating Interoperability data:", error )
@@ -107,5 +112,5 @@ const kp_interoperability_token = {
 	},
 }
 
-kp_interoperability_token.init();
-export const klarna_interoperability = kp_interoperability_token;
+kp_interoperability_token.init()
+export const klarna_interoperability = kp_interoperability_token
