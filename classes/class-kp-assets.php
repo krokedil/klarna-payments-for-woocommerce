@@ -179,7 +179,7 @@ class KP_Assets {
 		$customer_type   = $settings['customer_type'] ?? 'b2c';
 		$order_data      = new KP_Order_Data( $customer_type, $order_id );
 		$customer        = $order_data->get_klarna_customer_object();
-		$purchase_amount = floatval( WC()->cart->get_total( '' ) ) * 100;
+		$purchase_amount = intval( floatval( WC()->cart->get_total( 'edit' ) ) * 100 );
 
 		// Create the params array.
 		$klarna_payments_params = array(
