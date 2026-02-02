@@ -3,6 +3,7 @@ namespace Krokedil\Klarna\OrderManagement;
 
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderMetabox;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\OrderSupport;
+use Krokedil\Klarna\OrderManagement\KlarnaOrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

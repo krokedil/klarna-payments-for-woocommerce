@@ -1,6 +1,8 @@
 <?php
 namespace Krokedil\Klarna\OrderManagement\Request;
 
+use Krokedil\Klarna\OrderManagement\KlarnaOrderManagement;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

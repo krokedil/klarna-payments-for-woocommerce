@@ -3,6 +3,7 @@ namespace Krokedil\Klarna\OrderManagement\Request\Patch;
 
 use Krokedil\Klarna\OrderManagement\OrderLines;
 use Krokedil\Klarna\OrderManagement\Request\RequestPatch;
+use Krokedil\Klarna\OrderManagement\KlarnaOrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
