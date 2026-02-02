@@ -79,8 +79,8 @@ class SellersApp {
 			return;
 		}
 
-		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
+		// If the order was not paid using Klarna Payments, bail.
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 

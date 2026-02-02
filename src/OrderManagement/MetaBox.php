@@ -72,8 +72,8 @@ class MetaBox extends OrderMetabox {
 			$order_id = Utility::get_the_ID();
 			$order    = wc_get_order( $order_id );
 
-			// If the order was not paid using the plugin that instanced this class, bail.
-			if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
+			// If the order was not paid using Klarna Payments, bail.
+			if ( 'klarna_payments' !== $order->get_payment_method() ) {
 				return;
 			}
 
@@ -101,8 +101,8 @@ class MetaBox extends OrderMetabox {
 		$order_id = Utility::get_the_ID();
 		$order    = wc_get_order( $order_id );
 
-		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
+		// If the order was not paid using Klarna Payments, bail.
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 
@@ -135,8 +135,8 @@ class MetaBox extends OrderMetabox {
 		$order_id = Utility::get_the_ID();
 		$order    = wc_get_order( $order_id );
 
-		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
+		// If the order was not paid using Klarna Payments, bail.
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 

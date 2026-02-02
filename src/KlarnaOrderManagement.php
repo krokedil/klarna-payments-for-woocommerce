@@ -243,8 +243,8 @@ class KlarnaOrderManagement {
 		if ( ! isset( $options['kom_auto_cancel'] ) || 'yes' === $options['kom_auto_cancel'] || $action ) {
 			$order = wc_get_order( $order_id );
 
-			// If the order was not paid using the plugin that instanced this class, bail.
-			if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
+			// If the order was not paid using Klarna Payments, bail.
+			if ( 'klarna_payments' !== $order->get_payment_method() ) {
 				return;
 			}
 
@@ -323,8 +323,8 @@ class KlarnaOrderManagement {
 		$options = $this->settings->get_settings( $order_id );
 		$order   = wc_get_order( $order_id );
 
-		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
+		// If the order was not paid using Klarna Payments, bail.
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 
@@ -427,8 +427,8 @@ class KlarnaOrderManagement {
 		$options = $this->settings->get_settings( $order_id );
 		$order   = wc_get_order( $order_id );
 
-		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
+		// If the order was not paid using Klarna Payments, bail.
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 
@@ -548,8 +548,8 @@ class KlarnaOrderManagement {
 	public function refund_klarna_order( $result, $order_id, $amount = null, $reason = '' ) {
 		$order = wc_get_order( $order_id );
 
-		// If the order was not paid using the plugin that instanced this class, bail.
-		if ( ! Utility::check_plugin_instance( 'klarna_payments', $order->get_payment_method() ) ) {
+		// If the order was not paid using Klarna Payments, bail.
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 
