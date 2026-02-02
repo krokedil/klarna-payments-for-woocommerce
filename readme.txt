@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 10.4.3
-Stable tag: 4.6.1
+Stable tag: 4.6.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,13 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026.02.03    - version 4.6.2 =
+* Fix           - The Klarna Express Checkout webhook setting now only appears when the KEC flow is set to "One step", as intended.
+* Fix           - [KOSM] Added support for On-Site messaging on the blocks cart page.
+* Fix           - [SIWK] Resolved issue with SIWK visibility caused by settings not being initialized when needed, which prevented proper checking if SIWK is enabled.
+* Fix           - [KOSM] Fixed an issue where the Onsite Messaging debug mode was not functioning as expected.
+* Fix           - [Settings page] Fixed an issue where the `system-report.json` file was not correctly attached when submitting support requests via the HelpScout beacon.
+
 = 2026.01.20    - version 4.6.1 =
 * Fix           - Resolved a PHP warning ("Undefined array key 'send_shopping_data'") that could occur if plugin settings had not been saved after the latest update.
 

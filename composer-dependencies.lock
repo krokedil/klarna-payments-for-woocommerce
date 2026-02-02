@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f2836e2f00a7d976ceb5887ac23c040",
+    "content-hash": "60f5039c1185633a5c45dd87fac49fcd",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -143,16 +143,16 @@
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
-                "reference": "703705a58afccd1053815031f367f59fde813eb3"
+                "reference": "a874e5253f1ee4949a76cdbe413cd2738ee8500c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/703705a58afccd1053815031f367f59fde813eb3",
-                "reference": "703705a58afccd1053815031f367f59fde813eb3",
+                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/a874e5253f1ee4949a76cdbe413cd2738ee8500c",
+                "reference": "a874e5253f1ee4949a76cdbe413cd2738ee8500c",
                 "shasum": ""
             },
             "require": {
@@ -207,10 +207,10 @@
             ],
             "description": "Klarna On-Site Messaging for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/2.0.0",
+                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/2.1.0",
                 "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
             },
-            "time": "2025-12-03T10:55:47+00:00"
+            "time": "2026-02-02T13:15:26+00:00"
         },
         {
             "name": "krokedil/klarna-order-management",

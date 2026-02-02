@@ -1,4 +1,11 @@
 *** Klarna for WooCommerce Changelog ***
+2026.02.03    - version 4.6.2
+* Fix         - The Klarna Express Checkout webhook setting now only appears when the KEC flow is set to "One step", as intended.
+* Fix         - [KOSM] Added support for On-Site messaging on the blocks cart page.
+* Fix         - [SIWK] Resolved issue with SIWK visibility caused by settings not being initialized when needed, which prevented proper checking if SIWK is enabled.
+* Fix         - [KOSM] Fixed an issue where the Onsite Messaging debug mode was not functioning as expected.
+* Fix         - [Settings page] Fixed an issue where the `system-report.json` file was not correctly attached when submitting support requests via the HelpScout beacon.
+
 2026.01.20    - version 4.6.1
 * Fix         - Resolved a PHP warning ("Undefined array key 'send_shopping_data'") that could occur if plugin settings had not been saved after the latest update.
 
