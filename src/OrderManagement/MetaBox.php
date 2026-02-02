@@ -69,7 +69,7 @@ class MetaBox extends OrderMetabox {
 	 */
 	public function kom_meta_box( $post_type ) {
 		if ( in_array( $post_type, array( 'woocommerce_page_wc-orders', 'shop_order' ), true ) ) {
-			$order_id = Utility::get_the_ID();
+			$order_id = kp_get_the_ID();
 			$order    = wc_get_order( $order_id );
 
 			// If the order was not paid using Klarna Payments, bail.
@@ -98,7 +98,7 @@ class MetaBox extends OrderMetabox {
 	 * @return void
 	 */
 	public function metabox_content( $post ) {
-		$order_id = Utility::get_the_ID();
+		$order_id = kp_get_the_ID();
 		$order    = wc_get_order( $order_id );
 
 		// If the order was not paid using Klarna Payments, bail.
@@ -132,7 +132,7 @@ class MetaBox extends OrderMetabox {
 	 * @return void
 	 */
 	public function print_standard_content( $klarna_order ) {
-		$order_id = Utility::get_the_ID();
+		$order_id = kp_get_the_ID();
 		$order    = wc_get_order( $order_id );
 
 		// If the order was not paid using Klarna Payments, bail.

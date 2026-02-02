@@ -14,7 +14,6 @@ use Krokedil\Klarna\OrderManagement\Request\Patch\RequestPatchUpdate;
 use Krokedil\Klarna\OrderManagement\Request\Post\RequestPostCancel;
 use Krokedil\Klarna\OrderManagement\MetaBox;
 use Krokedil\Klarna\OrderManagement\Ajax;
-use Krokedil\Klarna\OrderManagement\Utility;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 use Krokedil\Klarna\OrderManagement\ReturnFee;
@@ -167,7 +166,7 @@ class KlarnaOrderManagement {
 	 * @return void
 	 */
 	public function enqueue_admin() {
-		$order_id = Utility::get_the_ID();
+		$order_id = kp_get_the_ID();
 		if ( empty( $order_id ) ) {
 			return;
 		}
