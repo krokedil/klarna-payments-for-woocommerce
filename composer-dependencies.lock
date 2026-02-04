@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60f5039c1185633a5c45dd87fac49fcd",
+    "content-hash": "e8942bdc72982da6a140f91c7311fb32",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -71,16 +71,16 @@
         },
         {
             "name": "krokedil/klarna-express-checkout",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "41656a73f69c1337e26fa4ea7632fbcf0d8371a4"
+                "reference": "b66f5a1790764ec7542f2012d7e840e7545535d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/41656a73f69c1337e26fa4ea7632fbcf0d8371a4",
-                "reference": "41656a73f69c1337e26fa4ea7632fbcf0d8371a4",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/b66f5a1790764ec7542f2012d7e840e7545535d4",
+                "reference": "b66f5a1790764ec7542f2012d7e840e7545535d4",
                 "shasum": ""
             },
             "require": {
@@ -136,10 +136,10 @@
             ],
             "description": "A Klarna Express Checkout solution for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-express-checkout/tree/2.1.0",
+                "source": "https://github.com/krokedil/klarna-express-checkout/tree/2.1.1",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2026-01-16T15:15:17+00:00"
+            "time": "2026-02-03T08:32:54+00:00"
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
@@ -326,16 +326,16 @@
         },
         {
             "name": "krokedil/sign-in-with-klarna",
-            "version": "2.0.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/sign-in-with-klarna.git",
-                "reference": "4b547790c2291a753424fea873fad20faa2a0f08"
+                "reference": "8db60d9294dace1a6d1bce0a03e86afa26f0590b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/4b547790c2291a753424fea873fad20faa2a0f08",
-                "reference": "4b547790c2291a753424fea873fad20faa2a0f08",
+                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/8db60d9294dace1a6d1bce0a03e86afa26f0590b",
+                "reference": "8db60d9294dace1a6d1bce0a03e86afa26f0590b",
                 "shasum": ""
             },
             "require": {
@@ -354,10 +354,10 @@
             },
             "description": "Add \"Sign in with Klarna\" compatibility with your WooCommerce plugin.",
             "support": {
-                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/2.0.1",
+                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/2.0.0",
                 "issues": "https://github.com/krokedil/sign-in-with-klarna/issues"
             },
-            "time": "2026-01-23T11:07:51+00:00"
+            "time": "2025-12-03T10:55:56+00:00"
         },
         {
             "name": "krokedil/support",
