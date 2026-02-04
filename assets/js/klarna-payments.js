@@ -9,7 +9,8 @@ jQuery( function ( $ ) {
 		klarna_container_selector: "#klarna_container_2",
 		checkout_values: {},
 		addresses: {},
-		submit_button_selectors: klarna_payments_params.submit_button_selectors.join(', '),
+		cart_total: klarna_payments_params.cart_total, // in minor units
+		submit_button_selectors: klarna_payments_params.submit_button_selectors.join( ", " ),
 		log: ( ...args ) => {
 			if ( klarna_payments_params.debug ) {
 				console.log( ...args )
@@ -63,7 +64,7 @@ jQuery( function ( $ ) {
 			 * When WooCommerce updates checkout
 			 * Happens on initial page load, country, state and postal code changes
 			 */
-			$( "body" ).on( "updated_checkout", function () {
+			$( "body" ).on( "updated_checkout", function ( event, data ) {
 				// Unblock the payments element if blocked
 				var blocked_el = $( ".woocommerce-checkout-payment" )
 				var blocked_el_data = blocked_el.data()
@@ -76,7 +77,7 @@ jQuery( function ( $ ) {
 
 				if ( klarna_payments.isKlarnaPaymentsSelected() ) {
 					klarna_payments.initKlarnaCredit()
-					klarna_payments.load().then( klarna_payments.loadHandler )
+					klarna_payments.load( data.fragments ).then( klarna_payments.loadHandler )
 				}
 			} )
 
@@ -156,7 +157,7 @@ jQuery( function ( $ ) {
 			} )
 		},
 
-		load: function () {
+		load: function ( fragments = null ) {
 			var $defer = $.Deferred()
 
 			// Dont run load during checkout completion.
@@ -187,6 +188,14 @@ jQuery( function ( $ ) {
 								klarna_payments.getSelectedPaymentCategory() === "klarna_payments"
 									? ""
 									: klarna_payments.getSelectedPaymentCategory(),
+							// purchased_amount is used on the checkout page in any of Klarna payment methods that show a cost breakdown (the "Learn more" OSM widget).
+							purchase_amount: klarna_payments.cart_total,
+						}
+
+						if ( fragments && fragments.kp_cart_total ) {
+							// Update the global instance. If we don't do this, the initial cart total will be used on further loads.
+							klarna_payments.cart_total = fragments.kp_cart_total
+							options.purchase_amount = klarna_payments.cart_total
 						}
 
 						if ( "US" === $( "#billing_country" ).val() ) {

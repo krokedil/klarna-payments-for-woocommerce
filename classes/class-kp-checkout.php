@@ -17,6 +17,7 @@ class KP_Checkout {
 	 */
 	public function __construct() {
 		add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'add_token_fragment' ) );
+		add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'add_cart_total_fragment' ) );
 		add_action( 'woocommerce_review_order_before_submit', array( $this, 'html_client_token' ) );
 		add_action( 'woocommerce_pay_order_before_submit', array( $this, 'html_client_token' ) );
 	}
@@ -39,6 +40,17 @@ class KP_Checkout {
 		$html = ob_get_clean();
 
 		$fragments['#kp_client_token'] = $html;
+		return $fragments;
+	}
+
+	/**
+	 * Adds the cart total as a fragment to the checkout.
+	 *
+	 * @param array $fragments The fragments for the checkout.
+	 * @return array
+	 */
+	public function add_cart_total_fragment( $fragments ) {
+		$fragments['kp_cart_total'] = intval( floatval( WC()->cart->get_total( 'edit' ) ) * 100 );
 		return $fragments;
 	}
 
