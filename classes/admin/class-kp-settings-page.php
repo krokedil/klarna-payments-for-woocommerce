@@ -361,7 +361,7 @@ class KP_Settings_Page {
 		}
 
 		// Credentials section is active if any valid credentials are set.
-		if ( 'credentials' === $setting_key && 'yes' === get_option( 'kp_has_valid_credentials' ) ) {
+		if ( 'credentials' === $setting_key && 'yes' === get_option( 'kp_has_valid_credentials', 'no' ) ) {
 			return true;
 		}
 
