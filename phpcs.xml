@@ -52,4 +52,7 @@
     <rule ref="Generic.Arrays.DisallowShortArraySyntax">
         <exclude-pattern>src/</exclude-pattern>
     </rule>
+    <rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
+        <exclude-pattern>src/</exclude-pattern>
+    </rule>
 </ruleset>
