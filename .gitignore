@@ -26,3 +26,4 @@ dependencies/*
 tmp*
 
 .changelogs/backup-*
+*.bak
