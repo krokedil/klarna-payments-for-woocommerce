@@ -83,6 +83,16 @@ if [ -z "$SLUG" ]; then
   read -p "Enter a slug for the change (e.g. short-description): " SLUG
 fi
 
+# Sanitize SLUG: remove/convert unsafe characters for filesystem safety
+# Keep only alphanumeric, dashes, and underscores; convert spaces to dashes
+SLUG=$(echo "$SLUG" | tr '[:upper:]' '[:lower:]' | tr -s '[:space:]' '-' | tr -cd '[:alnum:]-_' | sed 's/^[-_]*//; s/[-_]*$//')
+
+# Validate that slug is not empty after sanitization
+if [ -z "$SLUG" ]; then
+  echo "Error: Invalid slug. Must contain at least one alphanumeric character."
+  exit 1
+fi
+
 if [ -z "$NEEDS_DOCUMENTATION" ]; then
   read -p "Does this change need documentation? (yes/no): " NEEDS_DOCUMENTATION
 fi
@@ -97,8 +107,6 @@ fi
 #
 # <DESCRIPTION>
 TIMESTAMP=$(date +"%Y-%m-%d")
-# Convert spaces in slug to dashes for filesystem safety
-SLUG="${SLUG// /-}"
 FILENAME="${TIMESTAMP}-${SLUG}"
 
 # Use absolute path from SCRIPT_DIR to avoid issues when script called from different directories

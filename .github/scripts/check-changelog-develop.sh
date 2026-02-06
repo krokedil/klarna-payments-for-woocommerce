@@ -11,6 +11,15 @@ if [[ -z "$base_sha" || -z "$head_sha" ]]; then
   error "Missing base/head SHAs"
 fi
 
+# Validate SHA format (must be 40 hex characters or short SHA of 7-40 chars)
+if [[ ! "$base_sha" =~ ^[0-9a-f]{7,40}$ ]]; then
+  error "Invalid base SHA format: $base_sha (must be 7-40 hex characters)"
+fi
+
+if [[ ! "$head_sha" =~ ^[0-9a-f]{7,40}$ ]]; then
+  error "Invalid head SHA format: $head_sha (must be 7-40 hex characters)"
+fi
+
 has_changes=0
 has_changelog=0
 

@@ -121,10 +121,14 @@ if [[ "$CHECK_WORDPRESS_COMPAT" == "true" ]]; then
   if [[ -z "$latest_wp" ]]; then
     warn "Could not fetch latest WordPress version from API. Skipping WordPress compatibility check."
   else
-    if [[ "$wp_tested" != "$latest_wp" ]]; then
-      error "WordPress compatibility mismatch: Plugin tested up to WordPress $wp_tested, but latest WordPress is $latest_wp. Update 'Tested up to' field in $README_FILE"
+    # Compare only major.minor versions (e.g., 6.7) per WordPress guidelines
+    wp_tested_major_minor=$(echo "$wp_tested" | cut -d'.' -f1-2)
+    latest_wp_major_minor=$(echo "$latest_wp" | cut -d'.' -f1-2)
+
+    if [[ "$wp_tested_major_minor" != "$latest_wp_major_minor" ]]; then
+      error "WordPress compatibility mismatch: Plugin tested up to WordPress $wp_tested, but latest WordPress is $latest_wp (major.minor: $latest_wp_major_minor). Update 'Tested up to' field in $README_FILE"
     fi
-    info "WordPress tested version up-to-date: $wp_tested"
+    info "WordPress tested version up-to-date: $wp_tested (compatible with WordPress $latest_wp_major_minor)"
   fi
 fi
 
