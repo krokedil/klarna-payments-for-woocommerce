@@ -1,0 +1,48 @@
+name: PHPCS Check
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [develop, master]
+    paths:
+      - '**.php'
+      - 'phpcs.xml'
+      - 'composer.json'
+      - 'composer.lock'
+
+permissions:
+  contents: read
+concurrency:
+  group: pr-develop-phpcs-check-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['7.4', '8.1', '8.4'] # Check minimum, recommended, and latest supported PHP versions for WordPress/WooCommerce
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, xml, curl, json, zip
+          tools: composer
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Run PHPCS
+        run: vendor/bin/phpcs -s --standard=phpcs.xml $(git ls-files '*.php')
