@@ -24,3 +24,5 @@ dependencies/*
 
 # tmp folders from scoping.
 tmp*
+
+.changelogs/backup-*

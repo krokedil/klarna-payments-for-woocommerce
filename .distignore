@@ -28,3 +28,5 @@ README.md
 webpack.config.js
 yarn.lock
 .klarna-system-metadata.json
+/.changelogs
+.gitkeep
