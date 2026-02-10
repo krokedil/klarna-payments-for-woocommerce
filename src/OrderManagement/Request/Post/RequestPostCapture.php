@@ -2,7 +2,6 @@
 namespace Krokedil\Klarna\OrderManagement\Request\Post;
 
 use Krokedil\Klarna\OrderManagement\KlarnaOrderManagement;
-use Krokedil\Klarna\OrderManagement\OrderLines;
 use Krokedil\Klarna\OrderManagement\Request\RequestPost;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -59,12 +58,10 @@ class RequestPostCapture extends RequestPost {
 
 		// Don't add order lines if we are forcing a full order capture.
 		if ( ! $force_capture_full_order ) {
-
-			$lines_processor = new OrderLines( $this->order_id, 'capture' );
-			$order_lines     = $lines_processor->order_lines();
-
+			$kp_order_data = new \KP_Order_Data( 'b2c', $this->order_id );
+			$order_lines   = $kp_order_data->get_klarna_order_lines_array();
 			if ( isset( $order_lines ) && ! empty( $order_lines ) ) {
-				$data = array_merge( $order_lines, $data );
+				$data['order_lines'] = $order_lines;
 			}
 		}
 
