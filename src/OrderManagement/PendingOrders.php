@@ -104,6 +104,12 @@ class PendingOrders {
 	 * @return string|bool
 	 */
 	private static function get_klarna_order_id_from_order_id( $order_id ) {
-		return wc_get_order( $order_id )->get_meta( '_wc_klarna_order_id', true );
+		$order = wc_get_order( $order_id );
+
+		if ( ! $order ) {
+			return false;
+		}
+
+		return $order->get_meta( '_wc_klarna_order_id', true );
 	}
 }
