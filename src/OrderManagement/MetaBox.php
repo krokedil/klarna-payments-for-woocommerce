@@ -296,7 +296,7 @@ class MetaBox extends OrderMetabox {
 	 * @param  object $klarna_order The Klarna order object associated with this order.
 	 * @param  array  $actions The enabled actions.
 	 *
-	 * @return bool Should Capture-related stuff be in the output?
+	 * @return bool
 	 */
 	public function want_output_capture( $order_id, $klarna_order, $actions ) {
 		$order = wc_get_order( $order_id );
@@ -323,7 +323,7 @@ class MetaBox extends OrderMetabox {
 	 * @param  object $klarna_order The Klarna order object associated with this order.
 	 * @param  array  $actions The enabled actions.
 	 *
-	 * @return bool Should Capture-related stuff be in the output?
+	 * @return bool
 	 */
 	public function want_output_cancel( $order_id, $klarna_order, $actions ) {
 		$order = wc_get_order( $order_id );
