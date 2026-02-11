@@ -38,7 +38,9 @@ class RequestPatchUpdate extends RequestPatch {
 	 * @return array
 	 */
 	protected function get_body() {
-		$kp_order_data = new \KP_Order_Data( 'b2c', $this->order_id );
+		$settings      = $this->order_management->settings->get_settings( $this->order_id );
+		$customer_type = $settings['customer_type'] ?? 'b2c';
+		$kp_order_data = new \KP_Order_Data( $customer_type, $this->order_id );
 		$order_lines   = $kp_order_data->get_klarna_order_lines_array();
 		$data          = array( 'order_lines' => $order_lines );
 		return apply_filters( 'kom_order_update_args', $data, $this->order_id );

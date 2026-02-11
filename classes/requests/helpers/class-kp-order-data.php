@@ -54,7 +54,7 @@ class KP_Order_Data {
 	 *
 	 * @var bool
 	 */
-	private $separate_sales_tax;
+	public $separate_sales_tax;
 
 	/**
 	 * Class constructor.

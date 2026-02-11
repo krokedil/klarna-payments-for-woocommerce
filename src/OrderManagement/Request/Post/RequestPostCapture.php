@@ -58,7 +58,8 @@ class RequestPostCapture extends RequestPost {
 
 		// Don't add order lines if we are forcing a full order capture.
 		if ( ! $force_capture_full_order ) {
-			$kp_order_data = new \KP_Order_Data( 'b2c', $this->order_id );
+			$customer_type = $settings['customer_type'] ?? 'b2c';
+			$kp_order_data = new \KP_Order_Data( $customer_type, $this->order_id );
 			$order_lines   = $kp_order_data->get_klarna_order_lines_array();
 			if ( isset( $order_lines ) && ! empty( $order_lines ) ) {
 				$data['order_lines'] = $order_lines;
