@@ -150,7 +150,7 @@ class KlarnaOrderManagement {
 		add_action(
 			'wc_klarna_notification_listener',
 			array(
-				'WC_Klarna_Pending_Orders',
+				'\Krokedil\Klarna\OrderManagement\PendingOrders',
 				'notification_listener',
 			),
 			10,
