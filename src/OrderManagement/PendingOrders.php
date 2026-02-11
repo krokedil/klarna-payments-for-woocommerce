@@ -90,7 +90,7 @@ class PendingOrders {
 
 		$order = reset( $orders );
 
-		if ( empty( $orders ) ) {
+		if ( empty( $order ) ) {
 			return;
 		}
 
