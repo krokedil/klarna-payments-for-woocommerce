@@ -103,13 +103,13 @@ jQuery( function ( $ ) {
 
         show_refund_fee_section: function () {
             // Show the return fee section if it is hidden.
-            $klarnaReturnFee = $( "#klarna_return_fee" )
+            const $klarnaReturnFee = $( "#klarna_return_fee" )
             $klarnaReturnFee.show()
         },
         hide_refund_fee_section: function () {
             // Hide the return fee section if it is visible.
             // If the return fee section is hidden, do nothing.
-            $klarnaReturnFee = $( "#klarna_return_fee" )
+            const $klarnaReturnFee = $( "#klarna_return_fee" )
 
             if ( $klarnaReturnFee.attr( "data-klarna-hide" ) === "no" ) {
                 return
