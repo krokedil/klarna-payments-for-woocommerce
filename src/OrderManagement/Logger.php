@@ -36,7 +36,7 @@ class Logger {
 			if ( empty( self::$log ) ) {
 				self::$log = new \WC_Logger();
 			}
-			self::$log->add( 'klarna-order-management', wp_json_encode( $message ) );
+			self::$log->add( 'klarna-payments-for-woocommerce', wp_json_encode( $message ) );
 		}
 	}
 	/**
