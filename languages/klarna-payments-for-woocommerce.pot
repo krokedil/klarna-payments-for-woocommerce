@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2026-01-19 16:26:53+00:00\n"
+"POT-Creation-Date: 2026-02-04 09:20:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -679,19 +679,19 @@ msgstr ""
 msgid "Not Created"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:263
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:265
 msgid "Test Webhook"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:270
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:272
 msgid "Remove Webhook"
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:283
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:287
 msgid "Create the necessary webhook in Klarna for the Express Checkout."
 msgstr ""
 
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:289
+#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:293
 msgid "Create Webhook"
 msgstr ""
 
@@ -731,7 +731,7 @@ msgstr ""
 msgid "Webhook created successfully."
 msgstr ""
 
-#: dependencies/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:111
+#: dependencies/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:114
 msgid ""
 "The \"Klarna On-Site Messaging for WooCommerce\" plugin is now integrated "
 "into Klarna Payments. Please disable the plugin."
