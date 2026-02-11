@@ -47,11 +47,11 @@ class KP_Assets {
 	 * @return void
 	 */
 	public function register_klarna_websdk() {
-		wp_register_script( // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+		wp_register_script(
 			self::KP_SCRIPT_HANDLE,
 			'https://x.klarnacdn.net/kp/lib/v1/api.js',
 			array(),
-			null,
+			null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 			true
 		);
 
