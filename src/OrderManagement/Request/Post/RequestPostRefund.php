@@ -239,6 +239,33 @@ class RequestPostRefund extends RequestPost {
 
 				$data[] = $sales_tax;
 			}
+
+			// If return fees are set.
+			if ( ! empty( $this->return_fee ) ) {
+				add_filter( 'klarna_applied_return_fees', fn( $fees ) => array_merge( $fees, $this->return_fee ), 10, 1 );
+
+				// Calculate the tax rate for the return fee.
+				$return_fee_tax_rate = 0;
+				$tax_rate_id         = $this->return_fee['tax_rate_id'] ?? 0;
+				if ( $tax_rate_id ) {
+					$tax_rate_data = \WC_Tax::_get_tax_rate( $tax_rate_id );
+					if ( $tax_rate_data && isset( $tax_rate_data['tax_rate'] ) ) {
+						$return_fee_tax_rate = round( floatval( $tax_rate_data['tax_rate'] ) * 100 );
+					}
+				}
+
+				$return_fee = array(
+					'type'             => 'return_fee',
+					'name'             => __( 'Return fee', 'klarna-order-management-for-woocommerce' ),
+					'quantity'         => 1,
+					'unit_price'       => round( -1 * ( abs( $this->return_fee['amount'] + $this->return_fee['tax_amount'] ) * 100 ) ),
+					'tax_rate'         => $return_fee_tax_rate,
+					'total_amount'     => round( -1 * ( abs( $this->return_fee['amount'] + $this->return_fee['tax_amount'] ) * 100 ) ),
+					'total_tax_amount' => round( -1 * ( abs( $this->return_fee['tax_amount'] ) * 100 ) ),
+				);
+
+				$data[] = $return_fee;
+			}
 		}
 
 		return apply_filters( 'kom_refund_order_args', $data, $this->order_id );
@@ -313,7 +340,7 @@ class RequestPostRefund extends RequestPost {
 	}
 
 	/**
-	 * Calculate item tax percentage.
+	 * Calculate refund item tax percentage.
 	 *
 	 * @param  WC_Order_Item_Product|WC_Order_Item_Shipping|WC_Order_Item_Fee|WC_Order_Item_Coupon $order_line_item Order line item.
 	 * @param  bool                                                                                $separate_sales_tax Whether sales tax is separate.
