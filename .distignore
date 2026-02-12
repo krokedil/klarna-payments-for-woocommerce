@@ -18,7 +18,7 @@ composer.json
 composer.lock
 package.json
 package-lock.json
-phpcs.ruleset.xml
+phpcs.xml
 pnpm-lock.yaml
 readme.dev.txt
 readme.dev.md
@@ -28,3 +28,5 @@ README.md
 webpack.config.js
 yarn.lock
 .klarna-system-metadata.json
+/.changelogs
+.gitkeep
