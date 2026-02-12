@@ -1,7 +1,7 @@
 <?php
 namespace Krokedil\Klarna\OrderManagement\Request;
 
-use Krokedil\Klarna\OrderManagement\KlarnaOrderManagement;
+use Krokedil\Klarna\KlarnaOrderManagement;
 use Krokedil\Klarna\OrderManagement\Logger;
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -2,7 +2,7 @@
 namespace Krokedil\Klarna\OrderManagement\Request\Get;
 
 use Krokedil\Klarna\OrderManagement\Request\RequestGet;
-use Krokedil\Klarna\OrderManagement\KlarnaOrderManagement;
+use Krokedil\Klarna\KlarnaOrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
