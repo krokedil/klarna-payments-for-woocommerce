@@ -135,11 +135,9 @@ class PluginFeatures {
 				if ( ! in_array( $credentials['country_code'] ?? 'unknown', $available_for, true ) ) {
 					$available_for[] = $credentials['country_code'] ?? 'unknown';
 				}
-			} else {
+			} elseif ( in_array( $credentials['country_code'] ?? 'unknown', $available_for, true ) ) {
 				// If it is unavailable, remove the country code if present.
-				if ( in_array( $credentials['country_code'] ?? 'unknown', $available_for, true ) ) {
-					$available_for = array_diff( $available_for, array( $credentials['country_code'] ?? 'unknown' ) );
-				}
+				$available_for = array_diff( $available_for, array( $credentials['country_code'] ?? 'unknown' ) );
 			}
 
 			// If the feature exists already, and was available before, we should not override it to unavailable.
