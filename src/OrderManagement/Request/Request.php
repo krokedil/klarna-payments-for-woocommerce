@@ -229,7 +229,7 @@ abstract class Request {
 		$variant    = $this->get_klarna_variant();
 		if ( $variant ) {
 			$payment_method_settings = get_option( "woocommerce_{$variant}_settings" );
-			if ( ! $payment_method_settings || 'yes' == $payment_method_settings['testmode'] ) {
+			if ( ! $payment_method_settings || 'yes' === $payment_method_settings['testmode'] ) {
 				$playground = true;
 			}
 		}
@@ -252,7 +252,7 @@ abstract class Request {
 		if ( '' === $merchant_id || '' === $shared_secret ) {
 			return new \WP_Error( 'missing_credentials', 'Klarna Payments credentials are missing' );
 		}
-		return 'Basic ' . base64_encode( $merchant_id . ':' . htmlspecialchars_decode( $shared_secret ) );
+		return 'Basic ' . base64_encode( $merchant_id . ':' . htmlspecialchars_decode( $shared_secret ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Base64 used to calculate auth headers.
 	}
 
 	/**

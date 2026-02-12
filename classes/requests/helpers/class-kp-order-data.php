@@ -373,11 +373,11 @@ class KP_Order_Data {
 	/**
 	 * Filters array values to remove all null values.
 	 *
-	 * @param mixed $var The line value to filter.
+	 * @param mixed $value The line value to filter.
 	 * @return bool
 	 */
-	public static function remove_null( $var ) {
-		return is_array( $var ) ? ! empty( $var ) : null !== $var; // If empty array, or if value is null return true to remove value.
+	public static function remove_null( $value ) {
+		return is_array( $value ) ? ! empty( $value ) : null !== $value; // If empty array, or if value is null return true to remove value.
 	}
 
 	/**
