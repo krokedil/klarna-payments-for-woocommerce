@@ -3,9 +3,8 @@
     "php": ">=7.4"
   },
   "require-dev": {
-    "wp-coding-standards/wpcs": "^2.3",
-    "php-stubs/wordpress-stubs": "^6.1",
-    "php-stubs/woocommerce-stubs": "^7.2",
+    "wp-coding-standards/wpcs": "^3.3",
+    "php-stubs/woocommerce-stubs": "^10.5.0",
     "wpify/scoper": "3.1.3"
   },
   "config": {
@@ -13,6 +12,7 @@
       "php": "7.4"
     },
     "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
       "wpify/scoper": true
     }
   },
@@ -34,9 +34,16 @@
   },
   "minimum-stability": "dev",
   "scripts": {
-    "lint": "vendor/bin/phpcs . --standard=phpcs.ruleset.xml --extensions=php -q",
-    "lint:fix": "vendor/bin/phpcbf . --standard=phpcs.ruleset.xml --extensions=php -q",
-    "lint:changes": "git diff --name-only HEAD~1 | grep '\\.php$' | xargs vendor/bin/phpcs --standard=phpcs.ruleset.xml --extensions=php -q",
-    "lint:fix:changes": "git diff --name-only HEAD~1 | grep '\\.php$' | xargs vendor/bin/phpcbf --standard=phpcs.ruleset.xml --extensions=php -q"
+    "get-changelog": "bash .github/scripts/new-version.sh",
+    "update-version": "bash .github/scripts/new-version.sh update",
+    "create-changelog": "bash .github/scripts/new-changelog.sh",
+    "pre-release-check": [
+      "bash .github/scripts/check-changelog-master.sh",
+      "bash .github/scripts/check-version-and-compat.sh"
+    ],
+    "lint": "vendor/bin/phpcs . --standard=phpcs.xml --extensions=php -q",
+    "lint:fix": "vendor/bin/phpcbf . --standard=phpcs.xml --extensions=php -q",
+    "lint:changes": "git diff --name-only HEAD~1 | grep '\\.php$' | xargs vendor/bin/phpcs --standard=phpcs.xml --extensions=php -q",
+    "lint:fix:changes": "git diff --name-only HEAD~1 | grep '\\.php$' | xargs vendor/bin/phpcbf --standard=phpcs.xml --extensions=php -q"
   }
 }
