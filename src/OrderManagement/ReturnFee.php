@@ -117,8 +117,8 @@ class ReturnFee {
 			return;
 		}
 
-		$amount     = floatval( $return_fee['amount'] ) ?? 0;
-		$tax_amount = floatval( $return_fee['tax_amount'] ) ?? 0;
+		$amount     = floatval( $return_fee['amount'] );
+		$tax_amount = floatval( $return_fee['tax_amount'] );
 		$total      = $amount + $tax_amount;
 
 		// If the total is 0, just return.
