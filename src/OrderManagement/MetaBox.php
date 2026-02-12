@@ -213,7 +213,8 @@ class MetaBox extends OrderMetabox {
 			<?php endif; ?>
 		</ul>
 		<?php
-		echo ob_get_clean();
+		$output = ob_get_clean();
+		echo wp_kses_post( $output );
 	}
 
 	/**
