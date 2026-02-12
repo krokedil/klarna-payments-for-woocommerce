@@ -120,8 +120,8 @@ class KlarnaOrderManagement {
 
 		// Add refunds support to Klarna for WooCommerce.
 		add_action( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
-
-		$this->logger = new Logger( 'klarna_order_management', wc_string_to_bool( $this->settings['logging'] ?? false ) );
+		$options      = $this->settings->get_settings( null );
+		$this->logger = new Logger( 'klarna_order_management', wc_string_to_bool( $options['logging'] ?? false ) );
 		$report_about = array(
 			array( 'id' => 'kom_auto_capture' ),
 			array( 'id' => 'kom_auto_cancel' ),
