@@ -19,13 +19,22 @@ module.exports = function(grunt) {
         // minify css
         cssmin: {
             target: {
-                files: [{
-                    expand: true,
-                    cwd: './assets/css',
-                    src: ['*.css', '!*.min.css'],
-                    dest: './assets/css',
-                    ext: '.min.css',
-                }],
+                files: [
+                    {
+                        expand: true,
+                        cwd: './assets/css',
+                        src: ['*.css', '!*.min.css'],
+                        dest: './assets/css',
+                        ext: '.min.css',
+                    },
+                    {
+                        expand: true,
+                        cwd: './src/OrderManagement/assets/css',
+                        src: ['*.css', '!*.min.css'],
+                        dest: './src/OrderManagement/assets/css',
+                        ext: '.min.css',
+                    }
+                ],
             },
         }
     });
