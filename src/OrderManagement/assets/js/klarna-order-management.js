@@ -42,7 +42,9 @@ jQuery( function ( $ ) {
             // Make the AJAX request to toggle the order sync for the order.
             const result = await komMetabox.ajaxSetOrderSync( omStatus )
             if ( result.success ) {
-                komMetabox.toggleButton( $this, "enabled" === omStatus ? true : false )
+                // Toggle to the opposite state.
+                const newStatus = omStatus === "enabled" ? "disabled" : "enabled"
+                komMetabox.toggleButton( $this, newStatus )
             } else {
                 alert( "Failed to toggle order sync. Please try again." )
             }
