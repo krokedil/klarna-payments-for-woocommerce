@@ -82,6 +82,8 @@ class PluginFeatures {
 	/**
 	 * Initialize the features and their availability.
 	 *
+	 * @param bool $force Whether to force re-initialization even if it has already been initialized once during this request. Default false.
+	 *
 	 * @return void
 	 */
 	public function init_features( $force = false ) {
