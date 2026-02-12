@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: no
+
+Refined the `kp_wc_api_request_args` filter to include `$order_id` as a parameter, enabling enhanced customization of API requests.
