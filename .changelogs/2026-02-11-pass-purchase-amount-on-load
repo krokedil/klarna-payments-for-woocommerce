@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Fixed an issue where the amount shown for part payments would not be updated in the Klarna "Learn more" modal when the cart total changed.
