@@ -112,7 +112,7 @@ class ReturnFee {
 	public function show_return_fee_info( $refund_order ) {
 		$return_fee = $refund_order->get_meta( '_klarna_return_fees' );
 
-		// If its empty, just return.
+		// If it's empty, just return.
 		if ( empty( $return_fee ) ) {
 			return;
 		}
