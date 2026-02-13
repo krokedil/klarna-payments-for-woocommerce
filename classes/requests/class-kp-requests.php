@@ -75,8 +75,13 @@ abstract class KP_Requests extends Request {
 	 * @return array
 	 */
 	protected function get_request_headers() {
-		$session           = KP_WC()->session->get_session();
-		$session_reference = $session && isset( $session['session_id'] ) ? $session['session_id'] : '';
+		$session_reference = '';
+
+		if ( ! empty( $this->arguments['session_id'] ) ) {
+			$session_reference = $this->arguments['session_id'];
+		} elseif ( method_exists( KP_WC()->session, 'get_klarna_session_id' ) ) {
+			$session_reference = KP_WC()->session->get_klarna_session_id();
+		}
 
 		$integrator  = array(
 			'name'              => 'WOOCOMMERCE',
