@@ -5,6 +5,8 @@
  * @package WC_Klarna_Payments/Classes
  */
 
+use Krokedil\Klarna\PluginFeatures;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -32,6 +34,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				'kp_wc_express_button'             => true,
 				'kp_wc_get_unavailable_features'   => true,
 				'kp_wc_set_interoperability_token' => true,
+				'kp_wc_get_interoperability_data'  => true,
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -227,6 +230,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			wp_send_json_success( wc_get_checkout_url() );
 		}
 
+		/**
+		 * Get the unavailable features from the Klarna plugins API.
+		 *
+		 * @return void
+		 */
 		public static function kp_wc_get_unavailable_features() {
 			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
 
@@ -240,13 +248,13 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'Missing credentials.' );
 			}
 
-			$unavailable_features = kp_get_unavailable_feature_ids( $country_credentials );
-
-			if ( empty( $unavailable_features['feature_ids'] ) && ! empty( $unavailable_features['errors'] ) ) {
-				wp_send_json_error( 'Failed to get unavailable features. Error messages: ' . implode( ', ', $unavailable_features['errors'] ) );
+			$sections_to_hide = array();
+			foreach ( $country_credentials as $credentials ) {
+				$features         = KP_WC()->plugin_features()->process_api_credentials( $credentials );
+				$sections_to_hide = PluginFeatures::get_sections_to_hide( $features );
 			}
 
-			wp_send_json_success( $unavailable_features['feature_ids'] );
+			wp_send_json_success( $sections_to_hide );
 		}
 
 		/**
@@ -266,6 +274,20 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			KP_Interoperability_Token::set_token( $token );
 
 			wp_send_json_success();
+		}
+
+		/**
+		 * Set the interoperability data in the session for the current user.
+		 *
+		 * @return void
+		 */
+		public static function kp_wc_get_interoperability_data() {
+			// Verify the nonce.
+			check_ajax_referer( 'kp_wc_get_interoperability_data', 'nonce' );
+
+			$interoperability_data = KP_Interoperability_Token::get_data();
+
+			wp_send_json_success( $interoperability_data );
 		}
 	}
 }

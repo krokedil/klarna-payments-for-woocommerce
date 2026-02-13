@@ -259,7 +259,7 @@ class KP_Api {
 		$api_password = $credentials['shared_secret'] ?? false;
 
 		if ( ! $api_password ) {
-			return new WP_Error( 'missing_shared_secret', __( 'Missing shared secret.', 'woocommerce-klarna-payments' ) );
+			return new WP_Error( 'missing_shared_secret', __( 'Missing shared secret.', 'klarna-payments-for-woocommerce' ) );
 		}
 
 		if ( ! get_option( 'kp_uuid4' ) ) {

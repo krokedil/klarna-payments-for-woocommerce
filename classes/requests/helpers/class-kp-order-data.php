@@ -174,6 +174,86 @@ class KP_Order_Data {
 	}
 
 	/**
+	 * Returns an array of Klarna order line objects for interoperability data.
+	 *
+	 * @return array
+	 */
+	public function get_klarna_order_lines_interoperability() {
+		$klarna_order_lines = array();
+
+		// Order shipping.
+		$klarna_shipping_lines = ( $this->order_data->get_line_shipping() ?? array() )[0];
+		$klarna_shipping       = $this->get_klarna_shipping_line_object_interoperability( $klarna_shipping_lines );
+		$shipping_reference    = $klarna_shipping['shipping_reference'] ?? '';
+
+		// Order products.
+		foreach ( $this->order_data->get_line_items() as $item ) {
+			$klarna_order_lines[] = $this->get_klarna_order_line_object_interoperability( $item, $shipping_reference );
+		}
+
+		return array(
+			'line_items' => $klarna_order_lines,
+			'shipping'   => $klarna_shipping,
+		);
+	}
+
+	/**
+	 * Returns a formatted Klarna order line object for interoperability data.
+	 *
+	 * @param  KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderLineData $order_line The order line data.
+	 * @param  string                                                        $shipping_reference The shipping reference to use for the order line.
+	 * @return array
+	 */
+	public function get_klarna_order_line_object_interoperability( $order_line, $shipping_reference ) {
+
+		$klarna_interoperability_item = array(
+			'name'               => $order_line->get_name(),
+			'quantity'           => $order_line->get_quantity(),
+			'total_amount'       => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
+			'unit_price'         => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
+			'total_tax_amount'   => $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount(),
+			'product_url'        => $order_line->get_product_url(),
+			'image_url'          => $this->maybe_allow_order_line_url( $order_line->get_image_url() ),
+			'product_identifier' => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
+			'reference'          => $order_line->get_sku(),
+			'shipping_reference' => $shipping_reference,
+		);
+
+		return $klarna_interoperability_item;
+	}
+
+	/**
+	 * Returns a formatted Klarna shipping line object for interoperability data.
+	 *
+	 * @param  KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderLineData $shipping_line The shipping line data.
+	 * @return array
+	 */
+	public function get_klarna_shipping_line_object_interoperability( $shipping_line ) {
+		$customer_data         = $this->order_data->customer;
+		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
+
+		$recipient = array(
+			'given_name'  => $customer_data->get_shipping_first_name() ?? '',
+			'family_name' => $customer_data->get_shipping_last_name() ?? '',
+			'email'       => $customer_data->get_shipping_email() ?? '',
+			'phone'       => $customer_data->get_shipping_phone() ?? '',
+		);
+
+		$address = array(
+			'street_address' => $customer_data->get_shipping_address_1() ?? '',
+			'postal_code'    => $strip_postcode_spaces ? $customer_data->get_shipping_postcode() ?? '' : str_replace( ' ', '', $customer_data->get_shipping_postcode() ?? '' ),
+			'city'           => $customer_data->get_shipping_city() ?? '',
+			'country'        => $customer_data->get_shipping_country() ?? '',
+		);
+
+		return array(
+			'shipping_reference' => $shipping_line ? $shipping_line->get_sku() : '',
+			'recipient'          => $recipient,
+			'address'            => $address,
+		);
+	}
+
+	/**
 	 * Returns a formatted Klarna order line object.
 	 *
 	 * @param  KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderLineData $order_line The order line data.
@@ -244,34 +324,34 @@ class KP_Order_Data {
 		$customer_data         = $this->order_data->customer;
 
 		$billing = array(
-			'given_name'      => $customer_data->get_billing_first_name(),
-			'family_name'     => $customer_data->get_billing_last_name(),
-			'email'           => $customer_data->get_billing_email(),
-			'phone'           => $customer_data->get_billing_phone(),
-			'street_address'  => $customer_data->get_billing_address_1(),
-			'street_address2' => $customer_data->get_billing_address_2(),
-			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_billing_postcode() : str_replace( ' ', '', $customer_data->get_billing_postcode() ),
-			'city'            => $customer_data->get_billing_city(),
-			'region'          => $customer_data->get_billing_state(),
-			'country'         => empty( $customer_data->get_billing_country() ) ? kp_get_klarna_country() : $customer_data->get_billing_country(),
+			'given_name'      => $customer_data->get_billing_first_name() ?? '',
+			'family_name'     => $customer_data->get_billing_last_name() ?? '',
+			'email'           => $customer_data->get_billing_email() ?? '',
+			'phone'           => $customer_data->get_billing_phone() ?? '',
+			'street_address'  => $customer_data->get_billing_address_1() ?? '',
+			'street_address2' => $customer_data->get_billing_address_2() ?? '',
+			'postal_code'     => $strip_postcode_spaces ? ( $customer_data->get_billing_postcode() ?? '' ) : str_replace( ' ', '', $customer_data->get_billing_postcode() ?? '' ),
+			'city'            => $customer_data->get_billing_city() ?? '',
+			'region'          => $customer_data->get_billing_state() ?? '',
+			'country'         => empty( $customer_data->get_billing_country() ) ? ( kp_get_klarna_country() ?? '' ) : $customer_data->get_billing_country(),
 		);
 
 		$shipping = array(
-			'given_name'      => $customer_data->get_shipping_first_name(),
-			'family_name'     => $customer_data->get_shipping_last_name(),
-			'email'           => $customer_data->get_shipping_email(),
-			'phone'           => $customer_data->get_shipping_phone(),
-			'street_address'  => $customer_data->get_shipping_address_1(),
-			'street_address2' => $customer_data->get_shipping_address_2(),
-			'postal_code'     => $strip_postcode_spaces ? $customer_data->get_shipping_postcode() : str_replace( ' ', '', $customer_data->get_shipping_postcode() ),
-			'city'            => $customer_data->get_shipping_city(),
-			'region'          => $customer_data->get_shipping_state(),
-			'country'         => $customer_data->get_shipping_country(),
+			'given_name'      => $customer_data->get_shipping_first_name() ?? '',
+			'family_name'     => $customer_data->get_shipping_last_name() ?? '',
+			'email'           => $customer_data->get_shipping_email() ?? '',
+			'phone'           => $customer_data->get_shipping_phone() ?? '',
+			'street_address'  => $customer_data->get_shipping_address_1() ?? '',
+			'street_address2' => $customer_data->get_shipping_address_2() ?? '',
+			'postal_code'     => $strip_postcode_spaces ? ( $customer_data->get_shipping_postcode() ?? '' ) : str_replace( ' ', '', $customer_data->get_shipping_postcode() ?? '' ),
+			'city'            => $customer_data->get_shipping_city() ?? '',
+			'region'          => $customer_data->get_shipping_state() ?? '',
+			'country'         => $customer_data->get_shipping_country() ?? '',
 		);
 
 		if ( 'b2b' === $customer_type ) {
-			$billing['organization_name']  = $customer_data->get_billing_company();
-			$shipping['organization_name'] = $customer_data->get_shipping_company();
+			$billing['organization_name']  = $customer_data->get_billing_company() ?? '';
+			$shipping['organization_name'] = $customer_data->get_shipping_company() ?? '';
 		}
 
 		foreach ( $shipping as $key => $value ) {

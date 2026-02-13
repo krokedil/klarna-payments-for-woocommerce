@@ -2,12 +2,12 @@
 Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
-Requires at least: 5.0
-Tested up to: 6.8.3
+Requires at least: 6.7
+Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.3.4
-Stable tag: 4.4.0
+WC tested up to: 10.5.1
+Stable tag: 4.6.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,40 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-02-11    - version 4.6.3 =
+* Fix           - Fixed an issue where the amount shown for part payments would not be updated in the Klarna "Learn more" modal when the cart total changed.
+
+= 2026.02.04    - version 4.6.2 =
+* Fix           - [KEC] The Klarna Express Checkout webhook setting now only appears when the KEC flow is set to "One step", as intended.
+* Fix           - [KOSM] Added support for On-Site messaging on the blocks cart page.
+* Fix           - [KOSM] Fixed an issue where the Onsite Messaging debug mode was not functioning as expected.
+* Fix           - [Settings page] Fixed an issue where the `system-report.json` file was not correctly attached when submitting support requests via the HelpScout beacon.
+
+= 2026.01.20    - version 4.6.1 =
+* Fix           - Resolved a PHP warning ("Undefined array key 'send_shopping_data'") that could occur if plugin settings had not been saved after the latest update.
+
+= 2026.01.19    - version 4.6.0 =
+* Feature       - Added setting "Share shopping data with Klarna" to enable Supplementary Purchase Data being sent to Klarna, providing additional transaction context to improve payment outcomes and customer experience.
+* Feature       - Added support for the Fluid Checkout for WooCommerce plugin.
+* Feature       - [KEC] Added setting to select which flow to use for KEC when both one step checkout and two step flows are available and a AP key exists.
+* Fix           - Resolved an API error when capturing zero-value synchronized subscription orders.
+* Fix           - Added default values to order customer data to prevent errors when customer information is missing or undefined.
+* Fix           - Fixed an issue that could happen when changing API keys and we do not remove an old acquiring partner key that's no longer valid.
+* Fix           - [Woocommerce] Improved error handling in 'CartCustomer' by checking the availability of the checkout object before accessing it, preventing potential errors when the checkout is unavailable.
+* Fix           - [KEC] Fixed an issue where the one step checkout flow would not be prioritized when both flows were available.
+
+= 2025.12.04    - version 4.5.0 =
+* Feature       - [KEC] Add support for Klarna Express Checkout one step checkout for AP partners using the V2 WebSDK.
+* Feature       - Set the payment method title for the WooCommerce order based on the payment method used from Klarna.
+* Change        - [SIWK, KOSM] Migrated Sign-in with Klarna, Onsite messaging and Klarna interoperability token to Klarna's V2 WebSDK.
+* Enhancement   - Updated how we store feature availability in Klarna for API credentials.
+* Enhancement   - Improved when we load some Klarna features to prevent them from loading on each page.
+* Fix           - Removed a reference to Klarna Checkout in an error message when getting a 403 error from Klarna's API.
+* Fix           - Fixed an issue where the customer token was missing for HPP purchases for subscriptions when using the block checkout.
+
+= 2025.11.17    - version 4.4.1 =
+* Fix           - Temporarily disabled the interoperability token feature.
+
 = 2025.10.27    - version 4.4.0 =
 * Feature       - [KOM] Integrated the metabox package to enhance the order management metabox functionality.
 * Feature       - [KOM] Added filter 'kom_skip_scheduled_actions' to allow disabling the display of scheduled actions on the admin order page.

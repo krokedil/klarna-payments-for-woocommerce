@@ -5,13 +5,15 @@
     <!-- Exclude vendor and node_modules from all rules -->
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/dependencies/*</exclude-pattern>
+    <exclude-pattern>*/blocks/build/*</exclude-pattern>
 
     <!-- Exclude the tests folder -->
     <exclude-pattern>tests/*</exclude-pattern>
 
-    <!-- Configs - Maybe? -->
-    <config name="minimum_supported_wp_version" value="6.2" />
-    <config name="testVersion" value="7.3-" />
+    <!-- Set minimum supported WordPress version and PHP test version -->
+    <config name="minimum_supported_wp_version" value="6.7" />
+    <config name="testVersion" value="7.4-" />
 
     <!-- Use Wordpress Coding standards -->
     <rule ref="WordPress" />
@@ -47,6 +49,9 @@
     </rule>
 
     <!-- Allow the usage of shorthand arrays -->
+    <rule ref="Generic.Arrays.DisallowShortArraySyntax">
+        <exclude-pattern>src/</exclude-pattern>
+    </rule>
     <rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
         <exclude-pattern>src/</exclude-pattern>
     </rule>
