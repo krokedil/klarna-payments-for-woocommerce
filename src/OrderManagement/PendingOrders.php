@@ -1,7 +1,7 @@
 <?php
 namespace Krokedil\Klarna\OrderManagement;
 
-use Krokedil\Klarna\KlarnaOrderManagement;
+use Krokedil\Klarna\OrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -39,7 +39,7 @@ class PendingOrders {
 
 		$order = wc_get_order( $order_id );
 
-		$order_management = new KlarnaOrderManagement();
+		$order_management = new OrderManagement();
 		// Check the order status for the klarna order. Bail if it does not exist in order management.
 		$klarna_order = $order_management->retrieve_klarna_order( $order_id );
 		if ( is_wp_error( $klarna_order ) ) {

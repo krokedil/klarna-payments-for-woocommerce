@@ -2,7 +2,7 @@
 namespace Krokedil\Klarna\OrderManagement\Request\Patch;
 
 use Krokedil\Klarna\OrderManagement\Request\RequestPatch;
-use Krokedil\Klarna\KlarnaOrderManagement;
+use Krokedil\Klarna\OrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,8 +15,8 @@ class RequestPatchUpdate extends RequestPatch {
 	/**
 	 * Class constructor.
 	 *
-	 * @param KlarnaOrderManagement $order_management The order management instance.
-	 * @param array                 $arguments The request arguments.
+	 * @param OrderManagement $order_management The order management instance.
+	 * @param array           $arguments The request arguments.
 	 */
 	public function __construct( $order_management, $arguments ) {
 		parent::__construct( $order_management, $arguments );

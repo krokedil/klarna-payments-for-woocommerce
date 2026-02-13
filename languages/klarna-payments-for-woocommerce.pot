@@ -1338,74 +1338,74 @@ msgstr ""
 msgid "The controller %1$s must extend the %2$s class."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:93
+#: src/OrderManagement.php:93
 msgid "Klarna Order Management is now included in Klarna for WooCommerce."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:94
+#: src/OrderManagement.php:94
 msgid ""
 "Starting with version 4.3.0, you no longer need the separate Klarna Order "
 "Management plugin – unless you are also using the Kustom Checkout plugin "
 "(formerly Klarna Checkout)."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:98
+#: src/OrderManagement.php:98
 msgid "Read more about this change here."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:181
+#: src/OrderManagement.php:181
 msgid "minus a return fee of"
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:182
+#: src/OrderManagement.php:182
 msgid "Refund amount is less than the return fee."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:346
+#: src/OrderManagement.php:346
 #. translators: 1: User name, 2: Existing token, 3: New token.
 msgid "%1$s updated the subscription recurring token from \"%2$s\" to \"%3$s\"."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:402
+#: src/OrderManagement.php:402
 #. translators: %s: error message from Klarna.
 msgid "Could not update Klarna order lines: %s."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:404
+#: src/OrderManagement.php:404
 msgid "Could not update Klarna order lines. An unknown error occurred."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:514
+#: src/OrderManagement.php:514
 msgid ""
 "Klarna could not charge the customer. Please try again later. If that still "
 "fails, the customer may have to create a new subscription or add funds to "
 "their payment method if they wish to continue."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:524
+#: src/OrderManagement.php:524
 #. translators: %s: Error message from Klarna.
 msgid "Could not capture Klarna order. %s"
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:567 src/KlarnaOrderManagement.php:586
+#: src/OrderManagement.php:567 src/OrderManagement.php:586
 msgid "Klarna order has not been captured and cannot be refunded."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:578 src/KlarnaOrderManagement.php:617
+#: src/OrderManagement.php:578 src/OrderManagement.php:617
 #. translators: %s Klarna error message.
 msgid "Could not refund Klarna order. %s."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:598
+#: src/OrderManagement.php:598
 msgid "Could not retrieve the refund order."
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:626
+#: src/OrderManagement.php:626
 #. translators: refund amount, refund id.
 msgid "Processing a refund of %1$s with Klarna"
 msgstr ""
 
-#: src/KlarnaOrderManagement.php:636
+#: src/OrderManagement.php:636
 #. translators: 1: original amount, 2: return fee amount.
 msgid " (original amount of %1$s - return fee of %2$s)"
 msgstr ""

@@ -1,7 +1,7 @@
 <?php
 namespace Krokedil\Klarna\OrderManagement;
 
-use Krokedil\Klarna\KlarnaOrderManagement;
+use Krokedil\Klarna\OrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,7 +24,7 @@ class SellersApp {
 	/**
 	 * Holds the order management instance.
 	 *
-	 * @var KlarnaOrderManagement
+	 * @var OrderManagement
 	 */
 	private static $order_management;
 
@@ -38,7 +38,7 @@ class SellersApp {
 	/**
 	 * Returns the *Singleton* instance of this class.
 	 *
-	 * @param KlarnaOrderManagement $order_management The order management instance.
+	 * @param OrderManagement $order_management The order management instance.
 	 * @return self The *Singleton* instance.
 	 */
 	public static function get_instance( $order_management ) {

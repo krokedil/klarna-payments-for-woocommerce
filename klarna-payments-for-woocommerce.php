@@ -34,7 +34,7 @@
 use Krokedil\Klarna\Api\Registry;
 use Krokedil\Klarna\PluginFeatures;
 use Krokedil\Klarna\Compatibility;
-use Krokedil\Klarna\KlarnaOrderManagement;
+use Krokedil\Klarna\OrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -174,7 +174,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		/**
 		 * The Klarna Order Management package from Krokedil.
 		 *
-		 * @var KlarnaOrderManagement
+		 * @var OrderManagement
 		 */
 		public $order_management = null;
 
@@ -306,7 +306,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
 			$this->interoperability_token  = new KP_Interoperability_Token();
-			$this->order_management        = new KlarnaOrderManagement();
+			$this->order_management        = new OrderManagement();
 			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
 			Compatibility::register();
 

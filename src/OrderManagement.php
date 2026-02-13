@@ -23,7 +23,7 @@ use Krokedil\Klarna\OrderManagement\ReturnFee;
  *
  * The main class responsible for initializing the plugin.
  */
-class KlarnaOrderManagement {
+class OrderManagement {
 
 	/**
 	 * Klarna Order Management settings.

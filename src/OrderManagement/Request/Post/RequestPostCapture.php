@@ -1,7 +1,7 @@
 <?php
 namespace Krokedil\Klarna\OrderManagement\Request\Post;
 
-use Krokedil\Klarna\KlarnaOrderManagement;
+use Krokedil\Klarna\OrderManagement;
 use Krokedil\Klarna\OrderManagement\Request\RequestPost;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,15 +15,15 @@ class RequestPostCapture extends RequestPost {
 	/**
 	 * The order management instance.
 	 *
-	 * @var KlarnaOrderManagement
+	 * @var OrderManagement
 	 */
 	protected $order_management;
 
 	/**
 	 * Class constructor.
 	 *
-	 * @param KlarnaOrderManagement $order_management The order management instance.
-	 * @param array                 $arguments The request arguments.
+	 * @param OrderManagement $order_management The order management instance.
+	 * @param array           $arguments The request arguments.
 	 */
 	public function __construct( $order_management, $arguments ) {
 		parent::__construct( $order_management, $arguments );

@@ -3,7 +3,7 @@ namespace Krokedil\Klarna\OrderManagement;
 
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderMetabox;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\OrderSupport;
-use Krokedil\Klarna\KlarnaOrderManagement;
+use Krokedil\Klarna\OrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,14 +18,14 @@ class MetaBox extends OrderMetabox {
 	/**
 	 * Klarna Order Management instance.
 	 *
-	 * @var KlarnaOrderManagement
+	 * @var OrderManagement
 	 */
 	protected $order_management;
 
 	/**
 	 * Class constructor.
 	 *
-	 * @param KlarnaOrderManagement $order_management Klarna Order Management instance.
+	 * @param OrderManagement $order_management Klarna Order Management instance.
 	 */
 	public function __construct( $order_management ) {
 		$this->order_management = $order_management;
