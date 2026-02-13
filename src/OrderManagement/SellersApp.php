@@ -54,9 +54,9 @@ class SellersApp {
 	/**
 	 * Handles the wp_insert_post hook.
 	 *
-	 * @param string  $post_id WordPress post id.
-	 * @param WP_Post $post The post object.
-	 * @param bool    $update If this was an update.
+	 * @param string   $post_id WordPress post id.
+	 * @param \WP_Post $post The post object.
+	 * @param bool     $update If this was an update.
 	 * @return void
 	 */
 	public function process_order_creation( $post_id, $post, $update ) {
@@ -165,10 +165,10 @@ class SellersApp {
 	/**
 	 * Processes order lines with order data received from Klarna.
 	 *
-	 * @param Klarna_Checkout_Order $klarna_order Klarna order.
-	 * @param WC_Order              $order WooCommerce order.
+	 * @param \Klarna_Checkout_Order $klarna_order Klarna order.
+	 * @param WC_Order               $order WooCommerce order.
 	 *
-	 * @throws Exception WC_Data_Exception.
+	 * @throws \Exception WC_Data_Exception.
 	 */
 	private static function process_order_lines( $klarna_order, $order ) {
 		$order_id = $order->get_id();

@@ -175,13 +175,13 @@ abstract class Request {
 	/**
 	 * Make the request.
 	 *
-	 * @return object|WP_Error
+	 * @return object|\WP_Error
 	 */
 	public function request() {
 		$url  = $this->get_request_url();
 		$args = $this->get_request_args();
 		if ( is_wp_error( $args ) || ( isset( $args['body'] ) && is_null( json_decode( $args['body'] ) ) ) ) {
-			return is_wp_error( $args ) ? $args : new WP_Error( 'invalid_json', __( 'Invalid JSON response from the server.', 'woocommerce' ) );
+			return is_wp_error( $args ) ? $args : new \WP_Error( 'invalid_json', __( 'Invalid JSON response from the server.', 'woocommerce' ) );
 		}
 		$response = wp_remote_request( $url, $args );
 		return $this->process_response( $response, $args, $url );
@@ -239,7 +239,7 @@ abstract class Request {
 	/**
 	 * Calculate basic auth for the request.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
 	protected function calculate_auth() {
 		$variant = $this->get_klarna_variant();
@@ -298,10 +298,10 @@ abstract class Request {
 	/**
 	 * Processes the response checking for errors.
 	 *
-	 * @param object|WP_Error $response The response from the request.
-	 * @param array           $request_args The request args.
-	 * @param string          $request_url The request url.
-	 * @return array|WP_Error
+	 * @param object|\WP_Error $response The response from the request.
+	 * @param array            $request_args The request args.
+	 * @param string           $request_url The request url.
+	 * @return array|\WP_Error
 	 */
 	protected function process_response( $response, $request_args, $request_url ) {
 		if ( is_wp_error( $response ) ) {
@@ -334,7 +334,7 @@ abstract class Request {
 	/**
 	 * Builds the request args for a request.
 	 *
-	 * @return array|WP_Error
+	 * @return array|\WP_Error
 	 */
 	public function get_request_args() {
 		$headers = $this->get_request_headers();
@@ -366,9 +366,9 @@ abstract class Request {
 	/**
 	 * Standardized logging format for requests/responses.
 	 *
-	 * @param array|WP_Error $response The request response.
-	 * @param array          $request_args The arguments of the request.
-	 * @param int            $code The HTTP Response Code this request returned.
+	 * @param array|\WP_Error $response The request response.
+	 * @param array           $request_args The arguments of the request.
+	 * @param int             $code The HTTP Response Code this request returned.
 	 * @return void
 	 */
 	protected function log_response( $response, $request_args, $code ) {

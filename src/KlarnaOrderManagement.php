@@ -236,7 +236,7 @@ class KlarnaOrderManagement {
 	 * @param int  $order_id Order ID.
 	 * @param bool $action If this was triggered through an action or not.
 	 *
-	 * @return bool|WP_Error Returns bool true if cancellation was successful or a WP_Error object if not.
+	 * @return bool|\WP_Error Returns bool true if cancellation was successful or a WP_Error object if not.
 	 */
 	public function cancel_klarna_order( $order_id, $action = false ) {
 
@@ -246,7 +246,7 @@ class KlarnaOrderManagement {
 
 			// If the order was not paid using Klarna Payments, bail.
 			if ( 'klarna_payments' !== $order->get_payment_method() ) {
-				return;
+				return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments payment method.' );
 			}
 
 			// The merchant has disconnected the order from the order manager.
@@ -335,7 +335,7 @@ class KlarnaOrderManagement {
 
 		// Are we on the subscription page?
 		if ( 'shop_subscription' === $order->get_type() ) {
-			$token_key = KP_Subscription::RECURRING_TOKEN;
+			$token_key = \KP_Subscription::RECURRING_TOKEN;
 
 			// Did the customer update the subscription's recurring token?
 			$recurring_token = wc_get_var( $items[ $token_key ] );
