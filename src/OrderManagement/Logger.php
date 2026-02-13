@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Logger {
 	/**
-	 * Log message string
+	 * The logger instance.
 	 *
-	 * @var $log
+	 * @var \WC_Logger
 	 */
 	public static $log;
 

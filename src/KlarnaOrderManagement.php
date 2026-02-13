@@ -240,7 +240,7 @@ class KlarnaOrderManagement {
 	 * @param int  $order_id Order ID.
 	 * @param bool $action If this was triggered through an action or not.
 	 *
-	 * @return bool|\WP_Error Returns bool true if cancellation was successful or a WP_Error object if not.
+	 * @return bool|\WP_Error Returns bool true if cancellation was successful or a \WP_Error object if not.
 	 */
 	public function cancel_klarna_order( $order_id, $action = false ) {
 
@@ -280,7 +280,7 @@ class KlarnaOrderManagement {
 				$order->add_order_note( 'Klarna order could not be cancelled due to an error.' );
 				$order->save();
 
-				return new \WP_Error( 'object_error', 'Klarna order object is of type WP_Error.', $klarna_order );
+				return new \WP_Error( 'object_error', 'Klarna order object is of type \WP_Error.', $klarna_order );
 			}
 
 			// Captured, part-captured and cancelled orders cannot be cancelled.
@@ -307,7 +307,7 @@ class KlarnaOrderManagement {
 				} else {
 					$order->add_order_note( 'Could not cancel Klarna order. ' . $response->get_error_message() . '.' );
 					$order->save();
-					return new \WP_Error( 'unknown_error', 'Response object is of type WP_Error.', $response );
+					return new \WP_Error( 'unknown_error', 'Response object is of type \WP_Error.', $response );
 				}
 			}
 		}
@@ -322,7 +322,7 @@ class KlarnaOrderManagement {
 	 * @param array $items Order items.
 	 * @param bool  $action If this was triggered by an action.
 	 *
-	 * @return WP_Error|null Returns true if updating was successful or a WP_Error object if not.
+	 * @return \WP_Error|null Returns true if updating was successful or a \WP_Error object if not.
 	 */
 	public function update_klarna_order_items( $order_id, $items, $action = false ) {
 		$options = $this->settings->get_settings( $order_id );
@@ -385,7 +385,7 @@ class KlarnaOrderManagement {
 				$order->add_order_note( 'Klarna order could not be updated due to an error.' );
 				$order->save();
 
-				return new \WP_Error( 'object_error', 'Klarna order object is of type WP_Error.', $klarna_order );
+				return new \WP_Error( 'object_error', 'Klarna order object is of type \WP_Error.', $klarna_order );
 			}
 
 			if ( ! in_array( $klarna_order->status, array( 'CANCELLED', 'CAPTURED', 'PART_CAPTURED' ), true ) ) {
@@ -412,7 +412,7 @@ class KlarnaOrderManagement {
 
 					$order->add_order_note( $order_note );
 					$order->save();
-					return new \WP_Error( 'unknown_error', 'Response object is of type WP_Error.', $response );
+					return new \WP_Error( 'unknown_error', 'Response object is of type \WP_Error.', $response );
 				}
 			}
 		}
@@ -426,7 +426,7 @@ class KlarnaOrderManagement {
 	 * @param int  $order_id Order ID.
 	 * @param bool $action If this was triggered by an action.
 	 *
-	 * @return bool|null|\WP_Error Returns bool true if capture was successful or a WP_Error object if not.
+	 * @return bool|null|\WP_Error Returns bool true if capture was successful or a \WP_Error object if not.
 	 */
 	public function capture_klarna_order( $order_id, $action = false ) {
 		$options = $this->settings->get_settings( $order_id );
@@ -470,7 +470,7 @@ class KlarnaOrderManagement {
 
 			if ( is_wp_error( $klarna_order ) ) {
 				$order->update_status( 'on-hold', 'Klarna order could not be captured due to an error.' );
-				return new \WP_Error( 'object_error', 'Klarna order object is of type WP_Error.', $klarna_order );
+				return new \WP_Error( 'object_error', 'Klarna order object is of type \WP_Error.', $klarna_order );
 			}
 			// Check if order is pending review.
 			if ( 'PENDING' === $klarna_order->fraud_status ) {
@@ -548,7 +548,7 @@ class KlarnaOrderManagement {
 	 * @param null|string $amount Refund amount, full order amount if null.
 	 * @param string      $reason Refund reason.
 	 *
-	 * @return bool|null|\WP_Error Returns bool true if refund was successful or a WP_Error object if not.
+	 * @return bool|null|\WP_Error Returns bool true if refund was successful or a \WP_Error object if not.
 	 */
 	public function refund_klarna_order( $result, $order_id, $amount = null, $reason = '' ) {
 		$order = wc_get_order( $order_id );
@@ -584,7 +584,7 @@ class KlarnaOrderManagement {
 			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-payments-for-woocommerce' ), $klarna_order->get_error_message() ) );
 			$order->save();
 
-			return new \WP_Error( 'object_error', 'Klarna order object is of type WP_Error.', $klarna_order );
+			return new \WP_Error( 'object_error', 'Klarna order object is of type \WP_Error.', $klarna_order );
 		}
 
 		// We've checked for the metadata `_wc_klarna_capture_id`, now we check for the Klarna status.
@@ -623,7 +623,7 @@ class KlarnaOrderManagement {
 			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-payments-for-woocommerce' ), $klarna_order->get_error_message() ) );
 			$order->save();
 
-			return new \WP_Error( 'unknown_error', 'Response object is of type WP_Error.', $response );
+			return new \WP_Error( 'unknown_error', 'Response object is of type \WP_Error.', $response );
 		}
 
 		$applied_return_fees = apply_filters( 'klarna_applied_return_fees', array() );

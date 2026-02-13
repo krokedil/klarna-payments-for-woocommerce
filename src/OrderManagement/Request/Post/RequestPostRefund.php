@@ -119,7 +119,7 @@ class RequestPostRefund extends RequestPost {
 				/**
 				 * Process order item products.
 				 *
-				 * @var WC_Order_Item_Product $item WooCommerce order item product.
+				 * @var \WC_Order_Item_Product $item WooCommerce order item product.
 				 */
 				foreach ( $refunded_items as $item ) {
 					$product = wc_get_product( $item->get_product_id() );
@@ -127,7 +127,7 @@ class RequestPostRefund extends RequestPost {
 					/**
 					 * Get the order line total from order for calculation.
 					 *
-					 * @var WC_Order_Item_Product $order_item WooCommerce order item product.
+					 * @var \WC_Order_Item_Product $order_item WooCommerce order item product.
 					 */
 					foreach ( $order_items as $order_item ) {
 						if ( $item->get_product_id() === $order_item->get_product_id() ) {
@@ -185,7 +185,7 @@ class RequestPostRefund extends RequestPost {
 				/**
 				 * Process Shipping
 				 *
-				 * @var WC_Order_Item_Shipping $shipping_item WooCommerce order item *shipping*.
+				 * @var \WC_Order_Item_Shipping $shipping_item WooCommerce order item *shipping*.
 				 */
 				foreach ( $refunded_shipping_items as $shipping_item ) {
 
@@ -287,7 +287,7 @@ class RequestPostRefund extends RequestPost {
 	/**
 	 * Get the item reference for the refund order line based on the type of the order line item.
 	 *
-	 * @param WC_Order_Item_Product|WC_Order_Item_Shipping|WC_Order_Item_Fee|WC_Order_Item_Coupon $order_line_item WooCommerce order line item.
+	 * @param \WC_Order_Item_Product|\WC_Order_Item_Shipping|\WC_Order_Item_Fee|\WC_Order_Item_Coupon $order_line_item WooCommerce order line item.
 	 *
 	 * @return string $item_reference Cart item reference.
 	 */
@@ -320,8 +320,8 @@ class RequestPostRefund extends RequestPost {
 	/**
 	 * Get refund cart item discount.
 	 *
-	 * @param WC_Order_Item_Product|WC_Order_Item_Shipping|WC_Order_Item_Fee|WC_Order_Item_Coupon $order_line_item Order line item.
-	 * @param bool                                                                                $separate_sales_tax Whether sales tax is separate.
+	 * @param \WC_Order_Item_Product|\WC_Order_Item_Shipping|\WC_Order_Item_Fee|\WC_Order_Item_Coupon $order_line_item Order line item.
+	 * @param bool                                                                                    $separate_sales_tax Whether sales tax is separate.
 	 *
 	 * @return integer $item_discount_amount Cart item discount.
 	 */
@@ -342,8 +342,8 @@ class RequestPostRefund extends RequestPost {
 	/**
 	 * Calculate refund item tax percentage.
 	 *
-	 * @param  WC_Order_Item_Product|WC_Order_Item_Shipping|WC_Order_Item_Fee|WC_Order_Item_Coupon $order_line_item Order line item.
-	 * @param  bool                                                                                $separate_sales_tax Whether sales tax is separate.
+	 * @param  \WC_Order_Item_Product|\WC_Order_Item_Shipping|\WC_Order_Item_Fee|\WC_Order_Item_Coupon $order_line_item Order line item.
+	 * @param  bool                                                                                    $separate_sales_tax Whether sales tax is separate.
 	 *
 	 * @return integer $item_tax_amount Item tax amount.
 	 */

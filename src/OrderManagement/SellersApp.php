@@ -166,7 +166,7 @@ class SellersApp {
 	 * Processes order lines with order data received from Klarna.
 	 *
 	 * @param \Klarna_Checkout_Order $klarna_order Klarna order.
-	 * @param WC_Order               $order WooCommerce order.
+	 * @param \WC_Order              $order WooCommerce order.
 	 *
 	 * @throws \Exception WC_Data_Exception.
 	 */
