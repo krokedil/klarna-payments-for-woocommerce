@@ -174,6 +174,10 @@ class KlarnaOrderManagement {
 		}
 
 		$order = wc_get_order( $order_id );
+		if ( empty( $order ) ) {
+			return;
+		}
+
 		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}

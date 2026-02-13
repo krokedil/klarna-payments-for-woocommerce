@@ -293,7 +293,7 @@ class RequestPostRefund extends RequestPost {
 	 */
 	public function get_refund_item_reference( $order_line_item ) {
 		if ( 'line_item' === $order_line_item->get_type() ) {
-			$product = $order_line_item['variation_id'] ? wc_get_product( $order_line_item['variation_id'] ) : wc_get_product( $order_line_item['product_id'] );
+			$product = $order_line_item->get_variation_id() ? wc_get_product( $order_line_item->get_variation_id() ) : wc_get_product( $order_line_item->get_product_id() );
 			if ( $product ) {
 				if ( $product->get_sku() ) {
 					$item_reference = $product->get_sku();
@@ -326,11 +326,11 @@ class RequestPostRefund extends RequestPost {
 	 * @return integer $item_discount_amount Cart item discount.
 	 */
 	public function get_refund_item_discount_amount( $order_line_item, $separate_sales_tax ) {
-		if ( $order_line_item['subtotal'] > $order_line_item['total'] ) {
+		if ( $order_line_item->get_subtotal() > $order_line_item->get_total() ) {
 			if ( $separate_sales_tax ) {
-				$item_discount_amount = ( $order_line_item['subtotal'] - $order_line_item['total'] ) * 100;
+				$item_discount_amount = ( $order_line_item->get_subtotal() - $order_line_item->get_total() ) * 100;
 			} else {
-				$item_discount_amount = ( $order_line_item['subtotal'] + $order_line_item['subtotal_tax'] - $order_line_item['total'] - $order_line_item['total_tax'] ) * 100;
+				$item_discount_amount = ( $order_line_item->get_subtotal() + $order_line_item->get_subtotal_tax() - $order_line_item->get_total() - $order_line_item->get_total_tax() ) * 100;
 			}
 		} else {
 			$item_discount_amount = 0;
