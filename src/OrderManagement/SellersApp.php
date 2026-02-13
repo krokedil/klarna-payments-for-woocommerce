@@ -81,11 +81,6 @@ class SellersApp {
 			return;
 		}
 
-		// If the order was not paid using Klarna Payments, bail.
-		if ( 'klarna_payments' !== $order->get_payment_method() ) {
-			return;
-		}
-
 		if ( $update && ! empty( $order->get_transaction_id() ) && 'klarna_payments' === $order->get_payment_method() ) {
 			// Set post metas.
 			$order->update_meta_data( '_wc_klarna_order_id', $order->get_transaction_id() );

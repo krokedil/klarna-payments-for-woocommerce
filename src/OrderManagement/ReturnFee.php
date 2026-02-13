@@ -52,6 +52,10 @@ class ReturnFee {
 	public function add_return_fee_order_lines_html( $order_id ) {
 		$order = wc_get_order( $order_id );
 
+		if ( empty( $order ) ) {
+			return;
+		}
+
 		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
@@ -378,6 +382,10 @@ class ReturnFee {
 	 */
 	public function woocommerce_order_is_partially_refunded( $is_partially_refunded, $order_id, $refund_id ) {
 		$order = wc_get_order( $order_id );
+
+		if ( empty( $order ) ) {
+			return $is_partially_refunded;
+		}
 
 		// If the order is not a Klarna order, just return the original value.
 		if ( 'klarna_payments' !== $order->get_payment_method() ) {

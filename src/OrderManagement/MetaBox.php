@@ -73,21 +73,23 @@ class MetaBox extends OrderMetabox {
 			$order_id = kp_get_the_ID();
 			$order    = wc_get_order( $order_id );
 
+			if ( empty( $order ) ) {
+				return;
+			}
+
 			// If the order was not paid using Klarna Payments, bail.
 			if ( 'klarna_payments' !== $order->get_payment_method() ) {
 				return;
 			}
 
-			if ( 'klarna_payments' === $order->get_payment_method() ) {
-				add_meta_box(
-					$this->id,
-					$this->title,
-					array( $this, 'render_metabox' ),
-					$post_type,
-					'side',
-					'core'
-				);
-			}
+			add_meta_box(
+				$this->id,
+				$this->title,
+				array( $this, 'render_metabox' ),
+				$post_type,
+				'side',
+				'core'
+			);
 		}
 	}
 
@@ -101,6 +103,10 @@ class MetaBox extends OrderMetabox {
 	public function metabox_content( $post ) {
 		$order_id = kp_get_the_ID();
 		$order    = wc_get_order( $order_id );
+
+		if ( empty( $order ) ) {
+			return;
+		}
 
 		// If the order was not paid using Klarna Payments, bail.
 		if ( 'klarna_payments' !== $order->get_payment_method() ) {
@@ -135,6 +141,10 @@ class MetaBox extends OrderMetabox {
 	public function print_standard_content( $klarna_order ) {
 		$order_id = kp_get_the_ID();
 		$order    = wc_get_order( $order_id );
+
+		if ( empty( $order ) ) {
+			return;
+		}
 
 		// If the order was not paid using Klarna Payments, bail.
 		if ( 'klarna_payments' !== $order->get_payment_method() ) {
