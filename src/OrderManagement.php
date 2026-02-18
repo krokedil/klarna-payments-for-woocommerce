@@ -333,10 +333,6 @@ class OrderManagement {
 			return;
 		}
 
-		if ( 'klarna_payments' !== $order->get_payment_method() ) {
-			return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments payment method.' );
-		}
-
 		// Are we on the subscription page?
 		if ( 'shop_subscription' === $order->get_type() ) {
 			$token_key = \KP_Subscription::RECURRING_TOKEN;
