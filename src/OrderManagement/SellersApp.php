@@ -42,11 +42,12 @@ class SellersApp {
 	 * @return self The *Singleton* instance.
 	 */
 	public static function get_instance( $order_management ) {
-		self::$order_management = $order_management;
 
 		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
+
+		self::$order_management = $order_management;
 
 		return self::$instance;
 	}
