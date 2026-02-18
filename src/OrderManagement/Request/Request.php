@@ -93,27 +93,6 @@ abstract class Request {
 	}
 
 	/**
-	 * Get which klarna plugin is relevant for this request. Returns false if no Klarna variant seems relevant.
-	 *
-	 * @return bool|string
-	 */
-	protected function get_klarna_variant() {
-		$order = wc_get_order( $this->order_id );
-
-		if ( ! $order ) {
-			return false;
-		}
-
-		$payment_method = $order->get_payment_method();
-		switch ( $payment_method ) {
-			case 'klarna_payments':
-				return $payment_method;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Gets Klarna order ID from WooCommerce order.
 	 *
 	 * @return mixed
@@ -226,13 +205,12 @@ abstract class Request {
 	 */
 	protected function use_playground() {
 		$playground = false;
-		$variant    = $this->get_klarna_variant();
-		if ( $variant ) {
-			$payment_method_settings = get_option( "woocommerce_{$variant}_settings" );
-			if ( ! $payment_method_settings || 'yes' === $payment_method_settings['testmode'] ) {
-				$playground = true;
-			}
+
+		$payment_method_settings = get_option( 'woocommerce_klarna_payments_settings' );
+		if ( ! $payment_method_settings || 'yes' === $payment_method_settings['testmode'] ) {
+			$playground = true;
 		}
+
 		return $playground;
 	}
 
@@ -242,8 +220,13 @@ abstract class Request {
 	 * @return string|\WP_Error
 	 */
 	protected function calculate_auth() {
-		$variant = $this->get_klarna_variant();
-		if ( ! $variant ) {
+		$order = wc_get_order( $this->order_id );
+
+		if ( ! $order ) {
+			return new \WP_Error( 'invalid_order', 'Invalid order.' );
+		}
+
+		if ( 'klarna_payments' !== $order->get_payment_method() ) {
 			return new \WP_Error( 'wrong_gateway', 'This order was not created via Klarna for WooCommerce.' );
 		}
 
@@ -268,26 +251,15 @@ abstract class Request {
 			return iconv( mb_detect_encoding( $component, mb_detect_order(), true ), 'UTF-8', $component );
 		}
 
-		$variant = $this->get_klarna_variant();
-		if ( empty( $variant ) ) {
-			return '';
-		}
-		$options = get_option( "woocommerce_{$variant}_settings" );
+		$options = get_option( 'woocommerce_klarna_payments_settings' );
 		if ( ! $options ) {
 			return '';
 		}
 
-		$prefix  = $this->use_playground() ? 'test_' : '';
-		$country = $this->get_klarna_country();
-		if ( 'klarna_payments' === $variant ) {
-			$country_string = strtolower( $country );
-		} elseif ( 'US' === $country ) {
-				$country_string = 'us';
-		} else {
-			$country_string = 'eu';
-		}
-
-		$key = "{$prefix}{$component_name}_{$country_string}";
+		$prefix         = $this->use_playground() ? 'test_' : '';
+		$country        = $this->get_klarna_country();
+		$country_string = strtolower( $country );
+		$key            = "{$prefix}{$component_name}_{$country_string}";
 
 		if ( key_exists( $key, $options ) ) {
 			return $options[ $key ];
