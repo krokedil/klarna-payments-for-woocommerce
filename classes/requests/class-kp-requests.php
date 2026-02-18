@@ -83,19 +83,11 @@ abstract class KP_Requests extends Request {
 			$session_reference = KP_WC()->session->get_klarna_session_id();
 		}
 
-		$integrator  = array(
+		$integration_data = array(
 			'name'              => 'WOOCOMMERCE',
-			'module_name'       => 'klarna-payments-for-woocommerce',
+			'module_name'       => 'Klarna for WooCommerce',
 			'module_version'    => WC_KLARNA_PAYMENTS_VERSION,
 			'session_reference' => $session_reference,
-		);
-		$originators = array(
-			array(
-				'name'              => 'WOOCOMMERCE',
-				'module_name'       => 'klarna-payments-for-woocommerce',
-				'module_version'    => WC_KLARNA_PAYMENTS_VERSION,
-				'session_reference' => $session_reference,
-			),
 		);
 
 		return array(
@@ -103,8 +95,8 @@ abstract class KP_Requests extends Request {
 			'Content-Type'                  => 'application/json',
 			'X-Klarna-Integration-Metadata' => wp_json_encode(
 				array(
-					'integrator'  => $integrator,
-					'originators' => $originators,
+					'integrator'  => $integration_data,
+					'originators' => $integration_data,
 				)
 			),
 		);
