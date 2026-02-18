@@ -1,4 +1,7 @@
 *** Klarna for WooCommerce Changelog ***
+2026-02-18      - version 4.6.4
+* Fix           - Fixed an issue where payment would fail due to missing fragment data.
+
 2026-02-11      - version 4.6.3
 * Fix           - Fixed an issue where the amount shown for part payments would not be updated in the Klarna "Learn more" modal when the cart total changed.
 

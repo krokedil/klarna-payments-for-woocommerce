@@ -6,8 +6,8 @@ Requires at least: 6.7
 Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.5.1
-Stable tag: 4.6.3
+WC tested up to: 10.5.2
+Stable tag: 4.6.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,9 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-02-18    - version 4.6.4 =
+* Fix           - Fixed an issue where payment would fail due to missing fragment data.
+
 = 2026-02-11    - version 4.6.3 =
 * Fix           - Fixed an issue where the amount shown for part payments would not be updated in the Klarna "Learn more" modal when the cart total changed.
 
