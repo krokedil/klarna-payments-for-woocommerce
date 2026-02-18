@@ -449,10 +449,6 @@ class OrderManagement {
 				return new \WP_Error( 'not_paid', 'Order has not been paid.' );
 			}
 
-			// Not going to do this for non-Klarna orders.
-			if ( 'klarna_payments' !== $order->get_payment_method() ) {
-				return new \WP_Error( 'not_klarna_order', 'Order does not have klarna_payments payment method.' );
-			}
 			// Do nothing if Klarna order was already captured.
 			if ( $order->get_meta( '_wc_klarna_capture_id', true ) ) {
 				$order->add_order_note( 'Klarna order has already been captured.' );
