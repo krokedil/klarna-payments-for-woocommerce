@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: yes
+
+Added filter 'klarna_get_customer_type' to allow overriding Klarna Payments customer_type (b2c/b2b).
