@@ -96,7 +96,7 @@ abstract class KP_Requests extends Request {
 			'X-Klarna-Integration-Metadata' => wp_json_encode(
 				array(
 					'integrator'  => $integration_data,
-					'originators' => $integration_data,
+					'originators' => array( $integration_data ),
 				)
 			),
 		);
