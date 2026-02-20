@@ -2,7 +2,6 @@
 namespace Krokedil\Klarna\OrderManagement;
 
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderMetabox;
-use KrokedilKlarnaPaymentsDeps\Krokedil\Support\OrderSupport;
 use Krokedil\Klarna\OrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -180,7 +179,6 @@ class MetaBox extends OrderMetabox {
 			);
 
 		}
-		( new OrderSupport() )->add_export_order_button( $order, true );
 		self::output_actions_dropdown( $order_id, $klarna_order );
 		self::output_collapsable_section( 'kom-advanced', __( 'Advanced', 'klarna-payments-for-woocommerce' ), self::get_advanced_section_content( $order ) );
 	}
