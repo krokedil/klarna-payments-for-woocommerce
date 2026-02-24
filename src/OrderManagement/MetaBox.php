@@ -28,7 +28,7 @@ class MetaBox extends OrderMetabox {
 	 */
 	public function __construct( $order_management ) {
 		$this->order_management = $order_management;
-		parent::__construct( 'klarna-om', 'Klarna Order Management', 'Klarna Payments' );
+		parent::__construct( 'klarna-om', 'Klarna Order Management', 'klarna_payments' );
 
 		add_action( 'add_meta_boxes', array( $this, 'kom_meta_box' ) );
 		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'process_kom_actions' ), 45, 2 );
