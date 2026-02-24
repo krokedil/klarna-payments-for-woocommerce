@@ -157,17 +157,18 @@ class KP_Order_Data {
 		}
 
 		if ( $this->separate_sales_tax ) {
-			$klarna_order_lines[] = array(
+			$sales_tax_line       = array(
 				'name'                  => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
 				'quantity'              => 1,
 				'reference'             => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
 				'tax_rate'              => 0,
-				'total_amount'          => $this->order_data->get_total_tax(),
+				'total_amount'          => (int) round( (float) $this->order_data->get_total_tax(), 0 ),
 				'total_discount_amount' => 0,
 				'total_tax_amount'      => 0,
 				'type'                  => 'sales_tax',
-				'unit_price'            => $this->order_data->get_total_tax(),
+				'unit_price'            => (int) round( (float) $this->order_data->get_total_tax(), 0 ),
 			);
+			$klarna_order_lines[] = $sales_tax_line;
 		}
 
 		return $klarna_order_lines;
@@ -209,9 +210,9 @@ class KP_Order_Data {
 		$klarna_interoperability_item = array(
 			'name'               => $order_line->get_name(),
 			'quantity'           => $order_line->get_quantity(),
-			'total_amount'       => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
-			'unit_price'         => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
-			'total_tax_amount'   => $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount(),
+			'total_amount'       => (int) round( (float) ( $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount() ), 0 ),
+			'unit_price'         => (int) round( (float) ( $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount() ), 0 ),
+			'total_tax_amount'   => (int) round( (float) ( $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount() ), 0 ),
 			'product_url'        => $order_line->get_product_url(),
 			'image_url'          => $this->maybe_allow_order_line_url( $order_line->get_image_url() ),
 			'product_identifier' => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
@@ -286,12 +287,12 @@ class KP_Order_Data {
 			'quantity'              => $order_line->get_quantity(),
 			'quantity_unit'         => apply_filters( $order_line->get_filter_name( 'quantity_unit' ), 'pcs', $order_line ),
 			'reference'             => $order_line->get_sku(),
-			'tax_rate'              => $this->separate_sales_tax ? 0 : $order_line->get_tax_rate(),
-			'total_amount'          => $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount(),
-			'total_discount_amount' => $this->separate_sales_tax ? $order_line->get_total_discount_amount() : $order_line->get_total_discount_amount() + $order_line->get_total_discount_tax_amount(),
-			'total_tax_amount'      => $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount(),
+			'tax_rate'              => (int) round( (float) ( $this->separate_sales_tax ? 0 : $order_line->get_tax_rate() ), 0 ),
+			'total_amount'          => (int) round( (float) ( $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount() ), 0 ),
+			'total_discount_amount' => (int) round( (float) ( $this->separate_sales_tax ? $order_line->get_total_discount_amount() : $order_line->get_total_discount_amount() + $order_line->get_total_discount_tax_amount() ), 0 ),
+			'total_tax_amount'      => (int) round( (float) ( $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount() ), 0 ),
 			'type'                  => $type,
-			'unit_price'            => $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount(),
+			'unit_price'            => (int) round( (float) ( $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount() ), 0 ),
 			'subscription'          => apply_filters( $order_line->get_filter_name( 'subscription' ), array(), $order_line ),
 		);
 
