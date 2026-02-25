@@ -75,7 +75,9 @@ jQuery( function ( $ ) {
 				// Check if we need to hide the shipping fields
 				klarna_payments.maybeHideShippingAddress()
 
-				if ( klarna_payments.isKlarnaPaymentsSelected() ) {
+				if (klarna_payments.isKlarnaPaymentsSelected()) {
+					data = data || { fragments: null }
+
 					klarna_payments.initKlarnaCredit()
 					klarna_payments.load( data.fragments ).then( klarna_payments.loadHandler )
 				}
