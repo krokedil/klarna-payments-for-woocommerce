@@ -116,7 +116,7 @@ class KP_Settings_Saved {
 			// If the password and username is set and combined EU credentials are enabled, set the valid credentials flag.
 			if ( 'eu' === $cc && ! empty( $password ) && ! empty( $username ) ) {
 
-				if ( 'yes' !== get_option( 'kp_has_valid_credentials' ) ?? 'no' ) {
+				if ( 'yes' !== get_option( 'kp_has_valid_credentials', 'no' ) ) {
 					update_option( 'kp_has_valid_credentials', 'yes' );
 				}
 			}
@@ -145,7 +145,7 @@ class KP_Settings_Saved {
 		// If this is not a WP Error then its ok.
 		if ( ! is_wp_error( $test_response ) ) {
 			// Set the valid credentials flag as there is at least one valid set of credentials.
-			if ( 'yes' !== get_option( 'kp_has_valid_credentials' ) ?? 'no' ) {
+			if ( 'yes' !== get_option( 'kp_has_valid_credentials', 'no' ) ) {
 				update_option( 'kp_has_valid_credentials', 'yes' );
 			}
 			return;

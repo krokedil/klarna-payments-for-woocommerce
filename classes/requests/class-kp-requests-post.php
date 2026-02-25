@@ -71,7 +71,7 @@ abstract class KP_Requests_Post extends KP_Requests {
 	 */
 	protected function get_body() {
 		$order_id      = $this->arguments['order_id'] ?? null;
-		$customer_type = $this->arguments['customer_type'] ?? get_option( 'woocommerce_klarna_payments_settings', array( 'customer_type' => 'b2c' ) )['customer_type'];
+		$customer_type = klarna_get_customer_type( $this->arguments['customer_type'] ?? get_option( 'woocommerce_klarna_payments_settings', array( 'customer_type' => 'b2c' ) )['customer_type'] );
 		$order_data    = new KP_Order_Data( $customer_type, $order_id );
 
 		return apply_filters(

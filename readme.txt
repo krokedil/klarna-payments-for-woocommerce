@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 10.5.2
-Stable tag: 4.6.4
+Stable tag: 4.7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,14 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-02-25    - version 4.7.0 =
+* Feature       - Added Integrator tagging to requests, enabling data collection for improved customer experience, performance tracking, and incident resolution.
+* Enhancement   - Added filter 'klarna_get_customer_type' to allow overriding Klarna Payments customer_type (b2c/b2b).
+* Fix           - Resolved an issue where the credentials section's active/inactive status badge on the settings page did not display correctly.
+* Fix           - [SIWK] Resolved an issue where SIWK did not function correctly when using the popup authentication flow.
+* Fix           - [SIWK] Resolved notice "_load_textdomain_just_in_time was called incorrectly".
+* Tweak         - [Settings page] Removed the "Addons" tab.
+
 = 2026-02-18    - version 4.6.4 =
 * Fix           - Fixed an issue where payment would fail due to missing fragment data.
 

@@ -1,4 +1,12 @@
 *** Klarna for WooCommerce Changelog ***
+2026-02-25      - version 4.7.0
+* Feature       - Added Integrator tagging to requests, enabling data collection for improved customer experience, performance tracking, and incident resolution.
+* Enhancement   - Added filter 'klarna_get_customer_type' to allow overriding Klarna Payments customer_type (b2c/b2b).
+* Fix           - Resolved an issue where the credentials section's active/inactive status badge on the settings page did not display correctly.
+* Fix           - [SIWK] Resolved an issue where SIWK did not function correctly when using the popup authentication flow.
+* Fix           - [SIWK] Resolved notice "_load_textdomain_just_in_time was called incorrectly".
+* Tweak         - [Settings page] Removed the "Addons" tab.
+
 2026-02-18      - version 4.6.4
 * Fix           - Fixed an issue where payment would fail due to missing fragment data.
 
