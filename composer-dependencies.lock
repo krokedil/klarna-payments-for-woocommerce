@@ -326,16 +326,16 @@
         },
         {
             "name": "krokedil/sign-in-with-klarna",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/sign-in-with-klarna.git",
-                "reference": "4b547790c2291a753424fea873fad20faa2a0f08"
+                "reference": "e84803a518dfb19c98628aa4a55aa47756b49575"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/4b547790c2291a753424fea873fad20faa2a0f08",
-                "reference": "4b547790c2291a753424fea873fad20faa2a0f08",
+                "url": "https://api.github.com/repos/krokedil/sign-in-with-klarna/zipball/e84803a518dfb19c98628aa4a55aa47756b49575",
+                "reference": "e84803a518dfb19c98628aa4a55aa47756b49575",
                 "shasum": ""
             },
             "require": {
@@ -354,10 +354,10 @@
             },
             "description": "Add \"Sign in with Klarna\" compatibility with your WooCommerce plugin.",
             "support": {
-                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/2.0.1",
+                "source": "https://github.com/krokedil/sign-in-with-klarna/tree/2.0.2",
                 "issues": "https://github.com/krokedil/sign-in-with-klarna/issues"
             },
-            "time": "2026-01-23T11:07:51+00:00"
+            "time": "2026-02-25T12:49:30+00:00"
         },
         {
             "name": "krokedil/support",

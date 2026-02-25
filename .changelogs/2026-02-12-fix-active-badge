@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Resolved an issue where the credentials section's active/inactive status badge on the settings page did not display correctly.
