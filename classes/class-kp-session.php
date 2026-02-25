@@ -74,6 +74,11 @@ class KP_Session {
 			return;
 		}
 
+		// Skip session creation when HPP flow is enabled for traditional checkout (session created during order processing instead).
+		if ( kp_is_hpp_flow_enabled() ) {
+			return;
+		}
+
 		// Check if we get an order.
 		$order    = $this->maybe_get_order( $order );
 		$order_id = ! ( empty( $order ) || is_wp_error( $order ) ) ? $order->get_id() : null;

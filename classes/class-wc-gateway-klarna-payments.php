@@ -338,6 +338,13 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( is_checkout() ) {
 			if ( 'checkout/payment-method.php' === $template_name ) {
 				if ( 'klarna_payments' === $args['gateway']->id ) {
+					// Skip custom template when HPP flow is enabled (payment categories shown on HPP instead).
+					if ( kp_is_hpp_flow_enabled() ) {
+						// Use default WooCommerce template, hide payment fields.
+						$this->has_fields = false;
+						return $located;
+					}
+
 					$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
 				}
 			}
@@ -414,6 +421,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 						__( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' ),
 					),
 				);
+			}
+
+			// Check if HPP flow is enabled (only when KEC is NOT active).
+			if ( kp_is_hpp_flow_enabled() ) {
+				// Use HPP flow (same as Blocks).
+				return $this->process_hpp_order( $order );
 			}
 		} else {
 			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
@@ -508,6 +521,63 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			);
 		}
 
+		return array(
+			'result'   => 'success',
+			'redirect' => $hpp['redirect_url'],
+		);
+	}
+
+	/**
+	 * Process order using Hosted Payment Page flow.
+	 *
+	 * @param WC_Order $order The WooCommerce order.
+	 * @return array
+	 */
+	private function process_hpp_order( $order ) {
+		// Create or get existing session.
+		$session = KP_WC()->session->get_session( $order );
+
+		if ( is_wp_error( $session ) ) {
+			return array(
+				'result'   => 'error',
+				'messages' => array(
+					__( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
+				),
+			);
+		}
+
+		$session_id     = KP_WC()->session->get_klarna_session_id();
+		$klarna_country = kp_get_klarna_country( $order );
+
+		// Handle combined EU credentials.
+		$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
+		$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
+		if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
+			$klarna_country = 'EU';
+		}
+
+		// Create HPP session.
+		$hpp = KP_WC()->api->create_hpp( $klarna_country, $session_id, $order->get_id() );
+
+		// Set the order meta data.
+		$environment = $this->testmode ? 'test' : 'live';
+		$order->add_meta_data( '_wc_klarna_environment', $environment, true );
+		$order->add_meta_data( '_wc_klarna_country', $klarna_country, true );
+		$order->add_meta_data( '_kp_session_id', $session_id, true );
+
+		// Save the order.
+		$order->save();
+
+		if ( is_wp_error( $hpp ) ) {
+			return array(
+				'result'   => 'error',
+				'messages' => array(
+					__( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
+				),
+			);
+		}
+
+		// Return redirect (WooCommerce will handle the redirect).
 		return array(
 			'result'   => 'success',
 			'redirect' => $hpp['redirect_url'],

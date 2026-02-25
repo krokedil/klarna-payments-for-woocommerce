@@ -29,6 +29,11 @@ class KP_Checkout {
 	 * @return array
 	 */
 	public function add_token_fragment( $fragments ) {
+		// Skip session creation when HPP flow is enabled (session created during order processing instead).
+		if ( kp_is_hpp_flow_enabled() ) {
+			return $fragments;
+		}
+
 		KP_WC()->session->set_session_data();
 		$session_token = KP_WC()->session->get_klarna_client_token();
 		if ( empty( $session_token ) ) {
@@ -61,6 +66,11 @@ class KP_Checkout {
 	 * @return void
 	 */
 	public function html_client_token( $session_token = false ) {
+		// Skip session creation when HPP flow is enabled (session created during order processing instead).
+		if ( kp_is_hpp_flow_enabled() ) {
+			return;
+		}
+
 		if ( ! $session_token ) {
 			KP_WC()->session->set_session_data();
 			$session_token = KP_WC()->session->get_klarna_client_token();

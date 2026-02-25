@@ -39,7 +39,8 @@ function customize_php_scoper_config( array $config ): array {
 		'kp_is_wc_blocks_order',
 		'kp_get_client_id',
 		'kp_get_client_id_by_currency',
-		'kp_is_country_available'
+		'kp_is_country_available',
+		'kp_is_hpp_flow_enabled'
 	);
 
 	$config['exclude-functions'] = array_merge( $config['exclude-functions'] ?? array(), $functions );

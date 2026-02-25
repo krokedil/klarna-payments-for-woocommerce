@@ -417,6 +417,17 @@ class KP_Form_Fields {
 				'default'     => 'b2c',
 				'desc_tip'    => true,
 			),
+			'checkout_flow'        => array(
+				'title'       => __( 'Checkout flow', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'Choose how the payment is processed during checkout. "Normal" uses in-page authorization with AJAX. "Hosted Payment Page" redirects customers to Klarna\'s payment page.', 'klarna-payments-for-woocommerce' ),
+				'options'     => array(
+					'embedded' => __( 'Normal (in-page authorization)', 'klarna-payments-for-woocommerce' ),
+					'redirect' => __( 'Hosted Payment Page (redirect)', 'klarna-payments-for-woocommerce' ),
+				),
+				'default'     => 'embedded',
+				'desc_tip'    => false,
+			),
 			'general_end'          => array(
 				'type'     => 'kp_section_end',
 				'previews' => array(

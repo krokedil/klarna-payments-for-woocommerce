@@ -551,6 +551,31 @@ function kp_is_hpos_enabled() {
 }
 
 /**
+ * Check if HPP (Hosted Payment Page) flow is enabled for traditional checkout.
+ *
+ * This function determines whether the merchant has configured the checkout to use
+ * Klarna's Hosted Payment Page instead of the embedded in-page authorization flow.
+ *
+ * @return bool True if HPP flow is enabled, false otherwise.
+ */
+function kp_is_hpp_flow_enabled() {
+	// Blocks checkout always uses HPP (not affected by this setting).
+	if ( kp_is_checkout_blocks_page() ) {
+		return false;
+	}
+
+	// Subscription payment method changes always use HPP.
+	if ( KP_Subscription::is_change_payment_method() ) {
+		return false;
+	}
+
+	$settings      = get_option( 'woocommerce_klarna_payments_settings', array() );
+	$checkout_flow = $settings['checkout_flow'] ?? 'embedded';
+
+	return 'redirect' === $checkout_flow;
+}
+
+/**
  * Get the customer type for Klarna Payments.
  *
  * @param string $customer_type The customer type from the settings.

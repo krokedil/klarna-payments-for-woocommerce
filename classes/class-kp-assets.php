@@ -146,6 +146,11 @@ class KP_Assets {
 			return;
 		}
 
+		// Skip loading the checkout script when HPP flow is enabled (not on Blocks checkout).
+		if ( kp_is_hpp_flow_enabled() ) {
+			return;
+		}
+
 		$klarna_payments_params = $this->get_checkout_params( $settings );
 
 		wp_register_script(
