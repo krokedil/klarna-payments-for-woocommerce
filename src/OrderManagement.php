@@ -612,7 +612,6 @@ class OrderManagement {
 
 		$response = $request->request();
 		if ( is_wp_error( $response ) ) {
-			error_log( 'Response is WP_Error: ' . print_r( $response, true ) );
 			// translators: %s Klarna error message.
 			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-payments-for-woocommerce' ), $response->get_error_message() ) );
 			$order->save();
