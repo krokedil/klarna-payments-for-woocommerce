@@ -593,24 +593,31 @@ class OrderManagement {
 			return new \WP_Error( 'invalid_refund_order', 'Refund order is not valid.' );
 		}
 
-		$return_fee = $this->get_return_fee_from_post();
-		$request    = new RequestPostRefund(
-			$this,
-			array(
-				'order_id'      => $order_id,
-				'refund_amount' => $amount,
-				'refund_reason' => $reason,
-				'return_fee'    => $return_fee,
-				'refund_id'     => $refund_order_id,
-			)
+		$request_args = array(
+			'order_id'      => $order_id,
+			'refund_amount' => $amount,
+			'refund_reason' => $reason,
+			'refund_id'     => $refund_order_id,
 		);
-		$response   = $request->request();
+
+		$return_fee = $this->get_return_fee_from_post();
+		if ( ! empty( $return_fee['amount'] ) && 0 < floatval( $return_fee['amount'] ) ) {
+			$request_args['return_fee'] = $return_fee;
+		}
+
+		$request = new RequestPostRefund(
+			$this,
+			$request_args
+		);
+
+		$response = $request->request();
 		if ( is_wp_error( $response ) ) {
+			error_log( 'Response is WP_Error: ' . print_r( $response, true ) );
 			// translators: %s Klarna error message.
 			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-payments-for-woocommerce' ), $response->get_error_message() ) );
 			$order->save();
 
-			return new \WP_Error( 'unknown_error', 'Response object is of type \WP_Error.', $response );
+			return new \WP_Error( 'refund_failed', 'Refund failed.', $response->get_error_message() );
 		}
 
 		$applied_return_fees = apply_filters( 'klarna_applied_return_fees', array() );
