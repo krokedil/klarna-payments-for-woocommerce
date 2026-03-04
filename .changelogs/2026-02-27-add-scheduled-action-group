@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+Added a group name to the scheduled action `kp_wc_authorization` to improve filtering of related scheduled actions listed on the order admin page.
