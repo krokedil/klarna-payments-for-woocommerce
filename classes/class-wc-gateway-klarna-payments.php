@@ -113,6 +113,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		add_action( 'woocommerce_api_wc_gateway_klarna_payments', array( $this, 'notification_listener' ) );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'address_notice' ) );
 		add_filter( 'wc_get_template', array( $this, 'override_kp_payment_option' ), 10, 3 );
+		add_filter( 'kec_acquiring_partner_integrations', array( $this, 'register_kec_partner' ) );
 	}
 
 	/**
@@ -620,6 +621,17 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Registers the Klarna Express Checkout partner integration.
+	 *
+	 * @param array $integrations Existing integrations.
+	 * @return array Updated integrations.
+	 */
+	public function register_kec_partner( $integrations ) {
+		$partners[] = new KP_Register_One_Step();
+		return $partners;
 	}
 }
 
