@@ -176,7 +176,7 @@ class KP_Assets {
 			$order_key = $order->get_order_key();
 		}
 
-		$customer_type = $settings['customer_type'] ?? 'b2c';
+		$customer_type = klarna_get_customer_type( $settings['customer_type'] ?? 'b2c' );
 		$order_data    = new KP_Order_Data( $customer_type, $order_id );
 		$customer      = $order_data->get_klarna_customer_object();
 		$cart_total    = intval( floatval( WC()->cart->get_total( 'edit' ) ) * 100 );

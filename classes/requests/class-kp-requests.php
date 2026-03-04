@@ -70,6 +70,39 @@ abstract class KP_Requests extends Request {
 	}
 
 	/**
+	 * Returns headers for Klarna API requests.
+	 *
+	 * @return array
+	 */
+	protected function get_request_headers() {
+		$session_reference = '';
+
+		if ( ! empty( $this->arguments['session_id'] ) ) {
+			$session_reference = $this->arguments['session_id'];
+		} elseif ( method_exists( KP_WC()->session, 'get_klarna_session_id' ) ) {
+			$session_reference = KP_WC()->session->get_klarna_session_id();
+		}
+
+		$integration_data = array(
+			'name'              => 'WOOCOMMERCE',
+			'module_name'       => 'Klarna for WooCommerce',
+			'module_version'    => WC_KLARNA_PAYMENTS_VERSION,
+			'session_reference' => $session_reference,
+		);
+
+		return array(
+			'Authorization'                 => $this->calculate_auth(),
+			'Content-Type'                  => 'application/json',
+			'X-Klarna-Integration-Metadata' => wp_json_encode(
+				array(
+					'integrator'  => $integration_data,
+					'originators' => array( $integration_data ),
+				)
+			),
+		);
+	}
+
+	/**
 	 * Sets the environment.
 	 *
 	 * @param string $country The country code.

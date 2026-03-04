@@ -33,7 +33,7 @@ class KP_Create_Customer_Token extends KP_Requests_Post {
 	 * @return array
 	 */
 	protected function get_body() {
-		$customer_type    = $this->settings['customer_type'] ?? 'b2c';
+		$customer_type    = klarna_get_customer_type( $this->settings['customer_type'] ?? 'b2c' );
 		$order_data       = new KP_Order_Data( $customer_type, $this->arguments['order_id'] );
 		$order            = wc_get_order( $this->arguments['order_id'] );
 		$customer_address = $order_data->get_klarna_customer_object();
