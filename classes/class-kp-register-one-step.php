@@ -50,7 +50,7 @@ class KP_Register_One_Step implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klarn
 				$request  = new KP_Place_Order(
 					array(
 						'country'    => $order->get_billing_country(),
-						'auth_token' => $interoperability_token,
+						'auth_token' => $payload['payment_request_id'],
 						'order_id'   => $order->get_id(),
 						'session_id' => KP_WC()->session->get_klarna_session_id(),
 					)
