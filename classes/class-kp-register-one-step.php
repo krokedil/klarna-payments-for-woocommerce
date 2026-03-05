@@ -2,6 +2,16 @@
 /**
  * Class for registering the Klarna Express Checkout one step integration.
  *
+ * @package WC_Klarna_Payments/Classes
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+/**
+ * Class for registering the Klarna Express Checkout one step integration.
+ *
  * @package KlarnaPayments/Classes
  */
 class KP_Register_One_Step implements \KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\Interfaces\AcquiringPartnerIntegration {
@@ -42,14 +52,11 @@ class KP_Register_One_Step implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klarn
 				// 1-step flow - place the order and redirect to order received page.
 				$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $payload['payment_request_id'], $order->get_id() );
 
-				if ( ! $response ) {
+				if ( ! $response || is_wp_error( $response ) ) {
+					$error_message = is_wp_error( $response ) ? $response->get_error_message() : 'Unknown error';
+					KP_WC()->logger()->error( "[KEC One Step] Error placing order for Order ID {$order->get_id()}: {$error_message}" );
 					break;
 				}
-
-				if ( is_wp_error( $response ) ) {
-					break;
-				}
-
 				// Redirect to order received page.
 				$redirect_url = $order->get_checkout_order_received_url();
 				break;
