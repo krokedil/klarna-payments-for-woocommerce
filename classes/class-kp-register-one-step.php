@@ -5,25 +5,18 @@
  * @package KlarnaPayments/Classes
  */
 class KP_Register_One_Step implements \KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\Interfaces\AcquiringPartnerIntegration {
-	/**
-	 * The WooCommerce gateway settings.
-	 *
-	 * @var array
-	 */
-	protected $settings = null;
 
 	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
-		$this->settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 	}
 
 	/**
 	 * Get the partner ID for this integration.
 	 */
 	public function get_partner_id(): string {
-		return $this->settings['klarna_acquiring_partner_key'] ?? '';
+		return get_option( 'klarna_acquiring_partner_key', null ) ?? '';
 	}
 
 	/**
@@ -82,6 +75,6 @@ class KP_Register_One_Step implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klarn
 	 * Get the key for this integration.
 	 */
 	public function get_key() {
-		return $this->settings['klarna_acquiring_partner_key'] ?? '';
+		return '';
 	}
 }
