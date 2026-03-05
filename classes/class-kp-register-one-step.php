@@ -6,24 +6,24 @@
  */
 class KP_Register_One_Step implements \KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\Interfaces\AcquiringPartnerIntegration {
 	/**
-	 * The WooCommerce gateway instance.
+	 * The WooCommerce gateway settings.
 	 *
-	 * @var WC_Gateway_Klarna_Payments|null
+	 * @var array
 	 */
-	protected $gateway = null;
+	protected $settings = null;
 
 	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
-		$this->gateway = new WC_Gateway_Klarna_Payments();
+		$this->settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 	}
 
 	/**
 	 * Get the partner ID for this integration.
 	 */
 	public function get_partner_id(): string {
-		return $this->gateway->get_option( 'partner_account_id' );
+		return $this->settings['klarna_acquiring_partner_key'] ?? '';
 	}
 
 	/**
@@ -40,22 +40,14 @@ class KP_Register_One_Step implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klarn
 		$order->update_meta_data( '_klarna_interoperability_token', $interoperability_token );
 		$order->update_meta_data( '_klarna_interoperability_data', $interoperability_data );
 		$order->update_meta_data( '_klarna_payment_state', $state );
-		$order->set_payment_method( $this->gateway->id );
+		$order->set_payment_method( 'klarna_payments' );
 		$order->save();
 
 		$redirect_url = '';
 		switch ( $state ) {
 			case 'COMPLETED':
 				// 1-step flow - place the order and redirect to order received page.
-				$request  = new KP_Place_Order(
-					array(
-						'country'    => $order->get_billing_country(),
-						'auth_token' => $payload['payment_request_id'],
-						'order_id'   => $order->get_id(),
-						'session_id' => KP_WC()->session->get_klarna_session_id(),
-					)
-				);
-				$response = $request->request();
+				$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $payload['payment_request_id'], $order->get_id() );
 
 				if ( ! $response ) {
 					break;
@@ -90,6 +82,6 @@ class KP_Register_One_Step implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klarn
 	 * Get the key for this integration.
 	 */
 	public function get_key() {
-		return '';
+		return $this->settings['klarna_acquiring_partner_key'] ?? '';
 	}
 }

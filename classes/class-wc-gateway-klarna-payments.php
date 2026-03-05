@@ -630,8 +630,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array Updated integrations.
 	 */
 	public function register_kec_partner( $integrations ) {
-		$partners[] = new KP_Register_One_Step();
-		return $partners;
+		$integrations[] = new KP_Register_One_Step();
+		return $integrations;
 	}
 }
 
