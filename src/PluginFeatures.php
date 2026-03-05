@@ -319,7 +319,7 @@ class PluginFeatures {
 	 * @return string|null The acquiring partner key, or null if not set.
 	 */
 	public static function get_acquiring_partner_key() {
-		return get_option( 'klarna_acquiring_partner_key', null );
+		return get_option( 'klarna_acquiring_partner_key', 'klarna_payments' );
 	}
 
 	/**

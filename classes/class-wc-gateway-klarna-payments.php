@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Krokedil\Klarna\Features;
 use Krokedil\Klarna\PluginFeatures;
+use Krokedil\Klarna\KECOneStepIntegration;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
 
 /**
@@ -630,7 +631,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array Updated integrations.
 	 */
 	public function register_kec_partner( $integrations ) {
-		$integrations[] = new KP_Register_One_Step();
+		$integrations[] = new KECOneStepIntegration();
 		return $integrations;
 	}
 }
