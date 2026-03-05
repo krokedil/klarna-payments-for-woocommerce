@@ -9,9 +9,9 @@ If you are not a developer, please use the [Klarna for WooCommerce](https://word
 * [Klarna for WooCommerce](https://docs.woocommerce.com/document/klarna-payments/) (on docs.woocommerce.com)
 
 ## Support
-This repository is not suitable for support. Please don't use our issue tracker for support requests, but for core Klarna Payments for WooCommerce issues only. Support can take place through the appropriate channels:
+This repository is not suitable for support. Please don't use our issue tracker for support requests, but for core Klarna for WooCommerce issues only. Support can take place through the appropriate channels:
 
-* The documentation on [docs.krokedil.com](https://docs.krokedil.com/klarna-for-woocommerce) have a number of articles describing plugin configuration, compatibility issues and troubleshooting guides.
+* The documentation on [docs.krokedil.com](https://docs.krokedil.com/klarna-for-woocommerce) has a number of articles describing plugin configuration, compatibility issues and troubleshooting guides.
 * Other users might have experienced similar issues and gotten a reply in the [wp.org community forum](https://wordpress.org/support/plugin/klarna-payments-for-woocommerce/). 
 * If you can't find an answer to your question you can also [create a support ticket](http://krokedil.com/support/).
 
