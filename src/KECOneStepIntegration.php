@@ -16,17 +16,21 @@ class KECOneStepIntegration implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klar
 	 */
 	public function process_order_state( \WC_Order $order, string $interoperability_token, array $interoperability_data, string $state, array $payload ) {
 		$order->set_payment_method( 'klarna_payments' );
+		$response = '';
 
 		if ( 'COMPLETED' === $state ) {
 			$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $payload['payment_token'], $order->get_id() );
 		}
 
-		if ( $response && ! is_wp_error( $response ) ) {
+		if ( ! empty( $response ) && ! is_wp_error( $response ) ) {
 			kp_process_accepted( $order, $response );
 		} else {
 			$error_message = is_wp_error( $response ) ? $response->get_error_message() : 'Unknown error';
 			KP_WC()->logger()->error( "[KEC One Step] Error placing order for Order ID {$order->get_id()}: {$error_message}" );
-			kp_process_pending( $order, $response );
+			$order->update_status( 'on-hold', 'Klarna payment failed or was not completed during One Step Checkout.' );
+			kp_save_order_meta_data( $order, $response );
+			do_action( 'wc_klarna_payments_pending', $order->get_id(), $response );
+			do_action( 'wc_klarna_pending', $order->get_id(), $response );
 		}
 
 		$order->save();
