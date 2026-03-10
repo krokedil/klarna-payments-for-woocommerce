@@ -42,7 +42,11 @@ class RequestPatchUpdate extends RequestPatch {
 		$customer_type = $settings['customer_type'] ?? 'b2c';
 		$kp_order_data = new \KP_Order_Data( $customer_type, $this->order_id );
 		$order_lines   = $kp_order_data->get_klarna_order_lines_array();
-		$data          = array( 'order_lines' => $order_lines );
+		$data          = array(
+			'order_lines'      => $order_lines,
+			'order_amount'     => $kp_order_data->order_data->get_total(),
+			'order_tax_amount' => $kp_order_data->order_data->get_total_tax(),
+		);
 		return apply_filters( 'kom_order_update_args', $data, $this->order_id );
 	}
 }
