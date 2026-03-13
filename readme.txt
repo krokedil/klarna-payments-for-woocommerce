@@ -6,8 +6,8 @@ Requires at least: 6.7
 Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.4.3
-Stable tag: 4.5.0
+WC tested up to: 10.5.2
+Stable tag: 4.7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,39 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-02-25    - version 4.7.0 =
+* Feature       - Added Integrator tagging to requests, enabling data collection for improved customer experience, performance tracking, and incident resolution.
+* Enhancement   - Added filter 'klarna_get_customer_type' to allow overriding Klarna Payments customer_type (b2c/b2b).
+* Fix           - Resolved an issue where the credentials section's active/inactive status badge on the settings page did not display correctly.
+* Fix           - [SIWK] Resolved an issue where SIWK did not function correctly when using the popup authentication flow.
+* Fix           - [SIWK] Resolved notice "_load_textdomain_just_in_time was called incorrectly".
+* Tweak         - [Settings page] Removed the "Addons" tab.
+
+= 2026-02-18    - version 4.6.4 =
+* Fix           - Fixed an issue where payment would fail due to missing fragment data.
+
+= 2026-02-11    - version 4.6.3 =
+* Fix           - Fixed an issue where the amount shown for part payments would not be updated in the Klarna "Learn more" modal when the cart total changed.
+
+= 2026.02.04    - version 4.6.2 =
+* Fix           - [KEC] The Klarna Express Checkout webhook setting now only appears when the KEC flow is set to "One step", as intended.
+* Fix           - [KOSM] Added support for On-Site messaging on the blocks cart page.
+* Fix           - [KOSM] Fixed an issue where the Onsite Messaging debug mode was not functioning as expected.
+* Fix           - [Settings page] Fixed an issue where the `system-report.json` file was not correctly attached when submitting support requests via the HelpScout beacon.
+
+= 2026.01.20    - version 4.6.1 =
+* Fix           - Resolved a PHP warning ("Undefined array key 'send_shopping_data'") that could occur if plugin settings had not been saved after the latest update.
+
+= 2026.01.19    - version 4.6.0 =
+* Feature       - Added setting "Share shopping data with Klarna" to enable Supplementary Purchase Data being sent to Klarna, providing additional transaction context to improve payment outcomes and customer experience.
+* Feature       - Added support for the Fluid Checkout for WooCommerce plugin.
+* Feature       - [KEC] Added setting to select which flow to use for KEC when both one step checkout and two step flows are available and a AP key exists.
+* Fix           - Resolved an API error when capturing zero-value synchronized subscription orders.
+* Fix           - Added default values to order customer data to prevent errors when customer information is missing or undefined.
+* Fix           - Fixed an issue that could happen when changing API keys and we do not remove an old acquiring partner key that's no longer valid.
+* Fix           - [Woocommerce] Improved error handling in 'CartCustomer' by checking the availability of the checkout object before accessing it, preventing potential errors when the checkout is unavailable.
+* Fix           - [KEC] Fixed an issue where the one step checkout flow would not be prioritized when both flows were available.
+
 = 2025.12.04    - version 4.5.0 =
 * Feature       - [KEC] Add support for Klarna Express Checkout one step checkout for AP partners using the V2 WebSDK.
 * Feature       - Set the payment method title for the WooCommerce order based on the payment method used from Klarna.

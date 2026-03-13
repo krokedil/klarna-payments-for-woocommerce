@@ -99,7 +99,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		// Get setting values.
 		$this->title         = 'Klarna';
 		$this->enabled       = $this->get_option( 'enabled' );
-		$this->customer_type = $this->get_option( 'customer_type', 'b2c' );
+		$this->customer_type = klarna_get_customer_type( $this->get_option( 'customer_type', 'b2c' ) );
 		$this->testmode      = 'yes' === $this->get_option( 'testmode' );
 
 		// What is Klarna link.
@@ -212,7 +212,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	private function get_settings_page_args() {
 		$args = get_transient( 'klarna_payments_settings_page_config' );
 		if ( ! $args ) {
-			$args = wp_remote_get( 'https://krokedil-settings-page-configs.s3.eu-north-1.amazonaws.com/main/configs/klarna-payments-for-woocommerce.json' );
+			$args = wp_remote_get( 'https://krokedil-settings-page-configs.s3.eu-north-1.amazonaws.com/develop/configs/klarna-payments-for-woocommerce.json' );
 
 			if ( is_wp_error( $args ) ) {
 				KP_Logger::log( 'Failed to fetch Klarna Payments settings page config from remote source.' );
