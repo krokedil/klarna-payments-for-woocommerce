@@ -545,7 +545,7 @@ jQuery( function ( $ ) {
 							} else if ( data.message ) {
 								klarna_payments.logToFile( "Checkout error | " + data.message )
 								klarna_payments.failOrder( "submission", data.message )
-							// If requested, reload the page.
+								// If requested, reload the page.
 							} else if ( true === data.reload ) {
 								window.location.reload()
 							} else {
@@ -610,9 +610,11 @@ jQuery( function ( $ ) {
 			} )
 		},
 	}
+
 	if ( 'redirect' !== klarna_payments_params.checkout_flow ) {
- 		klarna_payments.start()
- 	}
+		klarna_payments.start()
+	}
+
 	$( document ).ready( function () {
 		klarna_payments.setRadioButtonValues()
 	} )
