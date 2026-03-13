@@ -14,11 +14,28 @@ if ( kp_is_order_pay_page() ) {
 }
 
 $klarna_payment_categories = KP_WC()->session->get_klarna_payment_method_categories();
+$settings                  = get_option( 'woocommerce_klarna_payments_settings', array() );
+$checkout_flow             = isset( $settings['checkout_flow'] ) ? $settings['checkout_flow'] : 'popout';
 
 if ( is_array( $klarna_payment_categories ) ) {
 	$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
 	$kp                 = $available_gateways['klarna_payments'];
 	$chosen_gateway     = $available_gateways[ array_key_first( $available_gateways ) ];
+
+	if ( 'redirect' === $checkout_flow ) {
+		$kp->id    = 'klarna_payments_redirect';
+		$kp->title = __( 'Klarna', 'klarna-payments-for-woocommerce' );
+
+		if ( false !== strpos( $chosen_gateway->id, 'klarna_payments' ) || $kp->chosen ) {
+			$kp->chosen = true;
+		}
+
+		if ( did_action( 'cartimize_get_payment_methods_html' ) === 0 ) {
+			wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $kp ) );
+		}
+
+		return;
+	}
 
 	foreach ( apply_filters( 'wc_klarna_payments_available_payment_categories', $klarna_payment_categories ) as $klarna_payment_category ) {
 		if ( ! is_array( $klarna_payment_category ) ) {
