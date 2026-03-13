@@ -524,6 +524,12 @@ jQuery( function ( $ ) {
 					success: function ( data ) {
 						try {
 							if ( "success" === data.result ) {
+								if ( data.redirect && "redirect" === klarna_payments_params.checkout_flow ) {
+									klarna_payments.logToFile( "Successfully placed order. Redirecting customer to Klarna HPP." )
+									window.location.href = data.redirect
+									return
+								}
+
 								klarna_payments.logToFile(
 									"Successfully placed order. Starting authorization with Klarna",
 								)

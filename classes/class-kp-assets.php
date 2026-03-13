@@ -171,7 +171,7 @@ class KP_Assets {
 		$settings      = get_option( 'woocommerce_klarna_payments_settings', array() );
 		$checkout_flow = isset( $settings['checkout_flow'] ) ? $settings['checkout_flow'] : 'popout';
 
-		$pay_for_order = 'redirect' === $checkout_flow ? true : kp_is_order_pay_page();
+		$pay_for_order = kp_is_order_pay_page();
 		$order_id      = $pay_for_order ? absint( get_query_var( 'order-pay', 0 ) ) : null;
 		$order_key     = null;
 		if ( ! empty( $order_id ) ) {
@@ -204,6 +204,7 @@ class KP_Assets {
 			'customer_type'           => $customer_type,
 			'remove_postcode_spaces'  => ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no',
 			'client_token'            => KP_WC()->session->get_klarna_client_token(),
+			'checkout_flow'           => $checkout_flow,
 			'order_pay_page'          => $pay_for_order,
 			'pay_for_order'           => $pay_for_order,
 			'order_id'                => $order_id,
