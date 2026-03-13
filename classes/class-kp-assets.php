@@ -168,7 +168,6 @@ class KP_Assets {
 	 */
 	private function get_checkout_params( $settings ) {
 		// Set needed variables for the order pay page handling.
-		$settings      = get_option( 'woocommerce_klarna_payments_settings', array() );
 		$checkout_flow = isset( $settings['checkout_flow'] ) ? $settings['checkout_flow'] : 'popout';
 
 		$pay_for_order = kp_is_order_pay_page();

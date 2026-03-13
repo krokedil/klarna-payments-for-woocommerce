@@ -542,7 +542,10 @@ jQuery( function ( $ ) {
 							if ( data.messages ) {
 								klarna_payments.logToFile( "Checkout error | " + data.messages )
 								klarna_payments.failOrder( "submission", data.messages )
-								// If requested, reload the page.
+							} else if ( data.message ) {
+								klarna_payments.logToFile( "Checkout error | " + data.message )
+								klarna_payments.failOrder( "submission", data.message )
+							// If requested, reload the page.
 							} else if ( true === data.reload ) {
 								window.location.reload()
 							} else {
@@ -607,7 +610,9 @@ jQuery( function ( $ ) {
 			} )
 		},
 	}
-	klarna_payments.start()
+	if ( 'redirect' !== klarna_payments_params.checkout_flow ) {
+ 		klarna_payments.start()
+ 	}
 	$( document ).ready( function () {
 		klarna_payments.setRadioButtonValues()
 	} )
