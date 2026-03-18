@@ -423,8 +423,8 @@ class KP_Form_Fields {
 				'label'       => __( 'Checkout Flow', 'klarna-payments-for-woocommerce' ),
 				'description' => __( 'Choose between Redirect or Pop-out checkout flow.', 'klarna-payments-for-woocommerce' ),
 				'options'     => array(
-					'redirect' => __( 'Redirect', 'klarna-payments-for-woocommerce' ),
 					'popout'   => __( 'Pop-out', 'klarna-payments-for-woocommerce' ),
+					'redirect' => __( 'Redirect', 'klarna-payments-for-woocommerce' ),
 				),
 				'default'     => 'popout',
 				'desc_tip'    => true,

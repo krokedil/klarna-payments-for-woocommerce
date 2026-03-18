@@ -338,7 +338,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( is_checkout() ) {
 			if ( 'checkout/payment-method.php' === $template_name ) {
 				if ( 'klarna_payments' === $args['gateway']->id ) {
-					$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
+					$checkout_flow = get_option( 'woocommerce_klarna_payments_settings', array() )['checkout_flow'] ?? 'popout';
+					if ( 'redirect' !== $checkout_flow ) {
+						$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
+					}
 				}
 			}
 
