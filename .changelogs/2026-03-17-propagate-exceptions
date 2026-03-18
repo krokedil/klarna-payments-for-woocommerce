@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+Due to recent changes in WC, a generic error message is displayed when an error occurs during payment processing. This has now been fixed to show the actual error message.
