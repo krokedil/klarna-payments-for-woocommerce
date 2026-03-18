@@ -75,8 +75,9 @@ abstract class KP_Requests_Post extends KP_Requests {
 		$order_data    = new KP_Order_Data( $customer_type, $order_id );
 
 		return apply_filters(
-			'kp_wc_api_request_args',
-			$order_data->get_klarna_order_object( $this->iframe_options )
+			'kp_wc_api_request_body_args',
+			$order_data->get_klarna_order_object( $this->iframe_options ),
+			$order_id
 		);
 	}
 }
