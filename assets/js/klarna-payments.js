@@ -601,7 +601,7 @@ jQuery( function ( $ ) {
 			} )
 		},
 	}
-
+	klarna_payments.start()
 	$( document ).ready( function () {
 		klarna_payments.setRadioButtonValues()
 	} )
