@@ -1,4 +1,0 @@
-Type: Feature
-Needs Documentation: no
-
-Order management functionality is now built directly into the plugin, eliminating the need for external code packages.
