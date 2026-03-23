@@ -6,8 +6,8 @@ Requires at least: 6.7
 Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.5.2
-Stable tag: 4.7.0
+WC tested up to: 10.6.1
+Stable tag: 4.7.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-03-23    - version 4.7.1 =
+* Enhancement   - Introduced the `kp_wc_api_request_body_args` filter to provide more specific API request customization and removed duplicate filtering previously applied via `kp_wc_api_request_args`.
+* Tweak         - Added a group name to the scheduled action `kp_wc_authorization` to improve filtering of related scheduled actions listed on the order admin page.
+* Tweak         - Due to recent changes in WC, a generic error message is displayed when an error occurs during payment processing. This has now been fixed to show the actual error message.
+
 = 2026-02-25    - version 4.7.0 =
 * Feature       - Added Integrator tagging to requests, enabling data collection for improved customer experience, performance tracking, and incident resolution.
 * Enhancement   - Added filter 'klarna_get_customer_type' to allow overriding Klarna Payments customer_type (b2c/b2b).

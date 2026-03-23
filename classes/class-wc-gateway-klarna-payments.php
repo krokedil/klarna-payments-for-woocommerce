@@ -393,6 +393,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Process WooCommerce checkout order.
 	 *
+	 * @throws Exception If session creation fails or required session data is missing.
+	 *
 	 * @param WC_Order $order The WooCommerce order.
 	 * @return array
 	 */
@@ -408,12 +410,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
 
 			if ( empty( $klarna_country ) || empty( $klarna_session_id ) ) {
-				return array(
-					'result'   => 'error',
-					'messages' => array(
-						__( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' ),
-					),
-				);
+				$message = __( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' );
+				throw new Exception( esc_html( $message ) );
 			}
 		} else {
 			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
@@ -462,6 +460,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Process WooCommerce blocks order.
 	 *
+	 * @throws Exception If session creation or HPP creation fails.
+	 *
 	 * @param WC_Order $order The WooCommerce order.
 	 * @return array
 	 */
@@ -471,11 +471,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Check for any errors.
 		if ( is_wp_error( $session ) ) {
-			return array(
-				'result'   => 'error',
-				'redirect' => '#',
-				'message'  => __( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
-			);
+			$message = __( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' );
+			throw new Exception( esc_html( $message ) );
 		}
 
 		$session_id     = KP_WC()->session->get_klarna_session_id();
@@ -501,11 +498,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order->save();
 
 		if ( is_wp_error( $hpp ) ) {
-			return array(
-				'result'   => 'error',
-				'redirect' => '#',
-				'message'  => __( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
-			);
+			$message = __( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' );
+			throw new Exception( esc_html( $message ) );
 		}
 
 		return array(

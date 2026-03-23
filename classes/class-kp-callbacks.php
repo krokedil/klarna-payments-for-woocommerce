@@ -35,7 +35,7 @@ class KP_Callbacks {
 			return;
 		}
 
-		as_schedule_single_action( time() + 120, 'kp_wc_authorization', array( $data ) );
+		as_schedule_single_action( time() + 120, 'kp_wc_authorization', array( $data ), 'klarna_authorization' );
 	}
 
 	/**
