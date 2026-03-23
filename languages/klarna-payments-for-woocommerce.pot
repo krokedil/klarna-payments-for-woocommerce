@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2026-02-25 12:52:51+00:00\n"
+"POT-Creation-Date: 2026-03-23 12:27:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -517,19 +517,19 @@ msgstr ""
 msgid "What is Klarna?"
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:414
+#: classes/class-wc-gateway-klarna-payments.php:413
 msgid "Failed to get required data from the Klarna session. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:477
+#: classes/class-wc-gateway-klarna-payments.php:474
 msgid "Failed to create a session with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:507
+#: classes/class-wc-gateway-klarna-payments.php:501
 msgid "Failed to create a hosted payment page with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:618
+#: classes/class-wc-gateway-klarna-payments.php:612
 msgid "Klarna did not accept the new order amount, the order has not been updated"
 msgstr ""
 

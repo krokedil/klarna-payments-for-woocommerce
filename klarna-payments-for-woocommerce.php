@@ -5,12 +5,12 @@
  * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 4.7.0
+ * Version: 4.7.1
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 10.5.3
+ * WC tested up to: 10.6.1
  * Requires Plugins: woocommerce
  *
  * Copyright (c) 2017-2026 Krokedil
@@ -34,7 +34,6 @@
 use Krokedil\Klarna\Api\Registry;
 use Krokedil\Klarna\PluginFeatures;
 use Krokedil\Klarna\Compatibility;
-use Krokedil\Klarna\OrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -44,13 +43,14 @@ use KlarnaPayments\Blocks\Payments\KlarnaPayments;
 use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
+use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '4.7.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '4.7.1' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -174,7 +174,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		/**
 		 * The Klarna Order Management package from Krokedil.
 		 *
-		 * @var OrderManagement
+		 * @var KlarnaOrderManagement
 		 */
 		public $order_management = null;
 
@@ -249,6 +249,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		protected function __construct() {
 			add_action( 'admin_notices', array( $this, 'admin_notices' ), 15 );
 			add_action( 'admin_notices', array( $this, 'check_permalinks' ) );
+			add_action( 'admin_notices', array( $this, 'order_management_check' ) );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
@@ -306,7 +307,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
 			$this->interoperability_token  = new KP_Interoperability_Token();
-			$this->order_management        = new OrderManagement();
+			$this->order_management        = new KlarnaOrderManagement();
 			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
 			Compatibility::register();
 
@@ -361,6 +362,22 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			}
 
 			return $data;
+		}
+
+		/**
+		 * Show admin notice if Order Management plugin is not active.
+		 */
+		public function order_management_check() {
+			if ( ! class_exists( 'WC_Klarna_Order_Management' ) && ! class_exists( 'KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOrderManagement\KlarnaOrderManagement' ) ) {
+				$current_screen = get_current_screen();
+				if ( 'shop_order' === $current_screen->id || 'plugins' === $current_screen->id || 'woocommerce_page_wc-settings' === $current_screen->id ) {
+					?>
+					<div class="notice notice-warning">
+						<p><?php esc_html_e( 'Klarna Order Management is not active. Please activate it so you can capture, cancel, update and refund Klarna orders.', 'klarna-payments-for-woocommerce' ); ?></p>
+					</div>
+					<?php
+				}
+			}
 		}
 
 		/**
