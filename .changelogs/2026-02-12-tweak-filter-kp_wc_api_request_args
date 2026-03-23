@@ -1,4 +1,0 @@
-Type: Enhancement
-Needs Documentation: yes
-
-Introduced the `kp_wc_api_request_body_args` filter to provide more specific API request customization and removed duplicate filtering previously applied via `kp_wc_api_request_args`.
