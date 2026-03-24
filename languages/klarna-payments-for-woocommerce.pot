@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2026-03-23 12:27:53+00:00\n"
+"POT-Creation-Date: 2026-03-23 13:41:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -529,14 +529,14 @@ msgstr ""
 msgid "Failed to create a hosted payment page with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:612
+#: classes/class-wc-gateway-klarna-payments.php:610
 msgid "Klarna did not accept the new order amount, the order has not been updated"
 msgstr ""
 
 #: classes/requests/helpers/class-kp-order-data.php:161
 #: classes/requests/helpers/class-kp-order-data.php:163
-#: dependencies/krokedil/klarna-order-management/src/OrderLines.php:249
-#: dependencies/krokedil/klarna-order-management/src/Request/Post/RequestPostRefund.php:171
+#: src/OrderManagement/Request/Post/RequestPostRefund.php:230
+#: src/OrderManagement/Request/Post/RequestPostRefund.php:231
 msgid "Sales Tax"
 msgstr ""
 
@@ -996,181 +996,6 @@ msgstr ""
 msgid "Placement Theme:"
 msgstr ""
 
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:78
-msgid "Klarna Order Management is now included in Klarna for WooCommerce."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:81
-msgid ""
-"Starting with version 4.3.0, you no longer need the separate Klarna Order "
-"Management plugin – unless you are also using the Kustom Checkout plugin "
-"(formerly Klarna Checkout)."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:87
-msgid "Read more about this change here."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:253
-#. translators: 1: User name, 2: Existing token, 3: New token.
-msgid "%1$s updated the subscription recurring token from \"%2$s\" to \"%3$s\"."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:293
-#. translators: %s: error message from Klarna.
-msgid "Could not update Klarna order lines: %s."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:295
-msgid "Could not update Klarna order lines. An unknown error occurred."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:385
-msgid ""
-"Klarna could not charge the customer. Please try again later. If that still "
-"fails, the customer may have to create a new subscription or add funds to "
-"their payment method if they wish to continue."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/KlarnaOrderManagement.php:393
-#. translators: %s: Error message from Klarna.
-msgid "Could not capture Klarna order. %s"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:96
-msgid "The payment has not been finalized with Klarna."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:103
-msgid "Failed to retrieve the order from Klarna."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:125
-msgid "Klarna Environment"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:126
-msgid "Klarna order status"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:127
-msgid "Initial Payment method"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:132
-msgid "Scheduled actions"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:135
-msgid "Advanced"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:160
-msgid "Choose an action..."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:167
-msgid "Apply"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:211
-msgid "Order management"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:212
-msgid ""
-"Disable this to turn off the automatic synchronization with the Klarna "
-"Merchant Portal. When disabled, any changes in either system have to be "
-"done manually."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:326
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:340
-msgid "Capture order"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:340
-msgid "Activates the order with Klarna."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:354
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:368
-msgid "Cancel order"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:368
-msgid "Cancels the order with Klarna."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:382
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:396
-msgid "Get customer"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/MetaBox.php:396
-msgid "Gets the customer data from Klarna and saves it to the WooCommerce order."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/OrderLines.php:151
-msgid "gift_card"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/OrderLines.php:153
-msgid "Gift card"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/Request/Request.php:203
-msgid "Invalid JSON response from the server."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/ScheduledActions.php:47
-msgid "Scheduled actions "
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/ScheduledActions.php:51
-msgid "See all actions scheduled for this order."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/ScheduledActions.php:61
-#. translators: %1$d: number of completed orders, %2$d: number of failed
-#. orders, %3$d: number of pending orders.
-msgid "%1$d completed, %2$d failed, %3$d pending"
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/SellersApp.php:128
-msgid "Order address updated by Klarna Order management."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/Settings.php:33
-msgid ""
-"Activate Klarna order automatically when WooCommerce order is marked "
-"complete."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/Settings.php:34
-msgid "Cancel Klarna order automatically when WooCommerce order is marked canceled."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/Settings.php:35
-msgid "Update Klarna order automatically when WooCommerce order is updated."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/Settings.php:36
-msgid ""
-"Gets the customer information from Klarna when creating a manual admin "
-"order and adding a Klarna order id as a transaction id."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/Settings.php:37
-msgid ""
-"Force capture full order. Useful if the Klarna order has been updated by an "
-"ERP system."
-msgstr ""
-
-#: dependencies/krokedil/klarna-order-management/src/Settings.php:38
-msgid "Enable the debug log."
-msgstr ""
-
 #: dependencies/krokedil/settings-page/src/Addons.php:42
 #: dependencies/krokedil/settings-page/src/Navigation.php:57
 msgid "Addons"
@@ -1497,6 +1322,231 @@ msgstr ""
 #. translators: 1: The name of the incorrect class. 2: The name of the base
 #. Controller class.
 msgid "The controller %1$s must extend the %2$s class."
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:117
+msgid "The payment has not been finalized with Klarna."
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:126
+msgid "Failed to retrieve the order from Klarna."
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:157
+msgid "Klarna Environment"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:162
+msgid "Klarna order status"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:167
+msgid "Initial Payment method"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:177
+msgid "Scheduled actions"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:183
+msgid "Advanced"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:207
+msgid "Choose an action..."
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:210
+msgid "Apply"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:250
+msgid "Order management"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:251
+msgid ""
+"Disable this to turn off the automatic synchronization with the Klarna "
+"Merchant Portal. When disabled, any changes in either system have to be "
+"done manually."
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:362 src/OrderManagement/MetaBox.php:376
+msgid "Capture order"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:376
+msgid "Activates the order with Klarna."
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:390 src/OrderManagement/MetaBox.php:404
+msgid "Cancel order"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:404
+msgid "Cancels the order with Klarna."
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:418 src/OrderManagement/MetaBox.php:432
+msgid "Get customer"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:432
+msgid "Gets the customer data from Klarna and saves it to the WooCommerce order."
+msgstr ""
+
+#: src/OrderManagement/Request/Post/RequestPostRefund.php:259
+#: src/OrderManagement/ReturnFee.php:192
+msgid "Return fee"
+msgstr ""
+
+#: src/OrderManagement/Request/Request.php:163
+msgid "Invalid JSON response from the server."
+msgstr ""
+
+#: src/OrderManagement/ReturnFee.php:78
+msgid "Klarna return fee"
+msgstr ""
+
+#: src/OrderManagement/ReturnFee.php:137
+msgid "Refund amount: "
+msgstr ""
+
+#: src/OrderManagement/ReturnFee.php:139
+msgid "Return fee: "
+msgstr ""
+
+#: src/OrderManagement/ReturnFee.php:141
+msgid "Refunded to customer: "
+msgstr ""
+
+#: src/OrderManagement/ReturnFee.php:293
+msgid "Return Fee"
+msgstr ""
+
+#: src/OrderManagement/ReturnFee.php:368
+#. translators: %1$s: return fee amount, %2$s: refund reason
+msgid "Return fee: %1$s<br>%2$s"
+msgstr ""
+
+#: src/OrderManagement/ScheduledActions.php:58
+msgid "Scheduled actions "
+msgstr ""
+
+#: src/OrderManagement/ScheduledActions.php:60
+msgid "See all actions scheduled for this order."
+msgstr ""
+
+#: src/OrderManagement/ScheduledActions.php:67
+#. translators: %1$d: number of completed orders, %2$d: number of failed
+#. orders, %3$d: number of pending orders.
+msgid "%1$d completed, %2$d failed, %3$d pending"
+msgstr ""
+
+#: src/OrderManagement/SellersApp.php:141
+msgid "Order address updated by Klarna Order management."
+msgstr ""
+
+#: src/OrderManagement/Settings.php:48
+msgid ""
+"Activate Klarna order automatically when WooCommerce order is marked "
+"complete."
+msgstr ""
+
+#: src/OrderManagement/Settings.php:55
+msgid "Cancel Klarna order automatically when WooCommerce order is marked canceled."
+msgstr ""
+
+#: src/OrderManagement/Settings.php:62
+msgid "Update Klarna order automatically when WooCommerce order is updated."
+msgstr ""
+
+#: src/OrderManagement/Settings.php:69
+msgid ""
+"Gets the customer information from Klarna when creating a manual admin "
+"order and adding a Klarna order id as a transaction id."
+msgstr ""
+
+#: src/OrderManagement/Settings.php:76
+msgid ""
+"Force capture full order. Useful if the Klarna order has been updated by an "
+"ERP system."
+msgstr ""
+
+#: src/OrderManagement/Settings.php:83
+msgid "Enable the debug log."
+msgstr ""
+
+#: src/OrderManagement.php:93
+msgid "Klarna Order Management is now included in Klarna for WooCommerce."
+msgstr ""
+
+#: src/OrderManagement.php:94
+msgid ""
+"Starting with version 4.3.0, you no longer need the separate Klarna Order "
+"Management plugin – unless you are also using the Kustom Checkout plugin "
+"(formerly Klarna Checkout)."
+msgstr ""
+
+#: src/OrderManagement.php:98
+msgid "Read more about this change here."
+msgstr ""
+
+#: src/OrderManagement.php:187
+msgid "minus a return fee of"
+msgstr ""
+
+#: src/OrderManagement.php:188
+msgid "Refund amount is less than the return fee."
+msgstr ""
+
+#: src/OrderManagement.php:343
+#. translators: 1: User name, 2: Existing token, 3: New token.
+msgid "%1$s updated the subscription recurring token from \"%2$s\" to \"%3$s\"."
+msgstr ""
+
+#: src/OrderManagement.php:399
+#. translators: %s: error message from Klarna.
+msgid "Could not update Klarna order lines: %s."
+msgstr ""
+
+#: src/OrderManagement.php:401
+msgid "Could not update Klarna order lines. An unknown error occurred."
+msgstr ""
+
+#: src/OrderManagement.php:507
+msgid ""
+"Klarna could not charge the customer. Please try again later. If that still "
+"fails, the customer may have to create a new subscription or add funds to "
+"their payment method if they wish to continue."
+msgstr ""
+
+#: src/OrderManagement.php:517
+#. translators: %s: Error message from Klarna.
+msgid "Could not capture Klarna order. %s"
+msgstr ""
+
+#: src/OrderManagement.php:560 src/OrderManagement.php:579
+msgid "Klarna order has not been captured and cannot be refunded."
+msgstr ""
+
+#: src/OrderManagement.php:571 src/OrderManagement.php:616
+#. translators: %s Klarna error message.
+msgid "Could not refund Klarna order. %s."
+msgstr ""
+
+#: src/OrderManagement.php:591
+msgid "Could not retrieve the refund order."
+msgstr ""
+
+#: src/OrderManagement.php:625
+#. translators: refund amount, refund id.
+msgid "Processing a refund of %1$s with Klarna"
+msgstr ""
+
+#: src/OrderManagement.php:635
+#. translators: 1: original amount, 2: return fee amount.
+msgid " (original amount of %1$s - return fee of %2$s)"
 msgstr ""
 
 #: src/PluginFeatures.php:186 src/PluginFeatures.php:230
