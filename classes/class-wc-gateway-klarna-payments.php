@@ -68,7 +68,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->id                 = 'klarna_payments';
 		$this->method_title       = __( 'Klarna for WooCommerce', 'klarna-payments-for-woocommerce' );
 		$this->method_description = __( 'Supercharge your business with one single plugin for increased sales and enhanced shopping experiences.', 'klarna-payments-for-woocommerce' );
-		$this->has_fields         = true;
+		$this->has_fields         = 'redirect' !== $this->get_option( 'checkout_flow', 'popout' );
 		$this->supports           = apply_filters(
 			'wc_klarna_payments_supports',
 			array(
@@ -338,7 +338,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( is_checkout() ) {
 			if ( 'checkout/payment-method.php' === $template_name ) {
 				if ( 'klarna_payments' === $args['gateway']->id ) {
-					$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
+					$checkout_flow = $this->get_option( 'checkout_flow', 'popout' );
+					if ( 'redirect' !== $checkout_flow ) {
+						$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
+					}
 				}
 			}
 
@@ -374,6 +377,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		}
 		// Check if the order was created using WooCommerce blocks.
 		if ( kp_is_wc_blocks_order( $order ) ) {
+			return $this->process_blocks_order( $order );
+		}
+
+		$checkout_flow = $this->get_option( 'checkout_flow', 'popout' );
+
+		if ( 'redirect' === $checkout_flow ) {
 			return $this->process_blocks_order( $order );
 		}
 

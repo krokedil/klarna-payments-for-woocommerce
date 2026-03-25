@@ -146,6 +146,11 @@ class KP_Assets {
 			return;
 		}
 
+		$checkout_flow = $settings['checkout_flow'] ?? 'popout';
+		if ( 'redirect' === $checkout_flow ) {
+			return;
+		}
+
 		$klarna_payments_params = $this->get_checkout_params( $settings );
 
 		wp_register_script(
