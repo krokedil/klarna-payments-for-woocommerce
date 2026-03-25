@@ -182,9 +182,9 @@ class KP_Order_Data {
 		$klarna_order_lines = array();
 
 		// Order shipping.
-		$klarna_shipping_lines = ( $this->order_data->get_line_shipping() ?? array() )[0];
-		$klarna_shipping       = $this->get_klarna_shipping_line_object_interoperability( $klarna_shipping_lines );
-		$shipping_reference    = $klarna_shipping['shipping_reference'] ?? '';
+		$shipping_lines     = $this->order_data->get_line_shipping() ?? array();
+		$klarna_shipping    = $this->get_klarna_shipping_line_object_interoperability( $shipping_lines[0] ?? null );
+		$shipping_reference = $klarna_shipping['shipping_reference'] ?? '';
 
 		// Order products.
 		foreach ( $this->order_data->get_line_items() as $item ) {
