@@ -179,6 +179,36 @@ class MetaBox extends OrderMetabox {
 			);
 
 		}
+
+		$transaction_id = $order->get_transaction_id();
+
+		$order_date_created        = $order->get_date_created();
+		$order_date_created_str    = $order_date_created ? $order_date_created->date( 'c' ) : null;
+		$matching_reference_orders = self::get_matching_reference_orders( $transaction_id, $order_id, $order_date_created_str ) ?? array();
+
+		if ( ! empty( $matching_reference_orders ) ) {
+			$matching_orders_string = '';
+
+			foreach ( $matching_reference_orders as $matching_order ) {
+
+				$matching_orders_string .= sprintf(
+					'<li><a target="_blank" rel="noopener noreferrer" href="%s">#%s - %s - %s</a></li>',
+					esc_url( admin_url( 'post.php?post=' . $matching_order->get_id() . '&action=edit' ) ),
+					esc_html( $matching_order->get_id() ),
+					esc_html( $matching_order->get_date_created()->date( 'Y-m-d H:i:s' ) ),
+					esc_html( wc_get_order_status_name( $matching_order->get_status() ) )
+				);
+
+			}
+			if ( ! empty( $matching_orders_string ) ) {
+				self::output_info(
+					__( 'Orders with same reference', 'klarna-payments-for-woocommerce' ),
+					'<ul>' . $matching_orders_string . '</ul>',
+					__( 'These orders share the same Klarna transaction ID.', 'klarna-payments-for-woocommerce' )
+				);
+			}
+		}
+
 		self::output_actions_dropdown( $order_id, $klarna_order );
 		self::output_collapsable_section( 'kom-advanced', __( 'Advanced', 'klarna-payments-for-woocommerce' ), self::get_advanced_section_content( $order ) );
 	}
@@ -520,5 +550,46 @@ class MetaBox extends OrderMetabox {
 		}
 
 		return $action_list;
+	}
+
+	/**
+	 * Get orders with matching transaction ID within a date range.
+	 *
+	 * @param string $transaction_id The transaction ID.
+	 * @param int    $current_order_id The current order ID to exclude.
+	 * @param string $order_date The order date.
+	 *
+	 * @return array An array of matching orders.
+	 */
+	public static function get_matching_reference_orders( $transaction_id, $current_order_id, $order_date ) {
+		// Allow disabling the display of matching reference orders via a filter.
+		if ( apply_filters( 'kom_skip_matching_reference_orders', false ) ) {
+			return array();
+		}
+
+		if ( empty( $transaction_id ) ) {
+			return array();
+		}
+
+		$order_date = new \DateTime( $order_date );
+		$start_date = ( clone $order_date )->modify( '-7 days' )->format( 'Y-m-d' );
+		$end_date   = ( clone $order_date )->modify( '+7 days' )->format( 'Y-m-d' );
+
+		$args   = array(
+			'limit'          => 10,
+			'transaction_id' => $transaction_id,
+			'exclude'        => array( $current_order_id ),
+			'date_created'   => $start_date . '...' . $end_date,
+		);
+		$orders = wc_get_orders( $args );
+
+		$orders = array_filter(
+			$orders,
+			function ( $order ) use ( $transaction_id ) {
+				return $order->get_transaction_id() === $transaction_id;
+			}
+		);
+
+		return $orders;
 	}
 }
