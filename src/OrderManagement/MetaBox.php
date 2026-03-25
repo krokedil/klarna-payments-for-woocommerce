@@ -169,7 +169,7 @@ class MetaBox extends OrderMetabox {
 		);
 
 		if ( ! empty( $session_id ) ) {
-			$scheduled_actions = ScheduledActions::get_scheduled_actions( $session_id );
+			$scheduled_actions = ScheduledActions::get_scheduled_actions( $session_id, gmdate( 'Y-m-d H:i:s', $order->get_date_created()->getTimestamp() ) );
 			$link_text         = count( $scheduled_actions['complete'] ) . ' completed, ' . count( $scheduled_actions['failed'] ) . ' failed, ' . count( $scheduled_actions['pending'] ) . ' pending';
 			$link_url          = admin_url( 'admin.php?page=wc-status&tab=action-scheduler&s=' . rawurlencode( $session_id ) . '&action=-1&paged=1&action2=-1' );
 
