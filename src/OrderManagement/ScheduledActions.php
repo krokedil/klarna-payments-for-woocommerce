@@ -21,7 +21,11 @@ class ScheduledActions {
 	 */
 	public static function get_scheduled_actions( $session_id, $order_created_date ) {
 		$statuses          = array( 'complete', 'failed', 'pending' );
-		$scheduled_actions = array();
+		$scheduled_actions = array(
+			'complete' => array(),
+			'failed'   => array(),
+			'pending'  => array(),
+		);
 
 		$order_created_timestamp = strtotime( $order_created_date );
 		$three_months_ago        = strtotime( '-3 months' );
