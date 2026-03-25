@@ -567,7 +567,7 @@ class MetaBox extends OrderMetabox {
 			return array();
 		}
 
-		if ( empty( $transaction_id ) ) {
+		if ( empty( $transaction_id ) || empty( $order_date ) ) {
 			return array();
 		}
 
