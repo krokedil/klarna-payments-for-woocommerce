@@ -16,7 +16,7 @@ class ScheduledActions {
 	 * Gets the scheduled actions for the order.
 	 *
 	 * @param string $session_id The session ID.
-	 * @param string $order_created_date The order creation date in 'Y-m-d H:i:s' format (UTC).
+	 * @param string $order_created_date The order creation date.
 	 * @return array
 	 */
 	public static function get_scheduled_actions( $session_id, $order_created_date ) {
