@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0727f3a16d4a207cd9421892a67640d2",
+    "content-hash": "7a912c705e7da14871c856af4e63be33",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -71,16 +71,16 @@
         },
         {
             "name": "krokedil/klarna-express-checkout",
-            "version": "dev-develop-kec-1-step-for-all",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "3fff00a7c533831d3fb18314c446bbd06ab1da5a"
+                "reference": "de32defeea1d8fc178ff641b45630ce57e0876de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/3fff00a7c533831d3fb18314c446bbd06ab1da5a",
-                "reference": "3fff00a7c533831d3fb18314c446bbd06ab1da5a",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/de32defeea1d8fc178ff641b45630ce57e0876de",
+                "reference": "de32defeea1d8fc178ff641b45630ce57e0876de",
                 "shasum": ""
             },
             "require": {
@@ -136,10 +136,10 @@
             ],
             "description": "A Klarna Express Checkout solution for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-express-checkout/tree/develop-kec-1-step-for-all",
+                "source": "https://github.com/krokedil/klarna-express-checkout/tree/2.1.2",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2026-03-11T10:07:00+00:00"
+            "time": "2026-03-31T06:57:21+00:00"
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
@@ -361,16 +361,16 @@
         },
         {
             "name": "krokedil/support",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/support.git",
-                "reference": "99059b1b27cc4ed7667c1d04968aec45413fe533"
+                "reference": "e4ee49d1c862e45fb284247c84d7c1f5583cb6ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/support/zipball/99059b1b27cc4ed7667c1d04968aec45413fe533",
-                "reference": "99059b1b27cc4ed7667c1d04968aec45413fe533",
+                "url": "https://api.github.com/repos/krokedil/support/zipball/e4ee49d1c862e45fb284247c84d7c1f5583cb6ba",
+                "reference": "e4ee49d1c862e45fb284247c84d7c1f5583cb6ba",
                 "shasum": ""
             },
             "require": {
@@ -410,10 +410,10 @@
             ],
             "description": "The support library allows you to extend your plugin with logging that can be optionally toggled through your plugin settings, generate an entry in the system report from your plugin settings, and report issues to the system report.",
             "support": {
-                "source": "https://github.com/krokedil/support/tree/1.0.2",
+                "source": "https://github.com/krokedil/support/tree/1.0.3",
                 "issues": "https://github.com/krokedil/support/issues"
             },
-            "time": "2025-10-08T12:47:46+00:00"
+            "time": "2026-03-30T09:30:26+00:00"
         },
         {
             "name": "krokedil/woocommerce",
@@ -507,9 +507,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "krokedil/klarna-express-checkout": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
