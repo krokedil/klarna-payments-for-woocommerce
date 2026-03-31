@@ -69,7 +69,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->id                 = 'klarna_payments';
 		$this->method_title       = __( 'Klarna for WooCommerce', 'klarna-payments-for-woocommerce' );
 		$this->method_description = __( 'Supercharge your business with one single plugin for increased sales and enhanced shopping experiences.', 'klarna-payments-for-woocommerce' );
-		$this->has_fields         = true;
+		$this->has_fields         = 'redirect' !== $this->get_option( 'checkout_flow', 'popout' );
 		$this->supports           = apply_filters(
 			'wc_klarna_payments_supports',
 			array(
@@ -329,7 +329,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Override checkout form template if Klarna Checkout is the selected payment method.
+	 * Override checkout form template if Klarna Payments is selected.
 	 *
 	 * @param string $located Target template file location.
 	 * @param string $template_name The name of the template.
@@ -340,7 +340,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( is_checkout() ) {
 			if ( 'checkout/payment-method.php' === $template_name ) {
 				if ( 'klarna_payments' === $args['gateway']->id ) {
-					$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
+					$checkout_flow = $this->get_option( 'checkout_flow', 'popout' );
+					if ( 'redirect' !== $checkout_flow ) {
+						$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
+					}
 				}
 			}
 
@@ -379,6 +382,12 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return $this->process_blocks_order( $order );
 		}
 
+		$checkout_flow = $this->get_option( 'checkout_flow', 'popout' );
+
+		if ( 'redirect' === $checkout_flow ) {
+			return $this->process_blocks_order( $order );
+		}
+
 		return $this->process_checkout_order( $order );
 	}
 
@@ -395,6 +404,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Process WooCommerce checkout order.
 	 *
+	 * @throws Exception If session creation fails or required session data is missing.
+	 *
 	 * @param WC_Order $order The WooCommerce order.
 	 * @return array
 	 */
@@ -410,12 +421,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
 
 			if ( empty( $klarna_country ) || empty( $klarna_session_id ) ) {
-				return array(
-					'result'   => 'error',
-					'messages' => array(
-						__( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' ),
-					),
-				);
+				$message = __( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' );
+				throw new Exception( esc_html( $message ) );
 			}
 		} else {
 			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
@@ -464,6 +471,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Process WooCommerce blocks order.
 	 *
+	 * @throws Exception If session creation or HPP creation fails.
+	 *
 	 * @param WC_Order $order The WooCommerce order.
 	 * @return array
 	 */
@@ -473,11 +482,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Check for any errors.
 		if ( is_wp_error( $session ) ) {
-			return array(
-				'result'   => 'error',
-				'redirect' => '#',
-				'message'  => __( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
-			);
+			$message = __( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' );
+			throw new Exception( esc_html( $message ) );
 		}
 
 		$session_id     = KP_WC()->session->get_klarna_session_id();
@@ -503,11 +509,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order->save();
 
 		if ( is_wp_error( $hpp ) ) {
-			return array(
-				'result'   => 'error',
-				'redirect' => '#',
-				'message'  => __( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' ),
-			);
+			$message = __( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' );
+			throw new Exception( esc_html( $message ) );
 		}
 
 		return array(
@@ -519,8 +522,6 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
 	 * Notification listener for Pending orders. This plugin doesn't handle pending orders, but it does allow Klarna
 	 * Order Management plugin to hook in and process pending orders.
-	 *
-	 * @link https://developers.klarna.com/en/us/kco-v3/pending-orders
 	 *
 	 * @hook woocommerce_api_wc_gateway_klarna_payments
 	 */
