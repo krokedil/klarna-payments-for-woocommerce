@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 10.6.1
-Stable tag: 4.8.0
+Stable tag: 4.9.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-03-31    - version 4.9.0 =
+* Feature       - [KEC] Express Checkout now supports a one-step flow for all users, simplifying the purchase process.
+* Feature       - Added support for an optional redirect checkout flow.
+* Fix           - Updated the "Set-up guidelines" link on the settings page.
+* Tweak         - [Support] Explicitly disabled autoloading the system report option to prevent it from being loaded on every request, as it is only needed when issuing a request, and viewing the system report.
+
 = 2026-03-24    - version 4.8.0 =
 * Feature       - Order management functionality is now built directly into the plugin, eliminating the need for external code packages.
 
