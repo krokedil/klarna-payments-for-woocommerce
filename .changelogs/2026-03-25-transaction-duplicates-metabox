@@ -1,0 +1,4 @@
+Type: Feature
+Needs Documentation: yes
+
+Added an "orders with the same reference" section to the Klarna Order Management admin metabox to show other WooCommerce orders sharing the same Klarna transaction ID, helping merchants identify related or duplicate orders. The filter kom_skip_matching_reference_orders allows the disabling of this feature.
