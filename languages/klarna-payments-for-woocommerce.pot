@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2026-03-31 08:18:42+00:00\n"
+"POT-Creation-Date: 2026-04-08 06:56:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1364,50 +1364,58 @@ msgstr ""
 msgid "Scheduled actions"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:183
-msgid "Advanced"
+#: src/OrderManagement/MetaBox.php:205
+msgid "Orders with same reference"
 msgstr ""
 
 #: src/OrderManagement/MetaBox.php:207
+msgid "These orders share the same Klarna transaction ID."
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:213
+msgid "Advanced"
+msgstr ""
+
+#: src/OrderManagement/MetaBox.php:237
 msgid "Choose an action..."
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:210
+#: src/OrderManagement/MetaBox.php:240
 msgid "Apply"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:250
+#: src/OrderManagement/MetaBox.php:280
 msgid "Order management"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:251
+#: src/OrderManagement/MetaBox.php:281
 msgid ""
 "Disable this to turn off the automatic synchronization with the Klarna "
 "Merchant Portal. When disabled, any changes in either system have to be "
 "done manually."
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:362 src/OrderManagement/MetaBox.php:376
+#: src/OrderManagement/MetaBox.php:392 src/OrderManagement/MetaBox.php:406
 msgid "Capture order"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:376
+#: src/OrderManagement/MetaBox.php:406
 msgid "Activates the order with Klarna."
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:390 src/OrderManagement/MetaBox.php:404
+#: src/OrderManagement/MetaBox.php:420 src/OrderManagement/MetaBox.php:434
 msgid "Cancel order"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:404
+#: src/OrderManagement/MetaBox.php:434
 msgid "Cancels the order with Klarna."
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:418 src/OrderManagement/MetaBox.php:432
+#: src/OrderManagement/MetaBox.php:448 src/OrderManagement/MetaBox.php:462
 msgid "Get customer"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:432
+#: src/OrderManagement/MetaBox.php:462
 msgid "Gets the customer data from Klarna and saves it to the WooCommerce order."
 msgstr ""
 
@@ -1443,20 +1451,6 @@ msgstr ""
 #: src/OrderManagement/ReturnFee.php:368
 #. translators: %1$s: return fee amount, %2$s: refund reason
 msgid "Return fee: %1$s<br>%2$s"
-msgstr ""
-
-#: src/OrderManagement/ScheduledActions.php:58
-msgid "Scheduled actions "
-msgstr ""
-
-#: src/OrderManagement/ScheduledActions.php:60
-msgid "See all actions scheduled for this order."
-msgstr ""
-
-#: src/OrderManagement/ScheduledActions.php:67
-#. translators: %1$d: number of completed orders, %2$d: number of failed
-#. orders, %3$d: number of pending orders.
-msgid "%1$d completed, %2$d failed, %3$d pending"
 msgstr ""
 
 #: src/OrderManagement/SellersApp.php:141

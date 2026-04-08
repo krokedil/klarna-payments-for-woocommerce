@@ -1,4 +1,8 @@
 *** Klarna for WooCommerce Changelog ***
+2026-04-08      - version 4.10.0
+* Feature       - Added an "orders with the same reference" section to the Klarna Order Management admin metabox to show other WooCommerce orders sharing the same Klarna transaction ID, helping merchants identify related or duplicate orders. The filter 'kom_skip_matching_reference_orders' allows the disabling of this feature.
+* Enhancement   - Improved performance and accuracy of the scheduled actions query.
+
 2026-03-31      - version 4.9.0
 * Feature       - [KEC] Express Checkout now supports a one-step flow for all users, simplifying the purchase process.
 * Feature       - Added support for an optional redirect checkout flow.

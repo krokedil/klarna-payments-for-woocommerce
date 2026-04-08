@@ -6,8 +6,8 @@ Requires at least: 6.7
 Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.6.1
-Stable tag: 4.9.0
+WC tested up to: 10.6.2
+Stable tag: 4.10.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-04-08    - version 4.10.0 =
+* Feature       - Added an "orders with the same reference" section to the Klarna Order Management admin metabox to show other WooCommerce orders sharing the same Klarna transaction ID, helping merchants identify related or duplicate orders. The filter 'kom_skip_matching_reference_orders' allows the disabling of this feature.
+* Enhancement   - Improved performance and accuracy of the scheduled actions query.
+
 = 2026-03-31    - version 4.9.0 =
 * Feature       - [KEC] Express Checkout now supports a one-step flow for all users, simplifying the purchase process.
 * Feature       - Added support for an optional redirect checkout flow.
