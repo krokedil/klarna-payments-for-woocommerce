@@ -375,11 +375,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$support_link = add_query_arg( 'subsection', 'support', $setting_link );
 
 			$plugin_links = array(
-				/* translators: [customer-facing]. */
+				/* translators: [merchant-facing]. */
 				'<a href="' . $setting_link . '">' . __( 'Settings', 'klarna-payments-for-woocommerce' ) . '</a>',
-				/* translators: [customer-facing]. */
+				/* translators: [merchant-facing]. */
 				'<a href="https://docs.woocommerce.com/document/klarna-payments/">' . __( 'Docs', 'klarna-payments-for-woocommerce' ) . '</a>',
-				/* translators: [customer-facing]. */
+				/* translators: [merchant-facing]. */
 				'<a href="' . $support_link . '">' . __( 'Support', 'klarna-payments-for-woocommerce' ) . '</a>',
 			);
 
