@@ -129,11 +129,13 @@ class KP_Klarna_Express_Checkout {
 
 		// Verify the order.
 		if ( ! $order ) {
+			/* translators: [customer-facing]. */
 			throw new Exception( __( 'Invalid order.', 'klarna-payments-for-woocommerce' ) ); // phpcs:ignore
 		}
 
 		// Verify the order key.
 		if ( $order->get_order_key() !== $order_key ) {
+			/* translators: [customer-facing]. */
 			throw new Exception( __( 'Invalid order key.', 'klarna-payments-for-woocommerce' ) ); // phpcs:ignore
 		}
 

@@ -290,6 +290,7 @@ class ReturnFee {
 
 		// Create the fee item.
 		$fee = new \WC_Order_Item_Fee();
+		/* translators: [merchant-facing]. */
 		$fee->set_name( __( 'Return Fee', 'klarna-payments-for-woocommerce' ) );
 		$fee->set_tax_class( $tax_class_slug );
 		$fee->set_tax_status( 'taxable' );
@@ -364,7 +365,7 @@ class ReturnFee {
 		}
 
 		return sprintf(
-		/* translators: %1$s: return fee amount, %2$s: refund reason */
+			/* translators: [merchant-facing]. %1$s: return fee amount, %2$s: refund reason   */
 			__( 'Return fee: %1$s<br>%2$s', 'klarna-payments-for-woocommerce' ),
 			wc_price( $total, array( 'currency' => $order->get_currency() ) ),
 			$reason

@@ -102,6 +102,7 @@ class KP_Settings_Page {
 		$setting_is_active = self::get_setting_status( $section['id'] );
 		$feature_status    = array(
 			'class' => $setting_is_active ? ' active' : '',
+			/* translators: [merchant-facing]. */
 			'title' => $setting_is_active ? __( 'Active', 'klarna-payments-for-woocommerce' ) : __( 'Not active', 'klarna-payments-for-woocommerce' ),
 		);
 
@@ -301,22 +302,29 @@ class KP_Settings_Page {
 
 		$wrapper_classes = $test_mode ? 'kp_settings__test_credentials' : 'kp_settings__production_credentials';
 
+		/* translators: [merchant-facing]. */
 		$label_suffix = $test_mode ? __( '(Test)', 'klarna-payments-for-woocommerce' ) : __( '(Production)', 'klarna-payments-for-woocommerce' );
+		/* translators: [merchant-facing]. */
+		$mid_label = __( 'Username', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix;
+		/* translators: [merchant-facing]. */
+		$shared_secret_label = __( 'Password', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix;
+		/* translators: [merchant-facing]. */
+		$client_id_label = __( 'Client ID', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix;
 
 		?>
 		<div class="kp_settings__credentials <?php echo esc_attr( $wrapper_classes ); ?>" style="<?php echo esc_attr( $hide ? 'display:none;' : '' ); ?>">
 			<div class="kp_settings__fields_credentials" data-field-key="<?php echo esc_attr( $key ); ?>">
 				<div class="kp_settings__field">
-					<label for="<?php echo esc_attr( $mid_key ); ?>"><?php echo esc_html( __( 'Username', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix ); ?></label>
+					<label for="<?php echo esc_attr( $mid_key ); ?>"><?php echo esc_html( $mid_label ); ?></label>
 					<input autocomplete="off new-password" type="text" class="kp_settings__fields_mid" id="<?php echo esc_attr( $mid_key ); ?>" name="<?php echo esc_attr( $mid_name ); ?>" value="<?php echo esc_attr( $settings[ $mid_key ] ?? '' ); ?>" placeholder=" " />
 				</div>
 				<div class="kp_settings__field">
-					<label for="<?php echo esc_attr( $shared_secret_key ); ?>"><?php echo esc_html( __( 'Password', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix ); ?></label>
+					<label for="<?php echo esc_attr( $shared_secret_key ); ?>"><?php echo esc_html( $shared_secret_label ); ?></label>
 					<input autocomplete="off new-password" type="password" class="kp_settings__fields_secret" id="<?php echo esc_attr( $shared_secret_key ); ?>" name="<?php echo esc_attr( $shared_secret_name ); ?>" value="<?php echo esc_attr( $settings[ $shared_secret_key ] ?? '' ); ?>" placeholder=" " />
 				</div>
 			</div>
 			<div class="kp_settings__field">
-				<label for="<?php echo esc_attr( $client_id_key ); ?>"><?php echo esc_html( __( 'Client ID', 'klarna-payments-for-woocommerce' ) . ' ' . $label_suffix ); ?></label>
+				<label for="<?php echo esc_attr( $client_id_key ); ?>"><?php echo esc_html( $client_id_label ); ?></label>
 				<input autocomplete="off new-password" type="text" class="kp_settings__fields_mid" id="<?php echo esc_attr( $client_id_key ); ?>" name="<?php echo esc_attr( $client_id_name ); ?>" value="<?php echo esc_attr( $settings[ $client_id_key ] ?? '' ); ?>" placeholder=" " />
 			</div>
 		</div>

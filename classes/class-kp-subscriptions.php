@@ -97,13 +97,14 @@ class KP_Subscription {
 		}
 
 		$recurring_token = $response['token_id'];
-		/* translators: Recurring token. */
+		/* translators: [merchant-facing]. Recurring token.   */
 		$order->add_order_note( sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $recurring_token ) );
 		self::save_recurring_token( $order_id, $recurring_token );
 
 		if ( 0.0 === floatval( $order->get_total() ) ) {
 			$order->payment_complete();
 			self::save_recurring_token( $order_id, $recurring_token );
+			/* translators: [merchant-facing]. */
 			$order->add_order_note( __( 'The order contains a free or trial subscription, and no Klarna order is associated with this purchase. A Klarna order will only be registered once the subscriber is charged.', 'klarna-payments-for-woocommerce' ) );
 
 			return new WP_Error( 'FREE_TRIAL', 'The order contains a free or trial subscription. No further processing is required.' );
@@ -150,12 +151,12 @@ class KP_Subscription {
 		$response = KP_WC()->api->create_recurring_order( kp_get_klarna_country( $renewal_order ), $recurring_token, $renewal_order->get_id() );
 		if ( ! is_wp_error( $response ) ) {
 			$klarna_order_id = $response['order_id'];
-			// Translators: Klarna order id.
+			/* translators: [merchant-facing]. Klarna order id.  */
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Klarna. Klarna order id: %s', 'klarna-payments-for-woocommerce' ), $klarna_order_id ) );
 			kp_save_order_meta_data( $renewal_order, $response );
 		} else {
 			$error_message = $response->get_error_message();
-			// Translators: Error message.
+			/* translators: [merchant-facing]. Error message.  */
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Klarna. Reason: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 		}
 
@@ -195,10 +196,11 @@ class KP_Subscription {
 
 		$response = KP_WC()->api->cancel_recurring_order( kp_get_klarna_country( $subscription ), $recurring_token );
 		if ( ! is_wp_error( $response ) ) {
+			/* translators: [merchant-facing]. */
 			$subscription->add_order_note( __( 'Subscription cancelled with Klarna Payments.', 'klarna-payments-for-woocommerce' ) );
 		} else {
 			$error_message = $response->get_error_message();
-			// Translators: Error message.
+			/* translators: [merchant-facing]. Error message.  */
 			$subscription->add_order_note( sprintf( __( 'Subscription cancellation failed with Klarna Payments. Reason: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 		}
 
@@ -267,7 +269,7 @@ class KP_Subscription {
 		$response     = KP_WC()->api->create_customer_token( kp_get_klarna_country( $subscription ), $auth_token, $subscription_id );
 		if ( is_wp_error( $response ) && 'TOKEN_FAILED' === $response->get_error_code() ) {
 			$message = sprintf(
-				/* translators: Error message. */
+				/* translators: [merchant-facing]. Error message.   */
 				__( 'Failed to create recurring token. Reason: %s', 'klarna-payments-for-woocommerce' ),
 				$response->get_error_message()
 			);
@@ -468,6 +470,7 @@ class KP_Subscription {
 					woocommerce_wp_text_input(
 						array(
 							'id'            => self::RECURRING_TOKEN,
+							/* translators: [merchant-facing]. */
 							'label'         => __( 'Klarna recurring token', 'klarna-payments-for-woocommerce' ),
 							'wrapper_class' => '_billing_company_field',
 							'value'         => $recurring_token,

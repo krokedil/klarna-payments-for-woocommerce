@@ -138,6 +138,7 @@ class SellersApp {
 
 		$order->save();
 
+		/* translators: [merchant-facing]. */
 		$order->add_order_note( __( 'Order address updated by Klarna Order management.', 'klarna-payments-for-woocommerce' ) );
 	}
 

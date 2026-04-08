@@ -375,8 +375,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$support_link = add_query_arg( 'subsection', 'support', $setting_link );
 
 			$plugin_links = array(
+				/* translators: [customer-facing]. */
 				'<a href="' . $setting_link . '">' . __( 'Settings', 'klarna-payments-for-woocommerce' ) . '</a>',
+				/* translators: [customer-facing]. */
 				'<a href="https://docs.woocommerce.com/document/klarna-payments/">' . __( 'Docs', 'klarna-payments-for-woocommerce' ) . '</a>',
+				/* translators: [customer-facing]. */
 				'<a href="' . $support_link . '">' . __( 'Support', 'klarna-payments-for-woocommerce' ) . '</a>',
 			);
 
@@ -442,8 +445,9 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 						echo wp_kses_post(
 							wpautop(
 								'<p>' . sprintf(
-									// translators: URL to docs.
+									/* translators: [customer-facing]. URL to docs.  */
 									__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
+									/* translators: [customer-facing]. */
 									esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
 								)
 							)
@@ -575,9 +579,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public static function get_pay_button_label() {
 
 			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) { // phpcs:ignore
+				/* translators: [customer-facing]. */
 				return apply_filters( 'kp_blocks_order_button_label_free', __( 'Pay with Klarna (free)', 'klarna-payments-for-woocommerce' ) );
 			}
 
+			/* translators: [customer-facing]. */
 			return apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) );
 		}
 	}

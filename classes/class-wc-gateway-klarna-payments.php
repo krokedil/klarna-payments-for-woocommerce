@@ -67,7 +67,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                 = 'klarna_payments';
+		/* translators: [customer-facing]. */
 		$this->method_title       = __( 'Klarna for WooCommerce', 'klarna-payments-for-woocommerce' );
+		/* translators: [customer-facing]. */
 		$this->method_description = __( 'Supercharge your business with one single plugin for increased sales and enhanced shopping experiences.', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = 'redirect' !== $this->get_option( 'checkout_flow', 'popout' );
 		$this->supports           = apply_filters(
@@ -143,6 +145,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 					$link_css = '';
 				}
 
+				/* translators: [customer-facing]. */
 				$what_is_klarna_text = __( 'What is Klarna?', 'klarna-payments-for-woocommerce' );
 				$link_url            = 'https://www.klarna.com';
 
@@ -421,6 +424,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
 
 			if ( empty( $klarna_country ) || empty( $klarna_session_id ) ) {
+				/* translators: [customer-facing]. */
 				$message = __( 'Failed to get required data from the Klarna session. Please try again.', 'klarna-payments-for-woocommerce' );
 				throw new Exception( esc_html( $message ) );
 			}
@@ -482,6 +486,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Check for any errors.
 		if ( is_wp_error( $session ) ) {
+			/* translators: [customer-facing]. */
 			$message = __( 'Failed to create a session with Klarna. Please try again.', 'klarna-payments-for-woocommerce' );
 			throw new Exception( esc_html( $message ) );
 		}
@@ -509,6 +514,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$order->save();
 
 		if ( is_wp_error( $hpp ) ) {
+			/* translators: [customer-facing]. */
 			$message = __( 'Failed to create a hosted payment page with Klarna. Please try again.', 'klarna-payments-for-woocommerce' );
 			throw new Exception( esc_html( $message ) );
 		}
@@ -618,6 +624,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_upsell_order = KP_WC()->api->upsell_klarna_order( $country, $klarna_order_id, $order_id );
 
 		if ( is_wp_error( $klarna_upsell_order ) ) {
+			/* translators: [customer-facing]. */
 			$error = new WP_Error( '401', __( 'Klarna did not accept the new order amount, the order has not been updated', 'klarna-payments-for-woocommerce' ) );
 			return $error;
 		}

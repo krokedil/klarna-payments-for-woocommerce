@@ -227,7 +227,9 @@ class RequestPostRefund extends RequestPost {
 				// Add sales tax line item.
 				$sales_tax = array(
 					'type'                  => 'sales_tax',
+					/* translators: [merchant-facing]. */
 					'reference'             => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
+					/* translators: [merchant-facing]. */
 					'name'                  => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
 					'quantity'              => 1,
 					'unit_price'            => $sales_tax_amount,
@@ -256,6 +258,7 @@ class RequestPostRefund extends RequestPost {
 
 				$return_fee = array(
 					'type'             => 'return_fee',
+					/* translators: [merchant-facing]. */
 					'name'             => __( 'Return fee', 'klarna-payments-for-woocommerce' ),
 					'quantity'         => 1,
 					'unit_price'       => round( -1 * ( abs( $this->return_fee['amount'] + $this->return_fee['tax_amount'] ) * 100 ) ),

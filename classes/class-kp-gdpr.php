@@ -33,6 +33,7 @@ class KP_GDPR {
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
 			// @codingStandardsIgnoreStart
 			$content =
+				/* translators: [customer-facing]. */
 				__(
 					'When you place an order in the webstore with Klarna Payments as the choosen payment method, ' .
 					'information about the products in the order (namne, price, quantity, SKU) is sent to Klarna ' .

@@ -259,6 +259,7 @@ class KP_Api {
 		$api_password = $credentials['shared_secret'] ?? false;
 
 		if ( ! $api_password ) {
+			/* translators: [merchant-facing]. */
 			return new WP_Error( 'missing_shared_secret', __( 'Missing shared secret.', 'klarna-payments-for-woocommerce' ) );
 		}
 
