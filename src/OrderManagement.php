@@ -124,8 +124,6 @@ class OrderManagement {
 		// Initialize the logger.
 		add_action( 'init', array( $this, 'initialize_logger' ) );
 
-		$this->logger = new Logger( 'klarna_order_management', wc_string_to_bool( $settings['logging'] ?? false ) );
-
 		$report_about = array(
 			array( 'id' => 'kom_auto_capture' ),
 			array( 'id' => 'kom_auto_cancel' ),
