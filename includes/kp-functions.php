@@ -28,7 +28,7 @@ function kp_extract_error_message( $response ) {
 	$code    = $response->get_error_code();
 	$message = $response->get_error_message();
 	/* translators: [merchant-facing]. */
-	$text    = __( 'Klarna Payments API Error: ', 'klarna-payments-for-woocommerce' ) . '%s %s';
+	$text = __( 'Klarna Payments API Error: ', 'klarna-payments-for-woocommerce' ) . '%s %s';
 	return sprintf( $text, $code, $message );
 }
 

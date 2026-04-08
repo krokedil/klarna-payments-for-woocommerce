@@ -287,10 +287,10 @@ class MetaBox extends OrderMetabox {
 
 		$om_status = $order->get_meta( $kom_disconnected_key ) ? 'disabled' : 'enabled';
 		/* translators: [merchant-facing]. */
-		$title     = __( 'Order management', 'klarna-payments-for-woocommerce' );
+		$title = __( 'Order management', 'klarna-payments-for-woocommerce' );
 		/* translators: [merchant-facing]. */
-		$tip       = __( 'Disable this to turn off the automatic synchronization with the Klarna Merchant Portal. When disabled, any changes in either system have to be done manually.', 'klarna-payments-for-woocommerce' );
-		$enabled   = 'enabled' === $om_status ? true : false;
+		$tip     = __( 'Disable this to turn off the automatic synchronization with the Klarna Merchant Portal. When disabled, any changes in either system have to be done manually.', 'klarna-payments-for-woocommerce' );
+		$enabled = 'enabled' === $om_status ? true : false;
 
 		ob_start();
 		self::output_toggle_switch( $title, $enabled, $tip, 'kom_order_sync--action', array( 'kom-order-sync' => $om_status ) );

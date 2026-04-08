@@ -66,9 +66,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->id                 = 'klarna_payments';
+		$this->id = 'klarna_payments';
 		/* translators: [customer-facing]. */
-		$this->method_title       = __( 'Klarna for WooCommerce', 'klarna-payments-for-woocommerce' );
+		$this->method_title = __( 'Klarna for WooCommerce', 'klarna-payments-for-woocommerce' );
 		/* translators: [customer-facing]. */
 		$this->method_description = __( 'Supercharge your business with one single plugin for increased sales and enhanced shopping experiences.', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = 'redirect' !== $this->get_option( 'checkout_flow', 'popout' );
