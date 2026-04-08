@@ -24,8 +24,10 @@ const kp_interoperability_token = {
 		});
 		this.bindKlarnaEvents();
 
-		// Set the klarna object to the window for other scripts to use as well.
-		$('body').trigger({ type: 'klarna_wc_sdk_loaded', Klarna: kp_interoperability_token.Klarna });
+		if ( this.params.client_id && '' !== this.params.client_id ) {
+			// Set the klarna object to the window for other scripts to use as well.
+			$('body').trigger({ type: 'klarna_wc_sdk_loaded', Klarna: kp_interoperability_token.Klarna });
+		}
 
 		// Check if we should send shopping data to Klarna.
 		if ( true === kp_interoperability_token.params.send_data ) {
