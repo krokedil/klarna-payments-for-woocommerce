@@ -78,7 +78,7 @@ class KECOneStepIntegration implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klar
 			return;
 		}
 
-		/* translators: [customer-facing]. */
+		/* translators: [merchant-facing]. */
 		$order->update_status( 'cancelled', __( 'Order cancelled due to expired payment request.', 'klarna-payments-for-woocommerce' ) );
 		do_action( 'kec_cancel_order', $order, $interoperability_token, array(), $payload['state'], $payload );
 	}

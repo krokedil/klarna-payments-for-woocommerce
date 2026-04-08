@@ -262,7 +262,7 @@ class KP_Assets {
 		$klarna_payments_admin_params = array(
 			'get_unavailable_features'       => WC_AJAX::get_endpoint( 'kp_wc_get_unavailable_features' ),
 			'get_unavailable_features_nonce' => wp_create_nonce( 'kp_wc_get_unavailable_features' ),
-			/* translators: [customer-facing]. */
+			/* translators: [merchant-facing]. */
 			'select_all_countries_title'     => __( 'Select all', 'klarna-payments-for-woocommerce' ),
 		);
 

@@ -440,16 +440,16 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					<div class="kp-message notice woocommerce-message notice-error">
 						<a class="woocommerce-message-close notice-dismiss"
 							href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>">
-							<?php /* translators: [customer-facing]. */ ?>
+							<?php /* translators: [merchant-facing]. */ ?>
 							<?php esc_html_e( 'Dismiss', 'klarna-payments-for-woocommerce' ); ?>
 						</a>
 						<?php
 						echo wp_kses_post(
 							wpautop(
 								'<p>' . sprintf(
-									/* translators: [customer-facing]. URL to docs.  */
-									__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
-									/* translators: [customer-facing]. */
+									/* translators: [merchant-facing]. URL to docs.  */
+									__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for WooCommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
+									/* translators: [merchant-facing]. */
 									esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
 								)
 							)

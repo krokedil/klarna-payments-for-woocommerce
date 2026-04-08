@@ -340,7 +340,7 @@ class KP_Form_Fields {
 			/* translators: [merchant-facing]. */
 			'title'       => __( 'Combine EU credentials', 'klarna-payments-for-woocommerce' ),
 			/* translators: [merchant-facing]. */
-			'label'       => __( 'Combine all EU country credentials into a single', 'klarna-payments-for-woocommerce' ),
+			'label'       => __( 'Combine all EU country credentials into a single set of credentials', 'klarna-payments-for-woocommerce' ),
 			'type'        => 'checkbox',
 			'description' => '',
 			'default'     => empty( $saved_settings ) ? 'yes' : 'no', // Default to yes for new installations, but no for existing.
