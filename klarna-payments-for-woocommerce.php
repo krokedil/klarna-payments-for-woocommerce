@@ -421,6 +421,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			?>
 			<div class="notice notice-error">
 				<p>
+					<?php /* translators: [customer-facing]. */ ?>
 					<?php esc_html_e( 'The WooCommerce plugin must be active for Klarna Payments to work.', 'klarna-payments-for-woocommerce' ); ?>
 				</p>
 			</div>
@@ -439,6 +440,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					<div class="kp-message notice woocommerce-message notice-error">
 						<a class="woocommerce-message-close notice-dismiss"
 							href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>">
+							<?php /* translators: [customer-facing]. */ ?>
 							<?php esc_html_e( 'Dismiss', 'klarna-payments-for-woocommerce' ); ?>
 						</a>
 						<?php

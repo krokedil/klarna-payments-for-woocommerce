@@ -90,11 +90,14 @@ class OrderManagement {
 						?>
 						<div class="notice notice-error">
 				
+								<?php /* translators: [merchant-facing]. */ ?>
 								<p><strong><?php esc_html_e( 'Klarna Order Management is now included in Klarna for WooCommerce.', 'klarna-payments-for-woocommerce' ); ?></strong></p>
+								<?php /* translators: [merchant-facing]. */ ?>
 								<p><?php esc_html_e( 'Starting with version 4.3.0, you no longer need the separate Klarna Order Management plugin – unless you are also using the Kustom Checkout plugin (formerly Klarna Checkout).', 'klarna-payments-for-woocommerce' ); ?></p>
 
 								<p>
 									<a href="https://docs.krokedil.com/klarna-for-woocommerce/get-started/order-management/#important-please-read" target="_blank">
+										<?php /* translators: [merchant-facing]. */ ?>
 										<?php esc_html_e( 'Read more about this change here.', 'klarna-payments-for-woocommerce' ); ?>
 									</a>
 								</p>

@@ -74,10 +74,14 @@ class KP_Settings_Page {
 		<div class="kp_settings__header">
 			<img class="kp_settings__header_logo" src="<?php echo esc_url( WC_KLARNA_PAYMENTS_PLUGIN_URL ); ?>/assets/img/klarna-icon.svg" alt="Klarna Payments" />
 			<div class="kp_settings__header_text">
+				<?php /* translators: [merchant-facing]. */ ?>
 				<h1 class="kp_settings__header_title"><?php esc_html_e( 'Klarna for WooCommerce', 'klarna-payments-for-woocommerce' ); ?></h1>
+				<?php /* translators: [merchant-facing]. */ ?>
 				<p class="kp_settings__header_description"><?php esc_html_e( 'Supercharge your business with one single plugin for increased sales and enhanced shopping experiences.', 'klarna-payments-for-woocommerce' ); ?></p>
 				<p class="kp_settings__header_links">
+					<?php /* translators: [merchant-facing]. */ ?>
 					<a href="https://docs.klarna.com/platform/woocommerce/get-started/prerequisites/?utm_source=docs-portal" target="_blank" class="kp_settings__header_link"><?php esc_html_e( 'Set-up guidelines', 'klarna-payments-for-woocommerce' ); ?></a>
+					<?php /* translators: [merchant-facing]. */ ?>
 					<a href="https://docs.klarna.com" target="_blank" class="kp_settings__header_link"><?php esc_html_e( 'Learn more about Klarna', 'klarna-payments-for-woocommerce' ); ?></a>
 				</p>
 			</div>

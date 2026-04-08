@@ -246,6 +246,7 @@ class MetaBox extends OrderMetabox {
 						<option value=""><?php esc_attr_e( 'Choose an action...', 'woocommerce' ); ?></option>
 						<?php do_action( 'kom_meta_action_options', $order_id, $klarna_order, $actions ); ?>
 					</select>
+					<?php /* translators: [merchant-facing]. */ ?>
 					<button class="button wc-reload"><span><?php esc_html_e( 'Apply', 'woocommerce' ); ?></span></button>
 					<span class="woocommerce-help-tip" data-tip="
 					<?php
