@@ -35,6 +35,27 @@ class KP_Settings_Saved {
 	public function __construct() {
 		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'update_credential_features' ), 5 );
 		add_action( 'woocommerce_update_options_checkout_klarna_payments', array( $this, 'check_api_credentials' ), 10 );
+
+		add_filter( 'woocommerce_settings_api_sanitized_fields_klarna_payments', array( $this, 'sanitize_settings' ) );
+	}
+
+	/**
+	 * Sanitize settings before saving.
+	 *
+	 * @param array $settings The settings to sanitize.
+	 *
+	 * @return array The sanitized settings.
+	 */
+	public function sanitize_settings( $settings ) {
+		foreach ( $settings as $key => $value ) {
+			// If the key contains the string 'client_id_' then we should sanitize it.
+			if ( strpos( $key, 'client_id_' ) !== false ) {
+				$settings[ $key ] = klarna_sanitize_client_id( $value );
+				continue;
+			}
+		}
+
+		return $settings;
 	}
 
 	/**

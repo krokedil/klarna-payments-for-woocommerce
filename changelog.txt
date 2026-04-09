@@ -1,4 +1,7 @@
 *** Klarna for WooCommerce Changelog ***
+2026-04-09      - version 4.10.1
+* Fix           - Sanitize the client id before using or saving it to the settings.
+
 2026-04-08      - version 4.10.0
 * Feature       - Added an "orders with the same reference" section to the Klarna Order Management admin metabox to show other WooCommerce orders sharing the same Klarna transaction ID, helping merchants identify related or duplicate orders. The filter 'kom_skip_matching_reference_orders' allows the disabling of this feature.
 * Enhancement   - Improved performance and accuracy of the scheduled actions query.
