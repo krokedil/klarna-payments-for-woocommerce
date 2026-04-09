@@ -298,7 +298,33 @@ function kp_get_client_id( $country = null ) {
 	}
 	$prefix      = $test_mode ? 'test_' : '';
 	$setting_key = "{$prefix}client_id_{$country}";
-	return $settings[ $setting_key ] ?? '';
+	$client_id = $settings[ $setting_key ] ?? '';
+
+	return klarna_sanitize_client_id( $client_id );
+}
+
+/**
+ * Sanitize the client id to make sure it is valid.
+ * The client id should start with either klarna_live_client_ or klarna_test_client_. If it doesn't, we return an empty string.
+ * This is to prevent invalid client ids from being used in the WebSDK.
+ *
+ * @param string $client_id The client id to sanitize.
+ *
+ * @return string
+ */
+function klarna_sanitize_client_id( $client_id ) {
+	// If the client id is empty, just return it.
+	if ( empty( $client_id ) ) {
+		return $client_id;
+	}
+
+	// Ensure the client id starts with either klarna_live_client_ or klarna_test_client_. Otherwise return an empty string.
+	if ( ! preg_match( '/^(klarna_live_client_|klarna_test_client_).+$/', $client_id ) ) {
+		KP_Logger::log( "[Invalid Client ID] The client id '$client_id' is invalid. It should start with either 'klarna_live_client_' or 'klarna_test_client_'. Returning an empty string." );
+		return '';
+	}
+
+	return $client_id;
 }
 
 /**
