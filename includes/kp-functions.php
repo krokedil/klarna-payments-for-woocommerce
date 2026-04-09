@@ -298,7 +298,7 @@ function kp_get_client_id( $country = null ) {
 	}
 	$prefix      = $test_mode ? 'test_' : '';
 	$setting_key = "{$prefix}client_id_{$country}";
-	$client_id = $settings[ $setting_key ] ?? '';
+	$client_id   = $settings[ $setting_key ] ?? '';
 
 	return klarna_sanitize_client_id( $client_id );
 }

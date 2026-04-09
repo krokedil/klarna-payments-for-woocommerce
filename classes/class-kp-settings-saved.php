@@ -46,8 +46,8 @@ class KP_Settings_Saved {
 	 *
 	 * @return array The sanitized settings.
 	 */
-	public function sanitize_settings( $settings  ) {
-		foreach( $settings as $key => $value ) {
+	public function sanitize_settings( $settings ) {
+		foreach ( $settings as $key => $value ) {
 			// If the key contains the string 'client_id_' then we should sanitize it.
 			if ( strpos( $key, 'client_id_' ) !== false ) {
 				$settings[ $key ] = klarna_sanitize_client_id( $value );
