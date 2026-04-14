@@ -97,7 +97,7 @@ class KP_Subscription {
 		}
 
 		$recurring_token = $response['token_id'];
-		/* translators: [merchant-facing]. Recurring token.   */
+		/* translators: [merchant-facing]. Recurring token. */
 		$order->add_order_note( sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $recurring_token ) );
 		self::save_recurring_token( $order_id, $recurring_token );
 
@@ -151,12 +151,12 @@ class KP_Subscription {
 		$response = KP_WC()->api->create_recurring_order( kp_get_klarna_country( $renewal_order ), $recurring_token, $renewal_order->get_id() );
 		if ( ! is_wp_error( $response ) ) {
 			$klarna_order_id = $response['order_id'];
-			/* translators: [merchant-facing]. Klarna order id.  */
+			/* translators: [merchant-facing]. Klarna order id. */
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Klarna. Klarna order id: %s', 'klarna-payments-for-woocommerce' ), $klarna_order_id ) );
 			kp_save_order_meta_data( $renewal_order, $response );
 		} else {
 			$error_message = $response->get_error_message();
-			/* translators: [merchant-facing]. Error message.  */
+			/* translators: [merchant-facing]. Error message. */
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Klarna. Reason: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 		}
 
@@ -200,7 +200,7 @@ class KP_Subscription {
 			$subscription->add_order_note( __( 'Subscription cancelled with Klarna Payments.', 'klarna-payments-for-woocommerce' ) );
 		} else {
 			$error_message = $response->get_error_message();
-			/* translators: [merchant-facing]. Error message.  */
+			/* translators: [merchant-facing]. Error message. */
 			$subscription->add_order_note( sprintf( __( 'Subscription cancellation failed with Klarna Payments. Reason: %1$s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 		}
 
@@ -269,7 +269,7 @@ class KP_Subscription {
 		$response     = KP_WC()->api->create_customer_token( kp_get_klarna_country( $subscription ), $auth_token, $subscription_id );
 		if ( is_wp_error( $response ) && 'TOKEN_FAILED' === $response->get_error_code() ) {
 			$message = sprintf(
-				/* translators: [merchant-facing]. Error message.   */
+				/* translators: [merchant-facing]. Error message. */
 				__( 'Failed to create recurring token. Reason: %s', 'klarna-payments-for-woocommerce' ),
 				$response->get_error_message()
 			);

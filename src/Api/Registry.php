@@ -41,7 +41,7 @@ class Registry {
 				wc_doing_it_wrong(
 					__METHOD__,
 					sprintf(
-					/* translators: [merchant-facing]. 1: The name of the incorrect class. 2: The name of the base Controller class.   */
+					/* translators: [merchant-facing]. 1: The name of the incorrect class. 2: The name of the base Controller class. */
 						__( 'The controller %1$s must extend the %2$s class.', 'klarna-payments-for-woocommerce' ),
 						is_object( $controller ) ? get_class( $controller ) : gettype( $controller ),
 						Controller::class

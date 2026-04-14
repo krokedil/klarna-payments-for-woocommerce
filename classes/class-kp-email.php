@@ -42,7 +42,7 @@ if ( ! class_exists( 'KP_Email' ) ) {
 					<?php
 					echo wp_kses(
 						sprintf(
-							/* translators: [customer-facing]. 1. Klarna customer service URL. 2. Klarnas app url.  */
+							/* translators: [customer-facing]. 1. Klarna customer service URL. 2. Klarnas app url. */
 							__(
 								'Your payment is processed by our partner %1$s. You will shortly receive instructions on how to complete your payment. You can manage all your payments via Klarna.com or in the %2$s',
 								'klarna-payments-for-woocommerce'

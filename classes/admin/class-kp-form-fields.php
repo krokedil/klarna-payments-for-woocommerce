@@ -258,7 +258,7 @@ class KP_Form_Fields {
 
 		/* translators: [merchant-facing]. */
 		$privacy_policy_html = '<a href="https://portal.klarna.com/privacy-policy" target="_blank">' . __( 'Klarna Merchant Privacy Notice', 'klarna-payments-for-woocommerce' ) . '</a>';
-		/* translators: [merchant-facing]. %s: privacy policy link.  */
+		/* translators: [merchant-facing]. %s: privacy policy link. */
 		$credentials_html = sprintf( __( 'By activating Klarna using API credentials you agree to and accept the %s.', 'klarna-payments-for-woocommerce' ), $privacy_policy_html );
 
 		$credentials_section = array(
@@ -280,7 +280,7 @@ class KP_Form_Fields {
 				'type'        => 'kp_text_info',
 				/* translators: [merchant-facing]. */
 				'title'       => __( 'Client Identifier & API Credentials', 'klarna-payments-for-woocommerce' ),
-				/* translators: [merchant-facing]. %s: merchant portal link.  */
+				/* translators: [merchant-facing]. %s: merchant portal link. */
 				'description' => sprintf( __( 'Enter the credentials for production and test for each market Klarna is used. Get the client identifier and API credentials from the %1$s, under Settings. <br><br><b>%2$s</b>', 'klarna-payments-for-woocommerce' ), $merchant_portal_html, $credentials_html ),
 			),
 			'available_countries'      => array(
@@ -308,7 +308,7 @@ class KP_Form_Fields {
 				'type'        => 'kp_text_info',
 				'class'       => 'kp_settings__send_shopping_data',
 				'description' => sprintf(
-					/* translators: [merchant-facing]. %s: link to Klarna's privacy policy   */
+					/* translators: [merchant-facing]. %s: link to Klarna's privacy policy */
 					__( 'Sharing your customer\'s data with Klarna improves the customer\'s experience and makes disputes easier to handle. Learn more about <a href="%s" target="_blank">how we handle customer data</a>. The recipient\'s name, email, phone number, and shipping address (street, postal code, city, and country) will be included in this data.', 'klarna-payments-for-woocommerce' ),
 					'https://www.klarna.com/international/privacy-policy/'
 				),
@@ -529,7 +529,7 @@ class KP_Form_Fields {
 	 * @return array
 	 */
 	private static function get_eu_country_fields( $key, $name ) {
-		/* translators: [merchant-facing]. %s: country name.  */
+		/* translators: [merchant-facing]. %s: country name. */
 		$title = sprintf( __( 'Credentials for %s:', 'klarna-payments-for-woocommerce' ), $name );
 
 		$fields = self::get_credential_fields( $key, $title );

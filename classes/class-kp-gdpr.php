@@ -35,8 +35,8 @@ class KP_GDPR {
 			$content =
 				/* translators: [customer-facing]. */
 				__(
-					'When you place an order in the webstore with Klarna Payments as the choosen payment method, ' .
-					'information about the products in the order (namne, price, quantity, SKU) is sent to Klarna ' .
+					'When you place an order in the webstore with Klarna Payments as the chosen payment method, ' .
+					'information about the products in the order (name, price, quantity, SKU) is sent to Klarna ' .
 					'together with your billing and shipping address. Klarna then responds with a unique transaction ID.' .
 					'This ID is stored in the order in WooCommerce for future reference.',
 					'klarna-payments-for-woocommerce'

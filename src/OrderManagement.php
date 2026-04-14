@@ -344,7 +344,7 @@ class OrderManagement {
 				$order->update_meta_data( $token_key, $recurring_token );
 				$order->add_order_note(
 					sprintf(
-					/* translators: [merchant-facing]. 1: User name, 2: Existing token, 3: New token.  */
+					/* translators: [merchant-facing]. 1: User name, 2: Existing token, 3: New token. */
 						__( '%1$s updated the subscription recurring token from "%2$s" to "%3$s".', 'klarna-payments-for-woocommerce' ),
 						ucfirst( wp_get_current_user()->display_name ),
 						$existing_token,
@@ -400,7 +400,7 @@ class OrderManagement {
 				} else {
 					$reason = $response->get_error_message();
 					if ( ! empty( $reason ) ) {
-						/* translators: [merchant-facing]. %s: error message from Klarna.  */
+						/* translators: [merchant-facing]. %s: error message from Klarna. */
 						$order_note = sprintf( __( 'Could not update Klarna order lines: %s.', 'klarna-payments-for-woocommerce' ), $reason );
 					} else {
 						/* translators: [merchant-facing]. */
@@ -520,7 +520,7 @@ class OrderManagement {
 						$error_message = str_replace( '. Capture not possible.', sprintf( ': %s %s.', $klarna_order->remaining_authorized_amount / 100, $klarna_order->purchase_currency ), $error_message );
 					}
 
-					/* translators: [merchant-facing]. %s: Error message from Klarna.  */
+					/* translators: [merchant-facing]. %s: Error message from Klarna. */
 					$order->update_status( 'on-hold', sprintf( __( 'Could not capture Klarna order. %s', 'klarna-payments-for-woocommerce' ), $error_message ) );
 					return new \WP_Error( 'capture_failed', 'Capture failed.', $error_message );
 				}
@@ -575,7 +575,7 @@ class OrderManagement {
 		$klarna_order = $this->retrieve_klarna_order( $order_id );
 
 		if ( is_wp_error( $klarna_order ) ) {
-			/* translators: [merchant-facing]. %s Klarna error message.  */
+			/* translators: [merchant-facing]. %s Klarna error message. */
 			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-payments-for-woocommerce' ), $klarna_order->get_error_message() ) );
 			$order->save();
 
@@ -622,7 +622,7 @@ class OrderManagement {
 
 		$response = $request->request();
 		if ( is_wp_error( $response ) ) {
-			/* translators: [merchant-facing]. %s Klarna error message.  */
+			/* translators: [merchant-facing]. %s Klarna error message. */
 			$order->add_order_note( \sprintf( __( 'Could not refund Klarna order. %s.', 'klarna-payments-for-woocommerce' ), $response->get_error_message() ) );
 			$order->save();
 
@@ -631,7 +631,7 @@ class OrderManagement {
 
 		$applied_return_fees = apply_filters( 'klarna_applied_return_fees', array() );
 
-		/* translators: [merchant-facing]. refund amount, refund id.  */
+		/* translators: [merchant-facing]. refund amount, refund id. */
 		$text = __( 'Processing a refund of %1$s with Klarna', 'klarna-payments-for-woocommerce' );
 		if ( ! empty( \floatval( $applied_return_fees['amount'] ?? 0 ) ) ) {
 			$total_return_fee_amount     = $applied_return_fees['amount'] ?? 0;
@@ -641,7 +641,7 @@ class OrderManagement {
 
 			$formatted_total_return_fees = wc_price( $total_return_fees, array( 'currency' => $order->get_currency() ) );
 
-			/* translators: [merchant-facing]. 1: original amount, 2: return fee amount.  */
+			/* translators: [merchant-facing]. 1: original amount, 2: return fee amount. */
 			$extra_text = \sprintf( __( ' (original amount of %1$s - return fee of %2$s)', 'klarna-payments-for-woocommerce' ), $original_amount, $formatted_total_return_fees );
 			$text      .= $extra_text;
 		}

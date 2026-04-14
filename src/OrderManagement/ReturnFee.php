@@ -370,7 +370,7 @@ class ReturnFee {
 		}
 
 		return sprintf(
-			/* translators: [merchant-facing]. %1$s: return fee amount, %2$s: refund reason   */
+			/* translators: [merchant-facing]. %1$s: return fee amount, %2$s: refund reason */
 			__( 'Return fee: %1$s<br>%2$s', 'klarna-payments-for-woocommerce' ),
 			wc_price( $total, array( 'currency' => $order->get_currency() ) ),
 			$reason
