@@ -196,7 +196,7 @@ abstract class Request {
 			. ' - OM: ' . WC_KLARNA_PAYMENTS_VERSION
 			. ' - PHP Version: ' . phpversion()
 			. ' - Krokedil',
-			empty( $url ) ? $this->get_api_url_base() : $url
+			empty( $url ) ? $this->get_request_url() : $url
 		);
 	}
 
