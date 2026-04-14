@@ -28,17 +28,16 @@ abstract class KP_Requests_Post extends KP_Requests {
 	/**
 	 * Build and return proper request arguments for this request type.
 	 *
-	 * @param string $url The request URL, forwarded to get_user_agent() for the http_headers_useragent filter.
 	 * @return array Request arguments
 	 */
-	protected function get_request_args( $url = '' ) {
+	protected function get_request_args() {
 		$body = $this->get_body();
 
 		return apply_filters(
 			$this->request_filter,
 			array(
 				'headers'    => $this->get_request_headers(),
-				'user-agent' => $this->get_user_agent( $url ),
+				'user-agent' => $this->get_user_agent(),
 				'method'     => $this->method,
 				'timeout'    => apply_filters( 'wc_kp_request_timeout', 10 ),
 				'body'       => wp_json_encode( apply_filters( 'kp_wc_api_request_args', $body ) ),
