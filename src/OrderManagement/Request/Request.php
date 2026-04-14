@@ -184,7 +184,7 @@ abstract class Request {
 
 	/**
 	 * Get the user agent via filter 'http_headers_useragent'.
-	 * The full request URL is passed as the 2nd parameter so callbacks can make URL-specific
+	 * The full request URL is passed as the 2nd parameter so callbacks can make URL-specific adjustments.
 	 *
 	 * @return string
 	 */
