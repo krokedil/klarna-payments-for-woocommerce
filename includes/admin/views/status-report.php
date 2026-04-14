@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<tr>
 		<th colspan="6" data-export-label="Klarna Payments Request Log">
 			<?php /* translators: [merchant-facing]. */ ?>
-			<h2><?php esc_html_e( 'Klarna Payments', 'klarna-payments-for-woocommerce' ); ?><?php echo wp_kses_post( wc_help_tip( esc_html__( 'Klarna Payments System Status.', 'klarna-payments-for-woocommerce' ) ) ); ?></h2>
+			<h2><?php esc_html_e( 'Klarna Payments', 'klarna-payments-for-woocommerce' ); ?><?php /* translators: [merchant-facing] */ ?><?php echo wp_kses_post( wc_help_tip( esc_html__( 'Klarna Payments System Status.', 'klarna-payments-for-woocommerce' ) ) ); ?></h2>
 		</th>
 	</tr>
 	<?php
@@ -100,7 +100,7 @@ if ( ( isset( $test_list_of_countries ) ) && ( count( $test_list_of_countries ) 
 		<tr>
 			<th colspan="6" data-export-label="Klarna Countries">
 				<?php /* translators: [merchant-facing]. */ ?>
-				<h2><?php esc_html_e( 'Klarna Payments Countries', 'klarna-payments-for-woocommerce' ); ?><?php echo wp_kses_post( wc_help_tip( esc_html__( 'Klarna Payments Countries System Status.', 'klarna-payments-for-woocommerce' ) ) ); ?></h2>
+				<h2><?php esc_html_e( 'Klarna Payments Countries', 'klarna-payments-for-woocommerce' ); ?><?php /* translators: [merchant-facing] */ ?><?php echo wp_kses_post( wc_help_tip( esc_html__( 'Klarna Payments Countries System Status.', 'klarna-payments-for-woocommerce' ) ) ); ?></h2>
 			</th>
 		</tr>
 	</thead>
