@@ -158,7 +158,7 @@ abstract class Request {
 	 */
 	public function request() {
 		$url  = $this->get_request_url();
-		$args = $this->get_request_args();
+		$args = $this->get_request_args( $url );
 		if ( is_wp_error( $args ) || ( isset( $args['body'] ) && is_null( json_decode( $args['body'] ) ) ) ) {
 			return is_wp_error( $args ) ? $args : new \WP_Error( 'invalid_json', __( 'Invalid JSON response from the server.', 'woocommerce' ) );
 		}
@@ -185,16 +185,18 @@ abstract class Request {
 	/**
 	 * Get the user agent via filter 'http_headers_useragent'.
 	 *
+	 * @param string $url The request URL, passed as the 2nd parameter to the filter.
 	 * @return string
 	 */
-	protected function get_user_agent() {
+	protected function get_user_agent( $url = '' ) {
 		return apply_filters(
 			'http_headers_useragent',
 			'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' )
 			. ' - WooCommerce: ' . WC()->version
 			. ' - OM: ' . WC_KLARNA_PAYMENTS_VERSION
 			. ' - PHP Version: ' . phpversion()
-			. ' - Krokedil'
+			. ' - Krokedil',
+			empty( $url ) ? $this->get_api_url_base() : $url
 		);
 	}
 
@@ -306,16 +308,17 @@ abstract class Request {
 	/**
 	 * Builds the request args for a request.
 	 *
+	 * @param string $url The request URL, forwarded to get_user_agent() for the http_headers_useragent filter.
 	 * @return array|\WP_Error
 	 */
-	public function get_request_args() {
+	public function get_request_args( $url = '' ) {
 		$headers = $this->get_request_headers();
 		if ( is_wp_error( $headers ) ) {
 			return $headers;
 		}
 		$args = array(
 			'headers'    => $headers,
-			'user-agent' => $this->get_user_agent(),
+			'user-agent' => $this->get_user_agent( $url ),
 			'method'     => $this->method,
 			'timeout'    => apply_filters( 'kom_request_timeout', 10 ),
 		);
