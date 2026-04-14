@@ -69,9 +69,9 @@ class KP_Settings_Saved {
 	}
 
 	/**
-	 * Stores client id validation errors if any were detected.
+	 * Stores client ID validation errors if any were detected.
 	 *
-	 * @param array $messages Client id error messages.
+	 * @param array $messages Client ID error messages.
 	 *
 	 * @return void
 	 */
@@ -81,13 +81,18 @@ class KP_Settings_Saved {
 			return;
 		}
 
-		update_option( 'kp_client_id_error', array_values( array_unique( $messages ) ) );
+		$messages = array_values( array_unique( $messages ) );
+		if ( false === get_option( 'kp_client_id_error', false ) ) {
+			add_option( 'kp_client_id_error', $messages, '', 'no' );
+			return;
+		}
+		update_option( 'kp_client_id_error', $messages, false );
 	}
 
 	/**
-	 * Gets a readable validation message for an invalid client id field.
+	 * Gets a readable validation message for an invalid client ID field.
 	 *
-	 * @param string $key Client id setting key.
+	 * @param string $key Client ID setting key.
 	 *
 	 * @return string
 	 */
