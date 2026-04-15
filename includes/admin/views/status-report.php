@@ -15,7 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<tr>
 		<th colspan="6" data-export-label="Klarna Payments Request Log">
 			<?php /* translators: [merchant-facing]. */ ?>
-			<h2><?php esc_html_e( 'Klarna Payments', 'klarna-payments-for-woocommerce' ); ?><?php /* translators: [merchant-facing] */ ?><?php echo wp_kses_post( wc_help_tip( esc_html__( 'Klarna Payments System Status.', 'klarna-payments-for-woocommerce' ) ) ); ?></h2>
+			<h2>
+				<?php
+				esc_html_e( 'Klarna Payments', 'klarna-payments-for-woocommerce' );
+				/* translators: [merchant-facing]. */
+				echo wp_kses_post( wc_help_tip( esc_html__( 'Klarna Payments System Status.', 'klarna-payments-for-woocommerce' ) ) );
+				?>
+			</h2>
 		</th>
 	</tr>
 	<?php
