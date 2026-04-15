@@ -236,7 +236,7 @@ class KP_Session {
 
 		$order = wc_get_order( $order );
 		if ( empty( $order ) ) {
-			/* translators: [merchant-facing]. */
+			/* translators: [customer-facing]. */
 			return new WP_Error( 'kp_order_not_found', __( 'Order was not found', 'klarna-payments-for-woocommerce' ), $order );
 		}
 
