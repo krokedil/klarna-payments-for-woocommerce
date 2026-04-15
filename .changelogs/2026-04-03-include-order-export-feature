@@ -1,0 +1,4 @@
+Type: Feature
+Needs Documentation: yes
+
+Added an "Export order for support" button to the order edit page, allowing order information to be exported.

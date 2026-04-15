@@ -2,6 +2,7 @@
 namespace Krokedil\Klarna\OrderManagement;
 
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderMetabox;
+use KrokedilKlarnaPaymentsDeps\Krokedil\Support\OrderSupport;
 use Krokedil\Klarna\OrderManagement;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,12 +23,20 @@ class MetaBox extends OrderMetabox {
 	protected $order_management;
 
 	/**
+	 * OrderSupport instance.
+	 *
+	 * @var OrderSupport
+	 */
+	protected $order_support;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param OrderManagement $order_management Klarna Order Management instance.
 	 */
 	public function __construct( $order_management ) {
 		$this->order_management = $order_management;
+		$this->order_support    = new OrderSupport();
 		parent::__construct( 'klarna-om', 'Klarna Order Management', 'klarna_payments' );
 
 		add_action( 'add_meta_boxes', array( $this, 'kom_meta_box' ) );
@@ -179,6 +188,7 @@ class MetaBox extends OrderMetabox {
 			);
 
 		}
+		$this->order_support->add_export_order_button( $order, true );
 
 		$transaction_id = $order->get_transaction_id();
 
