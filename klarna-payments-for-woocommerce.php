@@ -421,7 +421,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			?>
 			<div class="notice notice-error">
 				<p>
-					<?php /* translators: [customer-facing]. */ ?>
+					<?php /* translators: [merchant-facing]. */ ?>
 					<?php esc_html_e( 'The WooCommerce plugin must be active for Klarna Payments to work.', 'klarna-payments-for-woocommerce' ); ?>
 				</p>
 			</div>
