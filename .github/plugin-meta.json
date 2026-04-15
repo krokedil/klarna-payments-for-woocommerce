@@ -1,0 +1,16 @@
+{
+  "pluginDevZipE2e": {
+    "pages": [
+      {
+        "url": "/wp-admin/admin.php?page=wc-settings&tab=checkout&section=klarna_payments",
+        "assertions": [
+          {
+            "selector": "h2",
+            "text": "Klarna for WooCommerce",
+            "match": "contains"
+          }
+        ]
+      }
+    ]
+  }
+}
