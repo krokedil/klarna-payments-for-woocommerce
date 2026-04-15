@@ -97,11 +97,10 @@ class KP_Settings_Saved {
 	 * @return string
 	 */
 	private function get_client_id_error_message( $key ) {
-		$environment = __( 'production', 'klarna-payments-for-woocommerce' );
+		$environment = _x( 'production', 'environment', 'klarna-payments-for-woocommerce' );
 		$market      = '';
-
 		if ( preg_match( '/^(test_)?client_id_(.+)$/', $key, $matches ) ) {
-			$environment = ! empty( $matches[1] ) ? __( 'test', 'klarna-payments-for-woocommerce' ) : __( 'production', 'klarna-payments-for-woocommerce' );
+			$environment = ! empty( $matches[1] ) ? _x( 'test', 'environment', 'klarna-payments-for-woocommerce' ) : _x( 'production', 'environment', 'klarna-payments-for-woocommerce' );
 			$market      = strtoupper( $matches[2] );
 		}
 
