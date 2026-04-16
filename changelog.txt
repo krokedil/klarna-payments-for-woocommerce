@@ -1,4 +1,7 @@
 *** Klarna for WooCommerce Changelog ***
+2026-04-16      - version 4.10.2
+* Fix           - Fixed improper registration of AJAX events for order management.
+
 2026-04-09      - version 4.10.1
 * Fix           - Sanitize the client id before using or saving it to the settings.
 
