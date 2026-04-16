@@ -184,6 +184,26 @@ abstract class KP_Requests extends Request {
 	}
 
 	/**
+	 * Get the user agent string, passing the full request URL as the 2nd parameter to the
+	 * http_headers_useragent filter so other plugins can modify it based on the URL.
+	 *
+	 * @return string
+	 */
+	protected function get_user_agent() {
+		$wp_version             = get_bloginfo( 'version' );
+		$wp_url                 = get_bloginfo( 'url' );
+		$wc_version             = WC()->version;
+		$plugin_user_agent_name = $this->config['plugin_user_agent_name'];
+		$plugin_version         = $this->config['plugin_version'];
+		$php_version            = phpversion();
+		return apply_filters(
+			'http_headers_useragent',
+			"WordPress/{$wp_version}; {$wp_url} - WooCommerce: {$wc_version} - {$plugin_user_agent_name}: {$plugin_version} - PHP Version: {$php_version} - Krokedil",
+			$this->get_request_url()
+		);
+	}
+
+	/**
 	 * Logs the response from the request.
 	 *
 	 * @param array|\WP_Error $response The response from the request.
