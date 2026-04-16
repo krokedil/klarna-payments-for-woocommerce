@@ -47,15 +47,73 @@ class KP_Settings_Saved {
 	 * @return array The sanitized settings.
 	 */
 	public function sanitize_settings( $settings ) {
+		$client_id_messages = array();
+
 		foreach ( $settings as $key => $value ) {
 			// If the key contains the string 'client_id_' then we should sanitize it.
 			if ( strpos( $key, 'client_id_' ) !== false ) {
-				$settings[ $key ] = klarna_sanitize_client_id( $value );
+				$sanitized_client_id = klarna_sanitize_client_id( $value );
+
+				if ( ! empty( $value ) && empty( $sanitized_client_id ) ) {
+					$client_id_messages[] = $this->get_client_id_error_message( $key );
+				}
+
+				$settings[ $key ] = $sanitized_client_id;
 				continue;
 			}
 		}
 
+		$this->maybe_handle_client_id_error( $client_id_messages );
+
 		return $settings;
+	}
+
+	/**
+	 * Stores client ID validation errors if any were detected.
+	 *
+	 * @param array $messages Client ID error messages.
+	 *
+	 * @return void
+	 */
+	private function maybe_handle_client_id_error( $messages ) {
+		if ( empty( $messages ) ) {
+			delete_option( 'kp_client_id_error' );
+			return;
+		}
+
+		$messages = array_values( array_unique( $messages ) );
+		if ( false === get_option( 'kp_client_id_error', false ) ) {
+			add_option( 'kp_client_id_error', $messages, '', 'no' );
+			return;
+		}
+		update_option( 'kp_client_id_error', $messages, false );
+	}
+
+	/**
+	 * Gets a readable validation message for an invalid client ID field.
+	 *
+	 * @param string $key Client ID setting key.
+	 *
+	 * @return string
+	 */
+	private function get_client_id_error_message( $key ) {
+		$environment = _x( 'production', 'environment', 'klarna-payments-for-woocommerce' );
+		$market      = '';
+		if ( preg_match( '/^(test_)?client_id_(.+)$/', $key, $matches ) ) {
+			$environment = ! empty( $matches[1] ) ? _x( 'test', 'environment', 'klarna-payments-for-woocommerce' ) : _x( 'production', 'environment', 'klarna-payments-for-woocommerce' );
+			$market      = strtoupper( $matches[2] );
+		}
+
+		if ( ! empty( $market ) ) {
+			return sprintf(
+				/* translators: 1: environment (production or test), 2: market code (country code) */
+				__( 'The Client ID for %1$s credentials in country %2$s is invalid and has been cleared.', 'klarna-payments-for-woocommerce' ),
+				$environment,
+				$market
+			);
+		}
+
+		return __( 'A Client ID is invalid and was cleared.', 'klarna-payments-for-woocommerce' );
 	}
 
 	/**
@@ -217,7 +275,8 @@ class KP_Settings_Saved {
 	 * @return void
 	 */
 	public static function maybe_show_errors() {
-		$error_messages = get_option( 'kp_credentials_error' );
+		$error_messages     = get_option( 'kp_credentials_error' );
+		$client_id_messages = get_option( 'kp_client_id_error' );
 
 		// If plugin file exists.
 		if ( $error_messages ) {
@@ -227,6 +286,18 @@ class KP_Settings_Saved {
 			foreach ( $error_messages as $error_message ) {
 				?>
 					<p><?php echo wp_kses_post( $error_message ); ?></p>
+				<?php } ?>
+				</div>
+				<?php
+		}
+
+		if ( $client_id_messages ) {
+			?>
+				<div class="kp-message notice notice-error">
+			<?php
+			foreach ( $client_id_messages as $client_id_message ) {
+				?>
+					<p><?php echo wp_kses_post( $client_id_message ); ?></p>
 				<?php } ?>
 				</div>
 				<?php

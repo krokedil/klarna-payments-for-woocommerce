@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: no
+
+Added error messages to the credentials settings to notify users when an invalid Klarna client ID is entered.
