@@ -14,7 +14,6 @@ use Krokedil\Klarna\OrderManagement\Request\Patch\RequestPatchUpdate;
 use Krokedil\Klarna\OrderManagement\Request\Post\RequestPostCancel;
 use Krokedil\Klarna\OrderManagement\MetaBox;
 use Krokedil\Klarna\OrderManagement\Ajax;
-use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 use Krokedil\Klarna\OrderManagement\ReturnFee;
 
@@ -52,13 +51,6 @@ class OrderManagement {
 	 * @var ReturnFee $return_fee
 	 */
 	public $return_fee;
-
-	/**
-	 * Logger instance.
-	 *
-	 * @var Logger
-	 */
-	private $logger;
 
 	/**
 	 * SystemReport instance.
@@ -121,16 +113,12 @@ class OrderManagement {
 		// Add refunds support to Klarna for WooCommerce.
 		add_action( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
 
-		// Initialize the logger.
-		add_action( 'init', array( $this, 'initialize_logger' ) );
-
 		$report_about = array(
 			array( 'id' => 'kom_auto_capture' ),
 			array( 'id' => 'kom_auto_cancel' ),
 			array( 'id' => 'kom_auto_update' ),
 			array( 'id' => 'kom_auto_order_sync' ),
 			array( 'id' => 'kom_force_full_capture' ),
-			array( 'id' => 'kom_debug_log' ),
 
 		);
 		$this->system_report = new SystemReport( 'klarna_payments', 'Klarna Order Management for WooCommerce', $report_about );
@@ -704,15 +692,5 @@ class OrderManagement {
 	 */
 	public function report() {
 		return $this->system_report;
-	}
-
-	/**
-	 * Initialize the logger.
-	 *
-	 * @return void
-	 */
-	public function initialize_logger() {
-		$options      = $this->settings->get_settings( null );
-		$this->logger = new Logger( 'klarna_order_management', wc_string_to_bool( $options['logging'] ?? false ) );
 	}
 }

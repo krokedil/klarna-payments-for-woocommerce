@@ -307,7 +307,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->siwk                    = new SignInWithKlarna( $settings );
 			$this->interoperability_token  = new KP_Interoperability_Token();
 			$this->order_management        = new OrderManagement();
-			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
+			$this->logger                  = new Logger( 'Klarna', wc_string_to_bool( $settings['logging'] ?? false ) );
 			Compatibility::register();
 
 			// Includes the selectable, and checkbox settings, but excludes those whose title is empty. The 'kp_section_start' will appear as a section header in the system report.

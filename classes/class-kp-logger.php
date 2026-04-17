@@ -24,12 +24,18 @@ class KP_Logger {
 	 * Logs an event.
 	 *
 	 * @param array|string $data The data string.
+	 * @param string       $source The source label used for the WooCommerce log entry.
 	 */
-	public static function log( $data ) {
+	public static function log( $data, $source = 'Klarna' ) {
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 		if ( 'no' !== $kp_settings['logging'] ) {
 			$message = self::format_data( $data );
-			KP_WC()->logger()->info( wp_json_encode( $message ) );
+
+			if ( ! self::$log instanceof \WC_Logger ) {
+				self::$log = wc_get_logger();
+			}
+
+			self::$log->info( wp_json_encode( $message ), array( 'source' => $source ) );
 		}
 	}
 
