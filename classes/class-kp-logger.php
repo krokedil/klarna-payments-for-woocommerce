@@ -31,10 +31,6 @@ class KP_Logger {
 		if ( 'no' !== $kp_settings['logging'] ) {
 			$message = self::format_data( $data );
 
-			if ( ! self::$log instanceof \WC_Logger ) {
-				self::$log = wc_get_logger();
-			}
-
 			self::$log->info( wp_json_encode( $message ), array( 'source' => $source ) );
 		}
 	}
