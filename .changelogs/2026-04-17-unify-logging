@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: yes
+
+Order management logging is now decided by the plugin’s general logging setting. Log files remain separate and are named "klarna" and "klarna-order-management".
