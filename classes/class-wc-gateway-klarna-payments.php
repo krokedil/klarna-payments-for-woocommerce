@@ -624,7 +624,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$klarna_upsell_order = KP_WC()->api->upsell_klarna_order( $country, $klarna_order_id, $order_id );
 
 		if ( is_wp_error( $klarna_upsell_order ) ) {
-			/* translators: [other]. */
+			/* translators: [customer-facing]. */
 			$error = new WP_Error( '401', __( 'Klarna did not accept the new order amount, the order has not been updated', 'klarna-payments-for-woocommerce' ) );
 			return $error;
 		}
