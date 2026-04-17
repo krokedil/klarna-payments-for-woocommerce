@@ -126,17 +126,17 @@ class KP_Logger {
 	/**
 	 * Get the caller string from the stack trace line.
 	 *
-	 * @param string $class The class name.
+	 * @param string $class_name The class name.
 	 * @param string $type The type, :: or -> depending on if its a static or non static class.
-	 * @param string $function The function name.
+	 * @param string $function_name The function name.
 	 * @param array  $args The arguments passed to the caller.
 	 * @return string
 	 */
-	private static function get_caller_string( $class, $type, $function, $args ) {
+	private static function get_caller_string( $class_name, $type, $function_name, $args ) {
 		$log_extra_data = apply_filters( 'wc_kp_extra_debug', false );
 
 		// Construct a caller string.
-		$caller  = $class . $type . $function;
+		$caller  = $class_name . $type . $function_name;
 		$caller .= '(';
 		$caller .= $log_extra_data ? implode(
 			', ',
@@ -156,14 +156,14 @@ class KP_Logger {
 	/**
 	 * Handles any WP hooks that are called.
 	 *
-	 * @param string $class The class name.
-	 * @param string $function The function name.
+	 * @param string $class_name The class name.
+	 * @param string $function_name The function name.
 	 * @param array  $args The arguments. Passed by reference to allow modifications.
 	 * @param array  $debug_line The debug line.
 	 * @return void
 	 */
-	private static function handle_wp_hook( $class, $function, &$args, $debug_line ) {
-		if ( 'WP_Hook' === $class && in_array( $function, array( 'apply_filters', 'do_action' ), true ) ) {
+	private static function handle_wp_hook( $class_name, $function_name, &$args, $debug_line ) {
+		if ( 'WP_Hook' === $class_name && in_array( $function_name, array( 'apply_filters', 'do_action' ), true ) ) {
 			$wp_hook = $debug_line['object'] ?? null;
 			if ( $wp_hook instanceof WP_Hook ) {
 				$priority = $wp_hook->current_priority();
@@ -182,21 +182,21 @@ class KP_Logger {
 	/**
 	 * Gets a string back from the object passed to match the name of any class that it is an instance off.
 	 *
-	 * @param mixed $object The potential class object.
+	 * @param mixed $class_object The potential class object.
 	 * @return string
 	 */
-	private static function get_name_of_hook_function( $object ) {
+	private static function get_name_of_hook_function( $class_object ) {
 		// If the object is null, reutrn an empty string.
-		if ( null === $object ) {
+		if ( null === $class_object ) {
 			return '';
 		}
 
 		// If its not an object, check if class exists, else return as function name.
-		if ( ! is_object( $object ) ) {
-			return $object . ( class_exists( $object ) ? '::' : '()' );
+		if ( ! is_object( $class_object ) ) {
+			return $class_object . ( class_exists( $class_object ) ? '::' : '()' );
 		}
 
 		// Get the class name and return it with appended static divider.
-		return get_class( $object ) . '::';
+		return get_class( $class_object ) . '::';
 	}
 }
