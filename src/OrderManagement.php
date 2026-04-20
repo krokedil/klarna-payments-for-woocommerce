@@ -432,6 +432,8 @@ class OrderManagement {
 
 			// The merchant has disconnected the order from the order manager.
 			if ( $order->get_meta( '_kom_disconnect' ) ) {
+				$order->add_order_note( __( 'Klarna capture request was not sent because order management is disabled for this order.', 'klarna-payments-for-woocommerce' ) );
+				$order->save();
 				return new \WP_Error( 'order_sync_off', 'Order management is disabled' );
 			}
 
@@ -524,6 +526,9 @@ class OrderManagement {
 					return new \WP_Error( 'save_error', 'Could not save WooCommerce order object.' );
 				}
 			}
+		} else {
+			$order->add_order_note( __( 'Klarna capture request was not sent because order management is disabled for capture.', 'klarna-payments-for-woocommerce' ) );
+			$order->save();
 		}
 	}
 
