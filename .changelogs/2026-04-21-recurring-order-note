@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Added an order note when a new recurring token is created after changing the payment method for a subscription order.

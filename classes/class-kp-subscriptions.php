@@ -272,7 +272,11 @@ class KP_Subscription {
 				$response->get_error_message()
 			);
 		} else {
-			self::save_recurring_token( $subscription_id, $response['token_id'] );
+			$recurring_token = $response['token_id'];
+			self::save_recurring_token( $subscription_id, $recurring_token );
+
+			/* translators: Recurring token. */
+			$message = sprintf( __( 'Recurring token created: %s', 'klarna-payments-for-woocommerce' ), $recurring_token );
 		}
 
 		$subscription->add_order_note( $message );
