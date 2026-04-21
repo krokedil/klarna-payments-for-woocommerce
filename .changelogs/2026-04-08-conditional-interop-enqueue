@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Interoperability token scripts will now only be enqueued if a client ID is present, preventing unnecessary script loading when not required.

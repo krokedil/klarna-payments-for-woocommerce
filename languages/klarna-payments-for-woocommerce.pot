@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2026-04-16 11:05:23+00:00\n"
+"POT-Creation-Date: 2026-04-21 08:50:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -139,10 +139,6 @@ msgstr ""
 #: classes/admin/class-kp-form-fields.php:355
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:236
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:161
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:236
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:161
 msgid "Documentation"
 msgstr ""
 
@@ -168,10 +164,6 @@ msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:264
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:54
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:54
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:54
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
 msgid "Test mode"
 msgstr ""
 
@@ -251,14 +243,6 @@ msgstr ""
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:80
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:242
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:195
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:168
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:80
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:242
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:195
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:168
 msgid "Enable/Disable"
 msgstr ""
 
@@ -268,10 +252,6 @@ msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:368
 #: dependencies/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Logger.php:63
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Logger.php:63
 msgid "Logging"
 msgstr ""
 
@@ -366,10 +346,6 @@ msgstr ""
 #: classes/admin/class-kp-form-fields.php:436
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:308
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:304
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:308
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:304
 msgid "Preview"
 msgstr ""
 
@@ -400,10 +376,6 @@ msgstr ""
 
 #: classes/admin/class-kp-settings-page.php:105
 #: dependencies/krokedil/settings-page/src/Addons.php:241
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Addons.php:241
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Addons.php:230
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Addons.php:241
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Addons.php:230
 msgid "Active"
 msgstr ""
 
@@ -429,10 +401,6 @@ msgstr ""
 
 #: classes/admin/class-kp-settings-page.php:319
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:55
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:55
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:65
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:55
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:65
 msgid "Client ID"
 msgstr ""
 
@@ -522,6 +490,18 @@ msgstr ""
 msgid "Order was not found"
 msgstr ""
 
+#: classes/class-kp-settings-saved.php:110
+#. translators: 1: environment (production or test), 2: market code (country
+#. code)
+msgid ""
+"The Client ID for %1$s credentials in country %2$s is invalid and has been "
+"cleared."
+msgstr ""
+
+#: classes/class-kp-settings-saved.php:116
+msgid "A Client ID is invalid and was cleared."
+msgstr ""
+
 #: classes/class-kp-subscriptions.php:101
 #. translators: Recurring token.
 msgid "Recurring token created: %s"
@@ -595,77 +575,51 @@ msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Api/Notifications/PaymentStateExpired.php:32
 #: src/KECOneStepIntegration.php:81
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Api/Notifications/PaymentStateExpired.php:35
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Api/Notifications/PaymentStateExpired.php:35
 msgid "Order cancelled due to expired payment request."
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/OneStepCheckout.php:54
 #: dependencies/krokedil/klarna-express-checkout/src/OneStepCheckout.php:62
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/OneStepCheckout.php:55
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/OneStepCheckout.php:65
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/OneStepCheckout.php:55
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/OneStepCheckout.php:65
 msgid "Your order could not be processed"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/OneStepCheckout.php:148
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/OneStepCheckout.php:185
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/OneStepCheckout.php:186
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/OneStepCheckout.php:185
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/OneStepCheckout.php:186
 msgid "Digital delivery"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:198
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:221
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:221
 msgid "Two step"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:201
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:225
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:225
 msgid "One step"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:232
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:232
 msgid ""
 "Offer a 5x faster check-out process that lowers the threshold for shoppers "
 "to complete a purchase."
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:244
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:244
 msgid "Enable Klarna Express Checkout"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:249
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:249
 msgid "Placements & button style"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:250
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:250
 msgid ""
 "Tailor the express checkout button to fit your brand by adjusting the "
 "button theme, shape and selecting placements."
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:253
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:253
 msgid "Theme"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:255
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:255
 msgid "Select the theme for the Klarna Express Checkout."
 msgstr ""
 
@@ -675,26 +629,6 @@ msgstr ""
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:258
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:108
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:147
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:235
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:276
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:191
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:258
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:108
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:147
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:235
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:276
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:191
 msgid "Dark"
 msgstr ""
 
@@ -702,117 +636,66 @@ msgstr ""
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:259
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:234
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:275
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:192
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:259
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:234
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:275
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:192
 msgid "Light"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:260
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:193
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:260
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:193
 msgid "Outlined"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:265
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:265
 msgid "Shape"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:267
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:267
 msgid "Select the shape for the Klarna Express Checkout."
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:270
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:204
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:270
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:204
 msgid "Rounded"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:271
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:205
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:271
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:205
 msgid "Rectangular"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:272
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:206
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:272
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:206
 msgid "Pill"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:277
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:277
 msgid "Placements"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:281
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:281
 msgid "All (recommended)"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:282
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:282
 msgid "Product pages"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:283
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:283
 msgid "Cart page"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:287
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:287
 msgid "Flow"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:288
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:288
-msgid ""
-"Select the checkout flow for Klarna Express Checkout. One step is only "
-"available for stores integrating Klarna through a different payment "
-"provider."
+msgid "Select the checkout flow for Klarna Express Checkout."
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:296
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:296
 msgid "Webhook %s"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:297
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:297
 msgid ""
 "For one step Express Checkout to function, Klarna needs to be able to send "
 "callbacks to your store. Enable the callbacks and configure a signing key "
@@ -820,285 +703,145 @@ msgid ""
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:233
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:347
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:347
 msgid "Created"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:235
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:349
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:349
 msgid "Not Created"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:264
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:375
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:375
 msgid "Test Webhook"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:271
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:378
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:378
 msgid "Remove Webhook"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:286
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:390
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:390
 msgid "Create the necessary webhook in Klarna for the Express Checkout."
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:292
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:392
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/Settings.php:392
 msgid "Create Webhook"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:121
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:127
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:127
 msgid "Could not send test webhook"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:124
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:131
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:131
 msgid "Test webhook sent successfully."
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:143
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:153
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:153
 msgid "Could not remove webhook"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:151
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:164
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:164
 msgid "Could not remove signing key"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:155
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:170
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:170
 msgid "Webhook removed successfully."
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:166
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:182
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:182
 msgid "Could not create signing key"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:191
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:211
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:211
 msgid "Could not create a signing key with Klarna for the webhook."
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:199
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:225
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:225
 msgid "Could not create webhook with Klarna"
 msgstr ""
 
 #: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:204
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:232
-#: tmp-f58e187235/source/vendor/krokedil/klarna-express-checkout/src/WebhookSetup.php:232
 msgid "Webhook created successfully."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:114
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:114
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:127
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:114
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:127
 msgid ""
 "The \"Klarna On-Site Messaging for WooCommerce\" plugin is now integrated "
 "into Klarna Payments. Please disable the plugin."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:54
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:54
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:61
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:54
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:61
 msgid "Enable Test Mode"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:55
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:55
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:67
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:55
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:67
 msgid "Enter the client ID given by Klarna for Klarna On-Site Messaging"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:56
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:56
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:72
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:74
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:56
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:72
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:74
 msgid "Enable/Disable the Product placement"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:57
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:57
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:78
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:57
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:78
 msgid "Product page placement data key"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:57
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:57
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:80
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:57
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:80
 msgid "Enter the placement data key for the product page."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
 msgid "Product On-Site Messaging placement"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:253
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:253
 msgid "Select where to display the widget in your product pages"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:91
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:258
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:91
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:258
 msgid "Above Title"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:92
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:259
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:92
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:259
 msgid "Between Title and Price"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:93
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:260
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:93
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:260
 msgid "Between Price and Excerpt"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:94
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:261
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:94
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:261
 msgid "Between Excerpt and Add to cart button"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:95
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:262
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:95
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:262
 msgid "Between Add to cart button and Product meta"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:96
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:263
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:96
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:263
 msgid "Between Product meta and Product sharing buttons"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:97
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:264
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:97
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:264
 msgid "After Product sharing buttons"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:101
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:101
 msgid "Product Placement Theme"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:102
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:102
 msgid "Select which theme to use for the product pages."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:107
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:146
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:107
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:146
 msgid "Default"
 msgstr ""
 
@@ -1106,538 +849,256 @@ msgstr ""
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:109
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:148
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:236
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:277
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:109
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:148
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:236
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:277
 msgid "Custom"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:60
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:60
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:113
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:115
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:60
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:113
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:115
 msgid "Enable/Disable the Cart placement"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:61
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:61
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:119
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:61
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:119
 msgid "Cart page placement data key"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:61
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:61
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:121
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:61
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:121
 msgid "Enter the placement data key for the cart page."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:126
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:126
 msgid "Cart On-Site Messaging placement"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:127
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:215
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:127
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:215
 msgid "Select where to display the widget on your cart page"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:132
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:220
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:132
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:220
 msgid "Above cross sell"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:133
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:221
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:133
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:221
 msgid "Above cart totals"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:222
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:134
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:222
 msgid "Between cart totals and proceed to checkout button"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:135
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:223
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:135
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:223
 msgid "After proceed to checkout button"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:136
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:224
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:136
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:224
 msgid "Bottom of the page"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:140
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:140
 msgid "Cart Placement Theme"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:141
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:229
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:141
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:229
 msgid "Select which theme to use for the cart page."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:64
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:64
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:152
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:64
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:152
 msgid "Enable custom placement hook"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:65
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:65
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:157
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:65
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:157
 msgid "Custom placement hook"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:65
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:65
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:158
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:65
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:158
 msgid "Enter a custom hook where you want the OSM widget to be placed."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:66
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:66
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:163
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:66
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:163
 msgid "Custom placement hook priority"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:66
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:66
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:164
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:66
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:164
 msgid ""
 "Enter a priority for the custom hook where you want the OSM widget to be "
 "placed."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:79
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:79
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:185
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:79
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:185
 msgid ""
 "Add personalized messaging throughout the shopper journey for higher "
 "conversion rates and increased spend."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:79
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:79
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:189
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:79
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:189
 msgid "Further customization is possible in the Klarna Merchant Portal."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:80
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:196
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:80
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:196
 msgid "Enable On-site Messaging"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:202
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:202
 msgid "Cart Page Placement"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:204
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:204
 msgid "Select the placement for the cart page."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:208
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:246
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:208
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:246
 msgid "Don't show"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:209
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:209
 msgid "Show with Klarna badge  (recommended)"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:210
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:248
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:210
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:248
 msgid "Show without Klarna badge"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:214
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:82
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:214
 msgid "Cart Page Location"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:228
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:228
 msgid "Cart Page Theme"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:240
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:240
 msgid "Product Page Placement"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:242
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:242
 msgid "Select the placement type that you want to show on the product pages."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:247
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:84
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:247
 msgid "Show with Klarna badge (recommended)"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:252
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:85
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:252
 msgid "Product Page Location"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:268
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:268
 msgid "Product Page Theme"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:269
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:269
 msgid ""
 "The On-site messaging placements come in Light and Dark theme to fit into "
 "the look and feel of your website."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:87
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:87
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:284
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:87
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:284
 msgid "Cart preview"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:87
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:87
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:288
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:87
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Settings.php:288
 msgid "Product preview"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:25
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:25
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:22
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:25
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:22
 msgid "Klarna On-Site Messaging"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:27
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:27
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:23
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:27
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:23
 msgid "Displays a Klarna banner in your store."
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:74
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:74
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:80
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:74
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:80
 msgid "Title:"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:88
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:88
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:84
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:88
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:84
 msgid "Placement Key"
 msgstr ""
 
 #: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:104
-#: tmp-98ccec0a28/destination/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:104
-#: tmp-98ccec0a28/source/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:90
-#: tmp-f58e187235/destination/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:104
-#: tmp-f58e187235/source/vendor/krokedil/klarna-onsite-messaging/src/Widget.php:90
 msgid "Placement Theme:"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Addons.php:42
 #: dependencies/krokedil/settings-page/src/Navigation.php:57
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Addons.php:42
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Navigation.php:57
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Addons.php:46
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Navigation.php:63
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Addons.php:42
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Navigation.php:57
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Addons.php:46
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Navigation.php:63
 msgid "Addons"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Addons.php:209
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Addons.php:209
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Addons.php:199
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Addons.php:209
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Addons.php:199
 #. translators: %s is the plugin name.
 msgid "Free"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Addons.php:245
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Addons.php:245
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Addons.php:234
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Addons.php:245
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Addons.php:234
 msgid "Activate"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Addons.php:251
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Addons.php:251
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Addons.php:239
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Addons.php:251
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Addons.php:239
 msgid "Install Now"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Navigation.php:52
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Navigation.php:52
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Navigation.php:55
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Navigation.php:52
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Navigation.php:55
 msgid "General"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Navigation.php:54
 #: dependencies/krokedil/settings-page/src/Support.php:30
 #: klarna-payments-for-woocommerce.php:380
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Navigation.php:54
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Support.php:30
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Navigation.php:59
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Support.php:31
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Navigation.php:54
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Support.php:30
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Navigation.php:59
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Support.php:31
 msgid "Support"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Support.php:100
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Support.php:100
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Support.php:115
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Support.php:100
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Support.php:115
 msgid "If you still need help, please open a support ticket with Krokedil."
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Support.php:103
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Support.php:103
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Support.php:116
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Support.php:103
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Support.php:116
 msgid "Open support ticket with Krokedil"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Traits/Layout.php:76
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Traits/Layout.php:76
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Traits/Layout.php:67
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Traits/Layout.php:76
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Traits/Layout.php:67
 msgid "Return to payments"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Traits/Sidebar.php:90
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Traits/Sidebar.php:90
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Traits/Sidebar.php:74
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Traits/Sidebar.php:90
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Traits/Sidebar.php:74
 msgid "Plugin resources"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Traits/Sidebar.php:114
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Traits/Sidebar.php:114
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Traits/Sidebar.php:86
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Traits/Sidebar.php:114
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Traits/Sidebar.php:86
 msgid "Additional resources"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Traits/Subsection.php:34
-#: tmp-98ccec0a28/destination/vendor/krokedil/settings-page/src/Traits/Subsection.php:34
-#: tmp-98ccec0a28/source/vendor/krokedil/settings-page/src/Traits/Subsection.php:35
-#: tmp-f58e187235/destination/vendor/krokedil/settings-page/src/Traits/Subsection.php:34
-#: tmp-f58e187235/source/vendor/krokedil/settings-page/src/Traits/Subsection.php:35
 msgid "Sections"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: dependencies/krokedil/sign-in-with-klarna/src/User.php:176
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:156
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/User.php:194
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:156
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/User.php:194
+#: dependencies/krokedil/sign-in-with-klarna/src/User.php:161
 msgid "Sign in with Klarna"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:157
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:157
 msgid ""
 "Let customers connect their accounts with pre-set payments and preferences "
 "to shop anywhere, improve personalized shopping experiences."
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:170
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:170
 msgid "Enable Sign in with Klarna"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:175
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:175
 msgid "Redirect URL"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:177
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:177
 msgid ""
 "Add this URL to your list of allowed redirect URLs in the \"Sign in with "
 "Klarna\" settings on the <a href=\"https://portal.klarna.com/\">Klarna "
@@ -1645,116 +1106,78 @@ msgid ""
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:186
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:186
 msgid "Button theme"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:188
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:188
 msgid "The button's color theme."
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:199
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:199
 msgid "Button shape"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:201
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:201
 msgid "The button's shape."
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:212
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:212
 msgid "Badge alignment"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:214
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:214
 msgid "Change alignment of the Klarna logo on the call to action button."
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:217
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:217
 msgid "Badge"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:218
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:218
 msgid "Left"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:219
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:219
 msgid "Centered"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:225
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:225
 msgid "Cart page placement"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:227
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:227
 msgid "Change the placement of the \"Sign in with Klarna\" button on the cart page."
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:230
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:230
 msgid "Before \"Proceed to checkout\" button"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:231
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:231
 msgid "After \"Proceed to checkout\" button"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:237
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:237
 msgid "Required Customer Data"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:239
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:239
 msgid "Email Address"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:249
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:249
 msgid "Full name"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:260
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:260
 msgid "Phone number"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:271
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:271
 msgid "Billing address"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:272
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:272
 msgid ""
 "These scopes are included by default, as necessary for creating a "
 "WooCommerce customer account in your shop.  More about available scopes "
@@ -1767,68 +1190,40 @@ msgid ""
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:283
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:283
 msgid "Date of birth"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:289
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:289
 msgid "Country"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:296
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:296
 msgid "Language Preference"
 msgstr ""
 
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:176
-#: tmp-98ccec0a28/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:367
-#: tmp-f58e187235/source/vendor/krokedil/sign-in-with-klarna/src/Settings.php:367
 msgid "Theme, button shape & placements"
 msgstr ""
 
 #: dependencies/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Logger.php:59
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Logger.php:59
 msgid "Troubleshooting"
 msgstr ""
 
 #: dependencies/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Logger.php:66
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Logger.php:66
 msgid ""
 "Logging is required for troubleshooting any issues related to the plugin. "
 "It is recommended that you always have it enabled."
 msgstr ""
 
 #: dependencies/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Logger.php:70
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Logger.php:70
 msgid "Detailed logging"
 msgstr ""
 
 #: dependencies/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Logger.php:71
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Logger.php:71
 msgid "Enable"
 msgstr ""
 
 #: dependencies/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Logger.php:73
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Logger.php:54
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Logger.php:73
 msgid ""
 "Enable detailed logging to capture extra data. Use this only when needed "
 "for debugging hard-to-replicate issues, as it generates significantly more "
@@ -1836,43 +1231,23 @@ msgid ""
 msgstr ""
 
 #: dependencies/krokedil/support/src/Views/Admin/status-report.php:24
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Views/Admin/status-report.php:24
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Views/Admin/status-report.php:18
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Views/Admin/status-report.php:24
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Views/Admin/status-report.php:18
 msgid "Timestamp"
 msgstr ""
 
 #: dependencies/krokedil/support/src/Views/Admin/status-report.php:28
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Views/Admin/status-report.php:28
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Views/Admin/status-report.php:20
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Views/Admin/status-report.php:28
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Views/Admin/status-report.php:20
 msgid "Code"
 msgstr ""
 
 #: dependencies/krokedil/support/src/Views/Admin/status-report.php:31
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Views/Admin/status-report.php:31
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Views/Admin/status-report.php:21
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Views/Admin/status-report.php:31
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Views/Admin/status-report.php:21
 msgid "Message"
 msgstr ""
 
 #: dependencies/krokedil/support/src/Views/Admin/status-report.php:68
 #: includes/admin/views/status-report.php:61
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Views/Admin/status-report.php:68
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Views/Admin/status-report.php:38
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Views/Admin/status-report.php:68
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Views/Admin/status-report.php:38
 msgid "No error logs"
 msgstr ""
 
 #: dependencies/krokedil/support/src/Views/Admin/status-report.php:128
-#: tmp-98ccec0a28/destination/vendor/krokedil/support/src/Views/Admin/status-report.php:128
-#: tmp-98ccec0a28/source/vendor/krokedil/support/src/Views/Admin/status-report.php:68
-#: tmp-f58e187235/destination/vendor/krokedil/support/src/Views/Admin/status-report.php:128
-#: tmp-f58e187235/source/vendor/krokedil/support/src/Views/Admin/status-report.php:68
 msgid "Settings could not be retrieved."
 msgstr ""
 
@@ -2198,4 +1573,15 @@ msgstr ""
 msgid ""
 "There was an error when trying to get the feature availability from Klarna. "
 "Please check your API credentials and try again. Error: %s"
+msgstr ""
+
+#: classes/class-kp-settings-saved.php:100
+#: classes/class-kp-settings-saved.php:103
+msgctxt "environment"
+msgid "production"
+msgstr ""
+
+#: classes/class-kp-settings-saved.php:103
+msgctxt "environment"
+msgid "test"
 msgstr ""
