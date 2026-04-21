@@ -4,30 +4,30 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71cd672cca44987a72b8dd1a8db2dcf3",
+    "content-hash": "7f0791889cc618c1361a7b56f3ece337",
     "packages": [
         {
             "name": "firebase/php-jwt",
-            "version": "6.x-dev",
+            "version": "v6.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/php-jwt.git",
-                "reference": "d1e91ecf8c598d073d0995afa8cd5c75c6e19e66"
+                "reference": "a49db6f0a5033aef5143295342f1c95521b075ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/php-jwt/zipball/d1e91ecf8c598d073d0995afa8cd5c75c6e19e66",
-                "reference": "d1e91ecf8c598d073d0995afa8cd5c75c6e19e66",
+                "url": "https://api.github.com/repos/googleapis/php-jwt/zipball/a49db6f0a5033aef5143295342f1c95521b075ff",
+                "reference": "a49db6f0a5033aef5143295342f1c95521b075ff",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0"
+                "php": "^7.4||^8.0"
             },
             "require-dev": {
-                "guzzlehttp/guzzle": "^7.4",
+                "guzzlehttp/guzzle": "^6.5||^7.4",
                 "phpspec/prophecy-phpunit": "^2.0",
                 "phpunit/phpunit": "^9.5",
-                "psr/cache": "^2.0||^3.0",
+                "psr/cache": "^1.0||^2.0",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0"
             },
@@ -65,25 +65,26 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/php-jwt/issues",
-                "source": "https://github.com/googleapis/php-jwt/tree/v6.11.1"
+                "source": "https://github.com/googleapis/php-jwt/tree/v6.10.0"
             },
-            "time": "2025-04-09T20:32:01+00:00"
+            "time": "2023-12-01T16:26:39+00:00"
         },
         {
             "name": "krokedil/klarna-express-checkout",
-            "version": "2.1.4",
+            "version": "2.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "4f08e228f46e04b149a6a9a1b49879bbb2f3440b"
+                "reference": "b13ec91b8fd121cf145c6e278776fe4e75882bcc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/4f08e228f46e04b149a6a9a1b49879bbb2f3440b",
-                "reference": "4f08e228f46e04b149a6a9a1b49879bbb2f3440b",
+                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/b13ec91b8fd121cf145c6e278776fe4e75882bcc",
+                "reference": "b13ec91b8fd121cf145c6e278776fe4e75882bcc",
                 "shasum": ""
             },
             "require": {
+                "firebase/php-jwt": "6.10.0",
                 "php": "~7.4 || ~8.0"
             },
             "require-dev": {
@@ -135,10 +136,10 @@
             ],
             "description": "A Klarna Express Checkout solution for WooCommerce",
             "support": {
-                "source": "https://github.com/krokedil/klarna-express-checkout/tree/2.1.4",
+                "source": "https://github.com/krokedil/klarna-express-checkout/tree/2.1.3",
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
-            "time": "2026-04-21T08:48:57+00:00"
+            "time": "2026-04-21T08:33:14+00:00"
         },
         {
             "name": "krokedil/klarna-onsite-messaging",
@@ -293,16 +294,16 @@
         },
         {
             "name": "krokedil/support",
-            "version": "1.0.4",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/support.git",
-                "reference": "96da75792434a2553c6af9e891e646705fd33e7c"
+                "reference": "e4ee49d1c862e45fb284247c84d7c1f5583cb6ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/support/zipball/96da75792434a2553c6af9e891e646705fd33e7c",
-                "reference": "96da75792434a2553c6af9e891e646705fd33e7c",
+                "url": "https://api.github.com/repos/krokedil/support/zipball/e4ee49d1c862e45fb284247c84d7c1f5583cb6ba",
+                "reference": "e4ee49d1c862e45fb284247c84d7c1f5583cb6ba",
                 "shasum": ""
             },
             "require": {
@@ -342,10 +343,10 @@
             ],
             "description": "The support library allows you to extend your plugin with logging that can be optionally toggled through your plugin settings, generate an entry in the system report from your plugin settings, and report issues to the system report.",
             "support": {
-                "source": "https://github.com/krokedil/support/tree/1.0.4",
+                "source": "https://github.com/krokedil/support/tree/1.0.3",
                 "issues": "https://github.com/krokedil/support/issues"
             },
-            "time": "2026-04-20T16:27:59+00:00"
+            "time": "2026-03-30T09:30:26+00:00"
         },
         {
             "name": "krokedil/woocommerce",
@@ -439,15 +440,15 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
