@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 10.7.0
-Stable tag: 4.10.2
+Stable tag: 4.10.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,13 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-04-21    - version 4.10.3 =
+* Enhancement   - Added error messages to the credentials settings to notify users when an invalid Klarna client ID is entered.
+* Fix           - Interoperability token scripts will now only be enqueued if a client ID is present, preventing unnecessary script loading when not required.
+* Fix           - Added the request URL as the 2nd parameter to the 'http_headers_useragent' filter so other plugins can use it to modify the user agent string accordingly.
+* Fix           - [SIWK] The authentication flow now works in both popup and redirect modes.
+* Fix           - [KEC] Clarified the description for the `kec_flow` setting to indicate that the one step flow is now available to all users.
+
 = 2026-04-16    - version 4.10.2 =
 * Fix           - Fixed improper registration of AJAX events for order management.
 
