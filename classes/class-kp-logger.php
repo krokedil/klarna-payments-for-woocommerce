@@ -168,8 +168,13 @@ class KP_Logger {
 				$current  = current( $wp_hook->current() );
 				$name     = '';
 
-				foreach ( $current['function'] ?? array() as $function ) {
-					$name .= self::get_name_of_hook_function( $function );
+				$callback = $current['function'] ?? null;
+				if ( is_array( $callback ) ) {
+					foreach ( $callback as $callback_item ) {
+						$name .= self::get_name_of_hook_function( $callback_item );
+					}
+				} elseif ( null !== $callback ) {
+					$name .= self::get_name_of_hook_function( $callback );
 				}
 
 				array_unshift( $args, $name . ' (' . $priority . ')' );
