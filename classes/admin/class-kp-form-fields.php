@@ -267,6 +267,19 @@ class KP_Form_Fields {
 				'default'  => 'no',
 				'desc_tip' => true,
 			),
+			'logging'                  => array(
+				'title'       => __( 'Logging', 'klarna-payments-for-woocommerce' ),
+				'label'       => __( 'Log debug messages', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'klarna-payments-for-woocommerce' ),
+				'default'     => 'no',
+				'options'     => array(
+					'no'    => __( 'No', 'klarna-payments-for-woocommerce' ),
+					'yes'   => __( 'Yes', 'klarna-payments-for-woocommerce' ),
+					'extra' => __( 'Yes (with extra debug data)', 'klarna-payments-for-woocommerce' ),
+				),
+				'desc_tip'    => true,
+			),
 			'send_shopping_data_title' => array(
 				'title'       => __( 'Shopping data', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'kp_text_info',
@@ -363,19 +376,6 @@ class KP_Form_Fields {
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no',
-			),
-			'logging'              => array(
-				'title'       => __( 'Logging', 'klarna-payments-for-woocommerce' ),
-				'label'       => __( 'Log debug messages', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'klarna-payments-for-woocommerce' ),
-				'default'     => 'no',
-				'options'     => array(
-					'no'    => __( 'No', 'klarna-payments-for-woocommerce' ),
-					'yes'   => __( 'Yes', 'klarna-payments-for-woocommerce' ),
-					'extra' => __( 'Yes (with extra debug data)', 'klarna-payments-for-woocommerce' ),
-				),
-				'desc_tip'    => true,
 			),
 			'hide_what_is_klarna'  => array(
 				'title'    => __( 'Hide "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
