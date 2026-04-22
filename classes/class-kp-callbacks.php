@@ -88,6 +88,7 @@ class KP_Callbacks {
 			 *
 			 * @var WP_Error $response The error response.
 			 */
+			/* translators: [merchant-facing]. */
 			$order->add_order_note( __( 'Failed to complete the order during the authentication callback.', 'klarna-payments-for-woocommerce' ) . $response->get_error_message() );
 			return;
 		}
@@ -96,17 +97,21 @@ class KP_Callbacks {
 		switch ( $fraud_status ) {
 			case 'ACCEPTED':
 				kp_process_accepted( $order, $response );
+				/* translators: [merchant-facing]. */
 				$order->add_order_note( __( 'The Klarna order was successfully completed by the authorization callback', 'klarna-payments-for-woocommerce' ) );
 				break;
 			case 'PENDING':
 				kp_process_pending( $order, $response );
+				/* translators: [merchant-facing]. */
 				$order->add_order_note( __( 'The Klarna order is pending approval by Klarna', 'klarna-payments-for-woocommerce' ) );
 				break;
 			case 'REJECTED':
 				kp_process_rejected( $order, $response );
+				/* translators: [merchant-facing]. */
 				$order->add_order_note( __( 'The Klarna order was rejected during the authorization by Klarna', 'klarna-payments-for-woocommerce' ) );
 				break;
 			default:
+				/* translators: [merchant-facing]. */
 				$order->add_order_note( __( 'Failed to complete the order during the authentication callback.', 'klarna-payments-for-woocommerce' ) );
 				break;
 		}
@@ -143,6 +148,7 @@ class KP_Callbacks {
 				if ( 'FREE_TRIAL' === $recurring_token->get_error_code() ) {
 					kp_unset_session_values();
 				} else {
+					/* translators: [merchant-facing]. */
 					$order->add_order_note( __( 'Failed to create a recurring token when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) . $recurring_token->get_error_message() );
 
 					KP_Logger::log( sprintf( '[AJAX]: Order ID: %s. Auth token: %s. %s', $order->get_id(), $auth_token, $recurring_token->get_error_message() ) );
@@ -162,6 +168,7 @@ class KP_Callbacks {
 			 *
 			 * @var WP_Error $response The error response.
 			 */
+			/* translators: [merchant-facing]. */
 			$order->add_order_note( __( 'Failed to complete the order when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) . $response->get_error_message() );
 			return;
 		}
@@ -170,20 +177,24 @@ class KP_Callbacks {
 		switch ( $fraud_status ) {
 			case 'ACCEPTED':
 				kp_process_accepted( $order, $response );
+				/* translators: [merchant-facing]. */
 				$order->add_order_note( __( 'The Klarna order was successfully completed', 'klarna-payments-for-woocommerce' ) );
 				kp_unset_session_values();
 				break;
 			case 'PENDING':
 				kp_process_pending( $order, $response );
+				/* translators: [merchant-facing]. */
 				$order->add_order_note( __( 'The Klarna order is pending approval by Klarna', 'klarna-payments-for-woocommerce' ) );
 				kp_unset_session_values();
 				break;
 			case 'REJECTED':
 				kp_process_rejected( $order, $response );
+				/* translators: [merchant-facing]. */
 				$order->add_order_note( __( 'The Klarna order was rejected by Klarna', 'klarna-payments-for-woocommerce' ) );
 				kp_unset_session_values();
 				break;
 			default:
+				/* translators: [merchant-facing]. */
 				$order->add_order_note( __( 'Failed to complete the order when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) );
 				kp_unset_session_values();
 				break;

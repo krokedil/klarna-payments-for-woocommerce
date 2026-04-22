@@ -45,6 +45,7 @@ class Settings {
 			'title'   => 'On order completion',
 			'type'    => 'checkbox',
 			'default' => $default_values['kom_auto_capture'],
+			/* translators: [merchant-facing]. */
 			'label'   => __( 'Activate Klarna order automatically when WooCommerce order is marked complete.', 'klarna-payments-for-woocommerce' ),
 		);
 
@@ -52,6 +53,7 @@ class Settings {
 			'title'   => 'On order cancel',
 			'type'    => 'checkbox',
 			'default' => $default_values['kom_auto_cancel'],
+			/* translators: [merchant-facing]. */
 			'label'   => __( 'Cancel Klarna order automatically when WooCommerce order is marked canceled.', 'klarna-payments-for-woocommerce' ),
 		);
 
@@ -59,6 +61,7 @@ class Settings {
 			'title'   => 'On order update',
 			'type'    => 'checkbox',
 			'default' => $default_values['kom_auto_update'],
+			/* translators: [merchant-facing]. */
 			'label'   => __( 'Update Klarna order automatically when WooCommerce order is updated.', 'klarna-payments-for-woocommerce' ),
 		);
 
@@ -66,6 +69,7 @@ class Settings {
 			'title'   => 'On order creation ( manual )',
 			'type'    => 'checkbox',
 			'default' => $default_values['kom_auto_order_sync'],
+			/* translators: [merchant-facing]. */
 			'label'   => __( 'Gets the customer information from Klarna when creating a manual admin order and adding a Klarna order id as a transaction id.', 'klarna-payments-for-woocommerce' ),
 		);
 
@@ -73,6 +77,7 @@ class Settings {
 			'title'   => 'Force capture full order',
 			'type'    => 'checkbox',
 			'default' => $default_values['kom_force_full_capture'],
+			/* translators: [merchant-facing]. */
 			'label'   => __( 'Force capture full order. Useful if the Klarna order has been updated by an ERP system.', 'klarna-payments-for-woocommerce' ),
 		);
 
@@ -80,6 +85,7 @@ class Settings {
 			'title'   => 'Debug log',
 			'type'    => 'checkbox',
 			'default' => $default_values['kom_debug_log'],
+			/* translators: [merchant-facing]. */
 			'label'   => __( 'Enable the debug log.', 'klarna-payments-for-woocommerce' ),
 		);
 

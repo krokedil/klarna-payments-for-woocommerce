@@ -75,6 +75,7 @@ class ReturnFee {
 				<td class="thumb"><div></div></td>
 				<td class="name" >
 					<div class="view">
+					<?php /* translators: [merchant-facing]. */ ?>
 					<?php esc_html_e( 'Klarna return fee', 'klarna-payments-for-woocommerce' ); ?>
 					</div>
 				</td>
@@ -134,10 +135,13 @@ class ReturnFee {
 
 		?>
 		<span class="klarna-return-fee-info display_meta" style="display: block; margin-top: 10px; color: #888; font-size: .92em!important;">
+			<?php /* translators: [merchant-facing]. */ ?>
 			<span style="font-weight: bold;"><?php esc_html_e( 'Refund amount: ', 'woocommerce' ); ?></span>
 		<?php echo wp_kses_post( wc_price( $original_amount, array( 'currency' => $refund_order->get_currency() ) ) ); ?><br>
+			<?php /* translators: [merchant-facing]. */ ?>
 			<span style="font-weight: bold;"><?php esc_html_e( 'Return fee: ', 'woocommerce' ); ?></span>
 		<?php echo wp_kses_post( wc_price( $total, array( 'currency' => $refund_order->get_currency() ) ) ); ?><br>
+			<?php /* translators: [merchant-facing]. */ ?>
 			<span style="font-weight: bold;"><?php esc_html_e( 'Refunded to customer: ', 'woocommerce' ); ?></span>
 		<?php echo wp_kses_post( wc_price( $refund_order->get_total(), array( 'currency' => $refund_order->get_currency() ) ) ); ?>
 		</span>
@@ -189,6 +193,7 @@ class ReturnFee {
 		}
 		?>
 		<tr>
+				<?php /* translators: [merchant-facing]. */ ?>
 				<td class="label"><?php esc_html_e( 'Return fee', 'woocommerce' ); ?>:</td>
 				<td width="1%"></td>
 				<td class="total"><?php echo wc_price( $total_return_fee, array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
@@ -290,6 +295,7 @@ class ReturnFee {
 
 		// Create the fee item.
 		$fee = new \WC_Order_Item_Fee();
+		/* translators: [merchant-facing]. */
 		$fee->set_name( __( 'Return Fee', 'klarna-payments-for-woocommerce' ) );
 		$fee->set_tax_class( $tax_class_slug );
 		$fee->set_tax_status( 'taxable' );
@@ -364,7 +370,7 @@ class ReturnFee {
 		}
 
 		return sprintf(
-		/* translators: %1$s: return fee amount, %2$s: refund reason */
+			/* translators: [merchant-facing]. %1$s: return fee amount, %2$s: refund reason */
 			__( 'Return fee: %1$s<br>%2$s', 'klarna-payments-for-woocommerce' ),
 			wc_price( $total, array( 'currency' => $order->get_currency() ) ),
 			$reason

@@ -158,8 +158,10 @@ class KP_Order_Data {
 
 		if ( $this->separate_sales_tax ) {
 			$sales_tax_line       = array(
+				/* translators: [merchant-facing]. */
 				'name'                  => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
 				'quantity'              => 1,
+				/* translators: [merchant-facing]. */
 				'reference'             => __( 'Sales Tax', 'klarna-payments-for-woocommerce' ),
 				'tax_rate'              => 0,
 				'total_amount'          => (int) round( (float) $this->order_data->get_total_tax(), 0 ),

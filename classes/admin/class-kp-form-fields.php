@@ -163,37 +163,63 @@ class KP_Form_Fields {
 	 */
 	public static function available_countries( $region = 'all' ) {
 		$eu = array(
+			/* translators: [merchant-facing]. */
 			'at' => __( 'Austria', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'be' => __( 'Belgium', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'cz' => __( 'Czech Republic', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'dk' => __( 'Denmark', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'fi' => __( 'Finland', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'fr' => __( 'France', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'de' => __( 'Germany', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'gr' => __( 'Greece', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'hu' => __( 'Hungary', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'ie' => __( 'Ireland', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'it' => __( 'Italy', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'nl' => __( 'Netherlands', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'no' => __( 'Norway', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'pl' => __( 'Poland', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'pt' => __( 'Portugal', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'ro' => __( 'Romania', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'sk' => __( 'Slovakia', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'es' => __( 'Spain', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'se' => __( 'Sweden', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'ch' => __( 'Switzerland', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'gb' => __( 'United Kingdom', 'klarna-payments-for-woocommerce' ),
 		);
 
 		$na = array(
+			/* translators: [merchant-facing]. */
 			'ca' => __( 'Canada', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'mx' => __( 'Mexico', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'us' => __( 'United States', 'klarna-payments-for-woocommerce' ),
 		);
 
 		$oc = array(
+			/* translators: [merchant-facing]. */
 			'au' => __( 'Australia', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
 			'nz' => __( 'New Zealand', 'klarna-payments-for-woocommerce' ),
 		);
 
@@ -227,62 +253,74 @@ class KP_Form_Fields {
 	public static function get_credential_section_fields( $settings = array() ) {
 		$saved_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 
+		/* translators: [merchant-facing]. */
 		$merchant_portal_html = '<a href="https://portal.klarna.com" target="_blank">' . __( 'Klarna Merchant Portal', 'klarna-payments-for-woocommerce' ) . '</a>';
 
+		/* translators: [merchant-facing]. */
 		$privacy_policy_html = '<a href="https://portal.klarna.com/privacy-policy" target="_blank">' . __( 'Klarna Merchant Privacy Notice', 'klarna-payments-for-woocommerce' ) . '</a>';
-		// translators: %s: privacy policy link.
+		/* translators: [merchant-facing]. %s: privacy policy link. */
 		$credentials_html = sprintf( __( 'By activating Klarna using API credentials you agree to and accept the %s.', 'klarna-payments-for-woocommerce' ), $privacy_policy_html );
 
 		$credentials_section = array(
 			'credentials'              => array(
 				'id'          => 'credentials',
 				'title'       => 'Credentials',
+				/* translators: [merchant-facing]. */
 				'description' => __( 'To unlock the plugin\'s features, enter your credentials', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'kp_section_start',
 				'links'       => array(
 					array(
 						'url'   => 'https://docs.klarna.com/',
+						/* translators: [merchant-facing]. */
 						'title' => __( 'Documentation', 'klarna-payments-for-woocommerce' ),
 					),
 				),
 			),
 			'credentials_info'         => array(
 				'type'        => 'kp_text_info',
+				/* translators: [merchant-facing]. */
 				'title'       => __( 'Client Identifier & API Credentials', 'klarna-payments-for-woocommerce' ),
-				// translators: %s: merchant portal link.
+				/* translators: [merchant-facing]. %s: merchant portal link. */
 				'description' => sprintf( __( 'Enter the credentials for production and test for each market Klarna is used. Get the client identifier and API credentials from the %1$s, under Settings. <br><br><b>%2$s</b>', 'klarna-payments-for-woocommerce' ), $merchant_portal_html, $credentials_html ),
 			),
 			'available_countries'      => array(
+				/* translators: [merchant-facing]. */
 				'title'       => __( 'Enter the countries where Klarna will be available', 'klarna-payments-for-woocommerce' ) . ':',
 				'type'        => 'multiselect',
 				'class'       => 'wc-enhanced-select',
 				'options'     => self::available_countries(),
+				/* translators: [merchant-facing]. */
 				'placeholder' => __( 'Start typing', 'klarna-payments-for-woocommerce' ),
 				'default'     => '',
 			),
 			'testmode'                 => array(
+				/* translators: [merchant-facing]. */
 				'title'    => __( 'Test mode', 'klarna-payments-for-woocommerce' ),
+				/* translators: [merchant-facing]. */
 				'label'    => __( 'Enable Klarna in Klarna\'s test environment.', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
 				'default'  => 'no',
 				'desc_tip' => true,
 			),
 			'send_shopping_data_title' => array(
+				/* translators: [merchant-facing]. */
 				'title'       => __( 'Shopping data', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'kp_text_info',
 				'class'       => 'kp_settings__send_shopping_data',
 				'description' => sprintf(
-					/* translators: %s: link to Klarna's privacy policy */
+					/* translators: [merchant-facing]. %s: link to Klarna's privacy policy */
 					__( 'Sharing your customer\'s data with Klarna improves the customer\'s experience and makes disputes easier to handle. Learn more about <a href="%s" target="_blank">how we handle customer data</a>. The recipient\'s name, email, phone number, and shipping address (street, postal code, city, and country) will be included in this data.', 'klarna-payments-for-woocommerce' ),
 					'https://www.klarna.com/international/privacy-policy/'
 				),
 			),
 			'send_shopping_data'       => array(
 				'type'    => 'checkbox',
+				/* translators: [merchant-facing]. */
 				'label'   => __( 'Share shopping data with Klarna', 'klarna-payments-for-woocommerce' ),
 				'default' => 'yes',
 			),
 			'eu_credentials'           => array(
+				/* translators: [merchant-facing]. */
 				'title' => __( 'European Market', 'klarna-payments-for-woocommerce' ),
 				'type'  => 'kp_text_info',
 			),
@@ -291,6 +329,7 @@ class KP_Form_Fields {
 		$eu_countries = self::available_countries( 'eu' );
 
 		// Add the credentials fields.
+		/* translators: [merchant-facing]. */
 		$eu = self::get_credential_fields( 'eu', __( 'Credentials for Europe', 'klarna-payments-for-woocommerce' ) );
 
 		// Add input fields for all EU countries as well.
@@ -298,8 +337,10 @@ class KP_Form_Fields {
 			$eu = array_merge( $eu, self::get_eu_country_fields( $key, $name ) );
 		}
 		$eu['combine_eu_credentials'] = array(
+			/* translators: [merchant-facing]. */
 			'title'       => __( 'Combine EU credentials', 'klarna-payments-for-woocommerce' ),
-			'label'       => __( 'Combine all EU country credentials into a single', 'klarna-payments-for-woocommerce' ),
+			/* translators: [merchant-facing]. */
+			'label'       => __( 'Combine all EU country credentials into a single set of credentials', 'klarna-payments-for-woocommerce' ),
 			'type'        => 'checkbox',
 			'description' => '',
 			'default'     => empty( $saved_settings ) ? 'yes' : 'no', // Default to yes for new installations, but no for existing.
@@ -307,23 +348,30 @@ class KP_Form_Fields {
 		$na                           = array_merge(
 			array(
 				'na_credentials' => array(
+					/* translators: [merchant-facing]. */
 					'title' => __( 'North American Market', 'klarna-payments-for-woocommerce' ),
 					'type'  => 'kp_text_info',
 				),
 			),
+			/* translators: [merchant-facing]. */
 			self::get_credential_fields( 'us', __( 'Credentials for the US', 'klarna-payments-for-woocommerce' ) ),
+			/* translators: [merchant-facing]. */
 			self::get_credential_fields( 'ca', __( 'Credentials for Canada', 'klarna-payments-for-woocommerce' ) ),
+			/* translators: [merchant-facing]. */
 			self::get_credential_fields( 'mx', __( 'Credentials for Mexico', 'klarna-payments-for-woocommerce' ) )
 		);
 
 		$oc = array_merge(
 			array(
 				'oc_credentials' => array(
+					/* translators: [merchant-facing]. */
 					'title' => __( 'Oceania Market', 'klarna-payments-for-woocommerce' ),
 					'type'  => 'kp_text_info',
 				),
 			),
+			/* translators: [merchant-facing]. */
 			self::get_credential_fields( 'au', __( 'Credentials for Australia', 'klarna-payments-for-woocommerce' ) ),
+			/* translators: [merchant-facing]. */
 			self::get_credential_fields( 'nz', __( 'Credentials for New Zealand', 'klarna-payments-for-woocommerce' ) )
 		);
 
@@ -348,82 +396,110 @@ class KP_Form_Fields {
 			'general'              => array(
 				'id'          => 'general',
 				'title'       => 'Klarna Payments',
+				/* translators: [merchant-facing]. */
 				'description' => __( 'Give your customers the ability to pay in flexible ways such as Buy now, Pay Later, Invoicing, Installments and Financing.', 'klarna-payments-for-woocommerce' ),
 				'links'       => array(
 					array(
 						'url'   => 'https://docs.klarna.com/klarna-payments/',
+						/* translators: [merchant-facing]. */
 						'title' => __( 'Documentation', 'klarna-payments-for-woocommerce' ),
 					),
 				),
 				'type'        => 'kp_section_start',
 			),
 			'enabled'              => array(
+				/* translators: [merchant-facing]. */
 				'title'       => __( 'Enable/Disable', 'klarna-payments-for-woocommerce' ),
+				/* translators: [merchant-facing]. */
 				'label'       => __( 'Enable Klarna Payments', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no',
 			),
 			'logging'              => array(
+				/* translators: [merchant-facing]. */
 				'title'       => __( 'Logging', 'klarna-payments-for-woocommerce' ),
+				/* translators: [merchant-facing]. */
 				'label'       => __( 'Log debug messages', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'select',
+				/* translators: [merchant-facing]. */
 				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'klarna-payments-for-woocommerce' ),
 				'default'     => 'no',
 				'options'     => array(
+					/* translators: [merchant-facing]. */
 					'no'    => __( 'No', 'klarna-payments-for-woocommerce' ),
+					/* translators: [merchant-facing]. */
 					'yes'   => __( 'Yes', 'klarna-payments-for-woocommerce' ),
+					/* translators: [merchant-facing]. */
 					'extra' => __( 'Yes (with extra debug data)', 'klarna-payments-for-woocommerce' ),
 				),
 				'desc_tip'    => true,
 			),
 			'hide_what_is_klarna'  => array(
+				/* translators: [merchant-facing]. */
 				'title'    => __( 'Hide "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
+				/* translators: [merchant-facing]. */
 				'label'    => __( 'If checked, "What is Klarna?" will not be shown.', 'klarna-payments-for-woocommerce' ),
 				'default'  => 'no',
 				'desc_tip' => true,
 			),
 			'float_what_is_klarna' => array(
+				/* translators: [merchant-facing]. */
 				'title'    => __( 'Float "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
+				/* translators: [merchant-facing]. */
 				'label'    => __( 'If checked, "What is Klarna?" will be floated right.', 'klarna-payments-for-woocommerce' ),
 				'default'  => 'yes',
 				'desc_tip' => false,
 			),
 			'send_product_urls'    => array(
+				/* translators: [merchant-facing]. */
 				'title'    => __( 'Product URLs', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
+				/* translators: [merchant-facing]. */
 				'label'    => __( 'Send product and product image URLs to Klarna', 'klarna-payments-for-woocommerce' ),
 				'default'  => 'yes',
 				'desc_tip' => true,
 			),
 			'add_to_email'         => array(
+				/* translators: [merchant-facing]. */
 				'title'    => __( 'Add Klarna URLs to order email', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
+				/* translators: [merchant-facing]. */
 				'label'    => __( 'This will add Klarna URLs to the order emails that are sent. You can read more about this here: ', 'klarna-payments-for-woocommerce' ) . '<a href="https://docs.klarna.com/payments/web-payments/additional-resources/ux-guidelines/post-purchase-experience/" target="_blank">Klarna URLs</a>',
 				'default'  => 'no',
 				'desc_tip' => false,
 			),
 			'customer_type'        => array(
+				/* translators: [merchant-facing]. */
 				'title'       => __( 'Customer type', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'select',
+				/* translators: [merchant-facing]. */
 				'label'       => __( 'Customer type', 'klarna-payments-for-woocommerce' ),
+				/* translators: [merchant-facing]. */
 				'description' => __( 'Select the customer for the store.', 'klarna-payments-for-woocommerce' ),
 				'options'     => array(
+					/* translators: [merchant-facing]. */
 					'b2c' => __( 'Business to Consumer (B2C)', 'klarna-payments-for-woocommerce' ),
+					/* translators: [merchant-facing]. */
 					'b2b' => __( 'Business to Business (B2B)', 'klarna-payments-for-woocommerce' ),
 				),
 				'default'     => 'b2c',
 				'desc_tip'    => true,
 			),
 			'checkout_flow'        => array(
+				/* translators: [merchant-facing]. */
 				'title'       => __( 'Checkout Flow', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'select',
+				/* translators: [merchant-facing]. */
 				'label'       => __( 'Checkout Flow', 'klarna-payments-for-woocommerce' ),
+				/* translators: [merchant-facing]. */
 				'description' => __( 'Choose between Redirect or Pop-out checkout flow.', 'klarna-payments-for-woocommerce' ),
 				'options'     => array(
+					/* translators: [merchant-facing]. */
 					'popout'   => __( 'Pop-out', 'klarna-payments-for-woocommerce' ),
+					/* translators: [merchant-facing]. */
 					'redirect' => __( 'Redirect', 'klarna-payments-for-woocommerce' ),
 				),
 				'default'     => 'popout',
@@ -433,6 +509,7 @@ class KP_Form_Fields {
 				'type'     => 'kp_section_end',
 				'previews' => array(
 					array(
+						/* translators: [merchant-facing]. */
 						'title' => __( 'Preview', 'klarna-payments-for-woocommerce' ),
 						'image' => WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/kp-preview.png',
 					),
@@ -452,7 +529,7 @@ class KP_Form_Fields {
 	 * @return array
 	 */
 	private static function get_eu_country_fields( $key, $name ) {
-		// translators: %s: country name.
+		/* translators: [merchant-facing]. %s: country name. */
 		$title = sprintf( __( 'Credentials for %s:', 'klarna-payments-for-woocommerce' ), $name );
 
 		$fields = self::get_credential_fields( $key, $title );

@@ -154,8 +154,10 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 
 			$show_form = 'true' === $show_form ? true : false;
 			if ( $show_form ) {
+				/* translators: [merchant-facing]. */
 				$order->add_order_note( __( 'Customer aborted purchase with Klarna.', 'klarna-payments-for-woocommerce' ) );
 			} else {
+				/* translators: [merchant-facing]. */
 				$order->add_order_note( __( 'Authorization rejected by Klarna.', 'klarna-payments-for-woocommerce' ) );
 			}
 
