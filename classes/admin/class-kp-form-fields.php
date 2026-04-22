@@ -302,6 +302,25 @@ class KP_Form_Fields {
 				'default'  => 'no',
 				'desc_tip' => true,
 			),
+			'logging'                  => array(
+				/* translators: [merchant-facing]. */
+				'title'       => __( 'Logging', 'klarna-payments-for-woocommerce' ),
+				/* translators: [merchant-facing]. */
+				'label'       => __( 'Log debug messages', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'select',
+				/* translators: [merchant-facing]. */
+				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'klarna-payments-for-woocommerce' ),
+				'default'     => 'no',
+				'options'     => array(
+					/* translators: [merchant-facing]. */
+					'no'    => __( 'No', 'klarna-payments-for-woocommerce' ),
+					/* translators: [merchant-facing]. */
+					'yes'   => __( 'Yes', 'klarna-payments-for-woocommerce' ),
+					/* translators: [merchant-facing]. */
+					'extra' => __( 'Yes (with extra debug data)', 'klarna-payments-for-woocommerce' ),
+				),
+				'desc_tip'    => true,
+			),
 			'send_shopping_data_title' => array(
 				/* translators: [merchant-facing]. */
 				'title'       => __( 'Shopping data', 'klarna-payments-for-woocommerce' ),
@@ -415,25 +434,6 @@ class KP_Form_Fields {
 				'type'        => 'checkbox',
 				'description' => '',
 				'default'     => 'no',
-			),
-			'logging'              => array(
-				/* translators: [merchant-facing]. */
-				'title'       => __( 'Logging', 'klarna-payments-for-woocommerce' ),
-				/* translators: [merchant-facing]. */
-				'label'       => __( 'Log debug messages', 'klarna-payments-for-woocommerce' ),
-				'type'        => 'select',
-				/* translators: [merchant-facing]. */
-				'description' => __( 'Save debug messages to the WooCommerce System Status log.', 'klarna-payments-for-woocommerce' ),
-				'default'     => 'no',
-				'options'     => array(
-					/* translators: [merchant-facing]. */
-					'no'    => __( 'No', 'klarna-payments-for-woocommerce' ),
-					/* translators: [merchant-facing]. */
-					'yes'   => __( 'Yes', 'klarna-payments-for-woocommerce' ),
-					/* translators: [merchant-facing]. */
-					'extra' => __( 'Yes (with extra debug data)', 'klarna-payments-for-woocommerce' ),
-				),
-				'desc_tip'    => true,
 			),
 			'hide_what_is_klarna'  => array(
 				/* translators: [merchant-facing]. */

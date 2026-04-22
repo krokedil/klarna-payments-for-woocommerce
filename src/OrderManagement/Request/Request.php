@@ -2,7 +2,6 @@
 namespace Krokedil\Klarna\OrderManagement\Request;
 
 use Krokedil\Klarna\OrderManagement;
-use Krokedil\Klarna\OrderManagement\Logger;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -302,7 +301,7 @@ abstract class Request {
 			}
 		}
 
-		$this->log_response( $response, $request_args, $response_code );
+		$this->log_response( $response, $request_args, $request_url, $response_code );
 		return $processed_response;
 	}
 
@@ -343,10 +342,11 @@ abstract class Request {
 	 *
 	 * @param array|\WP_Error $response The request response.
 	 * @param array           $request_args The arguments of the request.
+	 * @param string          $request_url The request URL.
 	 * @param int             $code The HTTP Response Code this request returned.
 	 * @return void
 	 */
-	protected function log_response( $response, $request_args, $code ) {
+	protected function log_response( $response, $request_args, $request_url, $code ) {
 		foreach ( $request_args['headers'] as $header => $value ) {
 			if ( 'authorization' === strtolower( $header ) ) {
 				// If it is longer than 15 char., it most likely has a token. This is an assumption that is safe even if it is wrong.
@@ -354,7 +354,7 @@ abstract class Request {
 				break;
 			}
 		}
-		$log = Logger::format_log( $this->klarna_order_id, $this->method, $this->log_title, $request_args, $response, $code );
-		Logger::log( $log, $this->order_management, $this->order_id );
+		$log = \KP_Logger::format_log( $this->klarna_order_id, $this->method, $this->log_title, $request_args, $response, $code, $request_url );
+		\KP_Logger::log( $log );
 	}
 }
