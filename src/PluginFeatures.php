@@ -182,7 +182,7 @@ class PluginFeatures {
 					$error_message = $response->get_error_message();
 					throw new \WP_Exception(
 						sprintf(
-							// translators: %s: The error message from the API request.
+							/* translators: [merchant-facing]. %s: The error message from the API request. */
 							__( 'There was an error when trying to get the feature availability from Klarna. Please check your API credentials and try again. Error: %s', 'klarna-payments-for-woocommerce' ),
 							$error_message
 						)
@@ -226,7 +226,7 @@ class PluginFeatures {
 				$error_message = $response->get_error_message();
 				throw new \WP_Exception(
 					sprintf(
-						// translators: %s: The error message from the API request.
+						/* translators: [merchant-facing]. %s: The error message from the API request. */
 						__( 'There was an error when trying to get the feature availability from Klarna. Please check your API credentials and try again. Error: %s', 'klarna-payments-for-woocommerce' ),
 						$error_message
 					)
