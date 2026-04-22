@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Added an order note when changing the order status to completed, if no capture request is sent because auto-capture or order management is inactive for the order.
