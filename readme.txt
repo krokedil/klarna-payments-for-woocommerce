@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 10.7.0
-Stable tag: 4.10.3
+Stable tag: 4.10.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-04-27    - version 4.10.4 =
+* Fix           - [KOSM] Fixed reference to undefined variable in the cart block integration.
+* Fix           - [KOSM] Fixed cart being replaced with a dummy element when On-Site Messaging is enabled on the blocks cart page.
+
 = 2026-04-21    - version 4.10.3 =
 * Enhancement   - Added error messages to the credentials settings to notify users when an invalid Klarna client ID is entered.
 * Fix           - Interoperability token scripts will now only be enqueued if a client ID is present, preventing unnecessary script loading when not required.
