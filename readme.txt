@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 8.0
 WC requires at least: 5.6.0
 WC tested up to: 10.7.0
-Stable tag: 4.10.4
+Stable tag: 4.10.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,14 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-04-28    - version 4.10.5 =
+* Tweak         - Added a 'translators' comment to each translatable string that describes whether it is customer-facing or merchant-facing.
+* Tweak         - The integrated order management now uses the same logging file and logging setting as the rest of Klarna for WooCommerce.
+* Fix           - Added an order note when changing the order status to completed, if no capture request is sent because auto-capture or order management is inactive for the order.
+* Fix           - Added an order note when a new recurring token is created after changing the payment method for a subscription order.
+* Fix           - Fixed an issue where the manual order management action dropdown would render incorrectly in the order metabox.
+* Fix           - Fixed an issue where the payment method name on the order edit page in WooCommerce admin showed an incorrect title for orders not placed through Klarna Payments.
+
 = 2026-04-27    - version 4.10.4 =
 * Fix           - [KOSM] Fixed reference to undefined variable in the cart block integration.
 * Fix           - [KOSM] Fixed cart being replaced with a dummy element when On-Site Messaging is enabled on the blocks cart page.

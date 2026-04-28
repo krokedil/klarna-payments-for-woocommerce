@@ -1,4 +1,0 @@
-Type: Tweak
-Needs Documentation: no
-
-Adds a 'translators' comment to each translatable string that describes whether it is customer-facing or merchant-facing.
