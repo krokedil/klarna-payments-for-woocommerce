@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+Updated the remote settings page config fetch URL to use the main source instead of develop.
