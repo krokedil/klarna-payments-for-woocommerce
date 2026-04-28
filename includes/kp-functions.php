@@ -27,7 +27,8 @@ function kp_unset_session_values() {
 function kp_extract_error_message( $response ) {
 	$code    = $response->get_error_code();
 	$message = $response->get_error_message();
-	$text    = __( 'Klarna Payments API Error: ', 'klarna-payments-for-woocommerce' ) . '%s %s';
+	/* translators: 1: Klarna API error code, 2: Klarna API error message. [merchant-facing]. */
+	$text = __( 'Klarna Payments API Error: %1$s %2$s', 'klarna-payments-for-woocommerce' );
 	return sprintf( $text, $code, $message );
 }
 

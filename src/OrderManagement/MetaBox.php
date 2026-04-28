@@ -114,6 +114,7 @@ class MetaBox extends OrderMetabox {
 
 		// Check if the order has been paid.
 		if ( empty( $order->get_date_paid() ) && ! in_array( $order->get_status(), array( 'on-hold' ), true ) ) {
+			/* translators: [merchant-facing]. */
 			$this->print_error_content( __( 'The payment has not been finalized with Klarna.', 'klarna-payments-for-woocommerce' ) );
 			return;
 		}
@@ -123,6 +124,7 @@ class MetaBox extends OrderMetabox {
 			$klarna_order = $this->order_management->retrieve_klarna_order( $order_id );
 
 			if ( is_wp_error( $klarna_order ) ) {
+				/* translators: [merchant-facing]. */
 				$this->print_error_content( __( 'Failed to retrieve the order from Klarna.', 'klarna-payments-for-woocommerce' ) );
 				return;
 			}
@@ -154,16 +156,19 @@ class MetaBox extends OrderMetabox {
 		$environment = ! empty( $order->get_meta( '_wc_klarna_environment' ) ) ? $order->get_meta( '_wc_klarna_environment' ) : '';
 
 		self::output_info(
+			/* translators: [merchant-facing]. */
 			__( 'Klarna Environment', 'klarna-payments-for-woocommerce' ),
 			apply_filters( 'kom_meta_environment', $environment )
 		);
 
 		self::output_info(
+			/* translators: [merchant-facing]. */
 			__( 'Klarna order status', 'klarna-payments-for-woocommerce' ),
 			apply_filters( 'kom_meta_order_status', $klarna_order->status )
 		);
 
 		self::output_info(
+			/* translators: [merchant-facing]. */
 			__( 'Initial Payment method', 'klarna-payments-for-woocommerce' ),
 			apply_filters( 'kom_meta_payment_method', $klarna_order->initial_payment_method->description )
 		);
@@ -174,6 +179,7 @@ class MetaBox extends OrderMetabox {
 			$link_url          = admin_url( 'admin.php?page=wc-status&tab=action-scheduler&s=' . rawurlencode( $session_id ) . '&action=-1&paged=1&action2=-1' );
 
 			self::output_info(
+				/* translators: [merchant-facing]. */
 				__( 'Scheduled actions', 'klarna-payments-for-woocommerce' ),
 				'<a target="_blank" href="' . $link_url . '">' . $link_text . '</a>'
 			);
@@ -202,14 +208,17 @@ class MetaBox extends OrderMetabox {
 			}
 			if ( ! empty( $matching_orders_string ) ) {
 				self::output_info(
+					/* translators: [merchant-facing]. */
 					__( 'Orders with same reference', 'klarna-payments-for-woocommerce' ),
 					'<ul>' . $matching_orders_string . '</ul>',
+					/* translators: [merchant-facing]. */
 					__( 'These orders share the same Klarna transaction ID.', 'klarna-payments-for-woocommerce' )
 				);
 			}
 		}
 
 		self::output_actions_dropdown( $order_id, $klarna_order );
+		/* translators: [merchant-facing]. */
 		self::output_collapsable_section( 'kom-advanced', __( 'Advanced', 'klarna-payments-for-woocommerce' ), self::get_advanced_section_content( $order ) );
 	}
 
@@ -237,6 +246,7 @@ class MetaBox extends OrderMetabox {
 						<option value=""><?php esc_attr_e( 'Choose an action...', 'woocommerce' ); ?></option>
 						<?php do_action( 'kom_meta_action_options', $order_id, $klarna_order, $actions ); ?>
 					</select>
+					<?php /* translators: [merchant-facing]. */ ?>
 					<button class="button wc-reload"><span><?php esc_html_e( 'Apply', 'woocommerce' ); ?></span></button>
 					<span class="woocommerce-help-tip" data-tip="
 					<?php
@@ -251,8 +261,38 @@ class MetaBox extends OrderMetabox {
 			<?php endif; ?>
 		</ul>
 		<?php
-		$output = ob_get_clean();
-		echo wp_kses_post( $output );
+		$output       = ob_get_clean();
+		$allowed_tags = array(
+			'ul'     => array(
+				'class' => true,
+			),
+			'li'     => array(
+				'class' => true,
+				'id'    => true,
+			),
+			'select' => array(
+				'class' => true,
+				'name'  => true,
+				'id'    => true,
+			),
+			'option' => array(
+				'value'    => true,
+				'selected' => true,
+				'disabled' => true,
+			),
+			'button' => array(
+				'class' => true,
+				'type'  => true,
+				'name'  => true,
+				'value' => true,
+			),
+			'span'   => array(
+				'class'    => true,
+				'data-tip' => true,
+			),
+		);
+
+		echo wp_kses( $output, $allowed_tags );
 	}
 
 	/**
@@ -277,9 +317,11 @@ class MetaBox extends OrderMetabox {
 		}
 
 		$om_status = $order->get_meta( $kom_disconnected_key ) ? 'disabled' : 'enabled';
-		$title     = __( 'Order management', 'klarna-payments-for-woocommerce' );
-		$tip       = __( 'Disable this to turn off the automatic synchronization with the Klarna Merchant Portal. When disabled, any changes in either system have to be done manually.', 'klarna-payments-for-woocommerce' );
-		$enabled   = 'enabled' === $om_status ? true : false;
+		/* translators: [merchant-facing]. */
+		$title = __( 'Order management', 'klarna-payments-for-woocommerce' );
+		/* translators: [merchant-facing]. */
+		$tip     = __( 'Disable this to turn off the automatic synchronization with the Klarna Merchant Portal. When disabled, any changes in either system have to be done manually.', 'klarna-payments-for-woocommerce' );
+		$enabled = 'enabled' === $om_status ? true : false;
 
 		ob_start();
 		self::output_toggle_switch( $title, $enabled, $tip, 'kom_order_sync--action', array( 'kom-order-sync' => $om_status ) );
@@ -389,6 +431,7 @@ class MetaBox extends OrderMetabox {
 	 */
 	public function output_option_capture( $order_id, $klarna_order, $actions ) {
 		if ( $this->want_output_capture( $order_id, $klarna_order, $actions ) ) {
+			/* translators: [merchant-facing]. */
 			$this->print_option( 'kom_capture', __( 'Capture order', 'klarna-payments-for-woocommerce' ) );
 		}
 	}
@@ -403,6 +446,7 @@ class MetaBox extends OrderMetabox {
 	 */
 	public function output_tip_capture( $order_id, $klarna_order, $actions ) {
 		if ( $this->want_output_capture( $order_id, $klarna_order, $actions ) ) {
+			/* translators: [merchant-facing]. */
 			$this->print_tip_fragment( __( 'Capture order', 'klarna-payments-for-woocommerce' ), __( 'Activates the order with Klarna.', 'klarna-payments-for-woocommerce' ) );
 		}
 	}
@@ -417,6 +461,7 @@ class MetaBox extends OrderMetabox {
 	 */
 	public function output_option_cancel( $order_id, $klarna_order, $actions ) {
 		if ( $this->want_output_cancel( $order_id, $klarna_order, $actions ) ) {
+			/* translators: [merchant-facing]. */
 			$this->print_option( 'kom_cancel', __( 'Cancel order', 'klarna-payments-for-woocommerce' ) );
 		}
 	}
@@ -431,6 +476,7 @@ class MetaBox extends OrderMetabox {
 	 */
 	public function output_tip_cancel( $order_id, $klarna_order, $actions ) {
 		if ( $this->want_output_cancel( $order_id, $klarna_order, $actions ) ) {
+			/* translators: [merchant-facing]. */
 			$this->print_tip_fragment( __( 'Cancel order', 'klarna-payments-for-woocommerce' ), __( 'Cancels the order with Klarna.', 'klarna-payments-for-woocommerce' ) );
 		}
 	}
@@ -445,6 +491,7 @@ class MetaBox extends OrderMetabox {
 	 */
 	public function output_option_sync( $order_id, $klarna_order, $actions ) {
 		if ( $actions['sync'] ) {
+			/* translators: [merchant-facing]. */
 			$this->print_option( 'kom_sync', __( 'Get customer', 'klarna-payments-for-woocommerce' ) );
 		}
 	}
@@ -459,6 +506,7 @@ class MetaBox extends OrderMetabox {
 	 */
 	public function output_tip_sync( $order_id, $klarna_order, $actions ) {
 		if ( $actions['sync'] ) {
+			/* translators: [merchant-facing]. */
 			$this->print_tip_fragment( __( 'Get customer', 'klarna-payments-for-woocommerce' ), __( 'Gets the customer data from Klarna and saves it to the WooCommerce order.', 'klarna-payments-for-woocommerce' ) );
 		}
 	}

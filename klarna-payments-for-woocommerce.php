@@ -5,7 +5,7 @@
  * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 4.10.4
+ * Version: 4.10.5
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
@@ -50,7 +50,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '4.10.4' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '4.10.5' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -375,8 +375,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$support_link = add_query_arg( 'subsection', 'support', $setting_link );
 
 			$plugin_links = array(
+				/* translators: [merchant-facing]. */
 				'<a href="' . $setting_link . '">' . __( 'Settings', 'klarna-payments-for-woocommerce' ) . '</a>',
+				/* translators: [merchant-facing]. */
 				'<a href="https://docs.woocommerce.com/document/klarna-payments/">' . __( 'Docs', 'klarna-payments-for-woocommerce' ) . '</a>',
+				/* translators: [merchant-facing]. */
 				'<a href="' . $support_link . '">' . __( 'Support', 'klarna-payments-for-woocommerce' ) . '</a>',
 			);
 
@@ -418,6 +421,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			?>
 			<div class="notice notice-error">
 				<p>
+					<?php /* translators: [merchant-facing]. */ ?>
 					<?php esc_html_e( 'The WooCommerce plugin must be active for Klarna Payments to work.', 'klarna-payments-for-woocommerce' ); ?>
 				</p>
 			</div>
@@ -436,15 +440,16 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 					<div class="kp-message notice woocommerce-message notice-error">
 						<a class="woocommerce-message-close notice-dismiss"
 							href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'wc-hide-notice', 'kp_check_permalinks' ), 'woocommerce_hide_notices_nonce', '_wc_notice_nonce' ) ); ?>">
+							<?php /* translators: [merchant-facing]. */ ?>
 							<?php esc_html_e( 'Dismiss', 'klarna-payments-for-woocommerce' ); ?>
 						</a>
 						<?php
 						echo wp_kses_post(
 							wpautop(
 								'<p>' . sprintf(
-									// translators: URL to docs.
-									__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for Woocommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
-									esc_url( __( 'https://wordpress.org/support/article/using-permalinks/', 'klarna-payments-for-woocommerce' ) )
+									/* translators: [merchant-facing]. URL to docs. */
+									__( 'It looks as if you don\'t have pretty permalinks enabled in WordPress. In order for Klarna Payments for WooCommerce to function properly, this setting needs to be enabled. <a href="%1$s">Learn more</a>', 'klarna-payments-for-woocommerce' ),
+									esc_url( 'https://wordpress.org/support/article/using-permalinks/' )
 								)
 							)
 						);
@@ -575,9 +580,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public static function get_pay_button_label() {
 
 			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) { // phpcs:ignore
+				/* translators: [customer-facing]. */
 				return apply_filters( 'kp_blocks_order_button_label_free', __( 'Pay with Klarna (free)', 'klarna-payments-for-woocommerce' ) );
 			}
 
+			/* translators: [customer-facing]. */
 			return apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) );
 		}
 	}
