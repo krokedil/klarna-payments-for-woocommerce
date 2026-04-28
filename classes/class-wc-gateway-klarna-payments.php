@@ -179,7 +179,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		if ( ! empty( $order_id ) ) {
 			$order = wc_get_order( $order_id );
-			if ( ! empty( $order ) ) {
+			if ( ! empty( $order ) && $this->id === $order->get_payment_method() ) {
 				return apply_filters( 'woocommerce_gateway_title', $order->get_payment_method_title(), $this->id );
 			}
 		}
