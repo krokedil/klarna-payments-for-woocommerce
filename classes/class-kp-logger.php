@@ -169,8 +169,9 @@ class KP_Logger {
 				if ( ! $wp_hook_current ) {
 					return;
 				}
-				$current  = current( $wp_hook_current );
-				$name     = '';
+				$current = current( $wp_hook_current );
+				$name    = '';
+
 				$callback = $current['function'] ?? null;
 				if ( is_array( $callback ) ) {
 					foreach ( $callback as $callback_item ) {
