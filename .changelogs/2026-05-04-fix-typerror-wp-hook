@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Resolved an issue where a fatal error could occur in the order management metabox in some environments.
