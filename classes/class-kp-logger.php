@@ -164,9 +164,13 @@ class KP_Logger {
 		if ( 'WP_Hook' === $class_name && in_array( $function_name, array( 'apply_filters', 'do_action' ), true ) ) {
 			$wp_hook = $debug_line['object'] ?? null;
 			if ( $wp_hook instanceof WP_Hook ) {
-				$priority = $wp_hook->current_priority();
-				$current  = current( $wp_hook->current() );
-				$name     = '';
+				$priority        = $wp_hook->current_priority();
+				$wp_hook_current = $wp_hook->current();
+				if ( ! $wp_hook_current ) {
+					return;
+				}
+				$current = current( $wp_hook_current );
+				$name    = '';
 
 				$callback = $current['function'] ?? null;
 				if ( is_array( $callback ) ) {
