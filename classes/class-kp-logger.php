@@ -166,15 +166,11 @@ class KP_Logger {
 			if ( $wp_hook instanceof WP_Hook ) {
 				$priority        = $wp_hook->current_priority();
 				$wp_hook_current = $wp_hook->current();
-
 				if ( ! $wp_hook_current ) {
 					return;
 				}
-
-				$current = current( $wp_hook_current );
-
-				$name = '';
-
+				$current  = current( $wp_hook_current );
+				$name     = '';
 				$callback = $current['function'] ?? null;
 				if ( is_array( $callback ) ) {
 					foreach ( $callback as $callback_item ) {
