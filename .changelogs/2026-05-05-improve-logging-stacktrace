@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+wp_debug_backtrace_summary is now used to build the stacktrace included in the plugin logs. This resolves an issue where a fatal error could occur in the order management metabox in some environments.
