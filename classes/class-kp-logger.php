@@ -82,6 +82,6 @@ class KP_Logger {
 	 * @return string
 	 */
 	public static function get_stack() {
-		return wp_debug_backtrace_summary( __CLASS__, 0, false ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions -- Used for logging, not display.
+		return wp_debug_backtrace_summary( __CLASS__, 3, false ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions -- Used for logging, not display.
 	}
 }
