@@ -6,7 +6,7 @@
     "krokedil/support": "1.0.3",
     "krokedil/klarna-express-checkout": "2.1.4",
     "krokedil/klarna-onsite-messaging": "2.1.1",
-    "krokedil/settings-page": "^1.3.0",
+    "krokedil/settings-page": "1.3.4",
     "krokedil/sign-in-with-klarna": "^2.0.0"
   },
   "config": {
