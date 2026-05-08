@@ -198,12 +198,24 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
-		$args['general_content'] = array( $this, 'settings_page_content' );
-		$args['icon']            = WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-icon.svg';
+		$args['general_content']  = array( $this, 'settings_page_content' );
+		$args['icon']             = WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-icon.svg';
+		$args['fallback_content'] = array( $this, 'output_legacy_admin_options' );
+		$args['error_notice']     = __( 'Could not load the enhanced settings page. Showing the standard settings instead.', 'klarna-payments-for-woocommerce' );
+
 		( SettingsPage::get_instance() )
 			->set_plugin_name( 'Klarna' )
 			->register_page( 'klarna_payments', $args, $this )
 			->output( 'klarna_payments' );
+	}
+
+	/**
+	 * Output the standard WooCommerce admin options.
+	 *
+	 * @return void
+	 */
+	public function output_legacy_admin_options() {
+		$this->settings_page_content();
 	}
 
 	/**
