@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 8.0
 WC requires at least: 5.6.0
 WC tested up to: 10.7.0
-Stable tag: 4.10.5
+Stable tag: 4.10.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-05-11    - version 4.10.6 =
+* Enhancement   - Enhanced error handling for the settings page package, to prevent fatal errors and provide clearer feedback when errors occur.
+* Tweak         - Updated the remote settings page config fetch URL to use the main source instead of develop.
+* Fix           - wp_debug_backtrace_summary is now used to build the stacktrace included in the plugin logs. This resolves an issue where a fatal error could occur in the order management metabox in some environments.
+
 = 2026-04-28    - version 4.10.5 =
 * Tweak         - Added a 'translators' comment to each translatable string that describes whether it is customer-facing or merchant-facing.
 * Tweak         - The integrated order management now uses the same logging file and logging setting as the rest of Klarna for WooCommerce.
