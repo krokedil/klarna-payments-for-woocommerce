@@ -198,12 +198,24 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return;
 		}
 
-		$args['general_content'] = array( $this, 'settings_page_content' );
-		$args['icon']            = WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-icon.svg';
+		$args['general_content']  = array( $this, 'settings_page_content' );
+		$args['icon']             = WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-icon.svg';
+		$args['fallback_content'] = array( $this, 'output_legacy_admin_options' );
+		$args['error_notice']     = __( 'Could not load the enhanced settings page. Showing the standard settings instead.', 'klarna-payments-for-woocommerce' );
+
 		( SettingsPage::get_instance() )
 			->set_plugin_name( 'Klarna' )
 			->register_page( 'klarna_payments', $args, $this )
 			->output( 'klarna_payments' );
+	}
+
+	/**
+	 * Output the standard WooCommerce admin options.
+	 *
+	 * @return void
+	 */
+	public function output_legacy_admin_options() {
+		$this->settings_page_content();
 	}
 
 	/**
@@ -217,7 +229,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	private function get_settings_page_args() {
 		$args = get_transient( 'klarna_payments_settings_page_config' );
 		if ( ! $args ) {
-			$args = wp_remote_get( 'https://krokedil-settings-page-configs.s3.eu-north-1.amazonaws.com/develop/configs/klarna-payments-for-woocommerce.json' );
+			$args = wp_remote_get( 'https://krokedil-settings-page-configs.s3.eu-north-1.amazonaws.com/main/configs/klarna-payments-for-woocommerce.json' );
 
 			if ( is_wp_error( $args ) ) {
 				KP_Logger::log( 'Failed to fetch Klarna Payments settings page config from remote source.' );
