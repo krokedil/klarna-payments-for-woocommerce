@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for managing the Klarna Interoperability token.
+ * Class for managing the Klarna Network Session token.
  *
  * @package KlarnaPayments/Classes
  */
@@ -10,9 +10,9 @@ defined( 'ABSPATH' ) || exit;
 use Krokedil\Klarna\PluginFeatures;
 
 /**
- * Class for managing the Klarna Interoperability token.
+ * Class for managing the Klarna Network Session token.
  */
-class KP_Interoperability_Token {
+class KP_Network_Session_Token {
 	/**
 	 * Class constructor.
 	 *
@@ -36,11 +36,11 @@ class KP_Interoperability_Token {
 			return null;
 		}
 
-		return WC()->session->get( 'klarna_interoperability_token' );
+		return WC()->session->get( 'klarna_network_session_token' );
 	}
 
 	/**
-	 * Get the interoperability data from the WooCommerce session.
+	 * Get the network session data from the WooCommerce session.
 	 *
 	 * @return array|null
 	 */
@@ -50,7 +50,7 @@ class KP_Interoperability_Token {
 			return null;
 		}
 
-		return WC()->session->get( 'klarna_interoperability_data' ) ?? null;
+		return WC()->session->get( 'klarna_network_session_data' ) ?? null;
 	}
 
 	/**
@@ -66,11 +66,11 @@ class KP_Interoperability_Token {
 			WC()->session->set_customer_session_cookie( true );
 		}
 
-		WC()->session->set( 'klarna_interoperability_token', $token );
+		WC()->session->set( 'klarna_network_session_token', $token );
 	}
 
 	/**
-	 * Set the interoperability data in the WooCommerce session.
+	 * Set the network session data in the WooCommerce session.
 	 *
 	 * @param string $data The data to set.
 	 *
@@ -84,18 +84,18 @@ class KP_Interoperability_Token {
 		}
 
 		// Clear any existing data.
-		WC()->session->__unset( 'klarna_interoperability_data' );
+		WC()->session->__unset( 'klarna_network_session_data' );
 
 		// Make sure we have a cart and should send data.
 		if ( ! WC()->cart || ! self::should_send_data() ) {
 			return;
 		}
 
-		$customer_type         = $settings['customer_type'] ?? 'b2c';
-		$order_data            = new KP_Order_Data( $customer_type );
-		$interoperability_data = $order_data->get_klarna_order_lines_interoperability();
+		$customer_type        = $settings['customer_type'] ?? 'b2c';
+		$order_data           = new KP_Order_Data( $customer_type );
+		$network_session_data = $order_data->get_klarna_order_lines_network_session();
 
-		WC()->session->set( 'klarna_interoperability_data', $interoperability_data );
+		WC()->session->set( 'klarna_network_session_data', $network_session_data );
 	}
 
 	/**
@@ -108,12 +108,12 @@ class KP_Interoperability_Token {
 			return;
 		}
 
-		WC()->session->__unset( 'klarna_interoperability_token' );
-		WC()->session->__unset( 'klarna_interoperability_data' );
+		WC()->session->__unset( 'klarna_network_session_token' );
+		WC()->session->__unset( 'klarna_network_session_data' );
 	}
 
 	/**
-	 * Determine if we should send interoperability data.
+	 * Determine if we should send network session data.
 	 *
 	 * @return bool
 	 */

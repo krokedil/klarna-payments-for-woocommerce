@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+Replaced the usage of the interoperability token with the Klarna network session token.
