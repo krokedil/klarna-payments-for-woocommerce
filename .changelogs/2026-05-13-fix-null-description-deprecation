@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed a PHP deprecation warning on the checkout page caused by the gateway description being unset.
