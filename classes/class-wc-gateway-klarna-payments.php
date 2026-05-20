@@ -101,6 +101,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 
 		// Get setting values.
 		$this->title         = 'Klarna';
+		$this->description   = $this->get_option( 'description', '' );
 		$this->enabled       = $this->get_option( 'enabled' );
 		$this->customer_type = klarna_get_customer_type( $this->get_option( 'customer_type', 'b2c' ) );
 		$this->testmode      = 'yes' === $this->get_option( 'testmode' );
