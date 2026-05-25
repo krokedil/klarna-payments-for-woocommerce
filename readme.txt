@@ -3,11 +3,11 @@ Contributors: klarna, krokedil, automattic
 Tags: woocommerce, klarna, ecommerce, e-commerce
 Donate link: https://klarna.com
 Requires at least: 6.7
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 8.0
 WC requires at least: 5.6.0
 WC tested up to: 10.7.0
-Stable tag: 4.10.6
+Stable tag: 4.10.7
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-05-25    - version 4.10.7 =
+* Fix           - Fixed a PHP warning that occurred when an invalid or missing client ID was provided for boost features.
+* Fix           - Fixed a PHP deprecation warning on the checkout page caused by the gateway description being unset.
+* Fix           - [KEC] Added a one step flow check to ensure a valid client ID is found before attempting to register module data.
+* Fix           - [KOSM] Added a check to ensure a valid client ID is found before attempting to register module data.
+
 = 2026-05-11    - version 4.10.6 =
 * Enhancement   - Enhanced error handling for the settings page package, to prevent fatal errors and provide clearer feedback when errors occur.
 * Tweak         - Updated the remote settings page config fetch URL to use the main source instead of develop.

@@ -380,16 +380,16 @@ class KP_Assets {
 	public function enqueue_interoperability_token() {
 		$client_id = kp_get_client_id();
 
-		if ( empty( $client_id ) ) {
-			return;
-		}
-
 		wp_register_script_module(
 			'@klarna/interoperability_token',
 			plugins_url( 'assets/js/klarna-interoperability-token.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
 			array( self::KP_WEBSDK_HANDLE_V2 ),
 			WC_KLARNA_PAYMENTS_VERSION
 		);
+
+		if ( empty( $client_id ) ) {
+			return;
+		}
 
 		$params = array(
 			'client_id' => $client_id,
