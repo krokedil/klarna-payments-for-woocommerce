@@ -1,4 +1,10 @@
 *** Klarna for WooCommerce Changelog ***
+2026-05-25      - version 4.10.7
+* Fix           - Fixed a PHP warning that occurred when an invalid or missing client ID was provided for boost features.
+* Fix           - Fixed a PHP deprecation warning on the checkout page caused by the gateway description being unset.
+* Fix           - [KEC] Added a one step flow check to ensure a valid client ID is found before attempting to register module data.
+* Fix           - [KOSM] Added a check to ensure a valid client ID is found before attempting to register module data.
+
 2026-05-11      - version 4.10.6
 * Enhancement   - Enhanced error handling for the settings page package, to prevent fatal errors and provide clearer feedback when errors occur.
 * Tweak         - Updated the remote settings page config fetch URL to use the main source instead of develop.
