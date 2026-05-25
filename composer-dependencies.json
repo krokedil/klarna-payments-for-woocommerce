@@ -7,7 +7,7 @@
     "krokedil/klarna-express-checkout": "2.1.5",
     "krokedil/klarna-onsite-messaging": "2.1.2",
     "krokedil/settings-page": "1.3.4",
-    "krokedil/sign-in-with-klarna": "^2.0.0"
+    "krokedil/sign-in-with-klarna": "dev-develop-show-in-my-account-page-when-a-product-is-in-cart"
   },
   "config": {
     "platform": {
