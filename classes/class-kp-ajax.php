@@ -28,13 +28,13 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function add_ajax_events() {
 			$ajax_events = array(
-				'kp_wc_place_order'                => true,
-				'kp_wc_auth_failed'                => true,
-				'kp_wc_log_js'                     => true,
-				'kp_wc_express_button'             => true,
-				'kp_wc_get_unavailable_features'   => true,
-				'kp_wc_set_interoperability_token' => true,
-				'kp_wc_get_interoperability_data'  => true,
+				'kp_wc_place_order'               => true,
+				'kp_wc_auth_failed'               => true,
+				'kp_wc_log_js'                    => true,
+				'kp_wc_express_button'            => true,
+				'kp_wc_get_unavailable_features'  => true,
+				'kp_wc_set_network_session_token' => true,
+				'kp_wc_get_network_session_data'  => true,
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -260,36 +260,36 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		}
 
 		/**
-		 * Set the interoperability token in the session for the current user.
+		 * Set the network session token in the session for the current user.
 		 *
 		 * @return void
 		 */
-		public static function kp_wc_set_interoperability_token() {
+		public static function kp_wc_set_network_session_token() {
 			// Verify the nonce.
-			check_ajax_referer( 'kp_wc_set_interoperability_token', 'nonce' );
+			check_ajax_referer( 'kp_wc_set_network_session_token', 'nonce' );
 			$token = filter_input( INPUT_POST, 'token', FILTER_SANITIZE_SPECIAL_CHARS );
 
 			if ( empty( $token ) ) {
 				wp_send_json_error( 'missing token' );
 			}
 
-			KP_Interoperability_Token::set_token( $token );
+			KP_Network_Session_Token::set_token( $token );
 
 			wp_send_json_success();
 		}
 
 		/**
-		 * Set the interoperability data in the session for the current user.
+		 * Get the network session data from the session for the current user.
 		 *
 		 * @return void
 		 */
-		public static function kp_wc_get_interoperability_data() {
+		public static function kp_wc_get_network_session_data() {
 			// Verify the nonce.
-			check_ajax_referer( 'kp_wc_get_interoperability_data', 'nonce' );
+			check_ajax_referer( 'kp_wc_get_network_session_data', 'nonce' );
 
-			$interoperability_data = KP_Interoperability_Token::get_data();
+			$network_session_data = KP_Network_Session_Token::get_data();
 
-			wp_send_json_success( $interoperability_data );
+			wp_send_json_success( $network_session_data );
 		}
 	}
 }

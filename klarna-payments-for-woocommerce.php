@@ -165,11 +165,11 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public $siwk = null;
 
 		/**
-		 * The Klarna Interoperability token class instance.
+		 * The Klarna Network Session Token class instance.
 		 *
-		 * @var KP_Interoperability_Token
+		 * @var KP_Network_Session_Token
 		 */
-		public $interoperability_token = null;
+		public $network_session_token = null;
 
 		/**
 		 * The Klarna Order Management instance.
@@ -305,7 +305,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				)
 			);
 			$this->siwk                    = new SignInWithKlarna( $settings );
-			$this->interoperability_token  = new KP_Interoperability_Token();
+			$this->network_session_token   = new KP_Network_Session_Token();
 			$this->order_management        = new OrderManagement();
 			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
 			Compatibility::register();
@@ -481,7 +481,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-subscriptions.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-klarna-express-checkout.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-interoperability-token.php';
+			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-network-session-token.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-settings-page.php';
 

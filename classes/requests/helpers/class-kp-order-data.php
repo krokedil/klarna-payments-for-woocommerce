@@ -177,21 +177,21 @@ class KP_Order_Data {
 	}
 
 	/**
-	 * Returns an array of Klarna order line objects for interoperability data.
+	 * Returns an array of Klarna order line objects for network session data.
 	 *
 	 * @return array
 	 */
-	public function get_klarna_order_lines_interoperability() {
+	public function get_klarna_order_lines_network_session() {
 		$klarna_order_lines = array();
 
 		// Order shipping.
 		$shipping_lines     = $this->order_data->get_line_shipping() ?? array();
-		$klarna_shipping    = $this->get_klarna_shipping_line_object_interoperability( $shipping_lines[0] ?? null );
+		$klarna_shipping    = $this->get_klarna_shipping_line_object_network_session( $shipping_lines[0] ?? null );
 		$shipping_reference = $klarna_shipping['shipping_reference'] ?? '';
 
 		// Order products.
 		foreach ( $this->order_data->get_line_items() as $item ) {
-			$klarna_order_lines[] = $this->get_klarna_order_line_object_interoperability( $item, $shipping_reference );
+			$klarna_order_lines[] = $this->get_klarna_order_line_object_network_session( $item, $shipping_reference );
 		}
 
 		return array(
@@ -201,15 +201,15 @@ class KP_Order_Data {
 	}
 
 	/**
-	 * Returns a formatted Klarna order line object for interoperability data.
+	 * Returns a formatted Klarna order line object for network session data.
 	 *
 	 * @param  KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderLineData $order_line The order line data.
 	 * @param  string                                                        $shipping_reference The shipping reference to use for the order line.
 	 * @return array
 	 */
-	public function get_klarna_order_line_object_interoperability( $order_line, $shipping_reference ) {
+	public function get_klarna_order_line_object_network_session( $order_line, $shipping_reference ) {
 
-		$klarna_interoperability_item = array(
+		$klarna_network_session_item = array(
 			'name'               => $order_line->get_name(),
 			'quantity'           => $order_line->get_quantity(),
 			'total_amount'       => (int) round( (float) ( $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount() ), 0 ),
@@ -222,16 +222,16 @@ class KP_Order_Data {
 			'shipping_reference' => $shipping_reference,
 		);
 
-		return $klarna_interoperability_item;
+		return $klarna_network_session_item;
 	}
 
 	/**
-	 * Returns a formatted Klarna shipping line object for interoperability data.
+	 * Returns a formatted Klarna shipping line object for network session data.
 	 *
 	 * @param  KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderLineData $shipping_line The shipping line data.
 	 * @return array
 	 */
-	public function get_klarna_shipping_line_object_interoperability( $shipping_line ) {
+	public function get_klarna_shipping_line_object_network_session( $shipping_line ) {
 		$customer_data         = $this->order_data->customer;
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
 

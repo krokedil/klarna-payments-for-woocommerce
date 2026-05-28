@@ -36,8 +36,8 @@ class KP_Assets {
 		add_action( 'woocommerce_proceed_to_checkout', array( $this, 'express_button_placement' ) );
 		add_action( 'woocommerce_widget_shopping_cart_buttons', array( $this, 'express_button_placement' ), 15 );
 
-		/* Klarna Interoperability scripts */
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_interoperability_token' ) );
+		/* Klarna Network Session scripts */
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_network_session_token' ) );
 	}
 
 	/**
@@ -373,16 +373,16 @@ class KP_Assets {
 	}
 
 	/**
-	 * Enqueue the interoperability token script.
+	 * Enqueue the network session token script.
 	 *
 	 * @return void
 	 */
-	public function enqueue_interoperability_token() {
+	public function enqueue_network_session_token() {
 		$client_id = kp_get_client_id();
 
 		wp_register_script_module(
-			'@klarna/interoperability_token',
-			plugins_url( 'assets/js/klarna-interoperability-token.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
+			'@klarna/network_session_token',
+			plugins_url( 'assets/js/klarna-network-session-token.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
 			array( self::KP_WEBSDK_HANDLE_V2 ),
 			WC_KLARNA_PAYMENTS_VERSION
 		);
@@ -393,22 +393,22 @@ class KP_Assets {
 
 		$params = array(
 			'client_id' => $client_id,
-			'token'     => KP_Interoperability_Token::get_token(),
-			'data'      => KP_Interoperability_Token::get_data(),
-			'send_data' => KP_Interoperability_Token::should_send_data(),
+			'token'     => KP_Network_Session_Token::get_token(),
+			'data'      => KP_Network_Session_Token::get_data(),
+			'send_data' => KP_Network_Session_Token::should_send_data(),
 			'ajax'      => array(
-				'token_url'   => WC_AJAX::get_endpoint( 'kp_wc_set_interoperability_token' ),
-				'token_nonce' => wp_create_nonce( 'kp_wc_set_interoperability_token' ),
-				'data_url'    => WC_AJAX::get_endpoint( 'kp_wc_get_interoperability_data' ),
-				'data_nonce'  => wp_create_nonce( 'kp_wc_get_interoperability_data' ),
+				'token_url'   => WC_AJAX::get_endpoint( 'kp_wc_set_network_session_token' ),
+				'token_nonce' => wp_create_nonce( 'kp_wc_set_network_session_token' ),
+				'data_url'    => WC_AJAX::get_endpoint( 'kp_wc_get_network_session_data' ),
+				'data_nonce'  => wp_create_nonce( 'kp_wc_get_network_session_data' ),
 			),
 		);
 
-		self::register_module_data( $params, '@klarna/interoperability_token' );
+		self::register_module_data( $params, '@klarna/network_session_token' );
 
 		// Only enqueue the script if the customer is a AP merchant, meaning Klarna Payments is not used as a payment method.
 		if ( ! PluginFeatures::is_available( Features::PAYMENTS ) ) {
-			wp_enqueue_script_module( '@klarna/interoperability_token' );
+			wp_enqueue_script_module( '@klarna/network_session_token' );
 		}
 	}
 

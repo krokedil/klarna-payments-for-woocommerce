@@ -4,14 +4,14 @@ const $ = jQuery;
 let configData = {};
 
 const params = document.getElementById(
-	'wp-script-module-data-@klarna/interoperability_token'
+	'wp-script-module-data-@klarna/klarna_network_session_token'
 );
 
 if (params?.textContent) {
 	try { configData = JSON.parse(params.textContent); } catch { }
 }
 
-const kp_interoperability_token = {
+const kp_network_session_token = {
 	params: null,
 	Klarna: null,
 
@@ -25,22 +25,22 @@ const kp_interoperability_token = {
 		this.bindKlarnaEvents();
 
 		// Set the klarna object to the window for other scripts to use as well.
-		$('body').trigger({ type: 'klarna_wc_sdk_loaded', Klarna: kp_interoperability_token.Klarna });
+		$('body').trigger({ type: 'klarna_wc_sdk_loaded', Klarna: kp_network_session_token.Klarna });
 
 		// Check if we should send shopping data to Klarna.
-		if ( true === kp_interoperability_token.params.send_data ) {
+		if ( true === kp_network_session_token.params.send_data ) {
 			// Update the session data when cart or checkout is updated.
-			$( document.body ).on( "updated_cart_totals added_to_cart removed_from_cart updated_checkout wc-blocks_added_to_cart wc-blocks_removed_from_cart", kp_interoperability_token.updateSessionData );
+			$( document.body ).on( "updated_cart_totals added_to_cart removed_from_cart updated_checkout wc-blocks_added_to_cart wc-blocks_removed_from_cart", kp_network_session_token.updateSessionData );
 		}
 	},
 
 	bindKlarnaEvents: async function () {
-		kp_interoperability_token.Klarna.Interoperability.on( "tokenupdate", kp_interoperability_token.updateSessionToken )
+		kp_network_session_token.Klarna.NetworkSession.on( "tokenupdate", kp_network_session_token.updateSessionToken )
 
 		// If we did not get a token from Klarna yet, trigger the token request.
-		if ( undefined === window.klarna_interoperability_token ) {
-			const result = await kp_interoperability_token.Klarna.Interoperability.token()
-			kp_interoperability_token.updateSessionToken( { interoperabilityToken: result } )
+		if ( undefined === window.klarna_network_session_token ) {
+			const result = await kp_network_session_token.Klarna.NetworkSession.token()
+			kp_network_session_token.updateSessionToken( { networkSessionToken: result } )
 		}
 	},
 
@@ -50,7 +50,7 @@ const kp_interoperability_token = {
 			return
 		}
 
-		window.klarna_interoperability_token = token
+		window.klarna_network_session_token = token
 	},
 
 	updateGlobalData: async function ( data ) {
@@ -59,35 +59,35 @@ const kp_interoperability_token = {
 			return
 		}
 
-		window.klarna_interoperability_data = data
+		window.klarna_network_session_data = data
 	},
 
 	updateSessionToken: async function ( token ) {
-		const interoperabilityToken = token.interoperabilityToken
-		const { token_url, token_nonce } = kp_interoperability_token.params.ajax
+		const networkSessionToken = token.networkSessionToken
+		const { token_url, token_nonce } = kp_network_session_token.params.ajax
 		await $.ajax( {
 			url: token_url,
 			type: "POST",
 			data: {
-				token: interoperabilityToken,
+				token: networkSessionToken,
 				nonce: token_nonce,
 			},
 			async: true,
 			success: function ( response ) {
-				kp_interoperability_token.updateGlobalToken( interoperabilityToken )
+				kp_network_session_token.updateGlobalToken( networkSessionToken )
 				// Check if we should send shopping data to Klarna.
-				if ( true === kp_interoperability_token.params.send_data ) {
-					kp_interoperability_token.updateSessionData()
+				if ( true === kp_network_session_token.params.send_data ) {
+					kp_network_session_token.updateSessionData()
 				}
 			},
 			error: function ( error ) {
-				console.error( "Error updating Interoperability Token:", error )
+				console.error( "Error updating Network Session Token:", error )
 			},
 		} )
 	},
 
 	updateSessionData: async function () {
-		const { data_url, data_nonce } = kp_interoperability_token.params.ajax
+		const { data_url, data_nonce } = kp_network_session_token.params.ajax
 		await $.ajax( {
 			url: data_url,
 			type: "POST",
@@ -97,15 +97,15 @@ const kp_interoperability_token = {
 			async: true,
 			success: function ( response ) {
 				const updatedData = response.data
-				kp_interoperability_token.updateGlobalData( updatedData )
+				kp_network_session_token.updateGlobalData( updatedData )
 
 			},
 			error: function ( error ) {
-				console.error( "Error updating Interoperability data:", error )
+				console.error( "Error updating Network Session data:", error )
 			},
 		} )
 	},
 }
 
-kp_interoperability_token.init();
-export const klarna_interoperability = kp_interoperability_token;
+kp_network_session_token.init();
+export const klarna_network_session = kp_network_session_token;

@@ -6,15 +6,15 @@ namespace Krokedil\Klarna;
  */
 class KECOneStepIntegration implements \KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\Interfaces\AcquiringPartnerIntegration {
 	/**
-	 * Process the order state based on the interoperability token and data.
+	 * Process the order state based on the network session token and data.
 	 *
 	 * @param \WC_Order $order The WooCommerce order object.
-	 * @param string    $interoperability_token The interoperability token.
-	 * @param array     $interoperability_data The interoperability data.
+	 * @param string    $network_session_token The network session token.
+	 * @param array     $network_session_data The network session data.
 	 * @param string    $state The payment state.
 	 * @param array     $payload The payload data.
 	 */
-	public function process_order_state( \WC_Order $order, string $interoperability_token, array $interoperability_data, string $state, array $payload ) {
+	public function process_order_state( \WC_Order $order, string $network_session_token, array $network_session_data, string $state, array $payload ) {
 		$order->set_payment_method( 'klarna_payments' );
 
 		switch ( $state ) {
@@ -70,16 +70,16 @@ class KECOneStepIntegration implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klar
 	 * @throws \WP_Exception If required fields are missing in the payload.
 	 */
 	private function handle_expired_payment( \WC_Order $order, array $payload ) {
-		$payment_request_id     = $payload['payment_request_id'] ?? null;
-		$interoperability_token = $payload['interoperability_token'] ?? null;
+		$payment_request_id    = $payload['payment_request_id'] ?? null;
+		$network_session_token = $payload['klarna_network_session_token'] ?? null;
 
-		if ( ! $payment_request_id || ! $interoperability_token ) {
+		if ( ! $payment_request_id || ! $network_session_token ) {
 			KP_WC()->logger()->error( '[KEC One Step] Missing required fields in payload for expired payment: ' . wp_json_encode( $payload ) );
 			return;
 		}
 
 		/* translators: [merchant-facing]. */
 		$order->update_status( 'cancelled', __( 'Order cancelled due to expired payment request.', 'klarna-payments-for-woocommerce' ) );
-		do_action( 'kec_cancel_order', $order, $interoperability_token, array(), $payload['state'], $payload );
+		do_action( 'kec_cancel_order', $order, $network_session_token, array(), $payload['state'], $payload );
 	}
 }
