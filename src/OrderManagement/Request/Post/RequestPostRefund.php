@@ -156,7 +156,7 @@ class RequestPostRefund extends RequestPost {
 
 					$reference           = $this->get_refund_item_reference( $item );
 					$name                = wp_strip_all_tags( $item->get_name() );
-					$quantity            = abs( $item->get_quantity() ?? 1 );
+					$quantity            = abs( $item->get_quantity() ) ?: 1;
 					$refund_price_amount = round( abs( $refund_order->get_line_subtotal( $item, false ) ) * 100 );
 					$total_discount      = $this->get_refund_item_discount_amount( $item, $separate_sales_tax );
 					$refund_tax_amount   = $separate_sales_tax ? 0 : abs( $this->get_refund_item_tax_amount( $item, $separate_sales_tax ) );
