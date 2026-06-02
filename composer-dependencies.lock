@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bff692f4761e9101e7379ef60c9e87a5",
+    "content-hash": "93af8dc37e2f1a2ca53103677079ddf9",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -139,77 +139,6 @@
                 "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
             },
             "time": "2026-05-11T12:14:57+00:00"
-        },
-        {
-            "name": "krokedil/klarna-onsite-messaging",
-            "version": "2.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/krokedil/klarna-onsite-messaging.git",
-                "reference": "8cd2f46884bad3c244e2787e0fe498213ac4a75c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-onsite-messaging/zipball/8cd2f46884bad3c244e2787e0fe498213ac4a75c",
-                "reference": "8cd2f46884bad3c244e2787e0fe498213ac4a75c",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~7.4 || ~8.0"
-            },
-            "require-dev": {
-                "10up/wp_mock": "^1.0",
-                "php-stubs/woocommerce-stubs": "^8.3",
-                "wp-coding-standards/wpcs": "^3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Krokedil\\KlarnaOnsiteMessaging\\": "src/"
-                }
-            },
-            "archive": {
-                "exclude": [
-                    "tests/*",
-                    "phpunit.xml",
-                    "composer-lock.json",
-                    ".github/*",
-                    ".gitignore",
-                    ".gitattributes"
-                ]
-            },
-            "scripts": {
-                "phpcs": [
-                    "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
-                ],
-                "phpcbf": [
-                    "phpcbf --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
-                ],
-                "test": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml"
-                ],
-                "test-coverage-html": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage"
-                ],
-                "test-coverage-clover": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
-                ]
-            },
-            "license": [
-                "GPL-v3"
-            ],
-            "authors": [
-                {
-                    "name": "Krokedil AB",
-                    "email": "info@krokedil.se"
-                }
-            ],
-            "description": "Klarna On-Site Messaging for WooCommerce",
-            "support": {
-                "source": "https://github.com/krokedil/klarna-onsite-messaging/tree/2.1.2",
-                "issues": "https://github.com/krokedil/klarna-onsite-messaging/issues"
-            },
-            "time": "2026-05-11T12:21:02+00:00"
         },
         {
             "name": "krokedil/settings-page",
