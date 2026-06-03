@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed an issue where a partial refund could trigger a fatal `DivisionByZeroError` if the product quantity was left at `0`. Thank you [@blenardpazari](https://github.com/blenardpazari)!
