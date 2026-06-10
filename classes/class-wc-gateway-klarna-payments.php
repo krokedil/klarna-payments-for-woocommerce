@@ -63,6 +63,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $testmode;
 
 	/**
+	 * Whether the combined Klarna payment method is currently being rendered. Used to prevent the
+	 * payment method template override from recursing, since the gateway keeps its original id when
+	 * the payment methods are combined.
+	 *
+	 * @var bool
+	 */
+	public static $is_rendering_combined = false;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -355,7 +364,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function override_kp_payment_option( $located, $template_name, $args ) {
 		if ( is_checkout() ) {
 			if ( 'checkout/payment-method.php' === $template_name ) {
-				if ( 'klarna_payments' === $args['gateway']->id ) {
+				if ( 'klarna_payments' === $args['gateway']->id && ! self::$is_rendering_combined ) {
 					$checkout_flow = $this->get_option( 'checkout_flow', 'popout' );
 					if ( 'redirect' !== $checkout_flow ) {
 						$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
