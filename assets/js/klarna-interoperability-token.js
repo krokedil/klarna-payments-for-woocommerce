@@ -4,7 +4,7 @@ const $ = jQuery;
 let configData = {};
 
 const params = document.getElementById(
-	'wp-script-module-data-@klarna/interoperability_token'
+	'wp-script-module-data-@klarna/network_session_token'
 );
 
 if (params?.textContent) {

@@ -381,7 +381,7 @@ class KP_Assets {
 		$client_id = kp_get_client_id();
 
 		wp_register_script_module(
-			'@klarna/interoperability_token',
+			'@klarna/network_session_token',
 			plugins_url( 'assets/js/klarna-interoperability-token.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
 			array( self::KP_WEBSDK_HANDLE_V2 ),
 			WC_KLARNA_PAYMENTS_VERSION
@@ -404,11 +404,11 @@ class KP_Assets {
 			),
 		);
 
-		self::register_module_data( $params, '@klarna/interoperability_token' );
+		self::register_module_data( $params, '@klarna/network_session_token' );
 
 		// Only enqueue the script if the customer is a AP merchant, meaning Klarna Payments is not used as a payment method.
 		if ( ! PluginFeatures::is_available( Features::PAYMENTS ) ) {
-			wp_enqueue_script_module( '@klarna/interoperability_token' );
+			wp_enqueue_script_module( '@klarna/network_session_token' );
 		}
 	}
 
