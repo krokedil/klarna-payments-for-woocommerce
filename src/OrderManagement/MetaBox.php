@@ -415,7 +415,8 @@ class MetaBox extends OrderMetabox {
 			return false; // A cancellation is already pending, can't cancel again.
 		}
 		if ( in_array( $klarna_order->status, array( 'CAPTURED', 'PART_CAPTURED', 'CANCELLED' ), true ) ) {
-			return false; // Captured (in whole or in part) orders must be refunded, and cancelled orders can't be cancelled again.		}
+			return false; // Captured (in whole or in part) orders must be refunded, and cancelled orders can't be cancelled again.		
+		}
 
 		return true;
 	}
