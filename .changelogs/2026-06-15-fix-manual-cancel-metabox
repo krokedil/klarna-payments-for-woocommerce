@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed an issue where the "Cancel order" action was missing from the Klarna Order Management metabox when auto-cancel was disabled. The visibility check was inverted, only showing the action for already-captured orders (which cannot be cancelled) instead of authorized orders that can be cancelled.
