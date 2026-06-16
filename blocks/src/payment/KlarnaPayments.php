@@ -81,7 +81,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 		}
 
 		return array(
-			'title'            => 'Klarna',
+			'title'            => kp_is_combined_payment_methods_enabled() ? kp_get_combined_payment_method_title() : 'Klarna',
 			'description'      => $this->get_setting( 'description' ),
 			'iconurl'          => apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
 			'orderbuttonlabel' => WC_Klarna_Payments::get_pay_button_label(),

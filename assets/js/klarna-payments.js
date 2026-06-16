@@ -186,12 +186,14 @@ jQuery( function ( $ ) {
 
 						var options = {
 							container: klarna_payments_container_selector_id,
-							payment_method_category:
-								klarna_payments.getSelectedPaymentCategory() === "klarna_payments"
-									? ""
-									: klarna_payments.getSelectedPaymentCategory(),
 							// purchased_amount is used on the checkout page in any of Klarna payment methods that show a cost breakdown (the "Learn more" OSM widget).
 							purchase_amount: klarna_payments.cart_total,
+						}
+
+						// When the payment methods are combined into a single method, the category is omitted so the widget displays all payment options available in the Klarna session.
+						var payment_method_category = klarna_payments.getSelectedPaymentCategory()
+						if ( "klarna_payments" !== payment_method_category ) {
+							options.payment_method_category = payment_method_category
 						}
 
 						if ( fragments && fragments.kp_cart_total ) {
@@ -276,15 +278,17 @@ jQuery( function ( $ ) {
 
 			klarna_payments.authorization_response = {}
 
+			// The category must match the load() call, so it is omitted here as well when the payment methods are combined into a single method.
+			var options = {}
+			var payment_method_category = klarna_payments.getSelectedPaymentCategory()
+			if ( "klarna_payments" !== payment_method_category ) {
+				options.payment_method_category = payment_method_category
+			}
+
 			try {
 				Klarna.Payments.authorize(
 					address,
-					{
-						payment_method_category:
-							klarna_payments.getSelectedPaymentCategory() === "klarna_payments"
-								? ""
-								: klarna_payments.getSelectedPaymentCategory(),
-					},
+					options,
 					function ( response ) {
 						klarna_payments.authorization_response = response
 						$defer.resolve( response )
