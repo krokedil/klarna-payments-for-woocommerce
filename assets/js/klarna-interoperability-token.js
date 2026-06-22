@@ -4,7 +4,7 @@ const $ = jQuery;
 let configData = {};
 
 const params = document.getElementById(
-	'wp-script-module-data-@klarna/interoperability_token'
+	'wp-script-module-data-@klarna/network_session_token'
 );
 
 if (params?.textContent) {
@@ -35,11 +35,11 @@ const kp_interoperability_token = {
 	},
 
 	bindKlarnaEvents: async function () {
-		kp_interoperability_token.Klarna.Interoperability.on( "tokenupdate", kp_interoperability_token.updateSessionToken )
+		kp_interoperability_token.Klarna.Network.Session.on( "tokenupdate", kp_interoperability_token.updateSessionToken )
 
 		// If we did not get a token from Klarna yet, trigger the token request.
 		if ( undefined === window.klarna_interoperability_token ) {
-			const result = await kp_interoperability_token.Klarna.Interoperability.token()
+			const result = await kp_interoperability_token.Klarna.Network.Session.token()
 			kp_interoperability_token.updateSessionToken( { interoperabilityToken: result } )
 		}
 	},

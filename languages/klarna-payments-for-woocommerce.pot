@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2026-05-11 08:14:21+00:00\n"
+"POT-Creation-Date: 2026-06-22 09:25:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -396,46 +396,59 @@ msgid "Business to Business (B2B)"
 msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:493
+#. translators: [merchant-facing].
+msgid "Combine payment methods"
+msgstr ""
+
 #: classes/admin/class-kp-form-fields.php:496
+#. translators: [merchant-facing].
+msgid ""
+"Display Klarna as a single payment method in the checkout. The customer can "
+"choose between the available Klarna payment options inside the Klarna "
+"widget."
+msgstr ""
+
+#: classes/admin/class-kp-form-fields.php:502
+#: classes/admin/class-kp-form-fields.php:505
 #. translators: [merchant-facing].
 msgid "Checkout Flow"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:498
+#: classes/admin/class-kp-form-fields.php:507
 #. translators: [merchant-facing].
 msgid "Choose between Redirect or Pop-out checkout flow."
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:501
+#: classes/admin/class-kp-form-fields.php:510
 #. translators: [merchant-facing].
 msgid "Pop-out"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:503
+#: classes/admin/class-kp-form-fields.php:512
 #. translators: [merchant-facing].
 msgid "Redirect"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:513
+#: classes/admin/class-kp-form-fields.php:522
 #: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
 #: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
 #. translators: [merchant-facing].
 msgid "Preview"
 msgstr ""
 
-#: classes/admin/class-kp-form-fields.php:533
+#: classes/admin/class-kp-form-fields.php:542
 #. translators: [merchant-facing]. %s: country name.
 msgid "Credentials for %s:"
 msgstr ""
 
 #: classes/admin/class-kp-settings-page.php:78
-#: classes/class-wc-gateway-klarna-payments.php:71
+#: classes/class-wc-gateway-klarna-payments.php:80
 #. translators: [merchant-facing].
 msgid "Klarna for WooCommerce"
 msgstr ""
 
 #: classes/admin/class-kp-settings-page.php:80
-#: classes/class-wc-gateway-klarna-payments.php:73
+#: classes/class-wc-gateway-klarna-payments.php:82
 #. translators: [merchant-facing].
 msgid ""
 "Supercharge your business with one single plugin for increased sales and "
@@ -647,33 +660,33 @@ msgstr ""
 msgid "Klarna recurring token"
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:149
+#: classes/class-wc-gateway-klarna-payments.php:159
 #. translators: [customer-facing].
 msgid "What is Klarna?"
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:204
+#: classes/class-wc-gateway-klarna-payments.php:214
 msgid ""
 "Could not load the enhanced settings page. Showing the standard settings "
 "instead."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:440
+#: classes/class-wc-gateway-klarna-payments.php:450
 #. translators: [customer-facing].
 msgid "Failed to get required data from the Klarna session. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:502
+#: classes/class-wc-gateway-klarna-payments.php:512
 #. translators: [customer-facing].
 msgid "Failed to create a session with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:530
+#: classes/class-wc-gateway-klarna-payments.php:540
 #. translators: [customer-facing].
 msgid "Failed to create a hosted payment page with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:640
+#: classes/class-wc-gateway-klarna-payments.php:650
 #. translators: [customer-facing].
 msgid "Klarna did not accept the new order amount, the order has not been updated"
 msgstr ""
@@ -1441,6 +1454,11 @@ msgstr ""
 msgid "Klarna Payments API Error: %1$s %2$s"
 msgstr ""
 
+#: includes/kp-functions.php:572 klarna-payments-for-woocommerce.php:588
+#. translators: [customer-facing].
+msgid "Pay with Klarna"
+msgstr ""
+
 #: klarna-payments-for-woocommerce.php:379
 #. translators: [merchant-facing].
 msgid "Settings"
@@ -1480,11 +1498,6 @@ msgstr ""
 #: klarna-payments-for-woocommerce.php:584
 #. translators: [customer-facing].
 msgid "Pay with Klarna (free)"
-msgstr ""
-
-#: klarna-payments-for-woocommerce.php:588
-#. translators: [customer-facing].
-msgid "Pay with Klarna"
 msgstr ""
 
 #: src/Api/Registry.php:45
