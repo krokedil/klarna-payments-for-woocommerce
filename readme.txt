@@ -7,7 +7,7 @@ Tested up to: 7.0
 Requires PHP: 8.0
 WC requires at least: 5.6.0
 WC tested up to: 10.8.1
-Stable tag: 4.10.7
+Stable tag: 4.11.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-06-22    - version 4.11.0 =
+* Feature       - Added a new "Combine payment methods" setting. When enabled, Klarna is displayed as a single payment method named "Pay with Klarna" in the checkout, and the customer can choose between the available Klarna payment options inside the Klarna widget.
+* Tweak         - Switched from the interoperability token to the network session token.
+* Fix           - Fixed an issue where a partial refund could trigger a fatal `DivisionByZeroError` if the product quantity was left at `0`. Thank you [@blenardpazari](https://github.com/blenardpazari)!
+* Fix           - Fixed an issue where the cancel action didn't show in some cases.
+
 = 2026-05-25    - version 4.10.7 =
 * Fix           - Fixed a PHP warning that occurred when an invalid or missing client ID was provided for boost features.
 * Fix           - Fixed a PHP deprecation warning on the checkout page caused by the gateway description being unset.

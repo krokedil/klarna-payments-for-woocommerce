@@ -1,4 +1,0 @@
-Type: Tweak
-Needs Documentation: no
-
-Switched from the interoperability token to the network session token.
