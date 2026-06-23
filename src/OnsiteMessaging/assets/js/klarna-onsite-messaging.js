@@ -1,6 +1,6 @@
 const $ = jQuery;
 let configData = {};
-const { klarna_interoperability } = await import("@klarna/interoperability_token");
+const { klarna_interoperability } = await import("@klarna/network_session_token");
 const params = document.getElementById("wp-script-module-data-@klarna/onsite_messaging");
 
 if (params?.textContent) {
