@@ -551,6 +551,35 @@ function kp_set_payment_method_title( $order, $klarna_place_order_response ) {
 }
 
 /**
+ * Whether the "Combine payment methods" setting is enabled, meaning Klarna should be displayed as a
+ * single payment method in the checkout instead of one payment method per Klarna payment category.
+ *
+ * @return bool
+ */
+function kp_is_combined_payment_methods_enabled() {
+	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+
+	return 'yes' === ( $settings['combine_payment_methods'] ?? 'no' );
+}
+
+/**
+ * Get the title for the combined Klarna payment method displayed in the checkout.
+ *
+ * @return string
+ */
+function kp_get_combined_payment_method_title() {
+	/* translators: [customer-facing]. */
+	$title = __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' );
+
+	/**
+	 * Filters the title of the combined Klarna payment method displayed in the checkout.
+	 *
+	 * @param string $title The combined Klarna payment method title.
+	 */
+	return apply_filters( 'wc_klarna_payments_combined_payment_method_title', $title );
+}
+
+/**
  * Whether HPOS is enabled.
  *
  * @return bool
