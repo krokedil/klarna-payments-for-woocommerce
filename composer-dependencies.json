@@ -4,7 +4,7 @@
     "krokedil/wp-api": "^1.0",
     "krokedil/woocommerce": "^1.8.0",
     "krokedil/support": "1.0.3",
-    "krokedil/klarna-express-checkout": "2.1.5",
+    "krokedil/klarna-express-checkout": "dev-develop-fallback-no-sku",
     "krokedil/klarna-onsite-messaging": "2.1.2",
     "krokedil/settings-page": "1.3.4",
     "krokedil/sign-in-with-klarna": "^2.0.0"
