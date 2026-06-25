@@ -119,7 +119,7 @@ abstract class Page {
 				$this->{$key} = $settings->get( $value );
 			}
 
-			if ( in_array( $this->{$key}, array( 'yes', 'no' ) ) ) {
+			if ( in_array( $this->{$key}, array( 'yes', 'no' ), true ) ) {
 				$this->{$key} = wc_string_to_bool( $this->{$key} );
 			}
 		}

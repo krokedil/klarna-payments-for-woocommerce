@@ -35,11 +35,11 @@ class Settings {
 	 * Retrieve the value of a setting.
 	 *
 	 * @param string $key The setting name.
-	 * @param mixed  $default The default value if $key does not exist. Default is null.
+	 * @param mixed  $fallback The default value if $key does not exist. Default is null.
 	 * @return string|int|null The setting's string or integer value. NULL if $key does not exist.
 	 */
-	public function get( $key, $default = null ) {
-		return array_key_exists( $key, $this->settings ) ? $this->settings[ $key ] : $default;
+	public function get( $key, $fallback = null ) {
+		return array_key_exists( $key, $this->settings ) ? $this->settings[ $key ] : $fallback;
 	}
 
 	/**
@@ -347,7 +347,7 @@ class Settings {
 	 */
 	public function is_enabled() {
 		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
-		if ( in_array( 'onsite_messaging', $kp_unavailable_feature_ids ) ) {
+		if ( in_array( 'onsite_messaging', $kp_unavailable_feature_ids, true ) ) {
 			return false;
 		}
 
