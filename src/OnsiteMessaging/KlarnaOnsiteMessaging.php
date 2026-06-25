@@ -150,6 +150,7 @@ class KlarnaOnsiteMessaging {
 	/**
 	 * Enqueue KOSM and library scripts.
 	 *
+	 * @param bool $show_everywhere Whether to enqueue scripts on all pages.
 	 * @return void
 	 */
 	public function enqueue_scripts( $show_everywhere = false ) {
@@ -165,9 +166,9 @@ class KlarnaOnsiteMessaging {
 		$region        = 'eu-library';
 		$base_location = wc_get_base_location();
 		if ( is_array( $base_location ) && isset( $base_location['country'] ) ) {
-			if ( in_array( $base_location['country'], array( 'US', 'CA' ) ) ) {
+			if ( in_array( $base_location['country'], array( 'US', 'CA' ), true ) ) {
 				$region = 'na-library';
-			} elseif ( in_array( $base_location['country'], array( 'AU', 'NZ' ) ) ) {
+			} elseif ( in_array( $base_location['country'], array( 'AU', 'NZ' ), true ) ) {
 				$region = 'oc-library';
 			}
 		}
@@ -192,7 +193,7 @@ class KlarnaOnsiteMessaging {
 			'get_cart_total_url' => \WC_AJAX::get_endpoint( 'kosm_get_cart_total' ),
 		);
 
-		if ( isset( $_GET['osmDebug'] ) ) {
+		if ( isset( $_GET['osmDebug'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$localize['debug_info'] = array(
 				'product'        => is_product(),
 				'cart'           => is_cart(),
