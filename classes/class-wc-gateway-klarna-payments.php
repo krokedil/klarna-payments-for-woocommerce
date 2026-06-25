@@ -410,7 +410,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$checkout_flow = $this->get_option( 'checkout_flow', 'popout' );
 
 		if ( 'redirect' === $checkout_flow ) {
-			return $this->process_blocks_order( $order );
+			// If the user arrived via the KEC two-step flow, skip the HPP and process the order directly.
+			$kec_client_token = KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\Session::get_client_token();
+			if ( empty( $kec_client_token ) ) {
+				return $this->process_blocks_order( $order );
+			}
 		}
 
 		return $this->process_checkout_order( $order );
