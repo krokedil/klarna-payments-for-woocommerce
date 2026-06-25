@@ -14,6 +14,8 @@ class Widget extends \WP_Widget {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param KlarnaOnsiteMessaging $onsite_messaging Instance of the main KlarnaOnsiteMessaging class.
 	 */
 	public function __construct( $onsite_messaging ) {
 		$this->onsite_messaging = $onsite_messaging;
@@ -54,14 +56,14 @@ class Widget extends \WP_Widget {
 			)
 		);
 
-		echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+		echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		if ( ! empty( $title ) ) {
-			echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+			echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		echo esc_attr( Utility::print_placement( $instance ) );
 
-		echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+		echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -77,17 +79,17 @@ class Widget extends \WP_Widget {
 		$data_theme = ! empty( $instance['theme'] ) ? $instance['theme'] : '';
 		?>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"><?php esc_html_e( 'Title:' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'klarna-payments-for-woocommerce' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_html( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'key' ) ); ?>"><?php esc_html_e( 'Placement Key' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'key' ) ); ?>"><?php esc_html_e( 'Placement Key', 'klarna-payments-for-woocommerce' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'key' ) ); ?>"
 				name="<?php echo esc_attr( $this->get_field_name( 'key' ) ); ?>" type="text"
 				value="<?php echo esc_attr( $data_key ); ?>" />
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'theme' ) ); ?>"><?php esc_html_e( 'Placement Theme:' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'theme' ) ); ?>"><?php esc_html_e( 'Placement Theme:', 'klarna-payments-for-woocommerce' ); ?></label>
 			<select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'theme' ) ); ?>"
 					name="<?php echo esc_attr( $this->get_field_name( 'theme' ) ); ?>">
 				<option value="default" <?php selected( $data_theme, 'default' ); ?>>Default</option>
