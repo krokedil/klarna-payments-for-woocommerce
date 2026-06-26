@@ -581,10 +581,20 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			if ( isset( WC()->cart ) && 0 == WC()->cart->total ) { // phpcs:ignore
 				/* translators: [customer-facing]. */
+				/**
+				 * Filters the checkout pay button label shown for Klarna when the cart total is zero.
+				 *
+				 * @param string $label The pay button label.
+				 */
 				return apply_filters( 'kp_blocks_order_button_label_free', __( 'Pay with Klarna (free)', 'klarna-payments-for-woocommerce' ) );
 			}
 
 			/* translators: [customer-facing]. */
+			/**
+			 * Filters the checkout pay button label shown for Klarna.
+			 *
+			 * @param string $label The pay button label.
+			 */
 			return apply_filters( 'kp_blocks_order_button_label', __( 'Pay with Klarna', 'klarna-payments-for-woocommerce' ) );
 		}
 	}

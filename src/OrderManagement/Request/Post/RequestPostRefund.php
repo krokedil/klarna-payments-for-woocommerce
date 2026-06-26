@@ -151,6 +151,12 @@ class RequestPostRefund extends RequestPost {
 					if ( is_object( $product ) && method_exists( $product, 'is_downloadable' ) ) {
 							$type = $product->is_downloadable() || $product->is_virtual() ? 'digital' : 'physical';
 					} else {
+							/**
+							 * Filters the product type used for a refund order line when the product no longer exists in WooCommerce.
+							 *
+							 * @param string                $type The product type to use. Default 'physical'.
+							 * @param \WC_Order_Item_Product $item The WooCommerce order item being refunded.
+							 */
 							$type = apply_filters( 'kom_line_item_product_type', 'physical', $item );
 					}
 
@@ -271,6 +277,12 @@ class RequestPostRefund extends RequestPost {
 			}
 		}
 
+		/**
+		 * Filters the refund order lines sent to Klarna when refunding an order.
+		 *
+		 * @param array $data The refund order lines.
+		 * @param int   $order_id The WooCommerce order ID.
+		 */
 		return apply_filters( 'kom_refund_order_args', $data, $this->order_id );
 	}
 

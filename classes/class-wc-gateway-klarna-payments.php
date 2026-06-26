@@ -558,6 +558,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @hook woocommerce_api_wc_gateway_klarna_payments
 	 */
 	public function notification_listener() {
+		/**
+		 * Triggers on the Klarna notification endpoint, allowing the Klarna Order Management plugin to process pending orders.
+		 */
 		do_action( 'wc_klarna_notification_listener' );
 	}
 
@@ -572,6 +575,14 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return bool
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+		/**
+		 * Filters the result of a Klarna Payments refund, allowing the Klarna Order Management plugin to process it.
+		 *
+		 * @param bool     $result Whether the refund was processed. Default false.
+		 * @param int      $order_id The WooCommerce order ID.
+		 * @param null|int $amount The refund amount, or null for the full amount.
+		 * @param string   $reason The reason for the refund.
+		 */
 		return apply_filters( 'wc_klarna_payments_process_refund', false, $order_id, $amount, $reason );
 	}
 

@@ -49,6 +49,12 @@ function get_klarna_customer( $customer_type ) {
 		$customer['klarna_access_token'] = $access_token;
 	}
 
+	/**
+	 * Filters the Klarna customer object added to the request arguments.
+	 *
+	 * @param array  $customer The Klarna customer object.
+	 * @param string $customer_type The customer type from the settings.
+	 */
 	return apply_filters( 'kp_get_customer_type', $customer, $customer_type );
 }
 
@@ -64,6 +70,11 @@ function kp_get_klarna_country( $order = false ) {
 
 		// If the billing_country field is unset, $country will be empty.
 		if ( ! empty( $country ) ) {
+			/**
+			 * Filters the country code used to determine the Klarna market for the customer.
+			 *
+			 * @param string $country The two-letter country code.
+			 */
 			return apply_filters( 'wc_klarna_payments_country', $country );
 		}
 	}
@@ -72,6 +83,11 @@ function kp_get_klarna_country( $order = false ) {
 	if ( method_exists( 'WC_Customer', 'get_billing_country' ) && ! empty( WC()->customer ) ) {
 		$country = WC()->customer->get_billing_country();
 		if ( ! empty( $country ) ) {
+			/**
+			 * Filters the country code used to determine the Klarna market for the customer.
+			 *
+			 * @param string $country The two-letter country code.
+			 */
 			return apply_filters( 'wc_klarna_payments_country', $country );
 		}
 	}
@@ -79,6 +95,12 @@ function kp_get_klarna_country( $order = false ) {
 	/* Ignores whatever country the customer selects on the checkout page, and always uses the store's base location. Only used as fallback. */
 	$base_location = wc_get_base_location();
 	$country       = $base_location['country'];
+
+	/**
+	 * Filters the country code used to determine the Klarna market for the customer.
+	 *
+	 * @param string $country The two-letter country code.
+	 */
 	return apply_filters( 'wc_klarna_payments_country', $country );
 }
 
@@ -127,13 +149,20 @@ function kp_save_order_meta_data( $order, $response ) {
  * @return array   $result  Payment result.
  */
 function kp_process_accepted( $order, $decoded ) {
+	$order_id   = $order->get_id();
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	kp_save_order_meta_data( $order, $decoded );
 	$order->payment_complete( $decoded['order_id'] );
 	$order->add_order_note( 'Payment via Klarna Payments, order ID: ' . $decoded['order_id'] );
 
-	do_action( 'wc_klarna_payments_accepted', $order->get_id(), $decoded );
-	do_action( 'wc_klarna_accepted', $order->get_id(), $decoded );
+	/**
+	 * Triggers after an accepted Klarna Payments order has been completed and its meta data stored.
+	 *
+	 * @param int   $order_id The WooCommerce order ID.
+	 * @param array $decoded The decoded Klarna order data.
+	 */
+	do_action( 'wc_klarna_payments_accepted', $order_id, $decoded );
+	do_action( 'wc_klarna_accepted', $order_id, $decoded );
 
 	return array(
 		'result'   => 'success',
@@ -150,11 +179,20 @@ function kp_process_accepted( $order, $decoded ) {
  * @return array   $result  Payment result.
  */
 function kp_process_pending( $order, $decoded ) {
+	$order_id   = $order->get_id();
 	$kp_gateway = new WC_Gateway_Klarna_Payments();
 	$order->update_status( 'on-hold', 'Klarna order is under review, order ID: ' . $decoded['order_id'] );
 	kp_save_order_meta_data( $order, $decoded );
-	do_action( 'wc_klarna_payments_pending', $order->get_id(), $decoded );
-	do_action( 'wc_klarna_pending', $order->get_id(), $decoded );
+
+	/**
+	 * Triggers after a pending Klarna Payments order has been set to on-hold for review.
+	 *
+	 * @param int   $order_id The WooCommerce order ID.
+	 * @param array $decoded The decoded Klarna order data.
+	 */
+	do_action( 'wc_klarna_payments_pending', $order_id, $decoded );
+	do_action( 'wc_klarna_pending', $order_id, $decoded );
+
 	return array(
 		'result'   => 'success',
 		'redirect' => $kp_gateway->get_return_url( $order ),
@@ -170,10 +208,24 @@ function kp_process_pending( $order, $decoded ) {
  * @return array   $result  Payment result.
  */
 function kp_process_rejected( $order, $decoded ) {
+	$order_id = $order->get_id();
+	/**
+	 * Filters the WooCommerce order status applied to a rejected Klarna Payments order.
+	*
+	* @param string $status The order status to set. Default 'failed'.
+	*/
 	$status = apply_filters( 'kp_order_rejected_status', 'failed' );
 	$order->update_status( $status, 'Klarna order was rejected.' );
-	do_action( 'wc_klarna_payments_rejected', $order->get_id(), $decoded );
-	do_action( 'wc_klarna_rejected', $order->get_id(), $decoded );
+
+	/**
+	 * Triggers after a rejected Klarna Payments order has had its status updated.
+	 *
+	 * @param int   $order_id The WooCommerce order ID.
+	 * @param array $decoded The decoded Klarna order data.
+	 */
+	do_action( 'wc_klarna_payments_rejected', $order_id, $decoded );
+	do_action( 'wc_klarna_rejected', $order_id, $decoded );
+
 	return array(
 		'result'   => 'failure',
 		'redirect' => '',
@@ -197,6 +249,11 @@ function kp_get_locale() {
 			break;
 	}
 
+	/**
+	 * Filters the locale string sent to Klarna, formatted to match the Klarna API.
+	 *
+	 * @param string $locale The formatted locale, for example 'en-GB'.
+	 */
 	return apply_filters( 'kp_locale', substr( str_replace( '_', '-', $locale ), 0, 5 ) );
 }
 
@@ -613,5 +670,10 @@ function kp_is_hpos_enabled() {
  * @return string
  */
 function klarna_get_customer_type( $customer_type ) {
+	/**
+	 * Filters the customer type used for Klarna Payments.
+	 *
+	 * @param string $customer_type The customer type from the settings.
+	 */
 	return apply_filters( 'klarna_get_customer_type', $customer_type );
 }

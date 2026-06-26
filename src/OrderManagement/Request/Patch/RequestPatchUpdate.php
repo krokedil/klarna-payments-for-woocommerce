@@ -47,6 +47,12 @@ class RequestPatchUpdate extends RequestPatch {
 			'order_amount'     => $kp_order_data->order_data->get_total(),
 			'order_tax_amount' => $kp_order_data->order_data->get_total_tax(),
 		);
+		/**
+		 * Filters the request body sent to Klarna when updating an order's authorization.
+		 *
+		 * @param array $data The update request body, including order lines and amounts.
+		 * @param int   $order_id The WooCommerce order ID.
+		 */
 		return apply_filters( 'kom_order_update_args', $data, $this->order_id );
 	}
 }

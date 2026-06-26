@@ -137,7 +137,15 @@ abstract class Request {
 	 * @return string
 	 */
 	protected function get_api_url_base() {
-		$region     = strtolower( apply_filters( 'klarna_base_region', $this->get_klarna_api_region() ) );
+		$region = $this->get_klarna_api_region();
+		$region = strtolower(
+			/**
+			 * Filters the Klarna API region used to build the order management API base URL.
+			 *
+			 * @param string $region The Klarna API region, derived from the order's country.
+			 */
+			apply_filters( 'klarna_base_region', $region )
+		);
 		$playground = $this->use_playground() ? '.playground' : '';
 		$domain     = 'klarna.com';
 		return "https://api{$region}{$playground}.{$domain}/";
@@ -319,7 +327,13 @@ abstract class Request {
 			'headers'    => $headers,
 			'user-agent' => $this->get_user_agent(),
 			'method'     => $this->method,
-			'timeout'    => apply_filters( 'kom_request_timeout', 10 ),
+			'timeout'    =>
+				/**
+				 * Filters the timeout, in seconds, for Klarna order management API requests.
+				 *
+				 * @param int $timeout The request timeout in seconds. Default 10.
+				 */
+				apply_filters( 'kom_request_timeout', 10 ),
 		);
 		$body = $this->get_body();
 		if ( ! empty( $body ) ) {

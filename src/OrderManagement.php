@@ -81,7 +81,7 @@ class OrderManagement {
 					function () {
 						?>
 						<div class="notice notice-error">
-				
+
 								<?php /* translators: [merchant-facing]. */ ?>
 								<p><strong><?php esc_html_e( 'Klarna Order Management is now included in Klarna for WooCommerce.', 'klarna-payments-for-woocommerce' ); ?></strong></p>
 								<?php /* translators: [merchant-facing]. */ ?>
@@ -359,7 +359,13 @@ class OrderManagement {
 			}
 
 			// Changes are only possible if order is an allowed order status.
-			if ( ! in_array( $order->get_status(), apply_filters( 'kom_allowed_update_statuses', array( 'on-hold' ) ), true ) ) {
+			/**
+			 * Filters the WooCommerce order statuses for which Klarna order updates are allowed.
+			 *
+			 * @param string[] $statuses The allowed order statuses. Default array( 'on-hold' ).
+			 */
+			$allowed_statuses = apply_filters( 'kom_allowed_update_statuses', array( 'on-hold' ) );
+			if ( ! in_array( $order->get_status(), $allowed_statuses, true ) ) {
 				return new \WP_Error( 'not_allowed_status', 'Order is not in allowed status.' );
 			}
 
@@ -622,6 +628,11 @@ class OrderManagement {
 			return new \WP_Error( 'refund_failed', 'Refund failed.', $response->get_error_message() );
 		}
 
+		/**
+		 * Filters the return fees applied to a Klarna refund, used to build the refund order note.
+		 *
+		 * @param array $applied_return_fees The applied return fees, with 'amount' and 'tax_amount' keys.
+		 */
 		$applied_return_fees = apply_filters( 'klarna_applied_return_fees', array() );
 
 		/* translators: [merchant-facing]. refund amount, refund id. */

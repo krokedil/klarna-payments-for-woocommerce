@@ -25,6 +25,11 @@ class Registry {
 	 */
 	public function __construct() {
 		$this->init();
+		/**
+		 * Filters the list of REST API controllers registered by the plugin.
+		 *
+		 * @param Controller[] $controllers The list of API controllers to register. Default empty array.
+		 */
 		$this->controllers = apply_filters( 'klarna_register_api_controller', array() );
 		add_action( 'rest_api_init', array( $this, 'register_controller_routes' ) );
 	}

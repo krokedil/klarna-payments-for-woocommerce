@@ -20,6 +20,11 @@ if ( is_array( $klarna_payment_categories ) ) {
 	$kp                 = $available_gateways['klarna_payments'];
 	$chosen_gateway     = $available_gateways[ array_key_first( $available_gateways ) ];
 
+	/**
+	 * Filters the Klarna payment categories available to display in the checkout.
+	 *
+	 * @param array $klarna_payment_categories The available Klarna payment method categories.
+	 */
 	$klarna_payment_categories = apply_filters( 'wc_klarna_payments_available_payment_categories', $klarna_payment_categories );
 
 	// If the payment methods should be combined, render a single payment method. The Klarna widget will let the customer choose between the available Klarna payment options.

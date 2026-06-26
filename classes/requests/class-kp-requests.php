@@ -112,7 +112,14 @@ abstract class KP_Requests extends Request {
 		$country_data = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $country ?? '' ) ] ?? null;
 		$testmode     = wc_string_to_bool( $settings['testmode'] ?? 'no' ); // Get the testmode setting.
 
-		$region     = strtolower( apply_filters( 'klarna_base_region', $country_data['endpoint'] ?? '' ) ); // Get the region from the country parameters, blank for EU.
+		$region = strtolower(
+			/**
+			 * Filters the Klarna API region used to build the API base URL.
+			 *
+			 * @param string $region The Klarna API region, derived from the country endpoint. Blank for EU.
+			 */
+			apply_filters( 'klarna_base_region', $country_data['endpoint'] ?? '' )
+		); // Get the region from the country parameters, blank for EU.
 		$playground = $testmode ? '.playground' : ''; // If testmode is enabled, add playground to the subdomain.
 		$subdomain  = "api{$region}{$playground}"; // Combine the string to one subdomain.
 

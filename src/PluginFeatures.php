@@ -101,7 +101,12 @@ class PluginFeatures {
 		// Initialize the features.
 		$this->features = $features;
 
-		do_action( 'kp_plugin_features_initialized', $this->features );
+		/**
+		 * Triggers after the features class has been initialized and can be used.
+		 *
+		 * @param array $features The features and their availability.
+		 */
+		do_action( 'kp_plugin_features_initialized', $features );
 	}
 
 	/**
