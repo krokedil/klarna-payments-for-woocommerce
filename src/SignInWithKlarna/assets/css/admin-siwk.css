@@ -1,0 +1,8 @@
+tr:has(.siwk) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+tr:has(.siwk) th {
+    display: none;
+}
