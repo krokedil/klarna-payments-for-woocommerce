@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
-use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
+use Krokedil\Klarna\OnsiteMessaging\KlarnaOnsiteMessaging;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
