@@ -87,6 +87,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 				/**
 				 * Filters the Klarna logo URL shown for the payment method in the block checkout.
 				 *
+				 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-klarna-logo-in-the-blocks-checkout
 				 * @param string $logo_url The URL of the Klarna logo.
 				 */
 				apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),

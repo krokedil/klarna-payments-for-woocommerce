@@ -38,6 +38,7 @@ abstract class KP_Requests_Get extends KP_Requests {
 					/**
 					 * Filters the timeout, in seconds, for Klarna API requests.
 					 *
+					 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-request-timeout-time
 					 * @param int $timeout The request timeout in seconds. Default 10.
 					 */
 					apply_filters( 'wc_kp_request_timeout', 10 ),

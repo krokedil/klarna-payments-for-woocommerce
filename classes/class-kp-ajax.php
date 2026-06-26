@@ -164,6 +164,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			/**
 			 * Triggers after an order note has been added when the Klarna authorization modal is closed or rejected.
 			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#handle-the-klarna-modal-closed-event
 			 * @param WC_Order $order The WooCommerce order object.
 			 * @param bool     $show_form Whether the checkout form should be shown again to the customer.
 			 */

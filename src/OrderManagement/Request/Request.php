@@ -142,6 +142,7 @@ abstract class Request {
 			/**
 			 * Filters the Klarna API region used to build the order management API base URL.
 			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-base-region-for-api-requests
 			 * @param string $region The Klarna API region, derived from the order's country.
 			 */
 			apply_filters( 'klarna_base_region', $region )
@@ -331,6 +332,7 @@ abstract class Request {
 				/**
 				 * Filters the timeout, in seconds, for Klarna order management API requests.
 				 *
+				 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-order-management-request-timeout
 				 * @param int $timeout The request timeout in seconds. Default 10.
 				 */
 				apply_filters( 'kom_request_timeout', 10 ),

@@ -362,6 +362,7 @@ class OrderManagement {
 			/**
 			 * Filters the WooCommerce order statuses for which Klarna order updates are allowed.
 			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-order-statuses-that-allow-klarna-order-updates
 			 * @param string[] $statuses The allowed order statuses. Default array( 'on-hold' ).
 			 */
 			$allowed_statuses = apply_filters( 'kom_allowed_update_statuses', array( 'on-hold' ) );
@@ -631,6 +632,7 @@ class OrderManagement {
 		/**
 		 * Filters the return fees applied to a Klarna refund, used to build the refund order note.
 		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#inspect-the-return-fees-applied-to-a-klarna-refund
 		 * @param array $applied_return_fees The applied return fees, with 'amount' and 'tax_amount' keys.
 		 */
 		$applied_return_fees = apply_filters( 'klarna_applied_return_fees', array() );

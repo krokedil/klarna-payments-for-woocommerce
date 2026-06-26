@@ -81,7 +81,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		/* translators: [merchant-facing]. */
 		$this->method_description = __( 'Supercharge your business with one single plugin for increased sales and enhanced shopping experiences.', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = 'redirect' !== $this->get_option( 'checkout_flow', 'popout' );
-		$this->supports           = apply_filters(
+		/**
+		 * Filters the features supported by the Klarna Payments gateway.
+		 *
+		 * Use this to remove subscriptions support, since it is not possible to disable subscriptions in the Klarna account for Klarna Payments.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#disable-klarna-payments-for-subscriptions
+		 * @param array $supports The supported features.
+		 */
+		$this->supports = apply_filters(
 			'wc_klarna_payments_supports',
 			array(
 				'products',
@@ -560,6 +568,8 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function notification_listener() {
 		/**
 		 * Triggers on the Klarna notification endpoint, allowing the Klarna Order Management plugin to process pending orders.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-klarna-sends-a-push-notification
 		 */
 		do_action( 'wc_klarna_notification_listener' );
 	}
@@ -578,6 +588,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		/**
 		 * Filters the result of a Klarna Payments refund, allowing the Klarna Order Management plugin to process it.
 		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#handle-klarna-refunds-with-custom-code
 		 * @param bool     $result Whether the refund was processed. Default false.
 		 * @param int      $order_id The WooCommerce order ID.
 		 * @param null|int $amount The refund amount, or null for the full amount.

@@ -104,6 +104,7 @@ class PluginFeatures {
 		/**
 		 * Triggers after the features class has been initialized and can be used.
 		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-klarna-feature-availability-is-loaded
 		 * @param array $features The features and their availability.
 		 */
 		do_action( 'kp_plugin_features_initialized', $features );

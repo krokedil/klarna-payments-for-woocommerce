@@ -116,6 +116,7 @@ abstract class KP_Requests extends Request {
 			/**
 			 * Filters the Klarna API region used to build the API base URL.
 			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-base-region-for-api-requests
 			 * @param string $region The Klarna API region, derived from the country endpoint. Blank for EU.
 			 */
 			apply_filters( 'klarna_base_region', $country_data['endpoint'] ?? '' )

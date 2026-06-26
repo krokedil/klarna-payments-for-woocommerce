@@ -52,6 +52,7 @@ function get_klarna_customer( $customer_type ) {
 	/**
 	 * Filters the Klarna customer object added to the request arguments.
 	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-customer-object-for-klarna-payments
 	 * @param array  $customer The Klarna customer object.
 	 * @param string $customer_type The customer type from the settings.
 	 */
@@ -73,6 +74,7 @@ function kp_get_klarna_country( $order = false ) {
 			/**
 			 * Filters the country code used to determine the Klarna market for the customer.
 			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-purchase-country-sent-to-klarna
 			 * @param string $country The two-letter country code.
 			 */
 			return apply_filters( 'wc_klarna_payments_country', $country );
@@ -86,6 +88,7 @@ function kp_get_klarna_country( $order = false ) {
 			/**
 			 * Filters the country code used to determine the Klarna market for the customer.
 			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-purchase-country-sent-to-klarna
 			 * @param string $country The two-letter country code.
 			 */
 			return apply_filters( 'wc_klarna_payments_country', $country );
@@ -99,6 +102,7 @@ function kp_get_klarna_country( $order = false ) {
 	/**
 	 * Filters the country code used to determine the Klarna market for the customer.
 	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-purchase-country-sent-to-klarna
 	 * @param string $country The two-letter country code.
 	 */
 	return apply_filters( 'wc_klarna_payments_country', $country );
@@ -158,10 +162,19 @@ function kp_process_accepted( $order, $decoded ) {
 	/**
 	 * Triggers after an accepted Klarna Payments order has been completed and its meta data stored.
 	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-a-klarna-payment-is-accepted
 	 * @param int   $order_id The WooCommerce order ID.
 	 * @param array $decoded The decoded Klarna order data.
 	 */
 	do_action( 'wc_klarna_payments_accepted', $order_id, $decoded );
+
+	/**
+	 * Alias of wc_klarna_payments_accepted. Fires at the same time with the same arguments for cross-plugin compatibility.
+	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-a-klarna-payment-is-accepted
+	 * @param int   $order_id The WooCommerce order ID.
+	 * @param array $decoded The decoded Klarna order data.
+	 */
 	do_action( 'wc_klarna_accepted', $order_id, $decoded );
 
 	return array(
@@ -187,10 +200,19 @@ function kp_process_pending( $order, $decoded ) {
 	/**
 	 * Triggers after a pending Klarna Payments order has been set to on-hold for review.
 	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review
 	 * @param int   $order_id The WooCommerce order ID.
 	 * @param array $decoded The decoded Klarna order data.
 	 */
 	do_action( 'wc_klarna_payments_pending', $order_id, $decoded );
+
+	/**
+	 * Alias of wc_klarna_payments_pending. Fires at the same time with the same arguments for cross-plugin compatibility.
+	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review
+	 * @param int   $order_id The WooCommerce order ID.
+	 * @param array $decoded The decoded Klarna order data.
+	 */
 	do_action( 'wc_klarna_pending', $order_id, $decoded );
 
 	return array(
@@ -212,6 +234,7 @@ function kp_process_rejected( $order, $decoded ) {
 	/**
 	 * Filters the WooCommerce order status applied to a rejected Klarna Payments order.
 	*
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-order-status-for-rejected-payments
 	* @param string $status The order status to set. Default 'failed'.
 	*/
 	$status = apply_filters( 'kp_order_rejected_status', 'failed' );
@@ -220,10 +243,19 @@ function kp_process_rejected( $order, $decoded ) {
 	/**
 	 * Triggers after a rejected Klarna Payments order has had its status updated.
 	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-rejected
 	 * @param int   $order_id The WooCommerce order ID.
 	 * @param array $decoded The decoded Klarna order data.
 	 */
 	do_action( 'wc_klarna_payments_rejected', $order_id, $decoded );
+
+	/**
+	 * Alias of wc_klarna_payments_rejected. Fires at the same time with the same arguments for cross-plugin compatibility.
+	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-rejected
+	 * @param int   $order_id The WooCommerce order ID.
+	 * @param array $decoded The decoded Klarna order data.
+	 */
 	do_action( 'wc_klarna_rejected', $order_id, $decoded );
 
 	return array(
@@ -252,6 +284,7 @@ function kp_get_locale() {
 	/**
 	 * Filters the locale string sent to Klarna, formatted to match the Klarna API.
 	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#force-locale-to-a-specific-country-and-language
 	 * @param string $locale The formatted locale, for example 'en-GB'.
 	 */
 	return apply_filters( 'kp_locale', substr( str_replace( '_', '-', $locale ), 0, 5 ) );
@@ -673,6 +706,7 @@ function klarna_get_customer_type( $customer_type ) {
 	/**
 	 * Filters the customer type used for Klarna Payments.
 	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-customer-type-b2cb2b
 	 * @param string $customer_type The customer type from the settings.
 	 */
 	return apply_filters( 'klarna_get_customer_type', $customer_type );

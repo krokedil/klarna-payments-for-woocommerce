@@ -69,6 +69,7 @@ class RequestPostCapture extends RequestPost {
 		/**
 		 * Filters the request body sent to Klarna when capturing an order.
 		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-order-capture-request
 		 * @param array $data The capture request body, including the captured amount and order lines.
 		 * @param int   $order_id The WooCommerce order ID.
 		 */

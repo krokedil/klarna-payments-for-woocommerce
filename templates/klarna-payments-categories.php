@@ -23,6 +23,7 @@ if ( is_array( $klarna_payment_categories ) ) {
 	/**
 	 * Filters the Klarna payment categories available to display in the checkout.
 	 *
+	 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-available-klarna-payment-categories
 	 * @param array $klarna_payment_categories The available Klarna payment method categories.
 	 */
 	$klarna_payment_categories = apply_filters( 'wc_klarna_payments_available_payment_categories', $klarna_payment_categories );

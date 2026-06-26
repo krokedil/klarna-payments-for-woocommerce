@@ -238,6 +238,7 @@ class KP_Order_Data {
 		/**
 		 * Filters whether to strip spaces from the postcode sent to Klarna.
 		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#remove-postcode-spaces
 		 * @param bool $strip Whether to remove postcode spaces. Default false.
 		 */
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
@@ -338,6 +339,7 @@ class KP_Order_Data {
 		/**
 		 * Filters whether to strip spaces from the postcode sent to Klarna.
 		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#remove-postcode-spaces
 		 * @param bool $strip Whether to remove postcode spaces. Default false.
 		 */
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );

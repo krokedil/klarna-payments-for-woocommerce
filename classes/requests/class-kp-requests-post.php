@@ -43,6 +43,7 @@ abstract class KP_Requests_Post extends KP_Requests {
 					/**
 					 * Filters the timeout, in seconds, for Klarna API requests.
 					 *
+					 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-request-timeout-time
 					 * @param int $timeout The request timeout in seconds. Default 10.
 					 */
 					apply_filters( 'wc_kp_request_timeout', 10 ),
@@ -50,6 +51,8 @@ abstract class KP_Requests_Post extends KP_Requests {
 					/**
 					 * Filters the request body sent to the Klarna API.
 					 *
+					 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#auto-capture-orders
+					 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-order-cart-data-sent-to-klarna
 					 * @param array $body The request body.
 					 */
 					apply_filters( 'kp_wc_api_request_args', $body )
@@ -87,6 +90,13 @@ abstract class KP_Requests_Post extends KP_Requests {
 		$customer_type = klarna_get_customer_type( $this->arguments['customer_type'] ?? get_option( 'woocommerce_klarna_payments_settings', array( 'customer_type' => 'b2c' ) )['customer_type'] );
 		$order_data    = new KP_Order_Data( $customer_type, $order_id );
 
+		/**
+		 * Filters the formatted Klarna order object used as the request body.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#auto-capture-orders
+		 * @param array $order_lines The formatted Klarna order object.
+		 * @param int   $order_id    The WooCommerce order ID.
+		 */
 		return apply_filters(
 			'kp_wc_api_request_body_args',
 			$order_data->get_klarna_order_object( $this->iframe_options ),

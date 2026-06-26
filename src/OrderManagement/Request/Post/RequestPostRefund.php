@@ -154,6 +154,7 @@ class RequestPostRefund extends RequestPost {
 							/**
 							 * Filters the product type used for a refund order line when the product no longer exists in WooCommerce.
 							 *
+							 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-product-type-for-refunds-of-missing-products
 							 * @param string                $type The product type to use. Default 'physical'.
 							 * @param \WC_Order_Item_Product $item The WooCommerce order item being refunded.
 							 */
@@ -280,6 +281,7 @@ class RequestPostRefund extends RequestPost {
 		/**
 		 * Filters the refund order lines sent to Klarna when refunding an order.
 		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-order-refund-request
 		 * @param array $data The refund order lines.
 		 * @param int   $order_id The WooCommerce order ID.
 		 */

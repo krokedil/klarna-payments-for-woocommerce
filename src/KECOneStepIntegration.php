@@ -59,6 +59,7 @@ class KECOneStepIntegration implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klar
 			/**
 			 * Triggers when a One Step Checkout payment could not be completed and the order is left pending review.
 			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review
 			 * @param int   $order_id The WooCommerce order ID.
 			 * @param array $response The place order response from Klarna.
 			 */
@@ -67,6 +68,7 @@ class KECOneStepIntegration implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klar
 			/**
 			 * Triggers when a One Step Checkout payment is left pending review. Fires alongside klarna_payments_pending.
 			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review
 			 * @param int   $order_id The WooCommerce order ID.
 			 * @param array $response The place order response from Klarna.
 			 */
@@ -99,6 +101,7 @@ class KECOneStepIntegration implements \KrokedilKlarnaPaymentsDeps\Krokedil\Klar
 		/**
 		 * Triggers when a Klarna Express Checkout order is cancelled due to an expired payment request.
 		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-a-kec-payment-expires-or-is-cancelled
 		 * @param \WC_Order $order The WooCommerce order object.
 		 * @param string    $interoperability_token The Klarna interoperability token.
 		 * @param array     $interoperability_data The interoperability data. Empty when cancelling.

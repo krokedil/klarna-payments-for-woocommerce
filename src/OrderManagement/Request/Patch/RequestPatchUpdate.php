@@ -50,6 +50,7 @@ class RequestPatchUpdate extends RequestPatch {
 		/**
 		 * Filters the request body sent to Klarna when updating an order's authorization.
 		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-order-update-request
 		 * @param array $data The update request body, including order lines and amounts.
 		 * @param int   $order_id The WooCommerce order ID.
 		 */
