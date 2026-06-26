@@ -112,6 +112,24 @@ if ( null !== $changelog && \count( $changelog ) > 0 ) {
 	echo $eol;
 }
 
+$link_tags = ( null === $doc_block ) ? array() : $doc_block->getTagsByName( 'link' );
+if ( ! empty( $link_tags ) ) {
+	echo 'Examples: ';
+
+	for($i = 0; $i < count($link_tags); $i++) {
+		$link_tag = $link_tags[$i];
+		// Skip malformed @link tags that could not be parsed into a Link object.
+		if ( ! ( $link_tag instanceof \phpDocumentor\Reflection\DocBlock\Tags\Link ) ) {
+			continue;
+		}
+		echo sprintf( '[#%d](%s)', $i + 1, $link_tag->getLink() );
+		if ($i < count($link_tags) - 1) {
+			echo ', ';
+		}
+	}
+
+	echo $eol, $eol;
+}
 printf(
 	'Source: %s, %s',
 	\sprintf(
