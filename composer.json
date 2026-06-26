@@ -1,6 +1,7 @@
 {
   "require": {
-    "php": ">=7.4"
+    "php": ">=7.4",
+    "firebase/php-jwt": "^6.0.0"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "^3.3",

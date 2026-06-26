@@ -1,8 +1,8 @@
 <?php //phpcs:ignore -- PCR-4 compliant.
 namespace Krokedil\Klarna\SignInWithKlarna;
 
-use KrokedilKlarnaPaymentsDeps\Firebase\JWT\JWT as FirebaseJWT;
-use KrokedilKlarnaPaymentsDeps\Firebase\JWT\JWK as FirebaseJWK;
+use Firebase\JWT\JWT as FirebaseJWT;
+use Firebase\JWT\JWK as FirebaseJWK;
 use KP_Form_Fields;
 
 if ( ! defined( 'ABSPATH' ) ) {
