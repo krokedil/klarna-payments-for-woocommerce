@@ -76,8 +76,8 @@ abstract class Handler {
 	protected function get_wc_order_by_payment_request_id( $payment_request_id ) {
 		$args = array(
 			'limit'        => 1,
-			'meta_key'     => '_kec_payment_request_id',
-			'meta_value'   => $payment_request_id,
+			'meta_key'     => '_kec_payment_request_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_value'   => $payment_request_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 			'meta_compare' => '=',
 			'created_via'  => 'klarna_express_checkout',
 			'date_created' => '>' . ( time() - ( \DAY_IN_SECONDS * 2 ) ),
