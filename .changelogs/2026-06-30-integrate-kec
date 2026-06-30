@@ -1,0 +1,4 @@
+Type: Feature
+Needs Documentation: no
+
+Express Checkout functionality is now built directly into the plugin, eliminating the need for external code packages.
