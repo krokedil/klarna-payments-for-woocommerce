@@ -113,7 +113,5 @@ abstract class Handler {
 			$message = sprintf( __( 'Mismatch in payment request ID for order ID: %s', 'klarna-payments-for-woocommerce' ), $order->get_id() );
 			throw new \WP_Exception( esc_html( $message ) );
 		}
-
-		return $order;
 	}
 }
