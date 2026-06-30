@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Krokedil\Klarna\Features;
 use Krokedil\Klarna\PluginFeatures;
-use Krokedil\Klarna\KECOneStepIntegration;
+use Krokedil\Klarna\KlarnaExpressCheckout\KECOneStepIntegration;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
 
 /**
