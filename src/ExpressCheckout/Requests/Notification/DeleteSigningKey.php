@@ -6,6 +6,9 @@ use Krokedil\Klarna\ExpressCheckout\Requests\Base;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Request class for deleting a notification signing key.
+ */
 class DeleteSigningKey extends Base {
 	/**
 	 * Class constructor.
@@ -16,7 +19,7 @@ class DeleteSigningKey extends Base {
 	 */
 	public function __construct( $arguments = array() ) {
 		parent::__construct( $arguments );
-		$this->method  = 'DELETE';
+		$this->method = 'DELETE';
 
 		$signing_key_id  = $this->arguments['signing_key_id'] ?? '';
 		$this->endpoint  = "v2/notification/signing-keys/$signing_key_id";

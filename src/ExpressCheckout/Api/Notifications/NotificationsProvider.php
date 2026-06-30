@@ -4,6 +4,9 @@ namespace Krokedil\Klarna\ExpressCheckout\Api\Notifications;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Provider that registers and resolves notification handlers.
+ */
 class NotificationsProvider {
 	/**
 	 * Array of handlers for notifications.

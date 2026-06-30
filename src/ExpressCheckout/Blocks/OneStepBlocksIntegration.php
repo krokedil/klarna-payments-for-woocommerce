@@ -15,35 +15,45 @@ defined( 'ABSPATH' ) || exit;
 class OneStepBlocksIntegration implements IntegrationInterface {
 
 	/**
-	 * @inheritDoc
+	 * Get the script handles used in the editor.
+	 *
+	 * @return array
 	 */
 	public function get_editor_script_handles() {
 		return array();
 	}
 
 	/**
-	 * @inheritDoc
+	 * Get the unique name for this integration.
+	 *
+	 * @return string
 	 */
 	public function get_name() {
 		return 'kec-one-step';
 	}
 
 	/**
-	 * @inheritDoc
+	 * Get data passed to the integration script.
+	 *
+	 * @return array
 	 */
 	public function get_script_data() {
 		return array();
 	}
 
 	/**
-	 * @inheritDoc
+	 * Get the script handles registered by this integration.
+	 *
+	 * @return array
 	 */
 	public function get_script_handles() {
 		return array( 'kec-one-step-block' );
 	}
 
 	/**
-	 * @inheritDoc
+	 * Register scripts and assets for the integration.
+	 *
+	 * @return void
 	 */
 	public function initialize() {
 		$script_path = Assets::get_assets_path() . 'js/kec-one-step-block.js';

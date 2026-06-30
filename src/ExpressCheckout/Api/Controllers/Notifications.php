@@ -7,6 +7,9 @@ use Krokedil\Klarna\ExpressCheckout\Api\Notifications\NotificationsProvider;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * REST API controller for Express Checkout notifications.
+ */
 class Notifications extends Controller {
 	/**
 	 * The path of the controller.

@@ -6,6 +6,9 @@ use Krokedil\Klarna\ExpressCheckout\Requests\Base;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Request class for deleting a notification webhook.
+ */
 class DeleteWebhook extends Base {
 	/**
 	 * Class constructor.
@@ -16,7 +19,7 @@ class DeleteWebhook extends Base {
 	 */
 	public function __construct( $arguments = array() ) {
 		parent::__construct( $arguments );
-		$this->method  = 'DELETE';
+		$this->method = 'DELETE';
 
 		$webhook_id      = $this->arguments['webhook_id'] ?? '';
 		$this->endpoint  = "v2/notification/webhooks/$webhook_id";

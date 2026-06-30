@@ -4,6 +4,9 @@ namespace Krokedil\Klarna\ExpressCheckout\Api\Notifications;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Notification handler for the payment.request.state-change.expired event.
+ */
 class PaymentStateExpired extends Handler {
 	/**
 	 * The event type for the notification.
@@ -20,7 +23,12 @@ class PaymentStateExpired extends Handler {
 	protected $event_version = 'v2';
 
 	/**
-	 * @inheritDoc
+	 * Handle the notification for the payment expired event.
+	 *
+	 * @param array $payload The payload from the notification.
+	 *
+	 * @return \WP_REST_Response|null
+	 * @throws \WP_Exception If the notification cannot be handled.
 	 */
 	public function handle_notification( $payload ) {
 		$payment_request_id     = $payload['payment_request_id'] ?? null;

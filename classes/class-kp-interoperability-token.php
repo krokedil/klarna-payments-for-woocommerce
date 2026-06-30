@@ -72,8 +72,6 @@ class KP_Interoperability_Token {
 	/**
 	 * Set the interoperability data in the WooCommerce session.
 	 *
-	 * @param string $data The data to set.
-	 *
 	 * @return void
 	 */
 	public static function set_data() {

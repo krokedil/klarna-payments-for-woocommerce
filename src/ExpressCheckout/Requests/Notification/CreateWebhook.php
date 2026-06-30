@@ -6,6 +6,9 @@ use Krokedil\Klarna\ExpressCheckout\Requests\Base;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Request class for creating a notification webhook.
+ */
 class CreateWebhook extends Base {
 	/**
 	 * Class constructor.

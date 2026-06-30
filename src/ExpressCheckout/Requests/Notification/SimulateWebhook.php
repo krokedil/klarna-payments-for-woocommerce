@@ -6,6 +6,9 @@ use Krokedil\Klarna\ExpressCheckout\Requests\Base;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Request class for simulating a notification webhook.
+ */
 class SimulateWebhook extends Base {
 	/**
 	 * Class constructor.
@@ -16,7 +19,7 @@ class SimulateWebhook extends Base {
 	 */
 	public function __construct( $arguments = array() ) {
 		parent::__construct( $arguments );
-		$this->method  = 'POST';
+		$this->method = 'POST';
 
 		$webhook_id      = $this->arguments['webhook_id'] ?? '';
 		$this->endpoint  = "v2/notification/webhooks/$webhook_id/simulate";

@@ -6,6 +6,9 @@ use Krokedil\Klarna\ExpressCheckout\Requests\Base;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Request class for creating a notification signing key.
+ */
 class CreateSigningKey extends Base {
 	/**
 	 * Class constructor.

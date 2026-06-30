@@ -4,6 +4,9 @@ namespace Krokedil\Klarna\ExpressCheckout\Api\Notifications;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Notification handler for the payment.request.state-change.completed event.
+ */
 class PaymentStateCompleted extends Handler {
 	/**
 	 * The event type for the notification.
@@ -20,7 +23,12 @@ class PaymentStateCompleted extends Handler {
 	protected $event_version = 'v2';
 
 	/**
-	 * @inheritDoc
+	 * Handle the notification for the payment completed event.
+	 *
+	 * @param array $payload The payload from the notification.
+	 *
+	 * @return \WP_REST_Response|null
+	 * @throws \WP_Exception If the notification cannot be handled.
 	 */
 	public function handle_notification( $payload ) {
 		if ( 'COMPLETED' !== $payload['state'] ) {
