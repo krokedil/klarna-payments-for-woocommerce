@@ -279,13 +279,12 @@ class AJAX {
 
 		$shipping_address   = $post_data['shippingAddress'] ?? array();
 		$payment_request_id = $post_data['paymentRequestId'] ?? '';
-		$payment_token      = $post_data['paymentToken'] ?? '';
 
 		if ( empty( $shipping_address ) ) {
 			wp_send_json_error( 'No shipping address was posted' );
 		}
 
-		wp_send_json_success( OneStepCheckout::get_shipping_address_change_body( $shipping_address, $payment_request_id, $payment_token ) );
+		wp_send_json_success( OneStepCheckout::get_shipping_address_change_body( $shipping_address, $payment_request_id ) );
 	}
 
 	/**

@@ -147,11 +147,10 @@ class OneStepCheckout {
 	 *
 	 * @param array  $shipping_address   The shipping address from Klarna.
 	 * @param string $payment_request_id The Klarna payment request ID.
-	 * @param string $payment_token      The Klarna payment token.
 	 *
 	 * @return array
 	 */
-	public static function get_shipping_address_change_body( $shipping_address, $payment_request_id, $payment_token ) {
+	public static function get_shipping_address_change_body( $shipping_address, $payment_request_id ) {
 		if ( ! empty( $shipping_address['country'] ?? '' ) ) {
 			WC()->customer->set_shipping_country( $shipping_address['country'] ?? '' );
 		}
@@ -199,7 +198,7 @@ class OneStepCheckout {
 		$selected_shipping_option = ( empty( $selected_shipping_option ) && ! empty( $shipping_options ) ) ? $shipping_options[0] : reset( $selected_shipping_option );
 
 		$line_items = self::get_cart_items();
-		self::create_order( $payment_request_id, $payment_token );
+		self::create_order( $payment_request_id );
 
 		if ( ! empty( $selected_shipping_option ) ) {
 			$line_items[] = array(
@@ -359,12 +358,11 @@ class OneStepCheckout {
 	 * Create an order from the KEC session and cart data.
 	 *
 	 * @param string $payment_request_id The Klarna payment request ID.
-	 * @param string $payment_token      The Klarna payment token.
 	 *
 	 * @return \WC_Order|false
 	 */
-	public static function create_order( $payment_request_id, $payment_token ) {
-		$order = self::update_or_create_wc_order( $payment_request_id, $payment_token );
+	public static function create_order( $payment_request_id ) {
+		$order = self::update_or_create_wc_order( $payment_request_id );
 
 		if ( ! $order || is_wp_error( $order ) ) {
 			return false;
@@ -480,11 +478,10 @@ class OneStepCheckout {
 	 * Update or create a WooCommerce order with the current cart and customer data.
 	 *
 	 * @param string $payment_request_id The Klarna payment request ID.
-	 * @param string $payment_token      The Klarna payment token.
 	 *
 	 * @return \WC_Order|false
 	 */
-	private static function update_or_create_wc_order( $payment_request_id, $payment_token ) {
+	private static function update_or_create_wc_order( $payment_request_id ) {
 		$order = self::get_wc_order();
 
 		if ( ! $order || is_wp_error( $order ) ) {
