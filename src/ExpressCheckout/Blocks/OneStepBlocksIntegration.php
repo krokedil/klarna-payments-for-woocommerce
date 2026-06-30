@@ -1,9 +1,9 @@
 <?php
 
-namespace Krokedil\Klarna\KlarnaExpressCheckout\Blocks;
+namespace Krokedil\Klarna\ExpressCheckout\Blocks;
 
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
-use Krokedil\Klarna\KlarnaExpressCheckout\Assets;
+use Krokedil\Klarna\ExpressCheckout\Assets;
 
 defined( 'ABSPATH' ) || exit;
 

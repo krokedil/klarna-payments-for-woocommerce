@@ -6,22 +6,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Krokedil\Klarna\KlarnaExpressCheckout\Settings;
-use Krokedil\Klarna\KlarnaExpressCheckout\Session;
-use Krokedil\Klarna\KlarnaExpressCheckout\Assets;
-use Krokedil\Klarna\KlarnaExpressCheckout\AJAX;
-use Krokedil\Klarna\KlarnaExpressCheckout\ClientTokenParser;
-use Krokedil\Klarna\KlarnaExpressCheckout\WebhookSetup;
-use Krokedil\Klarna\KlarnaExpressCheckout\OneStepCheckout;
-use Krokedil\Klarna\KlarnaExpressCheckout\Blocks\OneStepBlocksIntegration;
-use Krokedil\Klarna\KlarnaExpressCheckout\Api\Controllers\Notifications;
+use Krokedil\Klarna\ExpressCheckout\Settings;
+use Krokedil\Klarna\ExpressCheckout\Session;
+use Krokedil\Klarna\ExpressCheckout\Assets;
+use Krokedil\Klarna\ExpressCheckout\AJAX;
+use Krokedil\Klarna\ExpressCheckout\ClientTokenParser;
+use Krokedil\Klarna\ExpressCheckout\WebhookSetup;
+use Krokedil\Klarna\ExpressCheckout\OneStepCheckout;
+use Krokedil\Klarna\ExpressCheckout\Blocks\OneStepBlocksIntegration;
+use Krokedil\Klarna\ExpressCheckout\Api\Controllers\Notifications;
 
 /**
  * Klarna Express Checkout class.
  *
  * The main class responsible for initializing the KEC integration.
  */
-class KlarnaExpressCheckout {
+class ExpressCheckout {
 
 	/**
 	 * Reference to the Settings class.

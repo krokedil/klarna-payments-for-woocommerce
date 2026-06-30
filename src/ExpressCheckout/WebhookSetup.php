@@ -1,6 +1,6 @@
 <?php
 
-namespace Krokedil\Klarna\KlarnaExpressCheckout;
+namespace Krokedil\Klarna\ExpressCheckout;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,9 +13,9 @@ class WebhookSetup {
 	const DELETE_WEBHOOK_ACTION   = 'delete_webhook';
 
 	/**
-	 * Instance of the KlarnaExpressCheckout main class.
+	 * Instance of the ExpressCheckout main class.
 	 *
-	 * @var \Krokedil\Klarna\KlarnaExpressCheckout
+	 * @var \Krokedil\Klarna\ExpressCheckout
 	 */
 	private $kec;
 
@@ -36,7 +36,7 @@ class WebhookSetup {
 	/**
 	 * Class constructor.
 	 *
-	 * @param \Krokedil\Klarna\KlarnaExpressCheckout $kec Instance of the main KEC class.
+	 * @param \Krokedil\Klarna\ExpressCheckout $kec Instance of the main KEC class.
 	 *
 	 * @return void
 	 */

@@ -1,5 +1,5 @@
 <?php
-namespace Krokedil\Klarna\KlarnaExpressCheckout;
+namespace Krokedil\Klarna\ExpressCheckout;
 
 /**
  * Class for registering the Klarna Express Checkout one step integration.

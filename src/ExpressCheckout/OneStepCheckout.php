@@ -1,6 +1,6 @@
 <?php
 
-namespace Krokedil\Klarna\KlarnaExpressCheckout;
+namespace Krokedil\Klarna\ExpressCheckout;
 
 use Krokedil\Klarna\Features;
 use Krokedil\Klarna\PluginFeatures;

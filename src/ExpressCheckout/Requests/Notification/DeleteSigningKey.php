@@ -1,8 +1,8 @@
 <?php
 
-namespace Krokedil\Klarna\KlarnaExpressCheckout\Requests\Notification;
+namespace Krokedil\Klarna\ExpressCheckout\Requests\Notification;
 
-use Krokedil\Klarna\KlarnaExpressCheckout\Requests\Base;
+use Krokedil\Klarna\ExpressCheckout\Requests\Base;
 
 defined( 'ABSPATH' ) || exit;
 

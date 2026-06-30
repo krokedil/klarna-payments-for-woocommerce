@@ -1,6 +1,6 @@
 <?php
 
-namespace Krokedil\Klarna\KlarnaExpressCheckout\Requests;
+namespace Krokedil\Klarna\ExpressCheckout\Requests;
 
 defined( 'ABSPATH' ) || exit;
 

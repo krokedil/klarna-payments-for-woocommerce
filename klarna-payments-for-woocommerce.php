@@ -35,7 +35,7 @@ use Krokedil\Klarna\Api\Registry;
 use Krokedil\Klarna\PluginFeatures;
 use Krokedil\Klarna\Compatibility;
 use Krokedil\Klarna\OrderManagement;
-use Krokedil\Klarna\KlarnaExpressCheckout;
+use Krokedil\Klarna\ExpressCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -140,7 +140,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		/**
 		 * KP Klarna Express Checkout class. Handles the integration with Klarna Express Checkout
 		 *
-		 * @var KlarnaExpressCheckout|null
+		 * @var ExpressCheckout|null
 		 */
 		public $klarna_express_checkout = null;
 
@@ -298,7 +298,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->settings_page           = new KP_Settings_Page();
 			$this->checkout                = new KP_Checkout();
 			$this->plugin_features         = new PluginFeatures();
-			$this->klarna_express_checkout = new KlarnaExpressCheckout();
+			$this->klarna_express_checkout = new ExpressCheckout();
 			$this->krokedil                = new KrokedilWooCommerce(
 				array(
 					'slug'         => 'klarna_payments',

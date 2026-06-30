@@ -1,9 +1,9 @@
 <?php
 
-namespace Krokedil\Klarna\KlarnaExpressCheckout\Api\Notifications;
+namespace Krokedil\Klarna\ExpressCheckout\Api\Notifications;
 
 use Krokedil\Klarna\PluginFeatures;
-use Krokedil\Klarna\KlarnaExpressCheckout\Interfaces\AcquiringPartnerIntegration;
+use Krokedil\Klarna\ExpressCheckout\Interfaces\AcquiringPartnerIntegration;
 
 defined( 'ABSPATH' ) || exit;
 
