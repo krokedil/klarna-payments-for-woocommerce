@@ -44,7 +44,7 @@ class OneStepCheckout {
 			'meta_value'   => $kec_unique_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 			'meta_compare' => '=',
 			'created_via'  => 'klarna_express_checkout',
-			'date_created' => '>' . ( time() - ( DAY_IN_SECONDS * 2 ) ),
+			'date_created' => '>' . ( time() - ( \DAY_IN_SECONDS * 2 ) ),
 		);
 
 		$orders = wc_get_orders( $args );
@@ -235,7 +235,11 @@ class OneStepCheckout {
 
 		$selected_shipping_methods = WC()->cart->get_shipping_methods();
 
-		/** @var \WC_Shipping_Rate $selected_shipping_method */
+		/**
+		 * Selected shipping method.
+		 *
+		 * @var \WC_Shipping_Rate $selected_shipping_method
+		 */
 		$selected_shipping_method = is_array( $selected_shipping_methods ) && ! empty( $selected_shipping_methods ) ? reset( $selected_shipping_methods ) : null;
 
 		$line_items = self::get_cart_items();
@@ -273,7 +277,11 @@ class OneStepCheckout {
 		$line_items = array();
 
 		foreach ( WC()->cart->get_cart() as $cart_item ) {
-			/** @var \WC_Product $product */
+			/**
+			 * Product in cart item.
+			 *
+			 * @var \WC_Product $product
+			 */
 			$product = $cart_item['data'];
 
 			if ( ! $product->exists() || $product->is_type( 'line_item' ) ) {
@@ -319,7 +327,11 @@ class OneStepCheckout {
 			}
 
 			foreach ( $package['rates'] as $rate ) {
-				/** @var \WC_Shipping_Rate $rate */
+				/**
+				 * Shipping rate object.
+				 *
+				 * @var \WC_Shipping_Rate $rate
+				 */
 				$shipping_options[] = array(
 					'shippingOptionReference' => $rate->get_id(),
 					'amount'                  => self::format_price( $rate->get_cost() + $rate->get_shipping_tax() ),
@@ -400,7 +412,11 @@ class OneStepCheckout {
 	 */
 	private static function set_order_item_products( &$order ) {
 		foreach ( WC()->cart->get_cart() as $cart_item ) {
-			/** @var \WC_Product $product */
+			/**
+			 * Product in cart item.
+			 *
+			 * @var \WC_Product $product
+			 */
 			$product = $cart_item['data'];
 
 			if ( ! $product->exists() || $product->is_type( 'line_item' ) ) {
