@@ -80,7 +80,7 @@ abstract class Handler {
 			'meta_value'   => $payment_request_id,
 			'meta_compare' => '=',
 			'created_via'  => 'klarna_express_checkout',
-			'date_created' => '>' . ( time() - ( DAY_IN_SECONDS * 2 ) ),
+			'date_created' => '>' . ( time() - ( \DAY_IN_SECONDS * 2 ) ),
 		);
 
 		$orders = wc_get_orders( $args );
@@ -102,12 +102,16 @@ abstract class Handler {
 	 */
 	protected function ensure_valid_order( $order, $payment_request_id ) {
 		if ( empty( $order ) ) {
-			throw new \WP_Exception( 'No draft order found for payment request ID: ' . $payment_request_id );
+			/* translators: %s: Klarna payment request ID. */
+			$message = sprintf( __( 'No draft order found for payment request ID: %s', 'klarna-payments-for-woocommerce' ), $payment_request_id );
+			throw new \WP_Exception( esc_html( $message ) );
 		}
 
 		$stored_payment_request_id = $order->get_meta( '_kec_payment_request_id' );
 		if ( $stored_payment_request_id !== $payment_request_id ) {
-			throw new \WP_Exception( 'Mismatch in payment request ID for order ID: ' . $order->get_id() );
+			/* translators: %s: WooCommerce order ID. */
+			$message = sprintf( __( 'Mismatch in payment request ID for order ID: %s', 'klarna-payments-for-woocommerce' ), $order->get_id() );
+			throw new \WP_Exception( esc_html( $message ) );
 		}
 
 		return $order;

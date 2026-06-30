@@ -123,7 +123,8 @@ class WebhookSetup {
 		$response = Requests::simulate_webhook( $webhook['webhook_id'], 'payment.request.state-change.submitted', 'v2' );
 
 		if ( is_wp_error( $response ) ) {
-			throw new \Exception( __( 'Could not send test webhook', 'klarna-payments-for-woocommerce' ) );
+			$message = __( 'Could not send test webhook', 'klarna-payments-for-woocommerce' );
+			throw new \Exception( esc_html( $message ) );
 		}
 
 		$this->add_message( __( 'Test webhook sent successfully.', 'klarna-payments-for-woocommerce' ) );
@@ -147,7 +148,8 @@ class WebhookSetup {
 			$delete_webhook_response = Requests::delete_webhook( $webhook['webhook_id'] );
 
 			if ( is_wp_error( $delete_webhook_response ) ) {
-				throw new \Exception( __( 'Could not remove webhook', 'klarna-payments-for-woocommerce' ) );
+				$message = __( 'Could not remove webhook', 'klarna-payments-for-woocommerce' );
+				throw new \Exception( esc_html( $message ) );
 			}
 
 			delete_option( 'kec_webhook' );
@@ -157,7 +159,8 @@ class WebhookSetup {
 			$delete_signing_key_response = Requests::delete_signing_key( $signing_key['signing_key_id'] );
 
 			if ( is_wp_error( $delete_signing_key_response ) ) {
-				throw new \Exception( __( 'Could not remove signing key', 'klarna-payments-for-woocommerce' ) );
+				$message = __( 'Could not remove signing key', 'klarna-payments-for-woocommerce' );
+				throw new \Exception( esc_html( $message ) );
 			}
 
 			delete_option( 'kec_signing_key' );
@@ -176,7 +179,8 @@ class WebhookSetup {
 		$response = Requests::create_signing_key();
 
 		if ( is_wp_error( $response ) ) {
-			throw new \Exception( __( 'Could not create signing key', 'klarna-payments-for-woocommerce' ) );
+			$message = __( 'Could not create signing key', 'klarna-payments-for-woocommerce' );
+			throw new \Exception( esc_html( $message ) );
 		}
 
 		$this->kec->settings()->update_setting( 'kec_signing_key', $response );
@@ -202,7 +206,8 @@ class WebhookSetup {
 		}
 
 		if ( is_wp_error( $signing_key ) ) {
-			throw new \Exception( __( 'Could not create a signing key with Klarna for the webhook.', 'klarna-payments-for-woocommerce' ) );
+			$message = __( 'Could not create a signing key with Klarna for the webhook.', 'klarna-payments-for-woocommerce' );
+			throw new \Exception( esc_html( $message ) );
 		}
 
 		$url           = get_rest_url( null, '/klarna/v1/kec/notifications' );
@@ -216,7 +221,8 @@ class WebhookSetup {
 		$response = Requests::create_webhook( $url, $event_types, $event_version, $signing_key['signing_key_id'] );
 
 		if ( is_wp_error( $response ) ) {
-			throw new \Exception( __( 'Could not create webhook with Klarna', 'klarna-payments-for-woocommerce' ) );
+			$message = __( 'Could not create webhook with Klarna', 'klarna-payments-for-woocommerce' );
+			throw new \Exception( esc_html( $message ) );
 		}
 
 		$this->kec->settings()->update_setting( 'kec_webhook', $response );

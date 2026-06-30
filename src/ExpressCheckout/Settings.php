@@ -394,7 +394,7 @@ class Settings {
 			return;
 		}
 
-		$messages = json_decode( base64_decode( wp_unslash( $_GET['kec_messages'] ) ), true ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		$messages = json_decode( base64_decode( wp_unslash( $_GET['kec_messages'] ) ), true ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		if ( ! is_array( $messages ) ) {
 			return;
@@ -423,7 +423,7 @@ class Settings {
 			return;
 		}
 
-		$errors = json_decode( base64_decode( wp_unslash( $_GET['kec_errors'] ) ), true ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		$errors = json_decode( base64_decode( wp_unslash( $_GET['kec_errors'] ) ), true ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		if ( ! is_array( $errors ) ) {
 			return;
