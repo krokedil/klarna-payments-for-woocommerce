@@ -62,7 +62,7 @@ class WebhookSetup {
 			return;
 		}
 
-		if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( $_GET['nonce'] ), "kec_$action" ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), "kec_$action" ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
 		}
 
@@ -110,6 +110,7 @@ class WebhookSetup {
 	/**
 	 * Trigger a test webhook delivery from Klarna.
 	 *
+	 * @throws \Exception If the webhook simulation request fails.
 	 * @return void
 	 */
 	private function simulate_webhook() {
@@ -131,6 +132,7 @@ class WebhookSetup {
 	/**
 	 * Delete the webhook and signing key in Klarna.
 	 *
+	 * @throws \Exception If deleting the webhook or signing key fails.
 	 * @return void
 	 */
 	private function delete_webhook() {
@@ -167,6 +169,7 @@ class WebhookSetup {
 	/**
 	 * Create a signing key for the webhook in Klarna.
 	 *
+	 * @throws \Exception If the signing key creation request fails.
 	 * @return array|\WP_Error
 	 */
 	public function create_signing_key() {
@@ -184,6 +187,7 @@ class WebhookSetup {
 	/**
 	 * Create the webhook in Klarna.
 	 *
+	 * @throws \Exception If the webhook creation request fails.
 	 * @return void
 	 */
 	public function create_webhook() {

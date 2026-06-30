@@ -7,6 +7,9 @@ use Krokedil\Klarna\ExpressCheckout\Interfaces\AcquiringPartnerIntegration;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Abstract base class for notification handlers.
+ */
 abstract class Handler {
 	/**
 	 * The event type for the notification.

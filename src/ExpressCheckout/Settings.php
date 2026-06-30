@@ -103,7 +103,7 @@ class Settings {
 	 */
 	public function is_enabled() {
 		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
-		if ( in_array( 'kec_settings', $kp_unavailable_feature_ids ) ) {
+		if ( in_array( 'kec_settings', $kp_unavailable_feature_ids, true ) ) {
 			return false;
 		}
 
@@ -284,6 +284,7 @@ class Settings {
 			'kec_webhook'        => array(
 				'class'       => 'kec-webhook-section',
 				'type'        => 'kp_text_info',
+				// translators: %s is the webhook status badge HTML.
 				'title'       => sprintf( __( 'Webhook %s', 'klarna-payments-for-woocommerce' ), self::webhook_status_badge( $webhook_created ) ),
 				'description' => __( 'For one step Express Checkout to function, Klarna needs to be able to send callbacks to your store. Enable the callbacks and configure a signing key to use for the authentication.', 'klarna-payments-for-woocommerce' ),
 			),
