@@ -4,7 +4,7 @@ namespace Krokedil\Klarna;
 /**
  * Class for registering the Klarna Express Checkout one step integration.
  */
-class KECOneStepIntegration implements \KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\Interfaces\AcquiringPartnerIntegration {
+class KECOneStepIntegration implements \Krokedil\Klarna\KlarnaExpressCheckout\Interfaces\AcquiringPartnerIntegration {
 	/**
 	 * Process the order state based on the interoperability token and data.
 	 *
