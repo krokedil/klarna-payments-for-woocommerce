@@ -55,7 +55,7 @@ class Assets {
 	 * @return string
 	 */
 	public static function get_assets_path() {
-		return plugin_dir_url( __DIR__ ) . 'assets/';
+		return plugin_dir_url( __FILE__ ) . 'assets/';
 	}
 
 	/**
