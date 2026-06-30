@@ -353,10 +353,10 @@ class Settings {
 	 */
 	private function default() {
 		return array(
-			'siwk_client_id'    => '',
-			'siwk_enabled'      => 'no',
-			'siwk_test_mode'    => 'no',
-			'siwk_button_theme' => 'default',
+			'siwk_client_id'      => '',
+			'siwk_enabled'        => 'no',
+			'siwk_test_mode'      => 'no',
+			'siwk_button_theme'   => 'default',
 			'siwk_button_shape'   => 'default',
 			'siwk_logo_alignment' => 'default',
 			'siwk_cart_placement' => 10,
