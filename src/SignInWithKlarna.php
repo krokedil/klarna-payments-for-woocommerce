@@ -192,7 +192,7 @@ class SignInWithKlarna {
 	 */
 	private function should_display() {
 		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
-		if ( in_array( 'siwk', $kp_unavailable_feature_ids ) ) {
+		if ( in_array( 'siwk', $kp_unavailable_feature_ids, true ) ) {
 			return false;
 		}
 
