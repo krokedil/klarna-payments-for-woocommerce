@@ -1,0 +1,10 @@
+#kec-pay-button {
+    width:100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#kec-pay-button.kec-button-disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}

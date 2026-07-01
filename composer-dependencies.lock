@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "93af8dc37e2f1a2ca53103677079ddf9",
+    "content-hash": "5f42b348cdd8f4adc6f91701318314af",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -68,77 +68,6 @@
                 "source": "https://github.com/googleapis/php-jwt/tree/v6.11.1"
             },
             "time": "2025-04-09T20:32:01+00:00"
-        },
-        {
-            "name": "krokedil/klarna-express-checkout",
-            "version": "2.1.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/krokedil/klarna-express-checkout.git",
-                "reference": "8e0f4593e51a657614cab8d60214c46a44e43458"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/klarna-express-checkout/zipball/8e0f4593e51a657614cab8d60214c46a44e43458",
-                "reference": "8e0f4593e51a657614cab8d60214c46a44e43458",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~7.4 || ~8.0"
-            },
-            "require-dev": {
-                "10up/wp_mock": "^1.0",
-                "php-stubs/woocommerce-stubs": "^8.3",
-                "wp-coding-standards/wpcs": "^3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Krokedil\\KlarnaExpressCheckout\\": "src/"
-                }
-            },
-            "archive": {
-                "exclude": [
-                    "tests/*",
-                    "phpunit.xml",
-                    "composer-lock.json",
-                    ".github/*",
-                    ".gitignore",
-                    ".gitattributes"
-                ]
-            },
-            "scripts": {
-                "phpcs": [
-                    "phpcs --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
-                ],
-                "phpcbf": [
-                    "phpcbf --standard=phpcs.xml --extensions=php --ignore=vendor/,tests/"
-                ],
-                "test": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml"
-                ],
-                "test-coverage-html": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage"
-                ],
-                "test-coverage-clover": [
-                    "@php ./vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml"
-                ]
-            },
-            "license": [
-                "GPL-v3"
-            ],
-            "authors": [
-                {
-                    "name": "Krokedil AB",
-                    "email": "info@krokedil.se"
-                }
-            ],
-            "description": "A Klarna Express Checkout solution for WooCommerce",
-            "support": {
-                "source": "https://github.com/krokedil/klarna-express-checkout/tree/2.1.6",
-                "issues": "https://github.com/krokedil/klarna-express-checkout/issues"
-            },
-            "time": "2026-06-16T09:26:41+00:00"
         },
         {
             "name": "krokedil/settings-page",
