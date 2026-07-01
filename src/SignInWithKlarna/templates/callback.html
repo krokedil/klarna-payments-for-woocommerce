@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <script
+      defer
+      src="https://js.klarna.com/web-sdk/v2/klarna.js"
+      data-client-id="%client_id%"
+      data-locale="%locale%"
+    ></script>
+    <script type="text/javascript">
+      window.KlarnaSDKCallback = function (klarna) {
+        klarna.Identity.on("signin", async (response) => {
+          const { idToken } = response
+
+          // admin-ajax.php doesn't support JSON request. We need to use FormData.
+          const formData = new FormData();
+          formData.append("id_token", idToken);
+
+          fetch("%sign_in_url%", {
+            method: "POST",
+            body: formData,
+            mode: 'same-origin'
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                location.href = '%store_url%'
+              } else {
+                console.warn("siwk sign-in failed", data);
+              }
+            });
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <p><a href="%store_url%">Back to the store</a></p>
+  </body>
+</html>
