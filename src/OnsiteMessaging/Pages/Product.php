@@ -65,7 +65,17 @@ class Product extends Page {
 	 */
 	public function register_placement() {
 		if ( $this->enabled && is_product() ) {
+			/**
+			 * Filters the WooCommerce hook the on-site messaging placement is attached to on the product page.
+			 *
+			 * @param string $target The action hook name. Default 'woocommerce_single_product_summary'.
+			 */
 			$target   = apply_filters( 'klarna_onsite_messaging_product_target', $this->target );
+			/**
+			 * Filters the priority used when attaching the on-site messaging placement on the product page.
+			 *
+			 * @param int $priority The hook priority.
+			 */
 			$priority = apply_filters( 'klarna_onsite_messaging_product_priority', $this->priority );
 			add_action( $target, array( $this, 'display_placement' ), $priority );
 		}

@@ -58,6 +58,12 @@ class Redirect {
 		$body     = wp_remote_retrieve_body( $response );
 
 		$page         = null;
+		/**
+		 * Filters the URL the customer is redirected to after the Klarna sign-in callback.
+		 *
+		 * @param string      $redirect_url The redirect URL. Defaults to the shop page permalink.
+		 * @param string|null $page         The page context. Null in the redirect callback.
+		 */
 		$redirect_url = apply_filters( 'siwk_redirect_url', get_permalink( wc_get_page_id( 'shop' ) ), $page );
 		if ( empty( $body ) ) {
 			wp_safe_redirect( $redirect_url );
@@ -89,6 +95,11 @@ class Redirect {
 	 */
 	public static function get_callback_url() {
 		// Since Woo requires pretty permalinks, we can assume it is always set, therefore, don't have to fallback to the "rest_route" parameter.
+		/**
+		 * Filters the callback URL registered with Klarna for the Sign in with Klarna redirect flow.
+		 *
+		 * @param string $callback_url The callback URL.
+		 */
 		return apply_filters( 'siwk_callback_url', home_url( self::REDIRECT_CALLBACK_ENDPOINT ) );
 	}
 }

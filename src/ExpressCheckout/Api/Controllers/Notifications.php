@@ -84,12 +84,26 @@ class Notifications extends Controller {
 			$handler = $this->provider->get_handler( $event_type, $event_version );
 
 			if ( null === $handler ) {
+				/**
+				 * Triggers when a Klarna notification is received but no handler is registered for its event type and version.
+				 *
+				 * The dynamic portion of the hook name, `$event_type` and `$event_version`, refers to the Klarna event type and version, for example `payment_completed_v2`.
+				 *
+				 * @param array $body The full notification body received from Klarna.
+				 */
 				do_action( "klarna_notification_{$event_type}_{$event_version}", $body );
 				return $this->success_response();
 			}
 
 			$response = $handler->handle_notification( $payload );
 
+			/**
+			 * Triggers after a Klarna notification has been handled by its registered handler.
+			 *
+			 * The dynamic portion of the hook name, `$event_type` and `$event_version`, refers to the Klarna event type and version, for example `payment_completed_v2`.
+			 *
+			 * @param array $body The full notification body received from Klarna.
+			 */
 			do_action( "klarna_notification_{$event_type}_{$event_version}", $body );
 
 			return $response ?? $this->success_response();

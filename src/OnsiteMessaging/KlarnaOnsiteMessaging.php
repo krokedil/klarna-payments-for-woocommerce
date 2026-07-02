@@ -139,6 +139,11 @@ class KlarnaOnsiteMessaging {
 	public function add_data_attributes( $attributes ) {
 		$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
 		$environment    = isset( $settings['testmode'] ) && 'yes' === $settings['testmode'] ? 'playground' : 'production';
+		/**
+		 * Filters the Klarna client ID used for the on-site messaging placements.
+		 *
+		 * @param string $data_client_id The Klarna data client ID.
+		 */
 		$data_client_id = apply_filters( 'kosm_data_client_id', $this->settings->get( 'data_client_id' ) );
 
 		$attributes['data-environment'] = $environment;
@@ -156,7 +161,13 @@ class KlarnaOnsiteMessaging {
 	public function enqueue_scripts( $show_everywhere = false ) {
 		global $post;
 
-		if ( ! apply_filters( 'kosm_show_everywhere', $show_everywhere ) ) {
+		/**
+		 * Filters whether to enqueue the on-site messaging scripts on all pages, rather than only on product, cart and shortcode pages.
+		 *
+		 * @param bool $show_everywhere Whether to enqueue the scripts on all pages. Default false.
+		 */
+		$show_everywhere = apply_filters( 'kosm_show_everywhere', $show_everywhere );
+		if ( ! $show_everywhere ) {
 			$has_shortcode = ( ! empty( $post ) && has_shortcode( $post->post_content, 'onsite_messaging' ) );
 			if ( ! ( $has_shortcode || is_product() || is_cart() ) ) {
 				return;
@@ -172,7 +183,17 @@ class KlarnaOnsiteMessaging {
 				$region = 'oc-library';
 			}
 		}
+		/**
+		 * Filters the Klarna library region used to load the on-site messaging script.
+		 *
+		 * @param string $region The library region. One of 'eu-library', 'na-library' or 'oc-library'.
+		 */
 		$region    = apply_filters( 'kosm_region_library', $region );
+		/**
+		 * Filters the Klarna client ID used for the on-site messaging placements.
+		 *
+		 * @param string $client_id The Klarna data client ID.
+		 */
 		$client_id = apply_filters( 'kosm_data_client_id', $this->settings->get( 'data_client_id' ) );
 
 		if ( empty( $client_id ) ) {

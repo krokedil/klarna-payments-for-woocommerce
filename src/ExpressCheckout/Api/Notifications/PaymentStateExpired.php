@@ -42,6 +42,15 @@ class PaymentStateExpired extends Handler {
 
 		$order->update_status( 'cancelled', __( 'Order cancelled due to expired payment request.', 'klarna-payments-for-woocommerce' ) );
 
+		/**
+		 * Triggers when a Klarna Express Checkout order is cancelled due to an expired payment request.
+		 *
+		 * @param \WC_Order $order                  The WooCommerce order object.
+		 * @param string    $interoperability_token The Klarna interoperability token.
+		 * @param array     $interoperability_data  The interoperability data. Empty when cancelling.
+		 * @param string    $state                  The payment state reported by Klarna.
+		 * @param array     $payload                The payload data from Klarna.
+		 */
 		do_action( 'kec_cancel_order', $order, $interoperability_token, array(), $payload['state'], $payload );
 
 		return null;

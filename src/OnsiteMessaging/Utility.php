@@ -85,6 +85,12 @@ class Utility {
 		}
 
 		// Allow the merchant to hide the placement based on the purchase amount.
+		/**
+		 * Filters whether to hide the Klarna on-site messaging placement.
+		 *
+		 * @param bool $hide            Whether to hide the placement. Default false.
+		 * @param int  $purchase_amount The purchase amount, in minor units, used for the placement.
+		 */
 		if ( apply_filters( 'kosm_hide_placement', false, $purchase_amount ) ) {
 			return;
 		}
@@ -288,6 +294,11 @@ class Utility {
 			default:
 				$locale = false;
 		}
+		/**
+		 * Filters the locale (IETF BCP 47 language and region tag) used for the on-site messaging placement.
+		 *
+		 * @param string|false $locale The resolved locale, or false when no locale could be determined for the currency.
+		 */
 		return apply_filters( 'kosm_locale', $locale );
 	}
 
@@ -302,8 +313,18 @@ class Utility {
 	 */
 	public static function get_locale_from_eur( $country_code, $locale ) {
 		// The merchant can set a fixed locale for EUR if no country code could be identified.
+		/**
+		 * Filters the default locale used for the EUR currency when no country code can be identified.
+		 *
+		 * @param string $default_locale The default EUR locale. Default 'en-DE'.
+		 */
 		$default_locale = apply_filters( 'kosm_default_euro_locale', 'en-DE' );
 		// However, if they want to enforce is regardless of country code, they must use this filter.
+		/**
+		 * Filters whether to always use the default EUR locale regardless of the customer's country code.
+		 *
+		 * @param bool $force Whether to force the default EUR locale. Default false.
+		 */
 		if ( apply_filters( 'kosm_force_euro_locale', false ) ) {
 			return $default_locale;
 		}
