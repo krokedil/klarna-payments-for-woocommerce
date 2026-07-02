@@ -35,6 +35,7 @@ use Krokedil\Klarna\Api\Registry;
 use Krokedil\Klarna\PluginFeatures;
 use Krokedil\Klarna\Compatibility;
 use Krokedil\Klarna\OrderManagement;
+use Krokedil\Klarna\ExpressCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -139,7 +140,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		/**
 		 * KP Klarna Express Checkout class. Handles the integration with Klarna Express Checkout
 		 *
-		 * @var KP_Klarna_Express_Checkout|null
+		 * @var ExpressCheckout|null
 		 */
 		public $klarna_express_checkout = null;
 
@@ -297,7 +298,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->settings_page           = new KP_Settings_Page();
 			$this->checkout                = new KP_Checkout();
 			$this->plugin_features         = new PluginFeatures();
-			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
+			$this->klarna_express_checkout = new ExpressCheckout();
 			$this->krokedil                = new KrokedilWooCommerce(
 				array(
 					'slug'         => 'klarna_payments',
@@ -480,7 +481,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-api.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-subscriptions.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-klarna-express-checkout.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-interoperability-token.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-settings-page.php';
