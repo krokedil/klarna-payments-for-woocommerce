@@ -114,7 +114,7 @@ if ( null !== $changelog && \count( $changelog ) > 0 ) {
 
 $link_tags = ( null === $doc_block ) ? array() : $doc_block->getTagsByName( 'link' );
 if ( ! empty( $link_tags ) ) {
-	echo 'Examples: ';
+	echo 'Examples: ', $eol;
 
 	for($i = 0; $i < count($link_tags); $i++) {
 		$link_tag = $link_tags[$i];
@@ -122,9 +122,16 @@ if ( ! empty( $link_tags ) ) {
 		if ( ! ( $link_tag instanceof \phpDocumentor\Reflection\DocBlock\Tags\Link ) ) {
 			continue;
 		}
-		echo sprintf( '[#%d](%s)', $i + 1, $link_tag->getLink() );
+		$description = $link_tag->getDescription();
+
+		// If the description is empty, default to $i + 1 instead.
+		if ( empty( $description ) ) {
+			$description = (string) '#' . ($i + 1);
+		}
+
+		echo sprintf( '- [%s](%s)', $description, $link_tag->getLink() );
 		if ($i < count($link_tags) - 1) {
-			echo ', ';
+			echo $eol;
 		}
 	}
 

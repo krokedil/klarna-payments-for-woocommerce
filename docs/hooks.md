@@ -15,63 +15,10 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$features` | `array` | The features and their availability.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-klarna-feature-availability-is-loaded)
+Examples: 
+- [Run code after a specific feature is available.](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-klarna-feature-availability-is-loaded)
 
 Source: [./src/PluginFeatures.php](../src/PluginFeatures.php), [line 104](../src/PluginFeatures.php#L104-L110)
-
-
----
-### `wc_klarna_payments_pending`
-
-*Triggers when a One Step Checkout payment could not be completed and the order is left pending review.*
-
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$order_id` | `int` | The WooCommerce order ID.
-`$response` | `array` | The place order response from Klarna.
-
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review)
-
-Source: [./src/KECOneStepIntegration.php](../src/KECOneStepIntegration.php), [line 59](../src/KECOneStepIntegration.php#L59-L66)
-
-
----
-### `wc_klarna_pending`
-
-*Triggers when a One Step Checkout payment is left pending review. Fires alongside klarna_payments_pending.*
-
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$order_id` | `int` | The WooCommerce order ID.
-`$response` | `array` | The place order response from Klarna.
-
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review)
-
-Source: [./src/KECOneStepIntegration.php](../src/KECOneStepIntegration.php), [line 68](../src/KECOneStepIntegration.php#L68-L75)
-
-
----
-### `kec_cancel_order`
-
-*Triggers when a Klarna Express Checkout order is cancelled due to an expired payment request.*
-
-**Arguments**
-
-Argument | Type | Description
--------- | ---- | -----------
-`$order` | `\WC_Order` | The WooCommerce order object.
-`$interoperability_token` | `string` | The Klarna interoperability token.
-`$interoperability_data` | `array` | The interoperability data. Empty when cancelling.
-`$state` | `string` | The payment state reported by Klarna.
-`$payload` | `array` | The payload data from Klarna.
-
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-a-kec-payment-expires-or-is-cancelled)
-
-Source: [./src/KECOneStepIntegration.php](../src/KECOneStepIntegration.php), [line 101](../src/KECOneStepIntegration.php#L101-L111)
 
 
 ---
@@ -87,7 +34,8 @@ Argument | Type | Description
 `$klarna_order` | `object` | The Klarna order object associated with this order.
 `$actions` | `array` | The available order management actions and their enabled state.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-custom-actions-to-the-kom-metabox)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-custom-actions-to-the-kom-metabox)
 
 Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 268](../src/OrderManagement/MetaBox.php#L268-L276)
 
@@ -105,7 +53,8 @@ Argument | Type | Description
 `$klarna_order` | `object` | The Klarna order object associated with this order.
 `$actions` | `array` | The available order management actions and their enabled state.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-tooltip-text-for-kom-metabox-actions)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-tooltip-text-for-kom-metabox-actions)
 
 Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 284](../src/OrderManagement/MetaBox.php#L284-L292)
 
@@ -123,9 +72,132 @@ Argument | Type | Description
 `$klarna_order` | `object` | The Klarna order object associated with this order.
 `$actions` | `array` | The available order management actions and their enabled state.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-content-when-no-kom-actions-are-available)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-content-when-no-kom-actions-are-available)
 
 Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 299](../src/OrderManagement/MetaBox.php#L299-L307)
+
+
+---
+### `wc_klarna_payments_pending`
+
+*Triggers when a One Step Checkout payment could not be completed and the order is left pending review.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$order_id` | `int` | The WooCommerce order ID.
+`$response` | `array` | The place order response from Klarna.
+
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review)
+
+Source: [./src/ExpressCheckout/KECOneStepIntegration.php](../src/ExpressCheckout/KECOneStepIntegration.php), [line 59](../src/ExpressCheckout/KECOneStepIntegration.php#L59-L66)
+
+
+---
+### `wc_klarna_pending`
+
+*Triggers when a One Step Checkout payment is left pending review. Fires alongside klarna_payments_pending.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$order_id` | `int` | The WooCommerce order ID.
+`$response` | `array` | The place order response from Klarna.
+
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review)
+
+Source: [./src/ExpressCheckout/KECOneStepIntegration.php](../src/ExpressCheckout/KECOneStepIntegration.php), [line 68](../src/ExpressCheckout/KECOneStepIntegration.php#L68-L75)
+
+
+---
+### `kec_cancel_order`
+
+*Triggers when a Klarna Express Checkout order is cancelled due to an expired payment request.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$order` | `\WC_Order` | The WooCommerce order object.
+`$interoperability_token` | `string` | The Klarna interoperability token.
+`$interoperability_data` | `array` | The interoperability data. Empty when cancelling.
+`$state` | `string` | The payment state reported by Klarna.
+`$payload` | `array` | The payload data from Klarna.
+
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-a-kec-payment-expires-or-is-cancelled)
+
+Source: [./src/ExpressCheckout/KECOneStepIntegration.php](../src/ExpressCheckout/KECOneStepIntegration.php), [line 101](../src/ExpressCheckout/KECOneStepIntegration.php#L101-L111)
+
+
+---
+### `kec_process_order`
+
+*Handle the notification for the payment completed event.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$payload` | `array` | The payload from the notification.
+
+Source: [./src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php](../src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php), [line 25](../src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php#L25-L60)
+
+
+---
+### `kec_cancel_order`
+
+*Handle the notification for the payment expired event.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$payload` | `array` | The payload from the notification.
+
+Source: [./src/ExpressCheckout/Api/Notifications/PaymentStateExpired.php](../src/ExpressCheckout/Api/Notifications/PaymentStateExpired.php), [line 25](../src/ExpressCheckout/Api/Notifications/PaymentStateExpired.php#L25-L45)
+
+
+---
+### `klarna_notification_{$event_type}_{$event_version}`
+
+*Handle the notification callback.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$request` | `\WP_REST_Request` | The request object.
+
+Source: [./src/ExpressCheckout/Api/Controllers/Notifications.php](../src/ExpressCheckout/Api/Controllers/Notifications.php), [line 63](../src/ExpressCheckout/Api/Controllers/Notifications.php#L63-L87)
+
+
+---
+### `klarna_notification_{$event_type}_{$event_version}`
+
+*Handle the notification callback.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$request` | `\WP_REST_Request` | The request object.
+
+Source: [./src/ExpressCheckout/Api/Controllers/Notifications.php](../src/ExpressCheckout/Api/Controllers/Notifications.php), [line 63](../src/ExpressCheckout/Api/Controllers/Notifications.php#L63-L93)
+
+
+---
+### `kec_auth_callback_processed`
+
+*Handle the auth callback for the two-step KEC flow.*
+
+
+Source: [./src/ExpressCheckout/AJAX.php](../src/ExpressCheckout/AJAX.php), [line 136](../src/ExpressCheckout/AJAX.php#L136-L173)
 
 
 ---
@@ -140,7 +212,8 @@ Argument | Type | Description
 `$order_id` | `int` | The WooCommerce order ID.
 `$decoded` | `array` | The decoded Klarna order data.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-a-klarna-payment-is-accepted)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-a-klarna-payment-is-accepted)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 162](../includes/kp-functions.php#L162-L169)
 
@@ -157,7 +230,8 @@ Argument | Type | Description
 `$order_id` | `int` | The WooCommerce order ID.
 `$decoded` | `array` | The decoded Klarna order data.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-a-klarna-payment-is-accepted)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-a-klarna-payment-is-accepted)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 171](../includes/kp-functions.php#L171-L178)
 
@@ -174,7 +248,8 @@ Argument | Type | Description
 `$order_id` | `int` | The WooCommerce order ID.
 `$decoded` | `array` | The decoded Klarna order data.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 200](../includes/kp-functions.php#L200-L207)
 
@@ -191,7 +266,8 @@ Argument | Type | Description
 `$order_id` | `int` | The WooCommerce order ID.
 `$decoded` | `array` | The decoded Klarna order data.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-pending-review)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 209](../includes/kp-functions.php#L209-L216)
 
@@ -208,7 +284,8 @@ Argument | Type | Description
 `$order_id` | `int` | The WooCommerce order ID.
 `$decoded` | `array` | The decoded Klarna order data.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-rejected)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-rejected)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 243](../includes/kp-functions.php#L243-L250)
 
@@ -225,7 +302,8 @@ Argument | Type | Description
 `$order_id` | `int` | The WooCommerce order ID.
 `$decoded` | `array` | The decoded Klarna order data.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-rejected)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-a-klarna-payment-is-rejected)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 252](../includes/kp-functions.php#L252-L259)
 
@@ -243,7 +321,8 @@ Argument | Type | Description
 `$order_id` | `string` | The WooCommerce order ID.
 `$auth_token` | `string` | The Klarna auth token for the session.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-the-place-order-request-completes)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-the-place-order-request-completes)
 
 Source: [./classes/class-kp-api.php](../classes/class-kp-api.php), [line 102](../classes/class-kp-api.php#L102-L110)
 
@@ -260,7 +339,8 @@ Argument | Type | Description
 `$order` | `\WC_Order` | The WooCommerce order object.
 `$show_form` | `bool` | Whether the checkout form should be shown again to the customer.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#handle-the-klarna-modal-closed-event)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#handle-the-klarna-modal-closed-event)
 
 Source: [./classes/class-kp-ajax.php](../classes/class-kp-ajax.php), [line 164](../classes/class-kp-ajax.php#L164-L171)
 
@@ -271,7 +351,8 @@ Source: [./classes/class-kp-ajax.php](../classes/class-kp-ajax.php), [line 164](
 *Triggers on the Klarna notification endpoint, allowing the Klarna Order Management plugin to process pending orders.*
 
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-klarna-sends-a-push-notification)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-klarna-sends-a-push-notification)
 
 Source: [./classes/class-wc-gateway-klarna-payments.php](../classes/class-wc-gateway-klarna-payments.php), [line 569](../classes/class-wc-gateway-klarna-payments.php#L569-L574)
 
@@ -279,6 +360,15 @@ Source: [./classes/class-wc-gateway-klarna-payments.php](../classes/class-wc-gat
 ---
 ## Filters
 
+### `kec_compatible_blocks`
+
+*Filter the compatible blocks for Klarna Express Checkout.*
+
+
+Source: [./src/ExpressCheckout.php](../src/ExpressCheckout.php), [line 208](../src/ExpressCheckout.php#L208-L211)
+
+
+---
 ### `klarna_onsite_messaging_cart_target`
 
 *Register hook for displaying the placement.*
@@ -325,7 +415,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$environment` | `string` | The Klarna environment, either 'test' or 'live'.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-environment-label-in-the-kom-metabox)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-environment-label-in-the-kom-metabox)
 
 Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 163](../src/OrderManagement/MetaBox.php#L163-L169)
 
@@ -341,7 +432,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$klarna_status` | `string` | The status of the Klarna order.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-order-status-label-in-the-kom-metabox)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-order-status-label-in-the-kom-metabox)
 
 Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 175](../src/OrderManagement/MetaBox.php#L175-L181)
 
@@ -357,7 +449,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$method_description` | `string` | The Klarna initial payment method description.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-payment-method-label-in-the-kom-metabox)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-payment-method-label-in-the-kom-metabox)
 
 Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 187](../src/OrderManagement/MetaBox.php#L187-L193)
 
@@ -373,7 +466,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$skip` | `bool` | Whether to skip the matching reference orders lookup. Default false.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#disable-lookup-of-orders-sharing-a-klarna-transaction-id)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#disable-lookup-of-orders-sharing-a-klarna-transaction-id)
 
 Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 661](../src/OrderManagement/MetaBox.php#L661-L667)
 
@@ -389,7 +483,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$region` | `string` | The Klarna API region, derived from the order's country.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-base-region-for-api-requests)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-base-region-for-api-requests)
 
 Source: [./src/OrderManagement/Request/Request.php](../src/OrderManagement/Request/Request.php), [line 142](../src/OrderManagement/Request/Request.php#L142-L148)
 
@@ -405,7 +500,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$timeout` | `int` | The request timeout in seconds. Default 10.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-order-management-request-timeout)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-order-management-request-timeout)
 
 Source: [./src/OrderManagement/Request/Request.php](../src/OrderManagement/Request/Request.php), [line 332](../src/OrderManagement/Request/Request.php#L332-L338)
 
@@ -422,7 +518,8 @@ Argument | Type | Description
 `$data` | `array` | The capture request body, including the captured amount and order lines.
 `$order_id` | `int` | The WooCommerce order ID.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-order-capture-request)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-order-capture-request)
 
 Source: [./src/OrderManagement/Request/Post/RequestPostCapture.php](../src/OrderManagement/Request/Post/RequestPostCapture.php), [line 69](../src/OrderManagement/Request/Post/RequestPostCapture.php#L69-L76)
 
@@ -439,7 +536,8 @@ Argument | Type | Description
 `$type` | `string` | The product type to use. Default 'physical'.
 `$item` | `\WC_Order_Item_Product` | The WooCommerce order item being refunded.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-product-type-for-refunds-of-missing-products)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-product-type-for-refunds-of-missing-products)
 
 Source: [./src/OrderManagement/Request/Post/RequestPostRefund.php](../src/OrderManagement/Request/Post/RequestPostRefund.php), [line 154](../src/OrderManagement/Request/Post/RequestPostRefund.php#L154-L161)
 
@@ -456,7 +554,8 @@ Argument | Type | Description
 `$data` | `array` | The refund order lines.
 `$order_id` | `int` | The WooCommerce order ID.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-order-refund-request)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-order-refund-request)
 
 Source: [./src/OrderManagement/Request/Post/RequestPostRefund.php](../src/OrderManagement/Request/Post/RequestPostRefund.php), [line 281](../src/OrderManagement/Request/Post/RequestPostRefund.php#L281-L288)
 
@@ -473,9 +572,17 @@ Argument | Type | Description
 `$data` | `array` | The update request body, including order lines and amounts.
 `$order_id` | `int` | The WooCommerce order ID.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-order-update-request)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-order-update-request)
 
 Source: [./src/OrderManagement/Request/Patch/RequestPatchUpdate.php](../src/OrderManagement/Request/Patch/RequestPatchUpdate.php), [line 50](../src/OrderManagement/Request/Patch/RequestPatchUpdate.php#L50-L57)
+
+
+---
+### `klarna_base_region`
+
+
+Source: [./src/SignInWithKlarna/JWT.php](../src/SignInWithKlarna/JWT.php), [line 68](../src/SignInWithKlarna/JWT.php#L68-L68)
 
 
 ---
@@ -489,9 +596,64 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$controllers` | `\Krokedil\Klarna\Api\Controllers\Controller[]` | The list of API controllers to register. Default empty array.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#register-a-custom-klarna-rest-api-controller)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#register-a-custom-klarna-rest-api-controller)
 
 Source: [./src/Api/Registry.php](../src/Api/Registry.php), [line 28](../src/Api/Registry.php#L28-L34)
+
+
+---
+### `kec_acquiring_partner_integrations`
+
+*Get the Acquiring Partner integration class to use for this notification.*
+
+
+Source: [./src/ExpressCheckout/Api/Notifications/Handler.php](../src/ExpressCheckout/Api/Notifications/Handler.php), [line 40](../src/ExpressCheckout/Api/Notifications/Handler.php#L40-L47)
+
+
+---
+### `kec_one_step_redirect_wait_max_attempts`
+
+*Wait for the order redirect URL to be set and return it.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$order` | `\WC_Order` | The WooCommerce order.
+`$kec_unique_id` | `string` | The KEC unique ID.
+
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 83](../src/ExpressCheckout/OneStepCheckout.php#L83-L92)
+
+
+---
+### `kec_one_step_redirect_wait_sleep_time_mu`
+
+*Wait for the order redirect URL to be set and return it.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$order` | `\WC_Order` | The WooCommerce order.
+`$kec_unique_id` | `string` | The KEC unique ID.
+
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 83](../src/ExpressCheckout/OneStepCheckout.php#L83-L93)
+
+
+---
+### `kec_one_step_default_redirect_url`
+
+*Wait for the order redirect URL to be set and return it.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$order` | `\WC_Order` | The WooCommerce order.
+`$kec_unique_id` | `string` | The KEC unique ID.
+
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 83](../src/ExpressCheckout/OneStepCheckout.php#L83-L95)
 
 
 ---
@@ -505,7 +667,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$statuses` | `string[]` | The allowed order statuses. Default array( 'on-hold' ).
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-order-statuses-that-allow-klarna-order-updates)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-order-statuses-that-allow-klarna-order-updates)
 
 Source: [./src/OrderManagement.php](../src/OrderManagement.php), [line 362](../src/OrderManagement.php#L362-L368)
 
@@ -521,7 +684,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$applied_return_fees` | `array` | The applied return fees, with 'amount' and 'tax_amount' keys.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#inspect-the-return-fees-applied-to-a-klarna-refund)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#inspect-the-return-fees-applied-to-a-klarna-refund)
 
 Source: [./src/OrderManagement.php](../src/OrderManagement.php), [line 632](../src/OrderManagement.php#L632-L638)
 
@@ -537,7 +701,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$label` | `string` | The pay button label.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-label-on-the-woocommerce-pay-button)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-label-on-the-woocommerce-pay-button)
 
 Source: [./klarna-payments-for-woocommerce.php](../klarna-payments-for-woocommerce.php), [line 584](../klarna-payments-for-woocommerce.php#L584-L590)
 
@@ -553,7 +718,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$label` | `string` | The pay button label.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-label-on-the-woocommerce-pay-button)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-label-on-the-woocommerce-pay-button)
 
 Source: [./klarna-payments-for-woocommerce.php](../klarna-payments-for-woocommerce.php), [line 594](../klarna-payments-for-woocommerce.php#L594-L600)
 
@@ -570,7 +736,8 @@ Argument | Type | Description
 `$customer` | `array` | The Klarna customer object.
 `$customer_type` | `string` | The customer type from the settings.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-customer-object-for-klarna-payments)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-customer-object-for-klarna-payments)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 52](../includes/kp-functions.php#L52-L59)
 
@@ -586,7 +753,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$country` | `string` | The two-letter country code.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-purchase-country-sent-to-klarna)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-purchase-country-sent-to-klarna)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 74](../includes/kp-functions.php#L74-L80)
 
@@ -602,7 +770,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$country` | `string` | The two-letter country code.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-purchase-country-sent-to-klarna)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-purchase-country-sent-to-klarna)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 88](../includes/kp-functions.php#L88-L94)
 
@@ -618,7 +787,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$country` | `string` | The two-letter country code.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-purchase-country-sent-to-klarna)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-purchase-country-sent-to-klarna)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 102](../includes/kp-functions.php#L102-L108)
 
@@ -634,7 +804,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$status` | `string` | The order status to set. Default 'failed'.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-order-status-for-rejected-payments)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-order-status-for-rejected-payments)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 234](../includes/kp-functions.php#L234-L240)
 
@@ -650,7 +821,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$locale` | `string` | The formatted locale, for example 'en-GB'.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#force-locale-to-a-specific-country-and-language)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#force-locale-to-a-specific-country-and-language)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 284](../includes/kp-functions.php#L284-L290)
 
@@ -680,7 +852,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$customer_type` | `string` | The customer type from the settings.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-customer-type-b2cb2b)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-customer-type-b2cb2b)
 
 Source: [./includes/kp-functions.php](../includes/kp-functions.php), [line 706](../includes/kp-functions.php#L706-L712)
 
@@ -696,7 +869,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$client_id` | `string` | The Klarna client ID, for example 'klarna_live_client_xxx'.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-klarna-web-sdk-client-id)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-klarna-web-sdk-client-id)
 
 Source: [./classes/class-kp-assets.php](../classes/class-kp-assets.php), [line 79](../classes/class-kp-assets.php#L79-L85)
 
@@ -714,7 +888,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$attributes` | `array` | Associative array of attribute name => value pairs. Default array( 'defer' => null ).
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-web-sdk-v2-script-attributes)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-web-sdk-v2-script-attributes)
 
 Source: [./classes/class-kp-assets.php](../classes/class-kp-assets.php), [line 90](../classes/class-kp-assets.php#L90-L103)
 
@@ -732,7 +907,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$attributes` | `array` | Associative array of attribute name => value pairs. Default array( 'defer' => null ).
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-web-sdk-v1-script-attributes)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-web-sdk-v1-script-attributes)
 
 Source: [./classes/class-kp-assets.php](../classes/class-kp-assets.php), [line 119](../classes/class-kp-assets.php#L119-L132)
 
@@ -757,7 +933,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$params` | `array` | Associative array of parameters, including AJAX URLs, nonces, cart total, testmode flag, customer type, client token, and i18n strings.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-parameters-passed-to-the-klarna-payments-frontend)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-parameters-passed-to-the-klarna-payments-frontend)
 
 Source: [./classes/class-kp-assets.php](../classes/class-kp-assets.php), [line 252](../classes/class-kp-assets.php#L252-L260)
 
@@ -775,7 +952,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$enabled` | `bool` | Whether the express button is enabled. Default false.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button)
 
 Source: [./classes/class-kp-assets.php](../classes/class-kp-assets.php), [line 311](../classes/class-kp-assets.php#L311-L319)
 
@@ -793,7 +971,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$enabled` | `bool` | Whether the express button is enabled. Default false.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button)
 
 Source: [./classes/class-kp-assets.php](../classes/class-kp-assets.php), [line 347](../classes/class-kp-assets.php#L347-L355)
 
@@ -809,7 +988,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$locale` | `string` | The locale string, for example 'en-US'.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#force-express-button-to-a-specific-country-and-language)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#force-express-button-to-a-specific-country-and-language)
 
 Source: [./classes/class-kp-assets.php](../classes/class-kp-assets.php), [line 376](../classes/class-kp-assets.php#L376-L382)
 
@@ -827,7 +1007,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$enabled` | `bool` | Whether the express button is enabled. Default false.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button)
 
 Source: [./classes/class-kp-assets.php](../classes/class-kp-assets.php), [line 498](../classes/class-kp-assets.php#L498-L506)
 
@@ -845,7 +1026,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$enabled` | `bool` | Whether the express button is enabled. Default false.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button)
 
 Source: [./classes/class-kp-assets.php](../classes/class-kp-assets.php), [line 538](../classes/class-kp-assets.php#L538-L546)
 
@@ -863,7 +1045,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$form_fields` | `array` | The WooCommerce settings form fields array.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-payments-settings-fields)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-payments-settings-fields)
 
 Source: [./classes/admin/class-kp-form-fields.php](../classes/admin/class-kp-form-fields.php), [line 609](../classes/admin/class-kp-form-fields.php#L609-L617)
 
@@ -879,7 +1062,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$timeout` | `int` | The request timeout in seconds. Default 10.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-request-timeout-time)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-request-timeout-time)
 
 Source: [./classes/requests/class-kp-requests-post.php](../classes/requests/class-kp-requests-post.php), [line 43](../classes/requests/class-kp-requests-post.php#L43-L49)
 
@@ -895,7 +1079,9 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$body` | `array` | The request body.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#auto-capture-orders), [#2](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-order-cart-data-sent-to-klarna)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#auto-capture-orders)
+- [#2](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-order-cart-data-sent-to-klarna)
 
 Source: [./classes/requests/class-kp-requests-post.php](../classes/requests/class-kp-requests-post.php), [line 51](../classes/requests/class-kp-requests-post.php#L51-L58)
 
@@ -912,7 +1098,8 @@ Argument | Type | Description
 `$order_lines` | `array` | The formatted Klarna order object.
 `$order_id` | `int` | The WooCommerce order ID.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#auto-capture-orders)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#auto-capture-orders)
 
 Source: [./classes/requests/class-kp-requests-post.php](../classes/requests/class-kp-requests-post.php), [line 93](../classes/requests/class-kp-requests-post.php#L93-L104)
 
@@ -928,7 +1115,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$timeout` | `int` | The request timeout in seconds. Default 10.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-request-timeout-time)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-request-timeout-time)
 
 Source: [./classes/requests/class-kp-requests-patch.php](../classes/requests/class-kp-requests-patch.php), [line 40](../classes/requests/class-kp-requests-patch.php#L40-L46)
 
@@ -944,7 +1132,9 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$body` | `array` | The request body.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#auto-capture-orders), [#2](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-order-cart-data-sent-to-klarna)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#auto-capture-orders)
+- [#2](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-order-cart-data-sent-to-klarna)
 
 Source: [./classes/requests/class-kp-requests-patch.php](../classes/requests/class-kp-requests-patch.php), [line 48](../classes/requests/class-kp-requests-patch.php#L48-L55)
 
@@ -960,7 +1150,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$timeout` | `int` | The request timeout in seconds. Default 10.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-request-timeout-time)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-request-timeout-time)
 
 Source: [./classes/requests/class-kp-requests-get.php](../classes/requests/class-kp-requests-get.php), [line 38](../classes/requests/class-kp-requests-get.php#L38-L44)
 
@@ -976,7 +1167,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$strip` | `bool` | Whether to remove postcode spaces. Default false.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#remove-postcode-spaces)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#remove-postcode-spaces)
 
 Source: [./classes/requests/helpers/class-kp-order-data.php](../classes/requests/helpers/class-kp-order-data.php), [line 238](../classes/requests/helpers/class-kp-order-data.php#L238-L244)
 
@@ -992,7 +1184,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$strip` | `bool` | Whether to remove postcode spaces. Default false.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#remove-postcode-spaces)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#remove-postcode-spaces)
 
 Source: [./classes/requests/helpers/class-kp-order-data.php](../classes/requests/helpers/class-kp-order-data.php), [line 339](../classes/requests/helpers/class-kp-order-data.php#L339-L345)
 
@@ -1008,7 +1201,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$region` | `string` | The Klarna API region, derived from the country endpoint. Blank for EU.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-base-region-for-api-requests)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-base-region-for-api-requests)
 
 Source: [./classes/requests/class-kp-requests.php](../classes/requests/class-kp-requests.php), [line 116](../classes/requests/class-kp-requests.php#L116-L122)
 
@@ -1026,7 +1220,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$supports` | `array` | The supported features.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#disable-klarna-payments-for-subscriptions)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#disable-klarna-payments-for-subscriptions)
 
 Source: [./classes/class-wc-gateway-klarna-payments.php](../classes/class-wc-gateway-klarna-payments.php), [line 84](../classes/class-wc-gateway-klarna-payments.php#L84-L108)
 
@@ -1045,7 +1240,8 @@ Argument | Type | Description
 `$amount` | `null\|int` | The refund amount, or null for the full amount.
 `$reason` | `string` | The reason for the refund.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#handle-klarna-refunds-with-custom-code)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#handle-klarna-refunds-with-custom-code)
 
 Source: [./classes/class-wc-gateway-klarna-payments.php](../classes/class-wc-gateway-klarna-payments.php), [line 588](../classes/class-wc-gateway-klarna-payments.php#L588-L597)
 
@@ -1061,7 +1257,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$klarna_payment_categories` | `array` | The available Klarna payment method categories.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-available-klarna-payment-categories)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-available-klarna-payment-categories)
 
 Source: [./templates/klarna-payments-categories.php](../templates/klarna-payments-categories.php), [line 23](../templates/klarna-payments-categories.php#L23-L29)
 
@@ -1077,7 +1274,8 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$logo_url` | `string` | The URL of the Klarna logo.
 
-Examples: [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-klarna-logo-in-the-blocks-checkout)
+Examples: 
+- [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-klarna-logo-in-the-blocks-checkout)
 
 Source: [./blocks/src/payment/KlarnaPayments.php](../blocks/src/payment/KlarnaPayments.php), [line 87](../blocks/src/payment/KlarnaPayments.php#L87-L93)
 
