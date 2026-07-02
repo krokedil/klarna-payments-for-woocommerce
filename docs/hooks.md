@@ -22,6 +22,15 @@ Source: [./src/PluginFeatures.php](../src/PluginFeatures.php), [line 104](../src
 
 
 ---
+### `osm_shortcode_added`
+
+*Triggers when the Klarna on-site messaging shortcode is rendered on the frontend.*
+
+
+Source: [./src/OnsiteMessaging/Shortcode.php](../src/OnsiteMessaging/Shortcode.php), [line 25](../src/OnsiteMessaging/Shortcode.php#L25-L28)
+
+
+---
 ### `kom_meta_action_options`
 
 *Triggers inside the order actions dropdown, allowing additional action options to be rendered.*
@@ -76,6 +85,21 @@ Examples:
 - [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-content-when-no-kom-actions-are-available)
 
 Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 299](../src/OrderManagement/MetaBox.php#L299-L307)
+
+
+---
+### `siwk_merge_with_existing_user`
+
+*Triggers after Klarna user data has been merged into an existing WooCommerce user.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$user_id` | `int` | The ID of the merged user.
+`$userdata` | `array` | The user data from Klarna used to update the user.
+
+Source: [./src/SignInWithKlarna/User.php](../src/SignInWithKlarna/User.php), [line 156](../src/SignInWithKlarna/User.php#L156-L162)
 
 
 ---
@@ -138,66 +162,83 @@ Source: [./src/ExpressCheckout/KECOneStepIntegration.php](../src/ExpressCheckout
 ---
 ### `kec_process_order`
 
-*Handle the notification for the payment completed event.*
+*Triggers when a completed Klarna Express Checkout payment notification is processed and no acquiring partner integration handles it.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$payload` | `array` | The payload from the notification.
+`$order` | `\WC_Order` | The WooCommerce order object.
+`$interoperability_token` | `string` | The Klarna interoperability token.
+`$interoperability_data` | `array` | The interoperability data. Empty for this event.
+`$state` | `string` | The payment state reported by Klarna.
+`$payload` | `array` | The payload data from Klarna.
 
-Source: [./src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php](../src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php), [line 25](../src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php#L25-L60)
+Source: [./src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php](../src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php), [line 60](../src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php#L60-L69)
 
 
 ---
 ### `kec_cancel_order`
 
-*Handle the notification for the payment expired event.*
+*Triggers when a Klarna Express Checkout order is cancelled due to an expired payment request.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$payload` | `array` | The payload from the notification.
+`$order` | `\WC_Order` | The WooCommerce order object.
+`$interoperability_token` | `string` | The Klarna interoperability token.
+`$interoperability_data` | `array` | The interoperability data. Empty when cancelling.
+`$state` | `string` | The payment state reported by Klarna.
+`$payload` | `array` | The payload data from Klarna.
 
-Source: [./src/ExpressCheckout/Api/Notifications/PaymentStateExpired.php](../src/ExpressCheckout/Api/Notifications/PaymentStateExpired.php), [line 25](../src/ExpressCheckout/Api/Notifications/PaymentStateExpired.php#L25-L45)
+Source: [./src/ExpressCheckout/Api/Notifications/PaymentStateExpired.php](../src/ExpressCheckout/Api/Notifications/PaymentStateExpired.php), [line 45](../src/ExpressCheckout/Api/Notifications/PaymentStateExpired.php#L45-L54)
 
 
 ---
 ### `klarna_notification_{$event_type}_{$event_version}`
 
-*Handle the notification callback.*
+*Triggers when a Klarna notification is received but no handler is registered for its event type and version.*
+
+The dynamic portion of the hook name, `$event_type` and `$event_version`, refers to the Klarna event type and version, for example `payment_completed_v2`.
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$request` | `\WP_REST_Request` | The request object.
+`$body` | `array` | The full notification body received from Klarna.
 
-Source: [./src/ExpressCheckout/Api/Controllers/Notifications.php](../src/ExpressCheckout/Api/Controllers/Notifications.php), [line 63](../src/ExpressCheckout/Api/Controllers/Notifications.php#L63-L87)
+Source: [./src/ExpressCheckout/Api/Controllers/Notifications.php](../src/ExpressCheckout/Api/Controllers/Notifications.php), [line 87](../src/ExpressCheckout/Api/Controllers/Notifications.php#L87-L94)
 
 
 ---
 ### `klarna_notification_{$event_type}_{$event_version}`
 
-*Handle the notification callback.*
+*Triggers after a Klarna notification has been handled by its registered handler.*
+
+The dynamic portion of the hook name, `$event_type` and `$event_version`, refers to the Klarna event type and version, for example `payment_completed_v2`.
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$request` | `\WP_REST_Request` | The request object.
+`$body` | `array` | The full notification body received from Klarna.
 
-Source: [./src/ExpressCheckout/Api/Controllers/Notifications.php](../src/ExpressCheckout/Api/Controllers/Notifications.php), [line 63](../src/ExpressCheckout/Api/Controllers/Notifications.php#L63-L93)
+Source: [./src/ExpressCheckout/Api/Controllers/Notifications.php](../src/ExpressCheckout/Api/Controllers/Notifications.php), [line 100](../src/ExpressCheckout/Api/Controllers/Notifications.php#L100-L107)
 
 
 ---
 ### `kec_auth_callback_processed`
 
-*Handle the auth callback for the two-step KEC flow.*
+*Triggers after the two-step Klarna Express Checkout auth callback has been processed and the customer address and client token stored in the session.*
 
+**Arguments**
 
-Source: [./src/ExpressCheckout/AJAX.php](../src/ExpressCheckout/AJAX.php), [line 136](../src/ExpressCheckout/AJAX.php#L136-L173)
+Argument | Type | Description
+-------- | ---- | -----------
+`$result` | `array` | The auth callback result from Klarna, including the approval status, client token and collected shipping address.
+
+Source: [./src/ExpressCheckout/AJAX.php](../src/ExpressCheckout/AJAX.php), [line 173](../src/ExpressCheckout/AJAX.php#L173-L178)
 
 
 ---
@@ -369,39 +410,172 @@ Source: [./src/ExpressCheckout.php](../src/ExpressCheckout.php), [line 208](../s
 
 
 ---
+### `kosm_data_client_id`
+
+*Filters the Klarna client ID used for the on-site messaging placements.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$data_client_id` | `string` | The Klarna data client ID.
+
+Source: [./src/OnsiteMessaging/KlarnaOnsiteMessaging.php](../src/OnsiteMessaging/KlarnaOnsiteMessaging.php), [line 142](../src/OnsiteMessaging/KlarnaOnsiteMessaging.php#L142-L147)
+
+
+---
+### `kosm_show_everywhere`
+
+*Filters whether to enqueue the on-site messaging scripts on all pages, rather than only on product, cart and shortcode pages.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$show_everywhere` | `bool` | Whether to enqueue the scripts on all pages. Default false.
+
+Source: [./src/OnsiteMessaging/KlarnaOnsiteMessaging.php](../src/OnsiteMessaging/KlarnaOnsiteMessaging.php), [line 164](../src/OnsiteMessaging/KlarnaOnsiteMessaging.php#L164-L169)
+
+
+---
+### `kosm_region_library`
+
+*Filters the Klarna library region used to load the on-site messaging script.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$region` | `string` | The library region. One of 'eu-library', 'na-library' or 'oc-library'.
+
+Source: [./src/OnsiteMessaging/KlarnaOnsiteMessaging.php](../src/OnsiteMessaging/KlarnaOnsiteMessaging.php), [line 186](../src/OnsiteMessaging/KlarnaOnsiteMessaging.php#L186-L191)
+
+
+---
+### `kosm_data_client_id`
+
+*Filters the Klarna client ID used for the on-site messaging placements.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$client_id` | `string` | The Klarna data client ID.
+
+Source: [./src/OnsiteMessaging/KlarnaOnsiteMessaging.php](../src/OnsiteMessaging/KlarnaOnsiteMessaging.php), [line 192](../src/OnsiteMessaging/KlarnaOnsiteMessaging.php#L192-L197)
+
+
+---
 ### `klarna_onsite_messaging_cart_target`
 
-*Register hook for displaying the placement.*
+*Filters the WooCommerce hook the on-site messaging placement is attached to on the cart page.*
 
+**Arguments**
 
-Source: [./src/OnsiteMessaging/Pages/Cart.php](../src/OnsiteMessaging/Pages/Cart.php), [line 39](../src/OnsiteMessaging/Pages/Cart.php#L39-L47)
+Argument | Type | Description
+-------- | ---- | -----------
+`$target` | `string` | The action hook name where the placement is rendered.
+
+Source: [./src/OnsiteMessaging/Pages/Cart.php](../src/OnsiteMessaging/Pages/Cart.php), [line 47](../src/OnsiteMessaging/Pages/Cart.php#L47-L52)
 
 
 ---
 ### `klarna_onsite_messaging_cart_priority`
 
-*Register hook for displaying the placement.*
+*Filters the priority used when attaching the on-site messaging placement on the cart page.*
 
+**Arguments**
 
-Source: [./src/OnsiteMessaging/Pages/Cart.php](../src/OnsiteMessaging/Pages/Cart.php), [line 39](../src/OnsiteMessaging/Pages/Cart.php#L39-L48)
+Argument | Type | Description
+-------- | ---- | -----------
+`$priority` | `int` | The hook priority. Default 5.
+
+Source: [./src/OnsiteMessaging/Pages/Cart.php](../src/OnsiteMessaging/Pages/Cart.php), [line 53](../src/OnsiteMessaging/Pages/Cart.php#L53-L58)
 
 
 ---
 ### `klarna_onsite_messaging_product_target`
 
-*Register hook for displaying the placement.*
+*Filters the WooCommerce hook the on-site messaging placement is attached to on the product page.*
 
+**Arguments**
 
-Source: [./src/OnsiteMessaging/Pages/Product.php](../src/OnsiteMessaging/Pages/Product.php), [line 61](../src/OnsiteMessaging/Pages/Product.php#L61-L68)
+Argument | Type | Description
+-------- | ---- | -----------
+`$target` | `string` | The action hook name. Default 'woocommerce_single_product_summary'.
+
+Source: [./src/OnsiteMessaging/Pages/Product.php](../src/OnsiteMessaging/Pages/Product.php), [line 68](../src/OnsiteMessaging/Pages/Product.php#L68-L73)
 
 
 ---
 ### `klarna_onsite_messaging_product_priority`
 
-*Register hook for displaying the placement.*
+*Filters the priority used when attaching the on-site messaging placement on the product page.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$priority` | `int` | The hook priority.
+
+Source: [./src/OnsiteMessaging/Pages/Product.php](../src/OnsiteMessaging/Pages/Product.php), [line 74](../src/OnsiteMessaging/Pages/Product.php#L74-L79)
 
 
-Source: [./src/OnsiteMessaging/Pages/Product.php](../src/OnsiteMessaging/Pages/Product.php), [line 61](../src/OnsiteMessaging/Pages/Product.php#L61-L69)
+---
+### `kosm_hide_placement`
+
+*Filters whether to hide the Klarna on-site messaging placement.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$hide` | `bool` | Whether to hide the placement. Default false.
+`$purchase_amount` | `int` | The purchase amount, in minor units, used for the placement.
+
+Source: [./src/OnsiteMessaging/Utility.php](../src/OnsiteMessaging/Utility.php), [line 88](../src/OnsiteMessaging/Utility.php#L88-L94)
+
+
+---
+### `kosm_locale`
+
+*Filters the locale (IETF BCP 47 language and region tag) used for the on-site messaging placement.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$locale` | `string\|false` | The resolved locale, or false when no locale could be determined for the currency.
+
+Source: [./src/OnsiteMessaging/Utility.php](../src/OnsiteMessaging/Utility.php), [line 297](../src/OnsiteMessaging/Utility.php#L297-L302)
+
+
+---
+### `kosm_default_euro_locale`
+
+*Filters the default locale used for the EUR currency when no country code can be identified.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$default_locale` | `string` | The default EUR locale. Default 'en-DE'.
+
+Source: [./src/OnsiteMessaging/Utility.php](../src/OnsiteMessaging/Utility.php), [line 316](../src/OnsiteMessaging/Utility.php#L316-L321)
+
+
+---
+### `kosm_force_euro_locale`
+
+*Filters whether to always use the default EUR locale regardless of the customer's country code.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$force` | `bool` | Whether to force the default EUR locale. Default false.
+
+Source: [./src/OnsiteMessaging/Utility.php](../src/OnsiteMessaging/Utility.php), [line 323](../src/OnsiteMessaging/Utility.php#L323-L328)
 
 
 ---
@@ -579,10 +753,135 @@ Source: [./src/OrderManagement/Request/Patch/RequestPatchUpdate.php](../src/Orde
 
 
 ---
+### `siwk_redirect_url`
+
+*Filters the URL the customer is redirected to after the Klarna sign-in callback.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$redirect_url` | `string` | The redirect URL. Defaults to the shop page permalink.
+`$page` | `string\|null` | The page context. Null in the redirect callback.
+
+Source: [./src/SignInWithKlarna/Redirect.php](../src/SignInWithKlarna/Redirect.php), [line 61](../src/SignInWithKlarna/Redirect.php#L61-L67)
+
+
+---
+### `siwk_callback_url`
+
+*Filters the callback URL registered with Klarna for the Sign in with Klarna redirect flow.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$callback_url` | `string` | The callback URL.
+
+Source: [./src/SignInWithKlarna/Redirect.php](../src/SignInWithKlarna/Redirect.php), [line 98](../src/SignInWithKlarna/Redirect.php#L98-L103)
+
+
+---
+### `siwk_set_gateway_to_klarna`
+
+*Filters whether to set Klarna as the chosen payment method after signing in with Klarna.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$set_gateway` | `bool` | Whether to set the highest-ordered Klarna gateway (Klarna Checkout or Klarna Payments) as the chosen payment method. Default false.
+
+Source: [./src/SignInWithKlarna/User.php](../src/SignInWithKlarna/User.php), [line 89](../src/SignInWithKlarna/User.php#L89-L94)
+
+
+---
+### `siwk_userdata`
+
+*Filters the user data extracted from the Klarna ID token before it is used to create or update a WooCommerce user.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$userdata` | `array` | The user data, including login, email and billing/shipping meta.
+
+Source: [./src/SignInWithKlarna/User.php](../src/SignInWithKlarna/User.php), [line 250](../src/SignInWithKlarna/User.php#L250-L255)
+
+
+---
+### `siwk_{$setting}`
+
+*Filters the optional OAuth scopes requested for Sign in with Klarna.*
+
+The dynamic portion of the hook name, `$setting`, is the setting name without the `siwk_` prefix, here `scope`. Required scopes are always prepended and cannot be removed via this filter.
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$scope` | `string` | The space-separated list of enabled optional scopes.
+
+Source: [./src/SignInWithKlarna/Settings.php](../src/SignInWithKlarna/Settings.php), [line 131](../src/SignInWithKlarna/Settings.php#L131-L138)
+
+
+---
+### `siwk_{$setting}`
+
+*Filters the value of a Sign in with Klarna setting.*
+
+The dynamic portion of the hook name, `$setting`, is the setting name without the `siwk_` prefix, for example `market`, `client_id` or `button_theme`.
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$value` | `string\|int` | The setting value.
+
+Source: [./src/SignInWithKlarna/Settings.php](../src/SignInWithKlarna/Settings.php), [line 142](../src/SignInWithKlarna/Settings.php#L142-L149)
+
+
+---
+### `siwk_locale`
+
+*Filters the locale used for Sign in with Klarna.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$locale` | `string` | The locale, formatted with a hyphen, for example 'en-US'.
+
+Source: [./src/SignInWithKlarna/Settings.php](../src/SignInWithKlarna/Settings.php), [line 351](../src/SignInWithKlarna/Settings.php#L351-L356)
+
+
+---
 ### `klarna_base_region`
 
+*Filters the Klarna API region used to build the Sign in with Klarna JWKS URL.*
 
-Source: [./src/SignInWithKlarna/JWT.php](../src/SignInWithKlarna/JWT.php), [line 68](../src/SignInWithKlarna/JWT.php#L68-L68)
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$region` | `string` | The Klarna API region, derived from the store's country. Either 'eu' or 'na'.
+
+Source: [./src/SignInWithKlarna/JWT.php](../src/SignInWithKlarna/JWT.php), [line 68](../src/SignInWithKlarna/JWT.php#L68-L73)
+
+
+---
+### `siwk_redirect_url`
+
+*Filters the URL the customer is redirected to after signing in with Klarna.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$redirect_url` | `string` | The redirect URL.
+`$page` | `string` | The page context, either 'cart' or 'shop'.
+
+Source: [./src/SignInWithKlarna/Ajax.php](../src/SignInWithKlarna/Ajax.php), [line 100](../src/SignInWithKlarna/Ajax.php#L100-L106)
 
 
 ---
@@ -605,55 +904,101 @@ Source: [./src/Api/Registry.php](../src/Api/Registry.php), [line 28](../src/Api/
 ---
 ### `kec_acquiring_partner_integrations`
 
-*Get the Acquiring Partner integration class to use for this notification.*
+*Filters the list of acquiring partner integrations available to handle Klarna Express Checkout notifications.*
 
+**Arguments**
 
-Source: [./src/ExpressCheckout/Api/Notifications/Handler.php](../src/ExpressCheckout/Api/Notifications/Handler.php), [line 40](../src/ExpressCheckout/Api/Notifications/Handler.php#L40-L47)
+Argument | Type | Description
+-------- | ---- | -----------
+`$integrations` | `\Krokedil\Klarna\ExpressCheckout\Interfaces\AcquiringPartnerIntegration[]` | The registered acquiring partner integrations. Default empty array.
+
+Source: [./src/ExpressCheckout/Api/Notifications/Handler.php](../src/ExpressCheckout/Api/Notifications/Handler.php), [line 47](../src/ExpressCheckout/Api/Notifications/Handler.php#L47-L52)
 
 
 ---
 ### `kec_one_step_redirect_wait_max_attempts`
 
-*Wait for the order redirect URL to be set and return it.*
+*Filters the maximum number of attempts to wait for the order redirect URL to be set.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$order` | `\WC_Order` | The WooCommerce order.
-`$kec_unique_id` | `string` | The KEC unique ID.
+`$max_attempts` | `int` | The maximum number of polling attempts. Default 20.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 83](../src/ExpressCheckout/OneStepCheckout.php#L83-L92)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 92](../src/ExpressCheckout/OneStepCheckout.php#L92-L97)
 
 
 ---
 ### `kec_one_step_redirect_wait_sleep_time_mu`
 
-*Wait for the order redirect URL to be set and return it.*
+*Filters the wait time, in microseconds, between attempts to read the order redirect URL.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$order` | `\WC_Order` | The WooCommerce order.
-`$kec_unique_id` | `string` | The KEC unique ID.
+`$sleep_time` | `int` | The wait time between attempts, in microseconds. Default 500000.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 83](../src/ExpressCheckout/OneStepCheckout.php#L83-L93)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 99](../src/ExpressCheckout/OneStepCheckout.php#L99-L104)
 
 
 ---
 ### `kec_one_step_default_redirect_url`
 
-*Wait for the order redirect URL to be set and return it.*
+*Filters the fallback redirect URL used when the order redirect URL is not set in time.*
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
+`$default_redirect_url` | `string` | The fallback redirect URL. Defaults to the order received URL.
 `$order` | `\WC_Order` | The WooCommerce order.
 `$kec_unique_id` | `string` | The KEC unique ID.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 83](../src/ExpressCheckout/OneStepCheckout.php#L83-L95)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 107](../src/ExpressCheckout/OneStepCheckout.php#L107-L114)
+
+
+---
+### `siwk_market`
+
+*Filters the Klarna market used for the Sign in with Klarna button.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$market` | `string` | The market, as a two-letter country code.
+
+Source: [./src/SignInWithKlarna.php](../src/SignInWithKlarna.php), [line 167](../src/SignInWithKlarna.php#L167-L172)
+
+
+---
+### `siwk_environment`
+
+*Filters the environment used for the Sign in with Klarna button.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$environment` | `string` | The Klarna environment, either 'playground' or 'production'.
+
+Source: [./src/SignInWithKlarna.php](../src/SignInWithKlarna.php), [line 174](../src/SignInWithKlarna.php#L174-L179)
+
+
+---
+### `siwk_client_id`
+
+*Filters the Klarna client ID used for the Sign in with Klarna button.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$client_id` | `string` | The Klarna client ID.
+
+Source: [./src/SignInWithKlarna.php](../src/SignInWithKlarna.php), [line 181](../src/SignInWithKlarna.php#L181-L186)
 
 
 ---
