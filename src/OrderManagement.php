@@ -70,38 +70,6 @@ class OrderManagement {
 	 * Init the plugin at plugins_loaded.
 	 */
 	public function init() {
-
-		// If the Klarna Order Management plugin is active, do nothing.
-		if ( class_exists( 'WC_Klarna_Order_Management' ) ) {
-
-			// KCO does not have order management included yet, so we don't want to encourage the disabling of the KOM plugin if KCO is active.
-			if ( ! class_exists( 'KCO' ) ) {
-				add_action(
-					'admin_notices',
-					function () {
-						?>
-						<div class="notice notice-error">
-				
-								<?php /* translators: [merchant-facing]. */ ?>
-								<p><strong><?php esc_html_e( 'Klarna Order Management is now included in Klarna for WooCommerce.', 'klarna-payments-for-woocommerce' ); ?></strong></p>
-								<?php /* translators: [merchant-facing]. */ ?>
-								<p><?php esc_html_e( 'Starting with version 4.3.0, you no longer need the separate Klarna Order Management plugin – unless you are also using the Kustom Checkout plugin (formerly Klarna Checkout).', 'klarna-payments-for-woocommerce' ); ?></p>
-
-								<p>
-									<a href="https://docs.krokedil.com/klarna-for-woocommerce/get-started/order-management/#important-please-read" target="_blank">
-										<?php /* translators: [merchant-facing]. */ ?>
-										<?php esc_html_e( 'Read more about this change here.', 'klarna-payments-for-woocommerce' ); ?>
-									</a>
-								</p>
-
-						</div>
-						<?php
-					}
-				);
-			}
-			return;
-		}
-
 		// If Klarna Order Management is an unavailable feature, do not include the rest of the plugin.
 		$kp_unavailable_feature_ids = get_option( 'kp_unavailable_feature_ids', array() );
 		if ( in_array( 'kom', $kp_unavailable_feature_ids, true ) ) {
