@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Refunds that include zero-value order lines are now processed correctly, preventing a division-by-zero error when taxes are disabled.
