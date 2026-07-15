@@ -1,0 +1,3 @@
+Fix refund processing failure when refund contains zero-value line items.
+
+Prevent DivisionByZeroError in Klarna refund line builder when WooCommerce taxes are disabled and a refunded item has a total of 0.
