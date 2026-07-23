@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed an issue where Klarna orders could fail to complete on stores using multiple currencies, when the shopper's currency was different from the store's default currency.
