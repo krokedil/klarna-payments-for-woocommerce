@@ -1,4 +1,4 @@
 Type: Fix
 Needs Documentation: no
 
-Klarna is now available at checkout for automatically renewing subscriptions with a 0kr initial payment (for example synchronised subscriptions within the sign-up grace period) when the store allows $0 initial checkout without a payment method.
+Fixed Klarna not appearing at checkout for synchronised subscriptions when the first payment amount is 0, such as during the sign-up grace period.
