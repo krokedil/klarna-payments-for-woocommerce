@@ -104,11 +104,8 @@ class KP_Subscription {
 			return false;
 		}
 
-		// The cart must contain a subscription (new sign-up, renewal or resubscribe).
-		$contains_subscription = ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() )
-			|| ( function_exists( 'wcs_cart_contains_renewal' ) && wcs_cart_contains_renewal() )
-			|| ( function_exists( 'wcs_cart_contains_resubscribe' ) && wcs_cart_contains_resubscribe() );
-		if ( ! $contains_subscription ) {
+		// The cart must contain a subscription (new sign-up, renewal, resubscribe, switch or early renewal).
+		if ( ! self::cart_has_subscription() ) {
 			return false;
 		}
 
@@ -499,7 +496,7 @@ class KP_Subscription {
 	 * @return bool
 	 */
 	public static function cart_has_subscription() {
-		if ( ! is_checkout() ) {
+		if ( is_null( WC()->cart ) ) {
 			return false;
 		}
 
