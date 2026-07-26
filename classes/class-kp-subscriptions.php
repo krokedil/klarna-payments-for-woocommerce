@@ -55,6 +55,8 @@ class KP_Subscription {
 		// tokenize for the automatic renewals, so we re-require payment for these carts. Priority 100 runs after WC
 		// Subscriptions has processed its own 'woocommerce_cart_needs_payment' filters (5, 10, 50).
 		add_filter( 'woocommerce_cart_needs_payment', array( $this, 'maybe_require_payment_for_subscription' ), 100, 2 );
+		// Same problem applies to the order-pay page, where WooCommerce gates gateways on WC_Order::needs_payment().
+		add_filter( 'woocommerce_order_needs_payment', array( $this, 'maybe_require_payment_for_subscription_order' ), 100, 3 );
 	}
 
 	/**
@@ -73,17 +75,7 @@ class KP_Subscription {
 			return $needs_payment;
 		}
 
-		// Only act when the Klarna Payments gateway is enabled. Read the setting directly instead of calling
-		// get_available_payment_gateways() to avoid recursing into this same filter while resolving gateways.
-		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		if ( 'yes' !== ( $settings['enabled'] ?? 'no' ) ) {
-			return $needs_payment;
-		}
-
-		// Only act when Klarna is available for the customer's country. Otherwise forcing payment could block an
-		// otherwise-allowed $0 checkout in a region Klarna doesn't serve. This is a plain settings lookup, so unlike
-		// is_available() it has no session side effects. It re-evaluates when the customer changes country at checkout.
-		if ( ! kp_is_country_available( kp_get_klarna_country() ) ) {
+		if ( ! self::klarna_offered_for( kp_get_klarna_country() ) ) {
 			return $needs_payment;
 		}
 
@@ -92,6 +84,53 @@ class KP_Subscription {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Re-require payment on the order-pay page for a 0kr subscription order that will need a Klarna recurring token.
+	 *
+	 * Mirrors maybe_require_payment_for_subscription() for WC_Order::needs_payment(), which gates the gateway list on
+	 * the order-pay page the same way the cart does on checkout.
+	 *
+	 * @param bool     $needs_payment Whether the order currently needs payment.
+	 * @param WC_Order $order The WooCommerce order.
+	 * @param string[] $valid_order_statuses Order statuses that are valid for payment.
+	 * @return bool
+	 */
+	public function maybe_require_payment_for_subscription_order( $needs_payment, $order, $valid_order_statuses ) {
+		// Already needs payment, nothing to do.
+		if ( $needs_payment ) {
+			return $needs_payment;
+		}
+
+		if ( ! self::klarna_offered_for( kp_get_klarna_country( $order ) ) ) {
+			return $needs_payment;
+		}
+
+		if ( ! self::order_requires_recurring_token( $order, $valid_order_statuses ) ) {
+			return $needs_payment;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Whether Klarna Payments is offered for the given country.
+	 *
+	 * Used to scope the "re-require payment" filters. Reads the enabled setting directly (instead of calling
+	 * get_available_payment_gateways()) to avoid recursing while gateways are resolved, and uses the lightweight
+	 * kp_is_country_available() rather than is_available() so there are no session side effects.
+	 *
+	 * @param string $country The country code to check.
+	 * @return bool
+	 */
+	private static function klarna_offered_for( $country ) {
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		if ( 'yes' !== ( $settings['enabled'] ?? 'no' ) ) {
+			return false;
+		}
+
+		return kp_is_country_available( $country );
 	}
 
 	/**
@@ -122,6 +161,37 @@ class KP_Subscription {
 			foreach ( $cart->recurring_carts as $recurring_cart ) {
 				$recurring_total += floatval( $recurring_cart->total );
 			}
+		}
+
+		return $recurring_total > 0;
+	}
+
+	/**
+	 * Whether a 0kr order contains an automatically renewing subscription that requires a Klarna recurring token.
+	 *
+	 * @param WC_Order $order The WooCommerce order.
+	 * @param string[] $valid_order_statuses Order statuses that are valid for payment.
+	 * @return bool
+	 */
+	private static function order_requires_recurring_token( $order, $valid_order_statuses ) {
+		if ( ! function_exists( 'wcs_order_contains_subscription' ) || ! wcs_order_contains_subscription( $order, array( 'parent', 'renewal', 'resubscribe', 'switch' ) ) ) {
+			return false;
+		}
+
+		// Only relevant for 0kr orders in a payable status. A positive total already needs payment.
+		if ( $order->get_total() > 0 || ! $order->has_status( $valid_order_statuses ) ) {
+			return false;
+		}
+
+		// Manual renewals never store a token, so no payment method is required up front.
+		if ( function_exists( 'wcs_is_manual_renewal_required' ) && wcs_is_manual_renewal_required() ) {
+			return false;
+		}
+
+		// At least one related subscription must have a future recurring amount to charge.
+		$recurring_total = 0.0;
+		foreach ( wcs_get_subscriptions_for_order( $order, array( 'order_type' => 'any' ) ) as $subscription ) {
+			$recurring_total += floatval( $subscription->get_total() );
 		}
 
 		return $recurring_total > 0;
