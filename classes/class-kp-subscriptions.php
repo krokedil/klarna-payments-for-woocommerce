@@ -48,6 +48,79 @@ class KP_Subscription {
 
 		// Creates and saves the customer token after the order is successfully placed.
 		add_action( 'kp_after_place_order', array( $this, 'add_recurring_token_to_order' ), 10, 3 );
+
+		// Keep Klarna available for automatic subscriptions with a 0kr initial payment. When a merchant enables
+		// WC Subscriptions' "$0 Initial Checkout" (allow $0 sign-up without a payment method), WooCommerce reports the
+		// cart as not needing payment and hides every gateway at checkout. Klarna still needs the customer present to
+		// tokenize for the automatic renewals, so we re-require payment for these carts. Priority 100 runs after WC
+		// Subscriptions has processed its own 'woocommerce_cart_needs_payment' filters (5, 10, 50).
+		add_filter( 'woocommerce_cart_needs_payment', array( $this, 'maybe_require_payment_for_subscription' ), 100, 2 );
+	}
+
+	/**
+	 * Re-require payment for automatic subscriptions that will need a Klarna recurring token.
+	 *
+	 * Only forces payment when Klarna Payments is enabled and the cart contains an automatically renewing
+	 * subscription with a future recurring amount. Free subscriptions and manual renewals are left untouched.
+	 *
+	 * @param bool    $needs_payment Whether the cart currently needs payment.
+	 * @param WC_Cart $cart The WooCommerce cart.
+	 * @return bool
+	 */
+	public function maybe_require_payment_for_subscription( $needs_payment, $cart ) {
+		// Already needs payment, nothing to do.
+		if ( $needs_payment ) {
+			return $needs_payment;
+		}
+
+		// Only act when the Klarna Payments gateway is enabled. Read the setting directly instead of calling
+		// get_available_payment_gateways() to avoid recursing into this same filter while resolving gateways.
+		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		if ( 'yes' !== ( $settings['enabled'] ?? 'no' ) ) {
+			return $needs_payment;
+		}
+
+		if ( ! self::cart_requires_recurring_token( $cart ) ) {
+			return $needs_payment;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Whether the cart contains an automatically renewing subscription that requires a Klarna recurring token.
+	 *
+	 * @param WC_Cart|null $cart The WooCommerce cart.
+	 * @return bool
+	 */
+	private static function cart_requires_recurring_token( $cart = null ) {
+		$cart = $cart instanceof WC_Cart ? $cart : WC()->cart;
+		if ( empty( $cart ) ) {
+			return false;
+		}
+
+		// Manual renewals never store a token, so no payment method is required up front.
+		if ( function_exists( 'wcs_is_manual_renewal_required' ) && wcs_is_manual_renewal_required() ) {
+			return false;
+		}
+
+		// The cart must contain a subscription (new sign-up, renewal or resubscribe).
+		$contains_subscription = ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() )
+			|| ( function_exists( 'wcs_cart_contains_renewal' ) && wcs_cart_contains_renewal() )
+			|| ( function_exists( 'wcs_cart_contains_resubscribe' ) && wcs_cart_contains_resubscribe() );
+		if ( ! $contains_subscription ) {
+			return false;
+		}
+
+		// There must be a future recurring amount to charge; otherwise no token is needed (e.g. a free subscription).
+		$recurring_total = 0.0;
+		if ( ! empty( $cart->recurring_carts ) ) {
+			foreach ( $cart->recurring_carts as $recurring_cart ) {
+				$recurring_total += floatval( $recurring_cart->total );
+			}
+		}
+
+		return $recurring_total > 0;
 	}
 
 	/**
