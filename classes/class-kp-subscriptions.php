@@ -80,6 +80,13 @@ class KP_Subscription {
 			return $needs_payment;
 		}
 
+		// Only act when Klarna is available for the customer's country. Otherwise forcing payment could block an
+		// otherwise-allowed $0 checkout in a region Klarna doesn't serve. This is a plain settings lookup, so unlike
+		// is_available() it has no session side effects. It re-evaluates when the customer changes country at checkout.
+		if ( ! kp_is_country_available( kp_get_klarna_country() ) ) {
+			return $needs_payment;
+		}
+
 		if ( ! self::cart_requires_recurring_token( $cart ) ) {
 			return $needs_payment;
 		}
