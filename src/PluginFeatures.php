@@ -71,6 +71,13 @@ class PluginFeatures {
 	protected $features = array();
 
 	/**
+	 * The settlement currencies Klarna allows, keyed by the country code of the credentials, e.g. array( 'eu' => array( 'EUR', 'SEK' ) ).
+	 *
+	 * @var array
+	 */
+	protected $settlement_currencies = array();
+
+	/**
 	 * If the credentials we have parsed had a AP key or not.
 	 * Only used when processing all API credentials, and can not be used
 	 * to determine if we have an AP key or not in general.
@@ -100,6 +107,10 @@ class PluginFeatures {
 
 		// Initialize the features.
 		$this->features = $features;
+
+		// Get the settlement currencies Klarna has approved for the stored credentials.
+		$settlement_currencies       = get_option( 'kp_allowed_settlement_currencies', array() );
+		$this->settlement_currencies = is_array( $settlement_currencies ) ? $settlement_currencies : array();
 
 		do_action( 'kp_plugin_features_initialized', $this->features );
 	}
@@ -155,6 +166,13 @@ class PluginFeatures {
 			$features[ $key ]['available_for'] = array_map( 'strtoupper', $available_for );
 		}
 
+		// Store the settlement currencies Klarna allows for these credentials, so we can accept any of them and not just the default currency of the country.
+		$country_code = strtolower( $credentials['country_code'] ?? 'unknown' );
+		$currencies   = array_map( 'strtoupper', $response['allowed_settlement_currencies'] ?? array() );
+		if ( ! empty( $currencies ) ) {
+			$this->settlement_currencies[ $country_code ] = array_values( array_unique( array_merge( $this->settlement_currencies[ $country_code ] ?? array(), $currencies ) ) );
+		}
+
 		// Store the acquiring_partner_key if present in the response.
 		if ( isset( $response['acquiring_partner_key'] ) && ! empty( $response['acquiring_partner_key'] ) ) {
 			$this->check_has_acquiring_partner_key = true;
@@ -174,6 +192,9 @@ class PluginFeatures {
 			$features        = array();
 			$api_credentials = $this->get_api_credentials();
 
+			// Rebuild the settlement currencies from scratch, so we do not keep any stale currencies for credentials that have been removed or changed.
+			$this->settlement_currencies = array();
+
 			foreach ( $api_credentials as $credentials ) {
 				$response = KP_WC()->api->get_unavailable_features( $credentials );
 
@@ -192,7 +213,8 @@ class PluginFeatures {
 			}
 		} catch ( \WP_Exception $e ) {
 			// If we get an error, reset the features to default and log the error.
-			$features = $this->default_features;
+			$features                    = $this->default_features;
+			$this->settlement_currencies = array();
 			KP_WC()->logger()->error( 'Error when trying to get the feature availability from Klarna: ' . $e->getMessage() );
 		} finally {
 			// If we did not have an acquiring partner key from the processed credentials, ensure we delete any existing one to ensure we do not have a stale key.
@@ -202,6 +224,8 @@ class PluginFeatures {
 
 			// Update the features option.
 			update_option( 'kp_plugin_features', array_merge( $this->default_features, $features ) );
+			// Update the allowed settlement currencies.
+			update_option( 'kp_allowed_settlement_currencies', $this->settlement_currencies );
 			// Re-initialize the features.
 			$this->init_features( true );
 		}
@@ -314,6 +338,17 @@ class PluginFeatures {
 	}
 
 	/**
+	 * Get the settlement currencies Klarna allows for a set of credentials.
+	 *
+	 * @param string|null $country_code The country code of the credentials, e.g. 'se' or 'eu'. Optional. If not passed, the currencies for all credentials are returned as a single list.
+	 *
+	 * @return string[] The allowed settlement currencies. Empty if Klarna has not told us which currencies are allowed.
+	 */
+	public static function get_allowed_settlement_currencies( $country_code = null ) {
+		return KP_WC()->plugin_features()->get_settlement_currencies( $country_code );
+	}
+
+	/**
 	 * Get the acquiring partner key.
 	 *
 	 * @return string|null The acquiring partner key, or null if not set.
@@ -337,6 +372,21 @@ class PluginFeatures {
 			return isset( $this->features[ $feature_key ] ) && in_array( strtoupper( $country_code ), $this->features[ $feature_key ]['available_for'], true );
 		}
 		return isset( $this->features[ $feature_key ] ) && $this->features[ $feature_key ]['availability'];
+	}
+
+	/**
+	 * Get the settlement currencies Klarna allows. Private method called by the static method get_allowed_settlement_currencies.
+	 *
+	 * @param string|null $country_code The country code of the credentials. Optional. If not passed, the currencies for all credentials are returned as a single list.
+	 *
+	 * @return string[] The allowed settlement currencies.
+	 */
+	private function get_settlement_currencies( $country_code = null ) {
+		if ( null === $country_code ) {
+			return array_values( array_unique( array_merge( array(), ...array_values( $this->settlement_currencies ) ) ) );
+		}
+
+		return $this->settlement_currencies[ strtolower( $country_code ) ] ?? array();
 	}
 
 	/**

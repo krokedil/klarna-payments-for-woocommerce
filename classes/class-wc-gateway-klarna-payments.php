@@ -273,8 +273,10 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 */
 	public function country_currency_check( $order = false ) {
 		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		// Check if allowed currency.
-		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies, true ) ) {
+
+		// Check if allowed currency. Any settlement currency Klarna has approved for our credentials is allowed as well, even if it is missing from the hardcoded list.
+		$allowed_currencies = array_merge( $this->allowed_currencies, PluginFeatures::get_allowed_settlement_currencies() );
+		if ( ! in_array( get_woocommerce_currency(), $allowed_currencies, true ) ) {
 			kp_unset_session_values();
 			return new WP_Error( 'currency', 'Currency not allowed for Klarna Payments' );
 		}
@@ -305,10 +307,26 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return new WP_Error( 'country', "No credentials found for {$country}" );
 		}
 
-		// Check the countrys currency against the current currency.
+		$country_name = $country_values['name'];
+		$currency     = get_woocommerce_currency();
+
+		/**
+		 * Check the current currency against the settlement currencies Klarna has approved for these credentials.
+		 * Any of them can be used, and not only the default currency of the country.
+		 */
+		$settlement_currencies = PluginFeatures::get_allowed_settlement_currencies( $country );
+		if ( ! empty( $settlement_currencies ) ) {
+			if ( ! in_array( $currency, $settlement_currencies, true ) ) {
+				kp_unset_session_values();
+				return new WP_Error( 'currency', "{$currency} is not an allowed currency for {$country_name} purchases" );
+			}
+
+			return true;
+		}
+
+		// Fallback to the countrys default currency if Klarna has not told us which currencies are allowed.
 		$required_currency = $country_values['currency'];
-		$country_name      = $country_values['name'];
-		if ( get_woocommerce_currency() !== $required_currency ) {
+		if ( $currency !== $required_currency ) {
 			kp_unset_session_values();
 			return new WP_Error( 'currency', "{$required_currency} must be used for {$country_name} purchases" );
 		}
