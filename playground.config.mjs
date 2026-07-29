@@ -36,9 +36,9 @@ export default {
 				logging: 'yes',
 				// Klarna playground credentials from .env (see .env.example) —
 				// missing values warn by name and leave the gateway unconfigured.
-				test_merchant_id_se: envSecret('KLARNA_TEST_MERCHANT_ID_SE'),
-				test_shared_secret_se: envSecret('KLARNA_TEST_SHARED_SECRET_SE'),
-				test_client_id_se: envSecret('KLARNA_TEST_CLIENT_ID_SE'),
+				test_merchant_id_se: envSecret('KP_TEST_MERCHANT_ID_SE'),
+				test_shared_secret_se: envSecret('KP_TEST_SHARED_SECRET_SE'),
+				test_client_id_se: envSecret('KP_TEST_CLIENT_ID_SE'),
 			},
 		},
 	},
