@@ -13,7 +13,7 @@
 		"@babel/plugin-syntax-jsx": "^7.18.6",
 		"@babel/preset-env": "^7.19.4",
 		"@babel/preset-react": "^7.18.6",
-		"@krokedil/wp-playground-tools": "git+https://github.com/krokedil/wp-playground-tools.git",
+		"@krokedil/wp-playground-tools": "github:krokedil/wp-playground-tools#semver:^1",
 		"@types/react": "^18.0.0",
 		"@types/wordpress__blocks": "^12.5.14",
 		"@webpack-cli/generators": "^2.5.0",
