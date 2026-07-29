@@ -27,3 +27,6 @@ tmp*
 
 .changelogs/backup-*
 *.bak
+.playground/
+/pr-screenshots/
+.env

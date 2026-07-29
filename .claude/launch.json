@@ -1,0 +1,35 @@
+{
+	"version": "0.0.1",
+	"configurations": [
+		{
+			"name": "playground-klarna-payments-for-woocommerce-start",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": [
+				"run",
+				"playground:start"
+			],
+			"port": 8890,
+			"autoPort": true
+		},
+		{
+			"name": "playground-klarna-payments-for-woocommerce-development",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": [
+				"run",
+				"playground:server-development"
+			],
+			"port": 8891,
+			"autoPort": true
+		},
+		{
+			"name": "playground-klarna-payments-for-woocommerce-demo",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": [
+				"run",
+				"playground:server-demo"
+			],
+			"port": 8892,
+			"autoPort": true
+		}
+	]
+}

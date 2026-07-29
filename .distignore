@@ -30,3 +30,13 @@ yarn.lock
 .klarna-system-metadata.json
 /.changelogs
 .gitkeep
+playground.config.mjs
+/tools
+/.claude
+CLAUDE.md
+.nvmrc
+.npmrc
+.playground
+/pr-screenshots
+.env
+.env.example
