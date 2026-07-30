@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Refunds containing zero-value order lines, such as free products or free shipping, no longer fail with a division-by-zero error.
