@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+The order's shipping address is now sent to Klarna when paying for an existing order, instead of falling back to the billing address.
