@@ -324,6 +324,13 @@ jQuery( function ( $ ) {
 
 			address.shipping_address = $.extend( {}, address.billing_address )
 
+			// The order pay page has no "ship to different address" checkbox, so the order's address is used as-is.
+			if ( true == klarna_payments_params.pay_for_order ) {
+				address.shipping_address = $.extend( {}, address.billing_address, klarna_payments.addresses.shipping )
+
+				return address
+			}
+
 			if ( $( "#ship-to-different-address" ).find( "input" ).is( ":checked" ) ) {
 				address.shipping_address.given_name = klarna_payments.addresses.shipping.given_name
 				address.shipping_address.family_name = klarna_payments.addresses.shipping.family_name
