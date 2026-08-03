@@ -135,7 +135,7 @@ class RequestPostRefund extends RequestPost {
 							$order_line_tax      = round( ( $order->get_line_tax( $order_item ) * 100 ) );
 							$tax_rates           = \WC_Tax::get_base_tax_rates( $order_item->get_tax_class() );
 							$first_tax_rate      = reset( $tax_rates );
-							$order_line_tax_rate = ( 0 !== $order_line_tax && 0 !== $order_line_total ) ? ( isset( $first_tax_rate['rate'] ) ? $first_tax_rate['rate'] * 100 : round( ( $order_line_tax / $order_line_total ) * 100 * 100 ) ) : 0;
+							$order_line_tax_rate = ( ! empty( $order_line_tax ) && ! empty( $order_line_total ) ) ? ( isset( $first_tax_rate['rate'] ) ? $first_tax_rate['rate'] * 100 : round( ( $order_line_tax / $order_line_total ) * 100 * 100 ) ) : 0;
 						}
 					}
 
@@ -191,7 +191,7 @@ class RequestPostRefund extends RequestPost {
 
 					$order_shipping_total    = round( $order->get_shipping_total() * 100 );
 					$order_shipping_tax      = round( $order->get_shipping_tax() * 100 );
-					$order_shipping_tax_rate = 0 === $order_shipping_total ? 0 : round( ( $order_shipping_tax / $order_shipping_total ) * 10000 );
+					$order_shipping_tax_rate = empty( $order_shipping_total ) ? 0 : round( ( $order_shipping_tax / $order_shipping_total ) * 10000 );
 
 					$type                = 'shipping_fee';
 					$reference           = $shipping_item->get_method_id() . ':' . $shipping_item->get_instance_id();
