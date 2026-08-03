@@ -1,0 +1,3 @@
+.woocommerce .kp_settings__section table.form-table tr.kec-webhook-section, .kp_settings__section .kec-webhook-section {
+    display: none;
+}

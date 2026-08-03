@@ -5,12 +5,12 @@
  * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 4.11.0
+ * Version: 4.12.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 10.8.1
+ * WC tested up to: 11.0
  * Requires Plugins: woocommerce
  *
  * Copyright (c) 2017-2026 Krokedil
@@ -35,22 +35,23 @@ use Krokedil\Klarna\Api\Registry;
 use Krokedil\Klarna\PluginFeatures;
 use Krokedil\Klarna\Compatibility;
 use Krokedil\Klarna\OrderManagement;
+use Krokedil\Klarna\ExpressCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 use KlarnaPayments\Blocks\Payments\KlarnaPayments;
-use KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaOnsiteMessaging\KlarnaOnsiteMessaging;
+use Krokedil\Klarna\OnsiteMessaging\KlarnaOnsiteMessaging;
+use Krokedil\Klarna\SignInWithKlarna;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
-use KrokedilKlarnaPaymentsDeps\Krokedil\SignInWithKlarna\SignInWithKlarna;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '4.11.0' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '4.12.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -139,7 +140,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		/**
 		 * KP Klarna Express Checkout class. Handles the integration with Klarna Express Checkout
 		 *
-		 * @var KP_Klarna_Express_Checkout|null
+		 * @var ExpressCheckout|null
 		 */
 		public $klarna_express_checkout = null;
 
@@ -297,7 +298,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->settings_page           = new KP_Settings_Page();
 			$this->checkout                = new KP_Checkout();
 			$this->plugin_features         = new PluginFeatures();
-			$this->klarna_express_checkout = new KP_Klarna_Express_Checkout();
+			$this->klarna_express_checkout = new ExpressCheckout();
 			$this->krokedil                = new KrokedilWooCommerce(
 				array(
 					'slug'         => 'klarna_payments',
@@ -480,7 +481,6 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-api.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-session.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-subscriptions.php';
-			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-klarna-express-checkout.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/class-kp-interoperability-token.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-status.php';
 			include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/classes/admin/class-kp-settings-page.php';
