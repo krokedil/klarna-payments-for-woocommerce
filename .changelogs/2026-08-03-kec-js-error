@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed a JavaScript error ("Uncaught TypeError: Cannot read properties of null (reading 'shadowRoot')") that could occur on pages where the KEC script was enqueued but the KEC button markup was not rendered.
