@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed an issue where closing the Express Checkout modal during the payment flow caused an error when reopening it.
