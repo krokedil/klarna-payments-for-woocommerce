@@ -664,7 +664,7 @@ class MetaBox extends OrderMetabox {
 		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#disable-lookup-of-orders-sharing-a-klarna-transaction-id
 		 * @param bool $skip Whether to skip the matching reference orders lookup. Default false.
 		 */
-		if ( apply_filters( 'klarna_om_skip_matching_reference_orders', false ) ) {
+		if ( apply_filters( 'kom_skip_matching_reference_orders', false ) ) {
 			return array();
 		}
 
