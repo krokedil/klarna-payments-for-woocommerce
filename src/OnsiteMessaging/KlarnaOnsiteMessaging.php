@@ -137,8 +137,8 @@ class KlarnaOnsiteMessaging {
 	 * @return array
 	 */
 	public function add_data_attributes( $attributes ) {
-		$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
-		$environment    = isset( $settings['testmode'] ) && 'yes' === $settings['testmode'] ? 'playground' : 'production';
+		$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
+		$environment = isset( $settings['testmode'] ) && 'yes' === $settings['testmode'] ? 'playground' : 'production';
 		/**
 		 * Filters the Klarna client ID used for the on-site messaging placements.
 		 *
@@ -188,7 +188,7 @@ class KlarnaOnsiteMessaging {
 		 *
 		 * @param string $region The library region. One of 'eu-library', 'na-library' or 'oc-library'.
 		 */
-		$region    = apply_filters( 'kosm_region_library', $region );
+		$region = apply_filters( 'kosm_region_library', $region );
 		/**
 		 * Filters the Klarna client ID used for the on-site messaging placements.
 		 *

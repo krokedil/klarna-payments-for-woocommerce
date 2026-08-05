@@ -70,7 +70,7 @@ class Product extends Page {
 			 *
 			 * @param string $target The action hook name. Default 'woocommerce_single_product_summary'.
 			 */
-			$target   = apply_filters( 'klarna_onsite_messaging_product_target', $this->target );
+			$target = apply_filters( 'klarna_onsite_messaging_product_target', $this->target );
 			/**
 			 * Filters the priority used when attaching the on-site messaging placement on the product page.
 			 *

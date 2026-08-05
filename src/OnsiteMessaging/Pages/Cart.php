@@ -49,7 +49,7 @@ class Cart extends Page {
 			 *
 			 * @param string $target The action hook name where the placement is rendered.
 			 */
-			$target   = apply_filters( 'klarna_onsite_messaging_cart_target', $this->target );
+			$target = apply_filters( 'klarna_onsite_messaging_cart_target', $this->target );
 			/**
 			 * Filters the priority used when attaching the on-site messaging placement on the cart page.
 			 *

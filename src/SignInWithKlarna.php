@@ -161,8 +161,8 @@ class SignInWithKlarna {
 	 * @return array
 	 */
 	public function add_websdk_attributes() {
-		$locale      = esc_attr( $this->settings->get( 'locale' ) );
-		$scope       = esc_attr( $this->settings->get( 'scope' ) );
+		$locale = esc_attr( $this->settings->get( 'locale' ) );
+		$scope  = esc_attr( $this->settings->get( 'scope' ) );
 
 		/**
 		 * Filters the Klarna market used for the Sign in with Klarna button.

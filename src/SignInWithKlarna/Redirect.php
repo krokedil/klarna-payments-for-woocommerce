@@ -57,7 +57,7 @@ class Redirect {
 		$response = wp_remote_get( plugin_dir_url( __FILE__ ) . 'templates/callback.html' );
 		$body     = wp_remote_retrieve_body( $response );
 
-		$page         = null;
+		$page = null;
 		/**
 		 * Filters the URL the customer is redirected to after the Klarna sign-in callback.
 		 *
