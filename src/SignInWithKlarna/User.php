@@ -86,6 +86,11 @@ class User {
 		wp_set_current_user( $user_id );
 
 		// Set Klarna as the selected payment method (if available).
+		/**
+		 * Filters whether to set Klarna as the chosen payment method after signing in with Klarna.
+		 *
+		 * @param bool $set_gateway Whether to set the highest-ordered Klarna gateway (Klarna Checkout or Klarna Payments) as the chosen payment method. Default false.
+		 */
 		if ( apply_filters( 'siwk_set_gateway_to_klarna', $set_gateway ) ) {
 			$gateways = WC()->payment_gateways->get_available_payment_gateways();
 			foreach ( $gateways as $gateway ) {
@@ -148,6 +153,12 @@ class User {
 			return $user_id;
 		}
 
+		/**
+		 * Triggers after Klarna user data has been merged into an existing WooCommerce user.
+		 *
+		 * @param int   $user_id  The ID of the merged user.
+		 * @param array $userdata The user data from Klarna used to update the user.
+		 */
 		do_action( 'siwk_merge_with_existing_user', $user_id, $userdata );
 		return $user_id;
 	}
@@ -236,6 +247,11 @@ class User {
 			}
 		);
 
+		/**
+		 * Filters the user data extracted from the Klarna ID token before it is used to create or update a WooCommerce user.
+		 *
+		 * @param array $userdata The user data, including login, email and billing/shipping meta.
+		 */
 		return apply_filters( 'siwk_userdata', $userdata );
 	}
 }

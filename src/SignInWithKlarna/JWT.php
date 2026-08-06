@@ -65,7 +65,13 @@ class JWT {
 			$country_data = KP_Form_Fields::$kp_form_auto_countries[ $country ] ?? null;
 			$endpoint     = empty( $country_data['endpoint'] ) ? 'eu' : 'na';
 
-			$this->region = strtolower( apply_filters( 'klarna_base_region', $endpoint ) );
+			/**
+			 * Filters the Klarna API region used to build the Sign in with Klarna JWKS URL.
+			 *
+			 * @param string $region The Klarna API region, derived from the store's country. Either 'eu' or 'na'.
+			 */
+			$region       = apply_filters( 'klarna_base_region', $endpoint );
+			$this->region = strtolower( $region );
 		}
 
 		$this->jwks_url = "{$this->base_url}/{$this->region}/lp/idp/.well-known/jwks.json";

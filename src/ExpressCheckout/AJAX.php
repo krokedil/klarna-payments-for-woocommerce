@@ -170,6 +170,11 @@ class AJAX {
 		Session::set_client_token( $client_token );
 		Session::set_klarna_address( $klarna_address );
 
+		/**
+		 * Triggers after the two-step Klarna Express Checkout auth callback has been processed and the customer address and client token stored in the session.
+		 *
+		 * @param array $result The auth callback result from Klarna, including the approval status, client token and collected shipping address.
+		 */
 		do_action( 'kec_auth_callback_processed', $result );
 
 		wp_send_json_success( wc_get_checkout_url() );

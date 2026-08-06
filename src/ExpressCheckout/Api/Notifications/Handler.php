@@ -43,7 +43,12 @@ abstract class Handler {
 	 * @return AcquiringPartnerIntegration|null
 	 */
 	public function get_acquiring_partner_integration() {
-		$ap_key       = PluginFeatures::get_acquiring_partner_key();
+		$ap_key = PluginFeatures::get_acquiring_partner_key();
+		/**
+		 * Filters the list of acquiring partner integrations available to handle Klarna Express Checkout notifications.
+		 *
+		 * @param AcquiringPartnerIntegration[] $integrations The registered acquiring partner integrations. Default empty array.
+		 */
 		$integrations = apply_filters( 'kec_acquiring_partner_integrations', array() );
 
 		foreach ( $integrations as $integration ) {

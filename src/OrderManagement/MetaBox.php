@@ -152,25 +152,45 @@ class MetaBox extends OrderMetabox {
 			return;
 		}
 
-		$session_id  = $order->get_meta( '_kp_session_id' );
-		$environment = ! empty( $order->get_meta( '_wc_klarna_environment' ) ) ? $order->get_meta( '_wc_klarna_environment' ) : '';
+		$session_id         = $order->get_meta( '_kp_session_id' );
+		$environment        = ! empty( $order->get_meta( '_wc_klarna_environment' ) ) ? $order->get_meta( '_wc_klarna_environment' ) : '';
+		$klarna_status      = $klarna_order->status ?? '';
+		$method_description = $klarna_order->initial_payment_method->description ?? '';
 
 		self::output_info(
 			/* translators: [merchant-facing]. */
 			__( 'Klarna Environment', 'klarna-payments-for-woocommerce' ),
+			/**
+			 * Filters the Klarna environment shown in the order metabox.
+			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-environment-label-in-the-kom-metabox
+			 * @param string $environment The Klarna environment, either 'test' or 'live'.
+			 */
 			apply_filters( 'kom_meta_environment', $environment )
 		);
 
 		self::output_info(
 			/* translators: [merchant-facing]. */
 			__( 'Klarna order status', 'klarna-payments-for-woocommerce' ),
-			apply_filters( 'kom_meta_order_status', $klarna_order->status )
+			/**
+			 * Filters the Klarna order status shown in the order metabox.
+			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-order-status-label-in-the-kom-metabox
+			 * @param string $klarna_status The status of the Klarna order.
+			 */
+			apply_filters( 'kom_meta_order_status', $klarna_status )
 		);
 
 		self::output_info(
 			/* translators: [merchant-facing]. */
 			__( 'Initial Payment method', 'klarna-payments-for-woocommerce' ),
-			apply_filters( 'kom_meta_payment_method', $klarna_order->initial_payment_method->description )
+			/**
+			 * Filters the initial payment method description shown in the order metabox.
+			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-payment-method-label-in-the-kom-metabox
+			 * @param string $method_description The Klarna initial payment method description.
+			 */
+			apply_filters( 'kom_meta_payment_method', $method_description )
 		);
 
 		if ( ! empty( $session_id ) ) {
@@ -244,20 +264,48 @@ class MetaBox extends OrderMetabox {
 				<li class="wide" id="kom-capture">
 					<select class="klarna_order_actions" name="kom_order_actions" id="kom_order_actions">
 						<option value=""><?php esc_attr_e( 'Choose an action...', 'woocommerce' ); ?></option>
-						<?php do_action( 'kom_meta_action_options', $order_id, $klarna_order, $actions ); ?>
+						<?php
+						/**
+						 * Triggers inside the order actions dropdown, allowing additional action options to be rendered.
+						 *
+						 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-custom-actions-to-the-kom-metabox
+						 * @param int    $order_id The ID of the order being considered.
+						 * @param object $klarna_order The Klarna order object associated with this order.
+						 * @param array  $actions The available order management actions and their enabled state.
+						 */
+						do_action( 'kom_meta_action_options', $order_id, $klarna_order, $actions );
+						?>
 					</select>
 					<?php /* translators: [merchant-facing]. */ ?>
 					<button class="button wc-reload"><span><?php esc_html_e( 'Apply', 'woocommerce' ); ?></span></button>
 					<span class="woocommerce-help-tip" data-tip="
 					<?php
 					ob_start();
+					/**
+					 * Triggers inside the order action help tip, allowing tooltip text for custom actions to be output.
+					 *
+					 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-tooltip-text-for-kom-metabox-actions
+					 * @param int    $order_id The ID of the order being considered.
+					 * @param object $klarna_order The Klarna order object associated with this order.
+					 * @param array  $actions The available order management actions and their enabled state.
+					 */
 					do_action( 'kom_meta_action_tips', $order_id, $klarna_order, $actions );
 					echo esc_attr( ob_get_clean() );
 					?>
 					"></span>
 				</li>
 			<?php else : ?>
-				<?php do_action( 'kom_meta_no_actions', $order_id, $klarna_order, $actions ); ?>
+				<?php
+				/**
+				 * Triggers when no order management actions are available, allowing custom markup to be rendered.
+				 *
+				 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-content-when-no-kom-actions-are-available
+				 * @param int    $order_id The ID of the order being considered.
+				 * @param object $klarna_order The Klarna order object associated with this order.
+				 * @param array  $actions The available order management actions and their enabled state.
+				 */
+				do_action( 'kom_meta_no_actions', $order_id, $klarna_order, $actions );
+				?>
 			<?php endif; ?>
 		</ul>
 		<?php
@@ -610,7 +658,12 @@ class MetaBox extends OrderMetabox {
 	 * @return array An array of matching orders.
 	 */
 	public static function get_matching_reference_orders( $transaction_id, $current_order_id, $order_date ) {
-		// Allow disabling the display of matching reference orders via a filter.
+		/**
+		 * Filters whether to skip looking up and displaying orders that share the same Klarna transaction ID.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#disable-lookup-of-orders-sharing-a-klarna-transaction-id
+		 * @param bool $skip Whether to skip the matching reference orders lookup. Default false.
+		 */
 		if ( apply_filters( 'kom_skip_matching_reference_orders', false ) ) {
 			return array();
 		}

@@ -208,6 +208,7 @@ class KP_Order_Data {
 	 * @return array
 	 */
 	public function get_klarna_order_line_object_interoperability( $order_line, $shipping_reference ) {
+		$product_identifier_filter = $order_line->get_filter_name( 'product_identifiers' );
 
 		$klarna_interoperability_item = array(
 			'name'               => $order_line->get_name(),
@@ -217,7 +218,7 @@ class KP_Order_Data {
 			'total_tax_amount'   => (int) round( (float) ( $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount() ), 0 ),
 			'product_url'        => $order_line->get_product_url(),
 			'image_url'          => $this->maybe_allow_order_line_url( $order_line->get_image_url() ),
-			'product_identifier' => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
+			'product_identifier' => apply_filters( $product_identifier_filter, array(), $order_line ),
 			'reference'          => $order_line->get_sku(),
 			'shipping_reference' => $shipping_reference,
 		);
@@ -232,7 +233,14 @@ class KP_Order_Data {
 	 * @return array
 	 */
 	public function get_klarna_shipping_line_object_interoperability( $shipping_line ) {
-		$customer_data         = $this->order_data->customer;
+		$customer_data = $this->order_data->customer;
+
+		/**
+		 * Filters whether to strip spaces from the postcode sent to Klarna.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#remove-postcode-spaces
+		 * @param bool $strip Whether to remove postcode spaces. Default false.
+		 */
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
 
 		$recipient = array(
@@ -280,14 +288,19 @@ class KP_Order_Data {
 				break;
 		}
 
+		$merchant_data_filter       = $order_line->get_filter_name( 'merchant_data' );
+		$product_identifiers_filter = $order_line->get_filter_name( 'product_identifiers' );
+		$quantity_unit_filter       = $order_line->get_filter_name( 'quantity_unit' );
+		$subscription_filter        = $order_line->get_filter_name( 'subscription' );
+
 		$klarna_item = array(
 			'image_url'             => $this->maybe_allow_order_line_url( $order_line->get_image_url() ),
-			'merchant_data'         => apply_filters( $order_line->get_filter_name( 'merchant_data' ), array(), $order_line ),
+			'merchant_data'         => apply_filters( $merchant_data_filter, array(), $order_line ),
 			'name'                  => $order_line->get_name(),
-			'product_identifiers'   => apply_filters( $order_line->get_filter_name( 'product_identifiers' ), array(), $order_line ),
+			'product_identifiers'   => apply_filters( $product_identifiers_filter, array(), $order_line ),
 			'product_url'           => $order_line->get_product_url(),
 			'quantity'              => $order_line->get_quantity(),
-			'quantity_unit'         => apply_filters( $order_line->get_filter_name( 'quantity_unit' ), 'pcs', $order_line ),
+			'quantity_unit'         => apply_filters( $quantity_unit_filter, 'pcs', $order_line ),
 			'reference'             => $order_line->get_sku(),
 			'tax_rate'              => (int) round( (float) ( $this->separate_sales_tax ? 0 : $order_line->get_tax_rate() ), 0 ),
 			'total_amount'          => (int) round( (float) ( $this->separate_sales_tax ? $order_line->get_total_amount() : $order_line->get_total_amount() + $order_line->get_total_tax_amount() ), 0 ),
@@ -295,7 +308,7 @@ class KP_Order_Data {
 			'total_tax_amount'      => (int) round( (float) ( $this->separate_sales_tax ? 0 : $order_line->get_total_tax_amount() ), 0 ),
 			'type'                  => $type,
 			'unit_price'            => (int) round( (float) ( $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount() ), 0 ),
-			'subscription'          => apply_filters( $order_line->get_filter_name( 'subscription' ), array(), $order_line ),
+			'subscription'          => apply_filters( $subscription_filter, array(), $order_line ),
 		);
 
 		if ( isset( $order_line->product ) ) {
@@ -323,6 +336,12 @@ class KP_Order_Data {
 			$customer_type = $this->customer_type;
 		}
 
+		/**
+		 * Filters whether to strip spaces from the postcode sent to Klarna.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#remove-postcode-spaces
+		 * @param bool $strip Whether to remove postcode spaces. Default false.
+		 */
 		$strip_postcode_spaces = apply_filters( 'wc_kp_remove_postcode_spaces', false );
 		$customer_data         = $this->order_data->customer;
 

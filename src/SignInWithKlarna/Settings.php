@@ -128,9 +128,24 @@ class Settings {
 		if ( 'scope' === $setting ) {
 			// These scopes are required for full functionality and shouldn't be modified by the merchant, and must be excluded from the filter.
 			$required = 'openid offline_access customer:login profile:name profile:email profile:phone profile:billing_address ';
-			return trim( $required . apply_filters( "siwk_{$setting}", implode( ' ', array_keys( array_filter( $this->scope ) ) ) ) );
+			/**
+			 * Filters the optional OAuth scopes requested for Sign in with Klarna.
+			 *
+			 * The dynamic portion of the hook name, `$setting`, is the setting name without the `siwk_` prefix, here `scope`. Required scopes are always prepended and cannot be removed via this filter.
+			 *
+			 * @param string $scope The space-separated list of enabled optional scopes.
+			 */
+			$scope = apply_filters( "siwk_{$setting}", implode( ' ', array_keys( array_filter( $this->scope ) ) ) );
+			return trim( $required . $scope );
 		}
 
+		/**
+		 * Filters the value of a Sign in with Klarna setting.
+		 *
+		 * The dynamic portion of the hook name, `$setting`, is the setting name without the `siwk_` prefix, for example `market`, `client_id` or `button_theme`.
+		 *
+		 * @param string|int $value The setting value.
+		 */
 		return apply_filters( "siwk_{$setting}", $this->{$setting} );
 	}
 
@@ -333,6 +348,11 @@ class Settings {
 		$this->market         = kp_get_klarna_country();
 		$this->client_id      = kp_get_client_id( $this->market );
 
+		/**
+		 * Filters the locale used for Sign in with Klarna.
+		 *
+		 * @param string $locale The locale, formatted with a hyphen, for example 'en-US'.
+		 */
 		$this->locale = apply_filters( 'siwk_locale', str_replace( '_', '-', get_locale() ) );
 
 		// The array keys match the name of the scopes they define.
