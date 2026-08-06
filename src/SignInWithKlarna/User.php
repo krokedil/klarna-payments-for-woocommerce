@@ -109,8 +109,41 @@ class User {
 	 * @return void
 	 */
 	public function sign_in_user( $user_id, $tokens ) {
+		// Never authenticate a privileged account through SIWK, regardless of how the user ID was resolved.
+		if ( ! $this->is_signin_allowed( $user_id ) ) {
+			return;
+		}
+
 		$this->set_tokens( $user_id, $tokens );
 		$this->set_current_user( $user_id );
+	}
+
+	/**
+	 * Whether an account may be authenticated through Sign in with Klarna.
+	 *
+	 * @param \WP_User|int $user The user (or user ID) to check.
+	 * @return bool True if the account is safe to sign in via SIWK.
+	 */
+	private function is_signin_allowed( $user ) {
+		$privileged_caps = array(
+			'manage_options',
+			'manage_woocommerce',
+			'edit_users',
+			'promote_users',
+			'edit_shop_orders',
+			'edit_others_shop_orders',
+			'edit_posts',       // editors / authors / contributors.
+			'install_plugins',
+			'activate_plugins',
+		);
+
+		foreach ( $privileged_caps as $cap ) {
+			if ( user_can( $user, $cap ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -120,10 +153,16 @@ class User {
 	 * @return int|WP_Error The user's ID if was successfully merged, WP_Error otherwise.
 	 */
 	public function merge_with_existing_user( $userdata ) {
-		$user = get_user_by( 'login', $userdata['user_login'] );
-		$user = ! empty( $user ) ? $user : get_user_by( 'email', $userdata['user_email'] );
+		// Match existing users by email, not username.
+		$user = get_user_by( 'email', $userdata['user_email'] );
 		if ( empty( $user ) ) {
 			return new WP_Error( 'user_exists', 'failed to retrieve user data' );
+		}
+
+		// Never authenticate a privileged account.
+		if ( ! $this->is_signin_allowed( $user ) ) {
+			/* translators: [customer-facing]. */
+			return new WP_Error( 'siwk_privileged_account', __( 'This account must be signed in with your username and password.', 'klarna-payments-for-woocommerce' ) );
 		}
 
 		// Add the retrieved user ID to the userdata so that Woo knows which user to update.
