@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed a fatal error on the order-pay page that occurred when the order no longer existed.
