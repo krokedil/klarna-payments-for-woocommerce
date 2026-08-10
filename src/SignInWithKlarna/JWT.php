@@ -111,8 +111,31 @@ class JWT {
 		}
 
 		try {
-			// An exception is thrown if the token is invalid. Convert the stdClass to associative array.
-			return json_decode( wp_json_encode( FirebaseJWT::decode( $jwt_token, FirebaseJWK::parseKeySet( $this->jwks ) ) ), true );
+			// An exception is thrown if the token is invalid.
+			$payload = FirebaseJWT::decode( $jwt_token, FirebaseJWK::parseKeySet( $this->jwks ) );
+
+			// Validate the iss claim to ensure the token is from Klarna, and that its for the correct environment.
+			if ( ! $this->validate_iss_claim( $payload ) ) {
+				return false;
+			}
+
+			// Ensure the aud claim matches the Klarna client ID.
+			if ( ! $this->validate_aud_claim( $payload ) ) {
+				return false;
+			}
+
+			// Only trust the email claim if Klarna has verified ownership of it.
+			if ( ! $this->validate_email_verified_claim( $payload ) ) {
+				return false;
+			}
+
+			// Validate that the token has not already been used by seeing if the jti claim exists as a transient.
+			if ( ! $this->validate_jti_claim( $payload ) ) {
+				return false;
+			}
+
+			// Return the payload as an associative array.
+			return json_decode( wp_json_encode( $payload ), true );
 		} catch ( \Exception $e ) {
 			// Set to false to ensure new keys are retrieved next time this function is called.
 			$this->jwks = false;
@@ -129,5 +152,89 @@ class JWT {
 	public function get_payload( $jwt_token ) {
 		$jwt_token = $this->is_valid_jwt( $jwt_token );
 		return empty( $jwt_token ) ? new \WP_Error( 'JWT token invalid.' ) : $jwt_token;
+	}
+
+	/**
+	 * Validate the JWT tokens aud claim against the Klarna client ID.
+	 *
+	 * @param \stdClass $payload The JWT token payload.
+	 *
+	 * @return bool True if the aud claim matches the Klarna client ID, false otherwise.
+	 */
+	public function validate_aud_claim( $payload ) {
+		$client_id = kp_get_client_id();
+		$aud       = $payload->aud ?? null;
+
+		// If the aud claim is empty, return false.
+		if ( empty( $aud ) ) {
+			return false;
+		}
+
+		// If we get an array of audiences, check if the client ID is in the array.
+		if ( is_array( $aud ) ) {
+			return in_array( $client_id, $aud, true );
+		}
+
+		// If we get a single audience, check if it matches the client ID.
+		return $aud === $client_id;
+	}
+
+	/**
+	 * Validate that Klarna has verified ownership of the email claim.
+	 *
+	 * The sign-in flow matches existing accounts by email, so an unverified email
+	 * would let a caller link to an account they do not own.
+	 *
+	 * @param \stdClass $payload The JWT token payload.
+	 *
+	 * @return bool True if the email is verified, false otherwise.
+	 */
+	public function validate_email_verified_claim( $payload ) {
+		// Accept both a JSON boolean and a string ("true"/"false") representation.
+		return filter_var( $payload->email_verified ?? false, FILTER_VALIDATE_BOOLEAN );
+	}
+
+	/**
+	 * Validate the JWT token's iss claim to ensure it is from Klarna and for the correct environment.
+	 *
+	 * @param \stdClass $payload The JWT token payload.
+	 *
+	 * @return bool True if the iss claim is valid, false otherwise.
+	 */
+	public function validate_iss_claim( $payload ) {
+		$expected_iss = $this->base_url;
+		$iss          = $payload->iss ?? null;
+
+		if ( empty( $iss ) ) {
+			return false;
+		}
+
+		return $iss === $expected_iss;
+	}
+	/**
+	 * Validate the JWT token's jti claim to ensure it has not already been used.
+	 *
+	 * @param \stdClass $payload The JWT token payload.
+	 *
+	 * @return bool True if the jti claim is valid, false otherwise.
+	 */
+	private function validate_jti_claim( $payload ) {
+		$jti = $payload->jti ?? null;
+
+		if ( empty( $jti ) ) {
+			return false;
+		}
+
+		// Check if the jti claim exists as a transient.
+		if ( false !== get_transient( "siwk_used_{$jti}" ) ) {
+			return false;
+		}
+
+		$fallback_exp = time() + MINUTE_IN_SECONDS * 5; // 5 minutes from now as the fallback expiration time if one is missing.
+
+		// Set the jti claim as a transient. We only need to store it until the token expires.
+		set_transient( "siwk_used_{$jti}", true, ( $payload->exp ?? $fallback_exp ) - time() );
+
+		return true;
 	}
 }

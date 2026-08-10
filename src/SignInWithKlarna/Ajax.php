@@ -70,7 +70,7 @@ class Ajax {
 
 		$userdata = $this->user->get_user_data( $payload );
 
-		if ( username_exists( $userdata['user_login'] ) || email_exists( $userdata['user_email'] ) ) {
+		if ( email_exists( $userdata['user_email'] ) ) {
 			$user_id = $this->user->merge_with_existing_user( $userdata );
 		} else {
 			$user_id = $this->user->register_new_user( $userdata );
