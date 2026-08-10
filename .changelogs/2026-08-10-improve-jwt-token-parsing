@@ -1,4 +1,0 @@
-Type: Enhancement
-Needs Documentation: no
-
-Improve the JWT token parsing and validation for SIWK.
