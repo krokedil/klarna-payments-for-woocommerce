@@ -26,8 +26,9 @@ jQuery(function ($) {
         return;
       }
 
-      // Check if the button already exist.
-      if (null !== document.querySelector('#kec-pay-button').shadowRoot) {
+      // Check that the button container exists, and that the button has not already been rendered into it.
+      const $button = $("#kec-pay-button");
+      if (!$button.length || null !== $button[0].shadowRoot) {
         return;
       }
 
