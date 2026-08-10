@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Krokedil\Klarna\Features;
 use Krokedil\Klarna\PluginFeatures;
-use Krokedil\Klarna\KECOneStepIntegration;
+use Krokedil\Klarna\ExpressCheckout\KECOneStepIntegration;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
 
 /**
@@ -63,6 +63,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public $testmode;
 
 	/**
+	 * Whether the combined Klarna payment method is currently being rendered. Used to prevent the
+	 * payment method template override from recursing, since the gateway keeps its original id when
+	 * the payment methods are combined.
+	 *
+	 * @var bool
+	 */
+	public static $is_rendering_combined = false;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -72,7 +81,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		/* translators: [merchant-facing]. */
 		$this->method_description = __( 'Supercharge your business with one single plugin for increased sales and enhanced shopping experiences.', 'klarna-payments-for-woocommerce' );
 		$this->has_fields         = 'redirect' !== $this->get_option( 'checkout_flow', 'popout' );
-		$this->supports           = apply_filters(
+		/**
+		 * Filters the features supported by the Klarna Payments gateway.
+		 *
+		 * Use this to remove subscriptions support, since it is not possible to disable subscriptions in the Klarna account for Klarna Payments.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#disable-klarna-payments-for-subscriptions
+		 * @param array $supports The supported features.
+		 */
+		$this->supports = apply_filters(
 			'wc_klarna_payments_supports',
 			array(
 				'products',
@@ -110,7 +127,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$this->hide_what_is_klarna  = 'yes' === $this->get_option( 'hide_what_is_klarna' );
 		$this->float_what_is_klarna = 'yes' === $this->get_option( 'float_what_is_klarna' );
 
-		$this->pay_button_id = KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\KlarnaExpressCheckout::get_payment_button_id();
+		$this->pay_button_id = Krokedil\Klarna\ExpressCheckout::get_payment_button_id();
 
 		// Hooks.
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -355,7 +372,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	public function override_kp_payment_option( $located, $template_name, $args ) {
 		if ( is_checkout() ) {
 			if ( 'checkout/payment-method.php' === $template_name ) {
-				if ( 'klarna_payments' === $args['gateway']->id ) {
+				if ( 'klarna_payments' === $args['gateway']->id && ! self::$is_rendering_combined ) {
 					$checkout_flow = $this->get_option( 'checkout_flow', 'popout' );
 					if ( 'redirect' !== $checkout_flow ) {
 						$located = untrailingslashit( plugin_dir_path( __DIR__ ) ) . '/templates/klarna-payments-categories.php';
@@ -401,7 +418,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$checkout_flow = $this->get_option( 'checkout_flow', 'popout' );
 
 		if ( 'redirect' === $checkout_flow ) {
-			return $this->process_blocks_order( $order );
+			// If the user arrived via the KEC two-step flow, skip the HPP and process the order directly.
+			$kec_client_token = Krokedil\Klarna\ExpressCheckout\Session::get_client_token();
+			if ( empty( $kec_client_token ) ) {
+				return $this->process_blocks_order( $order );
+			}
 		}
 
 		return $this->process_checkout_order( $order );
@@ -426,7 +447,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	private function process_checkout_order( $order ) {
-		$kec_client_token = KrokedilKlarnaPaymentsDeps\Krokedil\KlarnaExpressCheckout\Session::get_client_token();
+		$kec_client_token = Krokedil\Klarna\ExpressCheckout\Session::get_client_token();
 		$order_key        = $order->get_order_key();
 		$order_id         = $order->get_id();
 
@@ -545,6 +566,11 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @hook woocommerce_api_wc_gateway_klarna_payments
 	 */
 	public function notification_listener() {
+		/**
+		 * Triggers on the Klarna notification endpoint, allowing the Klarna Order Management plugin to process pending orders.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#when-klarna-sends-a-push-notification
+		 */
 		do_action( 'wc_klarna_notification_listener' );
 	}
 
@@ -559,6 +585,15 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @return bool
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+		/**
+		 * Filters the result of a Klarna Payments refund, allowing the Klarna Order Management plugin to process it.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#handle-klarna-refunds-with-custom-code
+		 * @param bool     $result Whether the refund was processed. Default false.
+		 * @param int      $order_id The WooCommerce order ID.
+		 * @param null|int $amount The refund amount, or null for the full amount.
+		 * @param string   $reason The reason for the refund.
+		 */
 		return apply_filters( 'wc_klarna_payments_process_refund', false, $order_id, $amount, $reason );
 	}
 

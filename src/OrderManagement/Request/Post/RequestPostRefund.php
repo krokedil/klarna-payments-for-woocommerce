@@ -135,7 +135,7 @@ class RequestPostRefund extends RequestPost {
 							$order_line_tax      = round( ( $order->get_line_tax( $order_item ) * 100 ) );
 							$tax_rates           = \WC_Tax::get_base_tax_rates( $order_item->get_tax_class() );
 							$first_tax_rate      = reset( $tax_rates );
-							$order_line_tax_rate = ( 0 !== $order_line_tax && 0 !== $order_line_total ) ? ( isset( $first_tax_rate['rate'] ) ? $first_tax_rate['rate'] * 100 : round( ( $order_line_tax / $order_line_total ) * 100 * 100 ) ) : 0;
+							$order_line_tax_rate = ( ! empty( $order_line_tax ) && ! empty( $order_line_total ) ) ? ( isset( $first_tax_rate['rate'] ) ? $first_tax_rate['rate'] * 100 : round( ( $order_line_tax / $order_line_total ) * 100 * 100 ) ) : 0;
 						}
 					}
 
@@ -151,12 +151,19 @@ class RequestPostRefund extends RequestPost {
 					if ( is_object( $product ) && method_exists( $product, 'is_downloadable' ) ) {
 							$type = $product->is_downloadable() || $product->is_virtual() ? 'digital' : 'physical';
 					} else {
+							/**
+							 * Filters the product type used for a refund order line when the product no longer exists in WooCommerce.
+							 *
+							 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-product-type-for-refunds-of-missing-products
+							 * @param string                $type The product type to use. Default 'physical'.
+							 * @param \WC_Order_Item_Product $item The WooCommerce order item being refunded.
+							 */
 							$type = apply_filters( 'kom_line_item_product_type', 'physical', $item );
 					}
 
 					$reference           = $this->get_refund_item_reference( $item );
 					$name                = wp_strip_all_tags( $item->get_name() );
-					$quantity            = abs( $item->get_quantity() ) ?: 1;
+					$quantity            = abs( $item->get_quantity() ) ?: 1; // phpcs:ignore Universal.Operators.DisallowShortTernary.Found -- Short ternary is used intentionally and correctly here to set a default quantity of 1 if the quantity is 0 or not set.
 					$refund_price_amount = round( abs( $refund_order->get_line_subtotal( $item, false ) ) * 100 );
 					$total_discount      = $this->get_refund_item_discount_amount( $item, $separate_sales_tax );
 					$refund_tax_amount   = $separate_sales_tax ? 0 : abs( $this->get_refund_item_tax_amount( $item, $separate_sales_tax ) );
@@ -191,7 +198,7 @@ class RequestPostRefund extends RequestPost {
 
 					$order_shipping_total    = round( $order->get_shipping_total() * 100 );
 					$order_shipping_tax      = round( $order->get_shipping_tax() * 100 );
-					$order_shipping_tax_rate = 0 === $order_shipping_total ? 0 : round( ( $order_shipping_tax / $order_shipping_total ) * 10000 );
+					$order_shipping_tax_rate = empty( $order_shipping_total ) ? 0 : round( ( $order_shipping_tax / $order_shipping_total ) * 10000 );
 
 					$type                = 'shipping_fee';
 					$reference           = $shipping_item->get_method_id() . ':' . $shipping_item->get_instance_id();
@@ -271,6 +278,13 @@ class RequestPostRefund extends RequestPost {
 			}
 		}
 
+		/**
+		 * Filters the refund order lines sent to Klarna when refunding an order.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-order-refund-request
+		 * @param array $data The refund order lines.
+		 * @param int   $order_id The WooCommerce order ID.
+		 */
 		return apply_filters( 'kom_refund_order_args', $data, $this->order_id );
 	}
 

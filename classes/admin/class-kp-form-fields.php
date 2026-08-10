@@ -412,7 +412,7 @@ class KP_Form_Fields {
 	 */
 	public static function get_kp_section_fields( $settings = array() ) {
 		$kp_section = array(
-			'general'              => array(
+			'general'                 => array(
 				'id'          => 'general',
 				'title'       => 'Klarna Payments',
 				/* translators: [merchant-facing]. */
@@ -426,7 +426,7 @@ class KP_Form_Fields {
 				),
 				'type'        => 'kp_section_start',
 			),
-			'enabled'              => array(
+			'enabled'                 => array(
 				/* translators: [merchant-facing]. */
 				'title'       => __( 'Enable/Disable', 'klarna-payments-for-woocommerce' ),
 				/* translators: [merchant-facing]. */
@@ -435,7 +435,7 @@ class KP_Form_Fields {
 				'description' => '',
 				'default'     => 'no',
 			),
-			'hide_what_is_klarna'  => array(
+			'hide_what_is_klarna'     => array(
 				/* translators: [merchant-facing]. */
 				'title'    => __( 'Hide "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
@@ -444,7 +444,7 @@ class KP_Form_Fields {
 				'default'  => 'no',
 				'desc_tip' => true,
 			),
-			'float_what_is_klarna' => array(
+			'float_what_is_klarna'    => array(
 				/* translators: [merchant-facing]. */
 				'title'    => __( 'Float "What is Klarna?" link', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
@@ -453,7 +453,7 @@ class KP_Form_Fields {
 				'default'  => 'yes',
 				'desc_tip' => false,
 			),
-			'send_product_urls'    => array(
+			'send_product_urls'       => array(
 				/* translators: [merchant-facing]. */
 				'title'    => __( 'Product URLs', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
@@ -462,7 +462,7 @@ class KP_Form_Fields {
 				'default'  => 'yes',
 				'desc_tip' => true,
 			),
-			'add_to_email'         => array(
+			'add_to_email'            => array(
 				/* translators: [merchant-facing]. */
 				'title'    => __( 'Add Klarna URLs to order email', 'klarna-payments-for-woocommerce' ),
 				'type'     => 'checkbox',
@@ -471,7 +471,7 @@ class KP_Form_Fields {
 				'default'  => 'no',
 				'desc_tip' => false,
 			),
-			'customer_type'        => array(
+			'customer_type'           => array(
 				/* translators: [merchant-facing]. */
 				'title'       => __( 'Customer type', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'select',
@@ -488,7 +488,16 @@ class KP_Form_Fields {
 				'default'     => 'b2c',
 				'desc_tip'    => true,
 			),
-			'checkout_flow'        => array(
+			'combine_payment_methods' => array(
+				/* translators: [merchant-facing]. */
+				'title'    => __( 'Combine payment methods', 'klarna-payments-for-woocommerce' ),
+				'type'     => 'checkbox',
+				/* translators: [merchant-facing]. */
+				'label'    => __( 'Display Klarna as a single payment method in the checkout. The customer can choose between the available Klarna payment options inside the Klarna widget.', 'klarna-payments-for-woocommerce' ),
+				'default'  => 'no',
+				'desc_tip' => true,
+			),
+			'checkout_flow'           => array(
 				/* translators: [merchant-facing]. */
 				'title'       => __( 'Checkout Flow', 'klarna-payments-for-woocommerce' ),
 				'type'        => 'select',
@@ -505,7 +514,7 @@ class KP_Form_Fields {
 				'default'     => 'popout',
 				'desc_tip'    => true,
 			),
-			'general_end'          => array(
+			'general_end'             => array(
 				'type'     => 'kp_section_end',
 				'previews' => array(
 					array(
@@ -597,6 +606,14 @@ class KP_Form_Fields {
 		add_filter( 'wc_gateway_klarna_payments_settings', array( __CLASS__, 'get_credential_section_fields' ), 1 );
 		add_filter( 'wc_gateway_klarna_payments_settings', array( __CLASS__, 'get_kp_section_fields' ), 2 );
 
+		/**
+		 * Filters the full array of settings fields rendered on the Klarna Payments settings page.
+		 *
+		 * Use this to add, modify, or remove settings fields under WooCommerce > Settings > Payments.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-payments-settings-fields
+		 * @param array $form_fields The WooCommerce settings form fields array.
+		 */
 		$form_fields        = apply_filters( 'wc_gateway_klarna_payments_settings', array() );
 		$parsed_form_fields = array();
 

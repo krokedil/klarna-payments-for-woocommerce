@@ -74,14 +74,27 @@ class KP_Assets {
 	 */
 	public function add_data_attributes( $tag, $handle ) {
 		if ( self::KP_SCRIPT_HANDLE === $handle ) {
-			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
-			$environment    = isset( $settings['testmode'] ) && 'yes' === $settings['testmode'] ? 'playground' : 'production';
+			$settings    = get_option( 'woocommerce_klarna_payments_settings', array() );
+			$environment = isset( $settings['testmode'] ) && 'yes' === $settings['testmode'] ? 'playground' : 'production';
+			/**
+			 * Filters the data-client-id attribute value injected into the Klarna Web SDK v1 (api.js) script tag.
+			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-klarna-web-sdk-client-id
+			 * @param string $client_id The Klarna client ID, for example 'klarna_live_client_xxx'.
+			 */
 			$data_client_id = apply_filters( 'kp_websdk_data_client_id', kp_get_client_id() );
 			$tag            = str_replace( ' src', ' async src', $tag );
 			$tag            = str_replace( '></script>', " data-environment={$environment} data-client-id='{$data_client_id}'></script>", $tag );
 			return $tag;
 		} elseif ( self::KP_WEBSDK_HANDLE_V2 === $handle ) {
-			// Allow other plugins to hook in an additional attributes to the script tag.
+			/**
+			 * Filters the HTML attributes added to the Klarna Web SDK v2 (klarna.mjs) script module tag.
+			 *
+			 * Each key-value pair in the returned array becomes an HTML attribute. A null value adds the key as a boolean attribute, for example 'defer'.
+			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-web-sdk-v2-script-attributes
+			 * @param array $attributes Associative array of attribute name => value pairs. Default array( 'defer' => null ).
+			 */
 			$attributes = apply_filters(
 				'kp_websdk_v2_data_attributes',
 				array(
@@ -103,7 +116,14 @@ class KP_Assets {
 
 			return $tag;
 		} elseif ( self::KP_WEBSDK_HANDLE_V1 === $handle ) {
-			// Allow other plugins to hook in an additional attributes to the script tag.
+			/**
+			 * Filters the HTML attributes added to the Klarna Web SDK v1 (klarna_websdk_v1) script tag.
+			 *
+			 * Each key-value pair in the returned array becomes an HTML attribute. A null value adds the key as a boolean attribute, for example 'defer'.
+			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-web-sdk-v1-script-attributes
+			 * @param array $attributes Associative array of attribute name => value pairs. Default array( 'defer' => null ).
+			 */
 			$attributes = apply_filters(
 				'kp_websdk_v1_data_attributes',
 				array(
@@ -204,6 +224,12 @@ class KP_Assets {
 			'testmode'                => $settings['testmode'] ?? 'no',
 			'debug'                   => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
 			'customer_type'           => $customer_type,
+			/**
+			 * Filters whether to strip spaces from the postcode sent to Klarna.
+			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#remove-postcode-spaces
+			 * @param bool $strip Whether to remove postcode spaces. Default false.
+			 */
 			'remove_postcode_spaces'  => ( apply_filters( 'wc_kp_remove_postcode_spaces', false ) ) ? 'yes' : 'no',
 			'client_token'            => KP_WC()->session->get_klarna_client_token(),
 			'order_pay_page'          => $pay_for_order,
@@ -223,7 +249,14 @@ class KP_Assets {
 			),
 		);
 
-		// Return with filter incase some people want to modify the params.
+		/**
+		 * Filters the JavaScript parameters object localized to the Klarna Payments checkout script.
+		 *
+		 * This is the primary filter for modifying any data passed from PHP to the frontend Klarna Payments JavaScript.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-parameters-passed-to-the-klarna-payments-frontend
+		 * @param array $params Associative array of parameters, including AJAX URLs, nonces, cart total, testmode flag, customer type, client token, and i18n strings.
+		 */
 		return apply_filters( 'wc_kp_checkout_params', $klarna_payments_params );
 	}
 
@@ -275,7 +308,17 @@ class KP_Assets {
 	 * @return void
 	 */
 	public function enqueue_express_button() {
-		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
+		/**
+		 * Filters whether the Klarna Express Checkout (Express Button) feature is enabled.
+		 *
+		 * The express button is not enqueued, rendered, or loaded unless a callback returns true.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button
+		 * @param bool $enabled Whether the express button is enabled. Default false.
+		 */
+		$express_button_enabled = apply_filters( 'kp_enable_express_button', false );
+
+		if ( ! $express_button_enabled ) {
 			return;
 		}
 
@@ -301,7 +344,17 @@ class KP_Assets {
 	 * @return void
 	 */
 	public function express_button_placement() {
-		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
+		/**
+		 * Filters whether the Klarna Express Checkout (Express Button) feature is enabled.
+		 *
+		 * The express button is not enqueued, rendered, or loaded unless a callback returns true.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button
+		 * @param bool $enabled Whether the express button is enabled. Default false.
+		 */
+		$express_button_enabled = apply_filters( 'kp_enable_express_button', false );
+
+		if ( ! $express_button_enabled ) {
 			return;
 		}
 
@@ -320,7 +373,14 @@ class KP_Assets {
 		}
 
 		$country_code = strtoupper( $purchase_country );
-		$locale       = esc_attr( apply_filters( 'kp_express_button_locale', kp_get_locale() ) );
+		/**
+		 * Filters the locale passed to the data-locale attribute of the Klarna Express Button web component.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#force-express-button-to-a-specific-country-and-language
+		 * @param string $locale The locale string, for example 'en-US'.
+		 */
+		$locale = apply_filters( 'kp_express_button_locale', kp_get_locale() );
+		$locale = esc_attr( $locale );
 
 		$supported_countries = array(
 			'US',
@@ -381,7 +441,7 @@ class KP_Assets {
 		$client_id = kp_get_client_id();
 
 		wp_register_script_module(
-			'@klarna/interoperability_token',
+			'@klarna/network_session_token',
 			plugins_url( 'assets/js/klarna-interoperability-token.js', WC_KLARNA_PAYMENTS_MAIN_FILE ),
 			array( self::KP_WEBSDK_HANDLE_V2 ),
 			WC_KLARNA_PAYMENTS_VERSION
@@ -404,11 +464,11 @@ class KP_Assets {
 			),
 		);
 
-		self::register_module_data( $params, '@klarna/interoperability_token' );
+		self::register_module_data( $params, '@klarna/network_session_token' );
 
 		// Only enqueue the script if the customer is a AP merchant, meaning Klarna Payments is not used as a payment method.
 		if ( ! PluginFeatures::is_available( Features::PAYMENTS ) ) {
-			wp_enqueue_script_module( '@klarna/interoperability_token' );
+			wp_enqueue_script_module( '@klarna/network_session_token' );
 		}
 	}
 
@@ -435,7 +495,17 @@ class KP_Assets {
 	 * @return void
 	 */
 	private function enqueue_express_button_scripts() {
-		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
+		/**
+		 * Filters whether the Klarna Express Checkout (Express Button) feature is enabled.
+		 *
+		 * The express button is not enqueued, rendered, or loaded unless a callback returns true.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button
+		 * @param bool $enabled Whether the express button is enabled. Default false.
+		 */
+		$express_button_enabled = apply_filters( 'kp_enable_express_button', false );
+
+		if ( ! $express_button_enabled ) {
 			return;
 		}
 
@@ -465,7 +535,17 @@ class KP_Assets {
 	 * @return void
 	 */
 	private function enqueue_express_button_styles() {
-		if ( ! apply_filters( 'kp_enable_express_button', false ) ) {
+		/**
+		 * Filters whether the Klarna Express Checkout (Express Button) feature is enabled.
+		 *
+		 * The express button is not enqueued, rendered, or loaded unless a callback returns true.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#enable-the-klarna-express-checkout-button
+		 * @param bool $enabled Whether the express button is enabled. Default false.
+		 */
+		$express_button_enabled = apply_filters( 'kp_enable_express_button', false );
+
+		if ( ! $express_button_enabled ) {
 			return;
 		}
 

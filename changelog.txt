@@ -1,4 +1,24 @@
 *** Klarna for WooCommerce Changelog ***
+2026-08-10      - version 4.12.1
+* Enhancement   - Improve the JWT token parsing and validation for SIWK.
+* Fix           - Fixed an issue where closing the Express Checkout modal during the payment flow caused an error when reopening it.
+* Fix           - The order's shipping address is now sent to Klarna when paying for an existing order, instead of falling back to the billing address.
+* Fix           - Fixed a JavaScript error ("Uncaught TypeError: Cannot read properties of null (reading 'shadowRoot')") that could occur on pages where the KEC script was enqueued but the KEC button markup was not rendered.
+
+2026-08-03      - version 4.12.0
+* Feature       - On-site messaging functionality is now built directly into the plugin, eliminating the need for external code packages.
+* Feature       - Express Checkout functionality is now built directly into the plugin, eliminating the need for external code packages.
+* Feature       - Sign in with Klarna functionality is now built directly into the plugin, eliminating the need for external code packages.
+* Fix           - The Two-Step Klarna Express Checkout flow now works as expected when the redirect checkout flow is used.
+* Fix           - Fixed an issue where Klarna orders could fail to complete on stores using multiple currencies, when the shopper's currency was different from the store's default currency.
+* Fix           - Refunds containing zero-value order lines, such as free products or free shipping, no longer fail with a division-by-zero error.
+
+2026-06-22      - version 4.11.0
+* Feature       - Added a new "Combine payment methods" setting. When enabled, Klarna is displayed as a single payment method named "Pay with Klarna" in the checkout, and the customer can choose between the available Klarna payment options inside the Klarna widget.
+* Tweak         - Switched from the interoperability token to the network session token.
+* Fix           - Fixed an issue where a partial refund could trigger a fatal `DivisionByZeroError` if the product quantity was left at `0`. Thank you [@blenardpazari](https://github.com/blenardpazari)!
+* Fix           - Fixed an issue where the cancel action didn't show in some cases.
+
 2026-05-25      - version 4.10.7
 * Fix           - Fixed a PHP warning that occurred when an invalid or missing client ID was provided for boost features.
 * Fix           - Fixed a PHP deprecation warning on the checkout page caused by the gateway description being unset.

@@ -99,6 +99,14 @@ class KP_Api {
 		);
 		$response = $request->request();
 
+		/**
+		 * Triggers after the place order request has been sent to Klarna.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-the-place-order-request-completes
+		 * @param array|WP_Error $response The response from the Klarna place order request.
+		 * @param string         $order_id The WooCommerce order ID.
+		 * @param string         $auth_token The Klarna auth token for the session.
+		 */
 		do_action( 'kp_after_place_order', $response, $order_id, $auth_token );
 		return self::check_for_api_error( $response );
 	}
