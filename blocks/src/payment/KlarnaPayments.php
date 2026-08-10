@@ -83,7 +83,14 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 		return array(
 			'title'            => kp_is_combined_payment_methods_enabled() ? kp_get_combined_payment_method_title() : 'Klarna',
 			'description'      => $this->get_setting( 'description' ),
-			'iconurl'          => apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
+			'iconurl'          =>
+				/**
+				 * Filters the Klarna logo URL shown for the payment method in the block checkout.
+				 *
+				 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-klarna-logo-in-the-blocks-checkout
+				 * @param string $logo_url The URL of the Klarna logo.
+				 */
+				apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
 			'orderbuttonlabel' => WC_Klarna_Payments::get_pay_button_label(),
 			'features'         => $features,
 		);

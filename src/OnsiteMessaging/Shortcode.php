@@ -22,6 +22,9 @@ class Shortcode {
 	public function shortcode_output( $atts ) {
 		$html = '';
 		if ( ! is_admin() ) {
+			/**
+			 * Triggers when the Klarna on-site messaging shortcode is rendered on the frontend.
+			 */
 			do_action( 'osm_shortcode_added' );
 			$atts = shortcode_atts(
 				array(

@@ -103,6 +103,7 @@ const KECOneStep = {
 
     KECOneStep.Klarna.Payment.on("shippingaddresschange", KECOneStep.onShippingAddressChange);
     KECOneStep.Klarna.Payment.on("shippingoptionselect", KECOneStep.onShippingOptionSelect);
+    KECOneStep.Klarna.Payment.on("abort", KECOneStep.onPaymentAbort);
 
     $(document.body).on(
       "updated_cart_totals added_to_cart removed_from_cart updated_checkout updated_wc_div wc-blocks_added_to_cart wc-blocks_removed_from_cart",
@@ -213,6 +214,15 @@ const KECOneStep = {
     const body = result.data || {};
 
     return body
+  },
+
+  /**
+   * Handle the customer closing the Klarna modal without completing payment.
+   *
+   * @returns {void}
+   */
+  onPaymentAbort() {
+    KECOneStep.isInitiating = false;
   },
 
   /**
