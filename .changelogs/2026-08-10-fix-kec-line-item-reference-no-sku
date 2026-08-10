@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed an issue where products without a SKU could cause Klarna Express Checkout to reject the session, since `lineItemReference` was sent as an empty string. The product ID is now used as a fallback.

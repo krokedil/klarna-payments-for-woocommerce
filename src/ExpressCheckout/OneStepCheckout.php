@@ -307,9 +307,14 @@ class OneStepCheckout {
 			}
 
 			$image_url = wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_thumbnail' );
+
+			// Klarna requires lineItemReference to be 1-255 characters. Fall back to the product ID when the product has no SKU.
+			$sku                 = $product->get_sku();
+			$line_item_reference = '' !== $sku ? $sku : (string) $product->get_id();
+
 			$line_item = array(
 				'name'              => $product->get_name(),
-				'lineItemReference' => $product->get_sku(),
+				'lineItemReference' => $line_item_reference,
 				'quantity'          => $cart_item['quantity'],
 				'totalAmount'       => self::format_price( $cart_item['line_total'] + $cart_item['line_tax'] ),
 				'totalTaxAmount'    => self::format_price( $cart_item['line_tax'] ),
