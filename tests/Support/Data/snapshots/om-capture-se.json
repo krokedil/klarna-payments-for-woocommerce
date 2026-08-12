@@ -1,0 +1,22 @@
+{
+    "method": "POST",
+    "path": "https://api.playground.klarna.com/ordermanagement/v1/orders/klarna-order-123/captures",
+    "body": {
+        "captured_amount": 25000,
+        "order_lines": [
+            {
+                "name": "KP Test Product",
+                "product_url": "<site>/?product=kp-test-product",
+                "quantity": 2,
+                "quantity_unit": "pcs",
+                "reference": "kp-test-1",
+                "tax_rate": 2500,
+                "total_amount": 25000,
+                "total_discount_amount": 0,
+                "total_tax_amount": 5000,
+                "type": "physical",
+                "unit_price": 12500
+            }
+        ]
+    }
+}
