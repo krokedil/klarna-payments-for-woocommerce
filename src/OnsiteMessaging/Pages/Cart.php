@@ -44,7 +44,17 @@ class Cart extends Page {
 	public function register_placement() {
 		if ( $this->enabled && is_cart() ) {
 
-			$target   = apply_filters( 'klarna_onsite_messaging_cart_target', $this->target );
+			/**
+			 * Filters the WooCommerce hook the on-site messaging placement is attached to on the cart page.
+			 *
+			 * @param string $target The action hook name where the placement is rendered.
+			 */
+			$target = apply_filters( 'klarna_onsite_messaging_cart_target', $this->target );
+			/**
+			 * Filters the priority used when attaching the on-site messaging placement on the cart page.
+			 *
+			 * @param int $priority The hook priority. Default 5.
+			 */
 			$priority = apply_filters( 'klarna_onsite_messaging_cart_priority', $this->priority );
 			add_action( $target, array( $this, 'display_placement' ), $priority );
 

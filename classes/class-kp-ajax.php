@@ -161,6 +161,13 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				$order->add_order_note( __( 'Authorization rejected by Klarna.', 'klarna-payments-for-woocommerce' ) );
 			}
 
+			/**
+			 * Triggers after an order note has been added when the Klarna authorization modal is closed or rejected.
+			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#handle-the-klarna-modal-closed-event
+			 * @param WC_Order $order The WooCommerce order object.
+			 * @param bool     $show_form Whether the checkout form should be shown again to the customer.
+			 */
 			do_action( 'kp_modal_closed', $order, $show_form );
 			wp_send_json_success();
 		}

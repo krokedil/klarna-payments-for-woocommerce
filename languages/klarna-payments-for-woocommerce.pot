@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2026-06-22 09:25:07+00:00\n"
+"POT-Creation-Date: 2026-08-10 07:59:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -166,8 +166,7 @@ msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:275
 #: classes/admin/class-kp-form-fields.php:424
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
+#: src/ExpressCheckout/Settings.php:227 src/SignInWithKlarna/Settings.php:168
 #. translators: [merchant-facing].
 msgid "Documentation"
 msgstr ""
@@ -196,7 +195,7 @@ msgid "Start typing"
 msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:298
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:54
+#: src/OnsiteMessaging/Settings.php:59
 #. translators: [merchant-facing].
 msgid "Test mode"
 msgstr ""
@@ -320,9 +319,8 @@ msgid ""
 msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:431
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
+#: src/ExpressCheckout/Settings.php:233 src/OnsiteMessaging/Settings.php:195
+#: src/SignInWithKlarna/Settings.php:175
 #. translators: [merchant-facing].
 msgid "Enable/Disable"
 msgstr ""
@@ -430,8 +428,7 @@ msgid "Redirect"
 msgstr ""
 
 #: classes/admin/class-kp-form-fields.php:522
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
+#: src/ExpressCheckout/Settings.php:300 src/SignInWithKlarna/Settings.php:311
 #. translators: [merchant-facing].
 msgid "Preview"
 msgstr ""
@@ -495,7 +492,7 @@ msgid "Password"
 msgstr ""
 
 #: classes/admin/class-kp-settings-page.php:316
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:55
+#: src/OnsiteMessaging/Settings.php:65
 #. translators: [merchant-facing].
 msgid "Client ID"
 msgstr ""
@@ -510,17 +507,17 @@ msgstr ""
 msgid "Authorization rejected by Klarna."
 msgstr ""
 
-#: classes/class-kp-api.php:263
+#: classes/class-kp-api.php:271
 #. translators: [merchant-facing].
 msgid "Missing shared secret."
 msgstr ""
 
-#: classes/class-kp-assets.php:222
+#: classes/class-kp-assets.php:248
 #. translators: [customer-facing].
 msgid "Please read and accept the terms and conditions to proceed with your order."
 msgstr ""
 
-#: classes/class-kp-assets.php:266
+#: classes/class-kp-assets.php:299
 #. translators: [merchant-facing].
 msgid "Select all"
 msgstr ""
@@ -588,16 +585,6 @@ msgid ""
 "payments via Klarna.com or in the %2$s"
 msgstr ""
 
-#: classes/class-kp-klarna-express-checkout.php:133
-#. translators: [customer-facing].
-msgid "The order could not be found."
-msgstr ""
-
-#: classes/class-kp-klarna-express-checkout.php:139
-#. translators: [customer-facing].
-msgid "Order verification failed."
-msgstr ""
-
 #: classes/class-kp-session.php:240
 #. translators: [customer-facing].
 msgid "Order was not found"
@@ -660,41 +647,41 @@ msgstr ""
 msgid "Klarna recurring token"
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:159
+#: classes/class-wc-gateway-klarna-payments.php:167
 #. translators: [customer-facing].
 msgid "What is Klarna?"
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:214
+#: classes/class-wc-gateway-klarna-payments.php:222
 msgid ""
 "Could not load the enhanced settings page. Showing the standard settings "
 "instead."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:450
+#: classes/class-wc-gateway-klarna-payments.php:462
 #. translators: [customer-facing].
 msgid "Failed to get required data from the Klarna session. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:512
+#: classes/class-wc-gateway-klarna-payments.php:524
 #. translators: [customer-facing].
 msgid "Failed to create a session with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:540
+#: classes/class-wc-gateway-klarna-payments.php:552
 #. translators: [customer-facing].
 msgid "Failed to create a hosted payment page with Klarna. Please try again."
 msgstr ""
 
-#: classes/class-wc-gateway-klarna-payments.php:650
+#: classes/class-wc-gateway-klarna-payments.php:676
 #. translators: [customer-facing].
 msgid "Klarna did not accept the new order amount, the order has not been updated"
 msgstr ""
 
 #: classes/requests/helpers/class-kp-order-data.php:162
 #: classes/requests/helpers/class-kp-order-data.php:165
-#: src/OrderManagement/Request/Post/RequestPostRefund.php:231
-#: src/OrderManagement/Request/Post/RequestPostRefund.php:233
+#: src/OrderManagement/Request/Post/RequestPostRefund.php:238
+#: src/OrderManagement/Request/Post/RequestPostRefund.php:240
 #. translators: [merchant-facing].
 msgid "Sales Tax"
 msgstr ""
@@ -702,461 +689,6 @@ msgstr ""
 #: classes/requests/patch/class-kp-upsell-order.php:46
 #. translators: [merchant-facing].
 msgid "Upsell from thankyou page"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Api/Notifications/PaymentStateExpired.php:32
-#: src/KECOneStepIntegration.php:82
-#. translators: [merchant-facing].
-msgid "Order cancelled due to expired payment request."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/OneStepCheckout.php:54
-#: dependencies/krokedil/klarna-express-checkout/src/OneStepCheckout.php:62
-msgid "Your order could not be processed"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/OneStepCheckout.php:148
-msgid "Digital delivery"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:198
-msgid "Two step"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:201
-msgid "One step"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid ""
-"Offer a 5x faster check-out process that lowers the threshold for shoppers "
-"to complete a purchase."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Enable Klarna Express Checkout"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Placements & button style"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid ""
-"Tailor the express checkout button to fit your brand by adjusting the "
-"button theme, shape and selecting placements."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Theme"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Select the theme for the Klarna Express Checkout."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Dark"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Light"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Outlined"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Shape"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Select the shape for the Klarna Express Checkout."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Rounded"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Rectangular"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Pill"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Placements"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "All (recommended)"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Product pages"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Cart page"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Flow"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Select the checkout flow for Klarna Express Checkout."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid "Webhook %s"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:203
-msgid ""
-"For one step Express Checkout to function, Klarna needs to be able to send "
-"callbacks to your store. Enable the callbacks and configure a signing key "
-"to use for the authentication."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:233
-msgid "Created"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:235
-msgid "Not Created"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:264
-msgid "Test Webhook"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:271
-msgid "Remove Webhook"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:286
-msgid "Create the necessary webhook in Klarna for the Express Checkout."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/Settings.php:292
-msgid "Create Webhook"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:121
-msgid "Could not send test webhook"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:124
-msgid "Test webhook sent successfully."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:143
-msgid "Could not remove webhook"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:151
-msgid "Could not remove signing key"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:155
-msgid "Webhook removed successfully."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:166
-msgid "Could not create signing key"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:191
-msgid "Could not create a signing key with Klarna for the webhook."
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:199
-msgid "Could not create webhook with Klarna"
-msgstr ""
-
-#: dependencies/krokedil/klarna-express-checkout/src/WebhookSetup.php:204
-msgid "Webhook created successfully."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/KlarnaOnsiteMessaging.php:114
-msgid ""
-"The \"Klarna On-Site Messaging for WooCommerce\" plugin is now integrated "
-"into Klarna Payments. Please disable the plugin."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:54
-msgid "Enable Test Mode"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:55
-msgid "Enter the client ID given by Klarna for Klarna On-Site Messaging"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:56
-msgid "Enable/Disable the Product placement"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:57
-msgid "Product page placement data key"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:57
-msgid "Enter the placement data key for the product page."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-msgid "Product On-Site Messaging placement"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-msgid "Select where to display the widget in your product pages"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-msgid "Above Title"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-msgid "Between Title and Price"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-msgid "Between Price and Excerpt"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-msgid "Between Excerpt and Add to cart button"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-msgid "Between Add to cart button and Product meta"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-msgid "Between Product meta and Product sharing buttons"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:58
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-msgid "After Product sharing buttons"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
-msgid "Product Placement Theme"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
-msgid "Select which theme to use for the product pages."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
-msgid "Default"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:59
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
-msgid "Custom"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:60
-msgid "Enable/Disable the Cart placement"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:61
-msgid "Cart page placement data key"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:61
-msgid "Enter the placement data key for the cart page."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-msgid "Cart On-Site Messaging placement"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-msgid "Select where to display the widget on your cart page"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-msgid "Above cross sell"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-msgid "Above cart totals"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-msgid "Between cart totals and proceed to checkout button"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-msgid "After proceed to checkout button"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:62
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-msgid "Bottom of the page"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
-msgid "Cart Placement Theme"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:63
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
-msgid "Select which theme to use for the cart page."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:64
-msgid "Enable custom placement hook"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:65
-msgid "Custom placement hook"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:65
-msgid "Enter a custom hook where you want the OSM widget to be placed."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:66
-msgid "Custom placement hook priority"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:66
-msgid ""
-"Enter a priority for the custom hook where you want the OSM widget to be "
-"placed."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:79
-msgid ""
-"Add personalized messaging throughout the shopper journey for higher "
-"conversion rates and increased spend."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:79
-msgid "Further customization is possible in the Klarna Merchant Portal."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:80
-msgid "Enable On-site Messaging"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
-msgid "Cart Page Placement"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
-msgid "Select the placement for the cart page."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
-msgid "Don't show"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
-msgid "Show with Klarna badge  (recommended)"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:81
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
-msgid "Show without Klarna badge"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:82
-msgid "Cart Page Location"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:83
-msgid "Cart Page Theme"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
-msgid "Product Page Placement"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
-msgid "Select the placement type that you want to show on the product pages."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:84
-msgid "Show with Klarna badge (recommended)"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:85
-msgid "Product Page Location"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
-msgid "Product Page Theme"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:86
-msgid ""
-"The On-site messaging placements come in Light and Dark theme to fit into "
-"the look and feel of your website."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:87
-msgid "Cart preview"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Settings.php:87
-msgid "Product preview"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:25
-msgid "Klarna On-Site Messaging"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:27
-msgid "Displays a Klarna banner in your store."
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:74
-msgid "Title:"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:88
-msgid "Placement Key"
-msgstr ""
-
-#: dependencies/krokedil/klarna-onsite-messaging/src/Widget.php:104
-msgid "Placement Theme:"
 msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Addons.php:42
@@ -1183,7 +715,7 @@ msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Navigation.php:54
 #: dependencies/krokedil/settings-page/src/Support.php:30
-#: klarna-payments-for-woocommerce.php:383
+#: klarna-payments-for-woocommerce.php:384
 #. translators: [merchant-facing].
 msgid "Support"
 msgstr ""
@@ -1218,132 +750,6 @@ msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Traits/Subsection.php:34
 msgid "Sections"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-#: dependencies/krokedil/sign-in-with-klarna/src/User.php:161
-msgid "Sign in with Klarna"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid ""
-"Let customers connect their accounts with pre-set payments and preferences "
-"to shop anywhere, improve personalized shopping experiences."
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Enable Sign in with Klarna"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Redirect URL"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid ""
-"Add this URL to your list of allowed redirect URLs in the \"Sign in with "
-"Klarna\" settings on the <a href=\"https://portal.klarna.com/\">Klarna "
-"merchant portal</a>."
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Button theme"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "The button's color theme."
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Button shape"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "The button's shape."
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Badge alignment"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Change alignment of the Klarna logo on the call to action button."
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Badge"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Left"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Centered"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Cart page placement"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Change the placement of the \"Sign in with Klarna\" button on the cart page."
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Before \"Proceed to checkout\" button"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "After \"Proceed to checkout\" button"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Required Customer Data"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Email Address"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Full name"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Phone number"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Billing address"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid ""
-"These scopes are included by default, as necessary for creating a "
-"WooCommerce customer account in your shop.  More about available scopes "
-"with Sign in with Klarna <a "
-"href=\"https://docs.klarna.com/conversion-boosters/sign-in-with-klarna/"
-"integrate-sign-in-with-klarna/web-sdk-integration/#scopes-and-claims\""
-">here</a>. Additional scopes can be customized if applicable, more info <a "
-"href=\"https://gist.github.com/mntzrr/4bf23ca394109d40575f2abc05811ddc\""
-">here</a>."
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Date of birth"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Country"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:134
-msgid "Language Preference"
-msgstr ""
-
-#: dependencies/krokedil/sign-in-with-klarna/src/Settings.php:176
-msgid "Theme, button shape & placements"
 msgstr ""
 
 #: dependencies/krokedil/support/src/Logger.php:54
@@ -1454,32 +860,32 @@ msgstr ""
 msgid "Klarna Payments API Error: %1$s %2$s"
 msgstr ""
 
-#: includes/kp-functions.php:572 klarna-payments-for-woocommerce.php:588
+#: includes/kp-functions.php:662 klarna-payments-for-woocommerce.php:600
 #. translators: [customer-facing].
 msgid "Pay with Klarna"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:379
+#: klarna-payments-for-woocommerce.php:380
 #. translators: [merchant-facing].
 msgid "Settings"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:381
+#: klarna-payments-for-woocommerce.php:382
 #. translators: [merchant-facing].
 msgid "Docs"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:425
+#: klarna-payments-for-woocommerce.php:426
 #. translators: [merchant-facing].
 msgid "The WooCommerce plugin must be active for Klarna Payments to work."
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:444
+#: klarna-payments-for-woocommerce.php:445
 #. translators: [merchant-facing].
 msgid "Dismiss"
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:451
+#: klarna-payments-for-woocommerce.php:452
 #. translators: [merchant-facing]. URL to docs.
 msgid ""
 "It looks as if you don't have pretty permalinks enabled in WordPress. In "
@@ -1495,15 +901,463 @@ msgid ""
 "plugin."
 msgstr ""
 
-#: klarna-payments-for-woocommerce.php:584
+#: klarna-payments-for-woocommerce.php:590
 #. translators: [customer-facing].
 msgid "Pay with Klarna (free)"
 msgstr ""
 
-#: src/Api/Registry.php:45
+#: src/Api/Registry.php:51
 #. translators: [merchant-facing]. 1: The name of the incorrect class. 2: The
 #. name of the base Controller class.
 msgid "The controller %1$s must extend the %2$s class."
+msgstr ""
+
+#: src/ExpressCheckout/Api/Notifications/Handler.php:111
+#. translators: %s: Klarna payment request ID.
+msgid "No draft order found for payment request ID: %s"
+msgstr ""
+
+#: src/ExpressCheckout/Api/Notifications/Handler.php:118
+#. translators: %s: WooCommerce order ID.
+msgid "Mismatch in payment request ID for order ID: %s"
+msgstr ""
+
+#: src/ExpressCheckout/Api/Notifications/PaymentStateExpired.php:43
+#: src/ExpressCheckout/KECOneStepIntegration.php:99
+#. translators: [merchant-facing].
+msgid "Order cancelled due to expired payment request."
+msgstr ""
+
+#: src/ExpressCheckout/OneStepCheckout.php:53
+#: src/ExpressCheckout/OneStepCheckout.php:62
+msgid "Your order could not be processed"
+msgstr ""
+
+#: src/ExpressCheckout/OneStepCheckout.php:200
+#: src/ExpressCheckout/OneStepCheckout.php:201
+msgid "Digital delivery"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:212
+msgid "Two step"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:216
+msgid "One step"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:223
+msgid ""
+"Offer a 5x faster check-out process that lowers the threshold for shoppers "
+"to complete a purchase."
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:235
+msgid "Enable Klarna Express Checkout"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:240
+msgid "Placements & button style"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:241
+msgid ""
+"Tailor the express checkout button to fit your brand by adjusting the "
+"button theme, shape and selecting placements."
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:244
+msgid "Theme"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:246
+msgid "Select the theme for the Klarna Express Checkout."
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:249 src/OnsiteMessaging/Settings.php:108
+#: src/OnsiteMessaging/Settings.php:147 src/OnsiteMessaging/Settings.php:235
+#: src/OnsiteMessaging/Settings.php:276 src/SignInWithKlarna/Settings.php:198
+msgid "Dark"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:250 src/OnsiteMessaging/Settings.php:234
+#: src/OnsiteMessaging/Settings.php:275 src/SignInWithKlarna/Settings.php:199
+msgid "Light"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:251 src/SignInWithKlarna/Settings.php:200
+msgid "Outlined"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:256
+msgid "Shape"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:258
+msgid "Select the shape for the Klarna Express Checkout."
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:261 src/SignInWithKlarna/Settings.php:211
+msgid "Rounded"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:262 src/SignInWithKlarna/Settings.php:212
+msgid "Rectangular"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:263 src/SignInWithKlarna/Settings.php:213
+msgid "Pill"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:268
+msgid "Placements"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:272
+msgid "All (recommended)"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:273
+msgid "Product pages"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:274
+msgid "Cart page"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:278
+msgid "Flow"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:279
+msgid "Select the checkout flow for Klarna Express Checkout."
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:288
+#. translators: %s is the webhook status badge HTML.
+msgid "Webhook %s"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:289
+msgid ""
+"For one step Express Checkout to function, Klarna needs to be able to send "
+"callbacks to your store. Enable the callbacks and configure a signing key "
+"to use for the authentication."
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:337
+msgid "Created"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:339
+msgid "Not Created"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:363
+msgid "Test Webhook"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:366
+msgid "Remove Webhook"
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:378
+msgid "Create the necessary webhook in Klarna for the Express Checkout."
+msgstr ""
+
+#: src/ExpressCheckout/Settings.php:380
+msgid "Create Webhook"
+msgstr ""
+
+#: src/ExpressCheckout/WebhookSetup.php:126
+msgid "Could not send test webhook"
+msgstr ""
+
+#: src/ExpressCheckout/WebhookSetup.php:130
+msgid "Test webhook sent successfully."
+msgstr ""
+
+#: src/ExpressCheckout/WebhookSetup.php:151
+msgid "Could not remove webhook"
+msgstr ""
+
+#: src/ExpressCheckout/WebhookSetup.php:162
+msgid "Could not remove signing key"
+msgstr ""
+
+#: src/ExpressCheckout/WebhookSetup.php:169
+msgid "Webhook removed successfully."
+msgstr ""
+
+#: src/ExpressCheckout/WebhookSetup.php:182
+msgid "Could not create signing key"
+msgstr ""
+
+#: src/ExpressCheckout/WebhookSetup.php:209
+msgid "Could not create a signing key with Klarna for the webhook."
+msgstr ""
+
+#: src/ExpressCheckout/WebhookSetup.php:224
+msgid "Could not create webhook with Klarna"
+msgstr ""
+
+#: src/ExpressCheckout/WebhookSetup.php:229
+msgid "Webhook created successfully."
+msgstr ""
+
+#: src/ExpressCheckout.php:358
+#. translators: [customer-facing].
+msgid "The order could not be found."
+msgstr ""
+
+#: src/ExpressCheckout.php:363
+#. translators: [customer-facing].
+msgid "Order verification failed."
+msgstr ""
+
+#: src/OnsiteMessaging/KlarnaOnsiteMessaging.php:127
+msgid ""
+"The \"Klarna On-Site Messaging for WooCommerce\" plugin is now integrated "
+"into Klarna Payments. Please disable the plugin."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:61
+msgid "Enable Test Mode"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:67
+msgid "Enter the client ID given by Klarna for Klarna On-Site Messaging"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:72 src/OnsiteMessaging/Settings.php:74
+msgid "Enable/Disable the Product placement"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:78
+msgid "Product page placement data key"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:80
+msgid "Enter the placement data key for the product page."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:85
+msgid "Product On-Site Messaging placement"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:86 src/OnsiteMessaging/Settings.php:253
+msgid "Select where to display the widget in your product pages"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:91 src/OnsiteMessaging/Settings.php:258
+msgid "Above Title"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:92 src/OnsiteMessaging/Settings.php:259
+msgid "Between Title and Price"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:93 src/OnsiteMessaging/Settings.php:260
+msgid "Between Price and Excerpt"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:94 src/OnsiteMessaging/Settings.php:261
+msgid "Between Excerpt and Add to cart button"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:95 src/OnsiteMessaging/Settings.php:262
+msgid "Between Add to cart button and Product meta"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:96 src/OnsiteMessaging/Settings.php:263
+msgid "Between Product meta and Product sharing buttons"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:97 src/OnsiteMessaging/Settings.php:264
+msgid "After Product sharing buttons"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:101
+msgid "Product Placement Theme"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:102
+msgid "Select which theme to use for the product pages."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:107 src/OnsiteMessaging/Settings.php:146
+msgid "Default"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:109 src/OnsiteMessaging/Settings.php:148
+#: src/OnsiteMessaging/Settings.php:236 src/OnsiteMessaging/Settings.php:277
+msgid "Custom"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:113 src/OnsiteMessaging/Settings.php:115
+msgid "Enable/Disable the Cart placement"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:119
+msgid "Cart page placement data key"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:121
+msgid "Enter the placement data key for the cart page."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:126
+msgid "Cart On-Site Messaging placement"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:127 src/OnsiteMessaging/Settings.php:215
+msgid "Select where to display the widget on your cart page"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:132 src/OnsiteMessaging/Settings.php:220
+msgid "Above cross sell"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:133 src/OnsiteMessaging/Settings.php:221
+msgid "Above cart totals"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:134 src/OnsiteMessaging/Settings.php:222
+msgid "Between cart totals and proceed to checkout button"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:135 src/OnsiteMessaging/Settings.php:223
+msgid "After proceed to checkout button"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:136 src/OnsiteMessaging/Settings.php:224
+msgid "Bottom of the page"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:140
+msgid "Cart Placement Theme"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:141 src/OnsiteMessaging/Settings.php:229
+msgid "Select which theme to use for the cart page."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:152
+msgid "Enable custom placement hook"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:157
+msgid "Custom placement hook"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:158
+msgid "Enter a custom hook where you want the OSM widget to be placed."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:163
+msgid "Custom placement hook priority"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:164
+msgid ""
+"Enter a priority for the custom hook where you want the OSM widget to be "
+"placed."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:185
+msgid ""
+"Add personalized messaging throughout the shopper journey for higher "
+"conversion rates and increased spend."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:189
+msgid "Further customization is possible in the Klarna Merchant Portal."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:196
+msgid "Enable On-site Messaging"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:202
+msgid "Cart Page Placement"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:204
+msgid "Select the placement for the cart page."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:208 src/OnsiteMessaging/Settings.php:246
+msgid "Don't show"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:209
+msgid "Show with Klarna badge  (recommended)"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:210 src/OnsiteMessaging/Settings.php:248
+msgid "Show without Klarna badge"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:214
+msgid "Cart Page Location"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:228
+msgid "Cart Page Theme"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:240
+msgid "Product Page Placement"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:242
+msgid "Select the placement type that you want to show on the product pages."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:247
+msgid "Show with Klarna badge (recommended)"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:252
+msgid "Product Page Location"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:268
+msgid "Product Page Theme"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:269
+msgid ""
+"The On-site messaging placements come in Light and Dark theme to fit into "
+"the look and feel of your website."
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:284
+msgid "Cart preview"
+msgstr ""
+
+#: src/OnsiteMessaging/Settings.php:288
+msgid "Product preview"
+msgstr ""
+
+#: src/OnsiteMessaging/Widget.php:24
+msgid "Klarna On-Site Messaging"
+msgstr ""
+
+#: src/OnsiteMessaging/Widget.php:25
+msgid "Displays a Klarna banner in your store."
+msgstr ""
+
+#: src/OnsiteMessaging/Widget.php:82
+msgid "Title:"
+msgstr ""
+
+#: src/OnsiteMessaging/Widget.php:86
+msgid "Placement Key"
+msgstr ""
+
+#: src/OnsiteMessaging/Widget.php:92
+msgid "Placement Theme:"
 msgstr ""
 
 #: src/OrderManagement/MetaBox.php:118
@@ -1516,56 +1370,56 @@ msgstr ""
 msgid "Failed to retrieve the order from Klarna."
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:160
+#: src/OrderManagement/MetaBox.php:162
 #. translators: [merchant-facing].
 msgid "Klarna Environment"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:166
+#: src/OrderManagement/MetaBox.php:174
 #. translators: [merchant-facing].
 msgid "Klarna order status"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:172
+#: src/OrderManagement/MetaBox.php:186
 #. translators: [merchant-facing].
 msgid "Initial Payment method"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:183
+#: src/OrderManagement/MetaBox.php:203
 #. translators: [merchant-facing].
 msgid "Scheduled actions"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:212
+#: src/OrderManagement/MetaBox.php:232
 #. translators: [merchant-facing].
 msgid "Orders with same reference"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:215
+#: src/OrderManagement/MetaBox.php:235
 #. translators: [merchant-facing].
 msgid "These orders share the same Klarna transaction ID."
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:222
+#: src/OrderManagement/MetaBox.php:242
 #. translators: [merchant-facing].
 msgid "Advanced"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:246
+#: src/OrderManagement/MetaBox.php:266
 msgid "Choose an action..."
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:250
+#: src/OrderManagement/MetaBox.php:280
 #. translators: [merchant-facing].
 msgid "Apply"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:321
+#: src/OrderManagement/MetaBox.php:369
 #. translators: [merchant-facing].
 msgid "Order management"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:323
+#: src/OrderManagement/MetaBox.php:371
 #. translators: [merchant-facing].
 msgid ""
 "Disable this to turn off the automatic synchronization with the Klarna "
@@ -1573,40 +1427,40 @@ msgid ""
 "done manually."
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:435 src/OrderManagement/MetaBox.php:450
+#: src/OrderManagement/MetaBox.php:483 src/OrderManagement/MetaBox.php:498
 #. translators: [merchant-facing].
 msgid "Capture order"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:450
+#: src/OrderManagement/MetaBox.php:498
 msgid "Activates the order with Klarna."
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:465 src/OrderManagement/MetaBox.php:480
+#: src/OrderManagement/MetaBox.php:513 src/OrderManagement/MetaBox.php:528
 #. translators: [merchant-facing].
 msgid "Cancel order"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:480
+#: src/OrderManagement/MetaBox.php:528
 msgid "Cancels the order with Klarna."
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:495 src/OrderManagement/MetaBox.php:510
+#: src/OrderManagement/MetaBox.php:543 src/OrderManagement/MetaBox.php:558
 #. translators: [merchant-facing].
 msgid "Get customer"
 msgstr ""
 
-#: src/OrderManagement/MetaBox.php:510
+#: src/OrderManagement/MetaBox.php:558
 msgid "Gets the customer data from Klarna and saves it to the WooCommerce order."
 msgstr ""
 
-#: src/OrderManagement/Request/Post/RequestPostRefund.php:262
+#: src/OrderManagement/Request/Post/RequestPostRefund.php:269
 #: src/OrderManagement/ReturnFee.php:197
 #. translators: [merchant-facing].
 msgid "Return fee"
 msgstr ""
 
-#: src/OrderManagement/Request/Request.php:163
+#: src/OrderManagement/Request/Request.php:172
 #. translators: [merchant-facing].
 msgid "Invalid JSON response from the server."
 msgstr ""
@@ -1711,23 +1565,23 @@ msgstr ""
 msgid "%1$s updated the subscription recurring token from \"%2$s\" to \"%3$s\"."
 msgstr ""
 
-#: src/OrderManagement.php:392
+#: src/OrderManagement.php:399
 #. translators: [merchant-facing]. %s: error message from Klarna.
 msgid "Could not update Klarna order lines: %s."
 msgstr ""
 
-#: src/OrderManagement.php:395
+#: src/OrderManagement.php:402
 #. translators: [merchant-facing].
 msgid "Could not update Klarna order lines. An unknown error occurred."
 msgstr ""
 
-#: src/OrderManagement.php:429
+#: src/OrderManagement.php:436
 msgid ""
 "Klarna capture request was not sent because order management is disabled "
 "for this order."
 msgstr ""
 
-#: src/OrderManagement.php:504
+#: src/OrderManagement.php:511
 #. translators: [merchant-facing].
 msgid ""
 "Klarna could not charge the customer. Please try again later. If that still "
@@ -1735,47 +1589,173 @@ msgid ""
 "their payment method if they wish to continue."
 msgstr ""
 
-#: src/OrderManagement.php:514
+#: src/OrderManagement.php:521
 #. translators: [merchant-facing]. %s: Error message from Klarna.
 msgid "Could not capture Klarna order. %s"
 msgstr ""
 
-#: src/OrderManagement.php:525
+#: src/OrderManagement.php:532
 msgid ""
 "Klarna capture request was not sent because order management is disabled "
 "for capture."
 msgstr ""
 
-#: src/OrderManagement.php:561 src/OrderManagement.php:581
+#: src/OrderManagement.php:568 src/OrderManagement.php:588
 #. translators: [merchant-facing].
 msgid "Klarna order has not been captured and cannot be refunded."
 msgstr ""
 
-#: src/OrderManagement.php:572 src/OrderManagement.php:619
+#: src/OrderManagement.php:579 src/OrderManagement.php:626
 #. translators: [merchant-facing]. %s Klarna error message.
 msgid "Could not refund Klarna order. %s."
 msgstr ""
 
-#: src/OrderManagement.php:594
+#: src/OrderManagement.php:601
 #. translators: [merchant-facing].
 msgid "Could not retrieve the refund order."
 msgstr ""
 
-#: src/OrderManagement.php:628
+#: src/OrderManagement.php:641
 #. translators: [merchant-facing]. refund amount, refund id.
 msgid "Processing a refund of %1$s with Klarna"
 msgstr ""
 
-#: src/OrderManagement.php:638
+#: src/OrderManagement.php:651
 #. translators: [merchant-facing]. 1: original amount, 2: return fee amount.
 msgid " (original amount of %1$s - return fee of %2$s)"
 msgstr ""
 
-#: src/PluginFeatures.php:186 src/PluginFeatures.php:230
+#: src/PluginFeatures.php:192 src/PluginFeatures.php:236
 #. translators: [merchant-facing]. %s: The error message from the API request.
 msgid ""
 "There was an error when trying to get the feature availability from Klarna. "
 "Please check your API credentials and try again. Error: %s"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:163 src/SignInWithKlarna/User.php:243
+msgid "Sign in with Klarna"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:164
+msgid ""
+"Let customers connect their accounts with pre-set payments and preferences "
+"to shop anywhere, improve personalized shopping experiences."
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:177
+msgid "Enable Sign in with Klarna"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:182
+msgid "Redirect URL"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:184
+msgid ""
+"Add this URL to your list of allowed redirect URLs in the \"Sign in with "
+"Klarna\" settings on the <a href=\"https://portal.klarna.com/\">Klarna "
+"merchant portal</a>."
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:193
+msgid "Button theme"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:195
+msgid "The button's color theme."
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:206
+msgid "Button shape"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:208
+msgid "The button's shape."
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:219
+msgid "Badge alignment"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:221
+msgid "Change alignment of the Klarna logo on the call to action button."
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:224
+msgid "Badge"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:225
+msgid "Left"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:226
+msgid "Centered"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:232
+msgid "Cart page placement"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:234
+msgid "Change the placement of the \"Sign in with Klarna\" button on the cart page."
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:237
+msgid "Before \"Proceed to checkout\" button"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:238
+msgid "After \"Proceed to checkout\" button"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:244
+msgid "Required Customer Data"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:246
+msgid "Email Address"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:256
+msgid "Full name"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:267
+msgid "Phone number"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:278
+msgid "Billing address"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:279
+msgid ""
+"These scopes are included by default, as necessary for creating a "
+"WooCommerce customer account in your shop.  More about available scopes "
+"with Sign in with Klarna <a "
+"href=\"https://docs.klarna.com/conversion-boosters/sign-in-with-klarna/"
+"integrate-sign-in-with-klarna/web-sdk-integration/#scopes-and-claims\""
+">here</a>. Additional scopes can be customized if applicable, more info <a "
+"href=\"https://gist.github.com/mntzrr/4bf23ca394109d40575f2abc05811ddc\""
+">here</a>."
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:290
+msgid "Date of birth"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:296
+msgid "Country"
+msgstr ""
+
+#: src/SignInWithKlarna/Settings.php:303
+msgid "Language Preference"
+msgstr ""
+
+#: src/SignInWithKlarna/User.php:170
+#. translators: [customer-facing].
+msgid "This account must be signed in with your username and password."
 msgstr ""
 
 #: classes/class-kp-settings-saved.php:100

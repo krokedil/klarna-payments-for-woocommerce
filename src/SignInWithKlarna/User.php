@@ -86,6 +86,11 @@ class User {
 		wp_set_current_user( $user_id );
 
 		// Set Klarna as the selected payment method (if available).
+		/**
+		 * Filters whether to set Klarna as the chosen payment method after signing in with Klarna.
+		 *
+		 * @param bool $set_gateway Whether to set the highest-ordered Klarna gateway (Klarna Checkout or Klarna Payments) as the chosen payment method. Default false.
+		 */
 		if ( apply_filters( 'siwk_set_gateway_to_klarna', $set_gateway ) ) {
 			$gateways = WC()->payment_gateways->get_available_payment_gateways();
 			foreach ( $gateways as $gateway ) {
@@ -109,8 +114,41 @@ class User {
 	 * @return void
 	 */
 	public function sign_in_user( $user_id, $tokens ) {
+		// Never authenticate a privileged account through SIWK, regardless of how the user ID was resolved.
+		if ( ! $this->is_signin_allowed( $user_id ) ) {
+			return;
+		}
+
 		$this->set_tokens( $user_id, $tokens );
 		$this->set_current_user( $user_id );
+	}
+
+	/**
+	 * Whether an account may be authenticated through Sign in with Klarna.
+	 *
+	 * @param \WP_User|int $user The user (or user ID) to check.
+	 * @return bool True if the account is safe to sign in via SIWK.
+	 */
+	private function is_signin_allowed( $user ) {
+		$privileged_caps = array(
+			'manage_options',
+			'manage_woocommerce',
+			'edit_users',
+			'promote_users',
+			'edit_shop_orders',
+			'edit_others_shop_orders',
+			'edit_posts',       // editors / authors / contributors.
+			'install_plugins',
+			'activate_plugins',
+		);
+
+		foreach ( $privileged_caps as $cap ) {
+			if ( user_can( $user, $cap ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -120,10 +158,16 @@ class User {
 	 * @return int|WP_Error The user's ID if was successfully merged, WP_Error otherwise.
 	 */
 	public function merge_with_existing_user( $userdata ) {
-		$user = get_user_by( 'login', $userdata['user_login'] );
-		$user = ! empty( $user ) ? $user : get_user_by( 'email', $userdata['user_email'] );
+		// Match existing users by email, not username.
+		$user = get_user_by( 'email', $userdata['user_email'] );
 		if ( empty( $user ) ) {
 			return new WP_Error( 'user_exists', 'failed to retrieve user data' );
+		}
+
+		// Never authenticate a privileged account.
+		if ( ! $this->is_signin_allowed( $user ) ) {
+			/* translators: [customer-facing]. */
+			return new WP_Error( 'siwk_privileged_account', __( 'This account must be signed in with your username and password.', 'klarna-payments-for-woocommerce' ) );
 		}
 
 		// Add the retrieved user ID to the userdata so that Woo knows which user to update.
@@ -148,6 +192,12 @@ class User {
 			return $user_id;
 		}
 
+		/**
+		 * Triggers after Klarna user data has been merged into an existing WooCommerce user.
+		 *
+		 * @param int   $user_id  The ID of the merged user.
+		 * @param array $userdata The user data from Klarna used to update the user.
+		 */
 		do_action( 'siwk_merge_with_existing_user', $user_id, $userdata );
 		return $user_id;
 	}
@@ -236,6 +286,11 @@ class User {
 			}
 		);
 
+		/**
+		 * Filters the user data extracted from the Klarna ID token before it is used to create or update a WooCommerce user.
+		 *
+		 * @param array $userdata The user data, including login, email and billing/shipping meta.
+		 */
 		return apply_filters( 'siwk_userdata', $userdata );
 	}
 }

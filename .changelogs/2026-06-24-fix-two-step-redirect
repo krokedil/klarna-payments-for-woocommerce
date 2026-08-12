@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-The Two-Step Klarna Express Checkout flow now works as expected when the redirect checkout flow is used.

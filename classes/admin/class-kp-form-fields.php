@@ -606,6 +606,14 @@ class KP_Form_Fields {
 		add_filter( 'wc_gateway_klarna_payments_settings', array( __CLASS__, 'get_credential_section_fields' ), 1 );
 		add_filter( 'wc_gateway_klarna_payments_settings', array( __CLASS__, 'get_kp_section_fields' ), 2 );
 
+		/**
+		 * Filters the full array of settings fields rendered on the Klarna Payments settings page.
+		 *
+		 * Use this to add, modify, or remove settings fields under WooCommerce > Settings > Payments.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-klarna-payments-settings-fields
+		 * @param array $form_fields The WooCommerce settings form fields array.
+		 */
 		$form_fields        = apply_filters( 'wc_gateway_klarna_payments_settings', array() );
 		$parsed_form_fields = array();
 
