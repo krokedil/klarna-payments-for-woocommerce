@@ -3,7 +3,7 @@
 	"configurations": [
 		{
 			"name": "playground-klarna-payments-for-woocommerce-start",
-			"runtimeExecutable": "pnpm",
+			"runtimeExecutable": "npm",
 			"runtimeArgs": [
 				"run",
 				"playground:start"
@@ -13,7 +13,7 @@
 		},
 		{
 			"name": "playground-klarna-payments-for-woocommerce-development",
-			"runtimeExecutable": "pnpm",
+			"runtimeExecutable": "npm",
 			"runtimeArgs": [
 				"run",
 				"playground:server-development"
@@ -23,7 +23,7 @@
 		},
 		{
 			"name": "playground-klarna-payments-for-woocommerce-demo",
-			"runtimeExecutable": "pnpm",
+			"runtimeExecutable": "npm",
 			"runtimeArgs": [
 				"run",
 				"playground:server-demo"
