@@ -547,9 +547,9 @@ class OrderManagement {
 	public function refund_klarna_order( $result, $order_id, $amount = null, $reason = '' ) {
 		$order = wc_get_order( $order_id );
 
-		// If the order was not paid using Klarna Payments, bail.
+		// If the order was not paid using Klarna Payments, return the original result.
 		if ( 'klarna_payments' !== $order->get_payment_method() ) {
-			return;
+			return $result;
 		}
 
 		// The merchant has disconnected the order from the order manager.
