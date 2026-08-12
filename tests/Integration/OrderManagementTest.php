@@ -11,7 +11,7 @@ use Tests\Support\IntegrationTestCase;
  * body but share their guards, so most of this file is one provider over all four.
  *
  * @covers \Krokedil\Klarna\OrderManagement
- * @covers \Krokedil\Klarna\OrderManagement\Request
+ * @covers \Krokedil\Klarna\OrderManagement\Request\Request
  * @covers \WC_Gateway_Klarna_Payments::process_refund
  */
 class OrderManagementTest extends IntegrationTestCase {
