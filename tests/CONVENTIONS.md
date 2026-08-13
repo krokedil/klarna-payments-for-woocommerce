@@ -37,6 +37,19 @@ a row instead.
 Providers are worth it at three rows. Below that, two plain methods usually read
 better than a provider plus its table.
 
+A Cest works the same way with two differences: the provider has to be `protected`,
+since Codeception loads every public method as a test, and the row arrives as a
+`Codeception\Example` after the actor. The row threshold above does not apply there.
+A browser flow is long enough that duplicating it even once is worse than the
+provider, which is why `CheckoutCest` is table-driven at two rows.
+
+```php
+/**
+ * @dataProvider provide_purchases
+ */
+public function can_purchase( EndToEndTester $I, Example $case ): void {
+```
+
 ## Where a test belongs
 
 | Suite | Use it for |
