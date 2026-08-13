@@ -26,6 +26,9 @@ modules:
       path: "/"
       window_size: 1920x1080
       wait: 10
+      # Without this, a page load against a tunnel that has gone away sits there
+      # until ChromeDriver's own 300s renderer timeout, once per test.
+      pageload_timeout: 45
       restart: true
       capabilities:
         "goog:chromeOptions":
@@ -59,6 +62,7 @@ extensions:
   enabled:
     - Tests\Support\Extension\NgrokController
     - Qameta\Allure\Codeception\AllureCodeception
+    - Tests\Support\Extension\ExampleNameReporter
     - Tests\Support\Extension\ArtifactReporter
     - Tests\Support\Extension\WordPressLogReporter
   config:
@@ -69,6 +73,9 @@ extensions:
     Tests\Support\Extension\NgrokController:
       domain: "%NGROK_DOMAIN%" # CLI arg, e.g. kp-test-site
       publicUrl: "https://%NGROK_DOMAIN%" # CLI arg, e.g. https://kp-test-site.ngrok.io
+      # What the browser talks to, which is the public endpoint in front of the
+      # internal one the agent binds. Health checked before the suite runs.
+      siteUrl: "%WORDPRESS_URL%"
       authtoken: "%NGROK_AUTHTOKEN%"
       forwardPort: "%BUILTIN_SERVER_PORT%"
       waitForOnlineSeconds: 15
