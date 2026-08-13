@@ -99,9 +99,14 @@ class Settings {
 	 * @return array
 	 */
 	private function get_order_status_options() {
-		$options = array();
+		$options           = array();
+		$wc_order_statuses = wc_get_order_statuses();
 
-		foreach ( wc_get_order_statuses() as $slug => $label ) {
+		unset( $wc_order_statuses['wc-pending'] );
+		unset( $wc_order_statuses['wc-refunded'] );
+		unset( $wc_order_statuses['wc-failed'] );
+
+		foreach ( $wc_order_statuses as $slug => $label ) {
 			$options[ str_replace( 'wc-', '', $slug ) ] = $label;
 		}
 
