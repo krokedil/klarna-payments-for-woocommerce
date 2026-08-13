@@ -44,7 +44,12 @@ extensions:
     lucatume\WPBrowser\Extension\ChromeDriverController:
       port: "%CHROMEDRIVER_PORT%"
     lucatume\WPBrowser\Extension\BuiltInServerController:
-      workers: 5
+      # One worker serves one connection at a time, and ngrok parks a keep-alive
+      # connection to the upstream per request without reaping them: a run can
+      # leave a hundred of them open. At 5 workers the server stops answering a
+      # few tests in, and a request that queues behind them hangs until
+      # ChromeDriver gives up. Headroom is cheaper than that failure.
+      workers: 24
       port: "%BUILTIN_SERVER_PORT%"
       docroot: "%WORDPRESS_ROOT_DIR%"
       env:
