@@ -10,18 +10,21 @@ use Codeception\Extension;
 use Symfony\Component\Process\Process;
 
 /**
- * Boots an ngrok HTTPS tunnel in front of BuiltInServerController for the
- * lifetime of a Codeception suite, then shuts it down. Klarna's JS SDK and API
- * refuse non-HTTPS origins, which the PHP built-in server cannot provide.
+ * Runs an ngrok HTTPS tunnel in front of BuiltInServerController for the lifetime
+ * of a suite, which Klarna's SDK and API need and the built-in server cannot give.
  *
  * Requires `domain`, `publicUrl` and `forwardPort` in extensions.config. Optional:
- * `authtoken`, `waitForOnlineSeconds` (15), `apiUrl` (http://127.0.0.1:4040).
+ * `authtoken`, `waitForOnlineSeconds` (15), `apiUrl` (http://127.0.0.1:4040),
+ * `siteUrl` (the URL the browser will use, health checked once the tunnel is up).
+ *
+ * The agent's own log is written to tests/_output/ngrok.log.
  */
 class NgrokController extends Extension
 {
     public static array $events = [
         Events::SUITE_BEFORE => 'start',
         Events::SUITE_AFTER  => 'stop',
+        Events::TEST_BEFORE  => 'checkStillUp',
     ];
 
     private ?Process $process = null;
@@ -33,12 +36,16 @@ class NgrokController extends Extension
             return;
         }
 
+        // A process that has exited, or that we stopped, is not ours any more.
+        $this->process = null;
+
         $domain      = (string) ($this->config['domain']      ?? '');
         $publicUrl   = (string) ($this->config['publicUrl']   ?? '');
         $forwardPort = (string) ($this->config['forwardPort'] ?? '');
         $authtoken   = (string) ($this->config['authtoken']   ?? '');
         $waitSeconds = (int)    ($this->config['waitForOnlineSeconds'] ?? 15);
         $apiUrl      = rtrim((string) ($this->config['apiUrl'] ?? 'http://127.0.0.1:4040'), '/');
+        $siteUrl     = (string) ($this->config['siteUrl'] ?? '');
 
         if ($domain === '' || $publicUrl === '' || $forwardPort === '') {
             throw new ExtensionException(
@@ -47,7 +54,7 @@ class NgrokController extends Extension
             );
         }
 
-        // Reuse a tunnel that is already up rather than killing a process we did not start.
+        // Reuse a tunnel that is already serving this public URL.
         if ($this->tunnelMatchingPublicUrl($apiUrl, $publicUrl) !== null) {
             $this->writeln("NgrokController: tunnel for {$publicUrl} already up; reusing it.");
             return;
@@ -86,13 +93,14 @@ class NgrokController extends Extension
             }
             if ($this->tunnelMatchingPublicUrl($apiUrl, $publicUrl) !== null) {
                 $this->writeln("NgrokController: tunnel online at {$publicUrl}.");
+                $this->waitForSiteToAnswer($siteUrl, $waitSeconds);
                 return;
             }
             $lastErr = (string) $this->process->getErrorOutput();
             usleep(250_000); // 250ms
         }
 
-        // Timeout. Kill the doomed process and report what we saw.
+        // Timeout. Kill it and report what we saw.
         $stderr = trim($lastErr ?: $this->process->getErrorOutput());
         $stdout = trim($this->process->getOutput());
         $this->stop();
@@ -104,11 +112,124 @@ class NgrokController extends Extension
         );
     }
 
+    /**
+     * Restarts the tunnel between tests when it, or the site behind it, has stopped
+     * answering. A stalled agent keeps running but hangs the traffic through it.
+     */
+    public function checkStillUp(): void
+    {
+        if (! $this->process instanceof Process) {
+            return;
+        }
+
+        $siteUrl = (string) ($this->config['siteUrl'] ?? '');
+
+        if ($this->process->isRunning() && ($siteUrl === '' || $this->answers($siteUrl))) {
+            return;
+        }
+
+        $this->writeln('NgrokController: the tunnel stopped answering, restarting it ...');
+        $this->flushAgentLog();
+        $this->stop();
+        $this->start();
+    }
+
+    /** Whether $url answers anything at all, quickly. */
+    private function answers(string $url): bool
+    {
+        $status = $this->statusOf($url, 5);
+
+        return $status > 0 && $status < 400;
+    }
+
+    /**
+     * Waits for the public URL the browser will use to answer, which an online tunnel
+     * does not guarantee: the agent binds the internal endpoint, not the public one.
+     */
+    private function waitForSiteToAnswer(string $siteUrl, int $waitSeconds): void
+    {
+        if ($siteUrl === '') {
+            return;
+        }
+
+        $deadline = microtime(true) + $waitSeconds;
+        $status   = 0;
+
+        while (microtime(true) < $deadline) {
+            $status = $this->statusOf($siteUrl);
+            if ($status > 0 && $status < 400) {
+                $this->writeln("NgrokController: {$siteUrl} answers {$status}.");
+                return;
+            }
+            usleep(500_000); // 500ms
+        }
+
+        $this->flushAgentLog();
+
+        throw new ExtensionException(
+            $this,
+            "The tunnel is up, but {$siteUrl} answers " . ($status === 0 ? 'nothing' : (string) $status)
+            . ". Chrome would see the same and every test would fail on a browser error page. An empty-bodied 403"
+            . ' means nothing is bound to the public endpoint: check that this run owns the only ngrok agent, and'
+            . ' read ' . $this->logPath() . '.'
+        );
+    }
+
+    /** The status code $url answers with, or 0 when it answers nothing at all. */
+    private function statusOf(string $url, int $timeout = 10): int
+    {
+        $context = stream_context_create(
+            [
+                'http' => [
+                    'method'          => 'GET',
+                    'timeout'         => $timeout,
+                    'ignore_errors'   => true,
+                    'follow_location' => 0,
+                ],
+            ]
+        );
+
+        $body = @file_get_contents($url, false, $context);
+        if ($body === false && ! isset($http_response_header)) {
+            return 0;
+        }
+
+        $headers = $http_response_header ?? [];
+        if (! isset($headers[0]) || preg_match('#\s(\d{3})\s#', $headers[0], $matches) !== 1) {
+            return 0;
+        }
+
+        return (int) $matches[1];
+    }
+
+    private function logPath(): string
+    {
+        return codecept_output_dir('ngrok.log');
+    }
+
+    /** Writes whatever the agent has said so far to tests/_output/ngrok.log. */
+    private function flushAgentLog(): void
+    {
+        if (! $this->process instanceof Process) {
+            return;
+        }
+
+        $log = trim($this->process->getOutput() . "\n" . $this->process->getErrorOutput());
+        if ($log === '') {
+            return;
+        }
+
+        // Appended, so a restart keeps the log of the agent it replaced.
+        file_put_contents($this->logPath(), $log . "\n", FILE_APPEND);
+    }
+
     public function stop(): void
     {
         if (! $this->process instanceof Process) {
             return;
         }
+        $this->flushAgentLog();
+
         if ($this->process->isRunning()) {
             $this->writeln('NgrokController: stopping tunnel ...');
             $this->process->stop(5.0, defined('SIGTERM') ? SIGTERM : 15);
