@@ -13,4 +13,5 @@ class EndToEndTester extends \Codeception\Actor
 	use Traits\CanManageE2EProducts;
 	use Traits\CanManageE2ETaxRates;
 	use Traits\CanDriveE2ECheckout;
+	use Traits\CanDriveE2EOrderManagement;
 }
