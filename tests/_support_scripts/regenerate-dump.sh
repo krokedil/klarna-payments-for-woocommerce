@@ -46,13 +46,16 @@ vendor/bin/codecept dev:stop >/dev/null 2>&1 || true
 echo "==> Wiping SQLite DB..."
 rm -f "${DB_FILE}" "${DB_SNAPSHOT}"
 
+# The admin password below is a placeholder on purpose, so no real credential
+# ends up in the committed dump. tests/_mu-plugins/05-klarna-test-admin-password.php
+# resets it to WORDPRESS_ADMIN_PASSWORD at request time.
 echo "==> Installing WordPress..."
 ${WP} core install \
 --url="http://localhost:64942" \
 --title="Klarna Payments Test" \
 --admin_user="admin" \
 --admin_email="admin@localhost.test" \
---admin_password="password" \
+--admin_password="placeholder" \
 --skip-email
 
 echo "==> Setting permalinks..."
