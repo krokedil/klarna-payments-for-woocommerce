@@ -97,13 +97,11 @@
       "@test:chromedriver",
       "@test:setup",
       "@dev:stop",
-      "rm -rf tests/_output/allure-results/endtoend",
       "vendor/bin/codecept run EndToEnd --steps --xml report-endtoend.xml",
       "@dev:stop"
     ],
     "test:integration": [
       "@test:setup",
-      "rm -rf tests/_output/allure-results/integration",
       "vendor/bin/codecept run Integration --steps --xml report-integration.xml"
     ],
     "test:integration:snapshots": [
@@ -112,7 +110,6 @@
     ],
     "test:harness": [
       "@test:setup",
-      "rm -rf tests/_output/allure-results/harness",
       "vendor/bin/codecept run Harness --steps --xml report-harness.xml"
     ],
     "test:report": "bash tests/_support_scripts/generate-report.sh",
