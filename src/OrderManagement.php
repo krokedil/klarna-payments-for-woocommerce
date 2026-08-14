@@ -118,6 +118,7 @@ class OrderManagement {
 
 		$report_about = array(
 			array( 'id' => 'kom_auto_capture' ),
+			array( 'id' => 'kom_capture_status' ),
 			array( 'id' => 'kom_auto_cancel' ),
 			array( 'id' => 'kom_auto_update' ),
 			array( 'id' => 'kom_auto_order_sync' ),
@@ -129,8 +130,8 @@ class OrderManagement {
 		// Cancel order.
 		add_action( 'woocommerce_order_status_cancelled', array( $this, 'cancel_klarna_order' ) );
 
-		// Capture an order.
-		add_action( 'woocommerce_order_status_completed', array( $this, 'capture_klarna_order' ) );
+		// Capture an order when it reaches the configured capture trigger status.
+		add_action( 'woocommerce_order_status_changed', array( $this, 'maybe_capture_klarna_order' ), 10, 4 );
 
 		// Update an order.
 		add_action( 'woocommerce_saved_order_items', array( $this, 'update_klarna_order_items' ), 10, 2 );
@@ -409,6 +410,25 @@ class OrderManagement {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Captures a Klarna order if the order just transitioned to the configured capture trigger status.
+	 *
+	 * @param int       $order_id Order ID.
+	 * @param string    $status_from Previous order status.
+	 * @param string    $status_to New order status.
+	 * @param \WC_Order $order The WooCommerce order object.
+	 *
+	 * @return void
+	 */
+	public function maybe_capture_klarna_order( $order_id, $status_from, $status_to, $order ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Kept to match the woocommerce_order_status_changed hook.
+		$options        = $this->settings->get_settings( $order_id );
+		$capture_status = ! empty( $options['kom_capture_status'] ) ? $options['kom_capture_status'] : 'completed';
+
+		if ( $status_to === $capture_status ) {
+			$this->capture_klarna_order( $order_id );
+		}
 	}
 
 	/**

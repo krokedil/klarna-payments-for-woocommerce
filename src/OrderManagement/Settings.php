@@ -28,6 +28,7 @@ class Settings {
 			get_option( 'kom_settings', array() ),
 			array(
 				'kom_auto_capture'       => 'yes',
+				'kom_capture_status'     => 'completed',
 				'kom_auto_cancel'        => 'yes',
 				'kom_auto_update'        => 'yes',
 				'kom_auto_order_sync'    => 'yes',
@@ -41,11 +42,20 @@ class Settings {
 		);
 
 		$settings['kom_auto_capture'] = array(
-			'title'   => 'On order completion',
+			'title'   => 'On order status change',
 			'type'    => 'checkbox',
 			'default' => $default_values['kom_auto_capture'],
 			/* translators: [merchant-facing]. */
-			'label'   => __( 'Activate Klarna order automatically when WooCommerce order is marked complete.', 'klarna-payments-for-woocommerce' ),
+			'label'   => __( 'Activate Klarna order automatically when the WooCommerce order reaches the status selected below.', 'klarna-payments-for-woocommerce' ),
+		);
+
+		$settings['kom_capture_status'] = array(
+			'title'    => 'Capture order status',
+			'type'     => 'select',
+			'options'  => $this->get_order_status_options(),
+			'default'  => $default_values['kom_capture_status'],
+			/* translators: [merchant-facing]. */
+			'desc_tip' => __( 'The order status that should trigger a Klarna capture request.', 'klarna-payments-for-woocommerce' ),
 		);
 
 		$settings['kom_auto_cancel'] = array(
@@ -81,6 +91,26 @@ class Settings {
 		);
 
 		return $settings;
+	}
+
+	/**
+	 * Get the WooCommerce order statuses available for the capture trigger select field.
+	 *
+	 * @return array
+	 */
+	private function get_order_status_options() {
+		$options           = array();
+		$wc_order_statuses = wc_get_order_statuses();
+
+		unset( $wc_order_statuses['wc-pending'] );
+		unset( $wc_order_statuses['wc-refunded'] );
+		unset( $wc_order_statuses['wc-failed'] );
+
+		foreach ( $wc_order_statuses as $slug => $label ) {
+			$options[ str_replace( 'wc-', '', $slug ) ] = $label;
+		}
+
+		return $options;
 	}
 
 	/**

@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: no
+
+Added support for selecting a custom WooCommerce order status to trigger Klarna order capture.
