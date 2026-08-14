@@ -30,3 +30,16 @@ yarn.lock
 .klarna-system-metadata.json
 /.changelogs
 .gitkeep
+composer-dependencies.json
+composer-dependencies.lock
+scoper.custom.php
+allurerc.mjs
+allurerc.single.mjs
+codeception.yml
+tsconfig.json
+gruntfile.cjs
+tmp*
+*.bak
+.env
+.env.local
+.env.*.local
