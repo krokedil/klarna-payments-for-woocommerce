@@ -1,33 +1,30 @@
 <?php
 /**
  * Plugin Name: KP Tests, HTTPS proxy handling
- * Description: Makes the test WP install behave as if it is served over HTTPS at the ngrok URL. Loaded only inside the Codeception test WP install.
+ * Description: Makes a request that arrived through the ngrok tunnel behave as if it were served over HTTPS at the public host. Loaded only inside the Codeception test WP install.
  *
  * Without it is_ssl() returns false (the built-in server speaks HTTP), so Klarna's SDK
  * refuses to load and WP generates http:// URLs that Chrome blocks as mixed content.
  *
- * Honours ngrok's X-Forwarded-Proto, rewrites HTTP_HOST to the public host, and forces
- * siteurl/home to WORDPRESS_URL so the dump survives a different dev's ngrok subdomain.
+ * Only for requests that actually came through the tunnel. A request served straight off
+ * the built-in server answers as itself, which is how the EndToEnd suite reaches wp-admin:
+ * only Klarna's SDK needs the tunnel, and an admin screen behind it stalls, because enough
+ * of its ~150 subresources never answer that the screen never finishes loading.
+ *
+ * The matching WP_HOME / WP_SITEURL are set in wp-config.php by tests/_bootstrap.php,
+ * which is early enough for the wp-content asset URLs. Do not move that here.
  */
 
 if (! defined('ABSPATH')) {
     exit;
 }
 
-if (! empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-    $_SERVER['HTTPS'] = 'on';
-}
-
 if (! empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
     $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
 }
 
-$kp_test_url = getenv('WORDPRESS_URL');
-if (is_string($kp_test_url) && $kp_test_url !== '') {
-    add_filter('pre_option_siteurl', static function () use ($kp_test_url) {
-        return $kp_test_url;
-    });
-    add_filter('pre_option_home', static function () use ($kp_test_url) {
-        return $kp_test_url;
-    });
+// Read off WP_HOME rather than X-Forwarded-Proto, which ngrok does not always send, so this
+// agrees with the URL wp-config.php already settled on.
+if (defined('WP_HOME') && strpos(WP_HOME, 'https://') === 0) {
+    $_SERVER['HTTPS'] = 'on';
 }

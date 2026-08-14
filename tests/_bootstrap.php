@@ -31,34 +31,50 @@ unset($kp_mu_source, $kp_mu_plugins, $kp_src, $kp_dest);
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// Ensure the WP_HOME and WP_SITE constants are set for the test environment in the wp-config.php file.
+/*
+ * Set WP_HOME and WP_SITEURL from the request, in wp-config.php.
+ *
+ * They have to be constants rather than option filters: wp_plugin_directory_constants()
+ * freezes WP_CONTENT_URL and WP_PLUGIN_URL from siteurl before mu-plugins load, so every
+ * wp-content asset URL is decided before a filter could reach it.
+ *
+ * A request through the ngrok tunnel answers as WORDPRESS_URL, which is what Klarna's SDK
+ * needs. One served straight off the built-in server answers as itself, which is how the
+ * EndToEnd suite reaches wp-admin without the tunnel; see the note in
+ * tests/_mu-plugins/01-https-proxy.php.
+ */
 $wpConfig = dirname(__DIR__) . '/tests/_wordpress/wp-config.php';
 if (is_file($wpConfig)) {
 	$wpUrl = $_ENV['WORDPRESS_URL'];
-	echo "Ensuring WP_HOME and WP_SITEURL in {$wpConfig} are set to {$wpUrl}\n";
+	echo "Ensuring WP_HOME and WP_SITEURL in {$wpConfig} follow the request, defaulting to {$wpUrl}\n";
 
-	$wpConfigContents = file_get_contents($wpConfig);
-	// Add the defines if absent; otherwise swap the getenv('WORDPRESS_URL') form for the literal URL.
-	if (strpos($wpConfigContents, "define('WP_HOME'") === false || strpos($wpConfigContents, "define('WP_SITEURL'") === false) {
-		$wpConfigContents = str_replace(
-			"<?php",
-			"<?php\n\n" .
-			"define('WP_HOME', '{$wpUrl}');\n" .
-			"define('WP_SITEURL', '{$wpUrl}');\n",
-			$wpConfigContents
-		);
-		file_put_contents($wpConfig, $wpConfigContents);
-	} else {
-		$wpConfigContents = preg_replace(
-			"/define\('WP_HOME',\s*getenv\('WORDPRESS_URL'\)\);/",
-			"define('WP_HOME', '{$wpUrl}');",
-			$wpConfigContents
-		);
-		$wpConfigContents = preg_replace(
-			"/define\('WP_SITEURL',\s*getenv\('WORDPRESS_URL'\)\);/",
-			"define('WP_SITEURL', '{$wpUrl}');",
-			$wpConfigContents
-		);
-		file_put_contents($wpConfig, $wpConfigContents);
+	/*
+	 * Only an explicit localhost request is served as itself. Anything else, including
+	 * everything arriving through the tunnel, keeps answering as WORDPRESS_URL: the host the
+	 * agent forwards upstream is its own internal endpoint rather than the public one, and
+	 * matching on that would answer the checkout over http, which breaks Klarna's SDK and
+	 * reads as the iframe misbehaving.
+	 */
+	$block = <<<PHP
+	// >>> KP tests: a request straight to the built-in server answers as itself.
+	if (! defined('WP_HOME')) {
+	    \$kp_host = \$_SERVER['HTTP_HOST'] ?? '';
+	    \$kp_url  = preg_match('/^(localhost|127\.0\.0\.1)(:\d+)?\$/', \$kp_host)
+	        ? 'http://' . \$kp_host
+	        : '{$wpUrl}';
+
+	    define('WP_HOME', \$kp_url);
+	    define('WP_SITEURL', \$kp_url);
 	}
+	// <<< KP tests
+	PHP;
+
+	$contents = file_get_contents($wpConfig);
+
+	// Drop whatever a previous run left behind, then re-insert.
+	$contents = preg_replace('/\n?\/\/ >>> KP tests:.*?\/\/ <<< KP tests\n/s', '', $contents);
+	$contents = preg_replace("/\n?define\('WP_(HOME|SITEURL)',[^;]*\);/", '', $contents);
+	$contents = preg_replace('/^<\?php/', "<?php\n\n" . $block . "\n", $contents, 1);
+
+	file_put_contents($wpConfig, $contents);
 }
