@@ -58,6 +58,7 @@ extensions:
         DB_DIR: "%codecept_root_dir%/tests/_wordpress/data"
         DB_FILE: db.sqlite
         WORDPRESS_URL: "%WORDPRESS_URL%"
+        WORDPRESS_ADMIN_PASSWORD: "%WORDPRESS_ADMIN_PASSWORD%"
         KLARNA_TEST_MID_SE: "%KLARNA_TEST_MID_SE%"
         KLARNA_TEST_SECRET_SE: "%KLARNA_TEST_SECRET_SE%"
     lucatume\WPBrowser\Extension\Symlinker:
