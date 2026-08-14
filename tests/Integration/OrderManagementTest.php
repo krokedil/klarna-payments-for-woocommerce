@@ -191,7 +191,7 @@ class OrderManagementTest extends IntegrationTestCase {
 		$result = $this->perform( $op, $order );
 
 		if ( null === $error_code ) {
-			$this->assertNull( $result );
+			$this->assertEmpty( $result ); // Can be both null or false if error code is null. So check for empty instead of assertNull.
 		} else {
 			$this->assertWpErrorCode( $error_code, $result );
 		}
