@@ -648,12 +648,11 @@ trait CanDriveE2ECheckout {
 		);
 	}
 
-	/** Verify a WooCommerce order once we are on the thank you page. */
-	public function verifyOrderOnThankYouPage( string $paymentMethod, string $orderTotal, array $expectedMeta = [] ): void {
+	/** The order the thank you page belongs to, asserted to exist before it is returned. */
+	public function grabOrderIdFromThankYouPage(): int {
 		$order_id = $this->grabFromCurrentUrl( '/\/checkout\/order-received\/(\d+)\//' );
 		if ( $order_id === null ) {
 			Assert::fail( 'Could not extract order ID from URL' );
-			return;
 		}
 
 		$this->seeInDatabase(
@@ -663,6 +662,13 @@ trait CanDriveE2ECheckout {
 				'post_type' => 'shop_order',
 			]
 		);
+
+		return (int) $order_id;
+	}
+
+	/** Verify a WooCommerce order once we are on the thank you page. */
+	public function verifyOrderOnThankYouPage( string $paymentMethod, string $orderTotal, array $expectedMeta = [] ): void {
+		$order_id = $this->grabOrderIdFromThankYouPage();
 
 		$expectedMeta = array_merge(
 			[
