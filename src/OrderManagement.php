@@ -423,7 +423,7 @@ class OrderManagement {
 	 *
 	 * @return void
 	 */
-	public function maybe_capture_klarna_order( $order_id, $status_from, $status_to, $order ) {
+	public function maybe_capture_klarna_order( $order_id, $status_from, $status_to, $order ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Kept to match the woocommerce_order_status_changed hook.
 		$options        = $this->settings->get_settings( $order_id );
 		$capture_status = ! empty( $options['kom_capture_status'] ) ? $options['kom_capture_status'] : 'completed';
 
