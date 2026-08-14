@@ -10,8 +10,8 @@
     "lucatume/wp-browser": "^4.5",
     "composer/installers": "^2.0",
     "wpackagist-plugin/woocommerce": "^10.0",
-    "wpackagist-plugin/sqlite-database-integration": "*",
-    "wpackagist-theme/storefront": "*",
+    "wpackagist-plugin/sqlite-database-integration": "^2.2",
+    "wpackagist-theme/storefront": "^4.6",
     "pronamic/wp-documentor": "^1.4.0",
     "allure-framework/allure-codeception": "^2"
   },
@@ -127,6 +127,7 @@
     "test:regenerate-dump": "Rebuild tests/Support/Data/dump.sql from a clean WP+WC+KP install. Run after upstream WC or KP changes that affect baseline schema/options.",
     "test:report": "Render the Allure report from whichever suite results are present into tests/_output/report/. Fails if any credential leaked into an artifact.",
     "test:report:share": "Same, but one self-contained tests/_output/report-share/index.html for sharing outside the dev team.",
-    "test:report:reset": "Delete all accumulated Allure results and rendered reports."
+    "test:report:reset": "Delete all accumulated Allure results and rendered reports.",
+    "doc:hooks": "vendor/bin/wp-documentor parse . --exclude=docs --exclude=tests --exclude=vendor --exclude=node_modules --exclude=languages --exclude=dependencies --format=markdown --type=filters --output=docs/hooks.md --relative=docs --prefix=klarna_ --prefix=wc_kp_ --prefix=kp_ --prefix=wc_klarna_ --prefix=kom_ --prefix=kec_ --prefix=wc_gateway_klarna_ --prefix=kosm_ --prefix=osm_ --prefix=siwk_ --template=docs/templates/template.php"
   }
 }

@@ -57,6 +57,15 @@ class PaymentStateCompleted extends Handler {
 				$payload
 			);
 		} else {
+			/**
+			 * Triggers when a completed Klarna Express Checkout payment notification is processed and no acquiring partner integration handles it.
+			 *
+			 * @param \WC_Order $order                  The WooCommerce order object.
+			 * @param string    $interoperability_token The Klarna interoperability token.
+			 * @param array     $interoperability_data  The interoperability data. Empty for this event.
+			 * @param string    $state                  The payment state reported by Klarna.
+			 * @param array     $payload                The payload data from Klarna.
+			 */
 			do_action( 'kec_process_order', $order, $interoperability_token, array(), $payload['state'], $payload );
 		}
 

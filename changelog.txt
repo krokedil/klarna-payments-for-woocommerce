@@ -1,4 +1,10 @@
 *** Klarna for WooCommerce Changelog ***
+2026-08-10      - version 4.12.1
+* Enhancement   - Improve the JWT token parsing and validation for SIWK.
+* Fix           - Fixed an issue where closing the Express Checkout modal during the payment flow caused an error when reopening it.
+* Fix           - The order's shipping address is now sent to Klarna when paying for an existing order, instead of falling back to the billing address.
+* Fix           - Fixed a JavaScript error ("Uncaught TypeError: Cannot read properties of null (reading 'shadowRoot')") that could occur on pages where the KEC script was enqueued but the KEC button markup was not rendered.
+
 2026-08-03      - version 4.12.0
 * Feature       - On-site messaging functionality is now built directly into the plugin, eliminating the need for external code packages.
 * Feature       - Express Checkout functionality is now built directly into the plugin, eliminating the need for external code packages.

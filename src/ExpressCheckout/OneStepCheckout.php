@@ -89,9 +89,28 @@ class OneStepCheckout {
 	 * @return string The redirect URL.
 	 */
 	public static function get_redirect_url_for_order( $order, $kec_unique_id ) {
-		$max_attempts         = apply_filters( 'kec_one_step_redirect_wait_max_attempts', 20 );
-		$sleep_time           = apply_filters( 'kec_one_step_redirect_wait_sleep_time_mu', 5 * 100000 );
-		$attempt              = 0;
+		/**
+		 * Filters the maximum number of attempts to wait for the order redirect URL to be set.
+		 *
+		 * @param int $max_attempts The maximum number of polling attempts. Default 20.
+		 */
+		$max_attempts = apply_filters( 'kec_one_step_redirect_wait_max_attempts', 20 );
+
+		/**
+		 * Filters the wait time, in microseconds, between attempts to read the order redirect URL.
+		 *
+		 * @param int $sleep_time The wait time between attempts, in microseconds. Default 500000.
+		 */
+		$sleep_time = apply_filters( 'kec_one_step_redirect_wait_sleep_time_mu', 5 * 100000 );
+		$attempt    = 0;
+
+		/**
+		 * Filters the fallback redirect URL used when the order redirect URL is not set in time.
+		 *
+		 * @param string    $default_redirect_url The fallback redirect URL. Defaults to the order received URL.
+		 * @param \WC_Order $order                 The WooCommerce order.
+		 * @param string    $kec_unique_id         The KEC unique ID.
+		 */
 		$default_redirect_url = apply_filters( 'kec_one_step_default_redirect_url', $order->get_checkout_order_received_url(), $order, $kec_unique_id );
 
 		while ( $attempt < $max_attempts ) {

@@ -161,11 +161,33 @@ class SignInWithKlarna {
 	 * @return array
 	 */
 	public function add_websdk_attributes() {
-		$locale      = esc_attr( $this->settings->get( 'locale' ) );
-		$scope       = esc_attr( $this->settings->get( 'scope' ) );
-		$market      = esc_attr( apply_filters( 'siwk_market', $this->settings->get( 'market' ) ) );
-		$environment = esc_attr( apply_filters( 'siwk_environment', wc_string_to_bool( $this->settings->get( 'test_mode' ) ) ? 'playground' : 'production' ) );
-		$client_id   = esc_attr( apply_filters( 'siwk_client_id', $this->settings->get( 'client_id' ) ) );
+		$locale = esc_attr( $this->settings->get( 'locale' ) );
+		$scope  = esc_attr( $this->settings->get( 'scope' ) );
+
+		/**
+		 * Filters the Klarna market used for the Sign in with Klarna button.
+		 *
+		 * @param string $market The market, as a two-letter country code.
+		 */
+		$market = apply_filters( 'siwk_market', $this->settings->get( 'market' ) );
+
+		/**
+		 * Filters the environment used for the Sign in with Klarna button.
+		 *
+		 * @param string $environment The Klarna environment, either 'playground' or 'production'.
+		 */
+		$environment = apply_filters( 'siwk_environment', wc_string_to_bool( $this->settings->get( 'test_mode' ) ) ? 'playground' : 'production' );
+
+		/**
+		 * Filters the Klarna client ID used for the Sign in with Klarna button.
+		 *
+		 * @param string $client_id The Klarna client ID.
+		 */
+		$client_id = apply_filters( 'siwk_client_id', $this->settings->get( 'client_id' ) );
+
+		$market      = esc_attr( $market );
+		$environment = esc_attr( $environment );
+		$client_id   = esc_attr( $client_id );
 		$redirect_to = esc_attr( Redirect::get_callback_url() );
 
 		$theme     = esc_attr( $this->settings->get( 'button_theme' ) );
