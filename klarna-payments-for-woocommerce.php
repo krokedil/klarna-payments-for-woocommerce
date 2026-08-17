@@ -5,12 +5,12 @@
  * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 4.12.1
+ * Version: 4.12.2
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
  * WC requires at least: 5.6.0
- * WC tested up to: 11.0.0
+ * WC tested up to: 11.0.1
  * Requires Plugins: woocommerce
  *
  * Copyright (c) 2017-2026 Krokedil
@@ -51,7 +51,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '4.12.1' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '4.12.2' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -308,7 +308,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->siwk                    = new SignInWithKlarna( $settings );
 			$this->interoperability_token  = new KP_Interoperability_Token();
 			$this->order_management        = new OrderManagement();
-			$this->logger                  = new Logger( 'klarna_payments', wc_string_to_bool( $settings['logging'] ?? false ) );
+			$this->logger                  = new Logger( 'klarna_payments', 'no' !== ( $settings['logging'] ?? 'no' ) );
 			Compatibility::register();
 
 			// Includes the selectable, and checkbox settings, but excludes those whose title is empty. The 'kp_section_start' will appear as a section header in the system report.

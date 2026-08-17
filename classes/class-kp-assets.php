@@ -196,9 +196,12 @@ class KP_Assets {
 		$pay_for_order = kp_is_order_pay_page();
 		$order_id      = $pay_for_order ? absint( get_query_var( 'order-pay', 0 ) ) : null;
 		$order_key     = null;
+
 		if ( ! empty( $order_id ) ) {
-			$order     = wc_get_order( $order_id );
-			$order_key = $order->get_order_key();
+			$order = wc_get_order( $order_id );
+			if ( ! empty( $order ) ) {
+				$order_key = $order->get_order_key();
+			}
 		}
 
 		$customer_type = klarna_get_customer_type( $settings['customer_type'] ?? 'b2c' );
