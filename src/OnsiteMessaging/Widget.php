@@ -21,7 +21,7 @@ class Widget extends \WP_Widget {
 		$this->onsite_messaging = $onsite_messaging;
 		parent::__construct(
 			'klarna_osm', // Base ID.
-			__( 'Klarna On-Site Messaging', 'klarna-payments-for-woocommerce' ), // Name.
+			sprintf( __( 'Klarna %s', 'klarna-payments-for-woocommerce' ), 'On-site messaging' ), // Name.
 			array( 'description' => __( 'Displays a Klarna banner in your store.', 'klarna-payments-for-woocommerce' ) ) // Description.
 		);
 	}
