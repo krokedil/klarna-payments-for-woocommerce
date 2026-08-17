@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/klarna-payments-for-woocommerce\n"
-"POT-Creation-Date: 2026-08-10 07:59:47+00:00\n"
+"POT-Creation-Date: 2026-08-17 08:17:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -512,12 +512,12 @@ msgstr ""
 msgid "Missing shared secret."
 msgstr ""
 
-#: classes/class-kp-assets.php:248
+#: classes/class-kp-assets.php:251
 #. translators: [customer-facing].
 msgid "Please read and accept the terms and conditions to proceed with your order."
 msgstr ""
 
-#: classes/class-kp-assets.php:299
+#: classes/class-kp-assets.php:302
 #. translators: [merchant-facing].
 msgid "Select all"
 msgstr ""
@@ -1500,31 +1500,36 @@ msgstr ""
 msgid "Order address updated by Klarna Order management."
 msgstr ""
 
-#: src/OrderManagement/Settings.php:48
+#: src/OrderManagement/Settings.php:49
 #. translators: [merchant-facing].
 msgid ""
-"Activate Klarna order automatically when WooCommerce order is marked "
-"complete."
+"Activate Klarna order automatically when the WooCommerce order reaches the "
+"status selected below."
 msgstr ""
 
-#: src/OrderManagement/Settings.php:56
+#: src/OrderManagement/Settings.php:58
+#. translators: [merchant-facing].
+msgid "The order status that should trigger a Klarna capture request."
+msgstr ""
+
+#: src/OrderManagement/Settings.php:66
 #. translators: [merchant-facing].
 msgid "Cancel Klarna order automatically when WooCommerce order is marked canceled."
 msgstr ""
 
-#: src/OrderManagement/Settings.php:64
+#: src/OrderManagement/Settings.php:74
 #. translators: [merchant-facing].
 msgid "Update Klarna order automatically when WooCommerce order is updated."
 msgstr ""
 
-#: src/OrderManagement/Settings.php:72
+#: src/OrderManagement/Settings.php:82
 #. translators: [merchant-facing].
 msgid ""
 "Gets the customer information from Klarna when creating a manual admin "
 "order and adding a Klarna order id as a transaction id."
 msgstr ""
 
-#: src/OrderManagement/Settings.php:80
+#: src/OrderManagement/Settings.php:90
 #. translators: [merchant-facing].
 msgid ""
 "Force capture full order. Useful if the Klarna order has been updated by an "
@@ -1575,13 +1580,13 @@ msgstr ""
 msgid "Could not update Klarna order lines. An unknown error occurred."
 msgstr ""
 
-#: src/OrderManagement.php:436
+#: src/OrderManagement.php:455
 msgid ""
 "Klarna capture request was not sent because order management is disabled "
 "for this order."
 msgstr ""
 
-#: src/OrderManagement.php:511
+#: src/OrderManagement.php:530
 #. translators: [merchant-facing].
 msgid ""
 "Klarna could not charge the customer. Please try again later. If that still "
@@ -1589,38 +1594,38 @@ msgid ""
 "their payment method if they wish to continue."
 msgstr ""
 
-#: src/OrderManagement.php:521
+#: src/OrderManagement.php:540
 #. translators: [merchant-facing]. %s: Error message from Klarna.
 msgid "Could not capture Klarna order. %s"
 msgstr ""
 
-#: src/OrderManagement.php:532
+#: src/OrderManagement.php:551
 msgid ""
 "Klarna capture request was not sent because order management is disabled "
 "for capture."
 msgstr ""
 
-#: src/OrderManagement.php:568 src/OrderManagement.php:588
+#: src/OrderManagement.php:587 src/OrderManagement.php:607
 #. translators: [merchant-facing].
 msgid "Klarna order has not been captured and cannot be refunded."
 msgstr ""
 
-#: src/OrderManagement.php:579 src/OrderManagement.php:626
+#: src/OrderManagement.php:598 src/OrderManagement.php:645
 #. translators: [merchant-facing]. %s Klarna error message.
 msgid "Could not refund Klarna order. %s."
 msgstr ""
 
-#: src/OrderManagement.php:601
+#: src/OrderManagement.php:620
 #. translators: [merchant-facing].
 msgid "Could not retrieve the refund order."
 msgstr ""
 
-#: src/OrderManagement.php:641
+#: src/OrderManagement.php:660
 #. translators: [merchant-facing]. refund amount, refund id.
 msgid "Processing a refund of %1$s with Klarna"
 msgstr ""
 
-#: src/OrderManagement.php:651
+#: src/OrderManagement.php:670
 #. translators: [merchant-facing]. 1: original amount, 2: return fee amount.
 msgid " (original amount of %1$s - return fee of %2$s)"
 msgstr ""

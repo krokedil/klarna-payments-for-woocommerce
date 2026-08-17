@@ -6,8 +6,8 @@ Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.0
 WC requires at least: 5.6.0
-WC tested up to: 11.0.0
-Stable tag: 4.12.1
+WC tested up to: 11.0.1
+Stable tag: 4.12.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-08-17    - version 4.12.2 =
+* Enhancement   - Added support for selecting a custom WooCommerce order status to trigger Klarna order capture.
+* Fix           - Fixed a fatal error on the order-pay page that occurred when the order no longer existed.
+* Fix           - Fixed an issue where setting Logging to "Yes (with extra debug data)" disabled the plugin's logging, instead of adding extra debug data to them.
+* Fix           - Resolved a compatibility conflict with the "Kustom Checkout for WooCommerce" plugin that could cause WooCommerce refund processing to fail when both plugins were active.
+
 = 2026-08-10    - version 4.12.1 =
 * Enhancement   - Improve the JWT token parsing and validation for SIWK.
 * Fix           - Fixed an issue where closing the Express Checkout modal during the payment flow caused an error when reopening it.

@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Fixed an issue where setting Logging to "Yes (with extra debug data)" disabled the plugin's logging, instead of adding extra debug data to them.
