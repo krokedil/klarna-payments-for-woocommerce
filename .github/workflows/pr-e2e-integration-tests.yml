@@ -113,7 +113,7 @@ jobs:
 
       - name: Install Composer dependencies
         # The post-autoload-dump hook fires here and provisions tests/_wordpress/.
-        run: composer install --prefer-dist --no-progress --optimize-autoloader --no-interaction
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Install ngrok
         # NgrokController shells out to a bare `ngrok`, which the runner image does not ship.
