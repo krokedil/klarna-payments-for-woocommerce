@@ -116,11 +116,14 @@ class Settings {
 	 * @return string
 	 */
 	public function get_credentials_secret() {
-		if ( function_exists( 'kp_get_client_id_by_currency' ) ) {
-			return kp_get_client_id_by_currency();
+		if ( ! function_exists( 'kp_get_client_id_by_currency' ) ) {
+			return $this->options['kec_credentials_secret'] ?? '';
 		}
 
-		return $this->options['kec_credentials_secret'] ?? '';
+		// Remember which credential set the button is rendered for, the order it results in has to use the same one.
+		Session::set_credentials_country( kp_get_credentials_country_by_currency() );
+
+		return kp_get_client_id_by_currency();
 	}
 
 	/**
