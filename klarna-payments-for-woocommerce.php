@@ -265,6 +265,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			add_action( 'init', array( $this, 'load_textdomain' ) );
 
+			// TODO: Should we keep this or remove it?
 			add_action( 'kp_refresh_credential_capabilities', array( $this, 'refresh_credential_capabilities' ) );
 			add_action( 'kp_backfill_credential_capabilities', array( $this, 'refresh_credential_capabilities' ) );
 			register_deactivation_hook( __FILE__, array( $this, 'clear_scheduled_events' ) );
