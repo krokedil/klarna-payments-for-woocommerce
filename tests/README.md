@@ -7,7 +7,7 @@ against a real WordPress + WooCommerce + Klarna Payments install:
 |---|---|---|
 | `Integration` | `composer test:integration` | PHP-level tests with WordPress and WooCommerce loaded in-process (WPLoader). No browser, no ngrok, no Klarna API calls. |
 | `Harness` | `composer test:harness` | The test harness itself: what the WooCommerce Subscriptions fakes answer, and that artifact redaction keeps a Klarna secret out of the report. |
-| `EndToEnd` | `composer test:e2e` | Browser-driven tests through an ngrok HTTPS tunnel, because Klarna's JS SDK refuses non-HTTPS origins. |
+| `EndToEnd` | `composer test:e2e` | Browser-driven tests against the local built-in server, plus an ngrok HTTPS tunnel alongside it that carries nothing but Klarna's own traffic. |
 
 Start with the Integration suite. It needs no credentials and runs in about two
 minutes.
@@ -49,8 +49,11 @@ Only needed to regenerate the dump fixture: **WP-CLI**, **Node** and **npm**.
    EndToEnd also needs:
    - `NGROK_DOMAIN`, the CLI argument for `ngrok http --domain=`. With an internal
      ngrok domain this is `<name>.internal`, not the public URL.
-   - `WORDPRESS_URL` and `WORDPRESS_DOMAIN`, the public HTTPS URL the tunnel
-     exposes, for example `https://kp-test-site.<subdomain>.ngrok.io`.
+   - `KP_WORDPRESS_URL`, the public HTTPS URL that domain resolves to, for example
+     `https://kp-test-site.<subdomain>.ngrok.io`. Only Klarna sees it.
+   - `WORDPRESS_URL`, which is where the site is actually served and driven:
+     `http://localhost:<BUILTIN_SERVER_PORT>`. See
+     [Only Klarna goes through the tunnel](#only-klarna-goes-through-the-tunnel).
    - `NGROK_AUTHTOKEN` from <https://dashboard.ngrok.com/get-started/your-authtoken>.
    - `KLARNA_TEST_MID_SE` and `KLARNA_TEST_SECRET_SE` from a Klarna test merchant
      account.
@@ -314,7 +317,8 @@ subscription on `completed` rather than `processing`.
 One Cest per flow. `CheckoutCest.php` is the shortcode checkout: build the store
 and the cart, place the order, finish it in Klarna's iframe, then assert on the
 order that came out. `OrderManagementCest.php` picks the order up from there and
-manages it from wp-admin.
+manages it from wp-admin. `TunnelCest.php` covers neither, and guards the one thing
+both depend on: a browser that arrives through the tunnel lands on the local site.
 
 `_mu-plugins/03-klarna-filter-payment-categories.php` narrows KP's payment
 categories to `pay_later`, so checkout renders one method in this environment.
@@ -432,29 +436,43 @@ sets the total outright. And amounts are typed with the store's decimal separato
 since WooCommerce's own JS parses them with it and would read `10.00` as ten
 thousand. The Klarna return fee is deliberately not covered.
 
-### wp-admin is not served through the tunnel
+### Only Klarna goes through the tunnel
 
-`amEditingKlarnaOrder()` moves the browser to `http://localhost:<BUILTIN_SERVER_PORT>`
-before logging in, and everything after it runs there. Only Klarna's SDK needs the
-HTTPS tunnel. A wp-admin screen behind it stalls: three admin screens per browser
-session get through and the fourth hangs, because enough of the screen's
-subresources never answer. Served locally they are all fine.
+The browser drives the site on `WORDPRESS_URL`, the built-in server, with no tunnel
+in the way. ChromeDriver disables the cache, so every page load re-fetches all of the
+assets WooCommerce enqueues; through the tunnel that spent the ngrok account's
+request allowance partway into a run, and the suite failed at the same test every
+time. Delaying the add-to-cart calls only moves where it lands.
 
-The site answers as whichever host asked for it, decided in `wp-config.php` by
-[_bootstrap.php](_bootstrap.php). It has to be the `WP_HOME` / `WP_SITEURL`
-constants rather than an option filter: `wp_plugin_directory_constants()` freezes
-`WP_CONTENT_URL` and `WP_PLUGIN_URL` from `siteurl` before mu-plugins load. Get
-that wrong and the admin screen loads its core scripts from localhost and its
-plugin scripts from the tunnel, which is the stall again with a harder-to-read
-cause.
+The tunnel still forwards to the same server and carries Klarna's traffic only, which
+`_mu-plugins/01-klarna-public-url.php` handles in both directions:
 
-`_mu-plugins/06-admin-screens-offline.php` drops the admin requests that never
-answer here: WooCommerce Admin's `/wp-json/wc-admin` and `/wp-json/wc-analytics`
-bursts (their SQL does not run under the SQLite translation), the dashboard news
-widget, the update checks and the script compression test.
+- **Outbound.** Klarna will not take a `localhost` merchant URL, so the site's URL
+  becomes `KP_WORDPRESS_URL` in every body headed for `*.klarna.com`. The filter is on
+  `http_request_args`, not KP's `kp_wc_api_request_args`, which only covers the bodies
+  KP core builds: order management, subscriptions and HPP build their own.
+- **Inbound.** ngrok forwards the public `Host` header unchanged, and
+  `redirect_canonical` answers that with a redirect to the public host carrying the
+  local port, which nothing listens on. So a browser request is sent on to the same
+  path on `WORDPRESS_URL`, and a callback is served with the host normalised to the
+  local one. [TunnelCest.php](EndToEnd/TunnelCest.php) is the guard: it fails in one
+  page load rather than as "never reached the order received page".
 
-A capture made from an admin screen carries `localhost` in its `product_url`,
-which is cosmetic here and pinned properly by the Integration snapshots.
+The site answers as `WORDPRESS_URL` and only that, pinned in `wp-config.php` by
+[_bootstrap.php](_bootstrap.php). It has to be the `WP_HOME` / `WP_SITEURL` constants
+rather than an option filter: `wp_plugin_directory_constants()` freezes
+`WP_CONTENT_URL` and `WP_PLUGIN_URL` from `siteurl` before mu-plugins load, and
+`dump.sql` carries the `siteurl` of whoever generated it.
+
+wp-admin needed this most: behind the tunnel, three admin screens per browser session
+got through and the fourth hung on subresources that never answered.
+`_mu-plugins/06-admin-screens-offline.php` drops the ones that never answer at all
+here: WooCommerce Admin's `/wp-json/wc-admin` and `/wp-json/wc-analytics` bursts
+(their SQL does not run under the SQLite translation), the dashboard news widget, the
+update checks and the script compression test.
+
+A capture made from an admin screen carries `localhost` in its `product_url`, which
+is cosmetic here and pinned properly by the Integration snapshots.
 
 ### Klarna's iframe is not a fixed sequence
 
@@ -517,9 +535,12 @@ asked for.
   request, because WPDb reloads the dump before each test and would otherwise drop
   it.
 - **A site that stops answering a few tests in.** The built-in server serves one
-  connection per worker, and ngrok parks a keep-alive connection per request
-  without reaping them. Hence `workers: 24` and `pageload_timeout: 45` in
+  connection per worker, and a browser opens several per host while the tunnel parks
+  its own keep-alives. Hence `workers: 24` and `pageload_timeout: 45` in
   `codeception.yml`.
+- **A run that fails at the same test every time, on a page that never loads.** An
+  ngrok rate limit, or a browser request that reached the tunnel. See
+  [Only Klarna goes through the tunnel](#only-klarna-goes-through-the-tunnel).
 - **A test that says it never reached the thank you page, with a screenshot of the
   thank you page.** Every driver command waits out a page that never finishes
   loading, and `readTopWindow()` reads a thrown timeout as "not there yet". Raising
@@ -633,7 +654,7 @@ it. The gate is a backstop for mistakes, not the control.
 | `tests/Support/Extension/WordPressLogReporter.php` | Clears `debug.log` and `wc-logs/` per suite; attaches each test's own slice of them. |
 | `tests/Support/Extension/ExampleNameReporter.php` | Names each data provider row in the report after the provider's own key. |
 | `tests/Support/Reporting/` | `Redactor`, `SecretRegistry` and `LogTail`. |
-| `tests/_mu-plugins/01-https-proxy.php` | Makes a tunnelled request behave as HTTPS at the public host. |
+| `tests/_mu-plugins/01-klarna-public-url.php` | Keeps the site local for the browser and public for Klarna, in both directions. |
 | `tests/_mu-plugins/02-klarna-test-credentials.php` | Overlays KP settings with env-var credentials. |
 | `tests/_mu-plugins/03-klarna-filter-payment-categories.php` | Narrows KP's payment categories to `pay_later`. |
 | `tests/_mu-plugins/04-woocommerce-sessions-upsert.php` | Creates the `session_key` unique index SQLite drops. |
