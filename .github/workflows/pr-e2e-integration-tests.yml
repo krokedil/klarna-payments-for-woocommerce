@@ -30,7 +30,7 @@ jobs:
       # Only Klarna's callbacks use the tunnel; the browser drives the site locally.
       KP_WORDPRESS_URL: https://klarna-test-${{ github.event.pull_request.number }}.krokedil.ngrok.io
       WORDPRESS_URL: http://localhost:8080
-      WORDPRESS_DOMAIN: klarna-test-${{ github.event.pull_request.number }}.krokedil.ngrok.io
+      WORDPRESS_DOMAIN: localhost
 
       # The rest of the env variables to use for the tests.
       WORDPRESS_DB_URL: sqlite://%codecept_root_dir%/tests/_wordpress/data/db.sqlite

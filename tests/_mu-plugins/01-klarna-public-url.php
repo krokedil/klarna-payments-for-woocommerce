@@ -45,8 +45,12 @@ $kp_asked_for = static function (string $header) use ($kp_public_host): bool {
     return false;
 };
 
-if ($kp_asked_for('HTTP_HOST') || $kp_asked_for('HTTP_X_FORWARDED_HOST')) {
-    $kp_method = strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'));
+// A web request only. WPLoader boots WordPress in-process with HTTP_HOST set from its
+// `domain` config and no REQUEST_METHOD, and redirecting that exits before wp_loaded.
+$kp_is_web_request = PHP_SAPI !== 'cli' && isset($_SERVER['REQUEST_METHOD']);
+
+if ($kp_is_web_request && ($kp_asked_for('HTTP_HOST') || $kp_asked_for('HTTP_X_FORWARDED_HOST'))) {
+    $kp_method = strtoupper((string) $_SERVER['REQUEST_METHOD']);
     $kp_uri    = (string) ($_SERVER['REQUEST_URI'] ?? '/');
     $kp_path   = (string) (parse_url($kp_uri, PHP_URL_PATH) ?: '/');
 
@@ -155,6 +159,7 @@ unset(
     $kp_local_host,
     $kp_local_port,
     $kp_asked_for,
+    $kp_is_web_request,
     $kp_port,
     $kp_local_urls,
     $kp_url,
