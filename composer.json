@@ -97,12 +97,12 @@
       "@test:chromedriver",
       "@test:setup",
       "@dev:stop",
-      "vendor/bin/codecept run EndToEnd --steps --xml report-endtoend.xml",
+      "vendor/bin/codecept run EndToEnd --xml report-endtoend.xml",
       "@dev:stop"
     ],
     "test:integration": [
       "@test:setup",
-      "vendor/bin/codecept run Integration --steps --xml report-integration.xml"
+      "vendor/bin/codecept run Integration --xml report-integration.xml"
     ],
     "test:integration:snapshots": [
       "@test:setup",
@@ -110,11 +110,11 @@
     ],
     "test:harness": [
       "@test:setup",
-      "vendor/bin/codecept run Harness --steps --xml report-harness.xml"
+      "vendor/bin/codecept run Harness --xml report-harness.xml"
     ],
     "test:report": "bash tests/_support_scripts/generate-report.sh",
     "test:report:share": "bash tests/_support_scripts/generate-report.sh --share",
-    "test:report:reset": "rm -rf tests/_output/allure-results tests/_output/report tests/_output/report-share",
+    "test:report:reset": "rm -rf tests/_output/allure-results tests/_output/report tests/_output/report-share tests/_output/record_* tests/_output/Tests.EndToEnd.*.html tests/_output/Tests.EndToEnd.*.png",
     "test:regenerate-dump": "bash tests/_support_scripts/regenerate-dump.sh"
   },
   "scripts-descriptions": {
@@ -122,8 +122,9 @@
     "test:chromedriver": "Download a Chromedriver build matching the local Chrome. Run once after a Chrome update if E2E tests start failing with a 'session not created' driver mismatch.",
     "test:setup": "Bootstrap the test env (idempotent), match Chromedriver to Chrome, and (re)generate Codeception Actor classes. Called automatically by test:e2e.",
     "test:integration:snapshots": "Rewrite the request-body fixtures in tests/Support/Data/snapshots/ from what KP currently sends, then review the diff, the fixture is the assertion. Run after an intended change to a Klarna payload.",
+    "test:integration": "Run the Integration suite. Requires a generated tests/Support/Data/dump.sql, and will share the SQLite database with test:harness, so never run the two at once.",
     "test:harness": "Run the tests that cover the test harness itself, the subscriptions fake and the artifact redaction, rather than the plugin. Shares the SQLite database with test:integration, so never run the two at once.",
-    "test:e2e": "Run the EndToEnd suite with verbose step output. Requires NGROK_DOMAIN, NGROK_AUTHTOKEN, KLARNA_TEST_MID_SE, KLARNA_TEST_SECRET_SE in tests/.env, plus a generated tests/Support/Data/dump.sql.",
+    "test:e2e": "Run the EndToEnd suite. Requires NGROK_DOMAIN, NGROK_AUTHTOKEN, KLARNA_TEST_MID_SE, KLARNA_TEST_SECRET_SE in tests/.env, plus a generated tests/Support/Data/dump.sql.",
     "test:regenerate-dump": "Rebuild tests/Support/Data/dump.sql from a clean WP+WC+KP install. Run after upstream WC or KP changes that affect baseline schema/options.",
     "test:report": "Render the Allure report from whichever suite results are present into tests/_output/report/. Fails if any credential leaked into an artifact.",
     "test:report:share": "Same, but one self-contained tests/_output/report-share/index.html for sharing outside the dev team.",
