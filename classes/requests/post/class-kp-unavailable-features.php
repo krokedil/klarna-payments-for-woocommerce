@@ -87,6 +87,20 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 	}
 
 	/**
+	 * Overrides the default credential resolution.
+	 *
+	 * This request authenticates with the API password from the arguments, and produces the capability data
+	 * the resolver reads, so it must not call the resolver itself.
+	 *
+	 * @param array $arguments The request arguments.
+	 *
+	 * @return null
+	 */
+	protected function resolve_credentials( $arguments ) {
+		return null;
+	}
+
+	/**
 	 * Calculates the auth header for the request.
 	 *
 	 * @return string
