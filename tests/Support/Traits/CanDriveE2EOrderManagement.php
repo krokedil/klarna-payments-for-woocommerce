@@ -38,18 +38,10 @@ trait CanDriveE2EOrderManagement {
 
 	/**
 	 * Opens the order edit screen, which is itself one live GET of the Klarna order.
-	 *
-	 * Moves the browser off the ngrok tunnel first. Only Klarna's SDK needs the tunnel,
-	 * and a wp-admin screen behind it stalls: enough of its ~150 subresources never answer
-	 * that the screen never finishes loading, however long the driver waits.
+	 * Logs in once per test.
 	 */
 	public function amEditingKlarnaOrder( int $orderId ): void {
 		if ( ! $this->inKlarnaAdmin ) {
-			$port = (string) ( $_ENV['BUILTIN_SERVER_PORT'] ?? getenv( 'BUILTIN_SERVER_PORT' ) );
-
-			Assert::assertNotSame( '', $port, 'BUILTIN_SERVER_PORT is not set in tests/.env.' );
-
-			$this->amOnUrl( "http://localhost:{$port}/wp-login.php" );
 			$this->loginAsAdmin();
 
 			$this->inKlarnaAdmin = true;

@@ -94,7 +94,7 @@ trait CanDriveE2ECheckout {
 	 */
 	public function haveCartWith( array $items ): array {
 		$product_ids = [];
-		$items_count = count( $items );
+
 		foreach ( $items as $item ) {
 			[ $sku, $quantity ] = is_array( $item ) ? [ $item[0], $item[1] ?? 1 ] : [ $item, 1 ];
 
@@ -103,11 +103,6 @@ trait CanDriveE2ECheckout {
 			// WooCommerce's own add-to-cart, which leaves the cart in the session the
 			// checkout reads. Doing it over wc-ajax builds a second cart instead.
 			$this->amOnPage( "/?add-to-cart={$product_ids[ $sku ]}&quantity={$quantity}" );
-
-			// Wait for 2 seconds to ensure we don't trigger a ngrok rate limit if we have more than 1 item in the cart.
-			if ( $items_count > 1 ) {
-				usleep( 2_000_000 );
-			}
 		}
 
 		return $product_ids;
