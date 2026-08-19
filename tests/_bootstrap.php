@@ -3,9 +3,8 @@
  * Shared test bootstrap, required by tests/EndToEnd/_bootstrap.php.
  *
  * Runs at SUITE_INIT, which is too late to scaffold WordPress, so the install lives in
- * composer's post-autoload-dump-dev hook. What stays here: a sentinel so the file is safe to
- * require twice, and re-syncing tests/_mu-plugins/ into the install on every run, because
- * Installation::scaffold does not touch wp-content/mu-plugins.
+ * composer's post-autoload-dump-dev hook. What stays here: a sentinel so the file is safe
+ * to require twice, syncing tests/_mu-plugins/ into the install, and pinning the site URL.
  */
 
 if (defined('KP_TEST_BOOTSTRAP_DONE')) {
@@ -17,54 +16,51 @@ $kp_mu_source  = dirname(__DIR__) . '/tests/_mu-plugins';
 $kp_mu_plugins = dirname(__DIR__) . '/tests/_wordpress/wp-content/mu-plugins';
 
 if (is_dir($kp_mu_plugins) && is_dir($kp_mu_source)) {
+    $kp_wanted = [];
+
     foreach (glob($kp_mu_source . '/*.php') as $kp_src) {
-        $kp_dest = $kp_mu_plugins . '/' . basename($kp_src);
+        $kp_wanted[] = basename($kp_src);
+        $kp_dest     = $kp_mu_plugins . '/' . basename($kp_src);
         if (! is_file($kp_dest) || filemtime($kp_src) > filemtime($kp_dest)) {
             copy($kp_src, $kp_dest);
         }
     }
+
+    // Drop the ones an earlier checkout installed and this one no longer has, matched on
+    // our own plugin header so wp-browser's SQLite drop-in is left alone.
+    foreach (glob($kp_mu_plugins . '/*.php') as $kp_installed) {
+        if (in_array(basename($kp_installed), $kp_wanted, true)) {
+            continue;
+        }
+        if (strpos((string) file_get_contents($kp_installed), 'Plugin Name: KP Tests,') !== false) {
+            unlink($kp_installed);
+        }
+    }
 }
 
-unset($kp_mu_source, $kp_mu_plugins, $kp_src, $kp_dest);
+unset($kp_mu_source, $kp_mu_plugins, $kp_src, $kp_dest, $kp_wanted, $kp_installed);
 
 // Load the env vars from .env in the tests/ directory. This is where the test WP installation's URL, DB connection string, and other config live.
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 /*
- * Set WP_HOME and WP_SITEURL from the request, in wp-config.php.
- *
- * They have to be constants rather than option filters: wp_plugin_directory_constants()
- * freezes WP_CONTENT_URL and WP_PLUGIN_URL from siteurl before mu-plugins load, so every
- * wp-content asset URL is decided before a filter could reach it.
- *
- * A request through the ngrok tunnel answers as WORDPRESS_URL, which is what Klarna's SDK
- * needs. One served straight off the built-in server answers as itself, which is how the
- * EndToEnd suite reaches wp-admin without the tunnel; see the note in
- * tests/_mu-plugins/01-https-proxy.php.
+ * Pin WP_HOME and WP_SITEURL to WORDPRESS_URL, the local built-in server. Constants rather
+ * than option filters, because wp_plugin_directory_constants() freezes WP_CONTENT_URL from
+ * siteurl before mu-plugins load; written here rather than committed, because WPDb reloads
+ * a dump carrying whoever generated it. The tunnel is dealt with in
+ * tests/_mu-plugins/01-klarna-public-url.php.
  */
 $wpConfig = dirname(__DIR__) . '/tests/_wordpress/wp-config.php';
 if (is_file($wpConfig)) {
-	$wpUrl = $_ENV['WORDPRESS_URL'];
-	echo "Ensuring WP_HOME and WP_SITEURL in {$wpConfig} follow the request, defaulting to {$wpUrl}\n";
+	$wpUrl = rtrim($_ENV['WORDPRESS_URL'], '/');
+	echo "Pinning WP_HOME and WP_SITEURL in {$wpConfig} to {$wpUrl}\n";
 
-	/*
-	 * Only an explicit localhost request is served as itself. Anything else, including
-	 * everything arriving through the tunnel, keeps answering as WORDPRESS_URL: the host the
-	 * agent forwards upstream is its own internal endpoint rather than the public one, and
-	 * matching on that would answer the checkout over http, which breaks Klarna's SDK and
-	 * reads as the iframe misbehaving.
-	 */
 	$block = <<<PHP
-	// >>> KP tests: a request straight to the built-in server answers as itself.
+	// >>> KP tests: the site answers as WORDPRESS_URL, tunnelled requests included.
 	if (! defined('WP_HOME')) {
-	    \$kp_host = \$_SERVER['HTTP_HOST'] ?? '';
-	    \$kp_url  = preg_match('/^(localhost|127\.0\.0\.1)(:\d+)?\$/', \$kp_host)
-	        ? 'http://' . \$kp_host
-	        : '{$wpUrl}';
-
-	    define('WP_HOME', \$kp_url);
-	    define('WP_SITEURL', \$kp_url);
+	    define('WP_HOME', '{$wpUrl}');
+	    define('WP_SITEURL', '{$wpUrl}');
 	}
 	// <<< KP tests
 	PHP;

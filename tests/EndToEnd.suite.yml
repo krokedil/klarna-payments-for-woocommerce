@@ -1,10 +1,8 @@
 # EndToEnd suite configuration.
 #
-# Browser-driven tests that hit the live WordPress install (booted by
-# BuiltInServerController) through an ngrok HTTPS tunnel (booted by
-# NgrokController). Klarna's JS SDK and API require HTTPS, which is why
-# the tunnel exists at all. Without it, KP's gateway never becomes
-# `is_available()` on checkout.
+# Browser-driven tests against the WordPress install BuiltInServerController boots, on
+# WORDPRESS_URL. The ngrok tunnel NgrokController boots forwards to the same server, and
+# carries Klarna's traffic only: see tests/_mu-plugins/01-klarna-public-url.php.
 
 actor: EndToEndTester
 bootstrap: _bootstrap.php
@@ -73,9 +71,9 @@ extensions:
     Tests\Support\Extension\NgrokController:
       domain: "%NGROK_DOMAIN%" # CLI arg, e.g. kp-test-site
       publicUrl: "https://%NGROK_DOMAIN%" # CLI arg, e.g. https://kp-test-site.ngrok.io
-      # What the browser talks to, which is the public endpoint in front of the
-      # internal one the agent binds. Health checked before the suite runs.
-      siteUrl: "%WORDPRESS_URL%"
+      # What Klarna talks to, health checked before the suite and between tests: a
+      # stalled agent keeps running while the traffic through it hangs.
+      siteUrl: "%KP_WORDPRESS_URL%"
       authtoken: "%NGROK_AUTHTOKEN%"
       forwardPort: "%BUILTIN_SERVER_PORT%"
       waitForOnlineSeconds: 15

@@ -44,11 +44,9 @@ extensions:
     lucatume\WPBrowser\Extension\ChromeDriverController:
       port: "%CHROMEDRIVER_PORT%"
     lucatume\WPBrowser\Extension\BuiltInServerController:
-      # One worker serves one connection at a time, and ngrok parks a keep-alive
-      # connection to the upstream per request without reaping them: a run can
-      # leave a hundred of them open. At 5 workers the server stops answering a
-      # few tests in, and a request that queues behind them hangs until
-      # ChromeDriver gives up. Headroom is cheaper than that failure.
+      # One worker serves one connection at a time, and a browser opens several per host.
+      # At 5 workers the server stops answering a few tests in, and a request that queues
+      # behind them hangs until ChromeDriver gives up.
       workers: 24
       port: "%BUILTIN_SERVER_PORT%"
       docroot: "%WORDPRESS_ROOT_DIR%"
@@ -58,6 +56,10 @@ extensions:
         DB_DIR: "%codecept_root_dir%/tests/_wordpress/data"
         DB_FILE: db.sqlite
         WORDPRESS_URL: "%WORDPRESS_URL%"
+        # What Klarna is told to call back on, used only by
+        # tests/_mu-plugins/01-klarna-public-url.php.
+        KP_WORDPRESS_URL: "%KP_WORDPRESS_URL%"
+        BUILTIN_SERVER_PORT: "%BUILTIN_SERVER_PORT%"
         WORDPRESS_ADMIN_PASSWORD: "%WORDPRESS_ADMIN_PASSWORD%"
         KLARNA_TEST_MID_SE: "%KLARNA_TEST_MID_SE%"
         KLARNA_TEST_SECRET_SE: "%KLARNA_TEST_SECRET_SE%"

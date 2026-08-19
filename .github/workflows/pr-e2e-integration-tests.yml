@@ -27,7 +27,9 @@ jobs:
 
       # One ngrok endpoint per PR number, so two open PRs never fight over the same tunnel.
       NGROK_DOMAIN: klarna-test-${{ github.event.pull_request.number }}.internal
-      WORDPRESS_URL: https://klarna-test-${{ github.event.pull_request.number }}.krokedil.ngrok.io
+      # Only Klarna's callbacks use the tunnel; the browser drives the site locally.
+      KP_WORDPRESS_URL: https://klarna-test-${{ github.event.pull_request.number }}.krokedil.ngrok.io
+      WORDPRESS_URL: http://localhost:8080
       WORDPRESS_DOMAIN: klarna-test-${{ github.event.pull_request.number }}.krokedil.ngrok.io
 
       # The rest of the env variables to use for the tests.
@@ -60,6 +62,7 @@ jobs:
         run: |
           {
             echo "WORDPRESS_URL=${WORDPRESS_URL}"
+            echo "KP_WORDPRESS_URL=${KP_WORDPRESS_URL}"
             echo "WORDPRESS_DOMAIN=${WORDPRESS_DOMAIN}"
             echo "WORDPRESS_DB_URL=${WORDPRESS_DB_URL}"
             echo "WORDPRESS_TABLE_PREFIX=${WORDPRESS_TABLE_PREFIX}"

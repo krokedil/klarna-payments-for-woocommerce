@@ -178,10 +178,23 @@ if (! is_dir($muPluginsDir) && ! mkdir($muPluginsDir, 0777, true) && ! is_dir($m
 }
 
 $copied = 0;
+$wanted = [];
 foreach (glob($muSource . '/*.php') as $file) {
-    $dest = $muPluginsDir . '/' . basename($file);
+    $wanted[] = basename($file);
+    $dest     = $muPluginsDir . '/' . basename($file);
     if (copy($file, $dest)) {
         ++$copied;
+    }
+}
+
+// Drop the ones an earlier checkout installed and this one no longer has, matched on our
+// own plugin header so the SQLite drop-in is left alone.
+foreach (glob($muPluginsDir . '/*.php') as $installed) {
+    if (in_array(basename($installed), $wanted, true)) {
+        continue;
+    }
+    if (strpos((string) file_get_contents($installed), 'Plugin Name: KP Tests,') !== false) {
+        unlink($installed);
     }
 }
 
