@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Support\Traits;
 
+use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
+
 /**
  * Store-level fixtures for the Integration suite: base location, currency, tax
  * options, tax rates and the Klarna Payments settings option.
@@ -159,6 +161,52 @@ trait CanConfigureStore {
 		);
 	}
 
+	/**
+	 * Merges credentials for several countries into the Klarna Payments settings.
+	 *
+	 * `haveKlarnaCredentials()` overwrites the whole option, so it cannot build the
+	 * multi-account store a cross border purchase needs.
+	 *
+	 * @param array<int, string> $countries Settings country codes, for example `[ 'se', 'us' ]` or `[ 'eu' ]`.
+	 */
+	protected function haveKlarnaCredentialsForSets( array $countries, array $overrides = [], bool $testmode = true ): void {
+		$prefix      = $testmode ? 'test_' : '';
+		$credentials = [];
+
+		foreach ( $countries as $country ) {
+			$country = strtolower( $country );
+
+			$credentials[ "{$prefix}merchant_id_{$country}" ]   = "mid-{$country}";
+			$credentials[ "{$prefix}shared_secret_{$country}" ] = "secret-{$country}";
+			$credentials[ "{$prefix}client_id_{$country}" ]     = "klarna_{$prefix}client_{$country}";
+		}
+
+		$this->setKlarnaSettings(
+			array_merge(
+				[
+					'enabled'             => 'yes',
+					'testmode'            => $testmode ? 'yes' : 'no',
+					'customer_type'       => 'b2c',
+					'logging'             => 'no',
+					'available_countries' => array_map( 'strtolower', $countries ),
+				],
+				$credentials,
+				$overrides
+			)
+		);
+	}
+
+	/**
+	 * Records what Klarna granted each credential set, keyed by settings country code.
+	 *
+	 * PluginFeatures caches the option in a property, so it has to be re-initialized.
+	 */
+	protected function haveKlarnaCredentialCapabilities( array $capabilities ): void {
+		update_option( 'kp_credential_capabilities', $capabilities );
+
+		KP_WC()->plugin_features()->init_features( true );
+	}
+
 	/** Overrides the availability of a single plugin feature. */
 	protected function setFeatureAvailability( string $feature_key, bool $available ): void {
 		$features = KP_WC()->plugin_features()->get_features();
@@ -173,8 +221,12 @@ trait CanConfigureStore {
 	protected function resetPluginFeatures(): void {
 		delete_option( 'kp_plugin_features' );
 		delete_option( 'kp_unavailable_feature_ids' );
+		delete_option( 'kp_credential_capabilities' );
 
 		KP_WC()->plugin_features()->init_features( true );
+
+		// The suite is one process, and the resolved credentials are cached in statics.
+		ApiCredentialsUtility::flush_cache();
 	}
 
 	/**
