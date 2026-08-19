@@ -5,6 +5,7 @@
  * @package WC_Klarna_Payments/Includes
  */
 
+use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderUtility;
 use Automattic\WooCommerce\Utilities\OrderUtil;
 /**
@@ -123,18 +124,11 @@ function kp_save_order_meta_data( $order, $response ) {
 	$testmode    = wc_string_to_bool( $settings['testmode'] ?? 'no' );
 	$environment = $testmode ? 'test' : 'live';
 
-	$klarna_country = kp_get_klarna_country( $order );
-
-	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-	// If EU credentials are combined, we should use the EU country code.
-	$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
-	if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
-		$klarna_country = 'EU';
-	}
-
 	$order->update_meta_data( '_wc_klarna_environment', $environment );
-	$order->update_meta_data( '_wc_klarna_country', $klarna_country );
 	$order->update_meta_data( '_wc_klarna_order_id', $response['order_id'], true );
+
+	kp_save_order_credentials_meta( $order );
+
 	$order->set_transaction_id( $response['order_id'] );
 	kp_set_payment_method_title( $order, $response );
 	$order->set_payment_method( 'klarna_payments' );
@@ -142,6 +136,74 @@ function kp_save_order_meta_data( $order, $response ) {
 	OrderUtility::add_environment_info( $order, WC_KLARNA_PAYMENTS_VERSION, null, false );
 
 	$order->save();
+}
+
+/**
+ * Store which market, and which set of credentials, an order belongs to.
+ *
+ * With cross border credentials these differ, and order management needs the credential set to authenticate.
+ * Does not save the order, the caller is expected to do that.
+ *
+ * @param WC_Order    $order The WooCommerce order.
+ * @param string|null $market The market (customer country) code. Defaults to the orders market.
+ * @param string|null $credentials_country The settings country code of the credential set. Resolved if not passed.
+ *
+ * @return void
+ */
+function kp_save_order_credentials_meta( $order, $market = null, $credentials_country = null ) {
+	$market = empty( $market ) ? kp_get_klarna_country( $order ) : $market;
+
+	// Never re-resolve over a credential set the order was already authorized with. Resolution can pick a
+	// different set once Klarna changes what the credentials are granted, and order management would then
+	// authenticate against the wrong Klarna account.
+	if ( empty( $credentials_country ) ) {
+		$credentials_country = $order->get_meta( '_wc_klarna_credentials_country', true );
+	}
+
+	if ( empty( $credentials_country ) ) {
+		$credentials = ApiCredentialsUtility::resolve( $market, $order->get_currency() );
+
+		if ( ! is_wp_error( $credentials ) ) {
+			$credentials_country = $credentials['country_code'];
+		}
+	}
+
+	// Both metas are written once and then left alone, so the market cannot drift from the credential set it
+	// was paired with. Order management would otherwise authenticate against the wrong Klarna account.
+	if ( empty( $order->get_meta( '_wc_klarna_country', true ) ) ) {
+		// The market, or 'EU' when the combined EU credentials are used.
+		$order->update_meta_data( '_wc_klarna_country', strtoupper( ApiCredentialsUtility::get_credentials_country_for_market( $market ) ) );
+	}
+
+	// Never overwrite a known credential set with nothing, order management would have nothing to authenticate with.
+	if ( ! empty( $credentials_country ) ) {
+		$order->update_meta_data( '_wc_klarna_credentials_country', strtolower( $credentials_country ) );
+	}
+}
+
+/**
+ * Get the settings country code of the credential set an order was authorized with.
+ *
+ * Falls back to the market, for orders created before the credential set was stored separately.
+ *
+ * @param WC_Order|int $order The WooCommerce order or order id.
+ *
+ * @return string The settings country code, or an empty string if the order has neither.
+ */
+function kp_get_order_credentials_country( $order ) {
+	$order = is_a( $order, 'WC_Order' ) ? $order : wc_get_order( $order );
+
+	if ( empty( $order ) ) {
+		return '';
+	}
+
+	$credentials_country = $order->get_meta( '_wc_klarna_credentials_country', true );
+
+	if ( ! empty( $credentials_country ) ) {
+		return strtolower( $credentials_country );
+	}
+
+	return strtolower( $order->get_meta( '_wc_klarna_country', true ) );
 }
 
 /**
@@ -368,30 +430,30 @@ function kp_is_wc_blocks_order( $order ) {
 /**
  * Get the client id for Klarna Payments from the settings based on the customer country.
  *
- * @param string|null $country The customer country.
+ * Has to belong to the same credential set the purchase is authorized with, or the Web SDK renders against
+ * different credentials than the session was created with.
+ *
+ * @param string|null $country The customer country. Defaults to the customers market.
+ * @param string|null $currency The purchase currency. Defaults to the current store currency.
  *
  * @return string
  */
-function kp_get_client_id( $country = null ) {
-	$country  = strtolower( $country ? $country : kp_get_klarna_country() );
-	$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-
-	$eu_combined = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
-	$test_mode   = 'yes' === ( isset( $settings['testmode'] ) ? $settings['testmode'] : 'no' );
+function kp_get_client_id( $country = null, $currency = null ) {
+	$country = empty( $country ) ? kp_get_klarna_country() : $country;
 
 	if ( ! kp_is_country_available( $country ) ) {
 		return '';
 	}
 
-	// If the country is in the EU and the EU combined setting is enabled, we should use the EU combined client id.
-	if ( $eu_combined && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
-		$country = 'eu';
-	}
-	$prefix      = $test_mode ? 'test_' : '';
-	$setting_key = "{$prefix}client_id_{$country}";
-	$client_id   = $settings[ $setting_key ] ?? '';
+	$credentials = ApiCredentialsUtility::resolve( $country, $currency );
 
-	return klarna_sanitize_client_id( $client_id );
+	// Fall back to the markets own client id. Nothing can be purchased in that combination, but on site
+	// messaging and the interoperability token also use this and only need a client id for the market.
+	if ( is_wp_error( $credentials ) ) {
+		return klarna_sanitize_client_id( ApiCredentialsUtility::get_client_id( $country ) );
+	}
+
+	return klarna_sanitize_client_id( $credentials['client_id'] );
 }
 
 /**
@@ -426,24 +488,49 @@ function klarna_sanitize_client_id( $client_id ) {
  * @return string
  */
 function kp_get_client_id_by_currency( $currency = null ) {
-	if ( empty( $currency ) ) {
-		$currency = get_woocommerce_currency();
+	$credentials_country = kp_get_credentials_country_by_currency( $currency );
+
+	if ( empty( $credentials_country ) ) {
+		return '';
 	}
 
-	$country = null;
-	// If the currency is EUR, we should maybe get the client id based on the locale for the customer.
-	if ( 'EUR' === $currency ) {
-		$country = kp_get_klarna_country();
-	} else {
+	// The country code is already a credential set, so combined_eu is false.
+	return klarna_sanitize_client_id( ApiCredentialsUtility::get_client_id( $credentials_country, false ) );
+}
+
+/**
+ * Get the credential set to render the Klarna Web SDK against for a currency.
+ *
+ * Used where there is a price but no purchase yet, so the customer market is only a hint.
+ *
+ * @param string|null $currency The currency code, if null the current currency will be used.
+ *
+ * @return string The settings country code of the credential set, or an empty string if there is none.
+ */
+function kp_get_credentials_country_by_currency( $currency = null ) {
+	$currency = empty( $currency ) ? get_woocommerce_currency() : $currency;
+	$market   = kp_get_klarna_country();
+
+	// Prefer the credentials that would serve a purchase in the customers market in this currency.
+	if ( kp_is_country_available( $market ) ) {
+		$credentials = ApiCredentialsUtility::resolve( $market, $currency );
+
+		if ( ! is_wp_error( $credentials ) ) {
+			return $credentials['country_code'];
+		}
+	}
+
+	// Otherwise fall back to the market whose own currency this is, for pages that only have a price.
+	if ( 'EUR' !== $currency ) {
 		foreach ( KP_Form_Fields::$kp_form_auto_countries as $cc => $country_data ) {
 			if ( $country_data['currency'] === $currency ) {
-				$country = $cc;
-				break;
+				return kp_is_country_available( $cc ) ? ApiCredentialsUtility::get_credentials_country_for_market( $cc ) : '';
 			}
 		}
 	}
 
-	return kp_get_client_id( $country );
+	// EUR, and any currency without a market of its own, uses the customers market.
+	return kp_is_country_available( $market ) ? ApiCredentialsUtility::get_credentials_country_for_market( $market ) : '';
 }
 
 /**
@@ -466,26 +553,12 @@ function kp_is_country_available( $country ) {
 	$country = strtolower( $country );
 	if ( empty( $available_countries ) ) {
 		// See if the country has values saved from the old settings, before the available countries setting was added.
-		$testmode = wc_string_to_bool( $settings['testmode'] ?? 'no' );
-		$prefix   = $testmode ? 'test_' : '';
-
-		// If the country is a EU country, check if we are using the combined EU credentials.
-		if ( key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
-			$eu_combined = 'yes' === ( $settings['combine_eu_credentials'] ?? 'no' );
-			if ( $eu_combined ) {
-				$country = 'eu';
-			}
-		}
-
-		$merchant_id = $settings[ "{$prefix}merchant_id_{$country}" ] ?? '';
-		$secret      = $settings[ "{$prefix}shared_secret_{$country}" ] ?? '';
-
-		// If we have the merchant id and secret, the country is available.
-		if ( ! empty( $merchant_id ) && ! empty( $secret ) ) {
+		if ( ! empty( ApiCredentialsUtility::get_merchant_id( $country ) ) && ! empty( ApiCredentialsUtility::get_shared_secret( $country ) ) ) {
 			return true;
 		}
 
-		return false;
+		// The country can also be served by credentials belonging to another country.
+		return in_array( strtoupper( $country ), ApiCredentialsUtility::get_serviceable_markets(), true );
 	}
 
 	$is_available = in_array( $country, $available_countries, true );
@@ -609,7 +682,7 @@ function kp_map_unavailable_features( $collected_features ) {
  */
 function kp_set_payment_method_title( $order, $klarna_place_order_response ) {
 	$klarna_order_id = $klarna_place_order_response['order_id'];
-	$response        = KP_WC()->api->get_klarna_om_order( $order->get_billing_country(), $klarna_order_id );
+	$response        = KP_WC()->api->get_klarna_om_order( $order->get_billing_country(), $klarna_order_id, kp_get_order_credentials_country( $order ) );
 	if ( is_wp_error( $response ) || ! isset( $response['initial_payment_method']['description'] ) ) {
 		$klarna_method = $klarna_place_order_response['authorized_payment_method']['type'];
 		switch ( $klarna_method ) {
