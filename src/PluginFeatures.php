@@ -98,6 +98,13 @@ class PluginFeatures {
 	protected $check_has_acquiring_partner_key = false;
 
 	/**
+	 * The error message from the last failed attempt to fetch the feature availability.
+	 *
+	 * @var string
+	 */
+	protected $last_error = '';
+
+	/**
 	 * Initialize the features and their availability.
 	 *
 	 * @param bool $force Whether to force re-initialization even if it has already been initialized once during this request. Default false.
@@ -208,11 +215,12 @@ class PluginFeatures {
 	 * and update the option kp_plugin_features with the result.
 	 *
 	 * @throws \WP_Exception If there is an error when trying to get the feature availability from Klarna.
-	 * @return void
+	 * @return bool True if every credential set was processed, false if the run failed and nothing was stored.
 	 */
 	public function process_all_api_credentials() {
-		$complete     = true;
-		$capabilities = array();
+		$complete         = true;
+		$capabilities     = array();
+		$this->last_error = '';
 
 		try {
 			$features        = array();
@@ -237,7 +245,8 @@ class PluginFeatures {
 				$this->process_api_response_capabilities( $response, $credentials, $capabilities );
 			}
 		} catch ( \WP_Exception $e ) {
-			$complete = false;
+			$complete         = false;
+			$this->last_error = $e->getMessage();
 			KP_WC()->logger()->error( 'Error when trying to get the feature availability from Klarna: ' . $e->getMessage() );
 		} finally {
 			// If we did not have an acquiring partner key from the processed credentials, ensure we delete any existing one to ensure we do not have a stale key.
@@ -255,6 +264,17 @@ class PluginFeatures {
 			// Re-initialize the features.
 			$this->init_features( true );
 		}
+
+		return $complete;
+	}
+
+	/**
+	 * Get the error message from the last failed attempt to fetch the feature availability.
+	 *
+	 * @return string The error message, or an empty string if the last attempt did not fail.
+	 */
+	public function get_last_error() {
+		return $this->last_error;
 	}
 
 	/**

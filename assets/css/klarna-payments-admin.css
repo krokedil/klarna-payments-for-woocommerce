@@ -38,7 +38,7 @@ div.kp_settings__section_content {
 	background: white;
 	border: 1px solid #e5e5e5;
 	padding: 20px;
-	width: calc( 100% - 40px );
+	width: calc(100% - 40px);
 	position: relative;
 }
 
@@ -46,7 +46,8 @@ span.kp_settings__section_toggle {
 	cursor: pointer;
 }
 
-.kp_settings__section_info, .kp_settings__section_preview {
+.kp_settings__section_info,
+.kp_settings__section_preview {
 	align-self: start;
 	grid-row: 1;
 }
@@ -55,7 +56,8 @@ span.kp_settings__section_toggle {
 	width: 400px;
 }
 
-.woocommerce .kp_settings__section table.form-table tr th, .woocommerce .kp_settings__section table.form-table tr td {
+.woocommerce .kp_settings__section table.form-table tr th,
+.woocommerce .kp_settings__section table.form-table tr td {
 	width: 100%;
 	padding: 0;
 	font-size: 14px;
@@ -67,7 +69,8 @@ span.kp_settings__section_toggle {
 	font-weight: 600;
 }
 
-.woocommerce .kp_settings__section table.form-table input:not([type="checkbox"]):not(.select2-search__field), .woocommerce .kp_settings__section table.form-table select {
+.woocommerce .kp_settings__section table.form-table input:not([type="checkbox"]):not(.select2-search__field),
+.woocommerce .kp_settings__section table.form-table select {
 	max-width: 100%;
 	width: 100%;
 	height: 40px;
@@ -137,7 +140,6 @@ div.kp_settings__section_content .kp_settings__section_toggle {
 	z-index: 999;
 }
 
-
 div.kp_settings__section_content table {
 	display: block;
 	height: auto;
@@ -168,15 +170,10 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	left: 0;
 	height: 100%;
 	width: 100%;
-	background: linear-gradient(
-		to bottom,
-		rgba(255, 255, 255, 0) 0%,
-		rgba(255, 255, 255, 1) 75%
-	);
+	background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 75%);
 	pointer-events: none; /* Prevent interaction with the gradient */
 	z-index: 999;
 }
-
 
 .kp_settings__section_title.kp_settings__section_title_hidden {
 	display: none;
@@ -261,21 +258,32 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	padding-top: 0;
 }
 
-.woocommerce .kp_settings__section table.form-table tr:has(td fieldset input.kp_settings__credentials_field[type="text"]:not(.kp_settings__credentials_field_client_id)) {
+.woocommerce
+	.kp_settings__section
+	table.form-table
+	tr:has(
+		td fieldset input.kp_settings__credentials_field[type="text"]:not(.kp_settings__credentials_field_client_id)
+	) {
 	float: left;
 	/** Calculate the width so there is always a 10px gap between the two rows */
 	width: calc(50% - 25px);
 	padding-right: 0;
 }
 
-.woocommerce .kp_settings__section table.form-table tr:has(td fieldset input.kp_settings__credentials_field[type="password"]) {
+.woocommerce
+	.kp_settings__section
+	table.form-table
+	tr:has(td fieldset input.kp_settings__credentials_field[type="password"]) {
 	float: right;
 	/** Calculate the width so there is always a 10px gap between the two rows */
 	width: calc(50% - 25px);
 	padding-left: 0;
 }
 
-.woocommerce .kp_settings__section table.form-table tr:has(td fieldset input.kp_settings__credentials_field[type="password"])::after {
+.woocommerce
+	.kp_settings__section
+	table.form-table
+	tr:has(td fieldset input.kp_settings__credentials_field[type="password"])::after {
 	clear: both;
 	content: ".";
 	visibility: hidden;
@@ -284,7 +292,7 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 }
 
 .kp_settings__credentials {
-	clear:both
+	clear: both;
 }
 
 .woocommerce table.form-table .kp_settings__credentials td fieldset {
@@ -303,7 +311,8 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 .woocommerce table.form-table tr th label {
 	display: inline-block;
 }
-.woocommerce table.form-table tr th label .woocommerce-help-tip, .wc-wp-version-gte-53 .woocommerce table.form-table tr th label .woocommerce-help-tip {
+.woocommerce table.form-table tr th label .woocommerce-help-tip,
+.wc-wp-version-gte-53 .woocommerce table.form-table tr th label .woocommerce-help-tip {
 	margin: -2px 0 0 0;
 	position: relative;
 }
@@ -315,8 +324,8 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	top: 0;
 	left: 10px;
 	color: grey;
-    transition: all 0.2s;
-    opacity: 0.6;
+	transition: all 0.2s;
+	opacity: 0.6;
 	cursor: text;
 	user-select: none;
 	display: inline-block;
@@ -346,14 +355,22 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	cursor: pointer;
 }
 
-.woocommerce .kp_settings__section table.form-table tr.kp_settings__credentials td.kp_settings__credentials_field_hidden {
+.woocommerce
+	.kp_settings__section
+	table.form-table
+	tr.kp_settings__credentials
+	td.kp_settings__credentials_field_hidden {
 	/*display: none;*/
 	max-height: 0;
 	transition: max-height 0.15s ease-out;
 	overflow: hidden;
 }
 
-.woocommerce .kp_settings__section table.form-table tr.kp_settings__credentials td:not(.kp_settings__credentials_field_hidden) {
+.woocommerce
+	.kp_settings__section
+	table.form-table
+	tr.kp_settings__credentials
+	td:not(.kp_settings__credentials_field_hidden) {
 	max-height: 150px;
 	transition: max-height 0.15s ease-in;
 	overflow: hidden;
@@ -380,8 +397,8 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	top: 0;
 	left: 15px;
 	color: grey;
-    transition: all 0.2s;
-    opacity: 0.6;
+	transition: all 0.2s;
+	opacity: 0.6;
 	cursor: text;
 	user-select: none;
 	display: inline-block;
@@ -429,7 +446,8 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	padding: 0 10px;
 }
 
-#klarna_payments_select_all_countries.active, #klarna_payments_select_all_countries:hover {
+#klarna_payments_select_all_countries.active,
+#klarna_payments_select_all_countries:hover {
 	background-color: #007cba;
 	color: #fff;
 }
@@ -442,7 +460,8 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 	padding: 10px 0;
 }
 
-#klarna_payments_select_all_countries.active span, #klarna_payments_select_all_countries:hover span {
+#klarna_payments_select_all_countries.active span,
+#klarna_payments_select_all_countries:hover span {
 	border-color: #007cba;
 }
 
@@ -460,3 +479,59 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 .kp_settings__send_shopping_data + tr .titledesc {
 	display: none;
 }
+
+/** Start kp_settings__refresh_features */
+.kp_settings__refresh_features {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+}
+
+.woocommerce .kp_settings__section .kp_settings__refresh_features_button {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.kp_settings__refresh_features_button.button .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+}
+
+.kp_settings__refresh_features_button--busy .dashicons {
+	animation: kp_settings__spin 1s linear infinite;
+}
+
+.kp_settings__refresh_features p.kp_settings__field_description {
+	margin: 0;
+	font-size: 12px;
+	color: #757575;
+}
+
+.kp_settings__refresh_features_message:empty {
+	display: none;
+}
+
+.kp_settings__refresh_features_message {
+	margin: 0;
+	font-size: 12px;
+	color: #007017;
+}
+
+.kp_settings__refresh_features_message--error {
+	color: #b32d2e;
+}
+
+@keyframes kp_settings__spin {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+/** End kp_settings__refresh_features */

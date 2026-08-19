@@ -28,13 +28,14 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function add_ajax_events() {
 			$ajax_events = array(
-				'kp_wc_place_order'                => true,
-				'kp_wc_auth_failed'                => true,
-				'kp_wc_log_js'                     => true,
-				'kp_wc_express_button'             => true,
-				'kp_wc_get_unavailable_features'   => true,
-				'kp_wc_set_interoperability_token' => true,
-				'kp_wc_get_interoperability_data'  => true,
+				'kp_wc_place_order'                 => true,
+				'kp_wc_auth_failed'                 => true,
+				'kp_wc_log_js'                      => true,
+				'kp_wc_express_button'              => true,
+				'kp_wc_get_unavailable_features'    => true,
+				'kp_wc_refresh_credential_features' => false,
+				'kp_wc_set_interoperability_token'  => true,
+				'kp_wc_get_interoperability_data'   => true,
 			);
 			foreach ( $ajax_events as $ajax_event => $nopriv ) {
 				add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -264,6 +265,60 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			}
 
 			wp_send_json_success( $sections_to_hide );
+		}
+
+		/**
+		 * Refresh the feature availability of the credentials that are stored in the settings.
+		 *
+		 * Deliberately ignores anything typed into the settings form. Only saved credentials may be sent to
+		 * Klarna, since the response is stored and would otherwise describe credentials the merchant discarded.
+		 *
+		 * @return void
+		 */
+		public static function kp_wc_refresh_credential_features() {
+			$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+
+			if ( ! wp_verify_nonce( $nonce, 'kp_wc_refresh_credential_features' ) ) {
+				wp_send_json_error(
+					array(
+						/* translators: [merchant-facing]. */
+						'message' => __( 'The page has expired. Please reload the page and try again.', 'klarna-payments-for-woocommerce' ),
+					)
+				);
+			}
+
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				wp_send_json_error(
+					array(
+						/* translators: [merchant-facing]. */
+						'message' => __( 'You are not allowed to refresh the Klarna feature availability.', 'klarna-payments-for-woocommerce' ),
+					)
+				);
+			}
+
+			$plugin_features = KP_WC()->plugin_features();
+			$success         = $plugin_features->process_all_api_credentials();
+			$sections        = PluginFeatures::get_sections_to_hide( $plugin_features->get_features() );
+
+			if ( ! $success ) {
+				$error_message = $plugin_features->get_last_error();
+
+				wp_send_json_error(
+					array(
+						/* translators: [merchant-facing]. */
+						'message'          => empty( $error_message ) ? __( 'The feature availability could not be fetched from Klarna. Please check the Klarna logs for more information.', 'klarna-payments-for-woocommerce' ) : $error_message,
+						'sections_to_hide' => $sections,
+					)
+				);
+			}
+
+			wp_send_json_success(
+				array(
+					/* translators: [merchant-facing]. */
+					'message'          => __( 'The feature availability has been refreshed from Klarna.', 'klarna-payments-for-woocommerce' ),
+					'sections_to_hide' => $sections,
+				)
+			);
 		}
 
 		/**

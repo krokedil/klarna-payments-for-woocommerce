@@ -34,12 +34,14 @@ class KP_Settings_Page {
 		add_action( 'woocommerce_admin_field_kp_section_end', array( __CLASS__, 'section_end_html' ) );
 		add_action( 'woocommerce_admin_field_kp_text_info', array( __CLASS__, 'text_info_html' ) );
 		add_action( 'woocommerce_admin_field_kp_credentials_info', array( __CLASS__, 'credentials_html' ) );
+		add_action( 'woocommerce_admin_field_kp_refresh_features', array( __CLASS__, 'refresh_features_html' ) );
 
 		// WC_Settings_API.
 		add_filter( 'woocommerce_generate_kp_section_start_html', array( __CLASS__, 'section_start' ), 10, 3 );
 		add_filter( 'woocommerce_generate_kp_section_end_html', array( __CLASS__, 'section_end' ), 10, 3 );
 		add_filter( 'woocommerce_generate_kp_text_info_html', array( __CLASS__, 'text_info' ), 10, 3 );
 		add_filter( 'woocommerce_generate_kp_credentials_html', array( __CLASS__, 'credentials' ), 10, 3 );
+		add_filter( 'woocommerce_generate_kp_refresh_features_html', array( __CLASS__, 'refresh_features' ), 10, 3 );
 
 		// Preload the fonts before the settings page is loaded.
 		add_action( 'admin_head', array( $this, 'preload_fonts' ) );
@@ -333,6 +335,7 @@ class KP_Settings_Page {
 			</div>
 		</div>
 		<?php
+
 	}
 
 	/**
@@ -347,6 +350,85 @@ class KP_Settings_Page {
 	public static function credentials( $html, $key, $args ) {
 		ob_start();
 		self::credentials_html( $args );
+		return ob_get_clean();
+	}
+
+	/**
+	 * Outputs the button that refreshes the feature availability of the saved API credentials.
+	 *
+	 * Can be echoed from anywhere on the settings page. It is not tied to a settings field, and does not
+	 * need to sit inside the settings form.
+	 *
+	 * @param array $args {
+	 *     Optional. Arguments for the button.
+	 *
+	 *     @type string $id          The ID attribute of the button.
+	 *     @type string $label       The button label.
+	 *     @type string $description Text shown below the button. Pass an empty string to omit it.
+	 *     @type string $class       Extra CSS classes for the wrapper.
+	 * }
+	 *
+	 * @return void
+	 */
+	public static function refresh_features_button_html( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'id'          => 'kp_settings__refresh_features_button',
+				/* translators: [merchant-facing]. */
+				'label'       => __( 'Refresh features', 'klarna-payments-for-woocommerce' ),
+				/* translators: [merchant-facing]. */
+				'description' => __( 'Fetch the features your Klarna credentials have access to. This uses the saved credentials, so save the settings first if you have changed them.', 'klarna-payments-for-woocommerce' ),
+				'class'       => '',
+			)
+		);
+
+		?>
+		<div class="kp_settings__refresh_features <?php echo esc_attr( $args['class'] ); ?>">
+			<button type="button" id="<?php echo esc_attr( $args['id'] ); ?>" class="button kp_settings__refresh_features_button">
+				<span class="dashicons dashicons-update" aria-hidden="true"></span>
+				<span class="kp_settings__refresh_features_label"><?php echo esc_html( $args['label'] ); ?></span>
+			</button>
+			<p class="kp_settings__refresh_features_message" role="status" aria-live="polite"></p>
+			<?php if ( ! empty( $args['description'] ) ) : ?>
+				<p class="kp_settings__field_description"><?php echo wp_kses_post( $args['description'] ); ?></p>
+			<?php endif; ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Outputs the refresh features button as a settings field row.
+	 *
+	 * @param array $args The arguments for the field.
+	 *
+	 * @return void
+	 */
+	public static function refresh_features_html( $args ) {
+		?>
+		<tr class="kp_settings__refresh_features_row" valign="top">
+			<th scope="row" class="titledesc">
+				<label for="<?php echo esc_attr( $args['id'] ?? 'kp_settings__refresh_features_button' ); ?>"><?php echo wp_kses_post( $args['title'] ?? '' ); ?></label>
+			</th>
+			<td class="forminp">
+				<?php self::refresh_features_button_html( $args ); ?>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Get the HTML as a string for the refresh features field row.
+	 *
+	 * @param string $html The HTML to append the field to.
+	 * @param string $key The key for the field.
+	 * @param array  $args The arguments for the field.
+	 *
+	 * @return string
+	 */
+	public static function refresh_features( $html, $key, $args ) {
+		ob_start();
+		self::refresh_features_html( $args );
 		return ob_get_clean();
 	}
 
