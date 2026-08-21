@@ -299,14 +299,6 @@ class KP_Assets {
 		$klarna_payments_admin_params = array(
 			'get_unavailable_features'       => WC_AJAX::get_endpoint( 'kp_wc_get_unavailable_features' ),
 			'get_unavailable_features_nonce' => wp_create_nonce( 'kp_wc_get_unavailable_features' ),
-			// The refresh is admin only, so it goes through admin-ajax rather than the public WC AJAX endpoint.
-			'refresh_features_url'           => admin_url( 'admin-ajax.php' ),
-			'refresh_features_action'        => 'woocommerce_kp_wc_refresh_credential_features',
-			'refresh_features_nonce'         => wp_create_nonce( 'kp_wc_refresh_credential_features' ),
-			/* translators: [merchant-facing]. */
-			'refresh_features_loading_text'  => __( 'Refreshing…', 'klarna-payments-for-woocommerce' ),
-			/* translators: [merchant-facing]. */
-			'refresh_features_error_text'    => __( 'The feature availability could not be refreshed. Please try again.', 'klarna-payments-for-woocommerce' ),
 			/* translators: [merchant-facing]. */
 			'select_all_countries_title'     => __( 'Select all', 'klarna-payments-for-woocommerce' ),
 		);

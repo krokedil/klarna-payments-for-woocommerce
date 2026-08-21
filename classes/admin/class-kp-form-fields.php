@@ -408,14 +408,6 @@ class KP_Form_Fields {
 
 		$credentials_section = array_merge( $credentials_section, $eu, $na, $oc );
 
-		$credentials_section['refresh_features'] = array(
-			/* translators: [merchant-facing]. */
-			'title'       => __( 'Refresh features', 'klarna-payments-for-woocommerce' ),
-			'type'        => 'kp_refresh_features',
-			/* translators: [merchant-facing]. */
-			'description' => __( 'Click the button to refresh the available Klarna features for your account.', 'klarna-payments-for-woocommerce' ),
-		);
-
 		$credentials_section['credentials_end'] = array(
 			'type' => 'kp_section_end',
 		);

@@ -73,8 +73,6 @@ jQuery( function ( $ ) {
 
 			$( document ).on( "click", "#klarna_payments_select_all_countries", this.toggleSelectAll )
 
-			$( document ).on( "click", ".kp_settings__refresh_features_button", this.refreshFeatures )
-
 			$( document ).on(
 				"mouseover",
 				"#klarna_payments_select_all_countries",
@@ -223,77 +221,6 @@ jQuery( function ( $ ) {
 			return countryCredentials
 		},
 
-		/**
-		 * Refresh the feature availability of the saved credentials.
-		 *
-		 * The saved credentials are used by the server on purpose. Anything unsaved in the form is ignored,
-		 * so the merchant has to save before a credential change affects the result.
-		 */
-		refreshFeatures: function ( event ) {
-			event.preventDefault()
-
-			const $button = $( this )
-
-			// Ignore clicks while a refresh is already running.
-			if ( $button.prop( "disabled" ) ) {
-				return
-			}
-
-			const $wrapper = $button.closest( ".kp_settings__refresh_features" )
-			const $message = $wrapper.find( ".kp_settings__refresh_features_message" )
-			const $label = $button.find( ".kp_settings__refresh_features_label" )
-			const labelText = $label.text()
-
-			$button.prop( "disabled", true ).addClass( "kp_settings__refresh_features_button--busy" )
-			$label.text( klarna_payments_admin_params.refresh_features_loading_text )
-			$message.removeClass( "kp_settings__refresh_features_message--error" ).text( "" )
-
-			$.ajax( klarna_payments_admin_params.refresh_features_url, {
-				type: "POST",
-				dataType: "json",
-				data: {
-					action: klarna_payments_admin_params.refresh_features_action,
-					nonce: klarna_payments_admin_params.refresh_features_nonce,
-				},
-			} )
-				.done( function ( response ) {
-					const data = response.data ?? {}
-
-					if ( response.success ) {
-						kp_admin.applySectionAvailability( data.sections_to_hide ?? [] )
-						$message.text( data.message ?? "" )
-						return
-					}
-
-					$message
-						.addClass( "kp_settings__refresh_features_message--error" )
-						.text( data.message ?? klarna_payments_admin_params.refresh_features_error_text )
-				} )
-				.fail( function ( response ) {
-					console.log( "Error refreshing the Klarna feature availability" )
-					console.log( response )
-
-					$message
-						.addClass( "kp_settings__refresh_features_message--error" )
-						.text( klarna_payments_admin_params.refresh_features_error_text )
-				} )
-				.always( function () {
-					$button.prop( "disabled", false ).removeClass( "kp_settings__refresh_features_button--busy" )
-					$label.text( labelText )
-				} )
-		},
-
-		/**
-		 * Mark the sections the server reported as unavailable, and clear the rest.
-		 */
-		applySectionAvailability: function ( sectionsToHide ) {
-			$( ".kp_settings__section" ).removeClass( "unavailable" )
-
-			sectionsToHide.forEach( ( section ) => {
-				$( `#klarna-payments-settings-${ section }` ).addClass( "unavailable" )
-			} )
-		},
-
 		updateUnavailableFeatures: function ( countryCredentials ) {
 			$.ajax( klarna_payments_admin_params.get_unavailable_features, {
 				type: "POST",
@@ -305,7 +232,16 @@ jQuery( function ( $ ) {
 				},
 				success: function ( response ) {
 					if ( response.success ) {
-						kp_admin.applySectionAvailability( response.data ?? [] )
+						const unavailableOptions = response.data ?? []
+						$( ".kp_settings__section" ).removeClass( "unavailable" )
+
+						if ( ! unavailableOptions.length ) {
+							return
+						}
+
+						unavailableOptions.forEach( ( option ) => {
+							$( `#klarna-payments-settings-${ option }` ).addClass( "unavailable" )
+						} )
 					} else {
 						console.log( "Error updating unavailable features" )
 						console.log( response )
