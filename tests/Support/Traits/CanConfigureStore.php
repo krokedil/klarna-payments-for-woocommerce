@@ -168,6 +168,8 @@ trait CanConfigureStore {
 	 * multi-account store a cross border purchase needs.
 	 *
 	 * @param array<int, string> $countries Settings country codes, for example `[ 'se', 'us' ]` or `[ 'eu' ]`.
+	 * @param array<string, mixed> $overrides Settings merged on top of the generated credentials.
+	 * @param bool $testmode Whether to write the `test_` prefixed credentials. Defaults to true.
 	 */
 	protected function haveKlarnaCredentialsForSets( array $countries, array $overrides = [], bool $testmode = true ): void {
 		$prefix      = $testmode ? 'test_' : '';
