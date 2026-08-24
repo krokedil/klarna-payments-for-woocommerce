@@ -77,17 +77,32 @@ class CheckoutTest extends IntegrationTestCase {
 	 * @dataProvider provide_eu_forks
 	 */
 	public function test_combining_eu_credentials_files_the_order_under_eu( string $fork ): void {
-		$gateway = $this->gateway( [ 'combine_eu_credentials' => 'yes' ] );
+		$gateway = $this->gateway(
+			[
+				'combine_eu_credentials' => 'yes',
+				// Combining moves the credential set to the 'eu' key, so SE has none of its own to authenticate with.
+				'test_merchant_id_eu'    => 'mid-eu',
+				'test_shared_secret_eu'  => 'secret-eu',
+			]
+		);
 		$this->arrangeFork( $fork );
 
 		$order = $this->haveCheckoutOrder( 'blocks' === $fork ? [ 'created_via' => 'store-api' ] : [] );
 
 		$gateway->process_payment( $order->get_id() );
 
+		$reloaded = $this->reload( $order );
+
 		$this->assertSame(
 			'EU',
-			$this->reload( $order )->get_meta( '_wc_klarna_country' ),
+			$reloaded->get_meta( '_wc_klarna_country' ),
 			'Order management has to sign later calls with the merchant account the purchase used.'
+		);
+
+		$this->assertSame(
+			'eu',
+			$reloaded->get_meta( '_wc_klarna_credentials_country' ),
+			'Without the credential set, order management has nothing to authenticate with.'
 		);
 	}
 

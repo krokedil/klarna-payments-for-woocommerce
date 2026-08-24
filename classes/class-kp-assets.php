@@ -7,6 +7,7 @@
 
 use Krokedil\Klarna\Features;
 use Krokedil\Klarna\PluginFeatures;
+use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -332,8 +333,7 @@ class KP_Assets {
 
 		/* If there is not corresponding MID for the customer's country, we'll abort. */
 		$purchase_country = strtolower( kp_get_klarna_country() );
-		$mode             = ( 'yes' === $kp_settings['testmode'] ) ? 'test_' : '';
-		if ( empty( $kp_settings[ $mode . 'merchant_id_' . $purchase_country ] ) || empty( $kp_settings[ $mode . 'shared_secret_' . $purchase_country ] ) ) {
+		if ( empty( ApiCredentialsUtility::get_merchant_id( $purchase_country ) ) || empty( ApiCredentialsUtility::get_shared_secret( $purchase_country ) ) ) {
 			return;
 		}
 
@@ -370,8 +370,7 @@ class KP_Assets {
 
 		/* If there is no corresponding MID for the customer's country set, we'll abort. */
 		$purchase_country = strtolower( kp_get_klarna_country() );
-		$mode             = ( 'yes' === $kp_settings['testmode'] ) ? 'test_' : '';
-		if ( empty( $kp_settings[ $mode . 'merchant_id_' . $purchase_country ] ) || empty( $kp_settings[ $mode . 'shared_secret_' . $purchase_country ] ) ) {
+		if ( empty( ApiCredentialsUtility::get_merchant_id( $purchase_country ) ) || empty( ApiCredentialsUtility::get_shared_secret( $purchase_country ) ) ) {
 			return;
 		}
 

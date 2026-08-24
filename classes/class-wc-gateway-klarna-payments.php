@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Krokedil\Klarna\Features;
 use Krokedil\Klarna\PluginFeatures;
+use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
 use Krokedil\Klarna\ExpressCheckout\KECOneStepIntegration;
 use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
 
@@ -280,45 +281,21 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	 * @param WC_Order|bool $order The WooCommerce order.
 	 */
 	public function country_currency_check( $order = false ) {
-		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		// The order currency can differ from the store currency.
+		$currency = $order ? $order->get_currency() : get_woocommerce_currency();
+
 		// Check if allowed currency.
-		if ( ! in_array( get_woocommerce_currency(), $this->allowed_currencies, true ) ) {
+		if ( ! in_array( $currency, $this->allowed_currencies, true ) ) {
 			kp_unset_session_values();
 			return new WP_Error( 'currency', 'Currency not allowed for Klarna Payments' );
 		}
 
-		$klarna_country = kp_get_klarna_country( $order );
-		$country        = strtolower( $klarna_country );
+		// Can any of the configured credentials serve this market in this currency?
+		$credentials = ApiCredentialsUtility::resolve( kp_get_klarna_country( $order ), $currency );
 
-		if ( ! isset( KP_Form_Fields::$kp_form_auto_countries[ $country ] ) ) {
+		if ( is_wp_error( $credentials ) ) {
 			kp_unset_session_values();
-			return new WP_Error( 'country', "Country ({$country}) is not supported by Klarna Payments." );
-		}
-
-		$country_values = KP_Form_Fields::$kp_form_auto_countries[ $country ];
-		$combined_eu    = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
-
-		// If the country is a EU country, check if we should get the credentials from the EU settings.
-		if ( $combined_eu && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
-			$country = 'eu';
-		}
-
-		// Check that the credentials are set for the current country in KP.
-		$prefix        = $this->testmode ? 'test_' : '';
-		$merchant_id   = $this->get_option( "{$prefix}merchant_id_{$country}" );
-		$shared_secret = $this->get_option( "{$prefix}shared_secret_{$country}" );
-
-		if ( empty( $merchant_id ) || empty( $shared_secret ) ) {
-			kp_unset_session_values();
-			return new WP_Error( 'country', "No credentials found for {$country}" );
-		}
-
-		// Check the countrys currency against the current currency.
-		$required_currency = $country_values['currency'];
-		$country_name      = $country_values['name'];
-		if ( get_woocommerce_currency() !== $required_currency ) {
-			kp_unset_session_values();
-			return new WP_Error( 'currency', "{$required_currency} must be used for {$country_name} purchases" );
+			return $credentials;
 		}
 
 		return true;
@@ -454,8 +431,9 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		if ( empty( $kec_client_token ) ) {
 			// Load any session data that we might have. Pass null instead of order identifier to load session from WC()->session.
 			KP_WC()->session->set_session_data( null );
-			$klarna_country    = KP_WC()->session->get_klarna_session_country( $order );
-			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
+			$klarna_country      = KP_WC()->session->get_klarna_session_country( $order );
+			$credentials_country = KP_WC()->session->get_klarna_session_credentials_country( $order );
+			$klarna_session_id   = KP_WC()->session->get_klarna_session_id();
 
 			if ( empty( $klarna_country ) || empty( $klarna_session_id ) ) {
 				/* translators: [customer-facing]. */
@@ -463,23 +441,19 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 				throw new Exception( esc_html( $message ) );
 			}
 		} else {
-			$settings       = get_option( 'woocommerce_klarna_payments_settings', array() );
-			$klarna_country = kp_get_klarna_country( $order );
-
-			// If EU credentials are combined, we should use the EU country code.
-			$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
-			if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
-				$klarna_country = 'EU';
-			}
-
-			$klarna_session_id = $kec_client_token;
+			// The KEC session belongs to the credential set the client id was emitted for, not to whichever set
+			// the billing address Klarna returned would resolve to now.
+			$klarna_country      = kp_get_klarna_country( $order );
+			$credentials_country = Krokedil\Klarna\ExpressCheckout\Session::get_credentials_country();
+			$klarna_session_id   = $kec_client_token;
 		}
 
 		// Set the order meta data.
 		$environment = $this->testmode ? 'test' : 'live';
 		$order->add_meta_data( '_wc_klarna_environment', $environment, true );
-		$order->add_meta_data( '_wc_klarna_country', $klarna_country, true );
 		$order->add_meta_data( '_kp_session_id', $klarna_session_id, true );
+
+		kp_save_order_credentials_meta( $order, $klarna_country, $credentials_country );
 
 		// Save the order.
 		$order->save();
@@ -525,24 +499,19 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			throw new Exception( esc_html( $message ) );
 		}
 
-		$session_id     = KP_WC()->session->get_klarna_session_id();
-		$klarna_country = kp_get_klarna_country( $order );
+		$session_id          = KP_WC()->session->get_klarna_session_id();
+		$klarna_country      = kp_get_klarna_country( $order );
+		$credentials_country = KP_WC()->session->get_klarna_session_credentials_country( $order );
 
-		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		// If EU credentials are combined, we should use the EU country code.
-		$combined_eu = 'yes' === ( isset( $settings['combine_eu_credentials'] ) ? $settings['combine_eu_credentials'] : 'no' );
-		if ( $combined_eu && key_exists( strtolower( $klarna_country ), KP_Form_Fields::available_countries( 'eu' ) ) ) {
-			$klarna_country = 'EU';
-		}
-
-		// Create a HPP url.
-		$hpp = KP_WC()->api->create_hpp( $klarna_country, $session_id, $order->get_id() );
+		// Create a HPP url. It has to be signed by the set the session it points at was created with.
+		$hpp = KP_WC()->api->create_hpp( $klarna_country, $session_id, $order->get_id(), $credentials_country );
 
 		// Set the order meta data.
 		$environment = $this->testmode ? 'test' : 'live';
 		$order->add_meta_data( '_wc_klarna_environment', $environment, true );
-		$order->add_meta_data( '_wc_klarna_country', $klarna_country, true );
 		$order->add_meta_data( '_kp_session_id', $session_id, true );
+
+		kp_save_order_credentials_meta( $order, $klarna_country, $credentials_country );
 
 		// Save the order.
 		$order->save();
@@ -624,7 +593,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 			return false;
 		}
 
-		$klarna_order = KP_WC()->api->get_klarna_om_order( $country, $klarna_order_id );
+		$klarna_order = KP_WC()->api->get_klarna_om_order( $country, $klarna_order_id, kp_get_order_credentials_country( $order ) );
 
 		if ( is_wp_error( $klarna_order ) ) {
 			return false;
@@ -669,7 +638,7 @@ class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 		$country         = $order->get_meta( '_wc_klarna_country', true );
 		$klarna_order_id = $order->get_meta( '_wc_klarna_order_id', true );
 
-		$klarna_upsell_order = KP_WC()->api->upsell_klarna_order( $country, $klarna_order_id, $order_id );
+		$klarna_upsell_order = KP_WC()->api->upsell_klarna_order( $country, $klarna_order_id, $order_id, kp_get_order_credentials_country( $order ) );
 
 		if ( is_wp_error( $klarna_upsell_order ) ) {
 			/* translators: [customer-facing]. */

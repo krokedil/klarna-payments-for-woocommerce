@@ -7,6 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Request;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Logger;
 
@@ -43,20 +44,46 @@ abstract class KP_Requests extends Request {
 	protected $request_filter = 'wc_klarna_payments_request_args';
 
 	/**
+	 * The credentials resolved for this request, or null if the request class supplies its own.
+	 *
+	 * @var array|null
+	 */
+	protected $credentials = null;
+
+	/**
+	 * The error from resolving the credentials, if there was one.
+	 *
+	 * @var WP_Error|null
+	 */
+	protected $credentials_error = null;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param mixed $arguments The request arguments.
 	 */
 	public function __construct( $arguments ) {
 		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		$config   = array(
+
+		// Resolve the credentials first, since the credential set decides the API region in the base URL.
+		$resolved = $this->resolve_credentials( $arguments );
+
+		if ( is_wp_error( $resolved ) ) {
+			$this->credentials_error = $resolved;
+		} elseif ( is_array( $resolved ) ) {
+			$this->credentials = $resolved;
+		}
+
+		$region_country = $this->credentials['country_code'] ?? ( $arguments['country'] ?? '' );
+
+		$config = array(
 			'slug'                   => 'klarna_payments',
 			'plugin_version'         => WC_KLARNA_PAYMENTS_VERSION,
 			'plugin_short_name'      => 'KP',
 			'plugin_user_agent_name' => 'KP',
 			'logging_enabled'        => 'no' !== ( $settings['logging'] ?? 'no' ),
 			'extended_debugging'     => 'extra' === ( isset( $settings['logging'] ) ? $settings['logging'] : 'no' ),
-			'base_url'               => $this->get_base_url( $arguments['country'], $settings ),
+			'base_url'               => $this->get_base_url( $region_country, $settings ),
 		);
 
 		parent::__construct( $config, $settings, $arguments );
@@ -109,8 +136,7 @@ abstract class KP_Requests extends Request {
 	 * @param array  $settings The settings array.
 	 */
 	protected function get_base_url( $country, $settings ) {
-		$country_data = KP_Form_Fields::$kp_form_auto_countries[ strtolower( $country ?? '' ) ] ?? null;
-		$testmode     = wc_string_to_bool( $settings['testmode'] ?? 'no' ); // Get the testmode setting.
+		$testmode = wc_string_to_bool( $settings['testmode'] ?? 'no' ); // Get the testmode setting.
 
 		$region = strtolower(
 			/**
@@ -119,7 +145,7 @@ abstract class KP_Requests extends Request {
 			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-base-region-for-api-requests
 			 * @param string $region The Klarna API region, derived from the country endpoint. Blank for EU.
 			 */
-			apply_filters( 'klarna_base_region', $country_data['endpoint'] ?? '' )
+			apply_filters( 'klarna_base_region', ApiCredentialsUtility::get_region( $country ) )
 		); // Get the region from the country parameters, blank for EU.
 		$playground = $testmode ? '.playground' : ''; // If testmode is enabled, add playground to the subdomain.
 		$subdomain  = "api{$region}{$playground}"; // Combine the string to one subdomain.
@@ -128,25 +154,71 @@ abstract class KP_Requests extends Request {
 	}
 
 	/**
+	 * Resolve which Klarna credentials to use for this request.
+	 *
+	 * Request classes that supply their own credentials override this and return null.
+	 *
+	 * @param array $arguments The request arguments.
+	 *
+	 * @return array|WP_Error|null The credentials, an error, or null to keep the ones the request class sets.
+	 */
+	protected function resolve_credentials( $arguments ) {
+		// Requests about an existing Klarna order pass the credential set the purchase was made with.
+		if ( ! empty( $arguments['credentials_country'] ) ) {
+			return ApiCredentialsUtility::get_credentials( $arguments['credentials_country'] );
+		}
+
+		$country = $arguments['country'] ?? kp_get_klarna_country();
+
+		return ApiCredentialsUtility::resolve_for_request( $country, $this->get_purchase_currency( $arguments ) );
+	}
+
+	/**
+	 * Get the currency this request is for.
+	 *
+	 * Has to match the purchase_currency in the payload, since the credentials depend on the currency.
+	 *
+	 * @param array $arguments The request arguments.
+	 *
+	 * @return string The currency code.
+	 */
+	protected function get_purchase_currency( $arguments ) {
+		if ( ! empty( $arguments['currency'] ) ) {
+			return $arguments['currency'];
+		}
+
+		if ( ! empty( $arguments['order_id'] ) ) {
+			$order = wc_get_order( $arguments['order_id'] );
+
+			if ( $order ) {
+				return $order->get_currency();
+			}
+		}
+
+		return get_woocommerce_currency();
+	}
+
+	/**
 	 * Sets Klarna credentials.
 	 */
 	public function set_credentials() {
-		$country     = strtolower( $this->arguments['country'] ) ?? strtolower( kp_get_klarna_country() ); // Get the country from the arguments, or the fetch from helper method.
-		$combined_eu = isset( $this->settings['combine_eu_credentials'] ) ? ( 'yes' === $this->settings['combine_eu_credentials'] ) : false; // Check if we should combine the EU credentials.
-		$testmode    = wc_string_to_bool( $this->settings['testmode'] ?? 'no' ); // Get the testmode setting.
+		$this->merchant_id   = $this->credentials['merchant_id'] ?? '';
+		$this->shared_secret = $this->credentials['shared_secret'] ?? '';
+	}
 
-		// If the country is a EU country, check if we should get the credentials from the EU settings.
-		if ( $combined_eu && key_exists( $country, KP_Form_Fields::available_countries( 'eu' ) ) ) {
-			$country = 'eu';
+	/**
+	 * Make the request, or return the credentials error if we could not resolve any.
+	 *
+	 * @return array|WP_Error
+	 */
+	public function request() {
+		if ( is_wp_error( $this->credentials_error ) ) {
+			KP_WC()->logger()->error( 'Could not resolve the Klarna API credentials for the request: ' . $this->credentials_error->get_error_message() );
+
+			return $this->credentials_error;
 		}
 
-		$prefix = $testmode ? 'test_' : ''; // If testmode is enabled, add test_ to the setting strings.
-
-		$merchant_id   = "{$prefix}merchant_id_{$country}";
-		$shared_secret = "{$prefix}shared_secret_{$country}";
-
-		$this->merchant_id   = isset( $this->settings[ $merchant_id ] ) ? $this->settings[ $merchant_id ] : '';
-		$this->shared_secret = isset( $this->settings[ $shared_secret ] ) ? $this->settings[ $shared_secret ] : '';
+		return parent::request();
 	}
 
 	/**
@@ -155,7 +227,7 @@ abstract class KP_Requests extends Request {
 	 * @return string
 	 */
 	public function calculate_auth() {
-		return 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( $this->shared_secret, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
+		return 'Basic ' . base64_encode( $this->merchant_id . ':' . htmlspecialchars_decode( (string) $this->shared_secret, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
 	}
 
 	/**

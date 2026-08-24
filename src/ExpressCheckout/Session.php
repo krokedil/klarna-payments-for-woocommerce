@@ -17,6 +17,7 @@ class Session {
 		add_action( 'woocommerce_checkout_update_order_review', __CLASS__ . '::on_update_order_review' );
 		add_action( 'woocommerce_thankyou', __CLASS__ . '::unset_client_token', 1 );
 		add_action( 'woocommerce_thankyou', __CLASS__ . '::unset_klarna_address', 1 );
+		add_action( 'woocommerce_thankyou', __CLASS__ . '::unset_credentials_country', 1 );
 	}
 
 	/**
@@ -145,6 +146,52 @@ class Session {
 		}
 
 		WC()->session->set( 'kec_klarna_address', wp_json_encode( $address ) );
+		return true;
+	}
+
+	/**
+	 * Set the credential set the KEC client id was emitted for.
+	 *
+	 * Klarna derives the merchant from the client id, so the KEC session belongs to that set no matter what
+	 * address the customer turns out to have.
+	 *
+	 * @param string $country_code The settings country code of the credential set.
+	 *
+	 * @return bool
+	 */
+	public static function set_credentials_country( $country_code ) {
+		if ( ! WC()->session ) {
+			return false;
+		}
+
+		WC()->session->set( 'kec_credentials_country', $country_code );
+		return true;
+	}
+
+	/**
+	 * Get the credential set the KEC client id was emitted for.
+	 *
+	 * @return string An empty string if the button was never rendered in this session.
+	 */
+	public static function get_credentials_country() {
+		if ( ! WC()->session ) {
+			return '';
+		}
+
+		return WC()->session->get( 'kec_credentials_country', '' );
+	}
+
+	/**
+	 * Remove the credential set from the WooCommerce session.
+	 *
+	 * @return bool
+	 */
+	public static function unset_credentials_country() {
+		if ( ! WC()->session ) {
+			return false;
+		}
+
+		WC()->session->__unset( 'kec_credentials_country' );
 		return true;
 	}
 
