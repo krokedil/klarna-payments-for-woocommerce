@@ -60,17 +60,19 @@ class KP_Api {
 	/**
 	 * Create HPP request.
 	 *
-	 * @param string $country The Klarna country to use.
-	 * @param string $session_id The Klarna session id.
-	 * @param string $order_id The WooCommerce order id.
+	 * @param string      $country The Klarna country to use.
+	 * @param string      $session_id The Klarna session id.
+	 * @param string      $order_id The WooCommerce order id.
+	 * @param string|null $credentials_country The credential set the session was created with. Optional.
 	 * @return array|WP_Error The response from Klarna.
 	 */
-	public function create_hpp( $country, $session_id, $order_id ) {
+	public function create_hpp( $country, $session_id, $order_id, $credentials_country = null ) {
 		$request  = new KP_Create_HPP(
 			array(
-				'country'    => $country,
-				'session_id' => $session_id,
-				'order_id'   => $order_id,
+				'country'             => $country,
+				'session_id'          => $session_id,
+				'order_id'            => $order_id,
+				'credentials_country' => $credentials_country,
 			)
 		);
 		$response = $request->request();
@@ -89,12 +91,21 @@ class KP_Api {
 	public function place_order( $country, $auth_token, $order_id ) {
 		KP_WC()->session->set_session_data( $order_id );
 
+		// The order is placed from a session, so it has to use the credentials that session was created with.
+		// The order meta is the reliable source, the session singleton can hold another context.
+		$credentials_country = kp_get_order_credentials_country( $order_id );
+
+		if ( empty( $credentials_country ) ) {
+			$credentials_country = KP_WC()->session->get_klarna_session_credentials_country( wc_get_order( $order_id ) );
+		}
+
 		$request  = new KP_Place_Order(
 			array(
-				'country'    => $country,
-				'auth_token' => $auth_token,
-				'order_id'   => $order_id,
-				'session_id' => KP_WC()->session->get_klarna_session_id(),
+				'country'             => $country,
+				'auth_token'          => $auth_token,
+				'order_id'            => $order_id,
+				'session_id'          => KP_WC()->session->get_klarna_session_id(),
+				'credentials_country' => $credentials_country,
 			)
 		);
 		$response = $request->request();
@@ -123,9 +134,11 @@ class KP_Api {
 	public function create_customer_token( $country, $auth_token, $order_id ) {
 		$request  = new KP_Create_Customer_Token(
 			array(
-				'country'    => $country,
-				'auth_token' => $auth_token,
-				'order_id'   => $order_id,
+				'country'             => $country,
+				'auth_token'          => $auth_token,
+				'order_id'            => $order_id,
+				// The token is issued for an authorization, so it belongs to the set that authorized the order.
+				'credentials_country' => kp_get_order_credentials_country( $order_id ),
 			)
 		);
 		$response = $request->request();
@@ -136,17 +149,19 @@ class KP_Api {
 	/**
 	 * Create recurring order (subscription).
 	 *
-	 * @param mixed $country The Klarna country to use.
-	 * @param mixed $recurring_token The recurring token for the subscription (referred to as customer token in docs).
-	 * @param mixed $order_id The WooCommerce order id.
+	 * @param mixed       $country The Klarna country to use.
+	 * @param mixed       $recurring_token The recurring token for the subscription (referred to as customer token in docs).
+	 * @param mixed       $order_id The WooCommerce order id.
+	 * @param string|null $credentials_country The credential set the recurring token belongs to. Optional.
 	 * @return WP_Error|array
 	 */
-	public function create_recurring_order( $country, $recurring_token, $order_id ) {
+	public function create_recurring_order( $country, $recurring_token, $order_id, $credentials_country = null ) {
 		$request  = new KP_Create_Recurring(
 			array(
-				'country'         => $country,
-				'recurring_token' => $recurring_token,
-				'order_id'        => $order_id,
+				'country'             => $country,
+				'recurring_token'     => $recurring_token,
+				'order_id'            => $order_id,
+				'credentials_country' => $credentials_country,
 			)
 		);
 		$response = $request->request();
@@ -159,15 +174,19 @@ class KP_Api {
 	 * Cancel recurring order (subscription).
 	 * This is used when a subscription is cancelled in WooCommerce.
 	 *
-	 * @param mixed $country The Klarna country to use.
-	 * @param mixed $recurring_token The recurring token for the subscription (referred to as customer token in docs).
+	 * @param mixed       $country The Klarna country to use.
+	 * @param mixed       $recurring_token The recurring token for the subscription (referred to as customer token in docs).
+	 * @param string|null $currency The purchase currency. Optional, since there is no order to read it from.
+	 * @param string|null $credentials_country The credential set the recurring token belongs to. Optional.
 	 * @return WP_Error|array
 	 */
-	public function cancel_recurring_order( $country, $recurring_token ) {
+	public function cancel_recurring_order( $country, $recurring_token, $currency = null, $credentials_country = null ) {
 		$request  = new KP_Cancel_Recurring(
 			array(
-				'country'         => $country,
-				'recurring_token' => $recurring_token,
+				'country'             => $country,
+				'recurring_token'     => $recurring_token,
+				'currency'            => $currency,
+				'credentials_country' => $credentials_country,
 			)
 		);
 		$response = $request->request();
@@ -178,16 +197,18 @@ class KP_Api {
 	/**
 	 * Get the Klarna order from the order management API.
 	 *
-	 * @param string $country The Klarna country to use.
-	 * @param string $klarna_order_id The Klarna order id.
+	 * @param string      $country The Klarna country to use.
+	 * @param string      $klarna_order_id The Klarna order id.
+	 * @param string|null $credentials_country The credential set the order was authorized with. Optional.
 	 *
 	 * @return array|WP_Error The response from Klarna.
 	 */
-	public function get_klarna_om_order( $country, $klarna_order_id ) {
+	public function get_klarna_om_order( $country, $klarna_order_id, $credentials_country = null ) {
 		$request  = new KP_Get_Order(
 			array(
-				'country'         => $country,
-				'klarna_order_id' => $klarna_order_id,
+				'country'             => $country,
+				'klarna_order_id'     => $klarna_order_id,
+				'credentials_country' => $credentials_country,
 			)
 		);
 		$response = $request->request();
@@ -198,18 +219,20 @@ class KP_Api {
 	/**
 	 * Upsell the klarna order.
 	 *
-	 * @param string $country The Klarna country to use.
-	 * @param string $klarna_order_id The Klarna order id.
-	 * @param int    $order_id The WooCommerce order id.
+	 * @param string      $country The Klarna country to use.
+	 * @param string      $klarna_order_id The Klarna order id.
+	 * @param int         $order_id The WooCommerce order id.
+	 * @param string|null $credentials_country The credential set the order was authorized with. Optional.
 	 *
 	 * @return array|WP_Error The response from Klarna.
 	 */
-	public function upsell_klarna_order( $country, $klarna_order_id, $order_id ) {
+	public function upsell_klarna_order( $country, $klarna_order_id, $order_id, $credentials_country = null ) {
 		$request  = new KP_Upsell_Order(
 			array(
-				'country'         => $country,
-				'klarna_order_id' => $klarna_order_id,
-				'order_id'        => $order_id,
+				'country'             => $country,
+				'klarna_order_id'     => $klarna_order_id,
+				'order_id'            => $order_id,
+				'credentials_country' => $credentials_country,
 			)
 		);
 		$response = $request->request();

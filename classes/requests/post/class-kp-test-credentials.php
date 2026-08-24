@@ -25,6 +25,17 @@ class KP_Test_Credentials extends KP_Requests_Post {
 	}
 
 	/**
+	 * Overrides the default credential resolution, this request tests the credentials from the arguments.
+	 *
+	 * @param array $arguments The request arguments.
+	 *
+	 * @return null
+	 */
+	protected function resolve_credentials( $arguments ) {
+		return null;
+	}
+
+	/**
 	 * Overrides the default set_credentials method to use the once passed from arguments.
 	 *
 	 * @return void

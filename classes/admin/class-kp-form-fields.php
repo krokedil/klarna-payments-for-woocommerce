@@ -162,6 +162,16 @@ class KP_Form_Fields {
 	 * @return array
 	 */
 	public static function available_countries( $region = 'all' ) {
+		// Resolving credentials asks for the EU countries repeatedly, and building this list translates 27
+		// country names every time. Cached per locale, since the admin can be in another language than the site.
+		static $cache = array();
+
+		$cache_key = $region . '|' . determine_locale();
+
+		if ( isset( $cache[ $cache_key ] ) ) {
+			return $cache[ $cache_key ];
+		}
+
 		$eu = array(
 			/* translators: [merchant-facing]. */
 			'at' => __( 'Austria', 'klarna-payments-for-woocommerce' ),
@@ -239,6 +249,8 @@ class KP_Form_Fields {
 		}
 
 		asort( $countries );
+
+		$cache[ $cache_key ] = $countries;
 
 		return $countries;
 	}
