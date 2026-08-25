@@ -7,6 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
+
 /**
  * KP_Session class.
  *
@@ -58,6 +60,22 @@ class KP_Session {
 	public $session_locale = null;
 
 	/**
+	 * The currency the Klarna session was created for.
+	 *
+	 * @var string|null
+	 */
+	public $session_currency = null;
+
+	/**
+	 * The settings country code of the credential set the Klarna session was created with.
+	 *
+	 * Can differ from the session country when cross border credentials are used.
+	 *
+	 * @var string|null
+	 */
+	public $session_credentials_country = null;
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
@@ -86,12 +104,15 @@ class KP_Session {
 		// Set session data from WC Session or order meta if we have any.
 		$this->set_session_data( $order );
 
-		// If we already have a Klarna session, and the session_country or session_locale has changed since our last request, reset all our params and a new session will be created.
-		if ( null !== $this->klarna_session && ( kp_get_klarna_country( $order ) !== $this->session_country || get_locale() !== $this->session_locale ) ) {
-			$this->klarna_session  = null;
-			$this->session_hash    = null;
-			$this->session_country = null;
-			$this->session_locale  = null;
+		// If we already have a Klarna session, and any of the values it was created for has changed since our
+		// last request, reset all our params and a new session will be created.
+		if ( null !== $this->klarna_session && $this->session_context_has_changed( $order ) ) {
+			$this->klarna_session              = null;
+			$this->session_hash                = null;
+			$this->session_country             = null;
+			$this->session_locale              = null;
+			$this->session_currency            = null;
+			$this->session_credentials_country = null;
 		}
 
 		// If we already have a Klarna session and session does not need an update, return the Klarna session.
@@ -128,6 +149,15 @@ class KP_Session {
 			throw new Exception( esc_html( $order->get_error_message() ) );
 		}
 
+		// The instance is a singleton, so anything left from an earlier call in this request belongs to another
+		// context. Clear it first, or a cart session leaks into an order and picks the credentials for it.
+		$this->klarna_session              = null;
+		$this->session_hash                = null;
+		$this->session_country             = null;
+		$this->session_locale              = null;
+		$this->session_currency            = null;
+		$this->session_credentials_country = null;
+
 		// If we have an order, get the Klarna session from order meta.
 		$session_data = $order ? $order->get_meta( '_kp_session_data', true ) : WC()->session->get( 'kp_session_data' );
 
@@ -148,6 +178,58 @@ class KP_Session {
 		$this->session_hash    = $session_data['session_hash'];
 		$this->session_country = $session_data['session_country'];
 		$this->session_locale  = $session_data['session_locale'];
+
+		// Sessions stored before these were added will not have them.
+		$this->session_currency            = $session_data['session_currency'] ?? null;
+		$this->session_credentials_country = $session_data['session_credentials_country'] ?? null;
+	}
+
+	/**
+	 * Has anything the current Klarna session was created for changed?
+	 *
+	 * A session cannot be updated into another currency, or with another credential set.
+	 *
+	 * @param WC_Order|null $order The WooCommerce order, or null if we are working with a cart.
+	 * @return bool True if a new session has to be created.
+	 */
+	private function session_context_has_changed( $order ) {
+		if ( kp_get_klarna_country( $order ) !== $this->session_country || get_locale() !== $this->session_locale ) {
+			return true;
+		}
+
+		// A session stored before these were tracked has to be rebuilt once, so that it cannot be updated into
+		// another currency or against another credential set than it was created with.
+		if ( null === $this->session_currency || null === $this->session_credentials_country ) {
+			return true;
+		}
+
+		if ( $this->get_current_currency( $order ) !== $this->session_currency ) {
+			return true;
+		}
+
+		return $this->get_current_credentials_country( $order ) !== $this->session_credentials_country;
+	}
+
+	/**
+	 * Get the currency the session should be created for.
+	 *
+	 * @param WC_Order|null $order The WooCommerce order, or null if we are working with a cart.
+	 * @return string The currency code.
+	 */
+	private function get_current_currency( $order ) {
+		return empty( $order ) ? get_woocommerce_currency() : $order->get_currency();
+	}
+
+	/**
+	 * Get the settings country code of the credential set that would serve the purchase right now.
+	 *
+	 * @param WC_Order|null $order The WooCommerce order, or null if we are working with a cart.
+	 * @return string|null The settings country code, or null if no credentials can serve the purchase.
+	 */
+	private function get_current_credentials_country( $order ) {
+		$credentials = ApiCredentialsUtility::resolve( kp_get_klarna_country( $order ), $this->get_current_currency( $order ) );
+
+		return is_wp_error( $credentials ) ? null : $credentials['country_code'];
 	}
 
 	/**
@@ -168,6 +250,9 @@ class KP_Session {
 		$this->session_hash    = null === $order ? $this->get_session_cart_hash() : $this->get_session_order_hash( $order );
 		$this->session_country = kp_get_klarna_country( $order );
 		$this->session_locale  = get_locale();
+
+		$this->session_currency            = $this->get_current_currency( $order );
+		$this->session_credentials_country = $this->get_current_credentials_country( $order );
 
 		// Update the WC Session or the order meta with instance of class.
 		$this->update_session_data_in_wc( $order );
@@ -343,6 +428,16 @@ class KP_Session {
 	 */
 	public function get_klarna_session_country( $order = null ) {
 		return $this->session_country ?? kp_get_klarna_country( $order );
+	}
+
+	/**
+	 * Get the settings country code of the credential set the Klarna session was created with.
+	 *
+	 * @param WC_Order|null $order The WooCommerce order, used to resolve the credentials if the session is missing them.
+	 * @return string|null The settings country code, or null if no credentials can serve the purchase.
+	 */
+	public function get_klarna_session_credentials_country( $order = null ) {
+		return $this->session_credentials_country ?? $this->get_current_credentials_country( $order );
 	}
 
 	/**

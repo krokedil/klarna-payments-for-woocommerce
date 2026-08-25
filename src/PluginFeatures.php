@@ -71,6 +71,24 @@ class PluginFeatures {
 	protected $features = array();
 
 	/**
+	 * The cross border capabilities of each credential set, keyed by the settings country code.
+	 *
+	 * Both lists are empty unless Klarna has granted the credentials the cross border add on.
+	 *
+	 * Array(
+	 *     'se' => Array(
+	 *         'merchant_id' => string   - The merchant ID the capabilities were fetched for.
+	 *         'mode'        => string   - Either 'test' or 'live'.
+	 *         'markets'     => string[] - Uppercase country codes these credentials may serve.
+	 *         'currencies'  => string[] - Uppercase currency codes these credentials may settle in.
+	 *     ),
+	 * );
+	 *
+	 * @var array
+	 */
+	protected $credential_capabilities = array();
+
+	/**
 	 * If the credentials we have parsed had a AP key or not.
 	 * Only used when processing all API credentials, and can not be used
 	 * to determine if we have an AP key or not in general.
@@ -99,7 +117,8 @@ class PluginFeatures {
 		$features = get_option( 'kp_plugin_features', $this->default_features );
 
 		// Initialize the features.
-		$this->features = $features;
+		$this->features                = $features;
+		$this->credential_capabilities = get_option( 'kp_credential_capabilities', array() );
 
 		/**
 		 * Triggers after the features class has been initialized and can be used.
@@ -120,6 +139,22 @@ class PluginFeatures {
 	}
 
 	/**
+	 * Get the cross border capabilities of every credential set, keyed by the settings country code.
+	 *
+	 * @return array The capabilities. See the $credential_capabilities property for the shape.
+	 */
+	public function get_credential_capabilities() {
+		/**
+		 * Filters the cross border capabilities of the configured Klarna credentials.
+		 *
+		 * Keyed by the settings country code, for example 'se' or 'eu'.
+		 *
+		 * @param array $capabilities The capabilities for each credential set.
+		 */
+		return apply_filters( 'kp_credential_capabilities', $this->credential_capabilities );
+	}
+
+	/**
 	 * Process the response from the plugins api request, and store the available and unavailable features.
 	 *
 	 * @param array $response The response from the plugins API request.
@@ -128,7 +163,7 @@ class PluginFeatures {
 	 *
 	 * @return void
 	 */
-	public function process_api_response( $response, $credentials, &$features ) {
+	public function process_api_response_features( $response, $credentials, &$features ) {
 		foreach ( $response['features'] ?? array() as $feature ) {
 			$key           = str_replace( 'platform-plugin-', '', $feature['feature_key'] ?? '' );
 			$availability  = $feature['availability'] ?? 'AVAILABLE'; // Default to AVAILABLE if not set.
@@ -176,6 +211,9 @@ class PluginFeatures {
 	 * @return void
 	 */
 	public function process_all_api_credentials() {
+		$complete     = true;
+		$capabilities = array();
+
 		try {
 			$features        = array();
 			$api_credentials = $this->get_api_credentials();
@@ -194,11 +232,12 @@ class PluginFeatures {
 						)
 					);
 				}
-				$this->process_api_response( $response, $credentials, $features );
+
+				$this->process_api_response_features( $response, $credentials, $features );
+				$this->process_api_response_capabilities( $response, $credentials, $capabilities );
 			}
 		} catch ( \WP_Exception $e ) {
-			// If we get an error, reset the features to default and log the error.
-			$features = $this->default_features;
+			$complete = false;
 			KP_WC()->logger()->error( 'Error when trying to get the feature availability from Klarna: ' . $e->getMessage() );
 		} finally {
 			// If we did not have an acquiring partner key from the processed credentials, ensure we delete any existing one to ensure we do not have a stale key.
@@ -206,8 +245,13 @@ class PluginFeatures {
 				delete_option( 'klarna_acquiring_partner_key' );
 			}
 
-			// Update the features option.
-			update_option( 'kp_plugin_features', array_merge( $this->default_features, $features ) );
+			// Only write on a clean pass. A partial run would disable every country scoped feature, and every
+			// cross border credential set, after the one that failed.
+			if ( $complete ) {
+				update_option( 'kp_plugin_features', array_merge( $this->default_features, $features ) );
+				update_option( 'kp_credential_capabilities', $capabilities );
+			}
+
 			// Re-initialize the features.
 			$this->init_features( true );
 		}
@@ -239,7 +283,7 @@ class PluginFeatures {
 				);
 			}
 
-			$this->process_api_response( $response, $credentials, $features );
+			$this->process_api_response_features( $response, $credentials, $features );
 		} catch ( \WP_Exception $e ) {
 			// Log the error.
 			KP_WC()->logger()->error( 'Error when trying to get the feature availability from Klarna: ' . $e->getMessage() );
@@ -366,8 +410,9 @@ class PluginFeatures {
 
 		// Get the credentials for each country, and add them to the list if they are set.
 		foreach ( $country_codes as $cc ) {
-			$merchant_id   = $testmode ? $settings[ "test_merchant_id_$cc" ] ?? '' : $settings[ "merchant_id_$cc" ] ?? '';
-			$shared_secret = $testmode ? $settings[ "test_shared_secret_$cc" ] ?? '' : $settings[ "shared_secret_$cc" ] ?? '';
+			// The country codes are already mapped to a credential set above, so combined_eu is false.
+			$merchant_id   = Utilities\ApiCredentialsUtility::get_merchant_id( $cc, false );
+			$shared_secret = Utilities\ApiCredentialsUtility::get_shared_secret( $cc, false );
 
 			// If the merchant id or shared secret is empty, skip this country.
 			if ( empty( $merchant_id ) || empty( $shared_secret ) ) {
@@ -383,6 +428,58 @@ class PluginFeatures {
 		}
 
 		return $api_credentials;
+	}
+
+	/**
+	 * Process the cross border capabilities from the plugins API response for one credential set.
+	 *
+	 * Both response fields are optional. Missing ones are stored as empty lists, meaning home market only.
+	 *
+	 * @param array $response The response from the plugins API request.
+	 * @param array $credentials The API credentials the response belongs to.
+	 * @param array $capabilities The capabilities array to update. Passed by reference.
+	 *
+	 * @return void
+	 */
+	private function process_api_response_capabilities( $response, $credentials, &$capabilities ) {
+		$country_code = strtolower( $credentials['country_code'] ?? '' );
+
+		if ( empty( $country_code ) ) {
+			return;
+		}
+
+		$capability = array(
+			'merchant_id' => $credentials['merchant_id'] ?? '',
+			'mode'        => $credentials['mode'] ?? 'live',
+			'markets'     => $this->normalize_code_list( $response['available_markets'] ?? array() ),
+			'currencies'  => $this->normalize_code_list( $response['allowed_settlement_currencies'] ?? array() ),
+		);
+
+		// Cross border is inert without either list, so make it visible in the log rather than silent.
+		if ( 'live' === $capability['mode'] && ! empty( $capability['merchant_id'] ) && empty( $capability['markets'] ) && empty( $capability['currencies'] ) ) {
+			KP_WC()->logger()->debug( "No available_markets or allowed_settlement_currencies returned for {$country_code}. Cross border purchases are not possible with these credentials." );
+		}
+
+		$capabilities[ $country_code ] = $capability;
+	}
+
+	/**
+	 * Normalize country or currency codes from the API into a unique list of uppercase strings.
+	 *
+	 * Anything that is not a flat array of strings is discarded, rather than raising a type error later.
+	 *
+	 * @param mixed $codes The raw value from the API response.
+	 *
+	 * @return string[] The normalized codes, or an empty array if the value was not usable.
+	 */
+	private function normalize_code_list( $codes ) {
+		if ( ! is_array( $codes ) ) {
+			return array();
+		}
+
+		$codes = array_map( 'strtoupper', array_filter( $codes, 'is_string' ) );
+
+		return array_values( array_unique( $codes ) );
 	}
 
 	/**

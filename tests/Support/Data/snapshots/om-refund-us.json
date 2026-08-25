@@ -1,0 +1,33 @@
+{
+    "method": "POST",
+    "path": "https://api-na.playground.klarna.com/ordermanagement/v1/orders/klarna-order-123/refunds",
+    "body": {
+        "refunded_amount": 12500,
+        "description": "",
+        "reference": "<order-number>|<refund-id>",
+        "order_lines": [
+            {
+                "type": "physical",
+                "reference": "kp-test-1",
+                "name": "KP Test Product",
+                "quantity": 1,
+                "unit_price": 10000,
+                "tax_rate": 850,
+                "total_amount": 10000,
+                "total_discount_amount": 0,
+                "total_tax_amount": 0
+            },
+            {
+                "type": "sales_tax",
+                "reference": "Sales Tax",
+                "name": "Sales Tax",
+                "quantity": 1,
+                "unit_price": 850,
+                "tax_rate": 0,
+                "total_amount": 850,
+                "total_discount_amount": 0,
+                "total_tax_amount": 0
+            }
+        ]
+    }
+}

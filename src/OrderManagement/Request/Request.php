@@ -2,6 +2,7 @@
 namespace Krokedil\Klarna\OrderManagement\Request;
 
 use Krokedil\Klarna\OrderManagement;
+use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -107,28 +108,19 @@ abstract class Request {
 	 * @return string
 	 */
 	protected function get_klarna_api_region() {
-		$country = $this->get_klarna_country();
-		switch ( $country ) {
-			case 'CA':
-			case 'US':
-				return '-na';
-			case 'AU':
-			case 'NZ':
-				return '-oc';
-			default:
-				return '';
-		}
+		// The region follows the credentials that authorized the purchase, not the customers market.
+		return ApiCredentialsUtility::get_region( $this->get_credentials_country() );
 	}
 
 	/**
-	 * Get the country code for the underlaying order.
+	 * Get the settings country code of the credential set the order was authorized with.
+	 *
+	 * The same as the market unless the purchase was made with cross border credentials.
 	 *
 	 * @return string
 	 */
-	protected function get_klarna_country() {
-		$order   = wc_get_order( $this->order_id );
-		$country = $order->get_meta( '_wc_klarna_country', true );
-		return $country ? $country : '';
+	protected function get_credentials_country() {
+		return kp_get_order_credentials_country( $this->order_id );
 	}
 
 	/**
@@ -268,8 +260,7 @@ abstract class Request {
 		}
 
 		$prefix         = $this->use_playground() ? 'test_' : '';
-		$country        = $this->get_klarna_country();
-		$country_string = strtolower( $country );
+		$country_string = strtolower( $this->get_credentials_country() );
 		$key            = "{$prefix}{$component_name}_{$country_string}";
 
 		if ( key_exists( $key, $options ) ) {
