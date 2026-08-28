@@ -19,6 +19,9 @@ composer.lock
 package.json
 package-lock.json
 phpcs.xml
+phpstan.neon
+phpstan-baseline.neon
+phpstan-bootstrap.php
 pnpm-lock.yaml
 readme.dev.txt
 readme.dev.md
