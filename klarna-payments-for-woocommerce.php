@@ -69,14 +69,14 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		/**
 		 * The reference the *Singleton* instance of this class.
 		 *
-		 * @var $instance
+		 * @var WC_Klarna_Payments $instance
 		 */
 		private static $instance;
 
 		/**
 		 * Returns the *Singleton* instance of this class.
 		 *
-		 * @return self::$instance The *Singleton* instance.
+		 * @return self The *Singleton* instance.
 		 */
 		public static function get_instance() {
 			if ( null === self::$instance ) {
@@ -586,7 +586,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$autoloader              = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
 			$autoloader_dependencies = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/dependencies/scoper-autoload.php';
 
-			if ( ! is_readable( $autoloader_dependencies ) || ! is_readable( $autoloader_dependencies ) ) {
+			if ( ! is_readable( $autoloader ) || ! is_readable( $autoloader_dependencies ) ) {
 				self::missing_autoloader();
 				return false;
 			}
