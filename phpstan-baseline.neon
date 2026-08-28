@@ -1,2 +1,703 @@
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: blocks/src/payment/KlarnaPayments.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: classes/admin/class-kp-settings-page.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Function kp_process_accepted invoked with 3 parameters, 2 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Offset ''city'' does not exist on string\|false\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Offset ''country'' does not exist on string\|false\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Offset ''postal_code'' does not exist on string\|false\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Offset ''region'' does not exist on string\|false\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Offset ''street_address'' does not exist on string\|false\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Offset ''street_address2'' does not exist on string\|false\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Parameter \#1 \$credentials of method Krokedil\\Klarna\\PluginFeatures\:\:process_api_credentials\(\) expects array, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Parameter \#2 \$status_code of function wp_send_json_error expects int\|null, array\|false\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 4
+			path: classes/class-kp-ajax.php
+
+		-
+			message: '#^Parameter \#1 \$order of function kp_get_order_credentials_country expects int\|WC_Order, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-kp-api.php
+
+		-
+			message: '#^Parameter \#1 \$order of method KP_Session\:\:set_session_data\(\) expects int\|WC_Order\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-kp-api.php
+
+		-
+			message: '#^Parameter \#3 \$deps of function wp_register_script_module expects array\<int\|string, array\{id\: string, import\?\: string\}\>, array\{''@klarna/websdk_v2''\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-kp-assets.php
+
+		-
+			message: '#^Parameter \#3 \$order_id of method KP_Api\:\:place_order\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-kp-callbacks.php
+
+		-
+			message: '#^Call to an undefined method WC_Session\:\:has_session\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: classes/class-kp-interoperability-token.php
+
+		-
+			message: '#^Call to an undefined method WC_Session\:\:set_customer_session_cookie\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: classes/class-kp-interoperability-token.php
+
+		-
+			message: '#^Method KP_Logger\:\:get_stack\(\) should return string but returns list\<string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: classes/class-kp-logger.php
+
+		-
+			message: '#^Property KP_Session\:\:\$klarna_session \(array\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: classes/class-kp-session.php
+
+		-
+			message: '#^Property KP_Session\:\:\$session_country \(string\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: classes/class-kp-session.php
+
+		-
+			message: '#^Property KP_Session\:\:\$session_country \(string\) on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.property
+			count: 1
+			path: classes/class-kp-session.php
+
+		-
+			message: '#^Property KP_Session\:\:\$session_hash \(string\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: classes/class-kp-session.php
+
+		-
+			message: '#^Property KP_Session\:\:\$session_locale \(string\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: classes/class-kp-session.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: classes/class-kp-settings-saved.php
+
+		-
+			message: '#^Parameter \#4 \$autoload of function add_option expects bool\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-kp-settings-saved.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of static method KP_Subscription\:\:save_recurring_token\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 6
+			path: classes/class-kp-subscriptions.php
+
+		-
+			message: '#^Parameter \#3 \$order_id of method KP_Api\:\:create_hpp\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-wc-gateway-klarna-payments.php
+
+		-
+			message: '#^Left side of && is always false\.$#'
+			identifier: booleanAnd.leftAlwaysFalse
+			count: 1
+			path: classes/requests/class-kp-requests-post.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: classes/requests/class-kp-requests.php
+
+		-
+			message: '#^Left side of && is always false\.$#'
+			identifier: booleanAnd.leftAlwaysFalse
+			count: 1
+			path: classes/requests/helpers/class-kp-order-data.php
+
+		-
+			message: '#^Parameter \#3 \$offset of function strpos expects int, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/requests/helpers/class-kp-order-data.php
+
+		-
+			message: '#^Variable \$list_of_countries in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: includes/admin/views/status-report.php
+
+		-
+			message: '#^Variable \$test_list_of_countries in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: includes/admin/views/status-report.php
+
+		-
+			message: '#^Call to function method_exists\(\) with ''WC_Customer'' and ''get_billing_country'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/kp-functions.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: includes/kp-functions.php
+
+		-
+			message: '#^Parameter \#1 \$order of static method KrokedilKlarnaPaymentsDeps\\Krokedil\\WooCommerce\\OrderUtility\:\:add_environment_info\(\) expects KrokedilKlarnaPaymentsDeps\\Krokedil\\WooCommerce\\WC_Order, WC_Order given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/kp-functions.php
+
+		-
+			message: '#^Parameter \#3 \$meta_id of method WC_Data\:\:update_meta_data\(\) expects int, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: includes/kp-functions.php
+
+		-
+			message: '#^Property WooCommerce\:\:\$customer \(WC_Customer\) in empty\(\) is not falsy\.$#'
+			identifier: empty.property
+			count: 1
+			path: includes/kp-functions.php
+
+		-
+			message: '#^Access to an undefined property WC_Cart\:\:\$total\.$#'
+			identifier: property.notFound
+			count: 1
+			path: klarna-payments-for-woocommerce.php
+
+		-
+			message: '#^Property WC_Klarna_Payments\:\:\$plugin_features \(Krokedil\\Klarna\\PluginFeatures\) in empty\(\) is not falsy\.$#'
+			identifier: empty.property
+			count: 1
+			path: klarna-payments-for-woocommerce.php
+
+		-
+			message: '#^Property WooCommerce\:\:\$cart \(WC_Cart\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: klarna-payments-for-woocommerce.php
+
+		-
+			message: '#^Method Krokedil\\Klarna\\ExpressCheckout\\Api\\Notifications\\PaymentStateCompleted\:\:handle_notification\(\) should return WP_REST_Response\|null but empty return statement found\.$#'
+			identifier: return.empty
+			count: 1
+			path: src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php
+
+		-
+			message: '#^Parameter \#3 \$deps of function wp_register_script_module expects array\<int\|string, array\{id\: string, import\?\: string\}\>, array\{''@klarna/network…''\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ExpressCheckout/Assets.php
+
+		-
+			message: '#^Property Krokedil\\Klarna\\ExpressCheckout\\ClientTokenParser\:\:\$settings is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/ExpressCheckout/ClientTokenParser.php
+
+		-
+			message: '#^Parameter \#3 \$order_id of method KP_Api\:\:place_order\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ExpressCheckout/KECOneStepIntegration.php
+
+		-
+			message: '#^Access to an undefined property WooCommerce\:\:\$shipping\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ExpressCheckout/OneStepCheckout.php
+
+		-
+			message: '#^Binary operation "\+" between string and float results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: src/ExpressCheckout/OneStepCheckout.php
+
+		-
+			message: '#^Parameter \#1 \$attachment_id of function wp_get_attachment_image_url expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ExpressCheckout/OneStepCheckout.php
+
+		-
+			message: '#^Property Krokedil\\Klarna\\ExpressCheckout\\Settings\:\:\$enabled is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: src/ExpressCheckout/Settings.php
+
+		-
+			message: '#^Parameter \#3 \$deps of function wp_register_script_module expects array\<int\|string, array\{id\: string, import\?\: string\}\>, array\{''@klarna/network…''\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OnsiteMessaging/KlarnaOnsiteMessaging.php
+
+		-
+			message: '#^Property _WP_Dependency\:\:\$src \(string\|false\) on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.property
+			count: 1
+			path: src/OnsiteMessaging/KlarnaOnsiteMessaging.php
+
+		-
+			message: '#^Variable \$client_id in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/OnsiteMessaging/KlarnaOnsiteMessaging.php
+
+		-
+			message: '#^Variable \$has_shortcode might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/OnsiteMessaging/KlarnaOnsiteMessaging.php
+
+		-
+			message: '#^Access to an undefined property WC_Cart\:\:\$total\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/OnsiteMessaging/Pages/Cart.php
+
+		-
+			message: '#^Property Krokedil\\Klarna\\OnsiteMessaging\\Pages\\Page\:\:\$priority \(string\) does not accept int\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/OnsiteMessaging/Pages/Cart.php
+
+		-
+			message: '#^Property WooCommerce\:\:\$cart \(WC_Cart\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: src/OnsiteMessaging/Pages/Cart.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/OnsiteMessaging/Settings.php
+
+		-
+			message: '#^Call to an undefined method WC_Product\:\:get_bundle_price\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/OnsiteMessaging/Utility.php
+
+		-
+			message: '#^Call to an undefined method WC_Product\:\:get_variation_price\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/OnsiteMessaging/Utility.php
+
+		-
+			message: '#^Call to function method_exists\(\) with ''WC_Customer'' and ''get_billing_country'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/OnsiteMessaging/Utility.php
+
+		-
+			message: '#^Property WooCommerce\:\:\$customer \(WC_Customer\) in empty\(\) is not falsy\.$#'
+			identifier: empty.property
+			count: 1
+			path: src/OnsiteMessaging/Utility.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OnsiteMessaging/Widget.php
+
+		-
+			message: '#^Result of static method Krokedil\\Klarna\\OnsiteMessaging\\Utility\:\:print_placement\(\) \(void\) is used\.$#'
+			identifier: staticMethod.void
+			count: 1
+			path: src/OnsiteMessaging/Widget.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and array\|object results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/OrderManagement.php
+
+		-
+			message: '#^Method Krokedil\\Klarna\\OrderManagement\:\:capture_klarna_order\(\) should return bool\|WP_Error\|null but empty return statement found\.$#'
+			identifier: return.empty
+			count: 1
+			path: src/OrderManagement.php
+
+		-
+			message: '#^Method Krokedil\\Klarna\\OrderManagement\:\:capture_klarna_order\(\) should return bool\|WP_Error\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/OrderManagement.php
+
+		-
+			message: '#^Method Krokedil\\Klarna\\OrderManagement\:\:update_klarna_order_items\(\) should return WP_Error\|null but empty return statement found\.$#'
+			identifier: return.empty
+			count: 1
+			path: src/OrderManagement.php
+
+		-
+			message: '#^Method Krokedil\\Klarna\\OrderManagement\:\:update_klarna_order_items\(\) should return WP_Error\|null but returns true\.$#'
+			identifier: return.type
+			count: 2
+			path: src/OrderManagement.php
+
+		-
+			message: '#^Parameter \#1 \$price of function wc_price expects float, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement.php
+
+		-
+			message: '#^Property Krokedil\\Klarna\\OrderManagement\:\:\$metabox \(Krokedil\\Klarna\\OrderManagement\\MetaBox\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: src/OrderManagement.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between ''klarna_payments'' and ''klarna_payments'' will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: src/OrderManagement.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/OrderManagement.php
+
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: src/OrderManagement/Ajax.php
+
+		-
+			message: '#^Parameter \#2 \$value of method WC_Data\:\:update_meta_data\(\) expects array\|string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/Ajax.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: src/OrderManagement/Ajax.php
+
+		-
+			message: '#^Parameter \#1 \$post_id of method Krokedil\\Klarna\\OrderManagement\\SellersApp\:\:populate_klarna_order\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/MetaBox.php
+
+		-
+			message: '#^Parameter \#2 \$value of method WC_Data\:\:update_meta_data\(\) expects array\|string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/MetaBox.php
+
+		-
+			message: '#^Parameter \#2 \$value of method WC_Data\:\:update_meta_data\(\) expects array\|string, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/PendingOrders.php
+
+		-
+			message: '#^Binary operation "\*" between string and 100 results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 4
+			path: src/OrderManagement/Request/Post/RequestPostRefund.php
+
+		-
+			message: '#^Binary operation "\+" between string and string results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/OrderManagement/Request/Post/RequestPostRefund.php
+
+		-
+			message: '#^Binary operation "\-" between string and string results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/OrderManagement/Request/Post/RequestPostRefund.php
+
+		-
+			message: '#^Method Krokedil\\Klarna\\OrderManagement\\Request\\Post\\RequestPostRefund\:\:get_refund_item_discount_amount\(\) should return int but returns float\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OrderManagement/Request/Post/RequestPostRefund.php
+
+		-
+			message: '#^Method Krokedil\\Klarna\\OrderManagement\\Request\\Post\\RequestPostRefund\:\:get_refund_item_tax_amount\(\) should return int but returns float\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OrderManagement/Request/Post/RequestPostRefund.php
+
+		-
+			message: '#^Method Krokedil\\Klarna\\OrderManagement\\Request\\Post\\RequestPostRefund\:\:get_refunded_order_id\(\) should return string but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OrderManagement/Request/Post/RequestPostRefund.php
+
+		-
+			message: '#^Parameter \#1 \$num of function abs expects float\|int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/OrderManagement/Request/Post/RequestPostRefund.php
+
+		-
+			message: '#^Variable \$data might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/OrderManagement/Request/Post/RequestPostRefund.php
+
+		-
+			message: '#^Variable \$order_line_tax_rate might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/OrderManagement/Request/Post/RequestPostRefund.php
+
+		-
+			message: '#^Method Krokedil\\Klarna\\OrderManagement\\Request\\Request\:\:get_request_headers\(\) should return array but returns WP_Error\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OrderManagement/Request/Request.php
+
+		-
+			message: '#^Parameter \#6 \$code of static method KP_Logger\:\:format_log\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/Request/Request.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/OrderManagement/ReturnFee.php
+
+		-
+			message: '#^Parameter \#1 \$value of method WC_Order_Refund\:\:set_amount\(\) expects string, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/ReturnFee.php
+
+		-
+			message: '#^Access to an undefined property WC_Shipping_Rate\:\:\$cost\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Access to an undefined property WC_Shipping_Rate\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Access to an undefined property WC_Shipping_Rate\:\:\$label\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Access to an undefined property WC_Shipping_Rate\:\:\$taxes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Access to property \$order_id on an unknown class Klarna_Checkout_Order\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Access to property \$order_lines on an unknown class Klarna_Checkout_Order\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of method Krokedil\\Klarna\\OrderManagement\:\:retrieve_klarna_order\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Parameter \#1 \$value of method WC_Abstract_Order\:\:set_cart_tax\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Parameter \#1 \$value of method WC_Abstract_Order\:\:set_shipping_tax\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Parameter \#1 \$value of method WC_Abstract_Order\:\:set_shipping_total\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Parameter \#1 \$value of method WC_Abstract_Order\:\:set_total\(\) expects string, \(float\|int\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Parameter \#6 \$instance_id of class WC_Shipping_Rate constructor expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Parameter \$klarna_order of method Krokedil\\Klarna\\OrderManagement\\SellersApp\:\:process_order_lines\(\) has invalid type Klarna_Checkout_Order\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between true and true will always evaluate to true\.$#'
+			identifier: identical.alwaysTrue
+			count: 1
+			path: src/OrderManagement/SellersApp.php
+
+		-
+			message: '#^The overwriting return is on this line\.$#'
+			identifier: finally.exitPoint
+			count: 1
+			path: src/PluginFeatures.php
+
+		-
+			message: '#^This throw is overwritten by a different one in the finally block below\.$#'
+			identifier: finally.exitPoint
+			count: 1
+			path: src/PluginFeatures.php
+
+		-
+			message: '#^Parameter \#3 \$deps of function wp_register_script_module expects array\<int\|string, array\{id\: string, import\?\: string\}\>, array\{''@klarna/network…''\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SignInWithKlarna.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: src/SignInWithKlarna/Ajax.php
+
+		-
+			message: '#^Parameter \#1 \$id_token of method Krokedil\\Klarna\\SignInWithKlarna\\User\:\:get_user_data\(\) expects string, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SignInWithKlarna/Ajax.php
+
+		-
+			message: '#^Property Krokedil\\Klarna\\SignInWithKlarna\\JWT\:\:\$jwks \(array\) does not accept false\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/SignInWithKlarna/JWT.php
+
+		-
+			message: '#^Property Krokedil\\Klarna\\SignInWithKlarna\\JWT\:\:\$settings is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/SignInWithKlarna/JWT.php
+
+		-
+			message: '#^Access to an undefined property WooCommerce\:\:\$payment_gateways\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/SignInWithKlarna/User.php
+
+		-
+			message: '#^Property Krokedil\\Klarna\\SignInWithKlarna\\User\:\:\$jwt is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/SignInWithKlarna/User.php

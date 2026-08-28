@@ -17,7 +17,7 @@ class SellersApp {
 	/**
 	 * *Singleton* instance of this class
 	 *
-	 * @var $instance
+	 * @var SellersApp $instance
 	 */
 	private static $instance;
 
