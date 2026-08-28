@@ -50,7 +50,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\Support\Logger;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 
 /**
- * Required minimums and constants
+ * Required minimums and constants test
  */
 define( 'WC_KLARNA_PAYMENTS_VERSION', '4.13.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
