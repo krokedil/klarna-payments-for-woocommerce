@@ -48,7 +48,8 @@ class KP_Create_Customer_Token extends KP_Requests_Post {
 				'intended_use'      => 'SUBSCRIPTION',
 				'locale'            => kp_get_locale(),
 				'purchase_country'  => kp_get_klarna_country( $order ),
-				'purchase_currency' => get_woocommerce_currency(),
+				// Has to match the currency the credentials were resolved for, see KP_Requests::get_purchase_currency.
+				'purchase_currency' => empty( $order ) ? get_woocommerce_currency() : $order->get_currency(),
 			)
 		);
 	}

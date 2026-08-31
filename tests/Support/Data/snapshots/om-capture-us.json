@@ -1,0 +1,33 @@
+{
+    "method": "POST",
+    "path": "https://api-na.playground.klarna.com/ordermanagement/v1/orders/klarna-order-123/captures",
+    "body": {
+        "captured_amount": 21700,
+        "order_lines": [
+            {
+                "name": "KP Test Product",
+                "product_url": "<site>/?product=kp-test-product",
+                "quantity": 2,
+                "quantity_unit": "pcs",
+                "reference": "kp-test-1",
+                "tax_rate": 0,
+                "total_amount": 20000,
+                "total_discount_amount": 0,
+                "total_tax_amount": 0,
+                "type": "physical",
+                "unit_price": 10000
+            },
+            {
+                "name": "Sales Tax",
+                "quantity": 1,
+                "reference": "Sales Tax",
+                "tax_rate": 0,
+                "total_amount": 1700,
+                "total_discount_amount": 0,
+                "total_tax_amount": 0,
+                "type": "sales_tax",
+                "unit_price": 1700
+            }
+        ]
+    }
+}

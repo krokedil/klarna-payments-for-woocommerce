@@ -19,6 +19,9 @@ composer.lock
 package.json
 package-lock.json
 phpcs.xml
+phpstan.neon
+phpstan-baseline.neon
+phpstan-bootstrap.php
 pnpm-lock.yaml
 readme.dev.txt
 readme.dev.md
@@ -38,5 +41,17 @@ CLAUDE.md
 .npmrc
 .playground
 /pr-screenshots
+composer-dependencies.json
+composer-dependencies.lock
+scoper.custom.php
+allurerc.mjs
+allurerc.single.mjs
+codeception.yml
+tsconfig.json
+gruntfile.cjs
+tmp*
+*.bak
 .env
 .env.example
+.env.local
+.env.*.local

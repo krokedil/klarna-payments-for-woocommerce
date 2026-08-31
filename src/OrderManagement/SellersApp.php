@@ -17,7 +17,7 @@ class SellersApp {
 	/**
 	 * *Singleton* instance of this class
 	 *
-	 * @var $instance
+	 * @var SellersApp $instance
 	 */
 	private static $instance;
 
@@ -85,7 +85,8 @@ class SellersApp {
 		if ( $update && ! empty( $order->get_transaction_id() ) && 'klarna_payments' === $order->get_payment_method() ) {
 			// Set post metas.
 			$order->update_meta_data( '_wc_klarna_order_id', $order->get_transaction_id() );
-			$order->update_meta_data( '_wc_klarna_country', wc_get_base_location()['country'] );
+			// Writes the market normalised, and the credential set order management needs to authenticate.
+			kp_save_order_credentials_meta( $order, wc_get_base_location()['country'] );
 			$order->update_meta_data( '_wc_klarna_environment', self::get_klarna_environment( $order->get_payment_method() ) );
 			$order->save();
 

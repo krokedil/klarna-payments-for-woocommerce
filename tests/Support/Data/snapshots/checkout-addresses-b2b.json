@@ -1,0 +1,28 @@
+{
+    "billing": {
+        "given_name": "Karl",
+        "family_name": "Karlsson",
+        "email": "karl@example.com",
+        "phone": "+46701234567",
+        "street_address": "Storgatan 1",
+        "street_address2": "Lgh 1102",
+        "postal_code": "41106",
+        "city": "G\u00f6teborg",
+        "region": "",
+        "country": "SE",
+        "organization_name": "Krokedil AB"
+    },
+    "shipping": {
+        "given_name": "Karl",
+        "family_name": "Karlsson",
+        "email": "karl@example.com",
+        "phone": "+46701234567",
+        "street_address": "Storgatan 1",
+        "street_address2": "Lgh 1102",
+        "postal_code": "41106",
+        "city": "G\u00f6teborg",
+        "region": "",
+        "country": "SE",
+        "organization_name": "Krokedil AB"
+    }
+}
