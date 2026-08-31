@@ -186,13 +186,13 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 
 			// If the post data is to long, log a error message and return.
 			if ( $post_size > 1024 ) {
-				KP_logger::log( "Frontend JS $klarna_session_id: message to long and can't be logged." );
+				KP_Logger::log( "Frontend JS $klarna_session_id: message to long and can't be logged." );
 				wp_send_json_success(); // Return success to not stop anything in the frontend if this happens.
 			}
 
 			$posted_message = filter_input( INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 			$message        = "Frontend JS $klarna_session_id: $posted_message";
-			KP_logger::log( $message );
+			KP_Logger::log( $message );
 			wp_send_json_success();
 		}
 
