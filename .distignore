@@ -33,6 +33,14 @@ yarn.lock
 .klarna-system-metadata.json
 /.changelogs
 .gitkeep
+playground.config.mjs
+/tools
+/.claude
+CLAUDE.md
+.nvmrc
+.npmrc
+.playground
+/pr-screenshots
 composer-dependencies.json
 composer-dependencies.lock
 scoper.custom.php
@@ -44,5 +52,6 @@ gruntfile.cjs
 tmp*
 *.bak
 .env
+.env.example
 .env.local
 .env.*.local
