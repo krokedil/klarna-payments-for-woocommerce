@@ -32,7 +32,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				'kp_wc_auth_failed'                => true,
 				'kp_wc_log_js'                     => true,
 				'kp_wc_express_button'             => true,
-				'kp_wc_get_unavailable_features'   => true,
+				'kp_wc_get_unavailable_features'   => false, // Settings screen only. Never registered for logged out requests.
 				'kp_wc_set_interoperability_token' => true,
 				'kp_wc_get_interoperability_data'  => true,
 			);

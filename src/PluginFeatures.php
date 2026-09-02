@@ -155,7 +155,7 @@ class PluginFeatures {
 	}
 
 	/**
-	 * Process the response from the plugins api request, and store the available and unavailable features.
+	 * Process the response from the plugins api request into the available and unavailable features.
 	 *
 	 * @param array $response The response from the plugins API request.
 	 * @param array $credentials The credentials used for the request.
@@ -195,12 +195,6 @@ class PluginFeatures {
 			$features[ $key ]['availability']  = 'AVAILABLE' === $availability;
 			$features[ $key ]['available_for'] = array_map( 'strtoupper', $available_for );
 		}
-
-		// Store the acquiring_partner_key if present in the response.
-		if ( isset( $response['acquiring_partner_key'] ) && ! empty( $response['acquiring_partner_key'] ) ) {
-			$this->check_has_acquiring_partner_key = true;
-			update_option( 'klarna_acquiring_partner_key', $response['acquiring_partner_key'] );
-		}
 	}
 
 	/**
@@ -235,6 +229,7 @@ class PluginFeatures {
 
 				$this->process_api_response_features( $response, $credentials, $features );
 				$this->process_api_response_capabilities( $response, $credentials, $capabilities );
+				$this->process_api_response_acquiring_partner_key( $response );
 			}
 		} catch ( \WP_Exception $e ) {
 			$complete = false;
@@ -461,6 +456,22 @@ class PluginFeatures {
 		}
 
 		$capabilities[ $country_code ] = $capability;
+	}
+
+	/**
+	 * Store the acquiring partner key from the plugins API response, if it has one.
+	 *
+	 * @param array $response The response from the plugins API request.
+	 *
+	 * @return void
+	 */
+	private function process_api_response_acquiring_partner_key( $response ) {
+		if ( empty( $response['acquiring_partner_key'] ) ) {
+			return;
+		}
+
+		$this->check_has_acquiring_partner_key = true;
+		update_option( 'klarna_acquiring_partner_key', $response['acquiring_partner_key'] );
 	}
 
 	/**
