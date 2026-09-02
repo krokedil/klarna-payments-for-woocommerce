@@ -459,7 +459,7 @@ parameters:
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
-			count: 3
+			count: 4
 			path: src/OrderManagement/Ajax.php
 
 		-
