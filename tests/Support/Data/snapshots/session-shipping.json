@@ -1,0 +1,69 @@
+{
+    "method": "POST",
+    "path": "https://api.playground.klarna.com/payments/v1/sessions",
+    "body": {
+        "purchase_country": "SE",
+        "purchase_currency": "SEK",
+        "locale": "en-US",
+        "order_amount": 31250,
+        "order_tax_amount": 6250,
+        "order_lines": [
+            {
+                "name": "Klarna Test Product",
+                "product_url": "<site>/?product=klarna-test-product",
+                "quantity": 2,
+                "quantity_unit": "pcs",
+                "reference": "kp-test-1",
+                "tax_rate": 2500,
+                "total_amount": 25000,
+                "total_discount_amount": 0,
+                "total_tax_amount": 5000,
+                "type": "physical",
+                "unit_price": 12500
+            },
+            {
+                "name": "Flat rate",
+                "quantity": 1,
+                "quantity_unit": "pcs",
+                "reference": "flat_rate:1",
+                "tax_rate": 2500,
+                "total_amount": 6250,
+                "total_discount_amount": 0,
+                "total_tax_amount": 1250,
+                "type": "shipping_fee",
+                "unit_price": 6250
+            }
+        ],
+        "customer": {
+            "type": "person"
+        },
+        "billing_address": {
+            "given_name": "Karl",
+            "family_name": "Karlsson",
+            "email": "karl@example.com",
+            "phone": "+46701234567",
+            "street_address": "Storgatan 1",
+            "street_address2": "Lgh 1102",
+            "postal_code": "41106",
+            "city": "G\u00f6teborg",
+            "region": "",
+            "country": "SE"
+        },
+        "shipping_address": {
+            "given_name": "Karl",
+            "family_name": "Karlsson",
+            "email": "karl@example.com",
+            "phone": "+46701234567",
+            "street_address": "Storgatan 1",
+            "street_address2": "Lgh 1102",
+            "postal_code": "41106",
+            "city": "G\u00f6teborg",
+            "region": "",
+            "country": "SE"
+        },
+        "options": null,
+        "merchant_urls": {
+            "authorization": "<site>/wc-api/KP_WC_AUTHORIZATION"
+        }
+    }
+}

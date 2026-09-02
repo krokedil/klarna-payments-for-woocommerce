@@ -1,0 +1,31 @@
+{
+    "line_items": [
+        {
+            "name": "Klarna Test Product",
+            "quantity": 2,
+            "total_amount": 25000,
+            "unit_price": 25000,
+            "total_tax_amount": 5000,
+            "product_url": "<site>/?product=klarna-test-product",
+            "image_url": null,
+            "product_identifier": [],
+            "reference": "kp-interop-1",
+            "shipping_reference": "flat_rate:1"
+        }
+    ],
+    "shipping": {
+        "shipping_reference": "flat_rate:1",
+        "recipient": {
+            "given_name": "Karl",
+            "family_name": "Karlsson",
+            "email": "",
+            "phone": "+46701234567"
+        },
+        "address": {
+            "street_address": "Storgatan 1",
+            "postal_code": "41106",
+            "city": "G\u00f6teborg",
+            "country": "SE"
+        }
+    }
+}

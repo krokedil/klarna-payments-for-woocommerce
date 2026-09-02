@@ -5,7 +5,7 @@
  * Description: Provides Klarna as a payment method to WooCommerce and Klarna conversion boosters.
  * Author: klarna
  * Author URI: https://www.klarna.com/
- * Version: 4.12.2
+ * Version: 4.13.0
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
@@ -36,6 +36,7 @@ use Krokedil\Klarna\PluginFeatures;
 use Krokedil\Klarna\Compatibility;
 use Krokedil\Klarna\OrderManagement;
 use Krokedil\Klarna\ExpressCheckout;
+use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -51,7 +52,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 /**
  * Required minimums and constants
  */
-define( 'WC_KLARNA_PAYMENTS_VERSION', '4.12.2' );
+define( 'WC_KLARNA_PAYMENTS_VERSION', '4.13.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
@@ -68,14 +69,14 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		/**
 		 * The reference the *Singleton* instance of this class.
 		 *
-		 * @var $instance
+		 * @var WC_Klarna_Payments $instance
 		 */
 		private static $instance;
 
 		/**
 		 * Returns the *Singleton* instance of this class.
 		 *
-		 * @return self::$instance The *Singleton* instance.
+		 * @return self The *Singleton* instance.
 		 */
 		public static function get_instance() {
 			if ( null === self::$instance ) {
@@ -254,9 +255,29 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'filter_payment_method_id' ) );
 
-			add_filter( 'kosm_data_client_id', 'kp_get_client_id' );
+			// A closure, so the filtered value is not passed as the $country argument.
+			add_filter(
+				'kosm_data_client_id',
+				function () {
+					return kp_get_client_id();
+				}
+			);
 
 			add_action( 'init', array( $this, 'load_textdomain' ) );
+
+			add_action( 'kp_refresh_credential_capabilities', array( $this, 'refresh_credential_capabilities' ) );
+			add_action( 'kp_backfill_credential_capabilities', array( $this, 'refresh_credential_capabilities' ) );
+			register_deactivation_hook( __FILE__, array( $this, 'clear_scheduled_events' ) );
+		}
+
+		/**
+		 * Clear the events this plugin has scheduled.
+		 *
+		 * @return void
+		 */
+		public function clear_scheduled_events() {
+			wp_clear_scheduled_hook( 'kp_refresh_credential_capabilities' );
+			wp_clear_scheduled_hook( 'kp_backfill_credential_capabilities' );
 		}
 
 		/**
@@ -334,7 +355,51 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			add_action( 'before_woocommerce_init', array( $this, 'declare_wc_compatibility' ) );
 
+			ApiCredentialsUtility::register_cache_invalidation();
+
 			$this->plugin_features->init_features();
+
+			$this->schedule_credential_capabilities_refresh();
+		}
+
+		/**
+		 * Make sure the credential capabilities are refreshed regularly.
+		 *
+		 * They are otherwise only fetched when the merchant saves the settings page.
+		 *
+		 * @return void
+		 */
+		public function schedule_credential_capabilities_refresh() {
+			// Reading the cron option on every front end request buys nothing, only an admin or cron can act on it.
+			if ( ! is_admin() && ! wp_doing_cron() && ! defined( 'WP_CLI' ) ) {
+				return;
+			}
+
+			if ( ! wp_next_scheduled( 'kp_refresh_credential_capabilities' ) ) {
+				wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'kp_refresh_credential_capabilities' );
+			}
+
+			// Backfill as a single event, so no page load waits for one API request per credential set. Gated on
+			// having been attempted rather than having succeeded, otherwise a failing credential set would
+			// reschedule this every minute forever.
+			if ( 'yes' !== get_option( 'kp_capabilities_backfilled' ) ) {
+				update_option( 'kp_capabilities_backfilled', 'yes' );
+				wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'kp_backfill_credential_capabilities' );
+			}
+		}
+
+		/**
+		 * Refresh the features and cross border capabilities of every configured credential set.
+		 *
+		 * @return void
+		 */
+		public function refresh_credential_capabilities() {
+			// Unset if the plugin bailed out of init because its requirements were not met.
+			if ( empty( $this->plugin_features ) ) {
+				return;
+			}
+
+			$this->plugin_features->process_all_api_credentials();
 		}
 
 		/**
@@ -521,7 +586,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$autoloader              = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
 			$autoloader_dependencies = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/dependencies/scoper-autoload.php';
 
-			if ( ! is_readable( $autoloader_dependencies ) || ! is_readable( $autoloader_dependencies ) ) {
+			if ( ! is_readable( $autoloader ) || ! is_readable( $autoloader_dependencies ) ) {
 				self::missing_autoloader();
 				return false;
 			}

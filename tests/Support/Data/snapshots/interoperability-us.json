@@ -1,0 +1,31 @@
+{
+    "line_items": [
+        {
+            "name": "Klarna Test Product",
+            "quantity": 2,
+            "total_amount": 20000,
+            "unit_price": 20000,
+            "total_tax_amount": 0,
+            "product_url": "<site>/?product=klarna-test-product",
+            "image_url": null,
+            "product_identifier": [],
+            "reference": "kp-interop-1",
+            "shipping_reference": "flat_rate:1"
+        }
+    ],
+    "shipping": {
+        "shipping_reference": "flat_rate:1",
+        "recipient": {
+            "given_name": "Jane",
+            "family_name": "Doe",
+            "email": "",
+            "phone": "+14155550123"
+        },
+        "address": {
+            "street_address": "1 Market Street",
+            "postal_code": "94105",
+            "city": "San Francisco",
+            "country": "US"
+        }
+    }
+}

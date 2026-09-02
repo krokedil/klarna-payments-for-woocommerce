@@ -146,13 +146,17 @@ class KP_Subscription {
 	 * @return void
 	 */
 	public function process_scheduled_payment( $amount_to_charge, $renewal_order ) {
-		$recurring_token = $this->get_recurring_tokens( $renewal_order->get_id() );
+		$recurring_token     = $this->get_recurring_tokens( $renewal_order->get_id() );
+		$credentials_country = self::get_recurring_credentials_country( $renewal_order );
 
-		$response = KP_WC()->api->create_recurring_order( kp_get_klarna_country( $renewal_order ), $recurring_token, $renewal_order->get_id() );
+		$response = KP_WC()->api->create_recurring_order( kp_get_klarna_country( $renewal_order ), $recurring_token, $renewal_order->get_id(), $credentials_country );
 		if ( ! is_wp_error( $response ) ) {
 			$klarna_order_id = $response['order_id'];
 			/* translators: [merchant-facing]. Klarna order id. */
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Klarna. Klarna order id: %s', 'klarna-payments-for-woocommerce' ), $klarna_order_id ) );
+
+			// Record the set that actually took the renewal, before kp_save_order_meta_data resolves a fresh one.
+			kp_save_order_credentials_meta( $renewal_order, null, $credentials_country );
 			kp_save_order_meta_data( $renewal_order, $response );
 		} else {
 			$error_message = $response->get_error_message();
@@ -177,6 +181,37 @@ class KP_Subscription {
 	}
 
 	/**
+	 * Get the credential set the recurring token belongs to.
+	 *
+	 * The token was issued by the account that took the original purchase, so resolving it again can pick a
+	 * different one once Klarna changes what the credentials are granted.
+	 *
+	 * @param WC_Order $order The renewal order or the subscription.
+	 * @return string The settings country code, or an empty string if it is not known.
+	 */
+	private static function get_recurring_credentials_country( $order ) {
+		$subscriptions = function_exists( 'wcs_get_subscriptions_for_renewal_order' ) ? array_values( wcs_get_subscriptions_for_renewal_order( $order->get_id() ) ) : array();
+		$parents       = array();
+
+		// A renewal order can be created without the meta, so fall back to the subscription and its parent.
+		foreach ( array_merge( array( $order ), $subscriptions ) as $source ) {
+			if ( is_callable( array( $source, 'get_parent' ) ) ) {
+				$parents[] = $source->get_parent();
+			}
+		}
+
+		foreach ( array_merge( array( $order ), $subscriptions, $parents ) as $source ) {
+			$credentials_country = empty( $source ) ? '' : kp_get_order_credentials_country( $source );
+
+			if ( ! empty( $credentials_country ) ) {
+				return $credentials_country;
+			}
+		}
+
+		return '';
+	}
+
+	/**
 	 * Cancel the customer token to prevent further payments using the token.
 	 *
 	 * Note: When changing payment method, WC Subscriptions will cancel the subscription with existing payment gateway (which triggers this functions), and create a new one. Thus the new subscription must generate a new customer token.
@@ -194,7 +229,8 @@ class KP_Subscription {
 
 		$recurring_token = $this->get_recurring_tokens( $subscription->get_id() );
 
-		$response = KP_WC()->api->cancel_recurring_order( kp_get_klarna_country( $subscription ), $recurring_token );
+		// Pass the currency explicitly, there is no order for the request to read it from.
+		$response = KP_WC()->api->cancel_recurring_order( kp_get_klarna_country( $subscription ), $recurring_token, $subscription->get_currency(), self::get_recurring_credentials_country( $subscription ) );
 		if ( ! is_wp_error( $response ) ) {
 			/* translators: [merchant-facing]. */
 			$subscription->add_order_note( __( 'Subscription cancelled with Klarna Payments.', 'klarna-payments-for-woocommerce' ) );
