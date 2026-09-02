@@ -251,6 +251,10 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_error( 'bad_nonce' );
 			}
 
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				wp_send_json_error( 'forbidden' );
+			}
+
 			$country_credentials = filter_input( INPUT_POST, 'country_credentials', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY );
 
 			if ( ! $country_credentials ) {
