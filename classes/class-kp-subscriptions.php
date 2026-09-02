@@ -374,6 +374,8 @@ class KP_Subscription {
 	/**
 	 * Save the payment and recurring token to the order and its subscription(s).
 	 *
+	 * A subscription left without a payment method is also set to renew automatically with Klarna.
+	 *
 	 * @param string $order_id The WooCommerce order id.
 	 * @param string $recurring_token The recurring token ("customer token").
 	 * @return void
@@ -383,11 +385,74 @@ class KP_Subscription {
 		$order->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
 
 		foreach ( wcs_get_subscriptions_for_order( $order, array( 'order_type' => 'any' ) ) as $subscription ) {
+			// Runs before the token is stored, since it needs to know whether the subscription already had one.
+			self::maybe_enable_automatic_renewals( $subscription, $recurring_token, $order );
+
 			$subscription->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
 			$subscription->save();
 		}
 
 		$order->save();
+	}
+
+	/**
+	 * Enable automatic renewals for a subscription we now hold a recurring token for.
+	 *
+	 * WC Subscriptions only copies the payment method onto the subscription when the cart needed payment, so with the
+	 * "$0 Initial Checkout" setting enabled the subscription is left flagged for manual renewal and the scheduled
+	 * payment hook never fires for it. A recurring token is what lets us charge unattended, so having one means Klarna
+	 * can be set as the payment method. The caller is responsible for saving the subscription.
+	 *
+	 * @see WC_Subscriptions_Checkout::create_subscription() Where the payment method is skipped.
+	 * @see WC_Subscriptions_Payment_Gateways::gateway_scheduled_subscription_payment() Where manual renewals bail.
+	 *
+	 * @param WC_Subscription          $subscription The subscription to update.
+	 * @param string                   $recurring_token The recurring token ("customer token").
+	 * @param WC_Order|WC_Subscription $order The order the recurring token was created for.
+	 * @return void
+	 */
+	private static function maybe_enable_automatic_renewals( $subscription, $recurring_token, $order ) {
+		// Without a token there is nothing to charge the subscription with.
+		if ( empty( $recurring_token ) ) {
+			return;
+		}
+
+		// A subscription that already has a gateway is not ours to reassign.
+		if ( ! empty( $subscription->get_payment_method() ) ) {
+			return;
+		}
+
+		// Claim the subscription only the first time we get a token for it. Selecting "Manual Renewal" also clears the
+		// payment method, and a subscription deliberately moved to manual renewal must stay that way.
+		if ( ! empty( $subscription->get_meta( self::RECURRING_TOKEN ) ) ) {
+			return;
+		}
+
+		// The store requires every subscription to be renewed manually.
+		if ( function_exists( 'wcs_is_manual_renewal_required' ) && wcs_is_manual_renewal_required() ) {
+			return;
+		}
+
+		// All registered gateways, since a scheduled payment or a callback has no cart to determine availability from.
+		$gateways = WC()->payment_gateways()->payment_gateways();
+		$gateway  = isset( $gateways[ self::GATEWAY_ID ] ) ? $gateways[ self::GATEWAY_ID ] : null;
+
+		// Support can be removed through the 'wc_klarna_payments_supports' filter.
+		if ( null === $gateway || ! $gateway->supports( 'subscriptions' ) ) {
+			return;
+		}
+
+		// Clears the manual renewal flag and sets the payment method title too, since the payment method id changes.
+		$subscription->set_payment_method( $gateway );
+
+		$subscription->add_order_note(
+			sprintf(
+				/* translators: 1: The payment gateway title. 2: The order number. */
+				__( 'Payment method set to %1$s. Automatic renewals enabled since a recurring token was created for order %2$s.', 'klarna-payments-for-woocommerce' ),
+				$gateway->get_title(),
+				$order->get_order_number()
+			)
+		);
 	}
 
 	/**
@@ -403,8 +468,14 @@ class KP_Subscription {
 		if ( empty( $recurring_token ) ) {
 			$subscriptions = wcs_get_subscriptions_for_renewal_order( $order_id );
 			foreach ( $subscriptions as $subscription ) {
-				$parent_order    = $subscription->get_parent();
-				$recurring_token = $parent_order->get_meta( self::RECURRING_TOKEN );
+				// A sign-up without a payment method leaves the token only on the subscription, not the parent order.
+				$recurring_token = $subscription->get_meta( self::RECURRING_TOKEN );
+
+				if ( empty( $recurring_token ) ) {
+					// Admin created subscriptions and resubscribes have no parent order.
+					$parent_order    = $subscription->get_parent();
+					$recurring_token = empty( $parent_order ) ? '' : $parent_order->get_meta( self::RECURRING_TOKEN );
+				}
 
 				if ( ! empty( $recurring_token ) ) {
 					break;
