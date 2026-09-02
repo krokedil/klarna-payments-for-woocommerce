@@ -52,6 +52,7 @@ class Ajax {
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_send_json_error( 'forbidden' );
+			exit;
 		}
 
 		if ( ! $order_id ) {
