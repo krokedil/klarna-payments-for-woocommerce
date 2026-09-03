@@ -66,6 +66,10 @@ class WebhookSetup {
 			return;
 		}
 
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
 		try {
 			switch ( $action ) {
 				case self::CREATE_WEBHOOK_ACTION:

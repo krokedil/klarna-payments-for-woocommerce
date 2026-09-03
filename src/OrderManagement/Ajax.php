@@ -29,9 +29,9 @@ class Ajax {
 			add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			if ( $nopriv ) {
 				add_action( 'wp_ajax_nopriv_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
+				// WC AJAX can be used for frontend ajax requests.
+				add_action( 'wc_ajax_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			}
-			// WC AJAX can be used for frontend ajax requests.
-			add_action( 'wc_ajax_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 		}
 	}
 
@@ -47,6 +47,11 @@ class Ajax {
 
 		if ( ! wp_verify_nonce( $nonce, 'kom_wc_set_order_sync' ) ) {
 			wp_send_json_error( 'bad_nonce' );
+			exit;
+		}
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( 'forbidden' );
 			exit;
 		}
 

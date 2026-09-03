@@ -32,7 +32,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				'kp_wc_auth_failed'                => true,
 				'kp_wc_log_js'                     => true,
 				'kp_wc_express_button'             => true,
-				'kp_wc_get_unavailable_features'   => true,
+				'kp_wc_get_unavailable_features'   => false, // Settings screen only. Never registered for logged out requests.
 				'kp_wc_set_interoperability_token' => true,
 				'kp_wc_get_interoperability_data'  => true,
 			);
@@ -249,6 +249,10 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 
 			if ( ! wp_verify_nonce( $nonce, 'kp_wc_get_unavailable_features' ) ) {
 				wp_send_json_error( 'bad_nonce' );
+			}
+
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				wp_send_json_error( 'forbidden' );
 			}
 
 			$country_credentials = filter_input( INPUT_POST, 'country_credentials', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY );

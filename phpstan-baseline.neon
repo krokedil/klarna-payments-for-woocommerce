@@ -25,12 +25,6 @@ parameters:
 			path: classes/class-kp-ajax.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: classes/class-kp-ajax.php
-
-		-
 			message: '#^Offset ''city'' does not exist on string\|false\.$#'
 			identifier: offsetAccess.notFound
 			count: 2
@@ -465,7 +459,7 @@ parameters:
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
-			count: 3
+			count: 4
 			path: src/OrderManagement/Ajax.php
 
 		-
