@@ -357,7 +357,7 @@ abstract class Request {
 		foreach ( $request_args['headers'] as $header => $value ) {
 			if ( 'authorization' === strtolower( $header ) ) {
 				// If it is longer than 15 char., it most likely has a token. This is an assumption that is safe even if it is wrong.
-				$request_args['headers'][ $header ] = strlen( $value ) > 15 ? '[REDACTED]' : '[MISSING]';
+				$request_args['headers'][ $header ] = strlen( $value ) > 15 ? \KP_Logger::REDACTED : \KP_Logger::MISSING;
 				break;
 			}
 		}

@@ -21,6 +21,13 @@ class KP_Logger {
 	const REDACTED = '[REDACTED]';
 
 	/**
+	 * The value written to the log in place of a credential that was expected but absent.
+	 *
+	 * @var string
+	 */
+	const MISSING = '[MISSING]';
+
+	/**
 	 * Log message string
 	 *
 	 * @var string $log

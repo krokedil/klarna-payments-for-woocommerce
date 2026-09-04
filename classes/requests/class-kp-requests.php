@@ -306,10 +306,10 @@ abstract class KP_Requests extends Request {
 
 		$arguments = $this->arguments;
 		if ( isset( $arguments['username'] ) ) {
-			$arguments['username'] = '[REDACTED]';
+			$arguments['username'] = KP_Logger::REDACTED;
 		}
 		if ( isset( $arguments['password'] ) ) {
-			$arguments['password'] = '[REDACTED]';
+			$arguments['password'] = KP_Logger::REDACTED;
 		}
 
 		KP_WC()->logger()->info(

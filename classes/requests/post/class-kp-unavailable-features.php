@@ -136,7 +136,7 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 	 * @return void
 	 */
 	protected function log_response( $response, $request_args, $request_url ) {
-		$this->arguments['api_password'] = '[REDACTED]';
+		$this->arguments['api_password'] = KP_Logger::REDACTED;
 		parent::log_response( $response, $request_args, $request_url );
 	}
 }
