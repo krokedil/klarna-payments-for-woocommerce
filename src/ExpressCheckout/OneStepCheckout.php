@@ -38,6 +38,10 @@ class OneStepCheckout {
 			return;
 		}
 
+		if ( ! self::is_own_unique_id( $kec_unique_id ) ) {
+			self::abort_redirect();
+		}
+
 		$args = array(
 			'limit'        => 1,
 			'meta_key'     => '_kec_unique_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -49,24 +53,43 @@ class OneStepCheckout {
 
 		$orders = wc_get_orders( $args );
 		if ( empty( $orders ) ) {
-			self::unset_sessions();
-			wc_add_notice( __( 'Your order could not be processed', 'klarna-payments-for-woocommerce' ) );
-			wp_safe_redirect( wc_get_cart_url() );
-			exit;
+			self::abort_redirect();
 		}
 
 		$order = reset( $orders );
 
 		if ( $order->get_meta( '_kec_unique_id' ) !== $kec_unique_id ) {
-			self::unset_sessions();
-			wc_add_notice( __( 'Your order could not be processed', 'klarna-payments-for-woocommerce' ) );
-			wp_safe_redirect( wc_get_cart_url() );
-			exit;
+			self::abort_redirect();
 		}
 
 		$redirect_url = self::get_redirect_url_for_order( $order, $kec_unique_id );
 		self::unset_sessions();
 		wp_safe_redirect( $redirect_url );
+		exit;
+	}
+
+	/**
+	 * Check that the reference in the return URL is the one issued to the current shopper's session.
+	 *
+	 * @param string $kec_unique_id The KEC unique ID from the return URL.
+	 *
+	 * @return bool
+	 */
+	private static function is_own_unique_id( $kec_unique_id ) {
+		$session_unique_id = WC()->session ? WC()->session->get( 'kec_one_step_unique_id' ) : '';
+
+		return ! empty( $session_unique_id ) && hash_equals( $session_unique_id, $kec_unique_id );
+	}
+
+	/**
+	 * Send the customer back to the cart with a generic error notice.
+	 *
+	 * @return never
+	 */
+	private static function abort_redirect() {
+		self::unset_sessions();
+		wc_add_notice( __( 'Your order could not be processed', 'klarna-payments-for-woocommerce' ) );
+		wp_safe_redirect( wc_get_cart_url() );
 		exit;
 	}
 
@@ -134,7 +157,7 @@ class OneStepCheckout {
 	 * @return array
 	 */
 	public static function get_initiate_body() {
-		$unique_id = uniqid( 'kec_one_step_' );
+		$unique_id = 'kec_one_step_' . bin2hex( random_bytes( 16 ) );
 		WC()->session->set( 'kec_one_step_unique_id', $unique_id );
 
 		return array(
