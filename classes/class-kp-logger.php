@@ -98,7 +98,7 @@ class KP_Logger {
 	 * @return mixed
 	 */
 	public static function redact( $data, $fields = null ) {
-		if ( ! is_array( $data ) && ! is_object( $data ) ) {
+		if ( ! is_array( $data ) && ! $data instanceof stdClass ) {
 			return $data;
 		}
 
