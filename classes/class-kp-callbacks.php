@@ -151,7 +151,7 @@ class KP_Callbacks {
 					/* translators: [merchant-facing]. */
 					$order->add_order_note( __( 'Failed to create a recurring token when returning from the hosted payment page.', 'klarna-payments-for-woocommerce' ) . $recurring_token->get_error_message() );
 
-					KP_Logger::log( sprintf( '[AJAX]: Order ID: %s. Auth token: %s. %s', $order->get_id(), $auth_token, $recurring_token->get_error_message() ) );
+					KP_Logger::log( sprintf( '[AJAX]: Order ID: %s. Auth token: %s. %s', $order->get_id(), '[REDACTED]', $recurring_token->get_error_message() ) );
 				}
 
 				// If the intent is only 'tokenize', we should not proceed further as 'place_order' only allows 'buy_and_tokenize' intent.

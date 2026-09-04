@@ -84,7 +84,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 						// If the intent is only 'tokenize', we should not proceed further as 'place_order' only allows 'buy_and_tokenize' intent.
 						wp_send_json_success( $order->get_checkout_order_received_url() );
 					} else {
-						KP_Logger::log( sprintf( '[AJAX]: Order ID: %s. Auth token: %s. %s', $order->get_id(), $auth_token, $recurring_token->get_error_message() ) );
+						KP_Logger::log( sprintf( '[AJAX]: Order ID: %s. Auth token: %s. %s', $order->get_id(), '[REDACTED]', $recurring_token->get_error_message() ) );
 						wp_send_json_error( 'customer_token_failed' );
 					}
 				}
