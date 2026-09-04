@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: yes
+
+Added a Log retention setting with a wc_kp_log_retention_days filter, for how many days the plugin's log files are kept. A daily scheduled event now removes Klarna log files older than that period. Set the value to 0 to leave the cleanup to WooCommerce.
