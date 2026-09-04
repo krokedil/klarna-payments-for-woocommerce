@@ -68,6 +68,13 @@ class Notifications extends Controller {
 	 * @return \WP_REST_Response
 	 */
 	public function handle_notification( $request ) {
+		$notification_id = $this->get_notification_id( $request );
+
+		if ( ! $this->claim_notification( $notification_id ) ) {
+			\KP_Logger::log( "KEC: Ignored an already handled notification: {$notification_id}" );
+			return $this->success_response();
+		}
+
 		try {
 			$body = $request->get_json_params();
 
@@ -108,8 +115,75 @@ class Notifications extends Controller {
 
 			return $response ?? $this->success_response();
 		} catch ( \Exception $e ) {
+			$this->release_notification( $notification_id );
 			return new \WP_REST_Response( array( 'error' => $e->getMessage() ), 500 );
 		}
+	}
+
+	/**
+	 * Get the identifier that uniquely identifies an incoming notification.
+	 *
+	 * @param \WP_REST_Request $request The request object.
+	 *
+	 * @return string The notification identifier, or an empty string if it could not be determined.
+	 */
+	protected function get_notification_id( $request ) {
+		$body     = $request->get_json_params();
+		$event_id = $body['metadata']['event_id'] ?? '';
+
+		return ! empty( $event_id ) ? $event_id : strval( $request->get_header( 'Klarna-Signature' ) );
+	}
+
+	/**
+	 * Record the notification as handled, and report whether it is the first time it is seen.
+	 *
+	 * @param string $notification_id The notification identifier.
+	 *
+	 * @return bool Whether the notification may be handled.
+	 */
+	protected function claim_notification( $notification_id ) {
+		if ( empty( $notification_id ) ) {
+			return true;
+		}
+
+		if ( false !== get_transient( self::get_notification_transient( $notification_id ) ) ) {
+			return false;
+		}
+
+		/**
+		 * Filters how long a handled Klarna notification is remembered, and therefore how long a repeat of it is ignored.
+		 *
+		 * @param int $replay_window The time to remember a notification, in seconds. Default two days.
+		 */
+		$replay_window = apply_filters( 'kec_notification_replay_window', \DAY_IN_SECONDS * 2 );
+
+		set_transient( self::get_notification_transient( $notification_id ), time(), $replay_window );
+
+		return true;
+	}
+
+	/**
+	 * Forget a notification that could not be handled, so that Klarna's retry of it is processed.
+	 *
+	 * @param string $notification_id The notification identifier.
+	 *
+	 * @return void
+	 */
+	protected function release_notification( $notification_id ) {
+		if ( ! empty( $notification_id ) ) {
+			delete_transient( self::get_notification_transient( $notification_id ) );
+		}
+	}
+
+	/**
+	 * Get the name of the transient that records a notification as handled.
+	 *
+	 * @param string $notification_id The notification identifier.
+	 *
+	 * @return string
+	 */
+	private static function get_notification_transient( $notification_id ) {
+		return 'kec_notification_' . hash( 'sha256', $notification_id );
 	}
 
 	/**
