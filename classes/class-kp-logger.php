@@ -203,7 +203,13 @@ class KP_Logger {
 		$expired_before = time() - ( $days * DAY_IN_SECONDS );
 
 		foreach ( (array) glob( trailingslashit( WC_LOG_DIR ) . 'klarna_payments-*.log' ) as $file ) {
-			if ( is_file( $file ) && filemtime( $file ) < $expired_before ) {
+			if ( ! is_file( $file ) ) {
+				continue;
+			}
+
+			// A file whose age cannot be read is kept, rather than assumed to be expired.
+			$modified_at = filemtime( $file );
+			if ( false !== $modified_at && $modified_at < $expired_before ) {
 				wp_delete_file( $file );
 			}
 		}
