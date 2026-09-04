@@ -333,6 +333,19 @@ class KP_Form_Fields {
 				),
 				'desc_tip'    => true,
 			),
+			'log_retention_days'       => array(
+				/* translators: [merchant-facing]. */
+				'title'             => __( 'Log retention', 'klarna-payments-for-woocommerce' ),
+				'type'              => 'number',
+				/* translators: [merchant-facing]. */
+				'description'       => __( 'How many days the Klarna log files are kept before they are deleted automatically. Set to 0 to leave the cleanup to WooCommerce.', 'klarna-payments-for-woocommerce' ),
+				'default'           => '30',
+				'desc_tip'          => true,
+				'custom_attributes' => array(
+					'min'  => '0',
+					'step' => '1',
+				),
+			),
 			'send_shopping_data_title' => array(
 				/* translators: [merchant-facing]. */
 				'title'       => __( 'Shopping data', 'klarna-payments-for-woocommerce' ),

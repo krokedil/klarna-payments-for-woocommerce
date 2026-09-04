@@ -267,6 +267,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 
 			add_action( 'kp_refresh_credential_capabilities', array( $this, 'refresh_credential_capabilities' ) );
 			add_action( 'kp_backfill_credential_capabilities', array( $this, 'refresh_credential_capabilities' ) );
+			add_action( 'kp_cleanup_logs', array( 'KP_Logger', 'cleanup_logs' ) );
 			register_deactivation_hook( __FILE__, array( $this, 'clear_scheduled_events' ) );
 		}
 
@@ -278,6 +279,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		public function clear_scheduled_events() {
 			wp_clear_scheduled_hook( 'kp_refresh_credential_capabilities' );
 			wp_clear_scheduled_hook( 'kp_backfill_credential_capabilities' );
+			wp_clear_scheduled_hook( 'kp_cleanup_logs' );
 		}
 
 		/**
@@ -360,6 +362,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->plugin_features->init_features();
 
 			$this->schedule_credential_capabilities_refresh();
+			KP_Logger::schedule_cleanup();
 		}
 
 		/**

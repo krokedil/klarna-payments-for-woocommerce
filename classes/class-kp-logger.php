@@ -14,6 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class KP_Logger {
 	/**
+	 * The value written to the log in place of data that is masked.
+	 *
+	 * @var string
+	 */
+	const REDACTED = '[REDACTED]';
+
+	/**
 	 * Log message string
 	 *
 	 * @var string $log

@@ -314,19 +314,21 @@ abstract class KP_Requests extends Request {
 
 		KP_WC()->logger()->info(
 			wp_json_encode(
-				array(
-					'type'        => $this->method,
-					'title'       => $this->log_title,
-					'arguments'   => $arguments,
-					'request'     => $request_args,
-					'request_url' => $request_url,
-					'response'    => array(
-					'body' => $response_body,
-					'code' => $code,
-					),
-					'timestamp'   => date( 'Y-m-d H:i:s' ),    // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
-				'stack'           => Logger::get_stack( $this->config['extended_debugging'] ),
-				'plugin_version'  => $this->config['plugin_version'],
+				KP_Logger::redact(
+					array(
+						'type'        => $this->method,
+						'title'       => $this->log_title,
+						'arguments'   => $arguments,
+						'request'     => $request_args,
+						'request_url' => $request_url,
+						'response'    => array(
+						'body' => $response_body,
+						'code' => $code,
+						),
+						'timestamp'   => date( 'Y-m-d H:i:s' ),    // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
+					'stack'           => Logger::get_stack( $this->config['extended_debugging'] ),
+					'plugin_version'  => $this->config['plugin_version'],
+					)
 				)
 			)
 		);
