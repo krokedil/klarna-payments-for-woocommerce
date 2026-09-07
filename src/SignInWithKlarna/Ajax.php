@@ -72,7 +72,26 @@ class Ajax {
 			}
 		}
 
-		if ( empty( $origin ) || ! is_allowed_http_origin( $origin ) ) {
+		// get_allowed_http_origins() builds its list from the host alone, so a store served
+		// on a non-default port never matches the origin its own browser sends. Add the port
+		// back for the duration of this check only, to avoid widening the list for anything else.
+		$add_port = function ( $origins ) {
+			foreach ( array( home_url(), site_url() ) as $url ) {
+				$parts = wp_parse_url( $url );
+
+				if ( isset( $parts['scheme'], $parts['host'], $parts['port'] ) ) {
+					$origins[] = $parts['scheme'] . '://' . $parts['host'] . ':' . $parts['port'];
+				}
+			}
+
+			return array_unique( $origins );
+		};
+
+		add_filter( 'allowed_http_origins', $add_port );
+		$is_allowed = is_allowed_http_origin( $origin );
+		remove_filter( 'allowed_http_origins', $add_port );
+
+		if ( empty( $origin ) || ! $is_allowed ) {
 			wp_send_json_error( 'bad_origin' );
 		}
 	}
