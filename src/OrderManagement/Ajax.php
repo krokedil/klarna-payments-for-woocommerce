@@ -47,24 +47,20 @@ class Ajax {
 
 		if ( ! wp_verify_nonce( $nonce, 'kom_wc_set_order_sync' ) ) {
 			wp_send_json_error( 'bad_nonce' );
-			exit;
 		}
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_send_json_error( 'forbidden' );
-			exit;
 		}
 
 		if ( ! $order_id ) {
 			wp_send_json_error( 'no_order_id' );
-			exit;
 		}
 
 		$order = wc_get_order( $order_id );
 
 		if ( ! $order ) {
 			wp_send_json_error( 'no_order' );
-			exit;
 		}
 
 		// Toggle the _kom_disconnect meta based on the received status.

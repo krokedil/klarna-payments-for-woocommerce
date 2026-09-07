@@ -457,12 +457,6 @@ parameters:
 			path: src/OrderManagement/Ajax.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 4
-			path: src/OrderManagement/Ajax.php
-
-		-
 			message: '#^Parameter \#1 \$post_id of method Krokedil\\Klarna\\OrderManagement\\SellersApp\:\:populate_klarna_order\(\) expects string, int given\.$#'
 			identifier: argument.type
 			count: 1
