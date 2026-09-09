@@ -29,6 +29,15 @@
         </properties>
     </rule>
 
+    <!-- Make the WooCommerce capabilities known to the capability sniff, which only knows the WordPress core ones -->
+    <rule ref="WordPress.WP.Capabilities">
+        <properties>
+            <property name="custom_capabilities" type="array">
+                <element value="manage_woocommerce" />
+            </property>
+        </properties>
+    </rule>
+
     <!--  Remove WordPress.Files.FileName.InvalidClassFileName checks to allow for PSR-4 naming convention -->
     <rule ref="WordPress.Files.FileName.InvalidClassFileName">
         <exclude-pattern>src/</exclude-pattern>

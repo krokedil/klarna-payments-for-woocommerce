@@ -89,15 +89,6 @@ class PluginFeatures {
 	protected $credential_capabilities = array();
 
 	/**
-	 * If the credentials we have parsed had a AP key or not.
-	 * Only used when processing all API credentials, and can not be used
-	 * to determine if we have an AP key or not in general.
-	 *
-	 * @var bool
-	 */
-	protected $check_has_acquiring_partner_key = false;
-
-	/**
 	 * Initialize the features and their availability.
 	 *
 	 * @param bool $force Whether to force re-initialization even if it has already been initialized once during this request. Default false.
@@ -155,7 +146,7 @@ class PluginFeatures {
 	}
 
 	/**
-	 * Process the response from the plugins api request, and store the available and unavailable features.
+	 * Process the response from the plugins api request into the available and unavailable features.
 	 *
 	 * @param array $response The response from the plugins API request.
 	 * @param array $credentials The credentials used for the request.
@@ -195,12 +186,6 @@ class PluginFeatures {
 			$features[ $key ]['availability']  = 'AVAILABLE' === $availability;
 			$features[ $key ]['available_for'] = array_map( 'strtoupper', $available_for );
 		}
-
-		// Store the acquiring_partner_key if present in the response.
-		if ( isset( $response['acquiring_partner_key'] ) && ! empty( $response['acquiring_partner_key'] ) ) {
-			$this->check_has_acquiring_partner_key = true;
-			update_option( 'klarna_acquiring_partner_key', $response['acquiring_partner_key'] );
-		}
 	}
 
 	/**
@@ -211,8 +196,9 @@ class PluginFeatures {
 	 * @return void
 	 */
 	public function process_all_api_credentials() {
-		$complete     = true;
-		$capabilities = array();
+		$complete                  = true;
+		$capabilities              = array();
+		$has_acquiring_partner_key = false;
 
 		try {
 			$features        = array();
@@ -235,13 +221,14 @@ class PluginFeatures {
 
 				$this->process_api_response_features( $response, $credentials, $features );
 				$this->process_api_response_capabilities( $response, $credentials, $capabilities );
+				$this->process_api_response_acquiring_partner_key( $response, $has_acquiring_partner_key );
 			}
 		} catch ( \WP_Exception $e ) {
 			$complete = false;
 			KP_WC()->logger()->error( 'Error when trying to get the feature availability from Klarna: ' . $e->getMessage() );
 		} finally {
 			// If we did not have an acquiring partner key from the processed credentials, ensure we delete any existing one to ensure we do not have a stale key.
-			if ( ! $this->check_has_acquiring_partner_key ) {
+			if ( ! $has_acquiring_partner_key ) {
 				delete_option( 'klarna_acquiring_partner_key' );
 			}
 
@@ -461,6 +448,23 @@ class PluginFeatures {
 		}
 
 		$capabilities[ $country_code ] = $capability;
+	}
+
+	/**
+	 * Store the acquiring partner key from the plugins API response, if it has one.
+	 *
+	 * @param array $response The response from the plugins API request.
+	 * @param bool  $has_acquiring_partner_key Whether a key has been found during this run. Passed by reference.
+	 *
+	 * @return void
+	 */
+	private function process_api_response_acquiring_partner_key( $response, &$has_acquiring_partner_key ) {
+		if ( empty( $response['acquiring_partner_key'] ) ) {
+			return;
+		}
+
+		$has_acquiring_partner_key = true;
+		update_option( 'klarna_acquiring_partner_key', $response['acquiring_partner_key'] );
 	}
 
 	/**

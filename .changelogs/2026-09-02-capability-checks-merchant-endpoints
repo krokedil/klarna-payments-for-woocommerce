@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Improved capability checks for admin actions.
