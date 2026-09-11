@@ -291,7 +291,7 @@ abstract class KP_Requests extends Request {
 	 */
 	protected static function get_masked_fields() {
 		return array(
-			'request'   => array( 'body' => LogMasking::body_fields() ),
+			'request'   => LogMasking::request_fields(),
 			'response'  => LogMasking::response_fields(),
 			'arguments' => array( 'api_password', 'auth_token', 'recurring_token' ),
 		);

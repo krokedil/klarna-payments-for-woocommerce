@@ -126,6 +126,32 @@ class LogMaskingTest extends IntegrationTestCase {
 		);
 	}
 
+	/**
+	 * The allow list is what makes the masking hold when Klarna adds a field, so it has to
+	 * reach the order management layer too and not just the payments one.
+	 */
+	public function test_an_order_management_response_masks_a_field_no_rule_names(): void {
+		$order = $this->haveKlarnaOrder( [ 'paid' => true, 'billing' => $this->swedishAddress() ] );
+
+		$this->willRetrieveKlarnaOrder(
+			[
+				// Neither is named by a rule or a key name: only the allow list catches them.
+				'billing_address' => [ 'title' => 'Mr', 'city' => 'Göteborg' ],
+				'customer'        => [ 'type' => 'person', 'organization_entity_type' => 'LIMITED_COMPANY' ],
+			]
+		);
+		$this->willCancel();
+
+		KP_WC()->order_management->cancel_klarna_order( $order->get_id(), false );
+
+		$entry = $this->loggedEntry( 'Retrieve Klarna order' )['response']['body'];
+
+		$this->assertSame( '[REDACTED]', $entry['billing_address']['title'] );
+		$this->assertSame( '[REDACTED]', $entry['customer']['organization_entity_type'] );
+		$this->assertSame( 'Göteborg', $entry['billing_address']['city'], 'The allow list kept the city.' );
+		$this->assertSame( 'person', $entry['customer']['type'], 'The allow list kept the customer type.' );
+	}
+
 	/** Drives a create-session the way the checkout page does. */
 	private function haveSessionForACart(): void {
 		$this->simulateCheckoutPage();

@@ -1,6 +1,7 @@
 <?php
 namespace Krokedil\Klarna\Logging;
 
+use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\FieldMasker;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\KeyMasker;
 
 defined( 'ABSPATH' ) || exit;
@@ -77,5 +78,55 @@ class LogMasking {
 	 */
 	public static function response_fields() {
 		return self::body_fields() + array( 'client_token' => 'mask' );
+	}
+
+	/**
+	 * The rules for a whole set of request args.
+	 *
+	 * @return array
+	 */
+	public static function request_fields() {
+		return array(
+			'headers' => array( 'Authorization' ),
+			'body'    => self::body_fields(),
+		);
+	}
+
+	/**
+	 * Mask a set of request args, for a request layer the package does not own.
+	 *
+	 * @param array $request_args The request args.
+	 * @return array|string The masked args, or the failure marker.
+	 */
+	public static function mask_request( $request_args ) {
+		try {
+			// Decode the body that was really sent, so the rules can reach into it.
+			if ( isset( $request_args['body'] ) && is_string( $request_args['body'] ) ) {
+				$decoded              = json_decode( $request_args['body'], true );
+				$request_args['body'] = is_array( $decoded ) ? $decoded : $request_args['body'];
+			}
+
+			return FieldMasker::mask( $request_args, self::request_fields() );
+		} catch ( \Throwable $e ) {
+			return KeyMasker::FAILED;
+		}
+	}
+
+	/**
+	 * Mask a decoded response body, for a request layer the package does not own.
+	 *
+	 * @param array $body The decoded response body.
+	 * @return array|string The masked body, or the failure marker.
+	 */
+	public static function mask_response( $body ) {
+		if ( empty( $body ) ) {
+			return $body;
+		}
+
+		try {
+			return FieldMasker::mask( $body, self::response_fields() );
+		} catch ( \Throwable $e ) {
+			return KeyMasker::FAILED;
+		}
 	}
 }
