@@ -1,4 +1,4 @@
-Type: Fix
+Type: Enhancement
 Needs Documentation: yes
 
-Masked customer data and credentials in the plugin log. Names, email addresses, phone numbers, street addresses, dates of birth and national identification numbers are replaced with a placeholder, as are API credentials, authorization and customer tokens, the client token, and the Klarna hosted URLs that can be paid with. Postal code, city, region, country, the order lines, the Klarna session id and the Klarna order id are kept readable, since they are what a support case is read for. Both the payments and the order management request layers mask through the same rules, which are an allow list, so a field Klarna adds is masked until it is deliberately kept. Anything those rules do not describe is masked by its key name rather than logged in full.
+Masked customer personal, and other sensitive data and credentials in the plugin log.
