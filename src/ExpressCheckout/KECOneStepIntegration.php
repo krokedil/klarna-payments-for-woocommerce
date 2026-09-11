@@ -91,7 +91,8 @@ class KECOneStepIntegration implements Interfaces\AcquiringPartnerIntegration {
 		$interoperability_data  = array();
 
 		if ( ! $payment_request_id || ! $interoperability_token ) {
-			KP_WC()->logger()->error( '[KEC One Step] Missing required fields in payload for expired payment: ' . wp_json_encode( $payload ) );
+			$missing = $payment_request_id ? 'interoperability_token' : 'payment_request_id';
+			KP_WC()->logger()->error( "[KEC One Step] Missing {$missing} in the payload for expired payment on order {$order->get_id()}." );
 			return;
 		}
 
