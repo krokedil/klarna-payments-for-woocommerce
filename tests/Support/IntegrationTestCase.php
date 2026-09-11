@@ -9,6 +9,7 @@ use Qameta\Allure\Allure;
 use Tests\Support\Reporting\Redactor;
 use Tests\Support\Reporting\SecretRegistry;
 use Tests\Support\Traits\CanBuildCartsAndOrders;
+use Tests\Support\Traits\CanCaptureLogs;
 use Tests\Support\Traits\CanConfigureStore;
 use Tests\Support\Traits\CanDriveCheckout;
 use Tests\Support\Traits\CanDriveKlarnaOrderManagement;
@@ -27,6 +28,7 @@ abstract class IntegrationTestCase extends WPTestCase {
 	use CanManageProducts;
 	use CanBuildCartsAndOrders;
 	use CanInterceptHttp;
+	use CanCaptureLogs;
 	use CanDriveKlarnaOrderManagement;
 	use CanDriveCheckout;
 	use CanFakeSubscriptions;
@@ -84,6 +86,7 @@ abstract class IntegrationTestCase extends WPTestCase {
 
 		$this->resetStore();
 		$this->resetHttpInterception();
+		$this->restoreLogging();
 
 		parent::tearDown();
 	}
