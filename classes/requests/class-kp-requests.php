@@ -8,8 +8,9 @@
 defined( 'ABSPATH' ) || exit;
 
 use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
+use Krokedil\Klarna\Logging\LogMasking;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\KeyMasker;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Request;
-use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Logger;
 
 /**
  * Base class for all request classes.
@@ -86,7 +87,7 @@ abstract class KP_Requests extends Request {
 			'base_url'               => $this->get_base_url( $region_country, $settings ),
 		);
 
-		parent::__construct( $config, $settings, $arguments );
+		parent::__construct( $config, $settings, $arguments, self::get_masked_fields() );
 		$this->set_credentials();
 		$this->iframe_options = new KP_IFrame( $settings );
 
@@ -284,51 +285,30 @@ abstract class KP_Requests extends Request {
 	}
 
 	/**
-	 * Logs the response from the request.
+	 * The fields masked out of the log, merged into what the package already masks.
 	 *
-	 * @param array|\WP_Error $response The response from the request.
-	 * @param array           $request_args The request args.
-	 * @param string          $request_url The request URL.
-	 *
-	 * @return void
+	 * @return array
 	 */
-	protected function log_response( $response, $request_args, $request_url ) {
-		$code = wp_remote_retrieve_response_code( $response );
+	protected static function get_masked_fields() {
+		return array(
+			'request'   => array( 'body' => LogMasking::body_fields() ),
+			'response'  => LogMasking::response_fields(),
+			'arguments' => array( 'api_password', 'auth_token', 'recurring_token' ),
+		);
+	}
 
-		// Get the response body if its not a WP_Error.
-		$response_body = is_wp_error( $response ) ? array() : json_decode( wp_remote_retrieve_body( $response ), true );
-
-		// Parse the Request body into an array if its json format.
-		$request_body         = $request_args['body'] ?? '';
-		$decoded_body         = json_decode( $request_body );
-		$request_args['body'] = $decoded_body ?? $request_args['body'] ?? null;
-		$request_args         = $this->sanitize_request_args( $request_args );
-
-		$arguments = $this->arguments;
-		if ( isset( $arguments['username'] ) ) {
-			$arguments['username'] = '[REDACTED]';
-		}
-		if ( isset( $arguments['password'] ) ) {
-			$arguments['password'] = '[REDACTED]';
-		}
-
-		KP_WC()->logger()->info(
-			wp_json_encode(
-				array(
-					'type'        => $this->method,
-					'title'       => $this->log_title,
-					'arguments'   => $arguments,
-					'request'     => $request_args,
-					'request_url' => $request_url,
-					'response'    => array(
-					'body' => $response_body,
-					'code' => $code,
-					),
-					'timestamp'   => date( 'Y-m-d H:i:s' ),    // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
-				'stack'           => Logger::get_stack( $this->config['extended_debugging'] ),
-				'plugin_version'  => $this->config['plugin_version'],
-				)
-			)
+	/**
+	 * Mask the tokens Klarna addresses a resource by in the path. A session or order id is
+	 * left readable, since neither authorises anything and both are what a log is searched by.
+	 *
+	 * @param string $request_url The request URL.
+	 * @return string
+	 */
+	protected function mask_request_url( $request_url ) {
+		return preg_replace(
+			array( '#/authorizations/[^/?]+#', '#/tokens/[^/?]+#' ),
+			array( '/authorizations/' . KeyMasker::REDACTED, '/tokens/' . KeyMasker::REDACTED ),
+			$request_url
 		);
 	}
 }
