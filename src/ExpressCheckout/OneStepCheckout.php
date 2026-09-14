@@ -62,7 +62,16 @@ class OneStepCheckout {
 			self::abort_redirect();
 		}
 
-		$redirect_url = self::get_redirect_url_for_order( $order, $kec_unique_id );
+		$redirect_url = $order->get_meta( '_kec_redirect_url' );
+
+		if ( ! empty( filter_input( INPUT_GET, 'kec-one-step-poll', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ) ) {
+			self::answer_redirect_poll( $redirect_url );
+		}
+
+		if ( empty( $redirect_url ) ) {
+			self::render_redirect_wait_page( $order, $kec_unique_id );
+		}
+
 		self::unset_sessions();
 		wp_safe_redirect( $redirect_url );
 		exit;
@@ -104,14 +113,30 @@ class OneStepCheckout {
 	}
 
 	/**
-	 * Wait for the order redirect URL to be set and return it.
+	 * Answer the wait page with the redirect URL Klarna's confirmation left on the order.
+	 *
+	 * @param string $redirect_url The redirect URL, or an empty string while the confirmation is still outstanding.
+	 *
+	 * @return void Exits after answering.
+	 */
+	private static function answer_redirect_poll( $redirect_url ) {
+		if ( ! empty( $redirect_url ) ) {
+			self::unset_sessions();
+		}
+
+		nocache_headers();
+		wp_send_json_success( array( 'redirect_url' => $redirect_url ) );
+	}
+
+	/**
+	 * Render the page that waits in the customer's browser for Klarna to confirm the payment.
 	 *
 	 * @param \WC_Order $order         The WooCommerce order.
 	 * @param string    $kec_unique_id The KEC unique ID.
 	 *
-	 * @return string The redirect URL.
+	 * @return void Exits after rendering.
 	 */
-	public static function get_redirect_url_for_order( $order, $kec_unique_id ) {
+	private static function render_redirect_wait_page( $order, $kec_unique_id ) {
 		/**
 		 * Filters the maximum number of attempts to wait for the order redirect URL to be set.
 		 *
@@ -125,7 +150,6 @@ class OneStepCheckout {
 		 * @param int $sleep_time The wait time between attempts, in microseconds. Default 500000.
 		 */
 		$sleep_time = apply_filters( 'kec_one_step_redirect_wait_sleep_time_mu', 5 * 100000 );
-		$attempt    = 0;
 
 		/**
 		 * Filters the fallback redirect URL used when the order redirect URL is not set in time.
@@ -136,19 +160,27 @@ class OneStepCheckout {
 		 */
 		$default_redirect_url = apply_filters( 'kec_one_step_default_redirect_url', $order->get_checkout_order_received_url(), $order, $kec_unique_id );
 
-		while ( $attempt < $max_attempts ) {
-			$order->read_meta_data( true );
-			$redirect_url = $order->get_meta( '_kec_redirect_url' );
+		nocache_headers();
 
-			if ( ! empty( $redirect_url ) ) {
-				return $redirect_url;
-			}
+		wc_get_template(
+			'kec-one-step-redirect.php',
+			array(
+				'poll_url'     => add_query_arg(
+					array(
+						'kec-one-step'      => $kec_unique_id,
+						'kec-one-step-poll' => '1',
+					),
+					home_url()
+				),
+				'fallback_url' => $default_redirect_url,
+				'max_attempts' => intval( $max_attempts ),
+				'interval'     => intval( $sleep_time / 1000 ),
+			),
+			'klarna-payments/',
+			WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/templates/'
+		);
 
-			usleep( $sleep_time );
-			++$attempt;
-		}
-
-		return $default_redirect_url;
+		exit;
 	}
 
 	/**
