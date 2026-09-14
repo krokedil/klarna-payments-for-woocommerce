@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Added origin and nonce verification to the Sign in with Klarna sign-in endpoints. Reported by Ilyess Ghalem of Fraudless.tech (https://fraudless.tech).
