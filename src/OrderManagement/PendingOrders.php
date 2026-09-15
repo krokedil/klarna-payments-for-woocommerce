@@ -76,7 +76,7 @@ class PendingOrders {
 	 * Gets WooCommerce order ID from Klarna order ID.
 	 *
 	 * @param string $klarna_order_id The klarna order id.
-	 * @return $order_id
+	 * @return int|null The WooCommerce order ID, or null if no matching order was found.
 	 */
 	private static function get_order_id_from_klarna_order_id( $klarna_order_id ) {
 		$orders = wc_get_orders(
@@ -92,7 +92,7 @@ class PendingOrders {
 		$order = reset( $orders );
 
 		if ( empty( $order ) ) {
-			return;
+			return null;
 		}
 
 		return $order->get_id();

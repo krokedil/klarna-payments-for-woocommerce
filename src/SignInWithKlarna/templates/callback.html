@@ -14,6 +14,7 @@
           // admin-ajax.php doesn't support JSON request. We need to use FormData.
           const formData = new FormData();
           formData.append("id_token", idToken);
+          formData.append("nonce", "%nonce%");
 
           fetch("%sign_in_url%", {
             method: "POST",

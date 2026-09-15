@@ -16,7 +16,7 @@ class KP_Logger {
 	/**
 	 * Log message string
 	 *
-	 * @var $log
+	 * @var string $log
 	 */
 	public static $log;
 

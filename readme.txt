@@ -6,8 +6,8 @@ Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.0
 WC requires at least: 5.6.0
-WC tested up to: 11.0.1
-Stable tag: 4.13.0
+WC tested up to: 11.1.0
+Stable tag: 4.13.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-09-14    - version 4.13.1 =
+* Fix           - Added origin and nonce verification to the Sign in with Klarna sign-in endpoints. Reported by Ilyess Ghalem of Fraudless.tech (https://fraudless.tech).
+* Fix           - Improved capability checks for admin actions.
+
 = 2026-08-25    - version 4.13.0 =
 * Feature       - Added support for the Klarna cross border add on. A purchase can now be made in a currency the customer's market does not settle in, signed by the credential set Klarna has granted that market and currency. The credential set used is stored on the order, so order management, subscription renewals and refunds keep using the account that authorized the purchase.
 

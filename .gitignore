@@ -27,6 +27,8 @@ tmp*
 
 .changelogs/backup-*
 *.bak
+.playground/
+/pr-screenshots/
 
 # Codeception / wp-browser test artefacts.
 /tests/_output/

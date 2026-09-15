@@ -418,7 +418,7 @@ class KP_Settings_Page {
 			case 'kom':
 				return 'kom_enabled';
 			default:
-				'';
+				return '';
 		}
 	}
 

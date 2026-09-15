@@ -1,0 +1,40 @@
+includes:
+  - phpstan-baseline.neon
+
+parameters:
+  level: 5
+  phpVersion: 80000
+  treatPhpDocTypesAsCertain: false
+
+  paths:
+    - klarna-payments-for-woocommerce.php
+    - src
+    - classes
+    - includes
+    - templates
+    - blocks/src
+
+  excludePaths:
+    - node_modules (?)
+    - tests (?)
+    - blocks/build (?)
+    - assets
+
+  scanDirectories:
+    - vendor/php-stubs
+    - dependencies
+
+  bootstrapFiles:
+    - phpstan-bootstrap.php
+    - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+    - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+    - vendor/php-stubs/woocommerce-stubs/woocommerce-packages-stubs.php
+    - vendor/php-stubs/woocommerce-subscriptions-stubs/woocommerce-subscriptions-stubs.php
+
+  dynamicConstantNames:
+    - WC_KLARNA_PAYMENTS_VERSION
+    - WC_KLARNA_PAYMENTS_MIN_PHP_VER
+    - WC_KLARNA_PAYMENTS_MIN_WC_VER
+    - WC_KLARNA_PAYMENTS_MAIN_FILE
+    - WC_KLARNA_PAYMENTS_PLUGIN_PATH
+    - WC_KLARNA_PAYMENTS_PLUGIN_URL

@@ -17,8 +17,6 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\SettingsPage\SettingsPage;
 
 /**
  * WC_Payment_Gateway class.
- *
- * @extends WC_Payment_Gateway
  */
 class WC_Gateway_Klarna_Payments extends WC_Payment_Gateway {
 	/**
