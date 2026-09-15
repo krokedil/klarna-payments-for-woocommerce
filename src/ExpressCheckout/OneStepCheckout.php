@@ -42,6 +42,10 @@ class OneStepCheckout {
 			self::abort_redirect();
 		}
 
+		if ( WC()->session ) {
+			WC()->session->__unset( 'kec_one_step_order_id' );
+		}
+
 		$args = array(
 			'limit'        => 1,
 			'meta_key'     => '_kec_unique_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -108,6 +112,10 @@ class OneStepCheckout {
 	 * @return void
 	 */
 	public static function unset_sessions() {
+		if ( ! WC()->session ) {
+			return;
+		}
+
 		WC()->session->__unset( 'kec_one_step_unique_id' );
 		WC()->session->__unset( 'kec_one_step_order_id' );
 	}

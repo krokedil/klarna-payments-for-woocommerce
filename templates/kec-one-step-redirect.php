@@ -52,14 +52,58 @@ defined( 'ABSPATH' ) || exit;
 			var maxAttempts = <?php echo wp_json_encode( $max_attempts ); ?>;
 			var interval = <?php echo wp_json_encode( $interval ); ?>;
 			var attempts = 0;
+			var done = false;
+			// A request that never responds must not stall the polling, so give each one its own deadline.
+			var requestTimeout = Math.max( interval * 2, 4000 );
 
-			function poll() {
-				if ( ++attempts > maxAttempts ) {
-					window.location.replace( fallbackUrl );
+			function leave( url ) {
+				if ( done ) {
 					return;
 				}
 
-				fetch( pollUrl, { credentials: 'same-origin' } )
+				done = true;
+				window.location.replace( url );
+			}
+
+			function poll() {
+				if ( done ) {
+					return;
+				}
+
+				if ( ++attempts > maxAttempts ) {
+					leave( fallbackUrl );
+					return;
+				}
+
+				var settled = false;
+				var controller = 'AbortController' in window ? new AbortController() : null;
+				var options = { credentials: 'same-origin' };
+				var timer;
+
+				if ( controller ) {
+					options.signal = controller.signal;
+				}
+
+				// Advance to the next attempt once, whether the request answered, failed or timed out.
+				function advance() {
+					if ( settled ) {
+						return;
+					}
+
+					settled = true;
+					window.clearTimeout( timer );
+					window.setTimeout( poll, interval );
+				}
+
+				timer = window.setTimeout( function () {
+					if ( controller ) {
+						controller.abort();
+					}
+
+					advance();
+				}, requestTimeout );
+
+				fetch( pollUrl, options )
 					.then( function ( response ) {
 						return response.json();
 					} )
@@ -67,16 +111,21 @@ defined( 'ABSPATH' ) || exit;
 						var redirectUrl = result && result.data && result.data.redirect_url;
 
 						if ( redirectUrl ) {
-							window.location.replace( redirectUrl );
+							settled = true;
+							window.clearTimeout( timer );
+							leave( redirectUrl );
 							return;
 						}
 
-						window.setTimeout( poll, interval );
+						advance();
 					} )
-					.catch( function () {
-						window.setTimeout( poll, interval );
-					} );
+					.catch( advance );
 			}
+
+			// The overall deadline the no-JavaScript refresh uses, plus the grace of one timed out request.
+			window.setTimeout( function () {
+				leave( fallbackUrl );
+			}, maxAttempts * interval + requestTimeout );
 
 			window.setTimeout( poll, interval );
 		} )();

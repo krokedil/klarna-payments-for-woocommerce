@@ -12,6 +12,13 @@ defined( 'ABSPATH' ) || exit;
  */
 class Notifications extends Controller {
 	/**
+	 * The object cache group used to claim a notification before it is handled.
+	 *
+	 * @var string
+	 */
+	private const CACHE_GROUP = 'kec_notifications';
+
+	/**
 	 * The path of the controller.
 	 *
 	 * @var string
@@ -114,7 +121,8 @@ class Notifications extends Controller {
 			do_action( "klarna_notification_{$event_type}_{$event_version}", $body );
 
 			return $response ?? $this->success_response();
-		} catch ( \Exception $e ) {
+		} catch ( \Throwable $e ) {
+			// Release the claim for every processing failure, not just exceptions, so that Klarna's retry of the notification is handled instead of ignored.
 			$this->release_notification( $notification_id );
 			return new \WP_REST_Response( array( 'error' => $e->getMessage() ), 500 );
 		}
@@ -128,10 +136,16 @@ class Notifications extends Controller {
 	 * @return string The notification identifier, or an empty string if it could not be determined.
 	 */
 	protected function get_notification_id( $request ) {
-		$body     = $request->get_json_params();
-		$event_id = $body['metadata']['event_id'] ?? '';
+		$body      = $request->get_json_params();
+		$meta_data = is_array( $body ) ? ( $body['metadata'] ?? array() ) : array();
+		$event_id  = is_array( $meta_data ) ? ( $meta_data['event_id'] ?? '' ) : '';
 
-		return ! empty( $event_id ) ? $event_id : strval( $request->get_header( 'Klarna-Signature' ) );
+		// The body is whatever Klarna sent us, so only a scalar event ID is usable as an identifier. Anything else falls back to the signature.
+		if ( ! empty( $event_id ) && is_scalar( $event_id ) ) {
+			return strval( $event_id );
+		}
+
+		return strval( $request->get_header( 'Klarna-Signature' ) );
 	}
 
 	/**
@@ -146,9 +160,7 @@ class Notifications extends Controller {
 			return true;
 		}
 
-		if ( false !== get_transient( self::get_notification_transient( $notification_id ) ) ) {
-			return false;
-		}
+		$key = self::get_notification_transient( $notification_id );
 
 		/**
 		 * Filters how long a handled Klarna notification is remembered, and therefore how long a repeat of it is ignored.
@@ -157,7 +169,18 @@ class Notifications extends Controller {
 		 */
 		$replay_window = apply_filters( 'kec_notification_replay_window', \DAY_IN_SECONDS * 2 );
 
-		set_transient( self::get_notification_transient( $notification_id ), time(), $replay_window );
+		/*
+		 * Atomically claim duplicate notifications when using a persistent object cache; otherwise the transient decides.
+		 */
+		if ( wp_using_ext_object_cache() && ! wp_cache_add( $key, time(), self::CACHE_GROUP, $replay_window ) ) {
+			return false;
+		}
+
+		if ( false !== get_transient( $key ) ) {
+			return false;
+		}
+
+		set_transient( $key, time(), $replay_window );
 
 		return true;
 	}
@@ -170,9 +193,14 @@ class Notifications extends Controller {
 	 * @return void
 	 */
 	protected function release_notification( $notification_id ) {
-		if ( ! empty( $notification_id ) ) {
-			delete_transient( self::get_notification_transient( $notification_id ) );
+		if ( empty( $notification_id ) ) {
+			return;
 		}
+
+		$key = self::get_notification_transient( $notification_id );
+
+		wp_cache_delete( $key, self::CACHE_GROUP );
+		delete_transient( $key );
 	}
 
 	/**
