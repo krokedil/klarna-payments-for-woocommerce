@@ -1,6 +1,8 @@
 <?php
 namespace Krokedil\Klarna\OnsiteMessaging;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Class for the WP widget.
  */

@@ -5,6 +5,8 @@
  * @package Klarna_Checkout/Classes
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Krokedil\Klarna\Features;
 use Krokedil\Klarna\PluginFeatures;
 

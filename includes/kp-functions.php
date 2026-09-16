@@ -5,6 +5,8 @@
  * @package WC_Klarna_Payments/Includes
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WooCommerce\OrderUtility;
 use Automattic\WooCommerce\Utilities\OrderUtil;

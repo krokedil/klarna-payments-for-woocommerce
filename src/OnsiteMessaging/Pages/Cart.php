@@ -1,6 +1,8 @@
 <?php
 namespace Krokedil\Klarna\OnsiteMessaging\Pages;
 
+defined( 'ABSPATH' ) || exit;
+
 use Krokedil\Klarna\OnsiteMessaging\Settings;
 
 /**
