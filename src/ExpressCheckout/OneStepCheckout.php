@@ -341,7 +341,9 @@ class OneStepCheckout {
 		 *
 		 * @param int $max_attempts The maximum number of polling attempts. Default 20.
 		 */
-		return intval( apply_filters( 'kec_one_step_redirect_wait_max_attempts', 20 ) );
+		$max_attempts = apply_filters( 'kec_one_step_redirect_wait_max_attempts', 20 );
+
+		return intval( $max_attempts );
 	}
 
 	/**
@@ -355,9 +357,9 @@ class OneStepCheckout {
 		 *
 		 * @param int $sleep_time The wait time between attempts, in microseconds. Default 500000.
 		 */
-		$sleep_time = intval( apply_filters( 'kec_one_step_redirect_wait_sleep_time_mu', 5 * 100000 ) );
+		$sleep_time = apply_filters( 'kec_one_step_redirect_wait_sleep_time_mu', 5 * 100000 );
 
-		return intval( $sleep_time / 1000 );
+		return intval( intval( $sleep_time ) / 1000 );
 	}
 
 	/**

@@ -926,7 +926,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$max_attempts` | `int` | The maximum number of polling attempts. Default 20.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 343](../src/ExpressCheckout/OneStepCheckout.php#L343-L348)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 339](../src/ExpressCheckout/OneStepCheckout.php#L339-L344)
 
 
 ---
@@ -940,7 +940,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$sleep_time` | `int` | The wait time between attempts, in microseconds. Default 500000.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 357](../src/ExpressCheckout/OneStepCheckout.php#L357-L362)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 355](../src/ExpressCheckout/OneStepCheckout.php#L355-L360)
 
 
 ---
@@ -956,7 +956,7 @@ Argument | Type | Description
 `$order` | `\WC_Order` | The WooCommerce order.
 `$kec_unique_id` | `string` | The KEC unique ID.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 327](../src/ExpressCheckout/OneStepCheckout.php#L327-L334)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 323](../src/ExpressCheckout/OneStepCheckout.php#L323-L330)
 
 
 ---
