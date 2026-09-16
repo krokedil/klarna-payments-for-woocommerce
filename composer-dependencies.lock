@@ -160,12 +160,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/wp-api.git",
-                "reference": "3220117df6be371b0ed3eb1c34f9e0c46abb483a"
+                "reference": "9c601c75a2e7f97315694fec6e602c03266b6a42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/3220117df6be371b0ed3eb1c34f9e0c46abb483a",
-                "reference": "3220117df6be371b0ed3eb1c34f9e0c46abb483a",
+                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/9c601c75a2e7f97315694fec6e602c03266b6a42",
+                "reference": "9c601c75a2e7f97315694fec6e602c03266b6a42",
                 "shasum": ""
             },
             "require-dev": {
@@ -213,7 +213,7 @@
                 "source": "https://github.com/krokedil/wp-api/tree/develop-mask-log-data",
                 "issues": "https://github.com/krokedil/wp-api/issues"
             },
-            "time": "2026-09-11T15:31:51+00:00"
+            "time": "2026-09-16T12:54:39+00:00"
         }
     ],
     "packages-dev": [],
