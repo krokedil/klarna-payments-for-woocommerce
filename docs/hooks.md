@@ -926,7 +926,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$max_attempts` | `int` | The maximum number of polling attempts. Default 20.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 92](../src/ExpressCheckout/OneStepCheckout.php#L92-L97)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 339](../src/ExpressCheckout/OneStepCheckout.php#L339-L344)
 
 
 ---
@@ -940,7 +940,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$sleep_time` | `int` | The wait time between attempts, in microseconds. Default 500000.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 99](../src/ExpressCheckout/OneStepCheckout.php#L99-L104)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 355](../src/ExpressCheckout/OneStepCheckout.php#L355-L360)
 
 
 ---
@@ -956,7 +956,21 @@ Argument | Type | Description
 `$order` | `\WC_Order` | The WooCommerce order.
 `$kec_unique_id` | `string` | The KEC unique ID.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 107](../src/ExpressCheckout/OneStepCheckout.php#L107-L114)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 323](../src/ExpressCheckout/OneStepCheckout.php#L323-L330)
+
+
+---
+### `kec_notification_replay_window`
+
+*Filters how long a handled Klarna notification is remembered, and therefore how long a repeat of it is ignored.*
+
+**Arguments**
+
+Argument | Type | Description
+-------- | ---- | -----------
+`$replay_window` | `int` | The time to remember a notification, in seconds. Default two days.
+
+Source: [./src/ExpressCheckout/Api/Controllers/Notifications.php](../src/ExpressCheckout/Api/Controllers/Notifications.php), [line 165](../src/ExpressCheckout/Api/Controllers/Notifications.php#L165-L170)
 
 
 ---
