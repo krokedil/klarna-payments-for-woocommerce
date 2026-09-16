@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\KeyMasker;
+
 /**
  * Logger class.
  */
@@ -27,10 +29,18 @@ class KP_Logger {
 	 */
 	public static function log( $data ) {
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		if ( 'no' !== $kp_settings['logging'] ) {
-			$message = self::format_data( $data );
-			KP_WC()->logger()->info( wp_json_encode( $message ) );
+		if ( 'no' === ( $kp_settings['logging'] ?? 'no' ) ) {
+			return;
 		}
+
+		// A failure here costs the entry, it never lets an unmasked one through.
+		try {
+			$message = KeyMasker::mask( self::format_data( $data ) );
+		} catch ( \Throwable $e ) {
+			$message = array( 'error' => KeyMasker::FAILED );
+		}
+
+		KP_WC()->logger()->info( wp_json_encode( $message ) );
 	}
 
 	/**
@@ -40,7 +50,7 @@ class KP_Logger {
 	 * @return array
 	 */
 	public static function format_data( $data ) {
-		if ( isset( $data['request']['body'] ) ) {
+		if ( isset( $data['request']['body'] ) && is_string( $data['request']['body'] ) ) {
 			$request_body            = json_decode( $data['request']['body'], true );
 			$data['request']['body'] = $request_body;
 		}
