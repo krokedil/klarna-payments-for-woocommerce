@@ -44,6 +44,10 @@ trait CanCaptureLogs {
 			$this->forcedLoggingOn = false;
 		}
 
+		if ( has_filter( 'woocommerce_logger_log_message', [ $this, 'captureLogMessage' ] ) ) {
+			remove_filter( 'woocommerce_logger_log_message', [ $this, 'captureLogMessage' ], 10 );
+		}
+
 		$this->capturedLogMessages = [];
 	}
 
