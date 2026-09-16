@@ -326,8 +326,8 @@ class KP_Assets {
 			return;
 		}
 
-		$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
-		if ( 'yes' !== $kp_settings['express_enabled'] || 'yes' !== $kp_settings['enabled'] ) {
+		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		if ( 'yes' !== ( $kp_settings['express_enabled'] ?? '' ) || 'yes' !== ( $kp_settings['enabled'] ?? '' ) ) {
 			return;
 		}
 
@@ -361,10 +361,10 @@ class KP_Assets {
 			return;
 		}
 
-		$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
+		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 
 		/* We're guaranteed to be on the cart page, so we don't have to check for is_cart. */
-		if ( 'yes' !== $kp_settings['express_enabled'] || 'yes' !== $kp_settings['enabled'] ) {
+		if ( 'yes' !== ( $kp_settings['express_enabled'] ?? '' ) || 'yes' !== ( $kp_settings['enabled'] ?? '' ) ) {
 			return;
 		}
 

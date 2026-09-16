@@ -133,7 +133,7 @@ class Notifications extends Controller {
 		$signature      = $request->get_header( 'Klarna-Signature' );
 		$body           = $request->get_body();
 
-		if ( empty( $signing_key_id ) ) {
+		if ( empty( $signing_key_id ) || empty( $signature ) ) {
 			return false;
 		}
 
