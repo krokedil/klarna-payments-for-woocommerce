@@ -137,8 +137,8 @@ class SubscriptionsTest extends IntegrationTestCase {
 	/** @return array<string, array{0: bool, 1: string, 2: string}> */
 	public function provide_renewals(): array {
 		return [
-			// The subscription itself carries no items, so payment_complete() lands on completed.
-			'a successful charge' => [ true, 'completed', 'Subscription payment made with Klarna. Klarna order id: klarna-renewal-1' ],
+			// A paid renewal reactivates the subscription rather than completing it.
+			'a successful charge' => [ true, 'active', 'Subscription payment made with Klarna. Klarna order id: klarna-renewal-1' ],
 			'a refused charge'    => [ false, 'failed', 'Subscription payment failed with Klarna. Reason:' ],
 		];
 	}
