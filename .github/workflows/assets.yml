@@ -1,17 +1,56 @@
 name: Plugin asset/readme update
+
+permissions:
+  contents: read
+
 on:
-  push:
-    branches:
-    - master
+  workflow_dispatch:
+
+concurrency:
+  group: assets-readme-update
+  cancel-in-progress: false
+
+env:
+  SLUG: klarna-payments-for-woocommerce
+
 jobs:
   trunk:
-    name: Push to trunk
+    name: Push assets to trunk
+    # Only the release branch may be published to trunk.
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: WordPress.org plugin asset/readme update
-      uses: 10up/action-wordpress-plugin-asset-update@stable
-      env:
-        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-        SLUG: klarna-payments-for-woocommerce
+      - name: Checkout repository
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Check that the readme's Stable tag is released on WordPress.org
+        id: guard
+        run: |
+          set -euo pipefail
+          tag=$(grep -m1 -E '^Stable tag:' readme.txt | awk '{print $NF}' | tr -d '\r')
+          if [[ -z "$tag" || "$tag" == "trunk" ]]; then
+            echo "::error::Could not read a versioned Stable tag from readme.txt (got '${tag}')."
+            exit 1
+          fi
+          url="https://plugins.svn.wordpress.org/${SLUG}/tags/${tag}/"
+          code=$(curl -sS -o /dev/null -w '%{http_code}' "$url")
+          echo "Stable tag ${tag}: ${url} -> HTTP ${code}"
+          if [[ "$code" == "200" ]]; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+          elif [[ "$code" == "404" ]]; then
+            echo "::error::Tag ${tag} is not in SVN yet. Deploy the release before syncing the readme."
+            exit 1
+          else
+            echo "::error::Unexpected HTTP ${code} from ${url}; not syncing."
+            exit 1
+          fi
+
+      - name: WordPress.org plugin asset/readme update
+        if: steps.guard.outputs.released == 'true'
+        uses: 10up/action-wordpress-plugin-asset-update@2480306f6f693672726d08b5917ea114cb2825f7 # 2.2.0
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: ${{ env.SLUG }}
+          ASSETS_DIR: .wordpress-org
+          IGNORE_OTHER_FILES: true
