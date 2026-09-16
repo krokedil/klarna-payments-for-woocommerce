@@ -926,7 +926,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$max_attempts` | `int` | The maximum number of polling attempts. Default 20.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 145](../src/ExpressCheckout/OneStepCheckout.php#L145-L150)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 343](../src/ExpressCheckout/OneStepCheckout.php#L343-L348)
 
 
 ---
@@ -940,7 +940,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$sleep_time` | `int` | The wait time between attempts, in microseconds. Default 500000.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 152](../src/ExpressCheckout/OneStepCheckout.php#L152-L157)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 357](../src/ExpressCheckout/OneStepCheckout.php#L357-L362)
 
 
 ---
@@ -956,7 +956,7 @@ Argument | Type | Description
 `$order` | `\WC_Order` | The WooCommerce order.
 `$kec_unique_id` | `string` | The KEC unique ID.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 159](../src/ExpressCheckout/OneStepCheckout.php#L159-L166)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 327](../src/ExpressCheckout/OneStepCheckout.php#L327-L334)
 
 
 ---
@@ -970,7 +970,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$replay_window` | `int` | The time to remember a notification, in seconds. Default two days.
 
-Source: [./src/ExpressCheckout/Api/Controllers/Notifications.php](../src/ExpressCheckout/Api/Controllers/Notifications.php), [line 159](../src/ExpressCheckout/Api/Controllers/Notifications.php#L159-L164)
+Source: [./src/ExpressCheckout/Api/Controllers/Notifications.php](../src/ExpressCheckout/Api/Controllers/Notifications.php), [line 165](../src/ExpressCheckout/Api/Controllers/Notifications.php#L165-L170)
 
 
 ---
