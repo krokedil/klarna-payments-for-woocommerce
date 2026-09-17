@@ -54,7 +54,7 @@ class KP_Settings_Saved {
 		foreach ( $settings as $key => $value ) {
 			// If the key contains the string 'client_id_' then we should sanitize it.
 			if ( strpos( $key, 'client_id_' ) !== false ) {
-				$sanitized_client_id = klarna_sanitize_client_id( $value );
+				$sanitized_client_id = klarna_sanitize_client_id( $value, $key );
 
 				if ( ! empty( $value ) && empty( $sanitized_client_id ) ) {
 					$client_id_messages[] = $this->get_client_id_error_message( $key );

@@ -94,20 +94,11 @@ class JWT {
 	 */
 	private function is_valid_jwt( $jwt_token ) {
 		if ( empty( $this->jwks ) ) {
-			$response = wp_remote_get(
-				$this->jwks_url,
-				array(
-					'headers' => array(
-						'Accept' => 'application/json',
-					),
-				)
-			);
+			$this->jwks = $this->get_jwks();
 
-			if ( is_wp_error( $response ) ) {
+			if ( empty( $this->jwks ) ) {
 				return false;
 			}
-
-			$this->jwks = json_decode( wp_remote_retrieve_body( $response ), true );
 		}
 
 		try {
@@ -137,10 +128,57 @@ class JWT {
 			// Return the payload as an associative array.
 			return json_decode( wp_json_encode( $payload ), true );
 		} catch ( \Exception $e ) {
-			// Set to false to ensure new keys are retrieved next time this function is called.
+			// Drop the keys to ensure fresh ones are retrieved next time, in case Klarna rotated them.
+			delete_transient( $this->get_jwks_transient_name() );
 			$this->jwks = false;
 			return false;
 		}
+	}
+
+	/**
+	 * The transient name the JWKS is cached under.
+	 *
+	 * @return string
+	 */
+	private function get_jwks_transient_name() {
+		return 'kp_siwk_jwks_' . md5( $this->jwks_url );
+	}
+
+	/**
+	 * Get Klarna's public signing keys, from cache when available.
+	 *
+	 * @return array|false The JWKS, or FALSE if it could not be retrieved.
+	 */
+	private function get_jwks() {
+		$transient_name = $this->get_jwks_transient_name();
+		$jwks           = get_transient( $transient_name );
+
+		if ( ! empty( $jwks ) ) {
+			return $jwks;
+		}
+
+		$response = wp_remote_get(
+			$this->jwks_url,
+			array(
+				'headers' => array(
+					'Accept' => 'application/json',
+				),
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		$jwks = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( empty( $jwks['keys'] ) ) {
+			return false;
+		}
+
+		set_transient( $transient_name, $jwks, DAY_IN_SECONDS );
+
+		return $jwks;
 	}
 
 	/**

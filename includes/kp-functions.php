@@ -452,10 +452,10 @@ function kp_get_client_id( $country = null, $currency = null ) {
 	// Fall back to the markets own client id. Nothing can be purchased in that combination, but on site
 	// messaging and the interoperability token also use this and only need a client id for the market.
 	if ( is_wp_error( $credentials ) ) {
-		return klarna_sanitize_client_id( ApiCredentialsUtility::get_client_id( $country ) );
+		return klarna_sanitize_client_id( ApiCredentialsUtility::get_client_id( $country ), "client id for $country" );
 	}
 
-	return klarna_sanitize_client_id( $credentials['client_id'] );
+	return klarna_sanitize_client_id( $credentials['client_id'], "client id for $country" );
 }
 
 /**
@@ -464,10 +464,11 @@ function kp_get_client_id( $country = null, $currency = null ) {
  * This is to prevent invalid client ids from being used in the WebSDK.
  *
  * @param string $client_id The client id to sanitize.
+ * @param string $field     The name of the field the client id came from, for logging.
  *
  * @return string
  */
-function klarna_sanitize_client_id( $client_id ) {
+function klarna_sanitize_client_id( $client_id, $field = 'client id' ) {
 	// If the client id is empty, just return it.
 	if ( empty( $client_id ) ) {
 		return $client_id;
@@ -475,7 +476,7 @@ function klarna_sanitize_client_id( $client_id ) {
 
 	// Ensure the client id starts with either klarna_live_client_ or klarna_test_client_. Otherwise return an empty string.
 	if ( ! preg_match( '/^(klarna_live_client_|klarna_test_client_).+$/', $client_id ) ) {
-		KP_Logger::log( "[Invalid Client ID] The client id '$client_id' is invalid. It should start with either 'klarna_live_client_' or 'klarna_test_client_'. Returning an empty string." );
+		KP_Logger::log( "[Invalid Client ID] The $field is invalid. It should start with either 'klarna_live_client_' or 'klarna_test_client_'. Returning an empty string." );
 		return '';
 	}
 
