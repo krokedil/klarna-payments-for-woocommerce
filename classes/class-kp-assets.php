@@ -218,8 +218,6 @@ class KP_Assets {
 			'place_order_nonce'       => wp_create_nonce( 'kp_wc_place_order' ),
 			'auth_failed_url'         => WC_AJAX::get_endpoint( 'kp_wc_auth_failed' ),
 			'auth_failed_nonce'       => wp_create_nonce( 'kp_wc_auth_failed' ),
-			'update_session_url'      => WC_AJAX::get_endpoint( 'kp_wc_update_session' ),
-			'update_session_nonce'    => wp_create_nonce( 'kp_wc_update_session' ),
 			'log_to_file_url'         => WC_AJAX::get_endpoint( 'kp_wc_log_js' ),
 			'log_to_file_nonce'       => wp_create_nonce( 'kp_wc_log_js' ),
 			'submit_order'            => WC_AJAX::get_endpoint( 'checkout' ),

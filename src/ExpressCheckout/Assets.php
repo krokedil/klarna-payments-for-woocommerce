@@ -250,11 +250,6 @@ class Assets {
 					'nonce'  => wp_create_nonce( 'kec_one_step_shipping_option_changed' ),
 					'method' => 'POST',
 				),
-				'finalize_order'         => array(
-					'url'    => \WC_AJAX::get_endpoint( 'kec_one_step_finalize_order' ),
-					'nonce'  => wp_create_nonce( 'kec_one_step_finalize_order' ),
-					'method' => 'POST',
-				),
 			),
 			'client_id'           => $client_id,
 			'testmode'            => $this->settings->is_testmode(),
