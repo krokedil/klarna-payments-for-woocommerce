@@ -48,12 +48,6 @@ class KP_Callbacks {
 			return 400;
 		}
 
-		$rate_limit_key = 'kp_authorization_' . md5( $session_id );
-		if ( WC_Rate_Limiter::retried_too_soon( $rate_limit_key ) ) {
-			self::log_authorization( sprintf( 'Throttled a repeated callback for session %s.', $session_id ) );
-			return 429;
-		}
-
 		$order = self::get_order_by_session_id( $session_id );
 		if ( empty( $order ) ) {
 			// Answered as a success so that Klarna does not retry a message this store can never act on.
@@ -67,6 +61,12 @@ class KP_Callbacks {
 			return 200;
 		}
 
+		$rate_limit_key = 'kp_authorization_' . md5( $session_id );
+		if ( WC_Rate_Limiter::retried_too_soon( $rate_limit_key ) ) {
+			self::log_authorization( sprintf( 'Throttled a repeated callback for session %s.', $session_id ) );
+			return 429;
+		}
+
 		/**
 		 * Filters how long, in seconds, further authorization callbacks for a Klarna session are throttled for.
 		 *
@@ -75,6 +75,8 @@ class KP_Callbacks {
 		 */
 		$rate_limit_window = apply_filters( 'kp_authorization_callback_rate_limit', 120, $session_id );
 
+		// Set straight after the check it belongs to: work in between widens the window for two
+		// callbacks that arrive at once to both reach the queue.
 		WC_Rate_Limiter::set_rate_limit( $rate_limit_key, $rate_limit_window );
 
 		as_schedule_single_action(
