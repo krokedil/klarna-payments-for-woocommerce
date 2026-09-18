@@ -1,6 +1,8 @@
 <?php
 namespace Krokedil\Klarna\OnsiteMessaging\Blocks;
 
+defined( 'ABSPATH' ) || exit;
+
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Krokedil\Klarna\OnsiteMessaging\Utility;
 

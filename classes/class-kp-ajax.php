@@ -182,7 +182,7 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
 
 			// Get the content size of the request.
-			$post_size = (int) $_SERVER['CONTENT_LENGTH'] ?? 0;
+			$post_size = isset( $_SERVER['CONTENT_LENGTH'] ) ? (int) $_SERVER['CONTENT_LENGTH'] : 0;
 
 			// If the post data is to long, log a error message and return.
 			if ( $post_size > 1024 ) {
