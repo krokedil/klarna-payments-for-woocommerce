@@ -54,15 +54,6 @@ class KP_Callbacks {
 			return 429;
 		}
 
-		/**
-		 * Filters how long, in seconds, further authorization callbacks for a Klarna session are throttled for.
-		 *
-		 * @param int    $seconds    The throttle window. Defaults to 120, matching the delay on the queued job.
-		 * @param string $session_id The Klarna session the callback refers to.
-		 */
-		$rate_limit_window = apply_filters( 'kp_authorization_callback_rate_limit', 120, $session_id );
-		WC_Rate_Limiter::set_rate_limit( $rate_limit_key, $rate_limit_window );
-
 		$order = self::get_order_by_session_id( $session_id );
 		if ( empty( $order ) ) {
 			// Answered as a success so that Klarna does not retry a message this store can never act on.
@@ -75,6 +66,16 @@ class KP_Callbacks {
 			self::log_authorization( sprintf( 'Declined a callback for session %s: order %s is already paid.', $session_id, $order->get_id() ) );
 			return 200;
 		}
+
+		/**
+		 * Filters how long, in seconds, further authorization callbacks for a Klarna session are throttled for.
+		 *
+		 * @param int    $seconds    The throttle window. Defaults to 120, matching the delay on the queued job.
+		 * @param string $session_id The Klarna session the callback refers to.
+		 */
+		$rate_limit_window = apply_filters( 'kp_authorization_callback_rate_limit', 120, $session_id );
+
+		WC_Rate_Limiter::set_rate_limit( $rate_limit_key, $rate_limit_window );
 
 		as_schedule_single_action(
 			time() + 120,

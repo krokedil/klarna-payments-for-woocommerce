@@ -194,16 +194,26 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function kp_wc_log_js() {
 			check_ajax_referer( 'kp_wc_log_js', 'nonce' );
-			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
+			$reported_by = self::log_js_identity( KP_WC()->session->get_klarna_session_id() );
 
-			if ( self::log_js_budget_spent( $klarna_session_id ) ) {
+			if ( self::log_js_budget_spent( $reported_by ) ) {
 				wp_send_json_success();
 			}
 
 			$posted_message = self::truncate_log_js_message( (string) filter_input( INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) );
 
-			KP_Logger::log( "Frontend JS $klarna_session_id: $posted_message" );
+			KP_Logger::log( "Frontend JS $reported_by: $posted_message" );
 			wp_send_json_success();
+		}
+
+		/**
+		 * Determines the identity to log frontend JavaScript messages under.
+		 *
+		 * @param string|null $klarna_session_id The Klarna session the message belongs to.
+		 * @return string
+		 */
+		public static function log_js_identity( $klarna_session_id ) {
+			return ! empty( $klarna_session_id ) ? (string) $klarna_session_id : (string) WC_Geolocation::get_ip_address();
 		}
 
 		/**
@@ -227,9 +237,9 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return bool
 		 */
 		public static function log_js_budget_spent( $klarna_session_id ) {
-			$session_id = ! empty( $klarna_session_id ) ? $klarna_session_id : WC_Geolocation::get_ip_address();
+			$session_id = self::log_js_identity( $klarna_session_id );
 
-			$key    = 'kp_log_js_' . md5( (string) $session_id );
+			$key    = 'kp_log_js_' . md5( $session_id );
 			$logged = (int) get_transient( $key );
 
 			if ( $logged >= self::LOG_JS_MAX_MESSAGES ) {
