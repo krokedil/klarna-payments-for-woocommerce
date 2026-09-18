@@ -1,6 +1,8 @@
 <?php
 namespace Krokedil\Klarna;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Features class.
  * Contains constants for Klarna feature identifiers, and grouped feature arrays.
