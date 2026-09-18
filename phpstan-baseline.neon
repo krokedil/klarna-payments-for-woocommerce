@@ -13,12 +13,6 @@ parameters:
 			path: classes/admin/class-kp-settings-page.php
 
 		-
-			message: '#^Expression on left side of \?\? is not nullable\.$#'
-			identifier: nullCoalesce.expr
-			count: 1
-			path: classes/class-kp-ajax.php
-
-		-
 			message: '#^Function kp_process_accepted invoked with 3 parameters, 2 required\.$#'
 			identifier: arguments.count
 			count: 1
