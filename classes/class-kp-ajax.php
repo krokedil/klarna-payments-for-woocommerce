@@ -17,6 +17,21 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 	 */
 	class KP_AJAX extends WC_AJAX {
 		/**
+		 * The most characters of a single frontend message that are logged. Longer messages are truncated.
+		 */
+		const LOG_JS_MAX_LENGTH = 1024;
+
+		/**
+		 * The most frontend messages logged for one session within LOG_JS_WINDOW seconds.
+		 */
+		const LOG_JS_MAX_MESSAGES = 20;
+
+		/**
+		 * The window, in seconds, that LOG_JS_MAX_MESSAGES is counted over.
+		 */
+		const LOG_JS_WINDOW = 300;
+
+		/**
 		 * Hook in ajax handlers.
 		 */
 		public static function init() {
@@ -179,21 +194,66 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 */
 		public static function kp_wc_log_js() {
 			check_ajax_referer( 'kp_wc_log_js', 'nonce' );
-			$klarna_session_id = KP_WC()->session->get_klarna_session_id();
+			$reported_by = self::log_js_identity( KP_WC()->session->get_klarna_session_id() );
 
-			// Get the content size of the request.
-			$post_size = (int) $_SERVER['CONTENT_LENGTH'] ?? 0;
-
-			// If the post data is to long, log a error message and return.
-			if ( $post_size > 1024 ) {
-				KP_Logger::log( "Frontend JS $klarna_session_id: message to long and can't be logged." );
-				wp_send_json_success(); // Return success to not stop anything in the frontend if this happens.
+			if ( self::log_js_budget_spent( $reported_by ) ) {
+				wp_send_json_success();
 			}
 
-			$posted_message = filter_input( INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-			$message        = "Frontend JS $klarna_session_id: $posted_message";
-			KP_Logger::log( $message );
+			$posted_message = self::truncate_log_js_message( (string) filter_input( INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) );
+
+			KP_Logger::log( "Frontend JS $reported_by: $posted_message" );
 			wp_send_json_success();
+		}
+
+		/**
+		 * Determines the identity to log frontend JavaScript messages under.
+		 *
+		 * @param string|null $klarna_session_id The Klarna session the message belongs to.
+		 * @return string
+		 */
+		public static function log_js_identity( $klarna_session_id ) {
+			return ! empty( $klarna_session_id ) ? (string) $klarna_session_id : (string) WC_Geolocation::get_ip_address();
+		}
+
+		/**
+		 * Cuts a frontend message down to the size the log accepts.
+		 *
+		 * @param string $message The message reported by the checkout page.
+		 * @return string
+		 */
+		public static function truncate_log_js_message( $message ) {
+			if ( mb_strlen( $message ) <= self::LOG_JS_MAX_LENGTH ) {
+				return $message;
+			}
+
+			return mb_substr( $message, 0, self::LOG_JS_MAX_LENGTH ) . ' [truncated]';
+		}
+
+		/**
+		 * Whether this session has already used up its frontend logging budget.
+		 *
+		 * @param string|null $klarna_session_id The Klarna session the message belongs to.
+		 * @return bool
+		 */
+		public static function log_js_budget_spent( $klarna_session_id ) {
+			$session_id = self::log_js_identity( $klarna_session_id );
+
+			$key    = 'kp_log_js_' . md5( $session_id );
+			$logged = (int) get_transient( $key );
+
+			if ( $logged >= self::LOG_JS_MAX_MESSAGES ) {
+				if ( self::LOG_JS_MAX_MESSAGES === $logged ) {
+					KP_Logger::log( sprintf( 'Frontend JS %s: further messages dropped, more than %d in %d seconds.', $session_id, self::LOG_JS_MAX_MESSAGES, self::LOG_JS_WINDOW ) );
+					set_transient( $key, $logged + 1, self::LOG_JS_WINDOW );
+				}
+
+				return true;
+			}
+
+			set_transient( $key, $logged + 1, self::LOG_JS_WINDOW );
+
+			return false;
 		}
 
 		/**

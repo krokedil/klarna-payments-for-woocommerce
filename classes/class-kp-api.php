@@ -83,9 +83,9 @@ class KP_Api {
 	/**
 	 * Place order request.
 	 *
-	 * @param string $country The Klarna country to use.
-	 * @param string $auth_token The Klarna auth token for the session.
-	 * @param string $order_id The WooCommerce order id.
+	 * @param string     $country The Klarna country to use.
+	 * @param string     $auth_token The Klarna auth token for the session.
+	 * @param int|string $order_id The WooCommerce order id.
 	 * @return array|WP_Error The response from Klarna.
 	 */
 	public function place_order( $country, $auth_token, $order_id ) {
@@ -115,7 +115,7 @@ class KP_Api {
 		 *
 		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#after-the-place-order-request-completes
 		 * @param array|WP_Error $response The response from the Klarna place order request.
-		 * @param string         $order_id The WooCommerce order ID.
+		 * @param int|string     $order_id The WooCommerce order ID.
 		 * @param string         $auth_token The Klarna auth token for the session.
 		 */
 		do_action( 'kp_after_place_order', $response, $order_id, $auth_token );
