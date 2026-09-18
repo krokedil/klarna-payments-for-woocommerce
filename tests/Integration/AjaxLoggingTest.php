@@ -13,8 +13,17 @@ use Tests\Support\IntegrationTestCase;
  *
  * @covers \KP_AJAX::truncate_log_js_message
  * @covers \KP_AJAX::log_js_budget_spent
+ * @covers \KP_AJAX::log_js_identity
  */
 class AjaxLoggingTest extends IntegrationTestCase {
+
+	protected function setUp(): void {
+		parent::setUp();
+
+		// The notice about dropped messages goes through KP_Logger, which reads 'logging'
+		// off the raw settings option without a fallback.
+		$this->setKlarnaSettings( [ 'logging' => 'yes' ] );
+	}
 
 	public function test_a_message_within_the_cap_is_logged_as_sent(): void {
 		$message = str_repeat( 'a', \KP_AJAX::LOG_JS_MAX_LENGTH );
@@ -76,6 +85,17 @@ class AjaxLoggingTest extends IntegrationTestCase {
 		$_SERVER['REMOTE_ADDR'] = '203.0.113.11';
 
 		$this->assertFalse( \KP_AJAX::log_js_budget_spent( null ), 'A different caller has its own budget.' );
+	}
+
+	/**
+	 * The budget and the log line name the same thing, so a dropped message can be traced back
+	 * to the messages that spent the budget.
+	 */
+	public function test_a_message_is_labelled_by_whatever_it_is_counted_against(): void {
+		$_SERVER['REMOTE_ADDR'] = '203.0.113.20';
+
+		$this->assertSame( 'sess-labelled', \KP_AJAX::log_js_identity( 'sess-labelled' ) );
+		$this->assertSame( '203.0.113.20', \KP_AJAX::log_js_identity( null ), 'A message reported before a Klarna session exists is labelled by its caller.' );
 	}
 
 	public function test_one_session_cannot_spend_another_sessions_budget(): void {

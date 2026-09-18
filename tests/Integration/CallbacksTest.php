@@ -186,6 +186,29 @@ class CallbacksTest extends IntegrationTestCase {
 		$this->assertCount( 1, $this->queuedAuthorizations( 'sess-throttled' ), 'The queue keeps one job per Klarna session.' );
 	}
 
+	/**
+	 * A callback nothing can be done with is answered 200 however often it arrives: throttling it
+	 * would answer the retry with a 429 and ask Klarna to keep sending a message the store ignores.
+	 *
+	 * @dataProvider provide_ignorable_callbacks
+	 */
+	public function test_a_repeated_callback_it_cannot_act_on_is_never_throttled( string $session_id, bool $already_paid ): void {
+		$order = $this->haveOrderAwaitingAuthorization();
+
+		if ( $already_paid ) {
+			$order->set_date_paid( time() );
+			$order->save();
+		}
+
+		$callbacks = new \KP_Callbacks();
+
+		$first  = $callbacks->handle_authorization_payload( $this->callbackData( $session_id ) );
+		$second = $callbacks->handle_authorization_payload( $this->callbackData( $session_id ) );
+
+		$this->assertSame( [ 200, 200 ], [ $first, $second ] );
+		$this->assertSame( [], $this->queuedAuthorizations( $session_id ) );
+	}
+
 	public function test_the_throttle_window_is_filterable(): void {
 		$this->haveOrderAwaitingAuthorization( 'sess-filterable' );
 		$callbacks = new \KP_Callbacks();
