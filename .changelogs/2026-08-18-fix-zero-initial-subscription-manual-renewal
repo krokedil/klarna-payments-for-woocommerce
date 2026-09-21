@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed subscriptions created through a $0 initial checkout never switching to automatic renewals after a renewal order was paid with Klarna.
