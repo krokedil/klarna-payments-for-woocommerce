@@ -1,6 +1,8 @@
 <?php
 namespace Krokedil\Klarna\ExpressCheckout;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Class for registering the Klarna Express Checkout one step integration.
  */

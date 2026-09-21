@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
+
 /**
  * Class for handling subscriptions.
  */
@@ -43,8 +45,10 @@ class KP_Subscription {
 
 		// Show the recurring token on the subscription page in the billing fields.
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'show_recurring_token' ) );
-		// Ensure wp_safe_redirect do not redirect back to default dashboard or home page.
-		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
+		// Klarna's hosted payment page is only a redirect target while changing the payment method.
+		if ( self::is_change_payment_method() ) {
+			add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
+		}
 
 		// Creates and saves the customer token after the order is successfully placed.
 		add_action( 'kp_after_place_order', array( $this, 'add_recurring_token_to_order' ), 10, 3 );
@@ -548,8 +552,7 @@ class KP_Subscription {
 	 * @return array
 	 */
 	public function extend_allowed_domains_list( $hosts ) {
-		$hosts[] = 'pay.playground.klarna.com';
-		$hosts[] = 'pay.klarna.com';
+		$hosts[] = ApiCredentialsUtility::is_test_mode() ? 'pay.playground.klarna.com' : 'pay.klarna.com';
 		return $hosts;
 	}
 
