@@ -73,28 +73,10 @@ parameters:
 			path: classes/class-kp-ajax.php
 
 		-
-			message: '#^Parameter \#1 \$order of function kp_get_order_credentials_country expects int\|WC_Order, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: classes/class-kp-api.php
-
-		-
-			message: '#^Parameter \#1 \$order of method KP_Session\:\:set_session_data\(\) expects int\|WC_Order\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: classes/class-kp-api.php
-
-		-
 			message: '#^Parameter \#3 \$deps of function wp_register_script_module expects array\<int\|string, array\{id\: string, import\?\: string\}\>, array\{''@klarna/websdk_v2''\} given\.$#'
 			identifier: argument.type
 			count: 1
 			path: classes/class-kp-assets.php
-
-		-
-			message: '#^Parameter \#3 \$order_id of method KP_Api\:\:place_order\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: classes/class-kp-callbacks.php
 
 		-
 			message: '#^Call to an undefined method WC_Session\:\:has_session\(\)\.$#'
@@ -269,12 +251,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: src/ExpressCheckout/ClientTokenParser.php
-
-		-
-			message: '#^Parameter \#3 \$order_id of method KP_Api\:\:place_order\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/ExpressCheckout/KECOneStepIntegration.php
 
 		-
 			message: '#^Access to an undefined property WooCommerce\:\:\$shipping\.$#'
