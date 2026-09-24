@@ -7,6 +7,8 @@
 
 namespace KlarnaPayments\Blocks\Payments;
 
+defined( 'ABSPATH' ) || exit;
+
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 use WC_Klarna_Payments;
 

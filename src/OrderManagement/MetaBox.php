@@ -349,20 +349,7 @@ class MetaBox extends OrderMetabox {
 	 * @param \WC_Order $order The WooCommerce order object.
 	 */
 	protected function get_advanced_section_content( $order ) {
-		// Release/Disconnect.
 		$kom_disconnected_key = '_kom_disconnect';
-		$kom_disconnect       = isset( $_GET[ $kom_disconnected_key ] ) ? sanitize_key( $_GET[ $kom_disconnected_key ] ) : false;
-
-		if ( isset( $_GET['kom'] ) && wp_verify_nonce( $kom_disconnect, 'kom_disconnect' ) ) {
-			$action = sanitize_text_field( wp_unslash( $_GET['kom'] ) );
-			// Disabled mean it is disconnected, not that the feature is disabled.
-			if ( 'disabled' === $action ) {
-				$order->update_meta_data( $kom_disconnected_key, 1 );
-			} elseif ( 'enabled' === $action ) {
-				$order->delete_meta_data( $kom_disconnected_key );
-			}
-			$order->save();
-		}
 
 		$om_status = $order->get_meta( $kom_disconnected_key ) ? 'disabled' : 'enabled';
 		/* translators: [merchant-facing]. */

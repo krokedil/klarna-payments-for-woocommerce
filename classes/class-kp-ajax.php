@@ -200,6 +200,15 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 				wp_send_json_success();
 			}
 
+			// Get the content size of the request.
+			$post_size = isset( $_SERVER['CONTENT_LENGTH'] ) ? (int) $_SERVER['CONTENT_LENGTH'] : 0;
+
+			// If the post data is to long, log a error message and return.
+			if ( $post_size > 1024 ) {
+				KP_Logger::log( "Frontend JS $reported_by: message to long and can't be logged." );
+				wp_send_json_success(); // Return success to not stop anything in the frontend if this happens.
+			}
+
 			$posted_message = self::truncate_log_js_message( (string) filter_input( INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) );
 
 			KP_Logger::log( "Frontend JS $reported_by: $posted_message" );

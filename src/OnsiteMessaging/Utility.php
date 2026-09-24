@@ -96,11 +96,11 @@ class Utility {
 		}
 
 		?>
-	<klarna-placement class=<?php echo esc_attr( $class ); ?>
+	<klarna-placement class="<?php echo esc_attr( $class ); ?>"
 		data-preloaded="true"
 		data-key="<?php echo esc_attr( $key ); ?>"
 		data-locale="<?php echo esc_attr( $locale ); ?>"
-		data-theme="<?php echo esc_html( $theme ); ?>"
+		data-theme="<?php echo esc_attr( $theme ); ?>"
 		data-purchase-amount="<?php echo esc_attr( $purchase_amount ); ?>"
 	></klarna-placement>
 		<?php

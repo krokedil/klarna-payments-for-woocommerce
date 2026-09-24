@@ -2,7 +2,6 @@
 namespace Krokedil\Klarna\Api;
 
 use Krokedil\Klarna\Api\Controllers\Controller;
-use Krokedil\Klarna\Api\Controllers\Notifications;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,24 +23,25 @@ class Registry {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->init();
 		/**
 		 * Filters the list of REST API controllers registered by the plugin.
 		 *
 		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#register-a-custom-klarna-rest-api-controller
 		 * @param Controller[] $controllers The list of API controllers to register. Default empty array.
 		 */
-		$this->controllers = apply_filters( 'klarna_register_api_controller', array() );
+		$this->init( apply_filters( 'klarna_register_api_controller', array() ) );
 		add_action( 'rest_api_init', array( $this, 'register_controller_routes' ) );
 	}
 
 	/**
 	 * Initialize the API controllers and models.
 	 *
+	 * @param Controller[] $controllers The controllers to validate before registering.
+	 *
 	 * @return void
 	 */
-	public function init() {
-		foreach ( $this->controllers as $controller ) {
+	public function init( $controllers = array() ) {
+		foreach ( $controllers as $controller ) {
 			// Ensure the controller is an instance of Controller before registering.
 			if ( ! $controller instanceof Controller ) {
 				wc_doing_it_wrong(

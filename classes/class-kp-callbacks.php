@@ -218,7 +218,12 @@ class KP_Callbacks {
 
 		$order_id = wc_get_order_id_by_order_key( $order_key );
 		$order    = wc_get_order( $order_id );
-		$country  = $order->get_billing_country();
+
+		if ( ! $order ) {
+			return;
+		}
+
+		$country = $order->get_billing_country();
 
 		// Check if the order has already been processed.
 		if ( ! empty( $order->get_date_paid() ) ) {
