@@ -223,11 +223,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return string
 		 */
 		public static function truncate_log_js_message( $message ) {
-			if ( mb_strlen( $message ) <= self::LOG_JS_MAX_LENGTH ) {
+			if ( strlen( $message ) <= self::LOG_JS_MAX_LENGTH ) {
 				return $message;
 			}
 
-			return mb_substr( $message, 0, self::LOG_JS_MAX_LENGTH ) . ' [truncated]';
+			return substr( $message, 0, self::LOG_JS_MAX_LENGTH ) . ' [truncated]';
 		}
 
 		/**

@@ -61,7 +61,7 @@ class KP_Callbacks {
 			return 200;
 		}
 
-		$rate_limit_key = 'kp_authorization_' . md5( $session_id );
+		$rate_limit_key = 'kp_authorization_' . md5( $session_id . ':' . $auth_token );
 		if ( WC_Rate_Limiter::retried_too_soon( $rate_limit_key ) ) {
 			self::log_authorization( sprintf( 'Throttled a repeated callback for session %s.', $session_id ) );
 			return 429;
