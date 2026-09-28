@@ -200,7 +200,7 @@ class CheckoutCest
 				// Act: the category that has to appear on checkout, then the
 				// option to pick in Klarna's iframe.
 				'payment_category' => 'klarna_payments_pay_later',
-				'klarna_method'    => 'pay_later',
+				'klarna_method'    => 'pay_later:30 days',
 				// Assert: the finished order's _payment_method, _order_total and
 				// any further meta.
 				'gateway'          => 'klarna_payments',
