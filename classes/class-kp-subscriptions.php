@@ -389,10 +389,25 @@ class KP_Subscription {
 		$order->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
 
 		foreach ( wcs_get_subscriptions_for_order( $order, array( 'order_type' => 'any' ) ) as $subscription ) {
+			$previous_token = $subscription->get_meta( self::RECURRING_TOKEN );
+
 			// Before the token is stored, since it checks whether the subscription already had one.
 			self::maybe_enable_automatic_renewals( $subscription, $recurring_token, $order );
 
 			$subscription->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
+
+			// Renewals save the same token again, and the change payment method flow notes the token on the subscription itself.
+			if ( ! empty( $recurring_token ) && $previous_token !== $recurring_token && ! wcs_is_subscription( $order ) ) {
+				$subscription->add_order_note(
+					sprintf(
+						/* translators: [merchant-facing]. 1: Recurring token. 2: The order number. */
+						__( 'Recurring token for subscription: %1$s (created for order %2$s).', 'klarna-payments-for-woocommerce' ),
+						$recurring_token,
+						$order->get_order_number()
+					)
+				);
+			}
+
 			$subscription->save();
 		}
 
