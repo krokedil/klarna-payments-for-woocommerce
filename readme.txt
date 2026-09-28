@@ -7,7 +7,7 @@ Tested up to: 7.1
 Requires PHP: 8.0
 WC requires at least: 5.6.0
 WC tested up to: 11.1.2
-Stable tag: 4.13.1
+Stable tag: 4.13.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-09-28    - version 4.13.2 =
+* Enhancement   - Made improvements to the handling of the Klarna Express Checkout one step flow.
+* Enhancement   - Removed dead code and made general code-quality improvements.
+* Fix           - Fixed subscriptions created through a $0 initial checkout never switching to automatic renewals after a renewal order was paid with Klarna.
+
 = 2026-09-14    - version 4.13.1 =
 * Fix           - Added origin and nonce verification to the Sign in with Klarna sign-in endpoints. Reported by Ilyess Ghalem of Fraudless.tech (https://fraudless.tech).
 * Fix           - Improved capability checks for admin actions.
