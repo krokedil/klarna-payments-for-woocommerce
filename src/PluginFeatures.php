@@ -1,6 +1,8 @@
 <?php
 namespace Krokedil\Klarna;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Class for handling the plugin features and their availability based on the plugins API request.
  */

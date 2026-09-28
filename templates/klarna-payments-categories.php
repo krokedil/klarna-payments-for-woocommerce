@@ -5,6 +5,8 @@
  * @package WC_Klarna_Payments/Templates
  */
 
+defined( 'ABSPATH' ) || exit;
+
 if ( kp_is_order_pay_page() ) {
 	$klarna_wc_order_id = absint( get_query_var( 'order-pay' ) );
 	$klarna_wc_order    = wc_get_order( $klarna_wc_order_id );

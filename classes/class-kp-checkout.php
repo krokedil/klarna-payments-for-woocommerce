@@ -66,7 +66,7 @@ class KP_Checkout {
 			$session_token = KP_WC()->session->get_klarna_client_token();
 		}
 		?>
-		<input type="hidden" id="kp_client_token" value="<?php echo esc_html( $session_token ); ?>" >
+		<input type="hidden" id="kp_client_token" value="<?php echo esc_attr( $session_token ); ?>" >
 		<?php
 	}
 }

@@ -27,7 +27,7 @@ class KP_Logger {
 	 */
 	public static function log( $data ) {
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
-		if ( 'no' !== $kp_settings['logging'] ) {
+		if ( 'no' !== ( $kp_settings['logging'] ?? 'no' ) ) {
 			$message = self::format_data( $data );
 			KP_WC()->logger()->info( wp_json_encode( $message ) );
 		}

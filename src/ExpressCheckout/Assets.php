@@ -107,9 +107,21 @@ class Assets {
 	/**
 	 * Enqueue KEC admin scripts and styles.
 	 *
+	 * @param string $hook The current admin page.
+	 *
 	 * @return void
 	 */
-	public function enqueue_admin_assets() {
+	public function enqueue_admin_assets( $hook ) {
+		// These are only used on the Klarna Payments settings screen.
+		if ( 'woocommerce_page_wc-settings' !== $hook ) {
+			return;
+		}
+
+		$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ( 'klarna_payments' !== $section ) {
+			return;
+		}
+
 		wp_enqueue_style( 'kec-admin' );
 		wp_enqueue_script( 'kec-admin' );
 	}
@@ -248,11 +260,6 @@ class Assets {
 				'shipping_option_change' => array(
 					'url'    => \WC_AJAX::get_endpoint( 'kec_one_step_shipping_option_changed' ),
 					'nonce'  => wp_create_nonce( 'kec_one_step_shipping_option_changed' ),
-					'method' => 'POST',
-				),
-				'finalize_order'         => array(
-					'url'    => \WC_AJAX::get_endpoint( 'kec_one_step_finalize_order' ),
-					'nonce'  => wp_create_nonce( 'kec_one_step_finalize_order' ),
 					'method' => 'POST',
 				),
 			),

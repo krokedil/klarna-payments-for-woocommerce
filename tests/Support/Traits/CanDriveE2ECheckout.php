@@ -32,9 +32,11 @@ trait CanDriveE2ECheckout {
 
 	/**
 	 * The Klarna payment option a purchase takes by default, matched against Klarna's
-	 * own option id and against the text on its card.
+	 * own option id and against the text on its card. Anything after a colon narrows by
+	 * the card's text alone: Klarna offers Pay later in 30 and 60 days under one id, and
+	 * declines the test shopper for 60.
 	 */
-	public const DEFAULT_KLARNA_METHOD = 'pay_later';
+	public const DEFAULT_KLARNA_METHOD = 'pay_later:30 days';
 
 	/** Klarna's hosted payment iframe on the WooCommerce checkout. */
 	private const KLARNA_IFRAME = '#klarna-apf-iframe';
@@ -259,6 +261,8 @@ trait CanDriveE2ECheckout {
 				}
 
 				if ( $this->clickKlarnaSelector(
+					'#offers-selector-continue-button',
+					'[data-fs-element="Offers Selector Continue Button"]',
 					'[data-fs-element="Continue Button"]',
 					'[data-testid="pick-plan"]'
 				) ) {
@@ -299,7 +303,7 @@ trait CanDriveE2ECheckout {
 					);
 				}
 
-				$this->clickKlarnaSelector( '[data-fs-element="Buy Button"]', '#buy_button' );
+				$this->clickKlarnaSelector( '[data-fs-element="Buy Button"]', '[data-testid="confirm-and-pay"]', '#buy_button' );
 				return;
 		}
 	}
@@ -309,13 +313,18 @@ trait CanDriveE2ECheckout {
 	 * the buy button's method id first and the text on screen second.
 	 */
 	private function klarnaConfirms( array $screen, string $paymentMethod ): bool {
-		$method = $this->methodNeedle( $paymentMethod );
+		[ $method, $hint ] = array_map( [ $this, 'methodNeedle' ], explode( ':', $paymentMethod . ':', 2 ) );
+		$text              = $this->methodNeedle( $screen['text'] );
+
+		if ( $hint !== '' && ! str_contains( $text, $hint ) ) {
+			return false;
+		}
 
 		if ( $screen['buy'] !== null && str_contains( $this->methodNeedle( (string) $screen['buy']['method'] ), $method ) ) {
 			return true;
 		}
 
-		return str_contains( $this->methodNeedle( $screen['text'] ), $method );
+		return str_contains( $text, $method );
 	}
 
 	/**
@@ -412,6 +421,8 @@ trait CanDriveE2ECheckout {
 					.map(button => ({
 						label: kpLabel(button),
 						id: button.id || '',
+						element: button.getAttribute('data-fs-element') || '',
+						testid: button.getAttribute('data-testid') || '',
 						method: button.getAttribute('data-fs-payment-method-id') || '',
 						disabled: button.disabled === true || button.getAttribute('aria-disabled') === 'true',
 						busy: button.getAttribute('aria-busy') === 'true',
@@ -430,7 +441,9 @@ trait CanDriveE2ECheckout {
 					account: !!document.querySelector('#pbb-account-list, [name="pbb_account"]'),
 					// Whichever app Klarna picked to identify the shopper with.
 					identify: buttons.some(button => /BankID|Swish|Vipps|MitID|Verify|Identify/i.test(button.label)),
-					buy: buttons.find(button => button.id === 'buy_button') || null,
+					buy: buttons.find(button => button.id === 'buy_button'
+						|| button.element === 'Buy Button'
+						|| button.testid === 'confirm-and-pay') || null,
 					loading: !!document.querySelector('#shield-loader, #loader-wrapper'),
 				};
 				JS
@@ -575,8 +588,10 @@ trait CanDriveE2ECheckout {
 				)).filter((radio, index, all) => all.indexOf(radio) === index);
 
 				if (radios.length) {
+					// A card carries both a role="radio" and a native input: one option per card.
 					return radios
 						.map(radio => ({ radio, card: kpCardOf(radio) }))
+						.filter((option, index, all) => all.findIndex(other => other.card === option.card) === index)
 						.filter(option => kpVisible(option.card));
 				}
 
@@ -593,8 +608,9 @@ trait CanDriveE2ECheckout {
 			].join(' '));
 			const kpOptionName = option => kpLabel(option.card) || kpOptionKey(option);
 			const kpOption = target => {
-				const needle = kpNeedle(target);
-				const options = kpOptions();
+				const [method, hint = ''] = (target + '').split(':');
+				const needle = kpNeedle(method);
+				const options = kpOptions().filter(option => kpNeedle(kpLabel(option.card)).includes(kpNeedle(hint)));
 
 				return options.find(option => kpOptionKey(option).includes(needle))
 					|| options.find(option => kpNeedle(kpLabel(option.card)).includes(needle))

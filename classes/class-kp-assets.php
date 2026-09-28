@@ -218,8 +218,6 @@ class KP_Assets {
 			'place_order_nonce'       => wp_create_nonce( 'kp_wc_place_order' ),
 			'auth_failed_url'         => WC_AJAX::get_endpoint( 'kp_wc_auth_failed' ),
 			'auth_failed_nonce'       => wp_create_nonce( 'kp_wc_auth_failed' ),
-			'update_session_url'      => WC_AJAX::get_endpoint( 'kp_wc_update_session' ),
-			'update_session_nonce'    => wp_create_nonce( 'kp_wc_update_session' ),
 			'log_to_file_url'         => WC_AJAX::get_endpoint( 'kp_wc_log_js' ),
 			'log_to_file_nonce'       => wp_create_nonce( 'kp_wc_log_js' ),
 			'submit_order'            => WC_AJAX::get_endpoint( 'checkout' ),
@@ -326,8 +324,8 @@ class KP_Assets {
 			return;
 		}
 
-		$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
-		if ( 'yes' !== $kp_settings['express_enabled'] || 'yes' !== $kp_settings['enabled'] ) {
+		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
+		if ( 'yes' !== ( $kp_settings['express_enabled'] ?? '' ) || 'yes' !== ( $kp_settings['enabled'] ?? '' ) ) {
 			return;
 		}
 
@@ -361,10 +359,10 @@ class KP_Assets {
 			return;
 		}
 
-		$kp_settings = get_option( 'woocommerce_klarna_payments_settings' );
+		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 
 		/* We're guaranteed to be on the cart page, so we don't have to check for is_cart. */
-		if ( 'yes' !== $kp_settings['express_enabled'] || 'yes' !== $kp_settings['enabled'] ) {
+		if ( 'yes' !== ( $kp_settings['express_enabled'] ?? '' ) || 'yes' !== ( $kp_settings['enabled'] ?? '' ) ) {
 			return;
 		}
 

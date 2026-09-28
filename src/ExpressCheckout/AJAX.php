@@ -164,8 +164,6 @@ class AJAX {
 			wp_send_json_error( 'The payment was not approved by Klarna' );
 		}
 
-		$klarna_address = $result['collected_shipping_address'];
-
 		$this->set_customer_address( $klarna_address );
 		Session::set_client_token( $client_token );
 		Session::set_klarna_address( $klarna_address );

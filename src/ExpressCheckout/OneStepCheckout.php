@@ -12,6 +12,27 @@ defined( 'ABSPATH' ) || exit;
  */
 class OneStepCheckout {
 	/**
+	 * The handle of the script that waits for Klarna's payment confirmation.
+	 *
+	 * @var string
+	 */
+	private const WAIT_SCRIPT_HANDLE = 'kec-one-step-wait';
+
+	/**
+	 * The order the current request is waiting for a payment confirmation for.
+	 *
+	 * @var \WC_Order|false
+	 */
+	private static $waiting_for_order = false;
+
+	/**
+	 * The KEC unique ID the current request is waiting for a payment confirmation for.
+	 *
+	 * @var string
+	 */
+	private static $waiting_for_unique_id = '';
+
+	/**
 	 * Register the hooks needed for the one-step checkout flow.
 	 *
 	 * @param string $flow The selected KEC flow.
@@ -23,21 +44,74 @@ class OneStepCheckout {
 			return;
 		}
 
-		add_action( 'init', __CLASS__ . '::maybe_redirect_kec_one_step_checkout' );
+		add_action( 'init', __CLASS__ . '::maybe_handle_kec_one_step_return' );
 	}
 
 	/**
-	 * Redirect the customer to the correct URL after a one-step checkout order.
+	 * Handle the customer's return from a one-step checkout.
 	 *
 	 * @return void
 	 */
-	public static function maybe_redirect_kec_one_step_checkout() {
+	public static function maybe_handle_kec_one_step_return() {
 		$kec_unique_id = filter_input( INPUT_GET, 'kec-one-step', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		if ( empty( $kec_unique_id ) ) {
 			return;
 		}
 
+		$is_poll = ! empty( filter_input( INPUT_GET, 'kec-one-step-poll', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) );
+		$order   = self::is_own_unique_id( $kec_unique_id ) ? self::get_order_by_unique_id( $kec_unique_id ) : false;
+
+		if ( ! $order ) {
+			// A poll is answered to a page the customer is already on, so tell it to stop rather than redirect it away.
+			if ( $is_poll ) {
+				self::answer_redirect_poll( '', true );
+			}
+
+			self::abort_redirect();
+		}
+
+		// The order has been handed over to Klarna, so a later checkout in this session must not pick it up again.
+		if ( WC()->session ) {
+			WC()->session->__unset( 'kec_one_step_order_id' );
+		}
+
+		$redirect_url = $order->get_meta( '_kec_redirect_url' );
+
+		if ( $is_poll ) {
+			self::answer_redirect_poll( $redirect_url, self::is_final_poll() );
+		}
+
+		if ( ! empty( $redirect_url ) ) {
+			self::unset_sessions();
+			wp_safe_redirect( $redirect_url );
+			exit;
+		}
+
+		self::wait_for_confirmation( $order, $kec_unique_id );
+	}
+
+	/**
+	 * Check that the reference in the return URL is the one issued to the current shopper's session.
+	 *
+	 * @param string $kec_unique_id The KEC unique ID from the return URL.
+	 *
+	 * @return bool
+	 */
+	private static function is_own_unique_id( $kec_unique_id ) {
+		$session_unique_id = WC()->session ? WC()->session->get( 'kec_one_step_unique_id' ) : '';
+
+		return ! empty( $session_unique_id ) && hash_equals( $session_unique_id, $kec_unique_id );
+	}
+
+	/**
+	 * Get the order the KEC unique ID was issued for.
+	 *
+	 * @param string $kec_unique_id The KEC unique ID.
+	 *
+	 * @return \WC_Order|false The order, or false if no recent order matches the ID.
+	 */
+	private static function get_order_by_unique_id( $kec_unique_id ) {
 		$args = array(
 			'limit'        => 1,
 			'meta_key'     => '_kec_unique_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -48,25 +122,25 @@ class OneStepCheckout {
 		);
 
 		$orders = wc_get_orders( $args );
+
 		if ( empty( $orders ) ) {
-			self::unset_sessions();
-			wc_add_notice( __( 'Your order could not be processed', 'klarna-payments-for-woocommerce' ) );
-			wp_safe_redirect( wc_get_cart_url() );
-			exit;
+			return false;
 		}
 
 		$order = reset( $orders );
 
-		if ( $order->get_meta( '_kec_unique_id' ) !== $kec_unique_id ) {
-			self::unset_sessions();
-			wc_add_notice( __( 'Your order could not be processed', 'klarna-payments-for-woocommerce' ) );
-			wp_safe_redirect( wc_get_cart_url() );
-			exit;
-		}
+		return $order->get_meta( '_kec_unique_id' ) === $kec_unique_id ? $order : false;
+	}
 
-		$redirect_url = self::get_redirect_url_for_order( $order, $kec_unique_id );
+	/**
+	 * Send the customer back to the cart with a generic error notice.
+	 *
+	 * @return never
+	 */
+	private static function abort_redirect() {
 		self::unset_sessions();
-		wp_safe_redirect( $redirect_url );
+		wc_add_notice( __( 'Your order could not be processed', 'klarna-payments-for-woocommerce' ) );
+		wp_safe_redirect( wc_get_cart_url() );
 		exit;
 	}
 
@@ -76,34 +150,176 @@ class OneStepCheckout {
 	 * @return void
 	 */
 	public static function unset_sessions() {
+		if ( ! WC()->session ) {
+			return;
+		}
+
 		WC()->session->__unset( 'kec_one_step_unique_id' );
 		WC()->session->__unset( 'kec_one_step_order_id' );
 	}
 
 	/**
-	 * Wait for the order redirect URL to be set and return it.
+	 * Answer the waiting browser with the redirect URL Klarna's confirmation left on the order.
+	 *
+	 * @param string $redirect_url The redirect URL, or an empty string while the confirmation is still outstanding.
+	 * @param bool   $is_final     Whether this is the last time the browser will ask.
+	 *
+	 * @return never
+	 */
+	private static function answer_redirect_poll( $redirect_url, $is_final ) {
+		$done = ! empty( $redirect_url ) || $is_final;
+
+		// Once the browser stops waiting, the session has served its purpose whether the confirmation arrived or not.
+		if ( $done ) {
+			self::unset_sessions();
+		}
+
+		nocache_headers();
+		wp_send_json_success(
+			array(
+				'redirect_url' => $redirect_url,
+				'done'         => $done,
+			)
+		);
+	}
+
+	/**
+	 * Check whether the browser has used up the attempts it was given to wait for the confirmation.
+	 *
+	 * @return bool
+	 */
+	private static function is_final_poll() {
+		$attempt = absint( filter_input( INPUT_GET, 'kec-one-step-attempt', FILTER_SANITIZE_NUMBER_INT ) );
+
+		return $attempt >= self::get_wait_max_attempts();
+	}
+
+	/**
+	 * Let the customer wait for Klarna's confirmation on the page they are headed for anyway.
+	 *
+	 * The order received page is rendered by WordPress as usual, and the waiting is added to it, so that the theme,
+	 * its styling and anything else the merchant runs on the page is kept intact while the confirmation is pending.
 	 *
 	 * @param \WC_Order $order         The WooCommerce order.
 	 * @param string    $kec_unique_id The KEC unique ID.
 	 *
-	 * @return string The redirect URL.
+	 * @return void Exits if the customer still has to be sent to that page.
 	 */
-	public static function get_redirect_url_for_order( $order, $kec_unique_id ) {
-		/**
-		 * Filters the maximum number of attempts to wait for the order redirect URL to be set.
-		 *
-		 * @param int $max_attempts The maximum number of polling attempts. Default 20.
-		 */
-		$max_attempts = apply_filters( 'kec_one_step_redirect_wait_max_attempts', 20 );
+	private static function wait_for_confirmation( $order, $kec_unique_id ) {
+		if ( empty( filter_input( INPUT_GET, 'kec-one-step-wait', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ) ) {
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'kec-one-step'      => $kec_unique_id,
+						'kec-one-step-wait' => '1',
+					),
+					self::get_default_redirect_url( $order, $kec_unique_id )
+				)
+			);
+			exit;
+		}
 
-		/**
-		 * Filters the wait time, in microseconds, between attempts to read the order redirect URL.
-		 *
-		 * @param int $sleep_time The wait time between attempts, in microseconds. Default 500000.
-		 */
-		$sleep_time = apply_filters( 'kec_one_step_redirect_wait_sleep_time_mu', 5 * 100000 );
-		$attempt    = 0;
+		nocache_headers();
 
+		self::$waiting_for_order     = $order;
+		self::$waiting_for_unique_id = $kec_unique_id;
+
+		add_action( 'wp_enqueue_scripts', __CLASS__ . '::enqueue_wait_assets' );
+		add_action( 'wp_head', __CLASS__ . '::render_wait_noscript_refresh' );
+		add_action( 'woocommerce_before_thankyou', __CLASS__ . '::render_wait_notice' );
+	}
+
+	/**
+	 * Enqueue the script that waits for Klarna's payment confirmation.
+	 *
+	 * @return void
+	 */
+	public static function enqueue_wait_assets() {
+		$order = self::$waiting_for_order;
+
+		if ( ! $order ) {
+			return;
+		}
+
+		wp_register_script(
+			self::WAIT_SCRIPT_HANDLE,
+			Assets::get_assets_path() . 'js/kec-one-step-wait.js',
+			array(),
+			WC_KLARNA_PAYMENTS_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			self::WAIT_SCRIPT_HANDLE,
+			'kec_one_step_wait_params',
+			array(
+				'poll_url'     => add_query_arg(
+					array(
+						'kec-one-step'      => self::$waiting_for_unique_id,
+						'kec-one-step-poll' => '1',
+					),
+					home_url()
+				),
+				'fallback_url' => self::get_default_redirect_url( $order, self::$waiting_for_unique_id ),
+				'max_attempts' => self::get_wait_max_attempts(),
+				'interval'     => self::get_wait_interval(),
+			)
+		);
+
+		wp_enqueue_script( self::WAIT_SCRIPT_HANDLE );
+	}
+
+	/**
+	 * Print the notice telling the customer that the payment is still being confirmed.
+	 *
+	 * @param int $order_id The ID of the order the page is rendered for.
+	 *
+	 * @return void
+	 */
+	public static function render_wait_notice( $order_id = 0 ) {
+		$order = self::$waiting_for_order;
+
+		if ( ! $order || ( ! empty( $order_id ) && $order->get_id() !== absint( $order_id ) ) ) {
+			return;
+		}
+
+		wc_get_template(
+			'kec-one-step-wait.php',
+			array( 'order' => $order ),
+			'klarna-payments/',
+			WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/templates/'
+		);
+	}
+
+	/**
+	 * Print the refresh that takes a browser without JavaScript to the order received page once the wait is over.
+	 *
+	 * @return void
+	 */
+	public static function render_wait_noscript_refresh() {
+		$order = self::$waiting_for_order;
+
+		if ( ! $order ) {
+			return;
+		}
+
+		$seconds      = absint( ceil( self::get_wait_max_attempts() * self::get_wait_interval() / 1000 ) );
+		$fallback_url = self::get_default_redirect_url( $order, self::$waiting_for_unique_id );
+
+		$refresh = $seconds . ';url=' . esc_url_raw( $fallback_url );
+
+		printf( '<noscript><meta http-equiv="refresh" content="%s"></noscript>' . "\n", esc_attr( $refresh ) );
+	}
+
+	/**
+	 * Get the URL to send the customer to when Klarna's confirmation does not arrive in time.
+	 *
+	 * @param \WC_Order $order         The WooCommerce order.
+	 * @param string    $kec_unique_id The KEC unique ID.
+	 *
+	 * @return string
+	 */
+	private static function get_default_redirect_url( $order, $kec_unique_id ) {
 		/**
 		 * Filters the fallback redirect URL used when the order redirect URL is not set in time.
 		 *
@@ -111,21 +327,39 @@ class OneStepCheckout {
 		 * @param \WC_Order $order                 The WooCommerce order.
 		 * @param string    $kec_unique_id         The KEC unique ID.
 		 */
-		$default_redirect_url = apply_filters( 'kec_one_step_default_redirect_url', $order->get_checkout_order_received_url(), $order, $kec_unique_id );
+		return apply_filters( 'kec_one_step_default_redirect_url', $order->get_checkout_order_received_url(), $order, $kec_unique_id );
+	}
 
-		while ( $attempt < $max_attempts ) {
-			$order->read_meta_data( true );
-			$redirect_url = $order->get_meta( '_kec_redirect_url' );
+	/**
+	 * Get the number of times the browser asks whether Klarna has confirmed the payment.
+	 *
+	 * @return int
+	 */
+	private static function get_wait_max_attempts() {
+		/**
+		 * Filters the maximum number of attempts to wait for the order redirect URL to be set.
+		 *
+		 * @param int $max_attempts The maximum number of polling attempts. Default 20.
+		 */
+		$max_attempts = apply_filters( 'kec_one_step_redirect_wait_max_attempts', 20 );
 
-			if ( ! empty( $redirect_url ) ) {
-				return $redirect_url;
-			}
+		return intval( $max_attempts );
+	}
 
-			usleep( $sleep_time );
-			++$attempt;
-		}
+	/**
+	 * Get the time, in milliseconds, the browser waits between asking whether Klarna has confirmed the payment.
+	 *
+	 * @return int
+	 */
+	private static function get_wait_interval() {
+		/**
+		 * Filters the wait time, in microseconds, between attempts to read the order redirect URL.
+		 *
+		 * @param int $sleep_time The wait time between attempts, in microseconds. Default 500000.
+		 */
+		$sleep_time = apply_filters( 'kec_one_step_redirect_wait_sleep_time_mu', 5 * 100000 );
 
-		return $default_redirect_url;
+		return intval( intval( $sleep_time ) / 1000 );
 	}
 
 	/**
@@ -134,7 +368,7 @@ class OneStepCheckout {
 	 * @return array
 	 */
 	public static function get_initiate_body() {
-		$unique_id = uniqid( 'kec_one_step_' );
+		$unique_id = 'kec_one_step_' . bin2hex( random_bytes( 16 ) );
 		WC()->session->set( 'kec_one_step_unique_id', $unique_id );
 
 		return array(
