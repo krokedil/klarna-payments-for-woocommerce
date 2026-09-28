@@ -396,8 +396,8 @@ class KP_Subscription {
 
 			$subscription->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
 
-			// Renewals save the same token again, and the change payment method flow notes the token on the subscription itself.
-			if ( ! empty( $recurring_token ) && $previous_token !== $recurring_token && ! wcs_is_subscription( $order ) ) {
+			// Only a replaced token, renewals save the same one again. The change payment method flow notes the token on the subscription itself.
+			if ( ! empty( $recurring_token ) && ! empty( $previous_token ) && $previous_token !== $recurring_token && ! wcs_is_subscription( $order ) ) {
 				$subscription->add_order_note(
 					sprintf(
 						/* translators: [merchant-facing]. 1: Recurring token. 2: The order number. */
