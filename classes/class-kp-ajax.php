@@ -222,7 +222,11 @@ if ( ! class_exists( 'KP_AJAX' ) ) {
 		 * @return string
 		 */
 		public static function log_js_identity( $klarna_session_id ) {
-			return ! empty( $klarna_session_id ) ? (string) $klarna_session_id : (string) WC_Geolocation::get_ip_address();
+			if ( ! empty( $klarna_session_id ) ) {
+				return (string) $klarna_session_id;
+			}
+
+			return 'visitor-' . substr( wp_hash( (string) WC_Geolocation::get_ip_address() ), 0, 12 );
 		}
 
 		/**
