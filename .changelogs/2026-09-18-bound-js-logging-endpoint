@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: no
+
+Improved handling of client-side checkout diagnostics by applying message size and submission limits to support more reliable and controlled logging.

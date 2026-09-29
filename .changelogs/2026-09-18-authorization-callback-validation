@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: yes
+
+Improved handling of Klarna authorization callbacks and background processing.
