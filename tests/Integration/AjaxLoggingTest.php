@@ -95,7 +95,23 @@ class AjaxLoggingTest extends IntegrationTestCase {
 		$_SERVER['REMOTE_ADDR'] = '203.0.113.20';
 
 		$this->assertSame( 'sess-labelled', \KP_AJAX::log_js_identity( 'sess-labelled' ) );
-		$this->assertSame( '203.0.113.20', \KP_AJAX::log_js_identity( null ), 'A message reported before a Klarna session exists is labelled by its caller.' );
+	}
+
+	/**
+	 * A caller without a Klarna session is labelled by a hash of their IP address, so the address
+	 * itself never ends up in the log.
+	 */
+	public function test_a_caller_without_a_klarna_session_is_not_labelled_by_their_ip_address(): void {
+		$_SERVER['REMOTE_ADDR'] = '203.0.113.30';
+
+		$label = \KP_AJAX::log_js_identity( null );
+
+		$this->assertStringNotContainsString( '203.0.113.30', $label );
+		$this->assertMatchesRegularExpression( '/^visitor-[0-9a-f]{12}$/', $label );
+
+		$_SERVER['REMOTE_ADDR'] = '203.0.113.31';
+
+		$this->assertNotSame( $label, \KP_AJAX::log_js_identity( null ), 'A different caller gets a different label.' );
 	}
 
 	public function test_one_session_cannot_spend_another_sessions_budget(): void {
