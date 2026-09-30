@@ -82,6 +82,9 @@ class Redirect {
 			// The AJAX URL.
 			$body = str_replace( '%sign_in_url%', \WC_AJAX::get_endpoint( 'siwk_sign_in_from_redirect' ), $body );
 
+			// A nonce so the sign-in request can be verified server-side. This page is served from our own origin, so the nonce is not readable by a cross-site page (CSRF protection).
+			$body = str_replace( '%nonce%', wp_create_nonce( 'siwk_sign_in_from_redirect' ), $body );
+
 			// phpcs:ignore -- body does not contain user input.
 			echo $body;
 		}

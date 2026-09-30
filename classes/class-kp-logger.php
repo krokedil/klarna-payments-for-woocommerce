@@ -33,6 +33,10 @@ class KP_Logger {
 			return;
 		}
 
+		$message = self::format_data( $data );
+		KP_WC()->logger()->info( wp_json_encode( $message ) );
+		}
+
 		// A failure here costs the entry, it never lets an unmasked one through.
 		try {
 			$message = KeyMasker::mask( self::format_data( $data ) );

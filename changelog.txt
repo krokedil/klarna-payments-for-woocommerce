@@ -1,4 +1,8 @@
 *** Klarna for WooCommerce Changelog ***
+2026-09-14      - version 4.13.1
+* Fix           - Added origin and nonce verification to the Sign in with Klarna sign-in endpoints. Reported by Ilyess Ghalem of Fraudless.tech (https://fraudless.tech).
+* Fix           - Improved capability checks for admin actions.
+
 2026-08-25      - version 4.13.0
 * Feature       - Added support for the Klarna cross border add on. A purchase can now be made in a currency the customer's market does not settle in, signed by the credential set Klarna has granted that market and currency. The credential set used is stored on the order, so order management, subscription renewals and refunds keep using the account that authorized the purchase.
 

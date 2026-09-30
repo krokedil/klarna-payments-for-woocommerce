@@ -50,6 +50,53 @@ class Ajax {
 	}
 
 	/**
+	 * Reject requests that did not originate from this site.
+	 *
+	 * A nonce cannot be bound to a logged-out visitor, so every anonymous visitor is issued
+	 * the same one. Unlike a nonce, the Origin header cannot be forged by a cross-site page.
+	 *
+	 * @return void A WP JSON response.
+	 */
+	private function verify_same_origin() {
+		$origin = get_http_origin();
+
+		// Some proxies strip Origin. Fall back to the referring URL, and note that the
+		// accepted origins can be extended with the 'allowed_http_origins' filter.
+		if ( empty( $origin ) ) {
+			$referer = wp_get_raw_referer();
+			$parts   = empty( $referer ) ? array() : wp_parse_url( $referer );
+
+			if ( isset( $parts['scheme'], $parts['host'] ) ) {
+				$origin = $parts['scheme'] . '://' . $parts['host']
+					. ( isset( $parts['port'] ) ? ':' . $parts['port'] : '' );
+			}
+		}
+
+		// get_allowed_http_origins() builds its list from the host alone, so a store served
+		// on a non-default port never matches the origin its own browser sends. Add the port
+		// back for the duration of this check only, to avoid widening the list for anything else.
+		$add_port = function ( $origins ) {
+			foreach ( array( home_url(), site_url() ) as $url ) {
+				$parts = wp_parse_url( $url );
+
+				if ( isset( $parts['scheme'], $parts['host'], $parts['port'] ) ) {
+					$origins[] = $parts['scheme'] . '://' . $parts['host'] . ':' . $parts['port'];
+				}
+			}
+
+			return array_unique( $origins );
+		};
+
+		add_filter( 'allowed_http_origins', $add_port );
+		$is_allowed = is_allowed_http_origin( $origin );
+		remove_filter( 'allowed_http_origins', $add_port );
+
+		if ( empty( $origin ) || ! $is_allowed ) {
+			wp_send_json_error( 'bad_origin' );
+		}
+	}
+
+	/**
 	 * Register a new user or sign in an existing user.
 	 *
 	 * @return void A WP JSON response.
@@ -118,7 +165,13 @@ class Ajax {
 	 * @return void A WP JSON response.
 	 */
 	public function siwk_sign_in_from_redirect() {
-		// Unlike with pop-out, we don't need to check for a nonce here since the request is triggered directly by Klarna.
+		$this->verify_same_origin();
+
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( wp_unslash( $_POST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'siwk_sign_in_from_redirect' ) ) {
+			wp_send_json_error( 'bad_nonce' );
+		}
+
 		$this->handle_sign_in();
 	}
 
@@ -128,6 +181,8 @@ class Ajax {
 	 * @return void A WP JSON response.
 	 */
 	public function siwk_sign_in_from_popup() {
+		$this->verify_same_origin();
+
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( wp_unslash( $_POST['nonce'] ) ) : '';
 		if ( ! wp_verify_nonce( $nonce, 'siwk_sign_in_from_popup' ) ) {
 			wp_send_json_error( 'bad_nonce' );

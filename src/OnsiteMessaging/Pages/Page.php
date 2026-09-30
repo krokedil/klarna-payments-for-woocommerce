@@ -2,6 +2,8 @@
 
 namespace Krokedil\Klarna\OnsiteMessaging\Pages;
 
+defined( 'ABSPATH' ) || exit;
+
 use Krokedil\Klarna\OnsiteMessaging\Utility;
 use Krokedil\Klarna\OnsiteMessaging\Settings;
 
