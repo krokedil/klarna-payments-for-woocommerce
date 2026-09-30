@@ -30,12 +30,105 @@ class KP_Callbacks {
 	public function authorization_cb() {
 		$data = json_decode( file_get_contents( 'php://input' ), true );
 
-		// If the data is empty, return.
-		if ( empty( $data ) ) {
-			return;
+		status_header( $this->handle_authorization_payload( is_array( $data ) ? $data : array() ) );
+	}
+
+	/**
+	 * Decide what to do with an authorization callback payload.
+	 *
+	 * @param array $data The decoded callback payload.
+	 * @return int The HTTP status code to respond with.
+	 */
+	public function handle_authorization_payload( $data ) {
+		$session_id = isset( $data['session_id'] ) && is_scalar( $data['session_id'] ) ? sanitize_text_field( (string) $data['session_id'] ) : '';
+		$auth_token = isset( $data['authorization_token'] ) && is_scalar( $data['authorization_token'] ) ? sanitize_text_field( (string) $data['authorization_token'] ) : '';
+
+		if ( empty( $session_id ) || empty( $auth_token ) ) {
+			self::log_authorization( 'Declined a callback that carried no session id or no authorization token.' );
+			return 400;
 		}
 
-		as_schedule_single_action( time() + 120, 'kp_wc_authorization', array( $data ), 'klarna_authorization' );
+		$order = self::get_order_by_session_id( $session_id );
+		if ( empty( $order ) ) {
+			// Answered as a success so that Klarna does not retry a message this store can never act on.
+			self::log_authorization( sprintf( 'Declined a callback for session %s: no order in this store carries that session.', $session_id ) );
+			return 200;
+		}
+
+		// The purchase already completed through the normal checkout flow, so there is nothing to place.
+		if ( ! empty( $order->get_date_paid() ) ) {
+			self::log_authorization( sprintf( 'Declined a callback for session %s: order %s is already paid.', $session_id, $order->get_id() ) );
+			return 200;
+		}
+
+		$rate_limit_key = 'kp_authorization_' . md5( $session_id . ':' . $auth_token );
+		if ( WC_Rate_Limiter::retried_too_soon( $rate_limit_key ) ) {
+			self::log_authorization( sprintf( 'Throttled a repeated callback for session %s.', $session_id ) );
+			return 429;
+		}
+
+		/**
+		 * Filters how long, in seconds, further authorization callbacks for a Klarna session are throttled for.
+		 *
+		 * @param int    $seconds    The throttle window. Defaults to 120, matching the delay on the queued job.
+		 * @param string $session_id The Klarna session the callback refers to.
+		 */
+		$rate_limit_window = apply_filters( 'kp_authorization_callback_rate_limit', 120, $session_id );
+
+		// Set straight after the check it belongs to: work in between widens the window for two
+		// callbacks that arrive at once to both reach the queue.
+		WC_Rate_Limiter::set_rate_limit( $rate_limit_key, $rate_limit_window );
+
+		as_schedule_single_action(
+			time() + 120,
+			'kp_wc_authorization',
+			array(
+				array(
+					'session_id'          => $session_id,
+					'authorization_token' => $auth_token,
+				),
+			),
+			'klarna_authorization'
+		);
+
+		return 200;
+	}
+
+	/**
+	 * Get the order that carries a Klarna session id.
+	 *
+	 * @param string $session_id The Klarna session id.
+	 * @return WC_Order|null The order, or null if no order in this store carries the session id.
+	 */
+	public static function get_order_by_session_id( $session_id ) {
+		$orders = wc_get_orders(
+			array(
+				'meta_key'   => '_kp_session_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value' => $session_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'limit'      => 1,
+				'orderby'    => 'date',
+				'order'      => 'DESC',
+			)
+		);
+
+		$order = reset( $orders );
+
+		// Verify that the meta data is correct with what we just searched for.
+		if ( empty( $order ) || $order->get_meta( '_kp_session_id', true ) !== $session_id ) {
+			return null;
+		}
+
+		return $order;
+	}
+
+	/**
+	 * Log a decision made about an authorization callback.
+	 *
+	 * @param string $message The message to log.
+	 * @return void
+	 */
+	private static function log_authorization( $message ) {
+		KP_Logger::log( sprintf( '[AUTHORIZATION CALLBACK]: %s', $message ) );
 	}
 
 	/**
@@ -45,29 +138,20 @@ class KP_Callbacks {
 	 * @return void
 	 */
 	public function kp_wc_authorization( $data ) {
-		$order = wc_get_orders(
-			array(
-				'meta_key'   => '_kp_session_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-				'meta_value' => $data['session_id'], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-				'limit'      => 1,
-				'orderby'    => 'date',
-				'order'      => 'DESC',
-			)
-		);
+		$session_id = isset( $data['session_id'] ) && is_scalar( $data['session_id'] ) ? (string) $data['session_id'] : '';
+		$auth_token = isset( $data['authorization_token'] ) && is_scalar( $data['authorization_token'] ) ? (string) $data['authorization_token'] : '';
 
-		$order = reset( $order );
-
-		// Verify that the meta data is correct with what we just searched for.
-		if ( $order && $order->get_meta( '_kp_session_id', true ) !== $data['session_id'] ) {
-			$order = null;
+		if ( empty( $session_id ) || empty( $auth_token ) ) {
+			return;
 		}
+
+		$order = self::get_order_by_session_id( $session_id );
 
 		if ( empty( $order ) ) {
 			return;
 		}
 
-		$auth_token = $data['authorization_token'];
-		$country    = kp_get_klarna_country( $order );
+		$country = kp_get_klarna_country( $order );
 
 		// Check if the PURCHASE has already been completed by the customer.
 		if ( ! empty( $order->get_date_paid() ) ) {
