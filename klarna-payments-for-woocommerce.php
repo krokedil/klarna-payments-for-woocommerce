@@ -37,6 +37,8 @@ use Krokedil\Klarna\Compatibility;
 use Krokedil\Klarna\OrderManagement;
 use Krokedil\Klarna\ExpressCheckout;
 use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
+use Krokedil\Klarna\Logging\LogMasking;
+use Krokedil\Klarna\Logging\LogWriter;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -330,6 +332,10 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			$this->interoperability_token  = new KP_Interoperability_Token();
 			$this->order_management        = new OrderManagement();
 			$this->logger                  = new Logger( 'klarna_payments', 'no' !== ( $settings['logging'] ?? 'no' ) );
+
+			// Masking has to be in place before anything can log.
+			LogMasking::register();
+			LogWriter::register();
 			Compatibility::register();
 
 			// Includes the selectable, and checkbox settings, but excludes those whose title is empty. The 'kp_section_start' will appear as a section header in the system report.
