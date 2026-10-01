@@ -72,9 +72,16 @@ class KP_Interoperability_Token {
 	/**
 	 * Set the interoperability data in the WooCommerce session.
 	 *
+	 * @param WC_Cart|null $cart The cart passed by the woocommerce_after_calculate_totals action.
+	 *
 	 * @return void
 	 */
-	public static function set_data() {
+	public static function set_data( $cart = null ) {
+		// Skip the recurring carts WooCommerce Subscriptions calculates, see KP_Session::get_session().
+		if ( KP_Subscription::is_recurring_cart( $cart ) ) {
+			return;
+		}
+
 		$settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 
 		if ( null === WC()->session ) {

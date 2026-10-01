@@ -88,6 +88,11 @@ class KP_Session {
 	 * @param int|WC_Order|null $order The WooCommerce order or order id. Null if we are working with a cart.
 	 */
 	public function get_session( $order = null ) {
+		// Skip the recurring carts WooCommerce Subscriptions calculates. Building the order data recalculates the global shipping packages, which WCS then stores as the recurring packages.
+		if ( KP_Subscription::is_recurring_cart( $order ) ) {
+			return;
+		}
+
 		if ( ( ! kp_is_available() || ! kp_is_checkout_page() ) && ! KP_Subscription::is_change_payment_method() ) {
 			return;
 		}
