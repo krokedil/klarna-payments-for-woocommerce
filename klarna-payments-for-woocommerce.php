@@ -38,6 +38,8 @@ use Krokedil\Klarna\OrderManagement;
 use Krokedil\Klarna\ExpressCheckout;
 use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
 
+//test-tests
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
