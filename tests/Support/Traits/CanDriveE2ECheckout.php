@@ -69,6 +69,7 @@ trait CanDriveE2ECheckout {
 		'identify' => false,
 		'buy'      => null,
 		'loading'  => false,
+		'terms'    => false,
 	];
 
 	/** Billing fields that are `<select>` rather than `<input>`. */
@@ -303,6 +304,13 @@ trait CanDriveE2ECheckout {
 					);
 				}
 
+				// Klarna refuses to buy until its terms are accepted. Ticking and buying
+				// are separate polls, so the box is read back before buying.
+				if ( $screen['terms'] ) {
+					$this->acceptKlarnaTerms();
+					return;
+				}
+
 				$this->clickKlarnaSelector( '[data-fs-element="Buy Button"]', '[data-testid="confirm-and-pay"]', '#buy_button' );
 				return;
 		}
@@ -363,6 +371,27 @@ trait CanDriveE2ECheckout {
 		return true;
 	}
 
+	/** Ticks every terms checkbox on the confirm screen that is not ticked yet. */
+	private function acceptKlarnaTerms(): bool {
+		return (bool) $this->klarnaJs(
+			<<<'JS'
+			const boxes = kpTermsBoxes();
+			for (const box of boxes) {
+				(kpLabelOf(box) || box).scrollIntoView({ block: 'center' });
+
+				// One activation only: kpClick fires two clicks, and on a checkbox or its
+				// label the second untoggles the first.
+				if (box.matches('input')) {
+					box.click();
+				} else {
+					box.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+				}
+			}
+			return boxes.length > 0;
+			JS
+		);
+	}
+
 	/** Whether the picker has the method we asked for selected. */
 	private function hasKlarnaOptionSelected( string $paymentMethod ): bool {
 		$needle = addslashes( $paymentMethod );
@@ -408,7 +437,7 @@ trait CanDriveE2ECheckout {
 	 * Everything we branch on inside the Klarna iframe, in one round trip, plus the name
 	 * of the screen it adds up to. Leaves the browser switched into the iframe.
 	 *
-	 * @return array{name: string, text: string, buttons: list<string>, options: list<string>, picker: bool, account: bool, identify: bool, buy: ?array, loading: bool}
+	 * @return array{name: string, text: string, buttons: list<string>, options: list<string>, picker: bool, account: bool, identify: bool, buy: ?array, loading: bool, terms: bool}
 	 */
 	private function readKlarnaScreen(): array {
 		try {
@@ -445,6 +474,8 @@ trait CanDriveE2ECheckout {
 						|| button.element === 'Buy Button'
 						|| button.testid === 'confirm-and-pay') || null,
 					loading: !!document.querySelector('#shield-loader, #loader-wrapper'),
+					// Terms Klarna wants accepted before it lets the buy button through.
+					terms: kpTermsBoxes().length > 0,
 				};
 				JS
 			);
@@ -617,6 +648,14 @@ trait CanDriveE2ECheckout {
 					// One option and no match: it is the only way on.
 					|| (options.length === 1 ? options[0] : null);
 			};
+			// Unticked checkboxes the shopper can reach, native or ARIA. The native
+			// input is styled away and its label is a sibling (`for=`), so the label decides.
+			const kpLabelOf = box => box.closest('label')
+				|| (box.id ? document.querySelector(`label[for="${CSS.escape(box.id)}"]`) : null);
+			const kpTermsBoxes = () => Array.from(document.querySelectorAll('input[type="checkbox"], [role="checkbox"]'))
+				.filter(box => box.checked !== true && box.getAttribute('aria-checked') !== 'true')
+				.filter(box => box.disabled !== true && box.getAttribute('aria-disabled') !== 'true')
+				.filter(box => kpVisible(box) || kpVisible(kpLabelOf(box)));
 			const kpOptionChecked = option => [option.radio]
 				.concat(Array.from(option.card.querySelectorAll('[role="radio"], input[type="radio"]')))
 				.filter(Boolean)

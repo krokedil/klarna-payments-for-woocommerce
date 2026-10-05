@@ -16,6 +16,9 @@ function customize_php_scoper_config( array $config ): array {
 	$config['exclude-classes'][] = 'KP_Subscription';
 	$config['exclude-classes'][] = 'KCO';
 
+	$config['exclude-classes'][] = 'WC_Subscriptions_Cart';
+	$config['exclude-classes'][] = 'WC_Subscriptions_Product';
+
 	$functions = array(
 		'KP_WC',
 		'kp_unset_session_values',

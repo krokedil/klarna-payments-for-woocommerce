@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed recurring shipping options not being shown in the block checkout for subscriptions with a free trial, which prevented the customer from choosing a shipping method for the subscription.
