@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Order details are now only added to the pay for order page when the request carries the order's key.
