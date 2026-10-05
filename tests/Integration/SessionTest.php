@@ -28,6 +28,12 @@ class SessionTest extends IntegrationTestCase {
 		$this->resetHttpInterception();
 	}
 
+	protected function tearDown(): void {
+		WC()->session->__unset( 'klarna_interoperability_data' );
+
+		parent::tearDown();
+	}
+
 	/**
 	 * Whether a change to the cart reuses, patches or replaces the Klarna session.
 	 *
@@ -94,6 +100,54 @@ class SessionTest extends IntegrationTestCase {
 				add_filter( 'locale', static fn() => 'sv_SE' );
 				return;
 		}
+	}
+
+	/**
+	 * WCS stores the global shipping packages as the recurring ones right after totaling its cart clone, so KP must not recalculate them.
+	 *
+	 * @covers \KP_Interoperability_Token::set_data
+	 */
+	public function test_a_subscriptions_recurring_cart_leaves_klarna_and_the_shipping_packages_alone(): void {
+		$recurring_cart                     = clone $this->haveCartWithMarkedKlarnaData();
+		$recurring_cart->recurring_cart_key = '2026_10_01_monthly';
+
+		$this->runAfterCalculateTotals( $recurring_cart );
+
+		$this->assertSessionCalls( 0, 0 );
+		$this->assertSame( [ 'recurring-package-marker' ], WC()->shipping()->get_packages(), 'The shipping packages WCS is about to store as recurring were recalculated.' );
+		$this->assertSame( 'main-cart-data', WC()->session->get( 'klarna_interoperability_data' ), 'The main cart interoperability data was replaced.' );
+	}
+
+	/**
+	 * @covers \KP_Interoperability_Token::set_data
+	 */
+	public function test_an_ordinary_cart_still_rebuilds_the_klarna_data_after_totals(): void {
+		$cart = $this->haveCartWithMarkedKlarnaData();
+		$this->willCreateSession();
+
+		$this->runAfterCalculateTotals( $cart );
+
+		$this->assertSessionCalls( 1, 0 );
+		$this->assertNotSame( [ 'recurring-package-marker' ], WC()->shipping()->get_packages(), 'The order data was not built from the cart.' );
+		$this->assertIsArray( WC()->session->get( 'klarna_interoperability_data' ), 'The interoperability data was not rebuilt.' );
+	}
+
+	private function haveCartWithMarkedKlarnaData(): \WC_Cart {
+		$this->haveCartWith( [ $this->haveSimpleProduct( [ 'price' => '100.00' ] ) ] );
+		$this->haveChosenFlatRateShipping( 'SE', '50.00' );
+		$this->recalculateCart();
+		$this->resetHttpInterception();
+
+		WC()->shipping()->packages = [ 'recurring-package-marker' ];
+		WC()->session->set( 'klarna_interoperability_data', 'main-cart-data' );
+
+		return WC()->cart;
+	}
+
+	private function runAfterCalculateTotals( \WC_Cart $cart ): void {
+		add_action( 'woocommerce_after_calculate_totals', [ KP_WC()->session, 'get_session' ], 999999 );
+		do_action( 'woocommerce_after_calculate_totals', $cart );
+		remove_action( 'woocommerce_after_calculate_totals', [ KP_WC()->session, 'get_session' ], 999999 );
 	}
 
 	public function test_a_country_change_starts_a_new_session_rather_than_patching_the_old(): void {

@@ -7,7 +7,7 @@ Tested up to: 7.1
 Requires PHP: 8.0
 WC requires at least: 5.6.0
 WC tested up to: 11.1.2
-Stable tag: 4.13.2
+Stable tag: 4.13.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,12 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-10-05    - version 4.13.3 =
+* Enhancement   - Improved handling of Klarna authorization callbacks and background processing.
+* Enhancement   - Improved handling of client-side checkout diagnostics by applying message size and submission limits to support more reliable and controlled logging.
+* Enhancement   - Added a subscription note with the new recurring token when it is replaced, for example when a failed renewal order is paid by the customer.
+* Fix           - Fixed recurring shipping options not being shown in the block checkout for subscriptions with a free trial, which prevented the customer from choosing a shipping method for the subscription.
+
 = 2026-09-28    - version 4.13.2 =
 * Enhancement   - Made improvements to the handling of the Klarna Express Checkout one step flow.
 * Enhancement   - Removed dead code and made general code-quality improvements.

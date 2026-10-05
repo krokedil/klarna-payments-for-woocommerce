@@ -389,10 +389,25 @@ class KP_Subscription {
 		$order->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
 
 		foreach ( wcs_get_subscriptions_for_order( $order, array( 'order_type' => 'any' ) ) as $subscription ) {
+			$previous_token = $subscription->get_meta( self::RECURRING_TOKEN );
+
 			// Before the token is stored, since it checks whether the subscription already had one.
 			self::maybe_enable_automatic_renewals( $subscription, $recurring_token, $order );
 
 			$subscription->update_meta_data( self::RECURRING_TOKEN, $recurring_token );
+
+			// Only a replaced token, renewals save the same one again. The change payment method flow notes the token on the subscription itself.
+			if ( ! empty( $recurring_token ) && ! empty( $previous_token ) && $previous_token !== $recurring_token && ! wcs_is_subscription( $order ) ) {
+				$subscription->add_order_note(
+					sprintf(
+						/* translators: [merchant-facing]. 1: Recurring token. 2: The order number. */
+						__( 'Recurring token for subscription: %1$s (created for order %2$s).', 'klarna-payments-for-woocommerce' ),
+						$recurring_token,
+						$order->get_order_number()
+					)
+				);
+			}
+
 			$subscription->save();
 		}
 
@@ -542,6 +557,18 @@ class KP_Subscription {
 		( function_exists( 'wcs_cart_contains_early_renewal' ) && wcs_cart_contains_early_renewal() ) ||
 		( function_exists( 'wcs_cart_contains_switches' ) && wcs_cart_contains_switches() )
 		);
+	}
+
+	/**
+	 * Check if a cart is one of the recurring carts WooCommerce Subscriptions clones from the main cart to calculate recurring totals.
+	 *
+	 * @see WC_Subscriptions_Cart::calculate_subscription_totals()
+	 *
+	 * @param mixed $cart The cart to check, as passed by the woocommerce_after_calculate_totals action.
+	 * @return bool
+	 */
+	public static function is_recurring_cart( $cart ) {
+		return $cart instanceof WC_Cart && ! empty( $cart->recurring_cart_key );
 	}
 
 	/**

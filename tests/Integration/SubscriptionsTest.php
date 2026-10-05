@@ -143,6 +143,71 @@ class SubscriptionsTest extends IntegrationTestCase {
 		];
 	}
 
+	/**
+	 * A replaced token, such as one minted when the customer pays a failed
+	 * renewal, is noted on the subscription. A first or unchanged token is not.
+	 *
+	 * @dataProvider provide_token_notes
+	 */
+	public function test_a_replaced_token_is_noted_on_the_subscription( string $scenario, bool $noted ): void {
+		$parent = $this->haveOrder(
+			[
+				'items'   => [ $this->haveSimpleProduct( [ 'price' => '100.00' ] ) ],
+				'billing' => $this->swedishAddress(),
+				'klarna'  => true,
+			]
+		);
+
+		$subscription = $this->haveSubscriptionFor( $parent );
+
+		if ( 'first-token' !== $scenario ) {
+			\KP_Subscription::save_recurring_token( $parent->get_id(), 'customer-token-1' );
+		}
+
+		$renewal = $this->haveRenewalOrderFor(
+			$this->reload( $subscription ),
+			[ 'items' => [ $this->haveSimpleProduct( [ 'price' => '100.00' ] ) ], 'billing' => $this->swedishAddress() ]
+		);
+
+		switch ( $scenario ) {
+			case 'first-token':
+				\KP_Subscription::save_recurring_token( $parent->get_id(), 'customer-token-2' );
+				break;
+			case 'same-token':
+				\KP_Subscription::save_recurring_token( $renewal->get_id(), 'customer-token-1' );
+				break;
+			case 'replaced-token':
+				\KP_Subscription::save_recurring_token( $renewal->get_id(), 'customer-token-2' );
+				break;
+			case 'change-payment-method':
+				\KP_Subscription::save_recurring_token( $subscription->get_id(), 'customer-token-2' );
+				break;
+		}
+
+		if ( $noted ) {
+			$this->assertOrderHasNote(
+				$this->reload( $subscription ),
+				sprintf( 'Recurring token for subscription: customer-token-2 (created for order %s).', $renewal->get_order_number() )
+			);
+		} else {
+			$this->assertOrderHasNoNote( $this->reload( $subscription ), 'Recurring token for subscription' );
+		}
+
+		$expected_token = 'same-token' === $scenario ? 'customer-token-1' : 'customer-token-2';
+		$this->assertSame( $expected_token, (string) $this->reload( $subscription )->get_meta( \KP_Subscription::RECURRING_TOKEN ) );
+	}
+
+	/** @return array<string, array{0: string, 1: bool}> */
+	public function provide_token_notes(): array {
+		return [
+			'a failed renewal paid with a new token' => [ 'replaced-token', true ],
+			'a renewal saving the same token'        => [ 'same-token', false ],
+			'the first token of a sign-up'           => [ 'first-token', false ],
+			// That flow adds its own "Recurring token created" note.
+			'a changed payment method'               => [ 'change-payment-method', false ],
+		];
+	}
+
 	public function test_cancelling_a_subscription_cancels_the_token_at_klarna(): void {
 		$parent = $this->haveOrder(
 			[
