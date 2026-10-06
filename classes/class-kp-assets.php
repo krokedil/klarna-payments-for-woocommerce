@@ -199,9 +199,14 @@ class KP_Assets {
 		$order_key     = null;
 
 		if ( ! empty( $order_id ) ) {
-			$order = wc_get_order( $order_id );
-			if ( ! empty( $order ) ) {
+			$order       = wc_get_order( $order_id );
+			$request_key = (string) filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS );
+
+			// Only expose the order when the request carries its key, like WooCommerce's own order-pay check.
+			if ( ! empty( $order ) && hash_equals( $order->get_order_key(), $request_key ) ) {
 				$order_key = $order->get_order_key();
+			} else {
+				$order_id = null;
 			}
 		}
 
@@ -239,7 +244,7 @@ class KP_Assets {
 			'order_id'                => $order_id,
 			'order_key'               => $order_key,
 			'submit_button_selectors' => array( 'input#place_order', 'button#place_order' ),
-			'addresses'               => $pay_for_order ? array(
+			'addresses'               => null !== $order_key ? array(
 				'billing'  => $customer['billing'],
 				'shipping' => $customer['shipping'],
 			) : null,
