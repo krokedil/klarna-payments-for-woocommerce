@@ -20,6 +20,9 @@ parameters:
     - blocks/build (?)
     - assets
 
+  scanFiles:
+    - phpstan-stubs.php
+
   scanDirectories:
     - vendor/php-stubs
     - dependencies
