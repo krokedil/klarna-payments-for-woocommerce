@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Order details are now only added to the pay for order page once a guest has confirmed the order's billing email, matching WooCommerce's own check.
