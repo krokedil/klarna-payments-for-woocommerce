@@ -224,11 +224,12 @@ class KP_Assets {
 			$order       = wc_get_order( $order_id );
 			$request_key = (string) filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS );
 
-			// Only expose the order when WooCommerce would render the pay form: key, permission and email checks all pass.
+			// Only expose the order when WooCommerce would render the pay form, so the same checks in the same order.
 			if (
 				! empty( $order )
 				&& hash_equals( $order->get_order_key(), $request_key )
 				&& current_user_can( 'pay_for_order', $order_id )
+				&& $order->needs_payment()
 				&& ! $this->guest_should_verify_email( $order )
 			) {
 				$order_key = $order->get_order_key();
