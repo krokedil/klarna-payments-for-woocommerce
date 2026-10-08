@@ -152,12 +152,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "56ae6a0c929a22c71277c84fe7c93c5d7268700f"
+                "reference": "af9dd5c75d539b46ffb6fe437f2d05225541e2c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/56ae6a0c929a22c71277c84fe7c93c5d7268700f",
-                "reference": "56ae6a0c929a22c71277c84fe7c93c5d7268700f",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/af9dd5c75d539b46ffb6fe437f2d05225541e2c3",
+                "reference": "af9dd5c75d539b46ffb6fe437f2d05225541e2c3",
                 "shasum": ""
             },
             "require-dev": {
@@ -191,7 +191,7 @@
                 "source": "https://github.com/krokedil/woocommerce/tree/develop-multi-package-shipping",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2026-10-08T09:45:58+00:00"
+            "time": "2026-10-08T12:14:43+00:00"
         },
         {
             "name": "krokedil/wp-api",
