@@ -560,6 +560,18 @@ class KP_Subscription {
 	}
 
 	/**
+	 * Check if a cart is one of the recurring carts WooCommerce Subscriptions clones from the main cart to calculate recurring totals.
+	 *
+	 * @see WC_Subscriptions_Cart::calculate_subscription_totals()
+	 *
+	 * @param mixed $cart The cart to check, as passed by the woocommerce_after_calculate_totals action.
+	 * @return bool
+	 */
+	public static function is_recurring_cart( $cart ) {
+		return $cart instanceof WC_Cart && ! empty( $cart->recurring_cart_key );
+	}
+
+	/**
 	 * Add Klarna hosted payment page as allowed external url for wp_safe_redirect.
 	 * We do this because WooCommerce Subscriptions use wp_safe_redirect when processing a payment method change request (from v5.1.0).
 	 *
