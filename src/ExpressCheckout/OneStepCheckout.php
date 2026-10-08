@@ -387,10 +387,10 @@ class OneStepCheckout {
 			'customerInteractionConfig' => array(
 				'returnUrl' => add_query_arg( array( 'kec-one-step' => $unique_id ), home_url() ),
 			),
-			'amount'                    => self::format_price( WC()->cart->get_cart_contents_total() + WC()->cart->get_cart_contents_tax() ),
+			'amount'                    => self::get_cart_total_excluding_shipping(),
 			'currency'                  => get_woocommerce_currency(),
 			'supplementaryPurchaseData' => array(
-				'lineItems' => self::get_cart_items(),
+				'lineItems' => self::maybe_add_rounding_item( self::get_cart_items(), self::get_cart_total_excluding_shipping() ),
 			),
 		);
 	}
@@ -463,10 +463,12 @@ class OneStepCheckout {
 			);
 		}
 
+		$amount = self::get_cart_total_excluding_shipping() + ( $selected_shipping_option['amount'] ?? 0 );
+
 		return array(
-			'amount'                          => self::format_price( WC()->cart->get_cart_contents_total() + WC()->cart->get_cart_contents_tax() ) + ( $selected_shipping_option['amount'] ?? 0 ),
+			'amount'                          => $amount,
 			'currency'                        => get_woocommerce_currency(),
-			'lineItems'                       => $line_items,
+			'lineItems'                       => self::maybe_add_rounding_item( $line_items, $amount ),
 			'selectedShippingOptionReference' => $selected_shipping_option['shippingOptionReference'] ?? '',
 			'shippingOptions'                 => $shipping_options,
 		);
@@ -514,9 +516,11 @@ class OneStepCheckout {
 			}
 		}
 
+		$amount = self::get_cart_total_excluding_shipping() + self::format_price( (float) $selected_shipping_method->get_cost() + $selected_shipping_method->get_shipping_tax() );
+
 		return array(
-			'amount'    => self::format_price( WC()->cart->get_cart_contents_total() + WC()->cart->get_cart_contents_tax() + $selected_shipping_method->get_cost() + $selected_shipping_method->get_shipping_tax() ),
-			'lineItems' => $line_items,
+			'amount'    => $amount,
+			'lineItems' => self::maybe_add_rounding_item( $line_items, $amount ),
 		);
 	}
 
@@ -560,7 +564,71 @@ class OneStepCheckout {
 			$line_items[] = $line_item;
 		}
 
+		foreach ( WC()->cart->get_fees() as $fee ) {
+			$line_items[] = array(
+				'name'              => $fee->name,
+				'lineItemReference' => $fee->id,
+				'quantity'          => 1,
+				'totalAmount'       => self::format_price( $fee->total + $fee->tax ),
+				'totalTaxAmount'    => self::format_price( $fee->tax ),
+			);
+		}
+
+		foreach ( KP_WC()->krokedil->compatibility()->giftcards() as $giftcards ) {
+			if ( false !== strpos( get_class( $giftcards ), 'WCGiftCards' ) && ! function_exists( 'WC_GC' ) ) {
+				continue;
+			}
+
+			foreach ( $giftcards->get_cart_giftcards() as $giftcard ) {
+				$line_items[] = array(
+					'name'              => $giftcard->get_name(),
+					'lineItemReference' => $giftcard->get_sku(),
+					'quantity'          => 1,
+					'totalAmount'       => (int) $giftcard->get_total_amount(),
+					'totalTaxAmount'    => 0,
+				);
+			}
+		}
+
 		return $line_items;
+	}
+
+	/**
+	 * Adds an item for the few minor units that rounding each item separately can leave against the amount.
+	 *
+	 * @param array $line_items The line items.
+	 * @param int   $amount     The amount the line items should add up to, in minor units.
+	 *
+	 * @return array
+	 */
+	private static function maybe_add_rounding_item( $line_items, $amount ) {
+		$difference = $amount - array_sum( array_column( $line_items, 'totalAmount' ) );
+
+		if ( 0 === $difference || abs( $difference ) > count( $line_items ) ) {
+			return $line_items;
+		}
+
+		$line_items[] = array(
+			/* translators: [customer-facing]. */
+			'name'              => __( 'Rounding', 'klarna-payments-for-woocommerce' ),
+			'lineItemReference' => 'rounding',
+			'quantity'          => 1,
+			'totalAmount'       => $difference,
+			'totalTaxAmount'    => 0,
+		);
+
+		return $line_items;
+	}
+
+	/**
+	 * The amount WooCommerce charges for everything but shipping, in minor units.
+	 *
+	 * @return int
+	 */
+	private static function get_cart_total_excluding_shipping() {
+		$cart = WC()->cart;
+
+		return self::format_price( (float) $cart->get_total( 'edit' ) - (float) $cart->get_shipping_total() - (float) $cart->get_shipping_tax() );
 	}
 
 	/**

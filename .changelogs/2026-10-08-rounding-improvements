@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: no
+
+Improved rounding logic keeps Klarna order lines and tax rates aligned with WooCommerce totals, including rounding adjustments for small discrepancies.
