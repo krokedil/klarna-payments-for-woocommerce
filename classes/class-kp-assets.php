@@ -5,6 +5,7 @@
  * @package WC_Klarna_Payments/Classes
  */
 
+use Automattic\WooCommerce\Internal\Utilities\Users;
 use Krokedil\Klarna\Features;
 use Krokedil\Klarna\PluginFeatures;
 use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
@@ -187,6 +188,27 @@ class KP_Assets {
 	}
 
 	/**
+	 * Whether WooCommerce asks the guest to confirm the billing email before showing the order-pay form.
+	 *
+	 * @param WC_Order $order The order being paid for.
+	 * @return bool
+	 */
+	private function guest_should_verify_email( $order ) {
+		// WooCommerce versions without the check never ask for verification.
+		if ( ! is_callable( array( Users::class, 'should_user_verify_order_email' ) ) ) {
+			return false;
+		}
+
+		// Mirrors WC_Shortcode_Checkout::guest_should_verify_email(), which accepts the email posted by its verify form.
+		$supplied_email = null;
+		if ( wp_verify_nonce( (string) filter_input( INPUT_POST, 'check_submission' ), 'wc_verify_email' ) ) {
+			$supplied_email = sanitize_email( wp_unslash( (string) filter_input( INPUT_POST, 'email' ) ) );
+		}
+
+		return Users::should_user_verify_order_email( $order->get_id(), $supplied_email, 'order-pay' );
+	}
+
+	/**
 	 * Get the params for the Klarna Payments checkout script.
 	 *
 	 * @param array $settings The Klarna Payments settings.
@@ -202,8 +224,14 @@ class KP_Assets {
 			$order       = wc_get_order( $order_id );
 			$request_key = (string) filter_input( INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS );
 
-			// Only expose the order when the request carries its key, like WooCommerce's own order-pay check.
-			if ( ! empty( $order ) && hash_equals( $order->get_order_key(), $request_key ) ) {
+			// Only expose the order when WooCommerce would render the pay form, so the same checks in the same order.
+			if (
+				! empty( $order )
+				&& hash_equals( $order->get_order_key(), $request_key )
+				&& current_user_can( 'pay_for_order', $order_id )
+				&& $order->needs_payment()
+				&& ! $this->guest_should_verify_email( $order )
+			) {
 				$order_key = $order->get_order_key();
 			} else {
 				$order_id = null;
