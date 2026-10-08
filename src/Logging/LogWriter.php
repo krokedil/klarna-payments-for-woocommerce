@@ -26,14 +26,12 @@ class LogWriter extends \WC_Logger {
 	/**
 	 * Write one masked entry from the API package.
 	 *
-	 * @param string $handle The log source, which the plugin logger sets for itself.
+	 * @param string $level The log level the package read from the response.
 	 * @param string $message The masked, json encoded entry.
-	 * @param string $level The log level, unused since the plugin logger decides it.
-	 * @return bool
+	 * @param array  $context The log context, unused since the plugin logger sets its own source.
+	 * @return void
 	 */
-	public function add( $handle, $message, $level = WC_Log_Levels::NOTICE ) {
-		\KP_WC()->logger()->info( $message );
-
-		return true;
+	public function log( $level, $message, $context = array() ) {
+		\KP_WC()->logger()->log( $message, WC_Log_Levels::is_valid_level( $level ) ? $level : WC_Log_Levels::INFO );
 	}
 }
