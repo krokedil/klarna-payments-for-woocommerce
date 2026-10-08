@@ -175,7 +175,7 @@ class RequestPostRefund extends RequestPost {
 						'name'                  => $name,
 						'quantity'              => $quantity,
 						'unit_price'            => $unit_price,
-						'tax_rate'              => $order_line_tax_rate,
+						'tax_rate'              => $separate_sales_tax ? 0 : (int) round( $order_line_tax_rate ),
 						'total_amount'          => $total,
 						'total_discount_amount' => $total_discount,
 						'total_tax_amount'      => $refund_tax_amount,
@@ -215,7 +215,7 @@ class RequestPostRefund extends RequestPost {
 						'name'                  => $name,
 						'quantity'              => $quantity,
 						'unit_price'            => $unit_price,
-						'tax_rate'              => $order_shipping_tax_rate,
+						'tax_rate'              => $separate_sales_tax ? 0 : (int) round( $order_shipping_tax_rate ),
 						'total_amount'          => $total,
 						'total_discount_amount' => $total_discount,
 						'total_tax_amount'      => $refund_tax_amount,
@@ -276,6 +276,8 @@ class RequestPostRefund extends RequestPost {
 
 				$data[] = $return_fee;
 			}
+
+			$data = $this->maybe_add_rounding_line( $data );
 		}
 
 		/**
@@ -286,6 +288,39 @@ class RequestPostRefund extends RequestPost {
 		 * @param int   $order_id The WooCommerce order ID.
 		 */
 		return apply_filters( 'kom_refund_order_args', $data, $this->order_id );
+	}
+
+	/**
+	 * Adds a line for what rounding each unit price leaves between the lines and the refunded amount.
+	 *
+	 * @param array $data The refund order lines.
+	 * @return array
+	 */
+	private function maybe_add_rounding_line( $data ) {
+		if ( empty( $data ) ) {
+			return $data;
+		}
+
+		$difference = (int) round( $this->refund_amount * 100 ) - (int) array_sum( array_column( $data, 'total_amount' ) );
+
+		if ( 0 === $difference || abs( $difference ) > array_sum( array_column( $data, 'quantity' ) ) ) {
+			return $data;
+		}
+
+		$data[] = array(
+			'type'                  => $difference < 0 ? 'discount' : 'surcharge',
+			'reference'             => 'rounding',
+			/* translators: [customer-facing]. */
+			'name'                  => __( 'Rounding', 'klarna-payments-for-woocommerce' ),
+			'quantity'              => 1,
+			'unit_price'            => $difference,
+			'tax_rate'              => 0,
+			'total_amount'          => $difference,
+			'total_discount_amount' => 0,
+			'total_tax_amount'      => 0,
+		);
+
+		return $data;
 	}
 
 	/**

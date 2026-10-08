@@ -25,6 +25,9 @@ trait CanConfigureStore {
 				'prices_include_tax' => false,
 				'tax_based_on'       => 'billing',
 				'ship_to_countries'  => '',
+				'round_at_subtotal'  => false,
+				'price_decimals'     => 2,
+				'shipping_tax_class' => 'inherit',
 			],
 			$args
 		);
@@ -35,6 +38,9 @@ trait CanConfigureStore {
 		update_option( 'woocommerce_prices_include_tax', $args['prices_include_tax'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_tax_based_on', $args['tax_based_on'] );
 		update_option( 'woocommerce_ship_to_countries', $args['ship_to_countries'] );
+		update_option( 'woocommerce_tax_round_at_subtotal', $args['round_at_subtotal'] ? 'yes' : 'no' );
+		update_option( 'woocommerce_price_num_decimals', (string) $args['price_decimals'] );
+		update_option( 'woocommerce_shipping_tax_class', $args['shipping_tax_class'] );
 
 		$this->flushStoreCaches();
 	}
@@ -119,6 +125,13 @@ trait CanConfigureStore {
 		);
 
 		return $slug;
+	}
+
+	/** Puts the options that change how WooCommerce rounds back to their defaults. */
+	protected function resetRoundingOptions(): void {
+		update_option( 'woocommerce_tax_round_at_subtotal', 'no' );
+		update_option( 'woocommerce_price_num_decimals', '2' );
+		update_option( 'woocommerce_shipping_tax_class', 'inherit' );
 	}
 
 	/** Removes every tax rate in the store. */

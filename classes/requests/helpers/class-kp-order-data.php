@@ -173,7 +173,58 @@ class KP_Order_Data {
 			$klarna_order_lines[] = $sales_tax_line;
 		}
 
+		return $this->maybe_add_rounding_line( $klarna_order_lines );
+	}
+
+	/**
+	 * Adds a line for the few minor units that rounding each line separately can leave against the order total.
+	 *
+	 * @param array $klarna_order_lines The Klarna order lines.
+	 * @return array
+	 */
+	private function maybe_add_rounding_line( $klarna_order_lines ) {
+		$difference = (int) $this->order_data->get_total() - array_sum( array_column( $klarna_order_lines, 'total_amount' ) );
+
+		if ( 0 === $difference || abs( $difference ) > count( $klarna_order_lines ) ) {
+			return $klarna_order_lines;
+		}
+
+		$klarna_order_lines[] = array(
+			/* translators: [customer-facing]. */
+			'name'                  => __( 'Rounding', 'klarna-payments-for-woocommerce' ),
+			'quantity'              => 1,
+			'reference'             => 'rounding',
+			'tax_rate'              => 0,
+			'total_amount'          => $difference,
+			'total_discount_amount' => 0,
+			'total_tax_amount'      => 0,
+			'type'                  => $difference < 0 ? 'discount' : 'surcharge',
+			'unit_price'            => $difference,
+		);
+
 		return $klarna_order_lines;
+	}
+
+	/**
+	 * Returns a tax rate that agrees with the line's tax amount, the way Klarna validates it.
+	 *
+	 * @param int $tax_rate         The configured tax rate, in hundredths of a percent.
+	 * @param int $total_amount     The line total including tax, in minor units.
+	 * @param int $total_tax_amount The line tax, in minor units.
+	 * @return int
+	 */
+	private function get_consistent_tax_rate( $tax_rate, $total_amount, $total_tax_amount ) {
+		if ( 0 === $total_amount || $total_amount === $total_tax_amount ) {
+			return $tax_rate;
+		}
+
+		$expected_tax = $total_amount - $total_amount * 10000 / ( 10000 + $tax_rate );
+
+		if ( abs( $total_tax_amount - $expected_tax ) <= 1 ) {
+			return $tax_rate;
+		}
+
+		return (int) round( $total_tax_amount * 10000 / ( $total_amount - $total_tax_amount ) );
 	}
 
 	/**
@@ -310,6 +361,10 @@ class KP_Order_Data {
 			'unit_price'            => (int) round( (float) ( $this->separate_sales_tax ? $order_line->get_subtotal_unit_price() : $order_line->get_subtotal_unit_price() + $order_line->get_subtotal_unit_tax_amount() ), 0 ),
 			'subscription'          => apply_filters( $subscription_filter, array(), $order_line ),
 		);
+
+		if ( ! $this->separate_sales_tax ) {
+			$klarna_item['tax_rate'] = $this->get_consistent_tax_rate( $klarna_item['tax_rate'], $klarna_item['total_amount'], $klarna_item['total_tax_amount'] );
+		}
 
 		if ( isset( $order_line->product ) ) {
 			$product = $order_line->product;
