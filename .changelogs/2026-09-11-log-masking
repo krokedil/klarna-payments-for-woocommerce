@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: yes
+
+Masked customer personal, and other sensitive data and credentials in the plugin log.

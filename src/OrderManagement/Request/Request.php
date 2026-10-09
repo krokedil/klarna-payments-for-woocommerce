@@ -2,6 +2,7 @@
 namespace Krokedil\Klarna\OrderManagement\Request;
 
 use Krokedil\Klarna\OrderManagement;
+use Krokedil\Klarna\Logging\LogMasking;
 use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -354,14 +355,14 @@ abstract class Request {
 	 * @return void
 	 */
 	protected function log_response( $response, $request_args, $request_url, $code ) {
-		foreach ( $request_args['headers'] as $header => $value ) {
-			if ( 'authorization' === strtolower( $header ) ) {
-				// If it is longer than 15 char., it most likely has a token. This is an assumption that is safe even if it is wrong.
-				$request_args['headers'][ $header ] = strlen( $value ) > 15 ? '[REDACTED]' : '[MISSING]';
-				break;
-			}
-		}
-		$log = \KP_Logger::format_log( $this->klarna_order_id, $this->method, $this->log_title, $request_args, $response, $code, $request_url );
+		// Decode the body so the masking can reach into it, and drop the rest of the HTTP
+		// response, which holds nothing a log needs and hides the payload inside a string.
+		$body = is_wp_error( $response ) ? array() : json_decode( wp_remote_retrieve_body( $response ), true );
+
+		$request_args = LogMasking::mask_request( $request_args );
+		$body         = LogMasking::mask_response( $body );
+
+		$log = \KP_Logger::format_log( $this->klarna_order_id, $this->method, $this->log_title, $request_args, $body, $code, $request_url );
 		\KP_Logger::log( $log );
 	}
 }
