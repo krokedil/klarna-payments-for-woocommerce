@@ -22,6 +22,7 @@ phpcs.xml
 phpstan.neon
 phpstan-baseline.neon
 phpstan-bootstrap.php
+phpstan-stubs.php
 pnpm-lock.yaml
 readme.dev.txt
 readme.dev.md
