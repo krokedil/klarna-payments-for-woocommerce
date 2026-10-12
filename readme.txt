@@ -70,8 +70,8 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 
 == Changelog ==
 = 2026-10-12    - version 4.13.4 =
-* Fix           - Order details are now only added to the pay for order page when WooCommerce would show the payment form: the request carries the order's key, the customer may pay for the order, the order still needs payment, and a guest has confirmed the billing email.
 * Enhancement   - Masked customer personal, and other sensitive data and credentials in the plugin log.
+* Fix           - Order details are now only added to the pay for order page when WooCommerce would show the payment form: the request carries the order's key, the customer may pay for the order, the order still needs payment, and a guest has confirmed the billing email.
 
 = 2026-10-05    - version 4.13.3 =
 * Enhancement   - Improved handling of Klarna authorization callbacks and background processing.
