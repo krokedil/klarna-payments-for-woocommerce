@@ -6,8 +6,8 @@ Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.0
 WC requires at least: 5.6.0
-WC tested up to: 11.1.2
-Stable tag: 4.13.3
+WC tested up to: 11.2.1
+Stable tag: 4.13.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,10 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-10-12    - version 4.13.4 =
+* Fix           - Order details are now only added to the pay for order page when WooCommerce would show the payment form: the request carries the order's key, the customer may pay for the order, the order still needs payment, and a guest has confirmed the billing email.
+* Enhancement   - Masked customer personal, and other sensitive data and credentials in the plugin log.
+
 = 2026-10-05    - version 4.13.3 =
 * Enhancement   - Improved handling of Klarna authorization callbacks and background processing.
 * Enhancement   - Improved handling of client-side checkout diagnostics by applying message size and submission limits to support more reliable and controlled logging.
