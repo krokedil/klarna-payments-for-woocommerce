@@ -9,7 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use Krokedil\Klarna\Logging\LogMasking;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\KeyMasker;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Masking;
 
 /**
  * Logger class.
@@ -33,12 +35,10 @@ class KP_Logger {
 			return;
 		}
 
-		$message = self::format_data( $data );
+		$message = Masking::mask_keys( self::format_data( $data ), LogMasking::SLUG );
 
 		// A failure here costs the entry, it never lets an unmasked one through.
-		try {
-			$message = KeyMasker::mask( self::format_data( $data ) );
-		} catch ( \Throwable $e ) {
+		if ( KeyMasker::FAILED === $message ) {
 			$message = array( 'error' => KeyMasker::FAILED );
 		}
 
