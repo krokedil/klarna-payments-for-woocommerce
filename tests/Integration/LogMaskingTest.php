@@ -28,6 +28,15 @@ class LogMaskingTest extends IntegrationTestCase {
 		'Lgh 1102'         => 'second address line',
 	];
 
+	/** The fields support needs back when masking is off, as Klarna names them. */
+	private const KLARNA_ADDRESS = [
+		'given_name'     => 'Karl',
+		'family_name'    => 'Karlsson',
+		'email'          => 'karl@example.com',
+		'phone'          => '+46701234567',
+		'street_address' => 'Storgatan 1',
+	];
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -165,8 +174,9 @@ class LogMaskingTest extends IntegrationTestCase {
 
 		$entry = wp_json_encode( $this->loggedEntry( $title ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 
-		$this->assertStringContainsString( 'karl@example.com', $entry, 'The entry still masked the email.' );
-		$this->assertStringContainsString( 'Storgatan 1', $entry, 'The entry still masked the street address.' );
+		foreach ( self::KLARNA_ADDRESS as $key => $value ) {
+			$this->assertStringContainsString( "\"{$key}\":\"{$value}\"", $entry, "The entry still masked the {$key}." );
+		}
 		$this->assertStringNotContainsString( '[REDACTED]', $entry );
 	}
 
@@ -214,12 +224,7 @@ class LogMaskingTest extends IntegrationTestCase {
 
 		$this->willRetrieveKlarnaOrder(
 			[
-				'billing_address' => [
-					'email'          => 'karl@example.com',
-					'family_name'    => 'Karlsson',
-					'phone'          => '+46701234567',
-					'street_address' => 'Storgatan 1',
-				],
+				'billing_address' => self::KLARNA_ADDRESS,
 			]
 		);
 		$this->willCancel();
@@ -232,12 +237,7 @@ class LogMaskingTest extends IntegrationTestCase {
 		\KP_Logger::log(
 			[
 				'title'           => 'Direct entry',
-				'billing_address' => [
-					'email'          => 'karl@example.com',
-					'family_name'    => 'Karlsson',
-					'phone'          => '+46701234567',
-					'street_address' => 'Storgatan 1',
-				],
+				'billing_address' => self::KLARNA_ADDRESS,
 			]
 		);
 	}
