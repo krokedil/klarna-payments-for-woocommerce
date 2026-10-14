@@ -16,17 +16,16 @@ trait CanConfigureStore {
 	public const KP_SETTINGS_OPTION = 'woocommerce_klarna_payments_settings';
 
 	/** Applies a store configuration. */
-	protected function configureStore( array $args = [] ): void {
+	protected function configureStore( array $args = array() ): void {
 		$args = array_merge(
-			[
-				'country'               => 'SE',
-				'currency'              => 'SEK',
-				'calc_taxes'            => true,
-				'prices_include_tax'    => false,
-				'tax_based_on'          => 'billing',
-				'tax_round_at_subtotal' => false,
-				'ship_to_countries'     => '',
-			],
+			array(
+				'country'            => 'SE',
+				'currency'           => 'SEK',
+				'calc_taxes'         => true,
+				'prices_include_tax' => false,
+				'tax_based_on'       => 'billing',
+				'ship_to_countries'  => '',
+			),
 			$args
 		);
 
@@ -35,7 +34,6 @@ trait CanConfigureStore {
 		update_option( 'woocommerce_calc_taxes', $args['calc_taxes'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_prices_include_tax', $args['prices_include_tax'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_tax_based_on', $args['tax_based_on'] );
-		update_option( 'woocommerce_tax_round_at_subtotal', $args['tax_round_at_subtotal'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_ship_to_countries', $args['ship_to_countries'] );
 
 		$this->flushStoreCaches();
@@ -44,37 +42,37 @@ trait CanConfigureStore {
 	/** A SE / SEK store with a single 25% VAT rate. */
 	protected function configureSwedishStore(): int {
 		$this->configureStore(
-			[
+			array(
 				'country'  => 'SE',
 				'currency' => 'SEK',
-			]
+			)
 		);
 
 		return $this->haveTaxRate(
-			[
+			array(
 				'tax_rate_country' => 'SE',
 				'tax_rate'         => '25.0000',
 				'tax_rate_name'    => 'VAT',
-			]
+			)
 		);
 	}
 
 	/** A US:CA / USD store with a single 8.5% sales tax rate. */
 	protected function configureUsStore(): int {
 		$this->configureStore(
-			[
+			array(
 				'country'  => 'US:CA',
 				'currency' => 'USD',
-			]
+			)
 		);
 
 		return $this->haveTaxRate(
-			[
+			array(
 				'tax_rate_country' => 'US',
 				'tax_rate_state'   => 'CA',
 				'tax_rate'         => '8.5000',
 				'tax_rate_name'    => 'Sales Tax',
-			]
+			)
 		);
 	}
 
@@ -82,7 +80,7 @@ trait CanConfigureStore {
 	protected function haveTaxRate( array $rate ): int {
 		$rate_id = \WC_Tax::_insert_tax_rate(
 			array_merge(
-				[
+				array(
 					'tax_rate_country'  => '',
 					'tax_rate_state'    => '',
 					'tax_rate'          => '0.0000',
@@ -92,7 +90,7 @@ trait CanConfigureStore {
 					'tax_rate_shipping' => 1,
 					'tax_rate_order'    => 0,
 					'tax_rate_class'    => '',
-				],
+				),
 				$rate
 			)
 		);
@@ -112,12 +110,12 @@ trait CanConfigureStore {
 		}
 
 		$this->haveTaxRate(
-			[
+			array(
 				'tax_rate_country' => $country,
 				'tax_rate'         => $rate,
 				'tax_rate_name'    => $name,
 				'tax_rate_class'   => $slug,
-			]
+			)
 		);
 
 		return $slug;
@@ -142,13 +140,13 @@ trait CanConfigureStore {
 	}
 
 	/** Merges credentials for one country into the Klarna Payments settings. */
-	protected function haveKlarnaCredentials( string $country, array $overrides = [], bool $testmode = true ): void {
+	protected function haveKlarnaCredentials( string $country, array $overrides = array(), bool $testmode = true ): void {
 		$country = strtolower( $country );
 		$prefix  = $testmode ? 'test_' : '';
 
 		$this->setKlarnaSettings(
 			array_merge(
-				[
+				array(
 					'enabled'                           => 'yes',
 					'testmode'                          => $testmode ? 'yes' : 'no',
 					// Both of these are read off the raw option without a fallback.
@@ -156,8 +154,8 @@ trait CanConfigureStore {
 					'logging'                           => 'no',
 					"{$prefix}merchant_id_{$country}"   => "mid-{$country}",
 					"{$prefix}shared_secret_{$country}" => "secret-{$country}",
-					'available_countries'               => [ $country ],
-				],
+					'available_countries'               => array( $country ),
+				),
 				$overrides
 			)
 		);
@@ -169,13 +167,13 @@ trait CanConfigureStore {
 	 * `haveKlarnaCredentials()` overwrites the whole option, so it cannot build the
 	 * multi-account store a cross border purchase needs.
 	 *
-	 * @param array<int, string> $countries Settings country codes, for example `[ 'se', 'us' ]` or `[ 'eu' ]`.
+	 * @param array<int, string>   $countries Settings country codes, for example `[ 'se', 'us' ]` or `[ 'eu' ]`.
 	 * @param array<string, mixed> $overrides Settings merged on top of the generated credentials.
-	 * @param bool $testmode Whether to write the `test_` prefixed credentials. Defaults to true.
+	 * @param bool                 $testmode Whether to write the `test_` prefixed credentials. Defaults to true.
 	 */
-	protected function haveKlarnaCredentialsForSets( array $countries, array $overrides = [], bool $testmode = true ): void {
+	protected function haveKlarnaCredentialsForSets( array $countries, array $overrides = array(), bool $testmode = true ): void {
 		$prefix      = $testmode ? 'test_' : '';
-		$credentials = [];
+		$credentials = array();
 
 		foreach ( $countries as $country ) {
 			$country = strtolower( $country );
@@ -187,13 +185,13 @@ trait CanConfigureStore {
 
 		$this->setKlarnaSettings(
 			array_merge(
-				[
+				array(
 					'enabled'             => 'yes',
 					'testmode'            => $testmode ? 'yes' : 'no',
 					'customer_type'       => 'b2c',
 					'logging'             => 'no',
 					'available_countries' => array_map( 'strtolower', $countries ),
-				],
+				),
 				$credentials,
 				$overrides
 			)
