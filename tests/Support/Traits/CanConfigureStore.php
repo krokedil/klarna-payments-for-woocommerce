@@ -19,12 +19,13 @@ trait CanConfigureStore {
 	protected function configureStore( array $args = [] ): void {
 		$args = array_merge(
 			[
-				'country'            => 'SE',
-				'currency'           => 'SEK',
-				'calc_taxes'         => true,
-				'prices_include_tax' => false,
-				'tax_based_on'       => 'billing',
-				'ship_to_countries'  => '',
+				'country'               => 'SE',
+				'currency'              => 'SEK',
+				'calc_taxes'            => true,
+				'prices_include_tax'    => false,
+				'tax_based_on'          => 'billing',
+				'tax_round_at_subtotal' => false,
+				'ship_to_countries'     => '',
 			],
 			$args
 		);
@@ -34,6 +35,7 @@ trait CanConfigureStore {
 		update_option( 'woocommerce_calc_taxes', $args['calc_taxes'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_prices_include_tax', $args['prices_include_tax'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_tax_based_on', $args['tax_based_on'] );
+		update_option( 'woocommerce_tax_round_at_subtotal', $args['tax_round_at_subtotal'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_ship_to_countries', $args['ship_to_countries'] );
 
 		$this->flushStoreCaches();

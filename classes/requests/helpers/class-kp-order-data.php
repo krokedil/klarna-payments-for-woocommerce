@@ -173,7 +173,140 @@ class KP_Order_Data {
 			$klarna_order_lines[] = $sales_tax_line;
 		}
 
-		return $klarna_order_lines;
+		// With separate sales tax the lines carry no tax, so only the amounts are matched.
+		$total_tax = $this->separate_sales_tax ? null : $this->order_data->get_total_tax();
+
+		return self::adjust_rounding( $klarna_order_lines, $this->order_data->get_total(), $total_tax );
+	}
+
+	/**
+	 * Makes the order lines add up to the WooCommerce totals.
+	 *
+	 * @param array    $order_lines The formatted Klarna order lines.
+	 * @param int      $total The WooCommerce total in minor units.
+	 * @param int|null $total_tax The WooCommerce total tax in minor units, or null to leave the tax amounts as they are.
+	 * @return array
+	 */
+	public static function adjust_rounding( $order_lines, $total, $total_tax = null ) {
+		$adjusted = $order_lines;
+
+		if ( null !== $total_tax ) {
+			$adjusted = self::adjust_rounding_field( $adjusted, 'total_tax_amount', (int) $total_tax );
+			if ( null === $adjusted ) {
+				return $order_lines;
+			}
+		}
+
+		$adjusted = self::adjust_rounding_field( $adjusted, 'total_amount', (int) $total );
+
+		return $adjusted ?? $order_lines;
+	}
+
+	/**
+	 * Spreads the difference between a total and the sum of one order line field over the lines, one minor unit at a time.
+	 *
+	 * @param array  $order_lines The formatted Klarna order lines.
+	 * @param string $field The order line field to adjust, total_amount or total_tax_amount.
+	 * @param int    $total The total the field should add up to, in minor units.
+	 * @return array|null The adjusted order lines, or null if the difference could not be placed.
+	 */
+	private static function adjust_rounding_field( $order_lines, $field, $total ) {
+		if ( $total <= 0 ) {
+			return $order_lines;
+		}
+
+		$difference = $total - (int) array_sum( array_column( $order_lines, $field ) );
+		if ( 0 === $difference ) {
+			return $order_lines;
+		}
+
+		// Rounding can only ever put a line off by less than one minor unit, so anything larger than the number of lines is an actual mismatch that should not be hidden.
+		if ( abs( $difference ) > count( $order_lines ) ) {
+			KP_Logger::log( "The order lines {$field} differ from the WooCommerce total by {$difference}, which is too much to be a rounding difference. The order lines are left as they are." );
+			return null;
+		}
+
+		$step = ( $difference > 0 ) ? 1 : -1;
+
+		while ( 0 !== $difference ) {
+			$applied = false;
+
+			foreach ( self::get_rounding_order( $order_lines ) as $key ) {
+				if ( 0 === $difference ) {
+					break;
+				}
+
+				$line = self::apply_rounding_step( $order_lines[ $key ], $field, $step );
+				if ( null === $line ) {
+					continue;
+				}
+
+				$order_lines[ $key ] = $line;
+				$difference         -= $step;
+				$applied             = true;
+			}
+
+			if ( ! $applied ) {
+				KP_Logger::log( "The order lines {$field} differ from the WooCommerce total by {$difference}, but no line was found that could take the difference. The order lines are left as they are." );
+				return null;
+			}
+		}
+
+		return $order_lines;
+	}
+
+	/**
+	 * Moves one minor unit onto an order line, keeping total_amount equal to quantity * unit_price - total_discount_amount.
+	 *
+	 * @param array  $order_line The formatted Klarna order line.
+	 * @param string $field The order line field to adjust, total_amount or total_tax_amount.
+	 * @param int    $step 1 or -1.
+	 * @return array|null The adjusted order line, or null if the line cannot take the step.
+	 */
+	private static function apply_rounding_step( $order_line, $field, $step ) {
+		if ( 'total_tax_amount' === $field ) {
+			if ( empty( $order_line['tax_rate'] ) || $order_line['total_tax_amount'] + $step < 0 ) {
+				return null;
+			}
+
+			$order_line['total_tax_amount'] += $step;
+			return $order_line;
+		}
+
+		if ( ( $order_line['total_discount_amount'] ?? 0 ) - $step >= 0 ) {
+			$order_line['total_discount_amount'] = ( $order_line['total_discount_amount'] ?? 0 ) - $step;
+		} elseif ( 1 === (int) $order_line['quantity'] && $order_line['unit_price'] + $step >= 0 ) {
+			$order_line['unit_price'] += $step;
+		} else {
+			return null;
+		}
+
+		$order_line['total_amount'] += $step;
+		return $order_line;
+	}
+
+	/**
+	 * Gets the keys of the order lines that can carry a rounding difference, largest line first.
+	 *
+	 * @param array $order_lines The formatted Klarna order lines.
+	 * @return array
+	 */
+	private static function get_rounding_order( $order_lines ) {
+		$keys = array();
+		foreach ( $order_lines as $key => $order_line ) {
+			if ( ( $order_line['total_amount'] ?? 0 ) > 0 && 'sales_tax' !== ( $order_line['type'] ?? '' ) ) {
+				$keys[] = $key;
+			}
+		}
+
+		usort(
+			$keys,
+			function ( $a, $b ) use ( $order_lines ) {
+				return array( $order_lines[ $b ]['total_amount'], $a ) <=> array( $order_lines[ $a ]['total_amount'], $b );
+			}
+		);
+
+		return $keys;
 	}
 
 	/**
