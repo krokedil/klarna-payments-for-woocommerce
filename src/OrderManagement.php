@@ -125,7 +125,7 @@ class OrderManagement {
 			array( 'id' => 'kom_force_full_capture' ),
 
 		);
-		$this->system_report = new SystemReport( 'klarna_payments', 'Klarna Order Management for WooCommerce', $report_about );
+		$this->system_report = new SystemReport( 'klarna_payments', 'Klarna order management for WooCommerce', $report_about );
 
 		// Cancel order.
 		add_action( 'woocommerce_order_status_cancelled', array( $this, 'cancel_klarna_order' ) );

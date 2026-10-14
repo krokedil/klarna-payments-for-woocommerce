@@ -37,7 +37,7 @@ class Settings {
 		);
 
 		$settings['kom'] = array(
-			'title' => 'Klarna Order Management',
+			'title' => 'Klarna order management',
 			'type'  => 'title',
 		);
 
