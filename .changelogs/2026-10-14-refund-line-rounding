@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed refunds being rejected by Klarna with "Sum of order line totals does not match expected amount" when a refunded line did not divide evenly by its quantity.

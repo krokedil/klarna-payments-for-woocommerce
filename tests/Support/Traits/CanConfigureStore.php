@@ -24,6 +24,7 @@ trait CanConfigureStore {
 				'calc_taxes'         => true,
 				'prices_include_tax' => false,
 				'tax_based_on'       => 'billing',
+				'round_at_subtotal'  => false,
 				'ship_to_countries'  => '',
 			],
 			$args
@@ -34,9 +35,15 @@ trait CanConfigureStore {
 		update_option( 'woocommerce_calc_taxes', $args['calc_taxes'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_prices_include_tax', $args['prices_include_tax'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_tax_based_on', $args['tax_based_on'] );
+		update_option( 'woocommerce_tax_round_at_subtotal', $args['round_at_subtotal'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_ship_to_countries', $args['ship_to_countries'] );
 
 		$this->flushStoreCaches();
+	}
+
+	/** Puts back the tax rounding WooCommerce ships with, which a store configuration may have changed. */
+	protected function resetRoundingOptions(): void {
+		update_option( 'woocommerce_tax_round_at_subtotal', 'no' );
 	}
 
 	/** A SE / SEK store with a single 25% VAT rate. */
@@ -167,9 +174,9 @@ trait CanConfigureStore {
 	 * `haveKlarnaCredentials()` overwrites the whole option, so it cannot build the
 	 * multi-account store a cross border purchase needs.
 	 *
-	 * @param array<int, string> $countries Settings country codes, for example `[ 'se', 'us' ]` or `[ 'eu' ]`.
+	 * @param array<int, string>   $countries Settings country codes, for example `[ 'se', 'us' ]` or `[ 'eu' ]`.
 	 * @param array<string, mixed> $overrides Settings merged on top of the generated credentials.
-	 * @param bool $testmode Whether to write the `test_` prefixed credentials. Defaults to true.
+	 * @param bool                 $testmode Whether to write the `test_` prefixed credentials. Defaults to true.
 	 */
 	protected function haveKlarnaCredentialsForSets( array $countries, array $overrides = [], bool $testmode = true ): void {
 		$prefix      = $testmode ? 'test_' : '';
