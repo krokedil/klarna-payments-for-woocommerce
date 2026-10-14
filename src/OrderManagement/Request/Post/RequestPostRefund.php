@@ -167,8 +167,9 @@ class RequestPostRefund extends RequestPost {
 					$refund_price_amount = round( abs( $refund_order->get_line_subtotal( $item, false ) ) * 100 );
 					$total_discount      = $this->get_refund_item_discount_amount( $item, $separate_sales_tax );
 					$refund_tax_amount   = $separate_sales_tax ? 0 : abs( $this->get_refund_item_tax_amount( $item, $separate_sales_tax ) );
-					$unit_price          = round( ( $refund_price_amount + $refund_tax_amount ) / $quantity );
-					$total               = round( $quantity * $unit_price );
+					$total               = (int) ( $refund_price_amount + $refund_tax_amount );
+					$unit_price          = (int) ceil( $total / $quantity );
+					$total_discount      = (int) $total_discount + $quantity * $unit_price - $total;
 					$item_data           = array(
 						'type'                  => $type,
 						'reference'             => $reference,
@@ -275,6 +276,10 @@ class RequestPostRefund extends RequestPost {
 				);
 
 				$data[] = $return_fee;
+			}
+
+			if ( ! empty( $data ) ) {
+				$data = \KP_Order_Data::adjust_rounding( $data, (int) round( $this->refund_amount * 100 ) );
 			}
 		}
 

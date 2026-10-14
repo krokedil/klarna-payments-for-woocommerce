@@ -320,7 +320,7 @@ class RoundingTest extends IntegrationTestCase {
 		);
 
 		$this->deleteAllTaxRates();
-		$flags = [ 'prices_include_tax' => $spec['include_tax'], 'tax_round_at_subtotal' => $spec['round_at_subtotal'] ];
+		$flags = [ 'prices_include_tax' => $spec['include_tax'], 'round_at_subtotal' => $spec['round_at_subtotal'] ];
 
 		if ( $spec['us'] ) {
 			$spec['standard_rate_id'] = $this->configureUsStore();
