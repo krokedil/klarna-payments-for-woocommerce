@@ -78,7 +78,7 @@ abstract class KP_Requests extends Request {
 		$region_country = $this->credentials['country_code'] ?? ( $arguments['country'] ?? '' );
 
 		$config = array(
-			'slug'                   => 'klarna_payments',
+			'slug'                   => LogMasking::SLUG,
 			'plugin_version'         => WC_KLARNA_PAYMENTS_VERSION,
 			'plugin_short_name'      => 'KP',
 			'plugin_user_agent_name' => 'KP',
