@@ -70,7 +70,7 @@ class MetaBox extends OrderMetabox {
 	protected function output_export_order_button() {
 		$order = wc_get_order( kp_get_the_ID() );
 
-		if ( empty( $order ) || empty( $this->order_management->order_support ) ) {
+		if ( empty( $order ) ) {
 			return;
 		}
 
