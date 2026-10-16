@@ -2506,12 +2506,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-				"reference": "136e518aead940cdd411a0d47c9da132fa63673e"
+				"reference": "e7afe8ce514688fbaca37a303072646fd11a117a"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/136e518aead940cdd411a0d47c9da132fa63673e",
-				"reference": "136e518aead940cdd411a0d47c9da132fa63673e",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/e7afe8ce514688fbaca37a303072646fd11a117a",
+				"reference": "e7afe8ce514688fbaca37a303072646fd11a117a",
 				"shasum": ""
 			},
 			"require": {
@@ -2581,7 +2581,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-08-27T00:23:13+00:00"
+			"time": "2026-10-14T23:58:43+00:00"
 		},
 		{
 			"name": "phpcsstandards/phpcsutils",
@@ -2589,12 +2589,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-				"reference": "68da2016f9163ff7d761a67c58e1d0c7b1fe53bd"
+				"reference": "f8754b18d1ac8f32becab6f58781eb72657f2d94"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/68da2016f9163ff7d761a67c58e1d0c7b1fe53bd",
-				"reference": "68da2016f9163ff7d761a67c58e1d0c7b1fe53bd",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/f8754b18d1ac8f32becab6f58781eb72657f2d94",
+				"reference": "f8754b18d1ac8f32becab6f58781eb72657f2d94",
 				"shasum": ""
 			},
 			"require": {
@@ -2675,7 +2675,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-09-11T18:20:41+00:00"
+			"time": "2026-10-14T22:16:50+00:00"
 		},
 		{
 			"name": "phpdocumentor/reflection",
@@ -2989,12 +2989,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/phpstan/phpdoc-parser.git",
-				"reference": "1427af4647235b4a73b13940b1f1258d3584f36e"
+				"reference": "7ed0100f3fd8d3ef1189153ddbf24696303cb472"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/1427af4647235b4a73b13940b1f1258d3584f36e",
-				"reference": "1427af4647235b4a73b13940b1f1258d3584f36e",
+				"url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/7ed0100f3fd8d3ef1189153ddbf24696303cb472",
+				"reference": "7ed0100f3fd8d3ef1189153ddbf24696303cb472",
 				"shasum": ""
 			},
 			"require": {
@@ -3029,15 +3029,15 @@
 				"issues": "https://github.com/phpstan/phpdoc-parser/issues",
 				"source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.x"
 			},
-			"time": "2026-09-27T20:07:45+00:00"
+			"time": "2026-10-12T04:15:32+00:00"
 		},
 		{
 			"name": "phpstan/phpstan",
 			"version": "2.3.x-dev",
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/bee10c5bc6246fefd63bb466ae4f61fa7b477f7d",
-				"reference": "bee10c5bc6246fefd63bb466ae4f61fa7b477f7d",
+				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/9aafec2cf73604f41e4dc1f6a2b4473f8a4c44ef",
+				"reference": "9aafec2cf73604f41e4dc1f6a2b4473f8a4c44ef",
 				"shasum": ""
 			},
 			"require": {
@@ -3094,7 +3094,7 @@
 					"type": "github"
 				}
 			],
-			"time": "2026-10-01T13:11:05+00:00"
+			"time": "2026-10-16T07:48:43+00:00"
 		},
 		{
 			"name": "phpunit/php-code-coverage",
@@ -3421,12 +3421,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/sebastianbergmann/phpunit.git",
-				"reference": "f9c9098efdbea3881b52b72d4aef2689378c94da"
+				"reference": "6d6ba6bd96756f0f10c362ab4b3f27fd74a462c2"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9c9098efdbea3881b52b72d4aef2689378c94da",
-				"reference": "f9c9098efdbea3881b52b72d4aef2689378c94da",
+				"url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6d6ba6bd96756f0f10c362ab4b3f27fd74a462c2",
+				"reference": "6d6ba6bd96756f0f10c362ab4b3f27fd74a462c2",
 				"shasum": ""
 			},
 			"require": {
@@ -3508,7 +3508,7 @@
 					"type": "other"
 				}
 			],
-			"time": "2026-09-26T12:30:19+00:00"
+			"time": "2026-10-16T04:26:32+00:00"
 		},
 		{
 			"name": "pronamic/wp-documentor",
@@ -3956,12 +3956,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/bobthecow/psysh.git",
-				"reference": "29a4aa132450141630c709947baf87426d2b51d3"
+				"reference": "b0d75ae4d3e2384770ce3dd0ad8e171ddd79ba86"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/bobthecow/psysh/zipball/29a4aa132450141630c709947baf87426d2b51d3",
-				"reference": "29a4aa132450141630c709947baf87426d2b51d3",
+				"url": "https://api.github.com/repos/bobthecow/psysh/zipball/b0d75ae4d3e2384770ce3dd0ad8e171ddd79ba86",
+				"reference": "b0d75ae4d3e2384770ce3dd0ad8e171ddd79ba86",
 				"shasum": ""
 			},
 			"require": {
@@ -4028,7 +4028,7 @@
 				"issues": "https://github.com/bobthecow/psysh/issues",
 				"source": "https://github.com/bobthecow/psysh/tree/main"
 			},
-			"time": "2026-09-23T02:42:26+00:00"
+			"time": "2026-10-14T03:54:33+00:00"
 		},
 		{
 			"name": "ralouphie/getallheaders",
@@ -5412,12 +5412,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/console.git",
-				"reference": "868a3e763ffd4d32993420ec7be1e6c876cde2ce"
+				"reference": "68a4a45af9fcb8c9bee567a88ae29e721fb22986"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/console/zipball/868a3e763ffd4d32993420ec7be1e6c876cde2ce",
-				"reference": "868a3e763ffd4d32993420ec7be1e6c876cde2ce",
+				"url": "https://api.github.com/repos/symfony/console/zipball/68a4a45af9fcb8c9bee567a88ae29e721fb22986",
+				"reference": "68a4a45af9fcb8c9bee567a88ae29e721fb22986",
 				"shasum": ""
 			},
 			"require": {
@@ -5507,7 +5507,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-08-29T20:08:53+00:00"
+			"time": "2026-10-07T15:50:15+00:00"
 		},
 		{
 			"name": "symfony/css-selector",
@@ -6113,12 +6113,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-				"reference": "5cac8f4db97208823aa353f59a01faad2da52c75"
+				"reference": "5a8f33c87aeecffce24e721b5064fab05f4becf8"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/5cac8f4db97208823aa353f59a01faad2da52c75",
-				"reference": "5cac8f4db97208823aa353f59a01faad2da52c75",
+				"url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/5a8f33c87aeecffce24e721b5064fab05f4becf8",
+				"reference": "5a8f33c87aeecffce24e721b5064fab05f4becf8",
 				"shasum": ""
 			},
 			"require": {
@@ -6188,7 +6188,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-09-25T15:46:47+00:00"
+			"time": "2026-10-15T09:18:53+00:00"
 		},
 		{
 			"name": "symfony/polyfill-intl-normalizer",
@@ -6850,12 +6850,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/var-dumper.git",
-				"reference": "616f4737ea3396bc09bf9c97a94083192c65af05"
+				"reference": "95d22a860d9a789cd62e5a97ec8ff30b86b47c72"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/var-dumper/zipball/616f4737ea3396bc09bf9c97a94083192c65af05",
-				"reference": "616f4737ea3396bc09bf9c97a94083192c65af05",
+				"url": "https://api.github.com/repos/symfony/var-dumper/zipball/95d22a860d9a789cd62e5a97ec8ff30b86b47c72",
+				"reference": "95d22a860d9a789cd62e5a97ec8ff30b86b47c72",
 				"shasum": ""
 			},
 			"require": {
@@ -6935,7 +6935,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-08-30T20:10:04+00:00"
+			"time": "2026-10-15T08:34:28+00:00"
 		},
 		{
 			"name": "symfony/yaml",
@@ -7071,12 +7071,12 @@
 			"version": "v5.7.0",
 			"source": {
 				"type": "git",
-				"url": "https://github.com/vlucas/phpdotenv.git",
+				"url": "https://github.com/phpdotenv/phpdotenv.git",
 				"reference": "301c07936b16d88628b126b01d082ba153cf4c40"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
+				"url": "https://api.github.com/repos/phpdotenv/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
 				"reference": "301c07936b16d88628b126b01d082ba153cf4c40",
 				"shasum": ""
 			},
@@ -7441,5 +7441,5 @@
 	"platform-overrides": {
 		"php": "8.0"
 	},
-	"plugin-api-version": "2.9.0"
+	"plugin-api-version": "2.6.0"
 }

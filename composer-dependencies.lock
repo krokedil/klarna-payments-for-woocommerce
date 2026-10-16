@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82df93fcb7d0af6c2c95e9a438100386",
+    "content-hash": "2163e7bca08ecd1b7abce006f1d15f04",
     "packages": [
         {
             "name": "krokedil/settings-page",
@@ -92,16 +92,16 @@
         },
         {
             "name": "krokedil/support",
-            "version": "1.0.3",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/support.git",
-                "reference": "e4ee49d1c862e45fb284247c84d7c1f5583cb6ba"
+                "reference": "c02f7469de457fd492f30d3a8d65ebc630d9f8d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/support/zipball/e4ee49d1c862e45fb284247c84d7c1f5583cb6ba",
-                "reference": "e4ee49d1c862e45fb284247c84d7c1f5583cb6ba",
+                "url": "https://api.github.com/repos/krokedil/support/zipball/c02f7469de457fd492f30d3a8d65ebc630d9f8d9",
+                "reference": "c02f7469de457fd492f30d3a8d65ebc630d9f8d9",
                 "shasum": ""
             },
             "require": {
@@ -141,10 +141,10 @@
             ],
             "description": "The support library allows you to extend your plugin with logging that can be optionally toggled through your plugin settings, generate an entry in the system report from your plugin settings, and report issues to the system report.",
             "support": {
-                "source": "https://github.com/krokedil/support/tree/1.0.3",
+                "source": "https://github.com/krokedil/support/tree/1.1.0",
                 "issues": "https://github.com/krokedil/support/issues"
             },
-            "time": "2026-03-30T09:30:26+00:00"
+            "time": "2026-10-16T08:17:58+00:00"
         },
         {
             "name": "krokedil/woocommerce",
@@ -258,15 +258,15 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
