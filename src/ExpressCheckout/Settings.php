@@ -289,8 +289,7 @@ class Settings {
 				'type'        => 'kp_text_info',
 				// translators: %s is the webhook status badge HTML.
 				'title'       => sprintf( __( 'Webhook %s', 'klarna-payments-for-woocommerce' ), self::webhook_status_badge( $webhook_created ) ),
-				'description' => __( 'For One step Express Checkout to function, Klarna needs to be able to send callbacks to your store. Click the Create Webhook button to create the necessary webhook in Klarna for Express Checkout.
-.', 'klarna-payments-for-woocommerce' ),
+				'description' => __( 'For One step Express Checkout to function, Klarna needs to be able to send callbacks to your store. Click the Create Webhook button to create the necessary webhook in Klarna for Express Checkout.', 'klarna-payments-for-woocommerce' ),
 			),
 			'kec_webhook_button' => array(
 				'class'           => 'kec-webhook-section',
