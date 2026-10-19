@@ -396,7 +396,7 @@ class KP_Form_Fields {
 			array(
 				'oc_credentials' => array(
 					/* translators: [merchant-facing]. */
-					'title' => __( 'Oceania Market', 'klarna-payments-for-woocommerce' ),
+					'title' => __( 'Oceanian Market', 'klarna-payments-for-woocommerce' ),
 					'type'  => 'kp_text_info',
 				),
 			),
