@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+Improved wording and consistency of settings texts for credentials, checkout flow, On-site messaging cart placements, Express Checkout webhook and Sign in with Klarna scopes.
