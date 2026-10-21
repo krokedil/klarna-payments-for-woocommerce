@@ -1,0 +1,51 @@
+# Managed by krokedil-baseline, changes here are overwritten on the next sync.
+# Regenerates docs/hooks.md and commits it to develop when the hooks changed.
+name: Hook docs
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - "**.php"
+      - "docs/templates/**"
+      - "composer.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs-hooks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hooks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+        with:
+          php-version: "8.3"
+          coverage: none
+          tools: composer:v2
+
+      # --no-scripts skips the wpify/scoper run, doc:hooks only needs wp-documentor.
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-scripts
+
+      - name: Generate docs/hooks.md
+        run: composer run-script doc:hooks
+
+      - name: Commit docs/hooks.md if it changed
+        run: |
+          if [ -z "$(git status --porcelain -- docs/hooks.md)" ]; then
+            echo "Hook documentation is up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/hooks.md
+          git commit -m "Update hook documentation"
+          git push

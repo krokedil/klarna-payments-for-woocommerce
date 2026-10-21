@@ -1,4 +1,8 @@
+# Managed by krokedil-baseline, changes here are overwritten on the next sync.
+# Plugin-specific ignores belong in phpstan-baseline.neon (composer phpstan:baseline).
 includes:
+  # Included directly: phpstan/extension-installer does not work together with wpify/scoper's nested Composer run.
+  - vendor/szepeviktor/phpstan-wordpress/extension.neon
   - phpstan-baseline.neon
 
 parameters:
@@ -14,25 +18,28 @@ parameters:
     - templates
     - blocks/src
 
+  # Only excluded from analysis, dependencies/ and vendor/ must still be scanned for symbols.
   excludePaths:
-    - node_modules (?)
-    - tests (?)
-    - blocks/build (?)
-    - assets
-
-  scanFiles:
-    - phpstan-stubs.php
+    analyse:
+      - vendor (?)
+      - node_modules (?)
+      - tests (?)
+      - blocks/build (?)
+      - dependencies (?)
+      - assets (?)
 
   scanDirectories:
-    - vendor/php-stubs
     - dependencies
 
   bootstrapFiles:
     - phpstan-bootstrap.php
-    - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+
+  # Scanned, not executed: the WordPress stubs (loaded by szepeviktor/phpstan-wordpress) are not available yet when bootstrap files run.
+  scanFiles:
     - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
     - vendor/php-stubs/woocommerce-stubs/woocommerce-packages-stubs.php
     - vendor/php-stubs/woocommerce-subscriptions-stubs/woocommerce-subscriptions-stubs.php
+    - phpstan-stubs.php
 
   dynamicConstantNames:
     - WC_KLARNA_PAYMENTS_VERSION

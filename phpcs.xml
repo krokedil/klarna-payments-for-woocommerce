@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <ruleset name="Krokedil Coding Standards">
-    <description>WooCommerce dev PHP_CodeSniffer ruleset.</description>
+    <description>Krokedil baseline PHP_CodeSniffer ruleset. Managed by krokedil-baseline, changes here are overwritten on the next sync.</description>
 
-    <!-- Exclude vendor and node_modules from all rules -->
+    <!-- Exclude dependencies, build output and tooling from all rules -->
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/dependencies/*</exclude-pattern>
     <exclude-pattern>*/blocks/build/*</exclude-pattern>
     <exclude-pattern>*/docs/*</exclude-pattern>
+    <exclude-pattern>*/kernl-update-checker/*</exclude-pattern>
+    <exclude-pattern>*/tmp-*/*</exclude-pattern>
 
     <!-- Exclude the tests folder -->
     <exclude-pattern>tests/*</exclude-pattern>
@@ -16,8 +18,8 @@
     <config name="minimum_supported_wp_version" value="6.7" />
     <config name="testVersion" value="7.4-" />
 
-    <!-- Use Wordpress Coding standards -->
-    <rule ref="WordPress" />
+    <!-- WooCommerce Core standard: WordPress, PHPCompatibilityWP and the WooCommerce sniffs -->
+    <rule ref="WooCommerce-Core" />
 
     <!-- Enforce the correct text-domain -->
     <rule ref="WordPress.WP.I18n">
@@ -39,7 +41,7 @@
         </properties>
     </rule>
 
-    <!--  Remove WordPress.Files.FileName.InvalidClassFileName checks to allow for PSR-4 naming convention -->
+    <!-- Remove WordPress.Files.FileName.InvalidClassFileName checks to allow for PSR-4 naming convention -->
     <rule ref="WordPress.Files.FileName.InvalidClassFileName">
         <exclude-pattern>src/</exclude-pattern>
     </rule>
@@ -60,9 +62,6 @@
     </rule>
 
     <!-- Allow the usage of shorthand arrays -->
-    <rule ref="Generic.Arrays.DisallowShortArraySyntax">
-        <exclude-pattern>src/</exclude-pattern>
-    </rule>
     <rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
         <exclude-pattern>src/</exclude-pattern>
     </rule>

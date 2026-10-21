@@ -1,3 +1,4 @@
+# Managed by krokedil-baseline, changes here are overwritten on the next sync.
 name: PHPStan
 
 on:
@@ -8,6 +9,7 @@ on:
             - "**.php"
             - "phpstan.neon"
             - "phpstan-baseline.neon"
+            - "phpstan-bootstrap.php"
             - "composer.json"
             - "composer.lock"
             - "composer-dependencies.json"
@@ -27,9 +29,8 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                # 8.0 is the floor declared in readme.txt and pinned in composer's platform
-                # config; the dev dependencies (Codeception 5, wp-browser 4) rule out 7.4.
-                php: ["8.0", "8.3", "8.5"]
+                # phpVersion in phpstan.neon checks the code against the plugin's minimum PHP version.
+                php: ["8.0","8.5"]
         steps:
             - name: Checkout repository
               uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
@@ -41,9 +42,8 @@ jobs:
                   coverage: none
                   tools: composer:v2
 
-            # --no-scripts skips post-autoload-dump-dev, which would otherwise scaffold a
-            # full WordPress + SQLite install for a job that never runs a test. wpify/scoper
-            # is a composer-plugin rather than a script, so it still populates dependencies/.
+            # --no-scripts skips project scripts (test environment setup and similar). wpify/scoper
+            # is a composer plugin rather than a script, so it still populates dependencies/.
             - name: Install Composer dependencies
               run: composer install --prefer-dist --no-progress --optimize-autoloader --no-scripts
 

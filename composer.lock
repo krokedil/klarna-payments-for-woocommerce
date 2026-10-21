@@ -4,7 +4,7 @@
 		"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
 		"This file is @generated automatically"
 	],
-	"content-hash": "2fbab6c1b05c216cdddd61813583dc9e",
+	"content-hash": "96425b06a84c53798fd332cd8a33d8fe",
 	"packages": [
 		{
 			"name": "firebase/php-jwt",
@@ -1565,6 +1565,220 @@
 			"time": "2026-01-15T09:33:40+00:00"
 		},
 		{
+			"name": "eftec/bladeone",
+			"version": "3.52",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/EFTEC/BladeOne.git",
+				"reference": "a19bf66917de0b29836983db87a455a4f6e32148"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/EFTEC/BladeOne/zipball/a19bf66917de0b29836983db87a455a4f6e32148",
+				"reference": "a19bf66917de0b29836983db87a455a4f6e32148",
+				"shasum": ""
+			},
+			"require": {
+				"ext-json": "*",
+				"php": ">=5.6"
+			},
+			"require-dev": {
+				"friendsofphp/php-cs-fixer": "^2.16.1",
+				"phpunit/phpunit": "^5.7",
+				"squizlabs/php_codesniffer": "^3.5.4"
+			},
+			"suggest": {
+				"eftec/bladeonehtml": "Extension to create forms",
+				"ext-mbstring": "This extension is used if it's active"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"eftec\\bladeone\\": "lib/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Jorge Patricio Castro Castillo",
+					"email": "jcastro@eftec.cl"
+				}
+			],
+			"description": "The standalone version Blade Template Engine from Laravel in a single php file",
+			"homepage": "https://github.com/EFTEC/BladeOne",
+			"keywords": [
+				"blade",
+				"php",
+				"template",
+				"templating",
+				"view"
+			],
+			"support": {
+				"issues": "https://github.com/EFTEC/BladeOne/issues",
+				"source": "https://github.com/EFTEC/BladeOne/tree/3.52"
+			},
+			"time": "2021-04-17T13:49:01+00:00"
+		},
+		{
+			"name": "gettext/gettext",
+			"version": "4.x-dev",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-gettext/Gettext.git",
+				"reference": "11af89ee6c087db3cf09ce2111a150bca5c46e12"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-gettext/Gettext/zipball/11af89ee6c087db3cf09ce2111a150bca5c46e12",
+				"reference": "11af89ee6c087db3cf09ce2111a150bca5c46e12",
+				"shasum": ""
+			},
+			"require": {
+				"gettext/languages": "^2.3",
+				"php": ">=5.4.0"
+			},
+			"require-dev": {
+				"illuminate/view": "^5.0.x-dev",
+				"phpunit/phpunit": "^4.8|^5.7|^6.5",
+				"squizlabs/php_codesniffer": "^3.0",
+				"symfony/yaml": "~2",
+				"twig/extensions": "*",
+				"twig/twig": "^1.31|^2.0"
+			},
+			"suggest": {
+				"illuminate/view": "Is necessary if you want to use the Blade extractor",
+				"symfony/yaml": "Is necessary if you want to use the Yaml extractor/generator",
+				"twig/extensions": "Is necessary if you want to use the Twig extractor",
+				"twig/twig": "Is necessary if you want to use the Twig extractor"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Gettext\\": "src"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Oscar Otero",
+					"email": "oom@oscarotero.com",
+					"homepage": "http://oscarotero.com",
+					"role": "Developer"
+				}
+			],
+			"description": "PHP gettext manager",
+			"homepage": "https://github.com/oscarotero/Gettext",
+			"keywords": [
+				"JS",
+				"gettext",
+				"i18n",
+				"mo",
+				"po",
+				"translation"
+			],
+			"support": {
+				"email": "oom@oscarotero.com",
+				"issues": "https://github.com/oscarotero/Gettext/issues",
+				"source": "https://github.com/php-gettext/Gettext/tree/4.x"
+			},
+			"funding": [
+				{
+					"url": "https://paypal.me/oscarotero",
+					"type": "custom"
+				},
+				{
+					"url": "https://github.com/oscarotero",
+					"type": "github"
+				},
+				{
+					"url": "https://www.patreon.com/misteroom",
+					"type": "patreon"
+				}
+			],
+			"time": "2024-05-18T10:25:07+00:00"
+		},
+		{
+			"name": "gettext/languages",
+			"version": "2.12.2",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-gettext/Languages.git",
+				"reference": "079d6f4842cbcbf5673a70d8e93169a684e7aadd"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-gettext/Languages/zipball/079d6f4842cbcbf5673a70d8e93169a684e7aadd",
+				"reference": "079d6f4842cbcbf5673a70d8e93169a684e7aadd",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.3"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4"
+			},
+			"bin": [
+				"bin/export-plural-rules",
+				"bin/import-cldr-data"
+			],
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Gettext\\Languages\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Michele Locati",
+					"email": "mlocati@gmail.com",
+					"role": "Developer"
+				}
+			],
+			"description": "gettext languages with plural rules",
+			"homepage": "https://github.com/php-gettext/Languages",
+			"keywords": [
+				"cldr",
+				"i18n",
+				"internationalization",
+				"l10n",
+				"language",
+				"languages",
+				"localization",
+				"php",
+				"plural",
+				"plural rules",
+				"plurals",
+				"translate",
+				"translations",
+				"unicode"
+			],
+			"support": {
+				"issues": "https://github.com/php-gettext/Languages/issues",
+				"source": "https://github.com/php-gettext/Languages/tree/2.12.2"
+			},
+			"funding": [
+				{
+					"url": "https://paypal.me/mlocati",
+					"type": "custom"
+				},
+				{
+					"url": "https://github.com/mlocati",
+					"type": "github"
+				}
+			],
+			"time": "2026-02-23T14:05:50+00:00"
+		},
+		{
 			"name": "graham-campbell/result-type",
 			"version": "1.2.x-dev",
 			"source": {
@@ -2062,6 +2276,57 @@
 			"time": "2026-08-26T08:36:08+00:00"
 		},
 		{
+			"name": "mck89/peast",
+			"version": "dev-master",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/mck89/peast.git",
+				"reference": "e6c41a0632434fe9f63122cac5a79effc17137aa"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/mck89/peast/zipball/e6c41a0632434fe9f63122cac5a79effc17137aa",
+				"reference": "e6c41a0632434fe9f63122cac5a79effc17137aa",
+				"shasum": ""
+			},
+			"require": {
+				"ext-mbstring": "*",
+				"php": ">=5.4.0"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0",
+				"squizlabs/php_codesniffer": "^3.0"
+			},
+			"default-branch": true,
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "1.18.2-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Peast\\": "lib/Peast/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"BSD-3-Clause"
+			],
+			"authors": [
+				{
+					"name": "Marco Marchiò",
+					"email": "marco.mm89@gmail.com"
+				}
+			],
+			"description": "Peast is PHP library that generates AST for JavaScript code",
+			"support": {
+				"issues": "https://github.com/mck89/peast/issues",
+				"source": "https://github.com/mck89/peast/tree/master"
+			},
+			"time": "2026-09-29T07:14:25+00:00"
+		},
+		{
 			"name": "myclabs/deep-copy",
 			"version": "1.x-dev",
 			"source": {
@@ -2501,17 +2766,230 @@
 			"time": "2025-12-28T23:57:40+00:00"
 		},
 		{
+			"name": "phpcompatibility/php-compatibility",
+			"version": "9.3.5",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/PHPCompatibility/PHPCompatibility.git",
+				"reference": "9fb324479acf6f39452e0655d2429cc0d3914243"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibility/zipball/9fb324479acf6f39452e0655d2429cc0d3914243",
+				"reference": "9fb324479acf6f39452e0655d2429cc0d3914243",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.3",
+				"squizlabs/php_codesniffer": "^2.3 || ^3.0.2"
+			},
+			"conflict": {
+				"squizlabs/php_codesniffer": "2.6.2"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "~4.5 || ^5.0 || ^6.0 || ^7.0"
+			},
+			"suggest": {
+				"dealerdirect/phpcodesniffer-composer-installer": "^0.5 || This Composer plugin will sort out the PHPCS 'installed_paths' automatically.",
+				"roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
+			},
+			"type": "phpcodesniffer-standard",
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"LGPL-3.0-or-later"
+			],
+			"authors": [
+				{
+					"name": "Wim Godden",
+					"homepage": "https://github.com/wimg",
+					"role": "lead"
+				},
+				{
+					"name": "Juliette Reinders Folmer",
+					"homepage": "https://github.com/jrfnl",
+					"role": "lead"
+				},
+				{
+					"name": "Contributors",
+					"homepage": "https://github.com/PHPCompatibility/PHPCompatibility/graphs/contributors"
+				}
+			],
+			"description": "A set of sniffs for PHP_CodeSniffer that checks for PHP cross-version compatibility.",
+			"homepage": "http://techblog.wimgodden.be/tag/codesniffer/",
+			"keywords": [
+				"compatibility",
+				"phpcs",
+				"standards"
+			],
+			"support": {
+				"issues": "https://github.com/PHPCompatibility/PHPCompatibility/issues",
+				"source": "https://github.com/PHPCompatibility/PHPCompatibility"
+			},
+			"time": "2019-12-27T09:44:58+00:00"
+		},
+		{
+			"name": "phpcompatibility/phpcompatibility-paragonie",
+			"version": "1.3.4",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/PHPCompatibility/PHPCompatibilityParagonie.git",
+				"reference": "244d7b04fc4bc2117c15f5abe23eb933b5f02bbf"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityParagonie/zipball/244d7b04fc4bc2117c15f5abe23eb933b5f02bbf",
+				"reference": "244d7b04fc4bc2117c15f5abe23eb933b5f02bbf",
+				"shasum": ""
+			},
+			"require": {
+				"phpcompatibility/php-compatibility": "^9.0"
+			},
+			"require-dev": {
+				"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+				"paragonie/random_compat": "dev-master",
+				"paragonie/sodium_compat": "dev-master"
+			},
+			"suggest": {
+				"dealerdirect/phpcodesniffer-composer-installer": "^1.0 || This Composer plugin will sort out the PHP_CodeSniffer 'installed_paths' automatically.",
+				"roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
+			},
+			"type": "phpcodesniffer-standard",
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"LGPL-3.0-or-later"
+			],
+			"authors": [
+				{
+					"name": "Wim Godden",
+					"role": "lead"
+				},
+				{
+					"name": "Juliette Reinders Folmer",
+					"role": "lead"
+				}
+			],
+			"description": "A set of rulesets for PHP_CodeSniffer to check for PHP cross-version compatibility issues in projects, while accounting for polyfills provided by the Paragonie polyfill libraries.",
+			"homepage": "http://phpcompatibility.com/",
+			"keywords": [
+				"compatibility",
+				"paragonie",
+				"phpcs",
+				"polyfill",
+				"standards",
+				"static analysis"
+			],
+			"support": {
+				"issues": "https://github.com/PHPCompatibility/PHPCompatibilityParagonie/issues",
+				"security": "https://github.com/PHPCompatibility/PHPCompatibilityParagonie/security/policy",
+				"source": "https://github.com/PHPCompatibility/PHPCompatibilityParagonie"
+			},
+			"funding": [
+				{
+					"url": "https://github.com/PHPCompatibility",
+					"type": "github"
+				},
+				{
+					"url": "https://github.com/jrfnl",
+					"type": "github"
+				},
+				{
+					"url": "https://opencollective.com/php_codesniffer",
+					"type": "open_collective"
+				},
+				{
+					"url": "https://thanks.dev/u/gh/phpcompatibility",
+					"type": "thanks_dev"
+				}
+			],
+			"time": "2025-09-19T17:43:28+00:00"
+		},
+		{
+			"name": "phpcompatibility/phpcompatibility-wp",
+			"version": "2.1.8",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
+				"reference": "7c8d18b4d90dac9e86b0869a608fa09158e168fa"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/7c8d18b4d90dac9e86b0869a608fa09158e168fa",
+				"reference": "7c8d18b4d90dac9e86b0869a608fa09158e168fa",
+				"shasum": ""
+			},
+			"require": {
+				"phpcompatibility/php-compatibility": "^9.0",
+				"phpcompatibility/phpcompatibility-paragonie": "^1.0",
+				"squizlabs/php_codesniffer": "^3.3"
+			},
+			"require-dev": {
+				"dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+			},
+			"suggest": {
+				"dealerdirect/phpcodesniffer-composer-installer": "^1.0 || This Composer plugin will sort out the PHP_CodeSniffer 'installed_paths' automatically.",
+				"roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
+			},
+			"type": "phpcodesniffer-standard",
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"LGPL-3.0-or-later"
+			],
+			"authors": [
+				{
+					"name": "Wim Godden",
+					"role": "lead"
+				},
+				{
+					"name": "Juliette Reinders Folmer",
+					"role": "lead"
+				}
+			],
+			"description": "A ruleset for PHP_CodeSniffer to check for PHP cross-version compatibility issues in projects, while accounting for polyfills provided by WordPress.",
+			"homepage": "http://phpcompatibility.com/",
+			"keywords": [
+				"compatibility",
+				"phpcs",
+				"standards",
+				"static analysis",
+				"wordpress"
+			],
+			"support": {
+				"issues": "https://github.com/PHPCompatibility/PHPCompatibilityWP/issues",
+				"security": "https://github.com/PHPCompatibility/PHPCompatibilityWP/security/policy",
+				"source": "https://github.com/PHPCompatibility/PHPCompatibilityWP"
+			},
+			"funding": [
+				{
+					"url": "https://github.com/PHPCompatibility",
+					"type": "github"
+				},
+				{
+					"url": "https://github.com/jrfnl",
+					"type": "github"
+				},
+				{
+					"url": "https://opencollective.com/php_codesniffer",
+					"type": "open_collective"
+				},
+				{
+					"url": "https://thanks.dev/u/gh/phpcompatibility",
+					"type": "thanks_dev"
+				}
+			],
+			"time": "2025-10-18T00:05:59+00:00"
+		},
+		{
 			"name": "phpcsstandards/phpcsextra",
 			"version": "dev-develop",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-				"reference": "136e518aead940cdd411a0d47c9da132fa63673e"
+				"reference": "48cfe485e672e70ad62c010dbbcfc443a4d31695"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/136e518aead940cdd411a0d47c9da132fa63673e",
-				"reference": "136e518aead940cdd411a0d47c9da132fa63673e",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/48cfe485e672e70ad62c010dbbcfc443a4d31695",
+				"reference": "48cfe485e672e70ad62c010dbbcfc443a4d31695",
 				"shasum": ""
 			},
 			"require": {
@@ -2581,7 +3059,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-08-27T00:23:13+00:00"
+			"time": "2026-10-21T02:34:44+00:00"
 		},
 		{
 			"name": "phpcsstandards/phpcsutils",
@@ -2589,12 +3067,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-				"reference": "68da2016f9163ff7d761a67c58e1d0c7b1fe53bd"
+				"reference": "33a13f5bdc00d46cd9ff2ee3f1f0b8078c5c20a1"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/68da2016f9163ff7d761a67c58e1d0c7b1fe53bd",
-				"reference": "68da2016f9163ff7d761a67c58e1d0c7b1fe53bd",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/33a13f5bdc00d46cd9ff2ee3f1f0b8078c5c20a1",
+				"reference": "33a13f5bdc00d46cd9ff2ee3f1f0b8078c5c20a1",
 				"shasum": ""
 			},
 			"require": {
@@ -2675,7 +3153,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-09-11T18:20:41+00:00"
+			"time": "2026-10-21T02:12:17+00:00"
 		},
 		{
 			"name": "phpdocumentor/reflection",
@@ -3036,8 +3514,8 @@
 			"version": "2.3.x-dev",
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/bee10c5bc6246fefd63bb466ae4f61fa7b477f7d",
-				"reference": "bee10c5bc6246fefd63bb466ae4f61fa7b477f7d",
+				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/d583672fab3548369e1d4ccb7bb67db39680d7dc",
+				"reference": "d583672fab3548369e1d4ccb7bb67db39680d7dc",
 				"shasum": ""
 			},
 			"require": {
@@ -3094,7 +3572,7 @@
 					"type": "github"
 				}
 			],
-			"time": "2026-10-01T13:11:05+00:00"
+			"time": "2026-10-21T12:12:46+00:00"
 		},
 		{
 			"name": "phpunit/php-code-coverage",
@@ -7017,6 +7495,70 @@
 			"time": "2026-08-30T06:09:20+00:00"
 		},
 		{
+			"name": "szepeviktor/phpstan-wordpress",
+			"version": "2.x-dev",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/szepeviktor/phpstan-wordpress.git",
+				"reference": "f8cfa97c7b6cb086492bc197a89ffc5cde1f6615"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/f8cfa97c7b6cb086492bc197a89ffc5cde1f6615",
+				"reference": "f8cfa97c7b6cb086492bc197a89ffc5cde1f6615",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^7.4 || ^8.0",
+				"php-stubs/wordpress-stubs": ">=6.6.2",
+				"phpstan/phpstan": "^2.0"
+			},
+			"require-dev": {
+				"composer/composer": "^2.1.14",
+				"composer/semver": "^3.4",
+				"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+				"php-parallel-lint/php-parallel-lint": "^1.1",
+				"phpstan/phpstan-strict-rules": "^2.0",
+				"phpunit/phpunit": "^9.0",
+				"szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^1.0",
+				"wp-coding-standards/wpcs": "3.4.1 as 2.3.0"
+			},
+			"suggest": {
+				"swissspidy/phpstan-no-private": "Detect usage of internal core functions, classes and methods"
+			},
+			"default-branch": true,
+			"type": "phpstan-extension",
+			"extra": {
+				"phpstan": {
+					"includes": [
+						"extension.neon"
+					]
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"SzepeViktor\\PHPStan\\WordPress\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "WordPress extensions for PHPStan",
+			"keywords": [
+				"PHPStan",
+				"code analyse",
+				"code analysis",
+				"static analysis",
+				"wordpress"
+			],
+			"support": {
+				"issues": "https://github.com/szepeviktor/phpstan-wordpress/issues",
+				"source": "https://github.com/szepeviktor/phpstan-wordpress/tree/2.x"
+			},
+			"time": "2026-09-09T03:55:05+00:00"
+		},
+		{
 			"name": "theseer/tokenizer",
 			"version": "1.3.1",
 			"source": {
@@ -7071,12 +7613,12 @@
 			"version": "v5.7.0",
 			"source": {
 				"type": "git",
-				"url": "https://github.com/vlucas/phpdotenv.git",
+				"url": "https://github.com/phpdotenv/phpdotenv.git",
 				"reference": "301c07936b16d88628b126b01d082ba153cf4c40"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
+				"url": "https://api.github.com/repos/phpdotenv/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
 				"reference": "301c07936b16d88628b126b01d082ba153cf4c40",
 				"shasum": ""
 			},
@@ -7207,6 +7749,351 @@
 				"source": "https://github.com/webmozarts/assert/tree/1.12.1"
 			},
 			"time": "2025-10-29T15:56:20+00:00"
+		},
+		{
+			"name": "woocommerce/woocommerce-sniffs",
+			"version": "1.0.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/woocommerce/woocommerce-sniffs.git",
+				"reference": "e6da0c372573724806b270ec1d5d94988b8aec52"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/woocommerce/woocommerce-sniffs/zipball/e6da0c372573724806b270ec1d5d94988b8aec52",
+				"reference": "e6da0c372573724806b270ec1d5d94988b8aec52",
+				"shasum": ""
+			},
+			"require": {
+				"dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
+				"php": ">=7.0",
+				"phpcompatibility/phpcompatibility-wp": "^2.1.0",
+				"wp-coding-standards/wpcs": "^3.0.0"
+			},
+			"type": "phpcodesniffer-standard",
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "WooCommerce sniffs",
+			"keywords": [
+				"phpcs",
+				"standards",
+				"static analysis",
+				"woocommerce",
+				"wordpress"
+			],
+			"support": {
+				"issues": "https://github.com/woocommerce/woocommerce-sniffs/issues",
+				"source": "https://github.com/woocommerce/woocommerce-sniffs/tree/1.0.1"
+			},
+			"time": "2025-09-03T13:34:27+00:00"
+		},
+		{
+			"name": "wp-cli/i18n-command",
+			"version": "v2.7.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/wp-cli/i18n-command.git",
+				"reference": "e91e6903d212486e32ed2c916171f661bfc539ce"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/wp-cli/i18n-command/zipball/e91e6903d212486e32ed2c916171f661bfc539ce",
+				"reference": "e91e6903d212486e32ed2c916171f661bfc539ce",
+				"shasum": ""
+			},
+			"require": {
+				"eftec/bladeone": "3.52",
+				"gettext/gettext": "^4.8",
+				"mck89/peast": "^1.13.11",
+				"wp-cli/wp-cli": "^2.12"
+			},
+			"require-dev": {
+				"wp-cli/scaffold-command": "^1.2 || ^2",
+				"wp-cli/wp-cli-tests": "^5.0.0"
+			},
+			"suggest": {
+				"ext-json": "Used for reading and generating JSON translation files",
+				"ext-mbstring": "Used for calculating include/exclude matches in code extraction"
+			},
+			"type": "wp-cli-package",
+			"extra": {
+				"bundled": true,
+				"commands": [
+					"i18n",
+					"i18n audit",
+					"i18n make-pot",
+					"i18n make-json",
+					"i18n make-mo",
+					"i18n make-php",
+					"i18n update-po"
+				],
+				"branch-alias": {
+					"dev-main": "2.x-dev"
+				}
+			},
+			"autoload": {
+				"files": [
+					"i18n-command.php"
+				],
+				"psr-4": {
+					"WP_CLI\\I18n\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Pascal Birchler",
+					"homepage": "https://pascalbirchler.com/"
+				}
+			],
+			"description": "Provides internationalization tools for WordPress projects.",
+			"homepage": "https://github.com/wp-cli/i18n-command",
+			"support": {
+				"issues": "https://github.com/wp-cli/i18n-command/issues",
+				"source": "https://github.com/wp-cli/i18n-command/tree/v2.7.0"
+			},
+			"time": "2026-03-16T17:13:39+00:00"
+		},
+		{
+			"name": "wp-cli/mustache",
+			"version": "v2.14.99",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/wp-cli/mustache.php.git",
+				"reference": "ca23b97ac35fbe01c160549eb634396183d04a59"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/wp-cli/mustache.php/zipball/ca23b97ac35fbe01c160549eb634396183d04a59",
+				"reference": "ca23b97ac35fbe01c160549eb634396183d04a59",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.6"
+			},
+			"replace": {
+				"mustache/mustache": "^2.14.2"
+			},
+			"require-dev": {
+				"friendsofphp/php-cs-fixer": "~2.19.3",
+				"yoast/phpunit-polyfills": "^2.0"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-0": {
+					"Mustache": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Justin Hileman",
+					"email": "justin@justinhileman.info",
+					"homepage": "http://justinhileman.com"
+				}
+			],
+			"description": "A Mustache implementation in PHP.",
+			"homepage": "https://github.com/bobthecow/mustache.php",
+			"keywords": [
+				"mustache",
+				"templating"
+			],
+			"support": {
+				"source": "https://github.com/wp-cli/mustache.php/tree/v2.14.99"
+			},
+			"time": "2025-05-06T16:15:37+00:00"
+		},
+		{
+			"name": "wp-cli/mustangostang-spyc",
+			"version": "0.6.7",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/wp-cli/spyc.git",
+				"reference": "8adbd399bc819c19e36f4aab0aeeb3b918793e1c"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/wp-cli/spyc/zipball/8adbd399bc819c19e36f4aab0aeeb3b918793e1c",
+				"reference": "8adbd399bc819c19e36f4aab0aeeb3b918793e1c",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.3.1"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "4.3.*@dev"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "0.5.x-dev"
+				}
+			},
+			"autoload": {
+				"files": [
+					"includes/functions.php"
+				],
+				"psr-4": {
+					"Mustangostang\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "mustangostang",
+					"email": "vlad.andersen@gmail.com"
+				}
+			],
+			"description": "A simple YAML loader/dumper class for PHP (WP-CLI fork)",
+			"homepage": "https://github.com/mustangostang/spyc/",
+			"support": {
+				"source": "https://github.com/wp-cli/spyc/tree/0.6.7"
+			},
+			"time": "2026-10-06T08:59:48+00:00"
+		},
+		{
+			"name": "wp-cli/php-cli-tools",
+			"version": "dev-main",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/wp-cli/php-cli-tools.git",
+				"reference": "58e1de95f0376e8550910a0a01fe7a16996f41e9"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/58e1de95f0376e8550910a0a01fe7a16996f41e9",
+				"reference": "58e1de95f0376e8550910a0a01fe7a16996f41e9",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">= 7.2.24"
+			},
+			"require-dev": {
+				"roave/security-advisories": "dev-latest",
+				"wp-cli/wp-cli-tests": "^5"
+			},
+			"default-branch": true,
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-main": "0.12.x-dev"
+				}
+			},
+			"autoload": {
+				"files": [
+					"lib/cli/cli.php"
+				],
+				"psr-0": {
+					"cli": "lib/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Daniel Bachhuber",
+					"email": "daniel@handbuilt.co",
+					"role": "Maintainer"
+				},
+				{
+					"name": "James Logsdon",
+					"email": "jlogsdon@php.net",
+					"role": "Developer"
+				}
+			],
+			"description": "Console utilities for PHP",
+			"homepage": "http://github.com/wp-cli/php-cli-tools",
+			"keywords": [
+				"cli",
+				"console"
+			],
+			"support": {
+				"issues": "https://github.com/wp-cli/php-cli-tools/issues",
+				"source": "https://github.com/wp-cli/php-cli-tools/tree/main"
+			},
+			"time": "2026-10-15T00:58:24+00:00"
+		},
+		{
+			"name": "wp-cli/wp-cli",
+			"version": "v2.12.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/wp-cli/wp-cli.git",
+				"reference": "03d30d4138d12b4bffd8b507b82e56e129e0523f"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/wp-cli/wp-cli/zipball/03d30d4138d12b4bffd8b507b82e56e129e0523f",
+				"reference": "03d30d4138d12b4bffd8b507b82e56e129e0523f",
+				"shasum": ""
+			},
+			"require": {
+				"ext-curl": "*",
+				"php": "^5.6 || ^7.0 || ^8.0",
+				"symfony/finder": ">2.7",
+				"wp-cli/mustache": "^2.14.99",
+				"wp-cli/mustangostang-spyc": "^0.6.3",
+				"wp-cli/php-cli-tools": "~0.12.4"
+			},
+			"require-dev": {
+				"wp-cli/db-command": "^1.3 || ^2",
+				"wp-cli/entity-command": "^1.2 || ^2",
+				"wp-cli/extension-command": "^1.1 || ^2",
+				"wp-cli/package-command": "^1 || ^2",
+				"wp-cli/wp-cli-tests": "^4.3.10"
+			},
+			"suggest": {
+				"ext-readline": "Include for a better --prompt implementation",
+				"ext-zip": "Needed to support extraction of ZIP archives when doing downloads or updates"
+			},
+			"bin": [
+				"bin/wp",
+				"bin/wp.bat"
+			],
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-main": "2.12.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-0": {
+					"WP_CLI\\": "php/"
+				},
+				"classmap": [
+					"php/class-wp-cli.php",
+					"php/class-wp-cli-command.php"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "WP-CLI framework",
+			"homepage": "https://wp-cli.org",
+			"keywords": [
+				"cli",
+				"wordpress"
+			],
+			"support": {
+				"docs": "https://make.wordpress.org/cli/handbook/",
+				"issues": "https://github.com/wp-cli/wp-cli/issues",
+				"source": "https://github.com/wp-cli/wp-cli"
+			},
+			"time": "2025-05-07T01:16:12+00:00"
 		},
 		{
 			"name": "wp-coding-standards/wpcs",
@@ -7431,13 +8318,13 @@
 	],
 	"aliases": [],
 	"minimum-stability": "dev",
-	"stability-flags": [],
+	"stability-flags": {},
 	"prefer-stable": false,
 	"prefer-lowest": false,
 	"platform": {
 		"php": ">=7.4"
 	},
-	"platform-dev": [],
+	"platform-dev": {},
 	"platform-overrides": {
 		"php": "8.0"
 	},
