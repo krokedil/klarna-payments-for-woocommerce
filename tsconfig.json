@@ -1,17 +1,14 @@
 {
-    "compilerOptions": {
-        "outDir": "./blocks/build/",
-        "noImplicitAny": true,
-        "module": "es6",
-        "target": "es6",
-        "jsx": "react",
-        "allowJs": true,
-        "moduleResolution": "node",
-        "allowSyntheticDefaultImports": true,
-    },
-    "exclude": [
-        "./node_modules/",
-        "./vendor/",
-        "./tests/"
-    ],
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"jsx": "react-jsx",
+		"lib": [ "DOM", "ES2022" ],
+		"strict": true,
+		"noEmit": true,
+		"skipLibCheck": true,
+		"isolatedModules": true
+	},
+	"include": [ "blocks/src", "types" ]
 }
