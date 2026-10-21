@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Improved handling of edge-case rounding issues that could make the order lines sent to Klarna not add up to the order total.
