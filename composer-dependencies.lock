@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82df93fcb7d0af6c2c95e9a438100386",
+    "content-hash": "95579ec6351692c752a0c4a92f107d81",
     "packages": [
         {
             "name": "krokedil/settings-page",
@@ -92,16 +92,16 @@
         },
         {
             "name": "krokedil/support",
-            "version": "1.0.3",
+            "version": "dev-develop-fix-log-entries",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/support.git",
-                "reference": "e4ee49d1c862e45fb284247c84d7c1f5583cb6ba"
+                "reference": "0e1073d8255fe4c8ded68b346d1e44f22ea28d6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/support/zipball/e4ee49d1c862e45fb284247c84d7c1f5583cb6ba",
-                "reference": "e4ee49d1c862e45fb284247c84d7c1f5583cb6ba",
+                "url": "https://api.github.com/repos/krokedil/support/zipball/0e1073d8255fe4c8ded68b346d1e44f22ea28d6b",
+                "reference": "0e1073d8255fe4c8ded68b346d1e44f22ea28d6b",
                 "shasum": ""
             },
             "require": {
@@ -141,10 +141,10 @@
             ],
             "description": "The support library allows you to extend your plugin with logging that can be optionally toggled through your plugin settings, generate an entry in the system report from your plugin settings, and report issues to the system report.",
             "support": {
-                "source": "https://github.com/krokedil/support/tree/1.0.3",
+                "source": "https://github.com/krokedil/support/tree/develop-fix-log-entries",
                 "issues": "https://github.com/krokedil/support/issues"
             },
-            "time": "2026-03-30T09:30:26+00:00"
+            "time": "2026-10-21T05:49:21+00:00"
         },
         {
             "name": "krokedil/woocommerce",
@@ -258,15 +258,17 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": {
+        "krokedil/support": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

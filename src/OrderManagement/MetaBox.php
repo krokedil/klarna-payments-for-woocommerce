@@ -57,8 +57,24 @@ class MetaBox extends OrderMetabox {
 		?>
 		<div class="krokedil_wc__metabox">
 			<?php $this->metabox_content( $post ); ?>
+			<?php $this->output_export_order_button(); ?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Output the button for exporting the order for support.
+	 *
+	 * @return void
+	 */
+	protected function output_export_order_button() {
+		$order = wc_get_order( kp_get_the_ID() );
+
+		if ( empty( $order ) ) {
+			return;
+		}
+
+		$this->order_management->order_support->add_export_order_button( $order );
 	}
 
 	/**
