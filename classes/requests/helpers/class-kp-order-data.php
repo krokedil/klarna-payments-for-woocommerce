@@ -215,9 +215,10 @@ class KP_Order_Data {
 			$order_lines[ $key ]['tax_rate'] = $tax_rate;
 
 			// On a large line one step of tax rate moves the tax by more than a minor unit, so the closest rate can still miss it.
-			$expected_tax = $total - $total * 10000 / ( 10000 + $tax_rate );
-			if ( abs( $total_tax - $expected_tax ) > 1 ) {
-				$order_lines[ $key ]['total_tax_amount'] = (int) round( $expected_tax );
+			// Moving the tax one minor unit stays within Klarna's tolerance on the order tax amount, anything more would break it.
+			$miss = $total - $total * 10000 / ( 10000 + $tax_rate ) - $total_tax;
+			if ( abs( $miss ) > 1 && abs( $miss ) <= 2 ) {
+				$order_lines[ $key ]['total_tax_amount'] = $total_tax + ( $miss > 0 ? 1 : -1 );
 			}
 		}
 
@@ -258,10 +259,6 @@ class KP_Order_Data {
 	 * @return array|null The adjusted order lines, or null if the difference could not be placed.
 	 */
 	private static function adjust_rounding_field( $order_lines, $field, $total, $unit ) {
-		if ( $total <= 0 ) {
-			return $order_lines;
-		}
-
 		$difference = $total - (int) array_sum( array_column( $order_lines, $field ) );
 		if ( 0 === $difference ) {
 			return $order_lines;

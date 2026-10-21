@@ -259,6 +259,12 @@ class AmountRoundingTest extends IntegrationTestCase {
 			'coupon larger than the cart'                 => [ 'items' => [ [ '100.00', 3 ] ], 'coupons' => [ [ 'fixed_cart', 500 ] ] ],
 			'percent coupon with taxed shipping'          => [ 'items' => [ [ '33.33', 3 ] ], 'coupons' => [ [ 'percent', 10 ] ], 'shipping' => [ 'cost' => '39.20' ] ],
 			'partial gift card'                           => [ 'items' => [ [ '100.00', 2 ] ], 'gift_card' => 33.33, 'cart_only' => 'Gift cards are applied to the cart.' ],
+			'gift card pays everything, rounded at subtotal' => [
+				'store'     => [ 'round_at_subtotal' => true ],
+				'items'     => [ [ '9.99' ], [ '19.99' ], [ '29.99' ] ],
+				'gift_card' => 74.96,
+				'cart_only' => 'Gift cards are applied to the cart.',
+			],
 
 			// Shipping and fees.
 			'shipping that is 39.00 incl. vat'            => [ 'items' => [ [ '100.00' ] ], 'shipping' => [ 'cost' => '31.20' ] ],

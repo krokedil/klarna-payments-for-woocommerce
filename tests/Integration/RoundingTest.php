@@ -13,6 +13,7 @@ use Tests\Support\IntegrationTestCase;
  * carries order lines. Nothing reaches Klarna: the responses are canned.
  *
  * @covers \KP_Order_Data::adjust_rounding
+ * @covers \KP_Order_Data::align_tax_rates
  * @covers \KP_Order_Data::get_klarna_order_lines_array
  * @covers \Krokedil\Klarna\OrderManagement\Request\Post\RequestPostCapture
  * @covers \Krokedil\Klarna\OrderManagement\Request\Post\RequestPostRefund
@@ -239,6 +240,28 @@ class RoundingTest extends IntegrationTestCase {
 		$this->assertSame( $expected, \KP_Order_Data::adjust_rounding( $lines, $total, $total_tax ) );
 	}
 
+	/**
+	 * @dataProvider provide_tax_rate_rules
+	 */
+	public function test_a_line_gets_the_tax_rate_its_tax_amount_implies( array $line, array $expected ): void {
+		$this->assertSame( [ $expected ], \KP_Order_Data::align_tax_rates( [ $line ] ) );
+	}
+
+	/** @return array<string, array{array, array}> */
+	public static function provide_tax_rate_rules(): array {
+		return [
+			'a line that matches its rate is left alone'          => [ self::taxed( 10000, 2000, 2500 ), self::taxed( 10000, 2000, 2500 ) ],
+			'compound tax gets the rate it adds up to'            => [ self::taxed( 11233, 1235, 1200 ), self::taxed( 11233, 1235, 1235 ) ],
+			'a negative fee gets the rate its tax implies'        => [ self::taxed( -1185, -185, 2500 ), self::taxed( -1185, -185, 1850 ) ],
+			'one minor unit past the closest rate gives it up'    => [ self::taxed( 37350, 7500, 2500 ), self::taxed( 37350, 7501, 2513 ) ],
+			'a large line no rate can describe keeps its tax'     => [ self::taxed( 1000000, 72141, 778 ), self::taxed( 1000000, 72141, 777 ) ],
+		];
+	}
+
+	private static function taxed( int $total, int $tax, int $rate ): array {
+		return [ 'tax_rate' => $rate, 'total_amount' => $total, 'total_tax_amount' => $tax ];
+	}
+
 	/** @return array<string, array{string}> */
 	public static function provide_scenarios(): array {
 		$rows = [];
@@ -291,6 +314,12 @@ class RoundingTest extends IntegrationTestCase {
 			'a tax difference moves only the tax'     => [ [ $big, $small ], 11000, 2199, [ self::line( 1, 10000, 0, 10000, 1999 ), $small ] ],
 			'more than a cent per line is left alone' => [ [ $big, $small ], 11003, 2200, [ $big, $small ] ],
 			'a tax mismatch blocks the amount too'    => [ [ $big, $small ], 11001, 2205, [ $big, $small ] ],
+			'a gift card covering everything'         => [
+				[ $big, self::line( 1, -9999, 0, -9999, 0, 'gift_card' ) ],
+				0,
+				2000,
+				[ self::line( 1, 10000, 1, 9999, 2000 ), self::line( 1, -9999, 0, -9999, 0, 'gift_card' ) ],
+			],
 			'sales tax and gift cards are not used'   => [
 				[ self::line( 1, -500, 0, -500, 0, 'gift_card' ), self::line( 1, 800, 0, 800, 0, 'sales_tax' ), self::line( 1, 1000, 0, 1000, 0 ) ],
 				1301,
