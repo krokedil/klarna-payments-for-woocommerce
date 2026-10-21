@@ -375,7 +375,7 @@ class RoundingTest extends IntegrationTestCase {
 		}
 
 		if ( $spec['coupon'] ) {
-			WC()->cart->apply_coupon( $this->haveCoupon( $spec['coupon'] ) );
+			WC()->cart->apply_coupon( $this->haveScenarioCoupon( $spec['coupon'] ) );
 		}
 
 		$this->recalculateCart();
@@ -405,23 +405,16 @@ class RoundingTest extends IntegrationTestCase {
 			return;
 		}
 
-		$order->apply_coupon( $this->haveCoupon( $spec['coupon'] ) );
+		$order->apply_coupon( $this->haveScenarioCoupon( $spec['coupon'] ) );
 		$order->save();
 	}
 
 	/** Creates a coupon of the given `[ type, amount ]` and returns its code. */
-	private function haveCoupon( array $coupon ): string {
+	private function haveScenarioCoupon( array $coupon ): string {
 		static $sequence = 0;
 		++$sequence;
 
-		$code = "rounding-{$sequence}";
-		$wc   = new \WC_Coupon();
-		$wc->set_code( $code );
-		$wc->set_discount_type( $coupon[0] );
-		$wc->set_amount( $coupon[1] );
-		$wc->save();
-
-		return $code;
+		return $this->haveCoupon( "rounding-{$sequence}", $coupon[0], (float) $coupon[1] );
 	}
 
 	private function assertLinesAddUp( array $body, int $amount, array $spec ): void {

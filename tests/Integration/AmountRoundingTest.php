@@ -266,12 +266,18 @@ class AmountRoundingTest extends IntegrationTestCase {
 			'shipping not taxable'                        => [ 'items' => [ [ '100.00' ] ], 'shipping' => [ 'cost' => '49.00', 'tax_status' => 'none' ], 'cart_only' => 'An order shipping line has no tax status of its own.' ],
 			'shipping inherits the reduced rate'          => [ 'items' => [ [ '100.00', 1, 'reduced-12' ] ], 'shipping' => [ 'cost' => '49.00' ] ],
 			'shipping over mixed item rates'              => [ 'items' => [ [ '100.00', 1, 'reduced-6' ], [ '100.00', 1, 'reduced-12' ] ], 'shipping' => [ 'cost' => '49.00' ] ],
-			'two shipping packages'                       => [ 'items' => [ [ '100.00' ], [ '50.00', 1, 'reduced-12' ] ], 'shipping' => [ 'cost' => '29.00', 'packages' => 2 ] ],
+			'two shipping packages'                       => [
+				'items'    => [ [ '100.00' ], [ '50.00', 1, 'reduced-12' ] ],
+				'shipping' => [ 'cost' => '29.00', 'packages' => 2 ],
+				'pending'  => 'Needs the multi-package shipping lines from krokedil/woocommerce develop-multi-package-shipping, which is not released yet.',
+				'one_step' => 'The one-step checkout lets the shopper choose one shipping option, not one per package.',
+			],
 			'two packages, one shipped untaxed'           => [
 				'items'     => [ [ '100.00' ], [ '50.00', 1, 'reduced-12' ] ],
 				'shipping'  => [ 'methods' => [ [ '29.00', 'taxable' ], [ '19.00', 'none' ] ] ],
 				'cart_only' => 'An order shipping line has no tax status of its own.',
 				'one_step'  => 'The one-step checkout lets the shopper choose one shipping option, not one per package.',
+				'pending'   => 'Needs the multi-package shipping lines from krokedil/woocommerce develop-multi-package-shipping, which is not released yet.',
 			],
 			'non-taxable fee'                             => [ 'items' => [ [ '100.00' ] ], 'fees' => [ [ 25.00, false ] ] ],
 			'fee with odd amount'                         => [ 'items' => [ [ '100.00' ] ], 'fees' => [ [ 3.33, true ] ] ],
@@ -403,6 +409,10 @@ class AmountRoundingTest extends IntegrationTestCase {
 
 	/** Applies the basket's store profile, options and extra tax rates. */
 	private function arrangeStore( array $basket ): void {
+		if ( ! empty( $basket['pending'] ) ) {
+			$this->markTestSkipped( $basket['pending'] );
+		}
+
 		$store   = $basket['store'] ?? [];
 		$profile = $basket['profile'] ?? 'se';
 

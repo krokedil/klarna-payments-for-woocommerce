@@ -176,7 +176,7 @@ class RequestPostRefund extends RequestPost {
 						'name'                  => $name,
 						'quantity'              => $quantity,
 						'unit_price'            => $unit_price,
-						'tax_rate'              => $order_line_tax_rate,
+						'tax_rate'              => $separate_sales_tax ? 0 : (int) round( $order_line_tax_rate ),
 						'total_amount'          => $total,
 						'total_discount_amount' => $total_discount,
 						'total_tax_amount'      => $refund_tax_amount,
@@ -216,7 +216,7 @@ class RequestPostRefund extends RequestPost {
 						'name'                  => $name,
 						'quantity'              => $quantity,
 						'unit_price'            => $unit_price,
-						'tax_rate'              => $order_shipping_tax_rate,
+						'tax_rate'              => $separate_sales_tax ? 0 : (int) round( $order_shipping_tax_rate ),
 						'total_amount'          => $total,
 						'total_discount_amount' => $total_discount,
 						'total_tax_amount'      => $refund_tax_amount,
@@ -228,6 +228,38 @@ class RequestPostRefund extends RequestPost {
 					}
 				}
 			}
+			/**
+			 * Process refunded fees.
+			 *
+			 * @var \WC_Order_Item_Fee $fee_item WooCommerce order item fee.
+			 */
+			foreach ( $refund_order->get_items( 'fee' ) as $fee_item ) {
+				// A refunded fee is negative. The return fee is added to the refund as a positive fee, and is sent as its own line below.
+				if ( (float) $fee_item->get_total() >= 0 ) {
+					continue;
+				}
+
+				$refund_price_amount = round( abs( (float) $fee_item->get_total() ) * 100 );
+				$refund_tax_amount   = $separate_sales_tax ? 0 : round( abs( (float) $fee_item->get_total_tax() ) * 100 );
+				$total               = (int) ( $refund_price_amount + $refund_tax_amount );
+				$fee_data            = array(
+					'type'                  => 'surcharge',
+					'reference'             => $this->get_refund_item_reference( $fee_item ),
+					'name'                  => wp_strip_all_tags( $fee_item->get_name() ),
+					'quantity'              => 1,
+					'unit_price'            => $total,
+					'tax_rate'              => ( $separate_sales_tax || empty( $refund_price_amount ) ) ? 0 : (int) round( $refund_tax_amount / $refund_price_amount * 10000 ),
+					'total_amount'          => $total,
+					'total_discount_amount' => 0,
+					'total_tax_amount'      => (int) $refund_tax_amount,
+				);
+
+				// Do not add order lines if separate sales tax and no refund amount entered.
+				if ( ! ( $separate_sales_tax && 0 === $total ) ) {
+					$data[] = $fee_data;
+				}
+			}
+
 			// If separate sales tax and if tax is being refunded.
 			if ( $separate_sales_tax && '0' != $refund_order->get_total_tax() ) { // phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual -- Can be float *or* integer, so non-strict is required.
 				$sales_tax_amount = round( abs( $refund_order->get_total_tax() ) * 100 );
@@ -279,7 +311,7 @@ class RequestPostRefund extends RequestPost {
 			}
 
 			if ( ! empty( $data ) ) {
-				$data = \KP_Order_Data::adjust_rounding( $data, (int) round( $this->refund_amount * 100 ) );
+				$data = \KP_Order_Data::adjust_rounding( $data, (int) round( $this->refund_amount * 100 ), null, \KP_Order_Data::get_rounding_unit() );
 			}
 		}
 

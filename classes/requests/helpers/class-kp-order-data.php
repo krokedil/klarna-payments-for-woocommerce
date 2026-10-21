@@ -176,7 +176,52 @@ class KP_Order_Data {
 		// With separate sales tax the lines carry no tax, so only the amounts are matched.
 		$total_tax = $this->separate_sales_tax ? null : $this->order_data->get_total_tax();
 
-		return self::adjust_rounding( $klarna_order_lines, $this->order_data->get_total(), $total_tax );
+		$klarna_order_lines = self::adjust_rounding( $klarna_order_lines, $this->order_data->get_total(), $total_tax, self::get_rounding_unit() );
+
+		return $this->separate_sales_tax ? $klarna_order_lines : self::align_tax_rates( $klarna_order_lines );
+	}
+
+	/**
+	 * Gets the smallest step WooCommerce rounds prices to, in minor units. A store that shows whole kronor rounds to 100 öre.
+	 *
+	 * @return int
+	 */
+	public static function get_rounding_unit() {
+		return (int) pow( 10, max( 0, 2 - wc_get_price_decimals() ) );
+	}
+
+	/**
+	 * Gives every order line a tax rate that agrees with its own tax amount, the way Klarna validates it.
+	 *
+	 * @param array $order_lines The formatted Klarna order lines.
+	 * @return array
+	 */
+	public static function align_tax_rates( $order_lines ) {
+		foreach ( $order_lines as $key => $order_line ) {
+			$total     = $order_line['total_amount'] ?? 0;
+			$total_tax = $order_line['total_tax_amount'] ?? 0;
+			$tax_rate  = $order_line['tax_rate'] ?? 0;
+
+			if ( 0 === $total || $total === $total_tax ) {
+				continue;
+			}
+
+			$expected_tax = $total - $total * 10000 / ( 10000 + $tax_rate );
+			if ( abs( $total_tax - $expected_tax ) <= 1 ) {
+				continue;
+			}
+
+			$tax_rate                        = (int) round( $total_tax * 10000 / ( $total - $total_tax ) );
+			$order_lines[ $key ]['tax_rate'] = $tax_rate;
+
+			// On a large line one step of tax rate moves the tax by more than a minor unit, so the closest rate can still miss it.
+			$expected_tax = $total - $total * 10000 / ( 10000 + $tax_rate );
+			if ( abs( $total_tax - $expected_tax ) > 1 ) {
+				$order_lines[ $key ]['total_tax_amount'] = (int) round( $expected_tax );
+			}
+		}
+
+		return $order_lines;
 	}
 
 	/**
@@ -185,19 +230,20 @@ class KP_Order_Data {
 	 * @param array    $order_lines The formatted Klarna order lines.
 	 * @param int      $total The WooCommerce total in minor units.
 	 * @param int|null $total_tax The WooCommerce total tax in minor units, or null to leave the tax amounts as they are.
+	 * @param int      $unit The step WooCommerce rounds prices to, in minor units. Each line may be off by up to one step.
 	 * @return array
 	 */
-	public static function adjust_rounding( $order_lines, $total, $total_tax = null ) {
+	public static function adjust_rounding( $order_lines, $total, $total_tax = null, $unit = 1 ) {
 		$adjusted = $order_lines;
 
 		if ( null !== $total_tax ) {
-			$adjusted = self::adjust_rounding_field( $adjusted, 'total_tax_amount', (int) $total_tax );
+			$adjusted = self::adjust_rounding_field( $adjusted, 'total_tax_amount', (int) $total_tax, (int) $unit );
 			if ( null === $adjusted ) {
 				return $order_lines;
 			}
 		}
 
-		$adjusted = self::adjust_rounding_field( $adjusted, 'total_amount', (int) $total );
+		$adjusted = self::adjust_rounding_field( $adjusted, 'total_amount', (int) $total, (int) $unit );
 
 		return $adjusted ?? $order_lines;
 	}
@@ -208,9 +254,10 @@ class KP_Order_Data {
 	 * @param array  $order_lines The formatted Klarna order lines.
 	 * @param string $field The order line field to adjust, total_amount or total_tax_amount.
 	 * @param int    $total The total the field should add up to, in minor units.
+	 * @param int    $unit The step WooCommerce rounds prices to, in minor units.
 	 * @return array|null The adjusted order lines, or null if the difference could not be placed.
 	 */
-	private static function adjust_rounding_field( $order_lines, $field, $total ) {
+	private static function adjust_rounding_field( $order_lines, $field, $total, $unit ) {
 		if ( $total <= 0 ) {
 			return $order_lines;
 		}
@@ -220,8 +267,8 @@ class KP_Order_Data {
 			return $order_lines;
 		}
 
-		// Rounding can only ever put a line off by less than one minor unit, so anything larger than the number of lines is an actual mismatch that should not be hidden.
-		if ( abs( $difference ) > count( $order_lines ) ) {
+		// Rounding can only ever put a line off by less than one rounding step, so anything larger is an actual mismatch that should not be hidden.
+		if ( abs( $difference ) > count( $order_lines ) * $unit ) {
 			KP_Logger::log( "The order lines {$field} differ from the WooCommerce total by {$difference}, which is too much to be a rounding difference. The order lines are left as they are." );
 			return null;
 		}

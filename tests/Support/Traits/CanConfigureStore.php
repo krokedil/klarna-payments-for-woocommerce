@@ -25,6 +25,8 @@ trait CanConfigureStore {
 				'prices_include_tax' => false,
 				'tax_based_on'       => 'billing',
 				'round_at_subtotal'  => false,
+				'price_decimals'     => 2,
+				'shipping_tax_class' => 'inherit',
 				'ship_to_countries'  => '',
 			],
 			$args
@@ -36,14 +38,18 @@ trait CanConfigureStore {
 		update_option( 'woocommerce_prices_include_tax', $args['prices_include_tax'] ? 'yes' : 'no' );
 		update_option( 'woocommerce_tax_based_on', $args['tax_based_on'] );
 		update_option( 'woocommerce_tax_round_at_subtotal', $args['round_at_subtotal'] ? 'yes' : 'no' );
+		update_option( 'woocommerce_price_num_decimals', (string) $args['price_decimals'] );
+		update_option( 'woocommerce_shipping_tax_class', $args['shipping_tax_class'] );
 		update_option( 'woocommerce_ship_to_countries', $args['ship_to_countries'] );
 
 		$this->flushStoreCaches();
 	}
 
-	/** Puts back the tax rounding WooCommerce ships with, which a store configuration may have changed. */
+	/** Puts the options that change how WooCommerce rounds back to their defaults. */
 	protected function resetRoundingOptions(): void {
 		update_option( 'woocommerce_tax_round_at_subtotal', 'no' );
+		update_option( 'woocommerce_price_num_decimals', '2' );
+		update_option( 'woocommerce_shipping_tax_class', 'inherit' );
 	}
 
 	/** A SE / SEK store with a single 25% VAT rate. */
