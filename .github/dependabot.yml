@@ -1,0 +1,36 @@
+version: 2
+updates:
+  # Build tooling: @wordpress/scripts, glob, the WooCommerce extraction plugin.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 14 # skip releases younger than 2 weeks
+    groups:
+      npm-build-tools:
+        patterns: ["*"] # one PR for all npm bumps instead of one per package
+    open-pull-requests-limit: 5
+
+  # Dev tooling: phpcs, phpstan, stubs, wp-cli i18n, scoper.
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 14
+    groups:
+      composer-dev-tools:
+        patterns: ["*"]
+    ignore:
+      - dependency-name: "wpify/scoper" # pinned to 3.1.3 in composer.json on purpose
+    open-pull-requests-limit: 5
+
+  # Workflows in .github/workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      actions:
+        patterns: ["*"]

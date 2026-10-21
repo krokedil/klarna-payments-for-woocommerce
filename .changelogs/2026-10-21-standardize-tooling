@@ -1,0 +1,4 @@
+Type: Dev
+Needs Documentation: no
+
+Standardized the build and code quality tooling on the shared Krokedil baseline: wp-scripts build, WooCommerce-Core phpcs ruleset, phpstan-wordpress, composer i18n and Node 24.
