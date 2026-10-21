@@ -197,6 +197,7 @@ class AmountRoundingTest extends IntegrationTestCase {
 			'an amount with no lines'                => [ 'one item, prices excl. tax', 'amount' ],
 			'everything, us sales tax'               => [ 'us sales tax', 'everything' ],
 			'one unit, us rate with three decimals'  => [ 'us rate with three decimals', 'one-unit' ],
+			'everything, compound tax rates'         => [ 'compound tax rates', 'everything' ],
 		];
 	}
 

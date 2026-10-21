@@ -370,6 +370,7 @@ class OneStepCheckout {
 	public static function get_initiate_body() {
 		$unique_id = 'kec_one_step_' . bin2hex( random_bytes( 16 ) );
 		WC()->session->set( 'kec_one_step_unique_id', $unique_id );
+		$amount = self::get_cart_total_excluding_shipping();
 
 		return array(
 			'collectCustomerProfile'    => array(
@@ -387,10 +388,10 @@ class OneStepCheckout {
 			'customerInteractionConfig' => array(
 				'returnUrl' => add_query_arg( array( 'kec-one-step' => $unique_id ), home_url() ),
 			),
-			'amount'                    => self::get_cart_total_excluding_shipping(),
+			'amount'                    => $amount,
 			'currency'                  => get_woocommerce_currency(),
 			'supplementaryPurchaseData' => array(
-				'lineItems' => self::adjust_rounding( self::get_cart_items(), self::get_cart_total_excluding_shipping() ),
+				'lineItems' => self::adjust_rounding( self::get_cart_items(), $amount ),
 			),
 		);
 	}

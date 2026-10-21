@@ -271,11 +271,12 @@ class KP_Order_Data {
 		}
 
 		$step = ( $difference > 0 ) ? 1 : -1;
+		$keys = self::get_rounding_order( $order_lines );
 
 		while ( 0 !== $difference ) {
 			$applied = false;
 
-			foreach ( self::get_rounding_order( $order_lines ) as $key ) {
+			foreach ( $keys as $key ) {
 				if ( 0 === $difference ) {
 					break;
 				}

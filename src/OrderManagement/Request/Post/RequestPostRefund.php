@@ -312,6 +312,7 @@ class RequestPostRefund extends RequestPost {
 
 			if ( ! empty( $data ) ) {
 				$data = \KP_Order_Data::adjust_rounding( $data, (int) round( $this->refund_amount * 100 ), null, \KP_Order_Data::get_rounding_unit() );
+				$data = $separate_sales_tax ? $data : \KP_Order_Data::align_tax_rates( $data );
 			}
 		}
 
