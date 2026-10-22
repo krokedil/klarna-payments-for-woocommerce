@@ -79,18 +79,6 @@ parameters:
 			path: classes/class-kp-assets.php
 
 		-
-			message: '#^Callback expects 1 parameter, \$accepted_args is set to 2\.$#'
-			identifier: arguments.count
-			count: 1
-			path: classes/class-kp-callbacks.php
-
-		-
-			message: '#^Callback expects 1 parameter, \$accepted_args is set to 3\.$#'
-			identifier: arguments.count
-			count: 1
-			path: classes/class-kp-email.php
-
-		-
 			message: '#^Call to an undefined method WC_Session\:\:has_session\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -325,12 +313,6 @@ parameters:
 			path: src/OnsiteMessaging/KlarnaOnsiteMessaging.php
 
 		-
-			message: '#^@param int \$priority does not accept actual type of parameter\: string\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: src/OnsiteMessaging/Pages/Cart.php
-
-		-
 			message: '#^Access to an undefined property WC_Cart\:\:\$total\.$#'
 			identifier: property.notFound
 			count: 1
@@ -347,12 +329,6 @@ parameters:
 			identifier: isset.property
 			count: 1
 			path: src/OnsiteMessaging/Pages/Cart.php
-
-		-
-			message: '#^@param int \$priority does not accept actual type of parameter\: string\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: src/OnsiteMessaging/Pages/Product.php
 
 		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
@@ -403,12 +379,6 @@ parameters:
 			path: src/OrderManagement.php
 
 		-
-			message: '#^Action callback returns array but should not return anything\.$#'
-			identifier: return.void
-			count: 1
-			path: src/OrderManagement.php
-
-		-
 			message: '#^Action callback returns bool\|WP_Error but should not return anything\.$#'
 			identifier: return.void
 			count: 1
@@ -417,12 +387,6 @@ parameters:
 		-
 			message: '#^Binary operation "\." between non\-falsy\-string and array\|object results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: src/OrderManagement.php
-
-		-
-			message: '#^Callback expects 0\-1 parameters, \$accepted_args is set to 2\.$#'
-			identifier: arguments.count
 			count: 1
 			path: src/OrderManagement.php
 

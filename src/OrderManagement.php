@@ -114,7 +114,7 @@ class OrderManagement {
 		$this->return_fee = new ReturnFee();
 
 		// Add refunds support to Klarna for WooCommerce.
-		add_action( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
+		add_filter( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
 
 		$report_about = array(
 			array( 'id' => 'kom_auto_capture' ),
@@ -145,9 +145,7 @@ class OrderManagement {
 			array(
 				'\Krokedil\Klarna\OrderManagement\PendingOrders',
 				'notification_listener',
-			),
-			10,
-			2
+			)
 		);
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin' ) );
@@ -362,6 +360,7 @@ class OrderManagement {
 			/**
 			 * Filters the WooCommerce order statuses for which Klarna order updates are allowed.
 			 *
+			 * @since 4.8.0
 			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-order-statuses-that-allow-klarna-order-updates
 			 * @param string[] $statuses The allowed order statuses. Default array( 'on-hold' ).
 			 */
@@ -651,6 +650,7 @@ class OrderManagement {
 		/**
 		 * Filters the return fees applied to a Klarna refund, used to build the refund order note.
 		 *
+		 * @since 4.8.0
 		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#inspect-the-return-fees-applied-to-a-klarna-refund
 		 * @param array $applied_return_fees The applied return fees, with 'amount' and 'tax_amount' keys.
 		 */
