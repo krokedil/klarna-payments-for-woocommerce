@@ -128,13 +128,13 @@ class OrderManagement {
 		$this->system_report = new SystemReport( 'klarna_payments', 'Klarna Order Management for WooCommerce', $report_about );
 
 		// Cancel order.
-		add_action( 'woocommerce_order_status_cancelled', array( $this, 'cancel_klarna_order' ) );
+		add_action( 'woocommerce_order_status_cancelled', array( $this, 'on_order_cancelled' ) );
 
 		// Capture an order when it reaches the configured capture trigger status.
 		add_action( 'woocommerce_order_status_changed', array( $this, 'maybe_capture_klarna_order' ), 10, 4 );
 
 		// Update an order.
-		add_action( 'woocommerce_saved_order_items', array( $this, 'update_klarna_order_items' ), 10, 2 );
+		add_action( 'woocommerce_saved_order_items', array( $this, 'on_saved_order_items' ), 10, 2 );
 
 		// Refund an order.
 		add_filter( 'wc_klarna_payments_process_refund', array( $this, 'refund_klarna_order' ), 10, 4 );
@@ -226,6 +226,17 @@ class OrderManagement {
 	}
 
 	/**
+	 * Cancels the Klarna order when the WooCommerce order is cancelled.
+	 *
+	 * @param int $order_id Order ID.
+	 *
+	 * @return void
+	 */
+	public function on_order_cancelled( $order_id ) {
+		$this->cancel_klarna_order( $order_id );
+	}
+
+	/**
 	 * Cancels a Klarna order.
 	 *
 	 * @param int  $order_id Order ID.
@@ -299,6 +310,18 @@ class OrderManagement {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Updates the Klarna order when the WooCommerce order items are saved.
+	 *
+	 * @param int   $order_id Order ID.
+	 * @param array $items Order items.
+	 *
+	 * @return void
+	 */
+	public function on_saved_order_items( $order_id, $items ) {
+		$this->update_klarna_order_items( $order_id, $items );
 	}
 
 	/**

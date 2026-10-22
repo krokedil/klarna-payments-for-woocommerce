@@ -277,12 +277,6 @@ parameters:
 			path: src/ExpressCheckout/OneStepCheckout.php
 
 		-
-			message: '#^Action callback returns bool but should not return anything\.$#'
-			identifier: return.void
-			count: 3
-			path: src/ExpressCheckout/Session.php
-
-		-
 			message: '#^Property Krokedil\\Klarna\\ExpressCheckout\\Settings\:\:\$enabled is unused\.$#'
 			identifier: property.unused
 			count: 1
@@ -371,18 +365,6 @@ parameters:
 			identifier: staticMethod.void
 			count: 1
 			path: src/OnsiteMessaging/Widget.php
-
-		-
-			message: '#^Action callback returns WP_Error\|null but should not return anything\.$#'
-			identifier: return.void
-			count: 1
-			path: src/OrderManagement.php
-
-		-
-			message: '#^Action callback returns bool\|WP_Error but should not return anything\.$#'
-			identifier: return.void
-			count: 1
-			path: src/OrderManagement.php
 
 		-
 			message: '#^Binary operation "\." between non\-falsy\-string and array\|object results in an error\.$#'
