@@ -35,6 +35,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 			$assets = require $assets_path;
 			wp_register_script( 'klarna-payments-block', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/blocks/build/payment.js', $assets['dependencies'], $assets['version'], true );
 			wp_register_style( 'klarna-payments-block', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/blocks/build/style-payment.css', array(), $assets['version'] );
+			wp_style_add_data( 'klarna-payments-block', 'rtl', 'replace' );
 		}
 	}
 

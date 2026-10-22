@@ -1,7 +1,7 @@
 {
     "main_file": "klarna-payments-for-woocommerce.php",
     "text_domain": "klarna-payments-for-woocommerce",
-    "min_php": "7.4",
+    "min_php": "8.0",
     "min_wp": "6.7",
     "distribution": "wordpress.org",
     "constants": {
