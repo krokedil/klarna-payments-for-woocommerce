@@ -1,3 +1,4 @@
+# Managed by krokedil-baseline, changes here are overwritten on the next sync.
 name: PHPCS Check
 on:
   pull_request:
@@ -16,33 +17,36 @@ concurrency:
   cancel-in-progress: true
 jobs:
   phpcs:
+    name: PHPCS (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        php: ["8.1", "8.4"] # Check minimum, recommended, and latest supported PHP versions for WordPress/WooCommerce
+        php: ["8.0","8.5"]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, xml, curl, json, zip
-          tools: composer
+          coverage: none
+          tools: composer:v2
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
           path: vendor
-          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          key: composer-${{ runner.os }}-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
           restore-keys: |
-            composer-${{ runner.os }}-
+            composer-${{ runner.os }}-${{ matrix.php }}-
 
+      # --no-scripts skips project scripts (test environment setup and similar) that PHPCS does not need.
       - name: Install Composer dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
+        run: composer install --no-progress --prefer-dist --optimize-autoloader --no-scripts
 
       - name: Get changed PHP files
         id: changed-files
@@ -64,5 +68,4 @@ jobs:
       - name: Run PHPCS on changed files
         if: steps.changed-files.outputs.has_php_files == 'true'
         run: |
-          # Read files from the saved list and run PHPCS
           xargs -a changed_files.txt vendor/bin/phpcs -s --standard=phpcs.xml

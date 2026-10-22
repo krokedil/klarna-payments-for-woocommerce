@@ -18,7 +18,7 @@ class KP_Callbacks {
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_api_kp_wc_authorization', array( $this, 'authorization_cb' ) );
-		add_action( 'kp_wc_authorization', array( $this, 'kp_wc_authorization' ), 10, 2 );
+		add_action( 'kp_wc_authorization', array( $this, 'kp_wc_authorization' ) );
 		add_action( 'init', array( $this, 'process_hpp_redirect' ), 9999 );
 	}
 
@@ -70,6 +70,7 @@ class KP_Callbacks {
 		/**
 		 * Filters how long, in seconds, further authorization callbacks for a Klarna session are throttled for.
 		 *
+		 * @since 4.13.3
 		 * @param int    $seconds    The throttle window. Defaults to 120, matching the delay on the queued job.
 		 * @param string $session_id The Klarna session the callback refers to.
 		 */

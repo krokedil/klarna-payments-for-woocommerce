@@ -145,6 +145,12 @@ parameters:
 			path: classes/class-kp-subscriptions.php
 
 		-
+			message: '#^Action callback returns bool but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: classes/class-wc-gateway-klarna-payments.php
+
+		-
 			message: '#^Parameter \#3 \$order_id of method KP_Api\:\:create_hpp\(\) expects string, int given\.$#'
 			identifier: argument.type
 			count: 1

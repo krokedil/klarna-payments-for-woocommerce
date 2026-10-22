@@ -43,7 +43,7 @@ interface LabelProps {
 }
 
 const Label: React.FC<LabelProps> = ({ components }) => {
-  const { PaymentMethodLabel } = components;
+  const { PaymentMethodLabel } = components!; // WooCommerce passes components to every payment method label.
   const icon = <img src={iconUrl} alt={title} />;
 
   return <PaymentMethodLabel className="kp-block-label" text={title} icon={icon} />;
