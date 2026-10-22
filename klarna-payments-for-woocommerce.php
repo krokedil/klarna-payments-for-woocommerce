@@ -55,7 +55,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
  * Required minimums and constants
  */
 define( 'WC_KLARNA_PAYMENTS_VERSION', '4.13.4' );
-define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
+define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '8.0.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
@@ -655,6 +655,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 				/**
 				 * Filters the checkout pay button label shown for Klarna when the cart total is zero.
 				 *
+				 * @since 4.3.0
 				 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-label-on-the-woocommerce-pay-button
 				 * @param string $label The pay button label.
 				 */
@@ -665,6 +666,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 			/**
 			 * Filters the checkout pay button label shown for Klarna.
 			 *
+			 * @since 3.6.0
 			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-label-on-the-woocommerce-pay-button
 			 * @param string $label The pay button label.
 			 */

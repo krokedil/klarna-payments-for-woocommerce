@@ -6,7 +6,7 @@
 		"start": "wp-scripts start --config webpack.config.cjs",
 		"lint": "npm run lint:js && npm run lint:css",
 		"typecheck": "tsc --noEmit",
-		"lint:js": "wp-scripts lint-js blocks/src assets/js src --ignore-pattern \"**/*.min.js\"",
+		"lint:js": "wp-scripts lint-js blocks/src types assets/js src --ignore-pattern \"**/*.min.js\"",
 		"lint:css": "wp-scripts lint-style \"blocks/src/**/*.{css,scss}\" \"assets/css/**/*.css\" \"src/**/assets/css/*.css\" --ignore-pattern \"**/*.min.css\" --allow-empty-input",
 		"playground:start": "node tools/playground.mjs start",
 		"playground:server-development": "node tools/playground.mjs server development",
