@@ -510,6 +510,9 @@ class OneStepCheckout {
 				$order->remove_order_items( 'shipping' );
 				self::set_order_item_shipping( $order );
 				$order->calculate_totals();
+
+				$order->set_cart_hash( WC()->cart->get_cart_hash() );
+
 				$order->save();
 			}
 		}
@@ -754,6 +757,8 @@ class OneStepCheckout {
 		$order->set_prices_include_tax( 'yes' === get_option( 'woocommerce_prices_include_tax' ) );
 
 		WC()->checkout()->set_data_from_cart( $order );
+
+		$order->set_cart_hash( WC()->cart->get_cart_hash() );
 
 		self::set_order_address( $order );
 
