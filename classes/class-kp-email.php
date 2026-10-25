@@ -18,7 +18,7 @@ if ( ! class_exists( 'KP_Email' ) ) {
 		 * Class constructor.
 		 */
 		public function __construct() {
-			add_action( 'woocommerce_email_after_order_table', array( $this, 'add_klarna_data_to_mail' ), 10, 3 );
+			add_action( 'woocommerce_email_after_order_table', array( $this, 'add_klarna_data_to_mail' ) );
 		}
 
 		/**

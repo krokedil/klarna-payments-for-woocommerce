@@ -23,20 +23,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
-      - name: Install Composer dependencies if composer.json is present
-        if: hashFiles('composer.json') != ''
-        run: |
-          # Install with dev dependencies first (needed for PHP Scoper or similar tooling).
-          composer install --prefer-dist --no-progress --optimize-autoloader
-          # Re-install without dev dependencies for the release build.
-          composer install --prefer-dist --no-progress --optimize-autoloader --no-dev
+      - name: Setup Node
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version-file: .nvmrc
 
-      - name: Build with npm if package.json is present
-        if: hashFiles('package.json') != ''
+      # Install with dev dependencies first, needed for PHP Scoper and for the
+      # wp-cli i18n commands that npm run build calls through composer i18n.
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --optimize-autoloader
+
+      - name: Build with npm
         run: |
           npm ci
-          # Run the build script if it exists, but don't fail if it's not defined.
-          npm run build --if-present
+          npm run build
+
+      - name: Remove Composer dev dependencies for the release build
+        run: composer install --prefer-dist --no-progress --optimize-autoloader --no-dev
 
       - name: Deploy to WordPress.org
         id: deploy

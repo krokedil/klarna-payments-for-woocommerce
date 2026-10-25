@@ -1,0 +1,36 @@
+{
+	"files.eol": "\n",
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit",
+		"source.fixAll.stylelint": "explicit"
+	},
+
+	"[javascript][javascriptreact][typescript][typescriptreact][json][jsonc][css][scss]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[php]": {
+		"editor.defaultFormatter": "valeryanm.vscode-phpsab"
+	},
+
+	// Only format with the project's Prettier config, never a personal one.
+	"prettier.requireConfig": true,
+	"prettier.resolveGlobalModules": false,
+
+	// Use the project's TypeScript, not the one bundled with VS Code.
+	"typescript.tsdk": "node_modules/typescript/lib",
+
+	// stylelint replaces the built-in CSS checks, so errors aren't reported twice.
+	"css.validate": false,
+	"scss.validate": false,
+	"stylelint.validate": [ "css", "scss" ],
+
+	"phpsab.executablePathCS": "./vendor/bin/phpcs",
+	"phpsab.executablePathCBF": "./vendor/bin/phpcbf",
+
+	"search.exclude": {
+		"dependencies": true,
+		"blocks/build": true,
+		"**/*.min.*": true
+	}
+}

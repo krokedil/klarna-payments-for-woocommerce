@@ -15,9 +15,18 @@ class Session {
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_checkout_update_order_review', __CLASS__ . '::on_update_order_review' );
-		add_action( 'woocommerce_thankyou', __CLASS__ . '::unset_client_token', 1 );
-		add_action( 'woocommerce_thankyou', __CLASS__ . '::unset_klarna_address', 1 );
-		add_action( 'woocommerce_thankyou', __CLASS__ . '::unset_credentials_country', 1 );
+		add_action( 'woocommerce_thankyou', __CLASS__ . '::clear_session', 1 );
+	}
+
+	/**
+	 * Clears the KEC session data once the order is placed.
+	 *
+	 * @return void
+	 */
+	public static function clear_session() {
+		self::unset_client_token();
+		self::unset_klarna_address();
+		self::unset_credentials_country();
 	}
 
 	/**

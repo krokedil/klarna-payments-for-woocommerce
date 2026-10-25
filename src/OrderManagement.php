@@ -114,7 +114,7 @@ class OrderManagement {
 		$this->return_fee = new ReturnFee();
 
 		// Add refunds support to Klarna for WooCommerce.
-		add_action( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
+		add_filter( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
 
 		$report_about = array(
 			array( 'id' => 'kom_auto_capture' ),
@@ -128,13 +128,13 @@ class OrderManagement {
 		$this->system_report = new SystemReport( 'klarna_payments', 'Klarna Order Management for WooCommerce', $report_about );
 
 		// Cancel order.
-		add_action( 'woocommerce_order_status_cancelled', array( $this, 'cancel_klarna_order' ) );
+		add_action( 'woocommerce_order_status_cancelled', array( $this, 'on_order_cancelled' ) );
 
 		// Capture an order when it reaches the configured capture trigger status.
 		add_action( 'woocommerce_order_status_changed', array( $this, 'maybe_capture_klarna_order' ), 10, 4 );
 
 		// Update an order.
-		add_action( 'woocommerce_saved_order_items', array( $this, 'update_klarna_order_items' ), 10, 2 );
+		add_action( 'woocommerce_saved_order_items', array( $this, 'on_saved_order_items' ), 10, 2 );
 
 		// Refund an order.
 		add_filter( 'wc_klarna_payments_process_refund', array( $this, 'refund_klarna_order' ), 10, 4 );
@@ -145,9 +145,7 @@ class OrderManagement {
 			array(
 				'\Krokedil\Klarna\OrderManagement\PendingOrders',
 				'notification_listener',
-			),
-			10,
-			2
+			)
 		);
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin' ) );
@@ -228,6 +226,17 @@ class OrderManagement {
 	}
 
 	/**
+	 * Cancels the Klarna order when the WooCommerce order is cancelled.
+	 *
+	 * @param int $order_id Order ID.
+	 *
+	 * @return void
+	 */
+	public function on_order_cancelled( $order_id ) {
+		$this->cancel_klarna_order( $order_id );
+	}
+
+	/**
 	 * Cancels a Klarna order.
 	 *
 	 * @param int  $order_id Order ID.
@@ -304,6 +313,18 @@ class OrderManagement {
 	}
 
 	/**
+	 * Updates the Klarna order when the WooCommerce order items are saved.
+	 *
+	 * @param int   $order_id Order ID.
+	 * @param array $items Order items.
+	 *
+	 * @return void
+	 */
+	public function on_saved_order_items( $order_id, $items ) {
+		$this->update_klarna_order_items( $order_id, $items );
+	}
+
+	/**
 	 * Updates Klarna order items.
 	 *
 	 * @param int   $order_id Order ID.
@@ -362,6 +383,7 @@ class OrderManagement {
 			/**
 			 * Filters the WooCommerce order statuses for which Klarna order updates are allowed.
 			 *
+			 * @since 4.8.0
 			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-order-statuses-that-allow-klarna-order-updates
 			 * @param string[] $statuses The allowed order statuses. Default array( 'on-hold' ).
 			 */
@@ -651,6 +673,7 @@ class OrderManagement {
 		/**
 		 * Filters the return fees applied to a Klarna refund, used to build the refund order note.
 		 *
+		 * @since 4.8.0
 		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#inspect-the-return-fees-applied-to-a-klarna-refund
 		 * @param array $applied_return_fees The applied return fees, with 'amount' and 'tax_amount' keys.
 		 */

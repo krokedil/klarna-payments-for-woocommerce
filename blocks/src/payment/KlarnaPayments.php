@@ -34,6 +34,8 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 		if ( file_exists( $assets_path ) ) {
 			$assets = require $assets_path;
 			wp_register_script( 'klarna-payments-block', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/blocks/build/payment.js', $assets['dependencies'], $assets['version'], true );
+			wp_register_style( 'klarna-payments-block', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/blocks/build/style-payment.css', array(), $assets['version'] );
+			wp_style_add_data( 'klarna-payments-block', 'rtl', 'replace' );
 		}
 	}
 
@@ -66,6 +68,8 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 	 * @return array
 	 */
 	public function get_payment_method_script_handles() {
+		// The build extracts the block's CSS to its own file, so it is enqueued alongside the script.
+		wp_enqueue_style( 'klarna-payments-block' );
 		return array( 'klarna-payments-block' );
 	}
 
@@ -90,6 +94,7 @@ class KlarnaPayments extends AbstractPaymentMethodType {
 				 * Filters the Klarna logo URL shown for the payment method in the block checkout.
 				 *
 				 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-klarna-logo-in-the-blocks-checkout
+				 * @since 3.0.0
 				 * @param string $logo_url The URL of the Klarna logo.
 				 */
 				apply_filters( 'kp_blocks_logo', WC_KLARNA_PAYMENTS_PLUGIN_URL . '/assets/img/klarna-logo.svg' ),
