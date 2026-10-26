@@ -84,7 +84,7 @@ class KP_Assets {
 			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#change-the-klarna-web-sdk-client-id
 			 * @param string $client_id The Klarna client ID, for example 'klarna_live_client_xxx'.
 			 */
-			$data_client_id = apply_filters( 'kp_websdk_data_client_id', kp_get_client_id() );
+			$data_client_id = esc_attr( apply_filters( 'kp_websdk_data_client_id', kp_get_client_id() ) );
 			$tag            = str_replace( ' src', ' async src', $tag );
 			$tag            = str_replace( '></script>', " data-environment={$environment} data-client-id='{$data_client_id}'></script>", $tag );
 			return $tag;
