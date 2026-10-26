@@ -293,7 +293,7 @@ class KP_Form_Fields {
 				/* translators: [merchant-facing]. */
 				'title'       => __( 'Client Identifier & API Credentials', 'klarna-payments-for-woocommerce' ),
 				/* translators: [merchant-facing]. %s: merchant portal link. */
-				'description' => sprintf( __( 'Enter the credentials for production and test for each market Klarna is used. Get the client identifier and API credentials from the %1$s, under Settings. <br><br><b>%2$s</b>', 'klarna-payments-for-woocommerce' ), $merchant_portal_html, $credentials_html ),
+				'description' => sprintf( __( 'Enter the credentials for production and test for each market where Klarna is used. Get the client identifier and API credentials from the %1$s, under Settings. <br><br><b>%2$s</b>', 'klarna-payments-for-woocommerce' ), $merchant_portal_html, $credentials_html ),
 			),
 			'available_countries'      => array(
 				/* translators: [merchant-facing]. */
@@ -396,7 +396,7 @@ class KP_Form_Fields {
 			array(
 				'oc_credentials' => array(
 					/* translators: [merchant-facing]. */
-					'title' => __( 'Oceania Market', 'klarna-payments-for-woocommerce' ),
+					'title' => __( 'Oceanian Market', 'klarna-payments-for-woocommerce' ),
 					'type'  => 'kp_text_info',
 				),
 			),
@@ -516,7 +516,7 @@ class KP_Form_Fields {
 				/* translators: [merchant-facing]. */
 				'label'       => __( 'Checkout Flow', 'klarna-payments-for-woocommerce' ),
 				/* translators: [merchant-facing]. */
-				'description' => __( 'Choose between Redirect or Pop-out checkout flow.', 'klarna-payments-for-woocommerce' ),
+				'description' => __( 'Choose between Redirect and Pop-out checkout flow.', 'klarna-payments-for-woocommerce' ),
 				'options'     => array(
 					/* translators: [merchant-facing]. */
 					'popout'   => __( 'Pop-out', 'klarna-payments-for-woocommerce' ),

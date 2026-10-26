@@ -7,7 +7,7 @@ Tested up to: 7.1
 Requires PHP: 8.0
 WC requires at least: 5.6.0
 WC tested up to: 11.2.1
-Stable tag: 4.13.4
+Stable tag: 4.13.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,14 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-10-26    - version 4.13.5 =
+* Tweak         - Renamed the "Oceania Market" settings section to "Oceanian Market" to match the European and North American market labels.
+* Tweak         - Improved wording and consistency of settings texts for credentials, checkout flow, On-site messaging cart placements, Express Checkout webhook and Sign in with Klarna scopes.
+* Fix           - Fixed the krokedil_wp_api_mask_log_data filter not turning off masking for order management and other plugin log entries.
+* Fix           - The cart is now emptied after an order is completed with Klarna Express Checkout one-step.
+* Fix           - Fixed Klarna Express Checkout one-step reusing a completed order when the customer made another purchase in the same session. Authorization tokens are now URL-encoded in Klarna API requests.
+* Fix           - Tightened validation of the Klarna client ID setting.
+
 = 2026-10-12    - version 4.13.4 =
 * Enhancement   - Masked customer personal, and other sensitive data and credentials in the plugin log.
 * Fix           - Order details are now only added to the pay for order page when WooCommerce would show the payment form: the request carries the order's key, the customer may pay for the order, the order still needs payment, and a guest has confirmed the billing email.

@@ -28,6 +28,15 @@ class LogMaskingTest extends IntegrationTestCase {
 		'Lgh 1102'         => 'second address line',
 	];
 
+	/** The fields support needs back when masking is off, as Klarna names them. */
+	private const KLARNA_ADDRESS = [
+		'given_name'     => 'Karl',
+		'family_name'    => 'Karlsson',
+		'email'          => 'karl@example.com',
+		'phone'          => '+46701234567',
+		'street_address' => 'Storgatan 1',
+	];
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -152,6 +161,51 @@ class LogMaskingTest extends IntegrationTestCase {
 		$this->assertSame( 'person', $entry['customer']['type'], 'The allow list kept the customer type.' );
 	}
 
+	/**
+	 * Masking is turned off for debugging with the wp-api filter, and a log that is only
+	 * partly unmasked misleads whoever reads it, so every logging path has to follow it.
+	 *
+	 * @dataProvider provide_logging_paths
+	 */
+	public function test_turning_masking_off_reaches_every_log_entry( string $scenario, string $title ): void {
+		add_filter( 'krokedil_wp_api_mask_log_data', '__return_false' );
+
+		$this->{$scenario}();
+
+		$entry = wp_json_encode( $this->loggedEntry( $title ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+
+		foreach ( self::KLARNA_ADDRESS as $key => $value ) {
+			$this->assertStringContainsString( "\"{$key}\":\"{$value}\"", $entry, "The entry still masked the {$key}." );
+		}
+		$this->assertStringNotContainsString( '[REDACTED]', $entry );
+	}
+
+	/** @return array<string, array{0: string, 1: string}> */
+	public function provide_logging_paths(): array {
+		return [
+			'a payments request'         => [ 'haveSessionForACart', 'Create session' ],
+			'an order management request' => [ 'haveRetrievedKlarnaOrder', 'Retrieve Klarna order' ],
+			'a direct logger call'       => [ 'haveLoggedDirectly', 'Direct entry' ],
+		];
+	}
+
+	/** The filter is told which plugin is logging, so turning it off for another one changes nothing here. */
+	public function test_turning_masking_off_for_another_plugin_keeps_these_logs_masked(): void {
+		add_filter(
+			'krokedil_wp_api_mask_log_data',
+			static function ( $enabled, $slug ) {
+				return 'klarna_payments' === $slug ? $enabled : false;
+			},
+			10,
+			2
+		);
+
+		$this->haveRetrievedKlarnaOrder();
+		$this->haveLoggedDirectly();
+
+		$this->assertNotLogged( self::PERSONAL_DATA );
+	}
+
 	/** Drives a create-session the way the checkout page does. */
 	private function haveSessionForACart(): void {
 		$this->simulateCheckoutPage();
@@ -162,6 +216,30 @@ class LogMaskingTest extends IntegrationTestCase {
 		KP_WC()->session->get_session();
 
 		$this->assertSame( 'sess-1', KP_WC()->session->get_klarna_session_id(), 'Fixture failed to create a session.' );
+	}
+
+	/** Has order management fetch the Klarna order, which logs the customer record Klarna returns. */
+	private function haveRetrievedKlarnaOrder(): void {
+		$order = $this->haveKlarnaOrder( [ 'paid' => true, 'billing' => $this->swedishAddress() ] );
+
+		$this->willRetrieveKlarnaOrder(
+			[
+				'billing_address' => self::KLARNA_ADDRESS,
+			]
+		);
+		$this->willCancel();
+
+		KP_WC()->order_management->cancel_klarna_order( $order->get_id(), false );
+	}
+
+	/** Logs straight through KP_Logger, the way the plugin's own notices and errors are logged. */
+	private function haveLoggedDirectly(): void {
+		\KP_Logger::log(
+			[
+				'title'           => 'Direct entry',
+				'billing_address' => self::KLARNA_ADDRESS,
+			]
+		);
 	}
 
 	private function havePlacedOrder(): void {
