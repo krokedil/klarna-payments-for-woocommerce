@@ -638,7 +638,8 @@ class OneStepCheckout {
 		$order_id = WC()->session->get( 'kec_one_step_order_id' );
 		$order    = wc_get_order( $order_id );
 
-		if ( $order && $order->get_user_id() === get_current_user_id() ) {
+		// Only reuse an order that is still awaiting payment.
+		if ( $order && $order->get_user_id() === get_current_user_id() && $order->needs_payment() && ! $order->get_date_paid() ) {
 			return $order;
 		}
 

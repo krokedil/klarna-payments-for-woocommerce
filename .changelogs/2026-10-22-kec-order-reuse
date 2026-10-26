@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed Klarna Express Checkout one-step reusing a completed order when the customer made another purchase in the same session. Authorization tokens are now URL-encoded in Klarna API requests.
