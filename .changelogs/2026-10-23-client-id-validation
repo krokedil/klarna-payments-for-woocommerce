@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Tightened validation of the Klarna client ID setting.

@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-The cart is now emptied after an order is completed with Klarna Express Checkout one-step.

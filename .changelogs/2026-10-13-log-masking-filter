@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Fixed the krokedil_wp_api_mask_log_data filter not turning off masking for order management and other plugin log entries.
