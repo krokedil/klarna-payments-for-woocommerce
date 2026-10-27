@@ -510,6 +510,9 @@ class OneStepCheckout {
 				$order->remove_order_items( 'shipping' );
 				self::set_order_item_shipping( $order );
 				$order->calculate_totals();
+
+				$order->set_cart_hash( WC()->cart->get_cart_hash() );
+
 				$order->save();
 			}
 		}
@@ -635,7 +638,8 @@ class OneStepCheckout {
 		$order_id = WC()->session->get( 'kec_one_step_order_id' );
 		$order    = wc_get_order( $order_id );
 
-		if ( $order && $order->get_user_id() === get_current_user_id() ) {
+		// Only reuse an order that is still awaiting payment.
+		if ( $order && $order->get_user_id() === get_current_user_id() && $order->needs_payment() && ! $order->get_date_paid() ) {
 			return $order;
 		}
 
@@ -754,6 +758,8 @@ class OneStepCheckout {
 		$order->set_prices_include_tax( 'yes' === get_option( 'woocommerce_prices_include_tax' ) );
 
 		WC()->checkout()->set_data_from_cart( $order );
+
+		$order->set_cart_hash( WC()->cart->get_cart_hash() );
 
 		self::set_order_address( $order );
 
