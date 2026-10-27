@@ -1629,22 +1629,22 @@
 		},
 		{
 			"name": "guzzlehttp/guzzle",
-			"version": "7.15.x-dev",
+			"version": "7.16.x-dev",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/guzzle/guzzle.git",
-				"reference": "ee80339fd9177ba44c49cdb653ff02a4d1106b9a"
+				"reference": "ffb62ec787050ae4fa9449cdd6b80335db69bda2"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/guzzle/guzzle/zipball/ee80339fd9177ba44c49cdb653ff02a4d1106b9a",
-				"reference": "ee80339fd9177ba44c49cdb653ff02a4d1106b9a",
+				"url": "https://api.github.com/repos/guzzle/guzzle/zipball/ffb62ec787050ae4fa9449cdd6b80335db69bda2",
+				"reference": "ffb62ec787050ae4fa9449cdd6b80335db69bda2",
 				"shasum": ""
 			},
 			"require": {
 				"ext-json": "*",
-				"guzzlehttp/promises": "^2.5.3",
-				"guzzlehttp/psr7": "^2.13.1",
+				"guzzlehttp/promises": "^2.6",
+				"guzzlehttp/psr7": "^2.13.2",
 				"php": "^7.2.5 || ^8.0",
 				"psr/http-client": "^1.0",
 				"symfony/deprecation-contracts": "^2.5 || ^3.0",
@@ -1737,7 +1737,7 @@
 			],
 			"support": {
 				"issues": "https://github.com/guzzle/guzzle/issues",
-				"source": "https://github.com/guzzle/guzzle/tree/7.15"
+				"source": "https://github.com/guzzle/guzzle/tree/7.16"
 			},
 			"funding": [
 				{
@@ -1753,20 +1753,20 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-08-24T09:21:06+00:00"
+			"time": "2026-10-18T13:38:36+00:00"
 		},
 		{
 			"name": "guzzlehttp/promises",
-			"version": "2.5.x-dev",
+			"version": "2.6.x-dev",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/guzzle/promises.git",
-				"reference": "cde49999552d185d64715fe9c1f77a2aadd2f9f1"
+				"reference": "3d88c829bd5f13d13847b39067dbf09a60af2154"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/guzzle/promises/zipball/cde49999552d185d64715fe9c1f77a2aadd2f9f1",
-				"reference": "cde49999552d185d64715fe9c1f77a2aadd2f9f1",
+				"url": "https://api.github.com/repos/guzzle/promises/zipball/3d88c829bd5f13d13847b39067dbf09a60af2154",
+				"reference": "3d88c829bd5f13d13847b39067dbf09a60af2154",
 				"shasum": ""
 			},
 			"require": {
@@ -1821,7 +1821,7 @@
 			],
 			"support": {
 				"issues": "https://github.com/guzzle/promises/issues",
-				"source": "https://github.com/guzzle/promises/tree/2.5"
+				"source": "https://github.com/guzzle/promises/tree/2.6"
 			},
 			"funding": [
 				{
@@ -1837,7 +1837,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-08-24T09:11:28+00:00"
+			"time": "2026-10-18T12:46:59+00:00"
 		},
 		{
 			"name": "guzzlehttp/psr7",
@@ -1845,12 +1845,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/guzzle/psr7.git",
-				"reference": "95e7828100de18b4e269fb1703be530082d5166d"
+				"reference": "adee536f95101929f262b8c59e8a61472f347d58"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/guzzle/psr7/zipball/95e7828100de18b4e269fb1703be530082d5166d",
-				"reference": "95e7828100de18b4e269fb1703be530082d5166d",
+				"url": "https://api.github.com/repos/guzzle/psr7/zipball/adee536f95101929f262b8c59e8a61472f347d58",
+				"reference": "adee536f95101929f262b8c59e8a61472f347d58",
 				"shasum": ""
 			},
 			"require": {
@@ -1956,7 +1956,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-08-24T09:13:11+00:00"
+			"time": "2026-10-17T23:49:46+00:00"
 		},
 		{
 			"name": "lucatume/wp-browser",
@@ -2506,12 +2506,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-				"reference": "136e518aead940cdd411a0d47c9da132fa63673e"
+				"reference": "48cfe485e672e70ad62c010dbbcfc443a4d31695"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/136e518aead940cdd411a0d47c9da132fa63673e",
-				"reference": "136e518aead940cdd411a0d47c9da132fa63673e",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/48cfe485e672e70ad62c010dbbcfc443a4d31695",
+				"reference": "48cfe485e672e70ad62c010dbbcfc443a4d31695",
 				"shasum": ""
 			},
 			"require": {
@@ -2581,7 +2581,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-08-27T00:23:13+00:00"
+			"time": "2026-10-21T02:34:44+00:00"
 		},
 		{
 			"name": "phpcsstandards/phpcsutils",
@@ -2589,12 +2589,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-				"reference": "68da2016f9163ff7d761a67c58e1d0c7b1fe53bd"
+				"reference": "33a13f5bdc00d46cd9ff2ee3f1f0b8078c5c20a1"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/68da2016f9163ff7d761a67c58e1d0c7b1fe53bd",
-				"reference": "68da2016f9163ff7d761a67c58e1d0c7b1fe53bd",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/33a13f5bdc00d46cd9ff2ee3f1f0b8078c5c20a1",
+				"reference": "33a13f5bdc00d46cd9ff2ee3f1f0b8078c5c20a1",
 				"shasum": ""
 			},
 			"require": {
@@ -2675,7 +2675,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-09-11T18:20:41+00:00"
+			"time": "2026-10-21T02:12:17+00:00"
 		},
 		{
 			"name": "phpdocumentor/reflection",
@@ -2989,12 +2989,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/phpstan/phpdoc-parser.git",
-				"reference": "1427af4647235b4a73b13940b1f1258d3584f36e"
+				"reference": "7ed0100f3fd8d3ef1189153ddbf24696303cb472"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/1427af4647235b4a73b13940b1f1258d3584f36e",
-				"reference": "1427af4647235b4a73b13940b1f1258d3584f36e",
+				"url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/7ed0100f3fd8d3ef1189153ddbf24696303cb472",
+				"reference": "7ed0100f3fd8d3ef1189153ddbf24696303cb472",
 				"shasum": ""
 			},
 			"require": {
@@ -3029,15 +3029,15 @@
 				"issues": "https://github.com/phpstan/phpdoc-parser/issues",
 				"source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.x"
 			},
-			"time": "2026-09-27T20:07:45+00:00"
+			"time": "2026-10-12T04:15:32+00:00"
 		},
 		{
 			"name": "phpstan/phpstan",
 			"version": "2.3.x-dev",
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/bee10c5bc6246fefd63bb466ae4f61fa7b477f7d",
-				"reference": "bee10c5bc6246fefd63bb466ae4f61fa7b477f7d",
+				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/a1d5e37f71896123af010d52a308aee745799b9c",
+				"reference": "a1d5e37f71896123af010d52a308aee745799b9c",
 				"shasum": ""
 			},
 			"require": {
@@ -3094,7 +3094,7 @@
 					"type": "github"
 				}
 			],
-			"time": "2026-10-01T13:11:05+00:00"
+			"time": "2026-10-20T19:20:52+00:00"
 		},
 		{
 			"name": "phpunit/php-code-coverage",
@@ -3421,12 +3421,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/sebastianbergmann/phpunit.git",
-				"reference": "f9c9098efdbea3881b52b72d4aef2689378c94da"
+				"reference": "508d415ca4fefbbd79ad385156dc491256f4fe25"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9c9098efdbea3881b52b72d4aef2689378c94da",
-				"reference": "f9c9098efdbea3881b52b72d4aef2689378c94da",
+				"url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/508d415ca4fefbbd79ad385156dc491256f4fe25",
+				"reference": "508d415ca4fefbbd79ad385156dc491256f4fe25",
 				"shasum": ""
 			},
 			"require": {
@@ -3508,7 +3508,7 @@
 					"type": "other"
 				}
 			],
-			"time": "2026-09-26T12:30:19+00:00"
+			"time": "2026-10-20T13:56:38+00:00"
 		},
 		{
 			"name": "pronamic/wp-documentor",
@@ -3956,12 +3956,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/bobthecow/psysh.git",
-				"reference": "29a4aa132450141630c709947baf87426d2b51d3"
+				"reference": "661f04c693374561314020924b50f3170b965799"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/bobthecow/psysh/zipball/29a4aa132450141630c709947baf87426d2b51d3",
-				"reference": "29a4aa132450141630c709947baf87426d2b51d3",
+				"url": "https://api.github.com/repos/bobthecow/psysh/zipball/661f04c693374561314020924b50f3170b965799",
+				"reference": "661f04c693374561314020924b50f3170b965799",
 				"shasum": ""
 			},
 			"require": {
@@ -4028,7 +4028,7 @@
 				"issues": "https://github.com/bobthecow/psysh/issues",
 				"source": "https://github.com/bobthecow/psysh/tree/main"
 			},
-			"time": "2026-09-23T02:42:26+00:00"
+			"time": "2026-10-18T17:00:09+00:00"
 		},
 		{
 			"name": "ralouphie/getallheaders",
@@ -5412,12 +5412,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/console.git",
-				"reference": "868a3e763ffd4d32993420ec7be1e6c876cde2ce"
+				"reference": "68a4a45af9fcb8c9bee567a88ae29e721fb22986"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/console/zipball/868a3e763ffd4d32993420ec7be1e6c876cde2ce",
-				"reference": "868a3e763ffd4d32993420ec7be1e6c876cde2ce",
+				"url": "https://api.github.com/repos/symfony/console/zipball/68a4a45af9fcb8c9bee567a88ae29e721fb22986",
+				"reference": "68a4a45af9fcb8c9bee567a88ae29e721fb22986",
 				"shasum": ""
 			},
 			"require": {
@@ -5507,7 +5507,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-08-29T20:08:53+00:00"
+			"time": "2026-10-07T15:50:15+00:00"
 		},
 		{
 			"name": "symfony/css-selector",
@@ -6113,12 +6113,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-				"reference": "5cac8f4db97208823aa353f59a01faad2da52c75"
+				"reference": "5a8f33c87aeecffce24e721b5064fab05f4becf8"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/5cac8f4db97208823aa353f59a01faad2da52c75",
-				"reference": "5cac8f4db97208823aa353f59a01faad2da52c75",
+				"url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/5a8f33c87aeecffce24e721b5064fab05f4becf8",
+				"reference": "5a8f33c87aeecffce24e721b5064fab05f4becf8",
 				"shasum": ""
 			},
 			"require": {
@@ -6188,7 +6188,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-09-25T15:46:47+00:00"
+			"time": "2026-10-15T09:18:53+00:00"
 		},
 		{
 			"name": "symfony/polyfill-intl-normalizer",
@@ -6850,12 +6850,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/var-dumper.git",
-				"reference": "616f4737ea3396bc09bf9c97a94083192c65af05"
+				"reference": "95d22a860d9a789cd62e5a97ec8ff30b86b47c72"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/var-dumper/zipball/616f4737ea3396bc09bf9c97a94083192c65af05",
-				"reference": "616f4737ea3396bc09bf9c97a94083192c65af05",
+				"url": "https://api.github.com/repos/symfony/var-dumper/zipball/95d22a860d9a789cd62e5a97ec8ff30b86b47c72",
+				"reference": "95d22a860d9a789cd62e5a97ec8ff30b86b47c72",
 				"shasum": ""
 			},
 			"require": {
@@ -6935,7 +6935,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-08-30T20:10:04+00:00"
+			"time": "2026-10-15T08:34:28+00:00"
 		},
 		{
 			"name": "symfony/yaml",
@@ -7071,12 +7071,12 @@
 			"version": "v5.7.0",
 			"source": {
 				"type": "git",
-				"url": "https://github.com/vlucas/phpdotenv.git",
+				"url": "https://github.com/phpdotenv/phpdotenv.git",
 				"reference": "301c07936b16d88628b126b01d082ba153cf4c40"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
+				"url": "https://api.github.com/repos/phpdotenv/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
 				"reference": "301c07936b16d88628b126b01d082ba153cf4c40",
 				"shasum": ""
 			},
@@ -7431,13 +7431,13 @@
 	],
 	"aliases": [],
 	"minimum-stability": "dev",
-	"stability-flags": [],
+	"stability-flags": {},
 	"prefer-stable": false,
 	"prefer-lowest": false,
 	"platform": {
 		"php": ">=7.4"
 	},
-	"platform-dev": [],
+	"platform-dev": {},
 	"platform-overrides": {
 		"php": "8.0"
 	},
