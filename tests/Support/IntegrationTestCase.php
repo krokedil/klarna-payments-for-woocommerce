@@ -8,6 +8,7 @@ use lucatume\WPBrowser\TestCase\WPTestCase;
 use Qameta\Allure\Allure;
 use Tests\Support\Reporting\Redactor;
 use Tests\Support\Reporting\SecretRegistry;
+use Tests\Support\Traits\CanAssertKlarnaAmounts;
 use Tests\Support\Traits\CanBuildCartsAndOrders;
 use Tests\Support\Traits\CanCaptureLogs;
 use Tests\Support\Traits\CanConfigureStore;
@@ -33,6 +34,7 @@ abstract class IntegrationTestCase extends WPTestCase {
 	use CanDriveCheckout;
 	use CanFakeSubscriptions;
 	use CanSnapshotRequests;
+	use CanAssertKlarnaAmounts;
 
 	/** @var \Tests\Support\Reporting\Redactor|null */
 	private static $reportRedactor = null;
@@ -138,6 +140,7 @@ abstract class IntegrationTestCase extends WPTestCase {
 	 */
 	protected function resetStore(): void {
 		$this->deleteAllTaxRates();
+		$this->resetRoundingOptions();
 		$this->emptyCart();
 		$this->haveCustomerAddress();
 		$this->setKlarnaSettings( [] );
