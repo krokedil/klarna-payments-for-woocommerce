@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82df93fcb7d0af6c2c95e9a438100386",
+    "content-hash": "459337b4f34ba7eae08845ca0888aa54",
     "packages": [
         {
             "name": "krokedil/settings-page",
-            "version": "1.3.7",
+            "version": "1.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/settings-page.git",
-                "reference": "ef40906dd574b8c61d5831d247661a909c0463e6"
+                "reference": "8ba11d2e62dfc0b63d75ec295374ea183fcdac63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/ef40906dd574b8c61d5831d247661a909c0463e6",
-                "reference": "ef40906dd574b8c61d5831d247661a909c0463e6",
+                "url": "https://api.github.com/repos/krokedil/settings-page/zipball/8ba11d2e62dfc0b63d75ec295374ea183fcdac63",
+                "reference": "8ba11d2e62dfc0b63d75ec295374ea183fcdac63",
                 "shasum": ""
             },
             "require-dev": {
@@ -61,6 +61,9 @@
                 "phpstan": [
                     "./vendor/bin/phpstan analyse --memory-limit=2G"
                 ],
+                "phpstan:baseline": [
+                    "./vendor/bin/phpstan analyse --memory-limit=2G --generate-baseline"
+                ],
                 "lint": [
                     "vendor/bin/phpcs . --standard=phpcs.xml --extensions=php -q -s"
                 ],
@@ -85,10 +88,10 @@
             ],
             "description": "A package to help setup settings pages in WordPress and WooCommerce for Krokedil plugins to add the Addons and Support tabs",
             "support": {
-                "source": "https://github.com/krokedil/settings-page/tree/1.3.7",
+                "source": "https://github.com/krokedil/settings-page/tree/1.3.8",
                 "issues": "https://github.com/krokedil/settings-page/issues"
             },
-            "time": "2026-09-28T12:26:52+00:00"
+            "time": "2026-10-29T09:53:20+00:00"
         },
         {
             "name": "krokedil/support",

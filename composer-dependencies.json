@@ -4,7 +4,7 @@
     "krokedil/wp-api": "^1.2.0",
     "krokedil/woocommerce": "^1.8.0",
     "krokedil/support": "1.0.3",
-    "krokedil/settings-page": "1.3.7"
+    "krokedil/settings-page": "1.3.8"
   },
   "config": {
     "platform-check": false,
