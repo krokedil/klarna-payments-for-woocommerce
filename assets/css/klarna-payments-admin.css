@@ -460,3 +460,8 @@ div.kp_settings__section_content .kp_settings__content_gradient {
 .kp_settings__send_shopping_data + tr .titledesc {
 	display: none;
 }
+
+/** Hide the Addons tab in the settings page navigation. */
+.krokedil_nav_tabs .nav-tab[href*="subsection=addons"] {
+	display: none;
+}
