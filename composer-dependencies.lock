@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "459337b4f34ba7eae08845ca0888aa54",
+    "content-hash": "5c08c7a9629704f9f8c21781851ef4f8",
     "packages": [
         {
             "name": "krokedil/settings-page",
@@ -198,16 +198,16 @@
         },
         {
             "name": "krokedil/wp-api",
-            "version": "1.2.0",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/wp-api.git",
-                "reference": "3473dd2fb6b31ed5060ecd69877c98b5287ebe48"
+                "reference": "6f57b4d16dd9f4680ea3e32b6e889675407d5310"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/3473dd2fb6b31ed5060ecd69877c98b5287ebe48",
-                "reference": "3473dd2fb6b31ed5060ecd69877c98b5287ebe48",
+                "url": "https://api.github.com/repos/krokedil/wp-api/zipball/6f57b4d16dd9f4680ea3e32b6e889675407d5310",
+                "reference": "6f57b4d16dd9f4680ea3e32b6e889675407d5310",
                 "shasum": ""
             },
             "require-dev": {
@@ -252,10 +252,10 @@
             ],
             "description": "A composer library for Krokedil WordPress plugins that contains classes for working with wp_remote_request to setup request classes. Also uses the WooCommerce logger to log request reponses.",
             "support": {
-                "source": "https://github.com/krokedil/wp-api/tree/1.2.0",
+                "source": "https://github.com/krokedil/wp-api/tree/1.2.2",
                 "issues": "https://github.com/krokedil/wp-api/issues"
             },
-            "time": "2026-10-07T08:46:15+00:00"
+            "time": "2026-10-30T14:09:15+00:00"
         }
     ],
     "packages-dev": [],
