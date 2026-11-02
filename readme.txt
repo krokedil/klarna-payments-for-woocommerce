@@ -7,7 +7,7 @@ Tested up to: 7.1
 Requires PHP: 8.0
 WC requires at least: 5.6.0
 WC tested up to: 11.2.1
-Stable tag: 4.13.5
+Stable tag: 4.13.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,11 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-11-02    - version 4.13.6 =
+* Tweak         - Removed the Add-ons tab on the settings page.
+* Tweak         - Support tickets now attach the WooCommerce system status report as text, the same report as WooCommerce's "Get system report" button.
+* Fix           - Fixed a fatal error in the block checkout that could occur when extended debugging was enabled.
+
 = 2026-10-26    - version 4.13.5 =
 * Tweak         - Renamed the "Oceania Market" settings section to "Oceanian Market" to match the European and North American market labels.
 * Tweak         - Improved wording and consistency of settings texts for credentials, checkout flow, On-site messaging cart placements, Express Checkout webhook and Sign in with Klarna scopes.
