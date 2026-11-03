@@ -14,8 +14,10 @@ use Krokedil\Klarna\OrderManagement\Request\Patch\RequestPatchUpdate;
 use Krokedil\Klarna\OrderManagement\Request\Post\RequestPostCancel;
 use Krokedil\Klarna\OrderManagement\MetaBox;
 use Krokedil\Klarna\OrderManagement\Ajax;
+use KrokedilKlarnaPaymentsDeps\Krokedil\Support\OrderSupport;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 use Krokedil\Klarna\OrderManagement\ReturnFee;
+use Krokedil\Klarna\Logging\LogMasking;
 
 /**
  * Klarna Order Management class.
@@ -51,6 +53,13 @@ class OrderManagement {
 	 * @var ReturnFee $return_fee
 	 */
 	public $return_fee;
+
+	/**
+	 * Support package order export, which renders the export button and handles its AJAX request.
+	 *
+	 * @var OrderSupport $order_support
+	 */
+	public $order_support;
 
 	/**
 	 * SystemReport instance.
@@ -112,6 +121,8 @@ class OrderManagement {
 		$this->metabox    = new MetaBox( $this );
 		$this->ajax       = new Ajax();
 		$this->return_fee = new ReturnFee();
+
+		$this->order_support = new OrderSupport( LogMasking::SLUG, '_wc_klarna_order_id' );
 
 		// Add refunds support to Klarna for WooCommerce.
 		add_action( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
