@@ -21,7 +21,7 @@ class YITHGiftCards {
 	public static function init() {
 
 		if ( ! defined( 'YITH_YWGC_VERSION' ) ) {
-				return;
+			return;
 		}
 
 		// Before YITH's own handler at priority 10, which only adds the fee on the second recalculation.
