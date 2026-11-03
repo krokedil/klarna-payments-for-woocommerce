@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b8d333f7805cdde9afd95b932e02cbe",
+    "content-hash": "07ac8f978ff494ef464a93779c50531f",
     "packages": [
         {
             "name": "krokedil/settings-page",
@@ -151,23 +151,25 @@
         },
         {
             "name": "krokedil/woocommerce",
-            "version": "1.9.2",
+            "version": "dev-develop-yith-compatibility",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "6c38cf569df5eeb3598f206d449eca86ae9ac402"
+                "reference": "42f483ede0acd275e6448092078d27dad52f33ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/6c38cf569df5eeb3598f206d449eca86ae9ac402",
-                "reference": "6c38cf569df5eeb3598f206d449eca86ae9ac402",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/42f483ede0acd275e6448092078d27dad52f33ec",
+                "reference": "42f483ede0acd275e6448092078d27dad52f33ec",
                 "shasum": ""
             },
             "require-dev": {
                 "10up/wp_mock": "^1.0",
                 "php": "~7.4 || ~8.0",
-                "php-stubs/woocommerce-stubs": "^7.2",
-                "php-stubs/wordpress-stubs": "^6.1"
+                "php-stubs/woocommerce-stubs": "^10.2",
+                "php-stubs/woocommerce-subscriptions-stubs": "^9.1",
+                "php-stubs/wordpress-stubs": "^6.1",
+                "phpstan/phpstan": "^2.1"
             },
             "type": "library",
             "autoload": {
@@ -180,6 +182,14 @@
                     "Krokedil\\WooCommerce\\Tests\\": "tests/"
                 }
             },
+            "scripts": {
+                "phpstan": [
+                    "./vendor/bin/phpstan analyse --memory-limit=2G"
+                ],
+                "phpstan:baseline": [
+                    "./vendor/bin/phpstan analyse --memory-limit=2G --generate-baseline"
+                ]
+            },
             "license": [
                 "GPL-V2"
             ],
@@ -191,10 +201,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/1.9.2",
+                "source": "https://github.com/krokedil/woocommerce/tree/develop-yith-compatibility",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2026-08-14T09:23:09+00:00"
+            "time": "2026-11-03T17:16:07+00:00"
         },
         {
             "name": "krokedil/wp-api",
@@ -261,7 +271,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": {
+        "krokedil/woocommerce": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
