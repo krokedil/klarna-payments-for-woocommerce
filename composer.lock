@@ -2506,12 +2506,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-				"reference": "8af9ebff3b0d3d68fe71534e5804e4b0bd6df919"
+				"reference": "6890bf304b4d312a97e13fa32ed90c1eabc3c798"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/8af9ebff3b0d3d68fe71534e5804e4b0bd6df919",
-				"reference": "8af9ebff3b0d3d68fe71534e5804e4b0bd6df919",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/6890bf304b4d312a97e13fa32ed90c1eabc3c798",
+				"reference": "6890bf304b4d312a97e13fa32ed90c1eabc3c798",
 				"shasum": ""
 			},
 			"require": {
@@ -2581,7 +2581,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-10-26T23:04:13+00:00"
+			"time": "2026-11-03T16:07:55+00:00"
 		},
 		{
 			"name": "phpcsstandards/phpcsutils",
@@ -3036,8 +3036,8 @@
 			"version": "2.3.x-dev",
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/645a1bd6bead15fc1b8474137467961d0fa30a79",
-				"reference": "645a1bd6bead15fc1b8474137467961d0fa30a79",
+				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/ca89e0810c30304f0ca9d8b2d4fd262dc47e49dd",
+				"reference": "ca89e0810c30304f0ca9d8b2d4fd262dc47e49dd",
 				"shasum": ""
 			},
 			"require": {
@@ -3094,7 +3094,7 @@
 					"type": "github"
 				}
 			],
-			"time": "2026-11-03T12:14:22+00:00"
+			"time": "2026-11-03T17:03:47+00:00"
 		},
 		{
 			"name": "phpunit/php-code-coverage",
