@@ -1633,12 +1633,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/guzzle/guzzle.git",
-				"reference": "ffb62ec787050ae4fa9449cdd6b80335db69bda2"
+				"reference": "81755d989b3007ca7f88a069857553cd08e7dc2e"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/guzzle/guzzle/zipball/ffb62ec787050ae4fa9449cdd6b80335db69bda2",
-				"reference": "ffb62ec787050ae4fa9449cdd6b80335db69bda2",
+				"url": "https://api.github.com/repos/guzzle/guzzle/zipball/81755d989b3007ca7f88a069857553cd08e7dc2e",
+				"reference": "81755d989b3007ca7f88a069857553cd08e7dc2e",
 				"shasum": ""
 			},
 			"require": {
@@ -1753,7 +1753,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-10-18T13:38:36+00:00"
+			"time": "2026-10-25T21:35:21+00:00"
 		},
 		{
 			"name": "guzzlehttp/promises",
@@ -2506,12 +2506,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-				"reference": "48cfe485e672e70ad62c010dbbcfc443a4d31695"
+				"reference": "8af9ebff3b0d3d68fe71534e5804e4b0bd6df919"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/48cfe485e672e70ad62c010dbbcfc443a4d31695",
-				"reference": "48cfe485e672e70ad62c010dbbcfc443a4d31695",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/8af9ebff3b0d3d68fe71534e5804e4b0bd6df919",
+				"reference": "8af9ebff3b0d3d68fe71534e5804e4b0bd6df919",
 				"shasum": ""
 			},
 			"require": {
@@ -2581,7 +2581,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-10-21T02:34:44+00:00"
+			"time": "2026-10-26T23:04:13+00:00"
 		},
 		{
 			"name": "phpcsstandards/phpcsutils",
@@ -2589,12 +2589,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-				"reference": "33a13f5bdc00d46cd9ff2ee3f1f0b8078c5c20a1"
+				"reference": "c22d6bd0dae0e89b144ef38cb363e4755db1033a"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/33a13f5bdc00d46cd9ff2ee3f1f0b8078c5c20a1",
-				"reference": "33a13f5bdc00d46cd9ff2ee3f1f0b8078c5c20a1",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/c22d6bd0dae0e89b144ef38cb363e4755db1033a",
+				"reference": "c22d6bd0dae0e89b144ef38cb363e4755db1033a",
 				"shasum": ""
 			},
 			"require": {
@@ -2675,7 +2675,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-10-21T02:12:17+00:00"
+			"time": "2026-10-27T17:50:18+00:00"
 		},
 		{
 			"name": "phpdocumentor/reflection",
@@ -2985,16 +2985,16 @@
 		},
 		{
 			"name": "phpstan/phpdoc-parser",
-			"version": "2.3.x-dev",
+			"version": "2.4.x-dev",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/phpstan/phpdoc-parser.git",
-				"reference": "7ed0100f3fd8d3ef1189153ddbf24696303cb472"
+				"reference": "af8e840551031d254cfdb3a18a62c3470a309c10"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/7ed0100f3fd8d3ef1189153ddbf24696303cb472",
-				"reference": "7ed0100f3fd8d3ef1189153ddbf24696303cb472",
+				"url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/af8e840551031d254cfdb3a18a62c3470a309c10",
+				"reference": "af8e840551031d254cfdb3a18a62c3470a309c10",
 				"shasum": ""
 			},
 			"require": {
@@ -3027,17 +3027,17 @@
 			"description": "PHPDoc parser with support for nullable, intersection and generic types",
 			"support": {
 				"issues": "https://github.com/phpstan/phpdoc-parser/issues",
-				"source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.x"
+				"source": "https://github.com/phpstan/phpdoc-parser/tree/2.4.x"
 			},
-			"time": "2026-10-12T04:15:32+00:00"
+			"time": "2026-10-30T19:36:28+00:00"
 		},
 		{
 			"name": "phpstan/phpstan",
 			"version": "2.3.x-dev",
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/a1d5e37f71896123af010d52a308aee745799b9c",
-				"reference": "a1d5e37f71896123af010d52a308aee745799b9c",
+				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/645a1bd6bead15fc1b8474137467961d0fa30a79",
+				"reference": "645a1bd6bead15fc1b8474137467961d0fa30a79",
 				"shasum": ""
 			},
 			"require": {
@@ -3094,7 +3094,7 @@
 					"type": "github"
 				}
 			],
-			"time": "2026-10-20T19:20:52+00:00"
+			"time": "2026-11-03T12:14:22+00:00"
 		},
 		{
 			"name": "phpunit/php-code-coverage",
@@ -3421,12 +3421,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/sebastianbergmann/phpunit.git",
-				"reference": "508d415ca4fefbbd79ad385156dc491256f4fe25"
+				"reference": "6ff0bd533e607680c3159c191dce34b6b8e02d13"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/508d415ca4fefbbd79ad385156dc491256f4fe25",
-				"reference": "508d415ca4fefbbd79ad385156dc491256f4fe25",
+				"url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6ff0bd533e607680c3159c191dce34b6b8e02d13",
+				"reference": "6ff0bd533e607680c3159c191dce34b6b8e02d13",
 				"shasum": ""
 			},
 			"require": {
@@ -3508,7 +3508,7 @@
 					"type": "other"
 				}
 			],
-			"time": "2026-10-20T13:56:38+00:00"
+			"time": "2026-11-03T06:09:07+00:00"
 		},
 		{
 			"name": "pronamic/wp-documentor",
@@ -3956,12 +3956,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/bobthecow/psysh.git",
-				"reference": "661f04c693374561314020924b50f3170b965799"
+				"reference": "64b18aa0d5f8bc14087b030f0f92cd76892f8dc3"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/bobthecow/psysh/zipball/661f04c693374561314020924b50f3170b965799",
-				"reference": "661f04c693374561314020924b50f3170b965799",
+				"url": "https://api.github.com/repos/bobthecow/psysh/zipball/64b18aa0d5f8bc14087b030f0f92cd76892f8dc3",
+				"reference": "64b18aa0d5f8bc14087b030f0f92cd76892f8dc3",
 				"shasum": ""
 			},
 			"require": {
@@ -4028,7 +4028,7 @@
 				"issues": "https://github.com/bobthecow/psysh/issues",
 				"source": "https://github.com/bobthecow/psysh/tree/main"
 			},
-			"time": "2026-10-18T17:00:09+00:00"
+			"time": "2026-10-26T03:41:38+00:00"
 		},
 		{
 			"name": "ralouphie/getallheaders",
@@ -5412,12 +5412,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/console.git",
-				"reference": "68a4a45af9fcb8c9bee567a88ae29e721fb22986"
+				"reference": "0b8208c757a9f97e372c6297a1863ffe19686dc0"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/console/zipball/68a4a45af9fcb8c9bee567a88ae29e721fb22986",
-				"reference": "68a4a45af9fcb8c9bee567a88ae29e721fb22986",
+				"url": "https://api.github.com/repos/symfony/console/zipball/0b8208c757a9f97e372c6297a1863ffe19686dc0",
+				"reference": "0b8208c757a9f97e372c6297a1863ffe19686dc0",
 				"shasum": ""
 			},
 			"require": {
@@ -5507,7 +5507,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-10-07T15:50:15+00:00"
+			"time": "2026-10-28T09:02:56+00:00"
 		},
 		{
 			"name": "symfony/css-selector",
@@ -6282,12 +6282,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/polyfill-mbstring.git",
-				"reference": "4d5d331bf731e0aedbc6b2f5e61135b7b7996a72"
+				"reference": "122889ed24dc000165bcbfd77ec412f15cbdfc6a"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/4d5d331bf731e0aedbc6b2f5e61135b7b7996a72",
-				"reference": "4d5d331bf731e0aedbc6b2f5e61135b7b7996a72",
+				"url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/122889ed24dc000165bcbfd77ec412f15cbdfc6a",
+				"reference": "122889ed24dc000165bcbfd77ec412f15cbdfc6a",
 				"shasum": ""
 			},
 			"require": {
@@ -6360,7 +6360,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-09-24T15:19:04+00:00"
+			"time": "2026-10-28T09:35:49+00:00"
 		},
 		{
 			"name": "symfony/polyfill-php73",
@@ -7068,16 +7068,16 @@
 		},
 		{
 			"name": "vlucas/phpdotenv",
-			"version": "v5.7.0",
+			"version": "dev-master",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/phpdotenv/phpdotenv.git",
-				"reference": "301c07936b16d88628b126b01d082ba153cf4c40"
+				"reference": "96149103e62ac67e915f6d2ef59b72dee2e011e0"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpdotenv/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
-				"reference": "301c07936b16d88628b126b01d082ba153cf4c40",
+				"url": "https://api.github.com/repos/phpdotenv/phpdotenv/zipball/96149103e62ac67e915f6d2ef59b72dee2e011e0",
+				"reference": "96149103e62ac67e915f6d2ef59b72dee2e011e0",
 				"shasum": ""
 			},
 			"require": {
@@ -7097,6 +7097,7 @@
 			"suggest": {
 				"ext-filter": "Required to use the boolean validator."
 			},
+			"default-branch": true,
 			"type": "library",
 			"extra": {
 				"bamarni-bin": {
@@ -7104,7 +7105,7 @@
 					"forward-command": false
 				},
 				"branch-alias": {
-					"dev-master": "5.6-dev"
+					"dev-master": "5.8-dev"
 				}
 			},
 			"autoload": {
@@ -7135,8 +7136,8 @@
 				"environment"
 			],
 			"support": {
-				"issues": "https://github.com/vlucas/phpdotenv/issues",
-				"source": "https://github.com/vlucas/phpdotenv/tree/v5.7.0"
+				"issues": "https://github.com/phpdotenv/phpdotenv/issues",
+				"source": "https://github.com/phpdotenv/phpdotenv/tree/master"
 			},
 			"funding": [
 				{
@@ -7148,7 +7149,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-08-24T18:07:49+00:00"
+			"time": "2026-10-25T16:26:19+00:00"
 		},
 		{
 			"name": "webmozart/assert",
