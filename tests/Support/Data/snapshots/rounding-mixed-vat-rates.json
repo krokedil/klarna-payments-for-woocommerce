@@ -1,0 +1,96 @@
+{
+    "method": "POST",
+    "path": "https://api.playground.klarna.com/payments/v1/sessions",
+    "body": {
+        "purchase_country": "SE",
+        "purchase_currency": "SEK",
+        "locale": "en-US",
+        "order_amount": 44300,
+        "order_tax_amount": 4300,
+        "order_lines": [
+            {
+                "name": "Rounding item 1",
+                "product_url": "<site>/?product=rounding-item-1",
+                "quantity": 1,
+                "quantity_unit": "pcs",
+                "reference": "rounding-1",
+                "tax_rate": 2500,
+                "total_amount": 12500,
+                "total_discount_amount": 0,
+                "total_tax_amount": 2500,
+                "type": "physical",
+                "unit_price": 12500
+            },
+            {
+                "name": "Rounding item 2",
+                "product_url": "<site>/?product=rounding-item-2",
+                "quantity": 1,
+                "quantity_unit": "pcs",
+                "reference": "rounding-2",
+                "tax_rate": 1200,
+                "total_amount": 11200,
+                "total_discount_amount": 0,
+                "total_tax_amount": 1200,
+                "type": "physical",
+                "unit_price": 11200
+            },
+            {
+                "name": "Rounding item 3",
+                "product_url": "<site>/?product=rounding-item-3",
+                "quantity": 1,
+                "quantity_unit": "pcs",
+                "reference": "rounding-3",
+                "tax_rate": 600,
+                "total_amount": 10600,
+                "total_discount_amount": 0,
+                "total_tax_amount": 600,
+                "type": "physical",
+                "unit_price": 10600
+            },
+            {
+                "name": "Rounding item 4",
+                "product_url": "<site>/?product=rounding-item-4",
+                "quantity": 1,
+                "quantity_unit": "pcs",
+                "reference": "rounding-4",
+                "tax_rate": 0,
+                "total_amount": 10000,
+                "total_discount_amount": 0,
+                "total_tax_amount": 0,
+                "type": "physical",
+                "unit_price": 10000
+            }
+        ],
+        "customer": {
+            "type": "person"
+        },
+        "billing_address": {
+            "given_name": "Karl",
+            "family_name": "Karlsson",
+            "email": "karl@example.com",
+            "phone": "+46701234567",
+            "street_address": "Storgatan 1",
+            "street_address2": "Lgh 1102",
+            "postal_code": "41106",
+            "city": "G\u00f6teborg",
+            "region": "",
+            "country": "SE"
+        },
+        "shipping_address": {
+            "given_name": "Karl",
+            "family_name": "Karlsson",
+            "email": "karl@example.com",
+            "phone": "+46701234567",
+            "street_address": "Storgatan 1",
+            "street_address2": "Lgh 1102",
+            "postal_code": "41106",
+            "city": "G\u00f6teborg",
+            "region": "",
+            "country": "SE"
+        },
+        "options": null,
+        "merchant_urls": {
+            "authorization": "<site>/wc-api/KP_WC_AUTHORIZATION"
+        }
+    }
+}

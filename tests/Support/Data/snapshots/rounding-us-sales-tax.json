@@ -1,0 +1,80 @@
+{
+    "method": "POST",
+    "path": "https://api-na.playground.klarna.com/payments/v1/sessions",
+    "body": {
+        "purchase_country": "US",
+        "purchase_currency": "USD",
+        "locale": "en-US",
+        "order_amount": 22785,
+        "order_tax_amount": 1785,
+        "order_lines": [
+            {
+                "name": "Rounding item 1",
+                "product_url": "<site>/?product=rounding-item-1",
+                "quantity": 2,
+                "quantity_unit": "pcs",
+                "reference": "rounding-1",
+                "tax_rate": 0,
+                "total_amount": 20000,
+                "total_discount_amount": 0,
+                "total_tax_amount": 0,
+                "type": "physical",
+                "unit_price": 10000
+            },
+            {
+                "name": "Flat rate",
+                "quantity": 1,
+                "quantity_unit": "pcs",
+                "reference": "flat_rate:1",
+                "tax_rate": 0,
+                "total_amount": 1000,
+                "total_discount_amount": 0,
+                "total_tax_amount": 0,
+                "type": "shipping_fee",
+                "unit_price": 1000
+            },
+            {
+                "name": "Sales Tax",
+                "quantity": 1,
+                "reference": "Sales Tax",
+                "tax_rate": 0,
+                "total_amount": 1785,
+                "total_discount_amount": 0,
+                "total_tax_amount": 0,
+                "type": "sales_tax",
+                "unit_price": 1785
+            }
+        ],
+        "customer": {
+            "type": "person"
+        },
+        "billing_address": {
+            "given_name": "Jane",
+            "family_name": "Doe",
+            "email": "jane@example.com",
+            "phone": "+14155550123",
+            "street_address": "1 Market Street",
+            "street_address2": "Suite 200",
+            "postal_code": "94105",
+            "city": "San Francisco",
+            "region": "CA",
+            "country": "US"
+        },
+        "shipping_address": {
+            "given_name": "Jane",
+            "family_name": "Doe",
+            "email": "jane@example.com",
+            "phone": "+14155550123",
+            "street_address": "1 Market Street",
+            "street_address2": "Suite 200",
+            "postal_code": "94105",
+            "city": "San Francisco",
+            "region": "CA",
+            "country": "US"
+        },
+        "options": null,
+        "merchant_urls": {
+            "authorization": "<site>/wc-api/KP_WC_AUTHORIZATION"
+        }
+    }
+}

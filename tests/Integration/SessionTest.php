@@ -94,7 +94,7 @@ class SessionTest extends IntegrationTestCase {
 				$this->haveChosenFlatRateShipping( 'SE', '50.00' );
 				return;
 			case 'coupon':
-				$this->haveAppliedCoupon( 'kp-session-10', 10 );
+				$this->haveAppliedCoupon( 'kp-session-10', 'percent', 10 );
 				return;
 			case 'locale':
 				add_filter( 'locale', static fn() => 'sv_SE' );
@@ -247,7 +247,7 @@ class SessionTest extends IntegrationTestCase {
 		}
 
 		if ( 'coupon' === $scenario ) {
-			$this->haveAppliedCoupon( 'kp-session-10', 10 );
+			$this->haveAppliedCoupon( 'kp-session-10', 'percent', 10 );
 		}
 
 		$this->resetHttpInterception();
@@ -390,17 +390,6 @@ class SessionTest extends IntegrationTestCase {
 			has_action( 'woocommerce_after_calculate_totals', [ new \KP_Session(), 'get_session' ] ),
 			'This wiring is what keeps the Klarna session in step with the cart.'
 		);
-	}
-
-	private function haveAppliedCoupon( string $code, int $percent ): void {
-		$coupon = new \WC_Coupon();
-		$coupon->set_code( $code );
-		$coupon->set_discount_type( 'percent' );
-		$coupon->set_amount( $percent );
-		$coupon->save();
-
-		WC()->cart->apply_coupon( $code );
-		$this->recalculateCart();
 	}
 
 	private function willUpdateSession( string $session_id = 'sess-1' ): void {

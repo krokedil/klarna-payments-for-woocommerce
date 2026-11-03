@@ -164,6 +164,107 @@ trait CanBuildCartsAndOrders {
 		return $rate_id;
 	}
 
+	/** Creates a saved coupon and returns its code. */
+	protected function haveCoupon( string $code, string $type, float $amount, array $args = [] ): string {
+		$args = array_merge(
+			[
+				'free_shipping'          => false,
+				'limit_usage_to_x_items' => null,
+			],
+			$args
+		);
+
+		$coupon = new \WC_Coupon();
+		$coupon->set_code( $code );
+		$coupon->set_discount_type( $type );
+		$coupon->set_amount( $amount );
+		$coupon->set_free_shipping( $args['free_shipping'] );
+		$coupon->set_limit_usage_to_x_items( $args['limit_usage_to_x_items'] );
+		$coupon->save();
+
+		return $code;
+	}
+
+	/** Creates a coupon and applies it to the cart. */
+	protected function haveAppliedCoupon( string $code, string $type, float $amount, array $args = [] ): void {
+		WC()->cart->apply_coupon( $this->haveCoupon( $code, $type, $amount, $args ) );
+		$this->recalculateCart();
+	}
+
+	/**
+	 * Creates one shipping zone with a flat rate per entry in $methods, each an
+	 * array of cost and tax status, and returns their rate ids.
+	 *
+	 * @return array<int, string>
+	 */
+	protected function haveFlatRateMethods( string $country, array $methods ): array {
+		$zone = new \WC_Shipping_Zone();
+		$zone->set_zone_name( "Test zone {$country}" );
+		$zone->add_location( $country, 'country' );
+		$zone->save();
+
+		$rate_ids = [];
+
+		foreach ( $methods as $index => list( $cost, $tax_status ) ) {
+			$instance_id = $zone->add_shipping_method( 'flat_rate' );
+
+			update_option(
+				"woocommerce_flat_rate_{$instance_id}_settings",
+				[
+					'title'      => 'Flat rate ' . ( $index + 1 ),
+					'tax_status' => $tax_status,
+					'cost'       => $cost,
+				]
+			);
+
+			$rate_ids[] = "flat_rate:{$instance_id}";
+		}
+
+		$this->resetShippingCaches();
+		WC()->shipping()->load_shipping_methods();
+
+		return $rate_ids;
+	}
+
+	/**
+	 * Ships every cart item as its own package, the way multi-vendor and
+	 * split-shipment plugins do. A single rate id is chosen for every package,
+	 * a list is chosen package by package.
+	 *
+	 * @param string|array<int, string> $rate_ids
+	 */
+	protected function haveOnePackagePerCartItem( $rate_ids ): void {
+		add_filter(
+			'woocommerce_cart_shipping_packages',
+			static function ( $packages ) {
+				if ( empty( $packages ) ) {
+					return $packages;
+				}
+
+				$split = [];
+
+				foreach ( $packages[0]['contents'] as $key => $item ) {
+					$split[] = array_merge(
+						$packages[0],
+						[
+							'contents'      => [ $key => $item ],
+							'contents_cost' => $item['line_total'],
+						]
+					);
+				}
+
+				return $split;
+			}
+		);
+
+		$this->resetShippingCaches();
+		WC()->session->set(
+			'chosen_shipping_methods',
+			is_array( $rate_ids ) ? $rate_ids : array_fill( 0, count( WC()->cart->get_cart() ), $rate_ids )
+		);
+		$this->recalculateCart();
+	}
+
 	/** Makes WooCommerce believe the current request is the checkout page. */
 	protected function simulateCheckoutPage(): void {
 		add_filter( 'woocommerce_is_checkout', '__return_true' );
@@ -182,6 +283,7 @@ trait CanBuildCartsAndOrders {
 				'items'            => [],
 				'shipping'         => null,
 				'fees'             => [],
+				'coupons'          => [],
 				'billing'          => [],
 				'shipping_address' => [],
 				'currency'         => null,
@@ -213,7 +315,10 @@ trait CanBuildCartsAndOrders {
 			$order->add_product( $product, $quantity );
 		}
 
-		if ( $args['shipping'] ) {
+		// A list of shipping lines, or the one shipping line on its own.
+		$shipping_lines = isset( $args['shipping'][0] ) ? $args['shipping'] : array_filter( [ $args['shipping'] ] );
+
+		foreach ( $shipping_lines as $shipping ) {
 			$shipping = array_merge(
 				[
 					'method_title' => 'Flat rate',
@@ -221,7 +326,7 @@ trait CanBuildCartsAndOrders {
 					'instance_id'  => 1,
 					'total'        => '50.00',
 				],
-				$args['shipping']
+				$shipping
 			);
 
 			$shipping_item = new \WC_Order_Item_Shipping();
@@ -272,6 +377,14 @@ trait CanBuildCartsAndOrders {
 
 		$order->calculate_totals( true );
 		$order->save();
+
+		foreach ( $args['coupons'] as $code ) {
+			$order->apply_coupon( $code );
+		}
+
+		if ( $args['coupons'] ) {
+			$order->save();
+		}
 
 		return $order;
 	}
