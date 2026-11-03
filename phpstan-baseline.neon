@@ -199,12 +199,6 @@ parameters:
 			path: includes/kp-functions.php
 
 		-
-			message: '#^Parameter \#1 \$order of static method KrokedilKlarnaPaymentsDeps\\Krokedil\\WooCommerce\\OrderUtility\:\:add_environment_info\(\) expects KrokedilKlarnaPaymentsDeps\\Krokedil\\WooCommerce\\WC_Order, WC_Order given\.$#'
-			identifier: argument.type
-			count: 1
-			path: includes/kp-functions.php
-
-		-
 			message: '#^Parameter \#3 \$meta_id of method WC_Data\:\:update_meta_data\(\) expects int, true given\.$#'
 			identifier: argument.type
 			count: 1
