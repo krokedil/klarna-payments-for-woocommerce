@@ -175,18 +175,6 @@ parameters:
 			path: classes/requests/helpers/class-kp-order-data.php
 
 		-
-			message: '#^Variable \$list_of_countries in isset\(\) always exists and is not nullable\.$#'
-			identifier: isset.variable
-			count: 1
-			path: includes/admin/views/status-report.php
-
-		-
-			message: '#^Variable \$test_list_of_countries in isset\(\) always exists and is not nullable\.$#'
-			identifier: isset.variable
-			count: 1
-			path: includes/admin/views/status-report.php
-
-		-
 			message: '#^Call to function method_exists\(\) with ''WC_Customer'' and ''get_billing_country'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
