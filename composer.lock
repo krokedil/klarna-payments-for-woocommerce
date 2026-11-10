@@ -73,20 +73,20 @@
 	"packages-dev": [
 		{
 			"name": "allure-framework/allure-codeception",
-			"version": "v2.5.0",
+			"version": "v2.6.0",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/allure-framework/allure-codeception.git",
-				"reference": "c32f7bfb559b877ce1c5fbaeda18b53731610c4f"
+				"reference": "c3c56e2dc3bb0d4013651ed9751c618f72ddd06a"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/allure-framework/allure-codeception/zipball/c32f7bfb559b877ce1c5fbaeda18b53731610c4f",
-				"reference": "c32f7bfb559b877ce1c5fbaeda18b53731610c4f",
+				"url": "https://api.github.com/repos/allure-framework/allure-codeception/zipball/c3c56e2dc3bb0d4013651ed9751c618f72ddd06a",
+				"reference": "c3c56e2dc3bb0d4013651ed9751c618f72ddd06a",
 				"shasum": ""
 			},
 			"require": {
-				"allure-framework/allure-php-commons": "^2.4.0",
+				"allure-framework/allure-php-commons": "^2.5.0",
 				"codeception/codeception": "^5.0.3",
 				"ext-json": "*",
 				"php": "^8"
@@ -134,20 +134,20 @@
 				"issues": "https://github.com/allure-framework/allure-codeception/issues",
 				"source": "https://github.com/allure-framework/allure-codeception"
 			},
-			"time": "2026-05-01T15:12:25+00:00"
+			"time": "2026-11-09T06:18:24+00:00"
 		},
 		{
 			"name": "allure-framework/allure-php-commons",
-			"version": "v2.4.0",
+			"version": "v2.5.0",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/allure-framework/allure-php-commons2.git",
-				"reference": "30bfd2a2f97d4edfe37a4cf05be4a5234ad87ed4"
+				"reference": "327dd62624ca784d4888c002d563b6f331ecbf4e"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/allure-framework/allure-php-commons2/zipball/30bfd2a2f97d4edfe37a4cf05be4a5234ad87ed4",
-				"reference": "30bfd2a2f97d4edfe37a4cf05be4a5234ad87ed4",
+				"url": "https://api.github.com/repos/allure-framework/allure-php-commons2/zipball/327dd62624ca784d4888c002d563b6f331ecbf4e",
+				"reference": "327dd62624ca784d4888c002d563b6f331ecbf4e",
 				"shasum": ""
 			},
 			"require": {
@@ -204,7 +204,7 @@
 				"issues": "https://github.com/allure-framework/allure-php-commons2/issues",
 				"source": "https://github.com/allure-framework/allure-php-commons"
 			},
-			"time": "2026-04-29T08:02:46+00:00"
+			"time": "2026-11-06T13:19:22+00:00"
 		},
 		{
 			"name": "behat/gherkin",
@@ -2506,12 +2506,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-				"reference": "6890bf304b4d312a97e13fa32ed90c1eabc3c798"
+				"reference": "8b00bbfbd82fd678b09f29c21af9f4cb3b6d292f"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/6890bf304b4d312a97e13fa32ed90c1eabc3c798",
-				"reference": "6890bf304b4d312a97e13fa32ed90c1eabc3c798",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/8b00bbfbd82fd678b09f29c21af9f4cb3b6d292f",
+				"reference": "8b00bbfbd82fd678b09f29c21af9f4cb3b6d292f",
 				"shasum": ""
 			},
 			"require": {
@@ -2581,7 +2581,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-11-03T16:07:55+00:00"
+			"time": "2026-11-06T18:21:54+00:00"
 		},
 		{
 			"name": "phpcsstandards/phpcsutils",
@@ -2589,12 +2589,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-				"reference": "c22d6bd0dae0e89b144ef38cb363e4755db1033a"
+				"reference": "b008482a2fae22ced43cac745a185580c1e7c44d"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/c22d6bd0dae0e89b144ef38cb363e4755db1033a",
-				"reference": "c22d6bd0dae0e89b144ef38cb363e4755db1033a",
+				"url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/b008482a2fae22ced43cac745a185580c1e7c44d",
+				"reference": "b008482a2fae22ced43cac745a185580c1e7c44d",
 				"shasum": ""
 			},
 			"require": {
@@ -2675,7 +2675,7 @@
 					"type": "thanks_dev"
 				}
 			],
-			"time": "2026-10-27T17:50:18+00:00"
+			"time": "2026-11-05T22:54:26+00:00"
 		},
 		{
 			"name": "phpdocumentor/reflection",
@@ -2989,12 +2989,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/phpstan/phpdoc-parser.git",
-				"reference": "af8e840551031d254cfdb3a18a62c3470a309c10"
+				"reference": "eb688aed3fcb965c4f807675942ad9c952326373"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/af8e840551031d254cfdb3a18a62c3470a309c10",
-				"reference": "af8e840551031d254cfdb3a18a62c3470a309c10",
+				"url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/eb688aed3fcb965c4f807675942ad9c952326373",
+				"reference": "eb688aed3fcb965c4f807675942ad9c952326373",
 				"shasum": ""
 			},
 			"require": {
@@ -3029,15 +3029,15 @@
 				"issues": "https://github.com/phpstan/phpdoc-parser/issues",
 				"source": "https://github.com/phpstan/phpdoc-parser/tree/2.4.x"
 			},
-			"time": "2026-10-30T19:36:28+00:00"
+			"time": "2026-11-07T10:23:27+00:00"
 		},
 		{
 			"name": "phpstan/phpstan",
 			"version": "2.3.x-dev",
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/ca89e0810c30304f0ca9d8b2d4fd262dc47e49dd",
-				"reference": "ca89e0810c30304f0ca9d8b2d4fd262dc47e49dd",
+				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/639c0f7c16ac0b26842c4e8fd2cf9da19a9937c5",
+				"reference": "639c0f7c16ac0b26842c4e8fd2cf9da19a9937c5",
 				"shasum": ""
 			},
 			"require": {
@@ -3094,7 +3094,7 @@
 					"type": "github"
 				}
 			],
-			"time": "2026-11-03T17:03:47+00:00"
+			"time": "2026-11-10T09:06:22+00:00"
 		},
 		{
 			"name": "phpunit/php-code-coverage",
@@ -3421,12 +3421,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/sebastianbergmann/phpunit.git",
-				"reference": "6ff0bd533e607680c3159c191dce34b6b8e02d13"
+				"reference": "8acfa92e461b5d71d54e8da9a035477e16cac0c9"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6ff0bd533e607680c3159c191dce34b6b8e02d13",
-				"reference": "6ff0bd533e607680c3159c191dce34b6b8e02d13",
+				"url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8acfa92e461b5d71d54e8da9a035477e16cac0c9",
+				"reference": "8acfa92e461b5d71d54e8da9a035477e16cac0c9",
 				"shasum": ""
 			},
 			"require": {
@@ -3508,7 +3508,7 @@
 					"type": "other"
 				}
 			],
-			"time": "2026-11-03T06:09:07+00:00"
+			"time": "2026-11-08T14:46:49+00:00"
 		},
 		{
 			"name": "pronamic/wp-documentor",
@@ -5891,12 +5891,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/filesystem.git",
-				"reference": "c4a6cc5733386414f6d17d744ee5ad8b445e349d"
+				"reference": "97768a0b5c3495c2a2469dfc1f3db00e006fc5d5"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/filesystem/zipball/c4a6cc5733386414f6d17d744ee5ad8b445e349d",
-				"reference": "c4a6cc5733386414f6d17d744ee5ad8b445e349d",
+				"url": "https://api.github.com/repos/symfony/filesystem/zipball/97768a0b5c3495c2a2469dfc1f3db00e006fc5d5",
+				"reference": "97768a0b5c3495c2a2469dfc1f3db00e006fc5d5",
 				"shasum": ""
 			},
 			"require": {
@@ -5954,7 +5954,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-08-30T06:54:06+00:00"
+			"time": "2026-11-03T06:18:36+00:00"
 		},
 		{
 			"name": "symfony/finder",
@@ -6943,12 +6943,12 @@
 			"source": {
 				"type": "git",
 				"url": "https://github.com/symfony/yaml.git",
-				"reference": "f27a7131106e8cb792d434e8faea7f3ffb615263"
+				"reference": "73f95622dbbab664af9db510424f267807bd1080"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/yaml/zipball/f27a7131106e8cb792d434e8faea7f3ffb615263",
-				"reference": "f27a7131106e8cb792d434e8faea7f3ffb615263",
+				"url": "https://api.github.com/repos/symfony/yaml/zipball/73f95622dbbab664af9db510424f267807bd1080",
+				"reference": "73f95622dbbab664af9db510424f267807bd1080",
 				"shasum": ""
 			},
 			"require": {
@@ -7014,7 +7014,7 @@
 					"type": "tidelift"
 				}
 			],
-			"time": "2026-08-30T06:09:20+00:00"
+			"time": "2026-11-05T16:36:45+00:00"
 		},
 		{
 			"name": "theseer/tokenizer",

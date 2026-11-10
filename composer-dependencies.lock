@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07ac8f978ff494ef464a93779c50531f",
+    "content-hash": "7256cabdc48147c827a857f550f77139",
     "packages": [
         {
             "name": "krokedil/settings-page",
@@ -151,16 +151,16 @@
         },
         {
             "name": "krokedil/woocommerce",
-            "version": "dev-develop-yith-compatibility",
+            "version": "1.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/krokedil/woocommerce.git",
-                "reference": "42f483ede0acd275e6448092078d27dad52f33ec"
+                "reference": "08dd70f22d9f21ad94158c4254954609b14fcda3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/42f483ede0acd275e6448092078d27dad52f33ec",
-                "reference": "42f483ede0acd275e6448092078d27dad52f33ec",
+                "url": "https://api.github.com/repos/krokedil/woocommerce/zipball/08dd70f22d9f21ad94158c4254954609b14fcda3",
+                "reference": "08dd70f22d9f21ad94158c4254954609b14fcda3",
                 "shasum": ""
             },
             "require-dev": {
@@ -201,10 +201,10 @@
             ],
             "description": "A library package for Krokedils plugins that contains helper methods when working with WooCommerce.",
             "support": {
-                "source": "https://github.com/krokedil/woocommerce/tree/develop-yith-compatibility",
+                "source": "https://github.com/krokedil/woocommerce/tree/1.9.3",
                 "issues": "https://github.com/krokedil/woocommerce/issues"
             },
-            "time": "2026-11-03T17:16:07+00:00"
+            "time": "2026-11-10T10:37:31+00:00"
         },
         {
             "name": "krokedil/wp-api",
@@ -271,9 +271,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "krokedil/woocommerce": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
