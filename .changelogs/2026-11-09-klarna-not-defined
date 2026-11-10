@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed a "Klarna is not defined" error in the classic checkout when the Klarna script had not finished loading. This error could also stop the payment widget from appearing on slow connections.
