@@ -28,6 +28,8 @@ class SystemReportTest extends IntegrationTestCase {
 				'kom_auto_capture' => 'yes',
 				'kec_settings'     => '',
 				'kec_enabled'      => 'no',
+				'onsite_messaging' => '',
+				'siwk'             => '',
 			]
 		);
 		update_option( 'krokedil_debuglog_kp', wp_json_encode( [ [ 'title' => 'Legacy request title' ] ] ) );
@@ -38,7 +40,11 @@ class SystemReportTest extends IntegrationTestCase {
 		$this->assertStringContainsString( 'Klarna for WooCommerce plugin settings', $report );
 		$this->assertStringNotContainsString( 'Klarna Order Management for WooCommerce', $report, 'Order Management has no report box of its own.' );
 		$this->assertStringContainsString( 'On order status change', $report, 'Order Management settings are part of the plugin settings box.' );
-		$this->assertStringContainsString( 'Express Checkout', $report );
+
+		// The report only prints a section whose key is saved, so each one is seeded above.
+		foreach ( [ 'Klarna Order Management', 'Express Checkout', 'On-Site Messaging', 'Sign in with Klarna' ] as $section ) {
+			$this->assertSame( 1, substr_count( $report, "<h2>{$section}</h2>" ), "The {$section} section is printed once." );
+		}
 		$this->assertStringNotContainsString( 'Legacy request title', $report, 'The legacy request log option is no longer read.' );
 		$this->assertMatchesRegularExpression( '#Production countries:</td>\s*<td class="help"></td>\s*<td>NO</td>#', $report );
 		$this->assertMatchesRegularExpression( '#Test countries:</td>\s*<td class="help"></td>\s*<td>SE</td>#', $report );
