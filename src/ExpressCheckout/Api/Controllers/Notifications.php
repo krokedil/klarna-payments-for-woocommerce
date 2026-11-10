@@ -4,6 +4,7 @@ namespace Krokedil\Klarna\ExpressCheckout\Api\Controllers;
 
 use Krokedil\Klarna\Api\Controllers\Controller;
 use Krokedil\Klarna\ExpressCheckout\Api\Notifications\NotificationsProvider;
+use Krokedil\Klarna\ExpressCheckout\Logger;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -76,11 +77,17 @@ class Notifications extends Controller {
 	 */
 	public function handle_notification( $request ) {
 		$notification_id = $this->get_notification_id( $request );
+		// The notification ID can be the signature, which must not reach the log, so the event ID is logged instead.
+		$event_id = $this->get_event_id( $request );
 
 		if ( ! $this->claim_notification( $notification_id ) ) {
-			\KP_Logger::log( "KEC: Ignored an already handled notification: {$notification_id}" );
+			Logger::log( 'Ignored an already handled notification', array( 'event_id' => $event_id ) );
 			return $this->success_response();
 		}
+
+		$event_type         = '';
+		$event_version      = '';
+		$payment_request_id = '';
 
 		try {
 			$body = $request->get_json_params();
@@ -88,14 +95,28 @@ class Notifications extends Controller {
 			$meta_data = $body['metadata'] ?? array();
 
 			if ( empty( $meta_data ) ) {
+				Logger::log( 'Ignored a notification without metadata', array( 'event_id' => $event_id ) );
 				return $this->success_response();
 			}
 
-			$event_type    = $meta_data['event_type'] ?? '';
-			$event_version = $meta_data['event_version'] ?? '';
-			$payload       = $body['payload'] ?? array();
+			$event_type         = $meta_data['event_type'] ?? '';
+			$event_version      = $meta_data['event_version'] ?? '';
+			$payload            = $body['payload'] ?? array();
+			$payment_request_id = is_array( $payload ) ? ( $payload['payment_request_id'] ?? '' ) : '';
 
 			$handler = $this->provider->get_handler( $event_type, $event_version );
+
+			Logger::log(
+				'Notification received',
+				array(
+					'event_id'           => $event_id,
+					'event_type'         => $event_type,
+					'event_version'      => $event_version,
+					'handler_found'      => null !== $handler,
+					'payment_request_id' => $payment_request_id,
+					'state'              => is_array( $payload ) ? ( $payload['state'] ?? '' ) : '',
+				)
+			);
 
 			if ( null === $handler ) {
 				/**
@@ -122,6 +143,17 @@ class Notifications extends Controller {
 
 			return $response ?? $this->success_response();
 		} catch ( \Throwable $e ) {
+			Logger::warning(
+				'Notification could not be handled, answered with 500 so Klarna retries',
+				array(
+					'event_id'           => $event_id,
+					'event_type'         => $event_type,
+					'event_version'      => $event_version,
+					'payment_request_id' => $payment_request_id,
+					'error'              => $e->getMessage(),
+				)
+			);
+
 			// Release the claim for every processing failure, not just exceptions, so that Klarna's retry of the notification is handled instead of ignored.
 			$this->release_notification( $notification_id );
 			return new \WP_REST_Response( array( 'error' => $e->getMessage() ), 500 );
@@ -136,16 +168,30 @@ class Notifications extends Controller {
 	 * @return string The notification identifier, or an empty string if it could not be determined.
 	 */
 	protected function get_notification_id( $request ) {
+		$event_id = $this->get_event_id( $request );
+
+		// Without a usable event ID, fall back to the signature.
+		if ( '' !== $event_id ) {
+			return $event_id;
+		}
+
+		return strval( $request->get_header( 'Klarna-Signature' ) );
+	}
+
+	/**
+	 * Get the event ID from the notification metadata.
+	 *
+	 * @param \WP_REST_Request $request The request object.
+	 *
+	 * @return string The event ID, or an empty string if there is no scalar one.
+	 */
+	protected function get_event_id( $request ) {
 		$body      = $request->get_json_params();
 		$meta_data = is_array( $body ) ? ( $body['metadata'] ?? array() ) : array();
 		$event_id  = is_array( $meta_data ) ? ( $meta_data['event_id'] ?? '' ) : '';
 
-		// The body is whatever Klarna sent us, so only a scalar event ID is usable as an identifier. Anything else falls back to the signature.
-		if ( ! empty( $event_id ) && is_scalar( $event_id ) ) {
-			return strval( $event_id );
-		}
-
-		return strval( $request->get_header( 'Klarna-Signature' ) );
+		// The body is whatever Klarna sent us, so only a scalar event ID is usable as an identifier.
+		return ( ! empty( $event_id ) && is_scalar( $event_id ) ) ? strval( $event_id ) : '';
 	}
 
 	/**
@@ -235,23 +281,57 @@ class Notifications extends Controller {
 		$signature      = $request->get_header( 'Klarna-Signature' );
 		$body           = $request->get_body();
 
-		if ( empty( $signing_key_id ) || empty( $signature ) ) {
-			return false;
-		}
-
 		$settings              = get_option( 'kec_signing_key', array() );
 		$stored_signing_key_id = $settings['signing_key_id'] ?? '';
 		$stored_signing_key    = $settings['signing_key'] ?? '';
 
+		$context = array(
+			// The header is caller supplied, so keep it short and plain before it reaches the log.
+			'received_signing_key_id' => substr( sanitize_text_field( (string) $signing_key_id ), 0, 64 ),
+			'stored_signing_key_id'   => (string) $stored_signing_key_id,
+		);
+
+		if ( empty( $signing_key_id ) || empty( $signature ) ) {
+			$missing = array();
+			if ( empty( $signing_key_id ) ) {
+				$missing[] = 'Klarna-Signing-Key-Id';
+			}
+			if ( empty( $signature ) ) {
+				$missing[] = 'Klarna-Signature';
+			}
+
+			return $this->reject_request( 'missing_headers', $context + array( 'missing_headers' => $missing ) );
+		}
+
+		if ( empty( $stored_signing_key_id ) || empty( $stored_signing_key ) ) {
+			return $this->reject_request( 'no_signing_key_stored', $context );
+		}
+
 		if ( $signing_key_id !== $stored_signing_key_id ) {
-			return false;
+			return $this->reject_request( 'signing_key_id_mismatch', $context );
 		}
 
 		$calculated_signature = hash_hmac( 'sha256', $body, $stored_signing_key, false );
 		if ( ! hash_equals( $calculated_signature, $signature ) ) {
-			return false;
+			return $this->reject_request( 'signature_mismatch', $context );
 		}
 
+		Logger::log( 'Notification request accepted', $context );
+
 		return true;
+	}
+
+	/**
+	 * Log why a notification request is rejected. WordPress answers it with a 401, which leaves no other trace.
+	 *
+	 * @param string $reason  Why the request is rejected.
+	 * @param array  $context The signing key IDs involved. Never the key or the signature.
+	 *
+	 * @return false
+	 */
+	private function reject_request( $reason, $context ) {
+		Logger::warning( 'Notification request rejected', array( 'reason' => $reason ) + $context );
+
+		return false;
 	}
 }
