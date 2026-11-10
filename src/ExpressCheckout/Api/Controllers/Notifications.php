@@ -34,6 +34,20 @@ class Notifications extends Controller {
 	protected $provider;
 
 	/**
+	 * The request last validated. Holding it keeps its identity from being reused by another request.
+	 *
+	 * @var \WP_REST_Request|null
+	 */
+	private $validated_request = null;
+
+	/**
+	 * The validation result of the request last validated.
+	 *
+	 * @var bool
+	 */
+	private $validated_result = false;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @return void
@@ -272,11 +286,29 @@ class Notifications extends Controller {
 	/**
 	 * Validate the request using HMAC-SHA256 signature verification.
 	 *
+	 * WordPress calls this again for the same request to build the Allow header, so the result is kept to log it once.
+	 *
 	 * @param \WP_REST_Request $request The request object.
 	 *
 	 * @return bool
 	 */
 	public function validate_request( $request ) {
+		if ( $this->validated_request !== $request ) {
+			$this->validated_result  = $this->verify_signature( $request );
+			$this->validated_request = $request;
+		}
+
+		return $this->validated_result;
+	}
+
+	/**
+	 * Verify the signature of the request, and log the outcome.
+	 *
+	 * @param \WP_REST_Request $request The request object.
+	 *
+	 * @return bool
+	 */
+	private function verify_signature( $request ) {
 		$signing_key_id = $request->get_header( 'Klarna-Signing-Key-Id' );
 		$signature      = $request->get_header( 'Klarna-Signature' );
 		$body           = $request->get_body();
@@ -286,8 +318,8 @@ class Notifications extends Controller {
 		$stored_signing_key    = $settings['signing_key'] ?? '';
 
 		$context = array(
-			// The header is caller supplied, so keep it short and plain before it reaches the log.
-			'received_signing_key_id' => substr( sanitize_text_field( (string) $signing_key_id ), 0, 64 ),
+			// The header is caller supplied, so keep it plain and bounded. A real ID is around 80 characters.
+			'received_signing_key_id' => substr( sanitize_text_field( (string) $signing_key_id ), 0, 128 ),
 			'stored_signing_key_id'   => (string) $stored_signing_key_id,
 		);
 

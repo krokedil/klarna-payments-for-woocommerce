@@ -105,8 +105,8 @@ class PaymentStateCompleted extends Handler {
 		Logger::log(
 			'Completed payment processed',
 			array(
-				'order_status'     => $order->get_status(),
-				'has_redirect_url' => ! empty( $redirect_url ),
+				'order_status' => $order->get_status(),
+				'has_redirect' => ! empty( $redirect_url ),
 			),
 			$order
 		);

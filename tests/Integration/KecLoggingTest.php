@@ -75,6 +75,22 @@ class KecLoggingTest extends IntegrationTestCase {
 		];
 	}
 
+	/** WordPress runs the permission callback a second time on the same request to build the Allow header. */
+	public function test_a_request_checked_twice_is_logged_once(): void {
+		$controller = new Notifications();
+		$title      = 'KEC: Notification request rejected';
+
+		// Each entry is captured once per log handler, so a request checked once sets the expected count.
+		$controller->validate_request( $this->notificationRequest( '{"metadata":{}}', self::SIGNING_KEY_ID, 'abc' ) );
+		$checked_once = substr_count( $this->loggedText(), $title );
+
+		$request = $this->notificationRequest( '{"metadata":{}}', self::SIGNING_KEY_ID, 'abc' );
+		$controller->validate_request( $request );
+		$this->assertFalse( $controller->validate_request( $request ), 'The cached result is the same rejection.' );
+
+		$this->assertSame( 2 * $checked_once, substr_count( $this->loggedText(), $title ) );
+	}
+
 	public function test_a_notification_for_an_unknown_payment_request_is_logged_as_failed(): void {
 		$body = wp_json_encode(
 			[

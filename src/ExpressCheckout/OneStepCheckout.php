@@ -231,6 +231,7 @@ class OneStepCheckout {
 	 */
 	private static function wait_for_confirmation( $order, $kec_unique_id ) {
 		if ( empty( filter_input( INPUT_GET, 'kec-one-step-wait', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ) ) {
+			Logger::log( 'One-step customer returned from Klarna, waiting for the payment confirmation', array(), $order );
 			wp_safe_redirect(
 				add_query_arg(
 					array(
