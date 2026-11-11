@@ -80,11 +80,8 @@ class PaymentStateCompleted extends Handler {
 
 			Logger::warning( 'No acquiring partner integration handled the completed payment, left to kec_process_order', array( 'acquiring_partner_key' => $ap_key ), $order );
 			$order->add_order_note(
-				sprintf(
-					/* translators: [merchant-facing]. %s: acquiring partner key. */
-					__( 'Klarna Express Checkout: no acquiring partner integration matches "%s", so the payment was not processed. The order stays pending unless a kec_process_order handler completes it.', 'klarna-payments-for-woocommerce' ),
-					$ap_key
-				)
+				/* translators: [merchant-facing]. */
+				__( 'Klarna Express Checkout: the customer completed the payment, but no active payment provider integration could update this order automatically. If the order stays pending, verify the payment in your Klarna or payment provider portal before processing it.', 'klarna-payments-for-woocommerce' )
 			);
 
 			/**
