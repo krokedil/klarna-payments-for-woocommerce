@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+The WooCommerce system status report now shows all Klarna for WooCommerce settings once, including Express Checkout, On-site messaging, Sign in with Klarna and Order Management, and drops the outdated Klarna Payments request log.

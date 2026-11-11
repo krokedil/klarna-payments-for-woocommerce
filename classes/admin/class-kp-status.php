@@ -12,7 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 /**
- * Class for WooCommerce status page.
+ * Adds the configured Klarna markets to the WooCommerce system status report.
+ *
+ * The request log and the plugin settings are rendered by the support package's SystemReport.
  */
 class KP_Status {
 	/**
@@ -20,6 +22,7 @@ class KP_Status {
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_system_status_report', array( $this, 'add_status_page_box' ) );
+		add_action( 'woocommerce_cleanup_logs', array( $this, 'delete_legacy_request_log' ) );
 	}
 
 	/**
@@ -28,7 +31,17 @@ class KP_Status {
 	 * @return void
 	 */
 	public function add_status_page_box() {
-		include_once WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/admin/views/status-report.php';
+		include WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/includes/admin/views/status-report.php';
+	}
+
+	/**
+	 * Delete the request log that older versions stored in an option. Nothing writes to it anymore.
+	 *
+	 * @hook woocommerce_cleanup_logs
+	 * @return void
+	 */
+	public function delete_legacy_request_log() {
+		delete_option( 'krokedil_debuglog_kp' );
 	}
 }
 $kp_status = new KP_Status();
