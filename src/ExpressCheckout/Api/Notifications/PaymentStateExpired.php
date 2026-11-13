@@ -2,6 +2,8 @@
 
 namespace Krokedil\Klarna\ExpressCheckout\Api\Notifications;
 
+use Krokedil\Klarna\ExpressCheckout\Logger;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -41,6 +43,8 @@ class PaymentStateExpired extends Handler {
 		$order = $this->get_wc_order_by_payment_request_id( $payment_request_id );
 
 		$order->update_status( 'cancelled', __( 'Order cancelled due to expired payment request.', 'klarna-payments-for-woocommerce' ) );
+
+		Logger::log( 'Order cancelled, the payment request expired', array(), $order );
 
 		/**
 		 * Triggers when a Klarna Express Checkout order is cancelled due to an expired payment request.

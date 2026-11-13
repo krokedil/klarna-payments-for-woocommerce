@@ -232,8 +232,10 @@ class AJAX {
 
 		$source = filter_input( INPUT_POST, 'source', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
+		Logger::log( 'One-step initiate requested', array( 'source' => (string) $source ) );
+
 		if ( empty( $source ) || 'unknown' === $source ) {
-			wp_send_json_error( "Missing or invalid source: {$source}" );
+			self::send_one_step_error( 'initiate', "Missing or invalid source: {$source}" );
 		}
 
 		if ( 'cart' !== $source ) {
@@ -242,7 +244,7 @@ class AJAX {
 			$product      = wc_get_product( $source );
 
 			if ( ! $product ) {
-				wp_send_json_error( 'Invalid product ID' );
+				self::send_one_step_error( 'initiate', 'Invalid product ID', array( 'product_id' => $source ) );
 			}
 
 			WC()->cart->empty_cart();
@@ -250,7 +252,7 @@ class AJAX {
 			$result = WC()->cart->add_to_cart( $source, 1, $variation_id ?? 0 );
 
 			if ( ! $result ) {
-				wp_send_json_error( 'Could not add the product to the cart' );
+				self::send_one_step_error( 'initiate', 'Could not add the product to the cart', array( 'product_id' => $source ) );
 			}
 		}
 
@@ -283,8 +285,17 @@ class AJAX {
 		$shipping_address   = $post_data['shippingAddress'] ?? array();
 		$payment_request_id = $post_data['paymentRequestId'] ?? '';
 
+		// Only the country is logged, the rest of the address is the customer's.
+		Logger::log(
+			'One-step shipping address changed',
+			array(
+				'payment_request_id' => (string) $payment_request_id,
+				'shipping_country'   => is_array( $shipping_address ) ? ( $shipping_address['country'] ?? '' ) : '',
+			)
+		);
+
 		if ( empty( $shipping_address ) ) {
-			wp_send_json_error( 'No shipping address was posted' );
+			self::send_one_step_error( 'shipping address change', 'No shipping address was posted', array( 'payment_request_id' => (string) $payment_request_id ) );
 		}
 
 		wp_send_json_success( OneStepCheckout::get_shipping_address_change_body( $shipping_address, $payment_request_id ) );
@@ -300,11 +311,27 @@ class AJAX {
 
 		$selected_option = filter_input( INPUT_POST, 'selectedOption', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
+		Logger::log( 'One-step shipping option changed', array( 'selected_option' => (string) $selected_option ) );
+
 		if ( empty( $selected_option ) ) {
-			wp_send_json_error( 'No shipping option was selected' );
+			self::send_one_step_error( 'shipping option change', 'No shipping option was selected' );
 		}
 
 		wp_send_json_success( OneStepCheckout::get_changed_shipping_option_response( $selected_option ) );
+	}
+
+	/**
+	 * Log a failed one-step AJAX request and answer it with the error.
+	 *
+	 * @param string $endpoint The one-step step that failed.
+	 * @param string $message  The error sent to the browser.
+	 * @param array  $context  Details to log with the error.
+	 *
+	 * @return never
+	 */
+	private static function send_one_step_error( $endpoint, $message, $context = array() ) {
+		Logger::warning( "One-step {$endpoint} failed", array( 'error' => $message ) + $context );
+		wp_send_json_error( $message );
 	}
 
 	/**

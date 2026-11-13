@@ -2,6 +2,9 @@
 
 namespace Krokedil\Klarna\ExpressCheckout\Api\Notifications;
 
+use Krokedil\Klarna\ExpressCheckout\Logger;
+use Krokedil\Klarna\PluginFeatures;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -31,11 +34,19 @@ class PaymentStateCompleted extends Handler {
 	 * @throws \WP_Exception If the notification cannot be handled.
 	 */
 	public function handle_notification( $payload ) {
-		if ( 'COMPLETED' !== $payload['state'] ) {
+		$payment_request_id = $payload['payment_request_id'] ?? null;
+
+		if ( 'COMPLETED' !== ( $payload['state'] ?? '' ) ) {
+			Logger::log(
+				'Ignored a completed notification whose state is not COMPLETED',
+				array(
+					'payment_request_id' => $payment_request_id,
+					'state'              => $payload['state'] ?? '',
+				)
+			);
 			return;
 		}
 
-		$payment_request_id     = $payload['payment_request_id'] ?? null;
 		$interoperability_token = $payload['klarna_network_session_token'] ?? '';
 
 		if ( ! $payment_request_id ) {
@@ -43,6 +54,14 @@ class PaymentStateCompleted extends Handler {
 		}
 
 		$order = $this->get_wc_order_by_payment_request_id( $payment_request_id );
+
+		$order->add_order_note(
+			sprintf(
+				/* translators: [merchant-facing]. %s: Klarna payment request ID. */
+				__( 'Klarna Express Checkout: payment completed notification received (payment request %s).', 'klarna-payments-for-woocommerce' ),
+				$payment_request_id
+			)
+		);
 
 		$this->set_address( $order, $payload );
 
@@ -57,6 +76,14 @@ class PaymentStateCompleted extends Handler {
 				$payload
 			);
 		} else {
+			$ap_key = PluginFeatures::get_acquiring_partner_key();
+
+			Logger::warning( 'No acquiring partner integration handled the completed payment, left to kec_process_order', array( 'acquiring_partner_key' => $ap_key ), $order );
+			$order->add_order_note(
+				/* translators: [merchant-facing]. */
+				__( 'Klarna Express Checkout: the customer completed the payment, but no active payment provider integration could update this order automatically. If the order stays pending, verify the payment in your Klarna or payment provider portal before processing it.', 'klarna-payments-for-woocommerce' )
+			);
+
 			/**
 			 * Triggers when a completed Klarna Express Checkout payment notification is processed and no acquiring partner integration handles it.
 			 *
@@ -71,6 +98,15 @@ class PaymentStateCompleted extends Handler {
 
 		$order->update_meta_data( '_kec_redirect_url', $redirect_url );
 		$order->save();
+
+		Logger::log(
+			'Completed payment processed',
+			array(
+				'order_status' => $order->get_status(),
+				'has_redirect' => ! empty( $redirect_url ),
+			),
+			$order
+		);
 
 		return null;
 	}
