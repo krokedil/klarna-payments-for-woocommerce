@@ -141,6 +141,36 @@ trait CanInterceptHttp {
 		);
 	}
 
+	/**
+	 * Asserts that a request carries the integration metadata Klarna tags its traffic with: the plugin as
+	 * integrator, and the WooCommerce, WordPress and PHP versions as originators.
+	 */
+	protected function assertIntegrationMetadata( array $request, ?string $session_reference = null ): void {
+		$header = $request['headers']['X-Klarna-Integration-Metadata'] ?? null;
+		$this->assertIsString( $header, 'The request has no X-Klarna-Integration-Metadata header.' );
+
+		$integrator = [
+			'name'           => 'KLARNA_PLUGIN',
+			'module_name'    => 'KLARNA_FOR_WOOCOMMERCE',
+			'module_version' => WC_KLARNA_PAYMENTS_VERSION,
+		];
+		if ( null !== $session_reference ) {
+			$integrator['session_reference'] = $session_reference;
+		}
+
+		$this->assertSame(
+			[
+				'integrator'  => $integrator,
+				'originators' => [
+					[ 'name' => 'WOOCOMMERCE', 'module_name' => 'WOOCOMMERCE', 'module_version' => WC()->version ],
+					[ 'name' => 'WORDPRESS', 'module_name' => 'WORDPRESS', 'module_version' => get_bloginfo( 'version' ) ],
+					[ 'name' => 'PHP', 'module_name' => 'PHP', 'module_version' => phpversion() ],
+				],
+			],
+			json_decode( $header, true )
+		);
+	}
+
 	/** The Klarna requests made so far, for a failure message. */
 	private function describeKlarnaRequests(): string {
 		$urls = array_column( $this->klarnaRequests(), 'url' );

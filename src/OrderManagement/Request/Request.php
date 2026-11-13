@@ -4,6 +4,7 @@ namespace Krokedil\Klarna\OrderManagement\Request;
 use Krokedil\Klarna\OrderManagement;
 use Krokedil\Klarna\Logging\LogMasking;
 use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
+use Krokedil\Klarna\Utilities\IntegrationMetadataUtility;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -179,8 +180,9 @@ abstract class Request {
 			return $auth;
 		}
 		return array(
-			'Authorization' => $auth,
-			'Content-Type'  => 'application/json',
+			'Authorization'                         => $auth,
+			'Content-Type'                          => 'application/json',
+			IntegrationMetadataUtility::HEADER_NAME => IntegrationMetadataUtility::get_header_value(),
 		);
 	}
 
