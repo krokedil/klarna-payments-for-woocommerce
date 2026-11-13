@@ -136,7 +136,7 @@ class KecLoggingTest extends IntegrationTestCase {
 		);
 
 		$this->assertOrderHasNote( $order, 'payment completed notification received' );
-		$this->assertOrderHasNote( $order, 'no acquiring partner integration matches' );
+		$this->assertOrderHasNote( $order, 'no active payment provider integration could update this order' );
 		$this->assertSame(
 			[
 				'payment_request_id' => 'krn:payment-request:completed',
