@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+The integration metadata header sent to Klarna now includes the WooCommerce, WordPress and PHP versions, and is also sent on order management and Express Checkout requests.
