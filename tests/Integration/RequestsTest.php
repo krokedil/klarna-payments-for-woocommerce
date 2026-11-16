@@ -199,6 +199,16 @@ class RequestsTest extends IntegrationTestCase {
 		return $product;
 	}
 
+	public function test_a_base64_authorization_token_is_url_encoded_in_the_endpoint(): void {
+		$this->haveKlarnaCredentials( 'se' );
+
+		$token     = 'aB3+dE/fG9==';
+		$arguments = [ 'country' => 'SE', 'order_id' => null, 'auth_token' => $token ];
+
+		$this->assertSame( 'payments/v1/authorizations/' . rawurlencode( $token ) . '/order', ( new \KP_Place_Order( $arguments ) )->endpoint );
+		$this->assertSame( '/payments/v1/authorizations/' . rawurlencode( $token ) . '/customer-token', ( new \KP_Create_Customer_Token( $arguments ) )->endpoint );
+	}
+
 	private function request( string $country ): \KP_Create_Session {
 		return new \KP_Create_Session( [ 'country' => $country, 'order_id' => null, 'include_address' => false ] );
 	}

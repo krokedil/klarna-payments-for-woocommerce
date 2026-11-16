@@ -276,7 +276,7 @@ class Settings {
 					'name'              => 'siwk_required_scopes_billing_address',
 					'type'              => 'checkbox',
 					'label'             => __( 'Billing address', 'klarna-payments-for-woocommerce' ),
-					'description'       => __( 'These scopes are included by default, as necessary for creating a WooCommerce customer account in your shop.  More about available scopes with Sign in with Klarna <a href="https://docs.klarna.com/conversion-boosters/sign-in-with-klarna/integrate-sign-in-with-klarna/web-sdk-integration/#scopes-and-claims">here</a>. Additional scopes can be customized if applicable, more info <a href="https://gist.github.com/mntzrr/4bf23ca394109d40575f2abc05811ddc">here</a>.', 'klarna-payments-for-woocommerce' ),
+					'description'       => __( 'These scopes are included by default, as necessary for creating a WooCommerce customer account in your shop. Read more about available scopes with Sign in with Klarna <a href="https://docs.klarna.com/conversion-boosters/sign-in-with-klarna/integrate-sign-in-with-klarna/web-sdk-integration/#scopes-and-claims">here</a>. Additional scopes can be customized if applicable – more info <a href="https://gist.github.com/mntzrr/4bf23ca394109d40575f2abc05811ddc">here</a>.', 'klarna-payments-for-woocommerce' ),
 					'disabled'          => true,
 					'class'             => 'siwk',
 					'custom_attributes' => array(

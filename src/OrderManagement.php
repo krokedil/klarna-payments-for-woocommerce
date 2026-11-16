@@ -14,6 +14,7 @@ use Krokedil\Klarna\OrderManagement\Request\Patch\RequestPatchUpdate;
 use Krokedil\Klarna\OrderManagement\Request\Post\RequestPostCancel;
 use Krokedil\Klarna\OrderManagement\MetaBox;
 use Krokedil\Klarna\OrderManagement\Ajax;
+use Krokedil\Klarna\OrderManagement\OrderSupport;
 use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
 use Krokedil\Klarna\OrderManagement\ReturnFee;
 
@@ -53,11 +54,11 @@ class OrderManagement {
 	public $return_fee;
 
 	/**
-	 * SystemReport instance.
+	 * Support package order export, which renders the export button, handles its AJAX request and adds the Klarna order.
 	 *
-	 * @var SystemReport
+	 * @var OrderSupport $order_support
 	 */
-	private $system_report;
+	public $order_support;
 
 	/**
 	 * Constructor.
@@ -113,19 +114,10 @@ class OrderManagement {
 		$this->ajax       = new Ajax();
 		$this->return_fee = new ReturnFee();
 
+		$this->order_support = new OrderSupport( $this );
+
 		// Add refunds support to Klarna for WooCommerce.
 		add_action( 'wc_klarna_payments_supports', array( $this, 'add_gateway_support' ) );
-
-		$report_about = array(
-			array( 'id' => 'kom_auto_capture' ),
-			array( 'id' => 'kom_capture_status' ),
-			array( 'id' => 'kom_auto_cancel' ),
-			array( 'id' => 'kom_auto_update' ),
-			array( 'id' => 'kom_auto_order_sync' ),
-			array( 'id' => 'kom_force_full_capture' ),
-
-		);
-		$this->system_report = new SystemReport( 'klarna_payments', 'Klarna Order Management for WooCommerce', $report_about );
 
 		// Cancel order.
 		add_action( 'woocommerce_order_status_cancelled', array( $this, 'cancel_klarna_order' ) );
@@ -733,11 +725,11 @@ class OrderManagement {
 	}
 
 	/**
-	 * System report.
+	 * System report. The plugin's single instance, which already covers the KOM settings.
 	 *
 	 * @return SystemReport
 	 */
 	public function report() {
-		return $this->system_report;
+		return KP_WC()->report();
 	}
 }

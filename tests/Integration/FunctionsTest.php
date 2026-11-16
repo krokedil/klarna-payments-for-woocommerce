@@ -108,6 +108,8 @@ class FunctionsTest extends IntegrationTestCase {
 			'the wrong prefix is rejected'      => [ 'klarna_client_abc123', '' ],
 			'the prefix has to be at the start' => [ 'xklarna_test_client_abc123', '' ],
 			'the prefix alone is not an id'     => [ 'klarna_test_client_', '' ],
+			'a base64 style id passes through'  => [ 'klarna_test_client_aB3+/x=-_9', 'klarna_test_client_aB3+/x=-_9' ],
+			'whitespace is not part of an id'   => [ 'klarna_test_client_abc 123', '' ],
 		];
 	}
 

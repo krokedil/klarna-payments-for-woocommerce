@@ -1,0 +1,4 @@
+Type: Feature
+Needs Documentation: no
+
+Added an "Export order for support" button to the Klarna Order Management box on the order page, which downloads the order data, order notes and system status report as a JSON file to send to support.

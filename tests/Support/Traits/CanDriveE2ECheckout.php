@@ -253,7 +253,11 @@ trait CanDriveE2ECheckout {
 				// Selecting and continuing are separate polls: Klarna drops clicks
 				// under load, so the picker is read back before continuing.
 				if ( $insist && ! $this->hasKlarnaOptionSelected( $paymentMethod ) ) {
-					$this->selectKlarnaPaymentOption( $paymentMethod );
+					if ( ! $this->selectKlarnaPaymentOption( $paymentMethod ) ) {
+						// Not on offer here: Klarna opened a sub-picker, such as its pay now
+						// list, over the one that has it, so step back to that one.
+						$this->clickKlarnaSelector( '[data-fs-element="Modal Back Button"]' );
+					}
 					return;
 				}
 
@@ -264,6 +268,7 @@ trait CanDriveE2ECheckout {
 				if ( $this->clickKlarnaSelector(
 					'#offers-selector-continue-button',
 					'[data-fs-element="Offers Selector Continue Button"]',
+					'[data-fs-element="Offers Selector Pay Now Continue Button"]',
 					'[data-fs-element="Continue Button"]',
 					'[data-testid="pick-plan"]'
 				) ) {
@@ -271,8 +276,10 @@ trait CanDriveE2ECheckout {
 				}
 
 				// The dialog takes neither a selection nor a continue: shut it and
-				// buy on the screen behind it.
-				$this->clickKlarnaButton( 'Close' );
+				// buy on the screen behind it. The button is named in the shopper's language.
+				if ( ! $this->clickKlarnaSelector( '[data-fs-element="Modal Close Button"]' ) ) {
+					$this->clickKlarnaButton( 'Close' );
+				}
 				return;
 
 			case 'account':
@@ -321,10 +328,16 @@ trait CanDriveE2ECheckout {
 	 * the buy button's method id first and the text on screen second.
 	 */
 	private function klarnaConfirms( array $screen, string $paymentMethod ): bool {
-		[ $method, $hint ] = array_map( [ $this, 'methodNeedle' ], explode( ':', $paymentMethod . ':', 2 ) );
+		[ $method, $hint ] = explode( ':', $paymentMethod . ':', 2 );
+		$hint              = rtrim( $hint, ':' );
+		$method            = $this->methodNeedle( $method );
 		$text              = $this->methodNeedle( $screen['text'] );
 
-		if ( $hint !== '' && ! str_contains( $text, $hint ) ) {
+		// Klarna words the screen in the shopper's language, so the hint's number alone also counts.
+		if ( $hint !== ''
+			&& ! str_contains( $text, $this->methodNeedle( $hint ) )
+			&& ! ( preg_match( '/\d+/', $hint, $number ) && preg_match( '/(?<!\d)' . $number[0] . '(?!\d)/', $screen['text'] ) )
+		) {
 			return false;
 		}
 
@@ -638,10 +651,19 @@ trait CanDriveE2ECheckout {
 				option.card.getAttribute('for') || '',
 			].join(' '));
 			const kpOptionName = option => kpLabel(option.card) || kpOptionKey(option);
+			// Klarna words a card in the shopper's language, so a hint also matches on its number alone.
+			const kpHintMatches = (text, hint) => {
+				const number = (hint + '').match(/\d+/);
+				return kpNeedle(text).includes(kpNeedle(hint))
+					|| (number !== null && new RegExp(`(^|\\D)${number[0]}(\\D|$)`).test(text));
+			};
 			const kpOption = target => {
 				const [method, hint = ''] = (target + '').split(':');
 				const needle = kpNeedle(method);
-				const options = kpOptions().filter(option => kpNeedle(kpLabel(option.card)).includes(kpNeedle(hint)));
+				const all = kpOptions();
+				const hinted = all.filter(option => kpHintMatches(kpLabel(option.card), hint));
+				// No card names the hint: the choice it narrows comes on a later screen, if at all.
+				const options = hinted.length ? hinted : all;
 
 				return options.find(option => kpOptionKey(option).includes(needle))
 					|| options.find(option => kpNeedle(kpLabel(option.card)).includes(needle))

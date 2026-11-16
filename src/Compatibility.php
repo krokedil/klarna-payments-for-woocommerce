@@ -2,6 +2,7 @@
 namespace Krokedil\Klarna;
 
 use Krokedil\Klarna\Compatibility\FluidCheckout;
+use Krokedil\Klarna\Compatibility\YITHGiftCards;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,5 +20,8 @@ class Compatibility {
 	public static function register() {
 		// Initialize Fluid Checkout compatibility.
 		FluidCheckout::init();
+
+		// Initialize YITH Gift Cards compatibility.
+		YITHGiftCards::init();
 	}
 }

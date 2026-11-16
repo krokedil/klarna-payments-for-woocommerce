@@ -475,7 +475,7 @@ function klarna_sanitize_client_id( $client_id, $field = 'client id' ) {
 	}
 
 	// Ensure the client id starts with either klarna_live_client_ or klarna_test_client_. Otherwise return an empty string.
-	if ( ! preg_match( '/^(klarna_live_client_|klarna_test_client_).+$/', $client_id ) ) {
+	if ( ! preg_match( '/^(klarna_live_client_|klarna_test_client_)[A-Za-z0-9_+\/=-]+$/', $client_id ) ) {
 		KP_Logger::log( "[Invalid Client ID] The $field is invalid. It should start with either 'klarna_live_client_' or 'klarna_test_client_'. Returning an empty string." );
 		return '';
 	}

@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+The "Export order for support" file now includes the order as Klarna has it, masked like the plugin logs, so support can compare the WooCommerce and Klarna sides of an order.

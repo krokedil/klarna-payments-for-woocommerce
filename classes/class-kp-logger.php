@@ -9,7 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use Krokedil\Klarna\Logging\LogMasking;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\KeyMasker;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Masking;
 
 /**
  * Logger class.
@@ -26,23 +28,22 @@ class KP_Logger {
 	 * Logs an event.
 	 *
 	 * @param array|string $data The data string.
+	 * @param string       $level The WC_Log_Levels level to log at. Default info.
 	 */
-	public static function log( $data ) {
+	public static function log( $data, $level = WC_Log_Levels::INFO ) {
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 		if ( 'no' === ( $kp_settings['logging'] ?? 'no' ) ) {
 			return;
 		}
 
-		$message = self::format_data( $data );
+		$message = Masking::mask_keys( self::format_data( $data ), LogMasking::SLUG );
 
 		// A failure here costs the entry, it never lets an unmasked one through.
-		try {
-			$message = KeyMasker::mask( self::format_data( $data ) );
-		} catch ( \Throwable $e ) {
+		if ( KeyMasker::FAILED === $message ) {
 			$message = array( 'error' => KeyMasker::FAILED );
 		}
 
-		KP_WC()->logger()->info( wp_json_encode( $message ) );
+		KP_WC()->logger()->log( wp_json_encode( $message ), WC_Log_Levels::is_valid_level( $level ) ? $level : WC_Log_Levels::INFO );
 	}
 
 	/**

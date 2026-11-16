@@ -55,7 +55,6 @@ jQuery( function ( $ ) {
 					klarna_payments.checkout_values[ fieldName ] = fieldValue
 				} )
 				if ( klarna_payments.isKlarnaPaymentsSelected() ) {
-					klarna_payments.initKlarnaCredit()
 					klarna_payments.load().then( klarna_payments.loadHandler )
 				}
 			} )
@@ -78,7 +77,6 @@ jQuery( function ( $ ) {
 				if (klarna_payments.isKlarnaPaymentsSelected()) {
 					data = data || { fragments: null }
 
-					klarna_payments.initKlarnaCredit()
 					klarna_payments.load( data.fragments ).then( klarna_payments.loadHandler )
 				}
 			} )
@@ -100,7 +98,6 @@ jQuery( function ( $ ) {
 					if ( klarna_payments.isKlarnaPaymentsSelected() ) {
 						//$('#place_order').attr('disabled', true);
 						if ( $( this ).val().length > 4 ) {
-							klarna_payments.initKlarnaCredit()
 							klarna_payments.load().then( klarna_payments.loadHandler )
 						}
 					}
@@ -117,7 +114,6 @@ jQuery( function ( $ ) {
 					if ( klarna_payments.isKlarnaPaymentsSelected() ) {
 						//$('#place_order').attr('disabled', true);
 						if ( ! $( this ).parent().hasClass( "woocommerce-invalid" ) ) {
-							klarna_payments.initKlarnaCredit()
 							klarna_payments.load().then( klarna_payments.loadHandler )
 						}
 					}
@@ -132,7 +128,6 @@ jQuery( function ( $ ) {
 				"#billing_company",
 				klarna_payments.debounce_changes( function () {
 					if ( klarna_payments.isKlarnaPaymentsSelected() ) {
-						klarna_payments.initKlarnaCredit()
 						klarna_payments.load().then( klarna_payments.loadHandler )
 					}
 				}, 750 ),
@@ -144,7 +139,6 @@ jQuery( function ( $ ) {
 			$( "body" ).on( "change", 'input[name="payment_method"]', function () {
 				// If Klarna Payments is selected and iframe is not loaded yet, disable the form. Also collapse any unselected Klarna Payments gateways.
 				if ( klarna_payments.isKlarnaPaymentsSelected() ) {
-					klarna_payments.initKlarnaCredit()
 					klarna_payments.load().then( klarna_payments.loadHandler )
 					klarna_payments.collapseGateways()
 				}
@@ -183,6 +177,9 @@ jQuery( function ( $ ) {
 					if ( Klarna && Klarna.Payments ) {
 						clearInterval( klarnaLoadedInterval )
 						clearTimeout( klarnaLoadedTimeout )
+
+						// The SDK is loaded async, so init must wait until it is available.
+						klarna_payments.initKlarnaCredit()
 
 						var options = {
 							container: klarna_payments_container_selector_id,
@@ -403,9 +400,13 @@ jQuery( function ( $ ) {
 		},
 
 		initKlarnaCredit: function ( client_token ) {
+			if ( ! window.Klarna || ! window.Klarna.Payments ) {
+				return
+			}
+
 			var client_token = klarna_payments.getClientToken()
 			window.klarnaInitData = { client_token: client_token }
-			Klarna.Payments.init( klarnaInitData )
+			window.Klarna.Payments.init( klarnaInitData )
 		},
 
 		printErrorMessage: function ( message ) {

@@ -24,7 +24,8 @@ class KP_Create_Customer_Token extends KP_Requests_Post {
 
 		$this->log_title      = 'Create customer token';
 		$this->request_filter = 'wc_klarna_payments_create_customer_token_args';
-		$this->endpoint       = "/payments/v1/authorizations/{$arguments['auth_token']}/customer-token";
+		$auth_token           = rawurlencode( $arguments['auth_token'] );
+		$this->endpoint       = "/payments/v1/authorizations/{$auth_token}/customer-token";
 	}
 
 	/**

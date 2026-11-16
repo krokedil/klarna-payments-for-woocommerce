@@ -1,8 +1,8 @@
 <?php
 namespace Krokedil\Klarna\Logging;
 
-use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\FieldMasker;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\KeyMasker;
+use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Masking;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,6 +13,11 @@ defined( 'ABSPATH' ) || exit;
  * safety net for everything else that reaches a log entry, including the stack trace.
  */
 class LogMasking {
+	/**
+	 * The slug the plugin logs under, which the krokedil_wp_api_mask_log_data filter receives.
+	 */
+	const SLUG = 'klarna_payments';
+
 	/**
 	 * The address fields kept readable, since a rejected address is the most common thing
 	 * a support case is about and none of these identify a person on their own.
@@ -106,7 +111,7 @@ class LogMasking {
 				$request_args['body'] = is_array( $decoded ) ? $decoded : $request_args['body'];
 			}
 
-			return FieldMasker::mask( $request_args, self::request_fields() );
+			return Masking::mask_fields( $request_args, self::request_fields(), self::SLUG );
 		} catch ( \Throwable $e ) {
 			return KeyMasker::FAILED;
 		}
@@ -123,10 +128,6 @@ class LogMasking {
 			return $body;
 		}
 
-		try {
-			return FieldMasker::mask( $body, self::response_fields() );
-		} catch ( \Throwable $e ) {
-			return KeyMasker::FAILED;
-		}
+		return Masking::mask_fields( $body, self::response_fields(), self::SLUG );
 	}
 }

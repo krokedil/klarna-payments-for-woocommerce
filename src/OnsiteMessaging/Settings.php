@@ -129,10 +129,10 @@ class Settings {
 			'default' => $default['onsite_messaging_cart_location'],
 			'type'    => 'select',
 			'options' => array(
-				'woocommerce_cart_collaterals'    => __( 'Above cross sell', 'klarna-payments-for-woocommerce' ),
-				'woocommerce_before_cart_totals'  => __( 'Above cart totals', 'klarna-payments-for-woocommerce' ),
-				'woocommerce_proceed_to_checkout' => __( 'Between cart totals and proceed to checkout button', 'klarna-payments-for-woocommerce' ),
-				'woocommerce_after_cart_totals'   => __( 'After proceed to checkout button', 'klarna-payments-for-woocommerce' ),
+				'woocommerce_cart_collaterals'    => __( 'Above Cross-sells', 'klarna-payments-for-woocommerce' ),
+				'woocommerce_before_cart_totals'  => __( 'Above Cart totals', 'klarna-payments-for-woocommerce' ),
+				'woocommerce_proceed_to_checkout' => __( 'Between Cart totals and Proceed to checkout button', 'klarna-payments-for-woocommerce' ),
+				'woocommerce_after_cart_totals'   => __( 'After Proceed to checkout button', 'klarna-payments-for-woocommerce' ),
 				'woocommerce_after_cart'          => __( 'Bottom of the page', 'klarna-payments-for-woocommerce' ),
 			),
 		);
@@ -217,10 +217,10 @@ class Settings {
 			'default' => $default['onsite_messaging_cart_location'],
 			'type'    => 'select',
 			'options' => array(
-				'woocommerce_cart_collaterals'    => __( 'Above cross sell', 'klarna-payments-for-woocommerce' ),
-				'woocommerce_before_cart_totals'  => __( 'Above cart totals', 'klarna-payments-for-woocommerce' ),
-				'woocommerce_proceed_to_checkout' => __( 'Between cart totals and proceed to checkout button', 'klarna-payments-for-woocommerce' ),
-				'woocommerce_after_cart_totals'   => __( 'After proceed to checkout button', 'klarna-payments-for-woocommerce' ),
+				'woocommerce_cart_collaterals'    => __( 'Above Cross-sells', 'klarna-payments-for-woocommerce' ),
+				'woocommerce_before_cart_totals'  => __( 'Above Cart totals', 'klarna-payments-for-woocommerce' ),
+				'woocommerce_proceed_to_checkout' => __( 'Between Cart totals and Proceed to checkout button', 'klarna-payments-for-woocommerce' ),
+				'woocommerce_after_cart_totals'   => __( 'After Proceed to checkout button', 'klarna-payments-for-woocommerce' ),
 				'woocommerce_after_cart'          => __( 'Bottom of the page', 'klarna-payments-for-woocommerce' ),
 			),
 		);
