@@ -331,6 +331,32 @@ class OrderManagementTest extends IntegrationTestCase {
 	}
 
 	/**
+	 * Klarna's error code, not the wording of its message, decides what the merchant is told.
+	 *
+	 * @dataProvider provide_capture_rejections
+	 */
+	public function test_a_rejected_capture_is_explained_by_klarnas_error_code( int $status, string $error_code, string $message, string $note ): void {
+		$order = $this->haveOrderFor( 'capture' );
+
+		$this->willRetrieveKlarnaOrder( [ 'remaining_authorized_amount' => 16317 ] );
+		$this->willRejectWith( '/captures', $message, $status, [ 'error_code' => $error_code ] );
+
+		$this->assertWpErrorCode( 'capture_failed', $this->perform( 'capture', $order ) );
+		$this->assertSame( 'on-hold', $this->statusOf( $order ) );
+		$this->assertOrderHasNote( $order, str_replace( '<remaining>', wc_price( 163.17, [ 'currency' => 'SEK' ] ), $note ) );
+	}
+
+	/** @return array<string, array{0: int, 1: string, 2: string, 3: string}> */
+	public function provide_capture_rejections(): array {
+		return [
+			'the customer could not be charged'         => [ 403, 'PAYMENT_METHOD_FAILED', 'Payment method failed.', 'Klarna could not charge the customer. Please try again later.' ],
+			'more than the remaining amount'            => [ 403, 'CAPTURE_NOT_ALLOWED', 'Captured amount is higher than the remaining authorized amount. Capture not possible.', 'Could not capture Klarna order. Captured amount is higher than the remaining authorized amount. Capture not possible. Remaining authorized amount: <remaining>.' ],
+			'more than the remaining amount, reworded'  => [ 403, 'CAPTURE_NOT_ALLOWED', 'Capture exceeds the authorization', 'Could not capture Klarna order. Capture exceeds the authorization. Remaining authorized amount: <remaining>.' ],
+			'any other error, without a full stop'      => [ 500, 'INTERNAL_ERROR', 'Something went wrong', 'Could not capture Klarna order. Something went wrong.' ],
+		];
+	}
+
+	/**
 	 * @dataProvider provide_body_filters
 	 */
 	public function test_the_request_body_can_be_filtered( string $op, string $filter, string $key, $value ): void {
