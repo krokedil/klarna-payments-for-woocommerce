@@ -28,8 +28,9 @@ class KP_Logger {
 	 * Logs an event.
 	 *
 	 * @param array|string $data The data string.
+	 * @param string       $level The WC_Log_Levels level to log at. Default info.
 	 */
-	public static function log( $data ) {
+	public static function log( $data, $level = WC_Log_Levels::INFO ) {
 		$kp_settings = get_option( 'woocommerce_klarna_payments_settings', array() );
 		if ( 'no' === ( $kp_settings['logging'] ?? 'no' ) ) {
 			return;
@@ -42,7 +43,7 @@ class KP_Logger {
 			$message = array( 'error' => KeyMasker::FAILED );
 		}
 
-		KP_WC()->logger()->info( wp_json_encode( $message ) );
+		KP_WC()->logger()->log( wp_json_encode( $message ), WC_Log_Levels::is_valid_level( $level ) ? $level : WC_Log_Levels::INFO );
 	}
 
 	/**

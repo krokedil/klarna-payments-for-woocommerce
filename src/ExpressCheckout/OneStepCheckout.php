@@ -60,9 +60,20 @@ class OneStepCheckout {
 		}
 
 		$is_poll = ! empty( filter_input( INPUT_GET, 'kec-one-step-poll', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) );
-		$order   = self::is_own_unique_id( $kec_unique_id ) ? self::get_order_by_unique_id( $kec_unique_id ) : false;
+		$is_own  = self::is_own_unique_id( $kec_unique_id );
+		$order   = $is_own ? self::get_order_by_unique_id( $kec_unique_id ) : false;
 
 		if ( ! $order ) {
+			Logger::warning(
+				'One-step return could not be matched to an order',
+				array(
+					'reason'        => $is_own ? 'no_order_for_reference' : 'reference_not_in_session',
+					// From the URL, so capped. A real ID is 45 characters.
+					'kec_unique_id' => substr( $kec_unique_id, 0, 64 ),
+					'is_poll'       => $is_poll,
+				)
+			);
+
 			// A poll is answered to a page the customer is already on, so tell it to stop rather than redirect it away.
 			if ( $is_poll ) {
 				self::answer_redirect_poll( '', true );
@@ -79,10 +90,11 @@ class OneStepCheckout {
 		$redirect_url = $order->get_meta( '_kec_redirect_url' );
 
 		if ( $is_poll ) {
-			self::answer_redirect_poll( $redirect_url, self::is_final_poll() );
+			self::answer_redirect_poll( $redirect_url, self::is_final_poll(), $order );
 		}
 
 		if ( ! empty( $redirect_url ) ) {
+			Logger::log( 'One-step return confirmed by Klarna, redirecting the customer', array(), $order );
 			self::unset_sessions();
 			wp_safe_redirect( $redirect_url );
 			exit;
@@ -161,13 +173,25 @@ class OneStepCheckout {
 	/**
 	 * Answer the waiting browser with the redirect URL Klarna's confirmation left on the order.
 	 *
-	 * @param string $redirect_url The redirect URL, or an empty string while the confirmation is still outstanding.
-	 * @param bool   $is_final     Whether this is the last time the browser will ask.
+	 * The fallback of a browser without JavaScript is a meta refresh, which never reaches the server and is not logged.
+	 *
+	 * @param string         $redirect_url The redirect URL, or an empty string while the confirmation is still outstanding.
+	 * @param bool           $is_final     Whether this is the last time the browser will ask.
+	 * @param \WC_Order|null $order        The order waited for, if one was found.
 	 *
 	 * @return never
 	 */
-	private static function answer_redirect_poll( $redirect_url, $is_final ) {
+	private static function answer_redirect_poll( $redirect_url, $is_final, $order = null ) {
 		$done = ! empty( $redirect_url ) || $is_final;
+
+		if ( ! empty( $redirect_url ) ) {
+			Logger::log( 'One-step wait confirmed by Klarna, redirecting the customer', array(), $order );
+		} elseif ( $is_final && $order ) {
+			// The customer now lands on the order received page although Klarna never confirmed the payment.
+			Logger::warning( 'One-step wait timed out, the customer is sent to the fallback page unconfirmed', array( 'max_attempts' => self::get_wait_max_attempts() ), $order );
+			/* translators: [merchant-facing]. */
+			$order->add_order_note( __( 'Klarna Express Checkout: the payment was not confirmed by Klarna in time, so the customer was sent to the order received page before the payment was confirmed.', 'klarna-payments-for-woocommerce' ) );
+		}
 
 		// Once the browser stops waiting, the session has served its purpose whether the confirmation arrived or not.
 		if ( $done ) {
@@ -207,6 +231,7 @@ class OneStepCheckout {
 	 */
 	private static function wait_for_confirmation( $order, $kec_unique_id ) {
 		if ( empty( filter_input( INPUT_GET, 'kec-one-step-wait', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ) ) {
+			Logger::log( 'One-step customer returned from Klarna, waiting for the payment confirmation', array(), $order );
 			wp_safe_redirect(
 				add_query_arg(
 					array(
@@ -371,6 +396,8 @@ class OneStepCheckout {
 		$unique_id = 'kec_one_step_' . bin2hex( random_bytes( 16 ) );
 		WC()->session->set( 'kec_one_step_unique_id', $unique_id );
 
+		Logger::log( 'One-step purchase initiated', array( 'kec_unique_id' => $unique_id ) );
+
 		return array(
 			'collectCustomerProfile'    => array(
 				'profile:name',
@@ -451,7 +478,9 @@ class OneStepCheckout {
 		$selected_shipping_option = ( empty( $selected_shipping_option ) && ! empty( $shipping_options ) ) ? $shipping_options[0] : reset( $selected_shipping_option );
 
 		$line_items = self::get_cart_items();
-		self::create_order( $payment_request_id );
+		if ( ! self::create_order( $payment_request_id ) ) {
+			Logger::warning( 'One-step order could not be created', array( 'payment_request_id' => $payment_request_id ) );
+		}
 
 		if ( ! empty( $selected_shipping_option ) ) {
 			$line_items[] = array(
@@ -745,6 +774,8 @@ class OneStepCheckout {
 			return false;
 		}
 
+		$reused = $order->get_id() === absint( WC()->session->get( 'kec_one_step_order_id' ) );
+
 		$unique_id = WC()->session->get( 'kec_one_step_unique_id' );
 
 		$order->remove_order_items();
@@ -767,6 +798,8 @@ class OneStepCheckout {
 		$order->save();
 
 		WC()->session->set( 'kec_one_step_order_id', $order->get_id() );
+
+		Logger::log( $reused ? 'One-step order updated for the payment request' : 'One-step order created for the payment request', array(), $order );
 
 		return $order;
 	}

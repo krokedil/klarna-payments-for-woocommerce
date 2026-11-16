@@ -2,6 +2,8 @@
 
 namespace Krokedil\Klarna\ExpressCheckout;
 
+use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -82,11 +84,12 @@ class WebhookSetup {
 					$this->delete_webhook();
 					break;
 			}
-
-			$this->redirect_to_settings();
 		} catch ( \Exception $e ) {
 			$this->add_error( $e->getMessage() );
 		}
+
+		// Redirect after a failure too, so the error reaches the settings page instead of being dropped.
+		$this->redirect_to_settings();
 	}
 
 	/**
@@ -121,16 +124,20 @@ class WebhookSetup {
 		$webhook = $this->kec->settings()->get_webhook();
 
 		if ( empty( $webhook ) ) {
-			return;
+			Logger::warning( 'Test webhook not sent, no webhook is registered', $this->get_account_context() );
+			$message = __( 'No webhook is registered, so no test webhook could be sent. Create the webhook first.', 'klarna-payments-for-woocommerce' );
+			throw new \Exception( esc_html( $message ) );
 		}
 
 		$response = Requests::simulate_webhook( $webhook['webhook_id'], 'payment.request.state-change.submitted', 'v2' );
 
 		if ( is_wp_error( $response ) ) {
+			$this->log_failure( 'Test webhook could not be sent', $response, array( 'webhook_id' => $webhook['webhook_id'] ) );
 			$message = __( 'Could not send test webhook', 'klarna-payments-for-woocommerce' );
 			throw new \Exception( esc_html( $message ) );
 		}
 
+		Logger::log( 'Test webhook sent', array( 'webhook_id' => $webhook['webhook_id'] ) + $this->get_account_context() );
 		$this->add_message( __( 'Test webhook sent successfully.', 'klarna-payments-for-woocommerce' ) );
 	}
 
@@ -145,6 +152,8 @@ class WebhookSetup {
 		$webhook     = $this->kec->settings()->get_webhook();
 
 		if ( empty( $signing_key ) && empty( $webhook ) ) {
+			Logger::log( 'Nothing to remove, no webhook or signing key is stored' );
+			$this->add_message( __( 'No webhook is registered, so there was nothing to remove.', 'klarna-payments-for-woocommerce' ) );
 			return;
 		}
 
@@ -152,22 +161,26 @@ class WebhookSetup {
 			$delete_webhook_response = Requests::delete_webhook( $webhook['webhook_id'] );
 
 			if ( is_wp_error( $delete_webhook_response ) ) {
+				$this->log_failure( 'Webhook could not be removed', $delete_webhook_response, array( 'webhook_id' => $webhook['webhook_id'] ) );
 				$message = __( 'Could not remove webhook', 'klarna-payments-for-woocommerce' );
 				throw new \Exception( esc_html( $message ) );
 			}
 
 			delete_option( 'kec_webhook' );
+			Logger::log( 'Webhook removed', array( 'webhook_id' => $webhook['webhook_id'] ) + $this->get_account_context() );
 		}
 
 		if ( ! empty( $signing_key ) ) {
 			$delete_signing_key_response = Requests::delete_signing_key( $signing_key['signing_key_id'] );
 
 			if ( is_wp_error( $delete_signing_key_response ) ) {
+				$this->log_failure( 'Signing key could not be removed', $delete_signing_key_response, array( 'signing_key_id' => $signing_key['signing_key_id'] ) );
 				$message = __( 'Could not remove signing key', 'klarna-payments-for-woocommerce' );
 				throw new \Exception( esc_html( $message ) );
 			}
 
 			delete_option( 'kec_signing_key' );
+			Logger::log( 'Signing key removed', array( 'signing_key_id' => $signing_key['signing_key_id'] ) );
 		}
 
 		$this->add_message( __( 'Webhook removed successfully.', 'klarna-payments-for-woocommerce' ) );
@@ -183,11 +196,15 @@ class WebhookSetup {
 		$response = Requests::create_signing_key();
 
 		if ( is_wp_error( $response ) ) {
+			$this->log_failure( 'Signing key could not be created', $response );
 			$message = __( 'Could not create signing key', 'klarna-payments-for-woocommerce' );
 			throw new \Exception( esc_html( $message ) );
 		}
 
 		$this->kec->settings()->update_setting( 'kec_signing_key', $response );
+
+		// Only the ID is logged, the key itself is the secret that signs every notification.
+		Logger::log( 'Signing key created', array( 'signing_key_id' => $response['signing_key_id'] ?? '' ) + $this->get_account_context() );
 
 		return $response;
 	}
@@ -201,6 +218,8 @@ class WebhookSetup {
 	public function create_webhook() {
 		$stored_webhook = $this->kec->settings()->get_webhook();
 		if ( ! empty( $stored_webhook ) ) {
+			Logger::log( 'Webhook not created, one is already stored', array( 'webhook_id' => $stored_webhook['webhook_id'] ?? '' ) );
+			$this->add_message( __( 'A webhook is already registered.', 'klarna-payments-for-woocommerce' ) );
 			return;
 		}
 
@@ -225,12 +244,58 @@ class WebhookSetup {
 		$response = Requests::create_webhook( $url, $event_types, $event_version, $signing_key['signing_key_id'] );
 
 		if ( is_wp_error( $response ) ) {
+			$this->log_failure( 'Webhook could not be created', $response, array( 'url' => $url ) );
 			$message = __( 'Could not create webhook with Klarna', 'klarna-payments-for-woocommerce' );
 			throw new \Exception( esc_html( $message ) );
 		}
 
 		$this->kec->settings()->update_setting( 'kec_webhook', $response );
+
+		Logger::log(
+			'Webhook created',
+			array(
+				'webhook_id'     => $response['webhook_id'] ?? '',
+				'signing_key_id' => $signing_key['signing_key_id'],
+				'url'            => $url,
+				'event_types'    => $event_types,
+			) + $this->get_account_context()
+		);
 		$this->add_message( __( 'Webhook created successfully.', 'klarna-payments-for-woocommerce' ) );
+	}
+
+	/**
+	 * Get the Klarna account the webhook requests are sent with, the same way the requests resolve it.
+	 *
+	 * @return array The country, test mode and merchant ID. Never the shared secret.
+	 */
+	private function get_account_context() {
+		$country     = kp_get_klarna_country();
+		$credentials = ApiCredentialsUtility::resolve_for_request( $country, get_woocommerce_currency() );
+
+		return array(
+			'country'     => $country,
+			'test_mode'   => ApiCredentialsUtility::is_test_mode(),
+			'merchant_id' => is_wp_error( $credentials ) ? $credentials->get_error_message() : ( $credentials['merchant_id'] ?? '' ),
+		);
+	}
+
+	/**
+	 * Log a failed webhook request with the error Klarna or WordPress returned.
+	 *
+	 * @param string    $title   What failed.
+	 * @param \WP_Error $error   The error from the request.
+	 * @param array     $context Additional details to log.
+	 *
+	 * @return void
+	 */
+	private function log_failure( $title, $error, $context = array() ) {
+		Logger::warning(
+			$title,
+			array(
+				'error_code'    => $error->get_error_code(),
+				'error_message' => $error->get_error_message(),
+			) + $context + $this->get_account_context()
+		);
 	}
 
 	/**

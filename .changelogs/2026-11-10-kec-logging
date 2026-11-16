@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: no
+
+Klarna Express Checkout now logs every step of a purchase, including webhook notifications that are rejected or fail, and adds order notes when a payment is completed or the customer reaches the order received page before Klarna confirms it. Errors from creating, testing or removing the KEC webhook are now shown on the settings page instead of being lost.
