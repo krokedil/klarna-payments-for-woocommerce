@@ -148,6 +148,47 @@ class KecLoggingTest extends IntegrationTestCase {
 		);
 	}
 
+	/** The shipping address arrives with the notification, so it has to reach the data handed to the payment provider. */
+	public function test_the_shipping_address_from_the_notification_is_in_the_interoperability_data(): void {
+		$order = $this->haveOrder(
+			[
+				'items'       => [ $this->haveSimpleProduct() ],
+				'status'      => 'pending',
+				'created_via' => 'klarna_express_checkout',
+			]
+		);
+		$order->set_shipping_first_name( '' );
+		$order->set_shipping_city( '' );
+		$order->update_meta_data( '_kec_payment_request_id', 'krn:payment-request:shipping' );
+		$order->save();
+
+		add_filter( 'kec_acquiring_partner_integrations', '__return_empty_array', 100 );
+
+		$interoperability_data = null;
+		add_action(
+			'kec_process_order',
+			static function ( $order, $token, $data ) use ( &$interoperability_data ) {
+				$interoperability_data = $data;
+			},
+			10,
+			3
+		);
+
+		( new PaymentStateCompleted() )->handle_notification(
+			[
+				'payment_request_id' => 'krn:payment-request:shipping',
+				'state'              => 'COMPLETED',
+				'shipping'           => [
+					'recipient' => [ 'given_name' => 'Notified' ],
+					'address'   => [ 'city' => 'Umeå' ],
+				],
+			]
+		);
+
+		$this->assertSame( 'Notified', $interoperability_data['shipping']['recipient']['given_name'] );
+		$this->assertSame( 'Umeå', $interoperability_data['shipping']['address']['city'] );
+	}
+
 	public function test_the_one_step_order_is_logged_against_its_payment_request(): void {
 		WC()->session->set( 'kec_one_step_unique_id', 'kec_one_step_created' );
 		$this->haveCartWith( [ [ $this->haveSimpleProduct(), 1 ] ] );

@@ -64,6 +64,8 @@ class PaymentStateCompleted extends Handler {
 		);
 
 		$this->set_address( $order, $payload );
+		// The interoperability data is built from the stored order, so the address has to be saved first.
+		$order->save();
 
 		$redirect_url           = $order->get_checkout_order_received_url();
 		$interoperability_data  = $this->get_interoperability_data( $order );
