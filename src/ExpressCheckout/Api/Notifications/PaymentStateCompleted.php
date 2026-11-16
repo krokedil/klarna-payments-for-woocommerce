@@ -47,12 +47,13 @@ class PaymentStateCompleted extends Handler {
 		$this->set_address( $order, $payload );
 
 		$redirect_url           = $order->get_checkout_order_received_url();
+		$interoperability_data  = $this->get_interoperability_data( $order );
 		$ap_partner_integration = $this->get_acquiring_partner_integration();
 		if ( $ap_partner_integration ) {
 			$redirect_url = $ap_partner_integration->process_order_state(
 				$order,
 				$interoperability_token,
-				array(),
+				$interoperability_data,
 				$payload['state'],
 				$payload
 			);
@@ -62,17 +63,36 @@ class PaymentStateCompleted extends Handler {
 			 *
 			 * @param \WC_Order $order                  The WooCommerce order object.
 			 * @param string    $interoperability_token The Klarna interoperability token.
-			 * @param array     $interoperability_data  The interoperability data. Empty for this event.
+			 * @param array     $interoperability_data  The order lines and shipping for the acquiring partner. Empty when shopping data is not sent.
 			 * @param string    $state                  The payment state reported by Klarna.
 			 * @param array     $payload                The payload data from Klarna.
 			 */
-			do_action( 'kec_process_order', $order, $interoperability_token, array(), $payload['state'], $payload );
+			do_action( 'kec_process_order', $order, $interoperability_token, $interoperability_data, $payload['state'], $payload );
 		}
 
 		$order->update_meta_data( '_kec_redirect_url', $redirect_url );
 		$order->save();
 
 		return null;
+	}
+
+	/**
+	 * Get the interoperability data for the order, the same order lines and shipping the
+	 * checkout keeps in the customer's session, which a webhook does not have.
+	 *
+	 * @param \WC_Order $order The WooCommerce order.
+	 *
+	 * @return array
+	 */
+	protected function get_interoperability_data( $order ) {
+		if ( ! \KP_Interoperability_Token::should_send_data() ) {
+			return array();
+		}
+
+		$settings      = get_option( 'woocommerce_klarna_payments_settings', array() );
+		$customer_type = $settings['customer_type'] ?? 'b2c';
+
+		return ( new \KP_Order_Data( $customer_type, $order->get_id() ) )->get_klarna_order_lines_interoperability();
 	}
 
 	/**
