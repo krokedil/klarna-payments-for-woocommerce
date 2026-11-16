@@ -524,10 +524,18 @@ class OrderManagement {
 					$order->update_status( 'on-hold', __( 'Klarna could not charge the customer. Please try again later. If that still fails, the customer may have to create a new subscription or add funds to their payment method if they wish to continue.', 'klarna-payments-for-woocommerce' ) );
 					return new \WP_Error( 'capture_failed', 'Capture failed. Please try again later.' );
 				} else {
-					$error_message = rtrim( $response->get_error_message(), '. ' ) . '.';
+					$error_message = trim( $response->get_error_message() );
+					$error_message = '.' === substr( $error_message, -1 ) ? $error_message : "{$error_message}.";
 
 					if ( 'CAPTURE_NOT_ALLOWED' === $klarna_error_code ) {
-						$remaining = wc_price( $klarna_order->remaining_authorized_amount / 100, array( 'currency' => $klarna_order->purchase_currency ) );
+						// Klarna amounts are in minor units, so keep both decimals whatever the store displays.
+						$remaining = wc_price(
+							$klarna_order->remaining_authorized_amount / 100,
+							array(
+								'currency' => $klarna_order->purchase_currency,
+								'decimals' => 2,
+							)
+						);
 						/* translators: [merchant-facing]. %s: Remaining authorized amount, formatted as a price. */
 						$error_message .= ' ' . sprintf( __( 'Remaining authorized amount: %s.', 'klarna-payments-for-woocommerce' ), $remaining );
 					}
