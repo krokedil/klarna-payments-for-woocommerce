@@ -1035,7 +1035,7 @@ Argument | Type | Description
 `$order` | `\WC_Order` | The WooCommerce order.
 `$kec_unique_id` | `string` | The KEC unique ID.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 348](../src/ExpressCheckout/OneStepCheckout.php#L348-L355)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 364](../src/ExpressCheckout/OneStepCheckout.php#L364-L371)
 
 
 ---
@@ -1049,7 +1049,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$max_attempts` | `int` | The maximum number of polling attempts. Default 20.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 364](../src/ExpressCheckout/OneStepCheckout.php#L364-L369)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 380](../src/ExpressCheckout/OneStepCheckout.php#L380-L385)
 
 
 ---
@@ -1063,7 +1063,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$sleep_time` | `int` | The wait time between attempts, in microseconds. Default 500000.
 
-Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 380](../src/ExpressCheckout/OneStepCheckout.php#L380-L385)
+Source: [./src/ExpressCheckout/OneStepCheckout.php](../src/ExpressCheckout/OneStepCheckout.php), [line 396](../src/ExpressCheckout/OneStepCheckout.php#L396-L401)
 
 
 ---
@@ -1266,7 +1266,7 @@ Argument | Type | Description
 Examples: 
 - [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#inspect-the-return-fees-applied-to-a-klarna-refund)
 
-Source: [./src/OrderManagement.php](../src/OrderManagement.php), [line 643](../src/OrderManagement.php#L643-L649)
+Source: [./src/OrderManagement.php](../src/OrderManagement.php), [line 655](../src/OrderManagement.php#L655-L661)
 
 
 ---
@@ -1440,7 +1440,7 @@ Argument | Type | Description
 Examples: 
 - [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#modify-the-order-management-request-timeout)
 
-Source: [./src/OrderManagement/Request/Request.php](../src/OrderManagement/Request/Request.php), [line 324](../src/OrderManagement/Request/Request.php#L324-L330)
+Source: [./src/OrderManagement/Request/Request.php](../src/OrderManagement/Request/Request.php), [line 329](../src/OrderManagement/Request/Request.php#L329-L335)
 
 
 ---
