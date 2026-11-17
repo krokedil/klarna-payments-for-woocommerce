@@ -126,17 +126,24 @@ class Settings {
 	public function get( $setting ) {
 		$setting = str_replace( 'siwk_', '', $setting );
 		if ( 'scope' === $setting ) {
-			// These scopes are required for full functionality and shouldn't be modified by the merchant, and must be excluded from the filter.
-			$required = 'openid offline_access customer:login profile:name profile:email profile:phone profile:billing_address ';
+			// Needed to create the customer account, so they are kept out of the filter and cannot be removed.
+			$required = array( 'openid', 'offline_access', 'customer:login', 'profile:name', 'profile:email', 'profile:phone', 'profile:billing_address' );
+
 			/**
-			 * Filters the optional OAuth scopes requested for Sign in with Klarna.
+			 * Filters the additional OAuth scopes requested with Sign in with Klarna.
 			 *
-			 * The dynamic portion of the hook name, `$setting`, is the setting name without the `siwk_` prefix, here `scope`. Required scopes are always prepended and cannot be removed via this filter.
+			 * Required customer-account scopes are always requested and cannot be removed; this filter only adds scopes. Duplicates and extra whitespace are removed.
 			 *
-			 * @param string $scope The space-separated list of enabled optional scopes.
+			 * Enable added scopes for your client in the Klarna Merchant Portal, or sign-in fails with "invalid_scope". See https://docs.klarna.com/conversion-boosters/sign-in-with-klarna/integrate-sign-in-with-klarna/web-sdk-integration/#scopes-and-claims for available scopes.
+			 *
+			 * @link https://github.com/krokedil/klarna-payments-for-woocommerce/blob/master/docs/examples/siwk-scope.php Request an additional scope, such as profile:date_of_birth
+			 *
+			 * @param string $scope The space-separated list of additional scopes selected under "Request Additional Customer Data", or an empty string.
 			 */
-			$scope = apply_filters( "siwk_{$setting}", implode( ' ', array_keys( array_filter( $this->scope ) ) ) );
-			return trim( $required . $scope );
+			$scope = apply_filters( 'siwk_scope', implode( ' ', array_keys( array_filter( $this->scope ) ) ) );
+			$scope = preg_split( '/\s+/', (string) $scope, -1, PREG_SPLIT_NO_EMPTY );
+
+			return implode( ' ', array_unique( array_merge( $required, $scope ) ) );
 		}
 
 		/**
@@ -276,7 +283,7 @@ class Settings {
 					'name'              => 'siwk_required_scopes_billing_address',
 					'type'              => 'checkbox',
 					'label'             => __( 'Billing address', 'klarna-payments-for-woocommerce' ),
-					'description'       => __( 'These scopes are included by default, as necessary for creating a WooCommerce customer account in your shop. Read more about available scopes with Sign in with Klarna <a href="https://docs.klarna.com/conversion-boosters/sign-in-with-klarna/integrate-sign-in-with-klarna/web-sdk-integration/#scopes-and-claims">here</a>. Additional scopes can be customized if applicable – more info <a href="https://gist.github.com/mntzrr/4bf23ca394109d40575f2abc05811ddc">here</a>.', 'klarna-payments-for-woocommerce' ),
+					'description'       => __( 'These scopes are included by default, as necessary for creating a WooCommerce customer account in your shop. Read more about available scopes with Sign in with Klarna <a href="https://docs.klarna.com/conversion-boosters/sign-in-with-klarna/integrate-sign-in-with-klarna/web-sdk-integration/#scopes-and-claims">here</a>. Developers can request additional scopes with the <a href="https://github.com/krokedil/klarna-payments-for-woocommerce/blob/master/docs/hooks.md#siwk_scope">siwk_scope filter</a>.', 'klarna-payments-for-woocommerce' ),
 					'disabled'          => true,
 					'class'             => 'siwk',
 					'custom_attributes' => array(
@@ -298,11 +305,12 @@ class Settings {
 					'class'   => 'siwk',
 				),
 				'siwk_optional_scopes_language'        => array(
-					'name'    => 'siwk_optional_scopes_language',
-					'type'    => 'checkbox',
-					'label'   => __( 'Language Preference', 'klarna-payments-for-woocommerce' ),
-					'default' => 'no',
-					'class'   => 'siwk',
+					'name'        => 'siwk_optional_scopes_language',
+					'type'        => 'checkbox',
+					'label'       => __( 'Language Preference', 'klarna-payments-for-woocommerce' ),
+					'description' => __( 'Each of these must also be enabled for your client in the Klarna Merchant Portal. Otherwise Klarna stops the sign-in with an "invalid_scope" error.', 'klarna-payments-for-woocommerce' ),
+					'default'     => 'no',
+					'class'       => 'siwk',
 				),
 				'siwk_previews'                        => array(
 					'type'     => 'kp_section_end',
@@ -355,11 +363,8 @@ class Settings {
 		 */
 		$this->locale = apply_filters( 'siwk_locale', str_replace( '_', '-', get_locale() ) );
 
-		// The array keys match the name of the scopes they define.
+		// The additional scopes the merchant can opt into. The array keys match the name of the scopes they define.
 		$this->scope = array(
-			'profile:name'          => wc_string_to_bool( $settings['siwk_required_scopes_name'] ?? 'yes' ),
-			'profile:email'         => wc_string_to_bool( $settings['siwk_required_scopes_email'] ?? 'yes' ),
-			'profile:phone'         => wc_string_to_bool( $settings['siwk_required_scopes_phone'] ?? 'yes' ),
 			'profile:locale'        => wc_string_to_bool( $settings['siwk_optional_scopes_language'] ?? 'no' ),
 			'profile:country'       => wc_string_to_bool( $settings['siwk_optional_scopes_country'] ?? 'no' ),
 			'profile:date_of_birth' => wc_string_to_bool( $settings['siwk_optional_scopes_date_of_birth'] ?? 'no' ),

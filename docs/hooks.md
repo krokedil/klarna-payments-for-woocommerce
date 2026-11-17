@@ -810,19 +810,24 @@ Source: [./src/SignInWithKlarna/User.php](../src/SignInWithKlarna/User.php), [li
 
 
 ---
-### `siwk_{$setting}`
+### `siwk_scope`
 
-*Filters the optional OAuth scopes requested for Sign in with Klarna.*
+*Filters the additional OAuth scopes requested with Sign in with Klarna.*
 
-The dynamic portion of the hook name, `$setting`, is the setting name without the `siwk_` prefix, here `scope`. Required scopes are always prepended and cannot be removed via this filter.
+The scopes the plugin needs to create a customer account (openid, offline_access, customer:login, profile:name, profile:email, profile:phone and profile:billing_address) are always requested and cannot be removed with this filter, so it can only add scopes. Duplicates and extra whitespace are removed from the result.
+
+Every scope you add must also be enabled for your client in the Klarna Merchant Portal, otherwise Klarna stops the sign-in with "invalid_scope". Available scopes are listed at https://docs.klarna.com/conversion-boosters/sign-in-with-klarna/integrate-sign-in-with-klarna/web-sdk-integration/#scopes-and-claims.
 
 **Arguments**
 
 Argument | Type | Description
 -------- | ---- | -----------
-`$scope` | `string` | The space-separated list of enabled optional scopes.
+`$scope` | `string` | The space-separated list of additional scopes selected under "Request Additional Customer Data", or an empty string.
 
-Source: [./src/SignInWithKlarna/Settings.php](../src/SignInWithKlarna/Settings.php), [line 131](../src/SignInWithKlarna/Settings.php#L131-L138)
+Examples: 
+- [Request an additional scope, such as profile:date_of_birth](https://github.com/krokedil/klarna-payments-for-woocommerce/blob/master/docs/examples/siwk-scope.php)
+
+Source: [./src/SignInWithKlarna/Settings.php](../src/SignInWithKlarna/Settings.php), [line 132](../src/SignInWithKlarna/Settings.php#L132-L143)
 
 
 ---
@@ -838,7 +843,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$value` | `string\|int` | The setting value.
 
-Source: [./src/SignInWithKlarna/Settings.php](../src/SignInWithKlarna/Settings.php), [line 142](../src/SignInWithKlarna/Settings.php#L142-L149)
+Source: [./src/SignInWithKlarna/Settings.php](../src/SignInWithKlarna/Settings.php), [line 149](../src/SignInWithKlarna/Settings.php#L149-L156)
 
 
 ---
@@ -852,7 +857,7 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$locale` | `string` | The locale, formatted with a hyphen, for example 'en-US'.
 
-Source: [./src/SignInWithKlarna/Settings.php](../src/SignInWithKlarna/Settings.php), [line 351](../src/SignInWithKlarna/Settings.php#L351-L356)
+Source: [./src/SignInWithKlarna/Settings.php](../src/SignInWithKlarna/Settings.php), [line 359](../src/SignInWithKlarna/Settings.php#L359-L364)
 
 
 ---
