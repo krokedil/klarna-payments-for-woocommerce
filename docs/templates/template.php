@@ -7,6 +7,26 @@ if ( ! isset( $documentor ) ) {
 $actions = $documentor->get_actions();
 $filters = $documentor->get_filters();
 
+/**
+ * Sort the hooks by source file and line.
+ *
+ * Documentor lists files in the order the filesystem returns them, which
+ * differs between machines, so without this every regeneration reorders the
+ * whole file.
+ *
+ * @param \Pronamic\WordPress\Documentor\Hook $a The first hook.
+ * @param \Pronamic\WordPress\Documentor\Hook $b The second hook.
+ * @return int
+ */
+$by_source = static function ( $a, $b ) {
+	$file = strcmp( $a->get_file()->getRelativePathname(), $b->get_file()->getRelativePathname() );
+
+	return 0 !== $file ? $file : $a->get_start_line() <=> $b->get_start_line();
+};
+
+usort( $actions, $by_source );
+usort( $filters, $by_source );
+
 $eol = "\n";
 
 echo '# Hooks', $eol;
