@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed the order note for a rejected capture not explaining when Klarna could not charge the customer.
