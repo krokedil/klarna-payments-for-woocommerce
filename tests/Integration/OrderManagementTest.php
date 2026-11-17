@@ -51,6 +51,21 @@ class OrderManagementTest extends IntegrationTestCase {
 		$this->assertKlarnaRequestCount( 2 );
 	}
 
+	/**
+	 * Klarna segments its API traffic by integration and platform version from this header.
+	 *
+	 * @dataProvider provide_operations
+	 */
+	public function test_the_operation_tags_itself_with_the_integration_metadata( string $op ): void {
+		$order = $this->haveOrderFor( $op );
+		$this->willSucceed( $op );
+
+		$this->assertTrue( $this->perform( $op, $order ) );
+
+		$this->assertIntegrationMetadata( $this->klarnaRequestTo( self::ENDPOINTS[ $op ][0] ) );
+		$this->assertIntegrationMetadata( $this->klarnaRequests()[0], null );
+	}
+
 	/** @return array<string, array{0: string}> */
 	public function provide_operations(): array {
 		return [ 'capture' => [ 'capture' ], 'cancel' => [ 'cancel' ], 'update' => [ 'update' ], 'refund' => [ 'refund' ] ];

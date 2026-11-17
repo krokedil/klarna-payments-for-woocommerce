@@ -8,6 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
+use Krokedil\Klarna\Utilities\IntegrationMetadataUtility;
 use Krokedil\Klarna\Logging\LogMasking;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\KeyMasker;
 use KrokedilKlarnaPaymentsDeps\Krokedil\WpApi\Request;
@@ -111,22 +112,10 @@ abstract class KP_Requests extends Request {
 			$session_reference = KP_WC()->session->get_klarna_session_id();
 		}
 
-		$integration_data = array(
-			'name'              => 'WOOCOMMERCE',
-			'module_name'       => 'Klarna for WooCommerce',
-			'module_version'    => WC_KLARNA_PAYMENTS_VERSION,
-			'session_reference' => $session_reference,
-		);
-
 		return array(
-			'Authorization'                 => $this->calculate_auth(),
-			'Content-Type'                  => 'application/json',
-			'X-Klarna-Integration-Metadata' => wp_json_encode(
-				array(
-					'integrator'  => $integration_data,
-					'originators' => array( $integration_data ),
-				)
-			),
+			'Authorization'                         => $this->calculate_auth(),
+			'Content-Type'                          => 'application/json',
+			IntegrationMetadataUtility::HEADER_NAME => IntegrationMetadataUtility::get_header_value( $session_reference ),
 		);
 	}
 

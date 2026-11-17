@@ -2,6 +2,8 @@
 
 namespace Krokedil\Klarna\ExpressCheckout\Requests;
 
+use Krokedil\Klarna\Utilities\IntegrationMetadataUtility;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -35,20 +37,14 @@ abstract class Base extends \KP_Requests {
 	/**
 	 * Get the headers for the request.
 	 *
+	 * The integration metadata is sent without a session reference, since the KP session is unrelated to KEC.
+	 *
 	 * @return array
 	 */
 	protected function get_request_headers() {
 		$headers = parent::get_request_headers();
 
-		$integration_metadata = array(
-			'integrator' => array(
-				'name'           => 'WOOCOMMERCE',
-				'module_name'    => 'Klarna for WooCommerce',
-				'module_version' => WC_KLARNA_PAYMENTS_VERSION,
-			),
-		);
-
-		$headers['X-Klarna-Integration-Metadata'] = wp_json_encode( $integration_metadata );
+		$headers[ IntegrationMetadataUtility::HEADER_NAME ] = IntegrationMetadataUtility::get_header_value();
 
 		return $headers;
 	}
