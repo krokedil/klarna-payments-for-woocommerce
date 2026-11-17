@@ -209,6 +209,41 @@ class RequestsTest extends IntegrationTestCase {
 		$this->assertSame( '/payments/v1/authorizations/' . rawurlencode( $token ) . '/customer-token', ( new \KP_Create_Customer_Token( $arguments ) )->endpoint );
 	}
 
+	/**
+	 * Klarna segments its API traffic by integration and platform version from this header.
+	 * A KEC request never carries the KP session, since the two are unrelated.
+	 *
+	 * @dataProvider provide_tagged_requests
+	 */
+	public function test_a_request_tags_itself_with_the_integration_metadata( string $endpoint, string $kind, ?string $session_reference ): void {
+		$this->haveKlarnaCredentials( 'se' );
+		$this->haveCartWith( [ [ $this->haveSimpleProduct( [ 'price' => '100.00' ] ), 1 ] ] );
+		$this->willRespondWith( [ 'session_id' => 'kp-session-1', 'client_token' => 'token', 'signing_key_id' => 'key-1' ] );
+
+		switch ( $kind ) {
+			case 'create-session':
+				$this->request( 'SE' )->request();
+				break;
+			case 'update-session':
+				( new \KP_Update_Session( [ 'country' => 'SE', 'order_id' => null, 'session_id' => 'kp-session-1', 'include_address' => false ] ) )->request();
+				break;
+			case 'express-checkout':
+				( new \Krokedil\Klarna\ExpressCheckout\Requests\Notification\CreateSigningKey( [ 'country' => 'SE' ] ) )->request();
+				break;
+		}
+
+		$this->assertIntegrationMetadata( $this->klarnaRequestTo( $endpoint ), $session_reference );
+	}
+
+	/** @return array<string, array{0: string, 1: string, 2: ?string}> */
+	public function provide_tagged_requests(): array {
+		return [
+			'payments, no session yet'      => [ 'payments/v1/sessions', 'create-session', null ],
+			'payments, existing session'    => [ 'payments/v1/sessions/kp-session-1', 'update-session', 'kp-session-1' ],
+			'express checkout, no session'  => [ 'v2/notification/signing-keys', 'express-checkout', null ],
+		];
+	}
+
 	private function request( string $country ): \KP_Create_Session {
 		return new \KP_Create_Session( [ 'country' => $country, 'order_id' => null, 'include_address' => false ] );
 	}

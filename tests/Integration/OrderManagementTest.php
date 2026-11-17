@@ -51,6 +51,21 @@ class OrderManagementTest extends IntegrationTestCase {
 		$this->assertKlarnaRequestCount( 2 );
 	}
 
+	/**
+	 * Klarna segments its API traffic by integration and platform version from this header.
+	 *
+	 * @dataProvider provide_operations
+	 */
+	public function test_the_operation_tags_itself_with_the_integration_metadata( string $op ): void {
+		$order = $this->haveOrderFor( $op );
+		$this->willSucceed( $op );
+
+		$this->assertTrue( $this->perform( $op, $order ) );
+
+		$this->assertIntegrationMetadata( $this->klarnaRequestTo( self::ENDPOINTS[ $op ][0] ) );
+		$this->assertIntegrationMetadata( $this->klarnaRequests()[0], null );
+	}
+
 	/** @return array<string, array{0: string}> */
 	public function provide_operations(): array {
 		return [ 'capture' => [ 'capture' ], 'cancel' => [ 'cancel' ], 'update' => [ 'update' ], 'refund' => [ 'refund' ] ];
@@ -327,6 +342,37 @@ class OrderManagementTest extends IntegrationTestCase {
 			'cancel'  => [ 'cancel', 'Order has already been captured', 'unknown_error', 'Could not cancel Klarna order. Order has already been captured.', '_wc_klarna_cancelled' ],
 			'update'  => [ 'update', 'Amount exceeds the authorized amount', 'unknown_error', 'Could not update Klarna order lines: Amount exceeds the authorized amount.', null ],
 			'refund'  => [ 'refund', 'Refund amount is higher than remaining captured amount', 'refund_failed', 'Could not refund Klarna order. Refund amount is higher than remaining captured amount.', null ],
+		];
+	}
+
+	/**
+	 * Klarna's error code, not the wording of its message, decides what the merchant is told.
+	 *
+	 * @dataProvider provide_capture_rejections
+	 */
+	public function test_a_rejected_capture_is_explained_by_klarnas_error_code( int $status, string $error_code, string $message, string $note, int $store_decimals = 2 ): void {
+		update_option( 'woocommerce_price_num_decimals', $store_decimals );
+		$order = $this->haveOrderFor( 'capture' );
+
+		$this->willRetrieveKlarnaOrder( [ 'remaining_authorized_amount' => 16317 ] );
+		$this->willRejectWith( '/captures', $message, $status, [ 'error_code' => $error_code ] );
+
+		$this->assertWpErrorCode( 'capture_failed', $this->perform( 'capture', $order ) );
+		$this->assertSame( 'on-hold', $this->statusOf( $order ) );
+		$remaining = wc_price( 163.17, [ 'currency' => 'SEK', 'decimals' => 2 ] );
+		// WooCommerce appends the status change, so this pins the note's whole ending.
+		$this->assertOrderHasNote( $order, str_replace( '<remaining>', $remaining, $note ) . ' Order status changed from Processing to On hold.' );
+	}
+
+	/** @return array<string, array{0: int, 1: string, 2: string, 3: string, 4?: int}> */
+	public function provide_capture_rejections(): array {
+		return [
+			'the customer could not be charged'           => [ 403, 'PAYMENT_METHOD_FAILED', 'Payment method failed.', 'Klarna could not charge the customer. Please try again later. If that still fails, the customer may have to create a new subscription or add funds to their payment method if they wish to continue.' ],
+			'more than the remaining amount'              => [ 403, 'CAPTURE_NOT_ALLOWED', 'Captured amount is higher than the remaining authorized amount. Capture not possible.', 'Could not capture Klarna order. Captured amount is higher than the remaining authorized amount. Capture not possible. Remaining authorized amount: <remaining>.' ],
+			'more than the remaining amount, reworded'    => [ 403, 'CAPTURE_NOT_ALLOWED', 'Capture exceeds the authorization', 'Could not capture Klarna order. Capture exceeds the authorization. Remaining authorized amount: <remaining>.' ],
+			'more than the remaining amount, no decimals' => [ 403, 'CAPTURE_NOT_ALLOWED', 'Capture not possible.', 'Could not capture Klarna order. Capture not possible. Remaining authorized amount: <remaining>.', 0 ],
+			'any other error, without a full stop'        => [ 500, 'INTERNAL_ERROR', 'Something went wrong', 'Could not capture Klarna order. Something went wrong.' ],
+			'any other error, ending in an ellipsis'      => [ 500, 'INTERNAL_ERROR', 'Something went wrong...', 'Could not capture Klarna order. Something went wrong...' ],
 		];
 	}
 
