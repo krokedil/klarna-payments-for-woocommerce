@@ -7,7 +7,7 @@ Tested up to: 7.1
 Requires PHP: 8.0
 WC requires at least: 5.6.0
 WC tested up to: 11.2.1
-Stable tag: 4.13.6
+Stable tag: 4.14.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,6 +69,17 @@ For help setting up and configuring Klarna Payments for WooCommerce please refer
 2. Express checkout
 
 == Changelog ==
+= 2026-11-17    - version 4.14.0 =
+* Feature       - Added an "Export order for support" button to the Klarna Order Management box on the order page, which downloads the order data, order notes and system status report as a JSON file to send to support.
+* Feature       - Added support for passing interoperability data to third party payment providers using Klarna Express Checkout.
+* Enhancement   - Klarna Express Checkout now logs every step of a purchase, including webhook notifications that are rejected or fail, and adds order notes when a payment is completed or the customer reaches the order received page before Klarna confirms it. Errors from creating, testing or removing the KEC webhook are now shown on the settings page instead of being lost.
+* Tweak         - The WooCommerce system status report now shows all Klarna for WooCommerce settings once, including Express Checkout, On-site messaging, Sign in with Klarna and Order Management, and drops the outdated Klarna Payments request log.
+* Tweak         - The "Export order for support" file now includes the order as Klarna has it, masked like the plugin logs, so support can compare the WooCommerce and Klarna sides of an order.
+* Tweak         - The integration metadata header sent to Klarna now includes the WooCommerce, WordPress and PHP versions, and is also sent on order management and Express Checkout requests.
+* Fix           - Fixed Klarna captures failing with "Captured amount is higher than the remaining authorized amount" for orders paid partly with a YITH gift card, when the order was set to completed from the edit order page.
+* Fix           - Fixed a "Klarna is not defined" error in the classic checkout when the Klarna script had not finished loading. This error could also stop the payment widget from appearing on slow connections.
+* Fix           - Fixed the order note for a rejected capture not explaining when Klarna could not charge the customer.
+
 = 2026-11-02    - version 4.13.6 =
 * Tweak         - Removed the Add-ons tab on the settings page.
 * Tweak         - Support tickets now attach the WooCommerce system status report as text, the same report as WooCommerce's "Get system report" button.

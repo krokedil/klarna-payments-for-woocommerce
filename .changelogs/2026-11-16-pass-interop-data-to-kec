@@ -1,4 +1,0 @@
-Type: Feature
-Needs Documentation: no
-
-Added support for passing interoperability data to third party payment providers using Klarna Express Checkout.
