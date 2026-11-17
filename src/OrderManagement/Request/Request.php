@@ -286,7 +286,12 @@ abstract class Request {
 		$body          = json_decode( wp_remote_retrieve_body( $response ) );
 
 		if ( $response_code < 200 || $response_code >= 300 ) { // Anything not in the 200 range is an error.
-			$data          = "URL: {$request_url} - " . wp_json_encode( $request_args );
+			// The WP_Error code stays the HTTP status; Klarna's own error code goes in the data.
+			$data          = array(
+				'code'       => $response_code,
+				'error_code' => $body->error_code ?? '',
+				'url'        => $request_url,
+			);
 			$error_message = "API Error {$response_code}";
 
 			if ( null !== $body && property_exists( $body, 'error_messages' ) ) {

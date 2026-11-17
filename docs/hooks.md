@@ -218,11 +218,11 @@ Argument | Type | Description
 -------- | ---- | -----------
 `$order` | `\WC_Order` | The WooCommerce order object.
 `$interoperability_token` | `string` | The Klarna interoperability token.
-`$interoperability_data` | `array` | The interoperability data. Empty for this event.
+`$interoperability_data` | `array` | The order lines and shipping for the acquiring partner. Empty when shopping data is not sent.
 `$state` | `string` | The payment state reported by Klarna.
 `$payload` | `array` | The payload data from Klarna.
 
-Source: [./src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php](../src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php), [line 87](../src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php#L87-L96)
+Source: [./src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php](../src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php), [line 90](../src/ExpressCheckout/Api/Notifications/PaymentStateCompleted.php#L90-L99)
 
 
 ---

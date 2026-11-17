@@ -96,11 +96,27 @@ class OneStepCheckout {
 		if ( ! empty( $redirect_url ) ) {
 			Logger::log( 'One-step return confirmed by Klarna, redirecting the customer', array(), $order );
 			self::unset_sessions();
+			// An acquiring partner can send the customer back to Klarna, e.g. to complete a step-up.
+			add_filter( 'allowed_redirect_hosts', __CLASS__ . '::allow_klarna_redirect_hosts' );
 			wp_safe_redirect( $redirect_url );
 			exit;
 		}
 
 		self::wait_for_confirmation( $order, $kec_unique_id );
+	}
+
+	/**
+	 * Allow redirects to Klarna's hosted payment pages.
+	 *
+	 * @param string[] $hosts The allowed redirect hosts.
+	 *
+	 * @return string[]
+	 */
+	public static function allow_klarna_redirect_hosts( $hosts ) {
+		$hosts[] = 'pay.klarna.com';
+		$hosts[] = 'pay.test.klarna.com';
+
+		return $hosts;
 	}
 
 	/**
