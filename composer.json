@@ -120,7 +120,8 @@
     "test:report": "bash tests/_support_scripts/generate-report.sh",
     "test:report:share": "bash tests/_support_scripts/generate-report.sh --share",
     "test:report:reset": "rm -rf tests/_output/allure-results tests/_output/report tests/_output/report-share tests/_output/record_* tests/_output/Tests.EndToEnd.*.html tests/_output/Tests.EndToEnd.*.png",
-    "test:regenerate-dump": "bash tests/_support_scripts/regenerate-dump.sh"
+    "test:regenerate-dump": "bash tests/_support_scripts/regenerate-dump.sh",
+    "doc:hooks": "vendor/bin/wp-documentor parse . --exclude=docs --exclude=tests --exclude=vendor --exclude=node_modules --exclude=languages --exclude=dependencies --format=markdown --type=filters --output=docs/hooks.md --relative=docs --prefix=klarna_ --prefix=wc_kp_ --prefix=kp_ --prefix=wc_klarna_ --prefix=kom_ --prefix=kec_ --prefix=wc_gateway_klarna_ --prefix=kosm_ --prefix=osm_ --prefix=siwk_ --template=docs/templates/template.php"
   },
   "scripts-descriptions": {
     "phpstan": "Run PHPStan static analysis at the level set in phpstan.neon. Findings that predate the analysis are suppressed by phpstan-baseline.neon, so a failure means new code introduced it.",
@@ -136,6 +137,6 @@
     "test:report": "Render the Allure report from whichever suite results are present into tests/_output/report/. Fails if any credential leaked into an artifact.",
     "test:report:share": "Same, but one self-contained tests/_output/report-share/index.html for sharing outside the dev team.",
     "test:report:reset": "Delete all accumulated Allure results and rendered reports.",
-    "doc:hooks": "vendor/bin/wp-documentor parse . --exclude=docs --exclude=tests --exclude=vendor --exclude=node_modules --exclude=languages --exclude=dependencies --format=markdown --type=filters --output=docs/hooks.md --relative=docs --prefix=klarna_ --prefix=wc_kp_ --prefix=kp_ --prefix=wc_klarna_ --prefix=kom_ --prefix=kec_ --prefix=wc_gateway_klarna_ --prefix=kosm_ --prefix=osm_ --prefix=siwk_ --template=docs/templates/template.php"
+    "doc:hooks": "Regenerate docs/hooks.md from the hook docblocks in the plugin source. Hooks are sorted by source file and line, so the output is the same on every machine."
   }
 }

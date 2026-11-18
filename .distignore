@@ -36,6 +36,7 @@ yarn.lock
 .gitkeep
 playground.config.mjs
 /tools
+/docs/templates
 /.claude
 CLAUDE.md
 .nvmrc
