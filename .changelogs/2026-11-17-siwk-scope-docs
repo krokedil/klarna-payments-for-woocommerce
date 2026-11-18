@@ -1,4 +1,4 @@
 Type: Tweak
 Needs Documentation: yes
 
-The Sign in with Klarna settings now link to the documented siwk_scope filter, with a working example, instead of an outdated external page, and note that every additional scope must be enabled for the client in the Klarna Merchant Portal.
+The Sign in with Klarna settings now link to the documented siwk_scope filter instead of an outdated external page, and note that every additional scope must be enabled for the client in the Klarna Merchant Portal.

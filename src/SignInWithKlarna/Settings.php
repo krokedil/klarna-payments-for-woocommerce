@@ -136,7 +136,7 @@ class Settings {
 			 *
 			 * Enable added scopes for your client in the Klarna Merchant Portal, or sign-in fails with "invalid_scope". See https://docs.klarna.com/conversion-boosters/sign-in-with-klarna/integrate-sign-in-with-klarna/web-sdk-integration/#scopes-and-claims for available scopes.
 			 *
-			 * @link https://github.com/krokedil/klarna-payments-for-woocommerce/blob/master/docs/examples/siwk-scope.php Request an additional scope, such as profile:date_of_birth
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#request-additional-customer-data-with-sign-in-with-klarna Request an additional scope, such as profile:date_of_birth
 			 *
 			 * @param string $scope The space-separated list of additional scopes selected under "Request Additional Customer Data", or an empty string.
 			 */

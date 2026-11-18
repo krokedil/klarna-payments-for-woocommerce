@@ -1575,7 +1575,7 @@ Argument | Type | Description
 `$scope` | `string` | The space-separated list of additional scopes selected under "Request Additional Customer Data", or an empty string.
 
 Examples: 
-- [Request an additional scope, such as profile:date_of_birth](https://github.com/krokedil/klarna-payments-for-woocommerce/blob/master/docs/examples/siwk-scope.php)
+- [Request an additional scope, such as profile:date_of_birth](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#request-additional-customer-data-with-sign-in-with-klarna)
 
 Source: [./src/SignInWithKlarna/Settings.php](../src/SignInWithKlarna/Settings.php), [line 132](../src/SignInWithKlarna/Settings.php#L132-L143)
 
