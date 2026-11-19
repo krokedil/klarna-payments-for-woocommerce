@@ -301,9 +301,13 @@ class KP_Api {
 		$mode       = $credentials['mode'] ?? 'live';
 		$request_id = get_option( 'kp_uuid4' );
 
+		// The settings page posts the merchant ID as client_id, the stored credentials use merchant_id.
+		$api_username = $credentials['merchant_id'] ?? $credentials['client_id'] ?? '';
+
 		$response = ( new KP_Unavailable_Features(
 			array(
 				'api_password' => $api_password,
+				'api_username' => $api_username,
 				'mode'         => $mode,
 				'request_id'   => $request_id,
 				'country'      => $credentials['country_code'],
