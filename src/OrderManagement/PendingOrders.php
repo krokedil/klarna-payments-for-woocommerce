@@ -43,6 +43,11 @@ class PendingOrders {
 			return;
 		}
 
+		// If a paid date is set, the order has already been processed. It is therefore not a pending order.
+		if ( ! empty( $order->get_date_paid() ) ) {
+			return;
+		}
+
 		$order_management = new OrderManagement();
 		// Check the order status for the klarna order. Bail if it does not exist in order management.
 		$klarna_order = $order_management->retrieve_klarna_order( $order_id );
@@ -67,11 +72,6 @@ class PendingOrders {
 		if ( $order->meta_exists( '_wc_klarna_pending_lookup_failed' ) ) {
 			$order->delete_meta_data( '_wc_klarna_pending_lookup_failed' );
 			$order->save();
-		}
-
-		// If a paid date is set, the order has already been processed. It is therefore not a pending order.
-		if ( ! empty( $order->get_date_paid() ) ) {
-			return;
 		}
 
 		// Use the order from Klarna for the fraud status check.

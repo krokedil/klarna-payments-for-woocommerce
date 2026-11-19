@@ -133,8 +133,7 @@ class PendingOrdersTest extends IntegrationTestCase {
 	/** @return array<string, array{0: string, 1: int}> */
 	public function provide_untouchable_orders(): array {
 		return [
-			// The lookup happens before the paid guard, so a replay still costs a round trip.
-			'the order already paid'      => [ 'paid', 1 ],
+			'the order already paid'      => [ 'paid', 0 ],
 			'the klarna lookup failed'    => [ 'lookup-failed', 1 ],
 			'the store has no orders'     => [ 'no-orders', 0 ],
 			'paid with another gateway'   => [ 'other-gateway', 0 ],
@@ -183,6 +182,18 @@ class PendingOrdersTest extends IntegrationTestCase {
 		PendingOrders::notification_listener( 'klarna-order-123' );
 
 		$this->assertCount( 2, preg_grep( '/could not be retrieved/', $this->orderNotes( $order ) ) );
+	}
+
+	public function test_a_replayed_notification_for_a_paid_order_is_acknowledged_during_an_outage(): void {
+		$order = $this->havePendingKlarnaOrder( [ 'paid' => true ] );
+
+		$this->willFailToRetrieveKlarnaOrder();
+
+		PendingOrders::notification_listener( 'klarna-order-123' );
+
+		$this->assertNull( $this->answeredStatus, 'A paid order needs nothing from Klarna, so there is nothing to retry.' );
+		$this->assertSame( [], preg_grep( '/could not be retrieved/', $this->orderNotes( $order ) ) );
+		$this->assertNoKlarnaRequests( 'The paid date settles it before Klarna is asked.' );
 	}
 
 	public function test_a_refused_order_emails_the_admin(): void {
