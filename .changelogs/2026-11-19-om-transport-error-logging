@@ -1,4 +1,4 @@
 Type: Tweak
 Needs Documentation: no
 
-Order management requests that fail before Klarna answers, such as a timeout or a blocked connection, are now written to the Klarna Payments log, and the capture, cancel and update order notes include the reason. When Klarna's notification about a pending order cannot be processed because the Klarna order could not be retrieved, the order gets a note, once per outage, and Klarna is answered with an error instead of a success.
+Order management errors are now logged when Klarna cannot be reached, and the order note includes the reason.
