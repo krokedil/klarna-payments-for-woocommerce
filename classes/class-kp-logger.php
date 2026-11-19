@@ -63,13 +63,13 @@ class KP_Logger {
 	/**
 	 * Formats the log data to be logged.
 	 *
-	 * @param string $payment_id The "Klarna Payments" Payment ID.
-	 * @param string $method The method.
-	 * @param string $title The title for the log.
-	 * @param array  $request_args The request args.
-	 * @param array  $response The response.
-	 * @param string $code The status code.
-	 * @param string $request_url The request URL for the request.
+	 * @param string          $payment_id The "Klarna Payments" Payment ID.
+	 * @param string          $method The method.
+	 * @param string          $title The title for the log.
+	 * @param array           $request_args The request args.
+	 * @param array           $response The response.
+	 * @param int|string|null $code The HTTP status code, null if the request never got an answer.
+	 * @param string          $request_url The request URL for the request.
 	 * @return array
 	 */
 	public static function format_log( $payment_id, $method, $title, $request_args, $response, $code, $request_url = null ) {

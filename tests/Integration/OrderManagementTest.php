@@ -303,18 +303,50 @@ class OrderManagementTest extends IntegrationTestCase {
 	public function test_a_failed_lookup_stops_the_operation( string $op, string $note ): void {
 		$order = $this->haveOrderFor( $op );
 
-		// No response queued, so the lookup is the blocked request.
+		$this->willFailToConnect( 'ordermanagement/v1/orders', 'cURL error 28: Operation timed out' );
+
 		$this->assertWpErrorCode( 'object_error', $this->perform( $op, $order ) );
 		$this->assertKlarnaRequestCount( 1, '', 'Acting on an order whose state is unknown is not safe.' );
-		$this->assertOrderHasNote( $order, $note );
+		$this->assertOrderHasNote( $order, $note . ' cURL error 28: Operation timed out' );
 	}
 
 	/** @return array<string, array{0: string, 1: string}> */
 	public function provide_lookup_failures(): array {
 		return [
-			'capture' => [ 'capture', 'Klarna order could not be captured due to an error.' ],
-			'cancel'  => [ 'cancel', 'Klarna order could not be cancelled due to an error.' ],
-			'update'  => [ 'update', 'Klarna order could not be updated due to an error.' ],
+			'capture' => [ 'capture', 'Klarna order could not be captured due to an error:' ],
+			'cancel'  => [ 'cancel', 'Klarna order could not be cancelled due to an error:' ],
+			'update'  => [ 'update', 'Klarna order could not be updated due to an error:' ],
+		];
+	}
+
+	/**
+	 * Klarna never answered, so the error is all support has to go on.
+	 *
+	 * @dataProvider provide_unanswered_requests
+	 */
+	public function test_a_request_klarna_never_answered_is_logged( string $scenario, string $code, string $message ): void {
+		$this->haveLoggingEnabled();
+		$order = $this->haveOrderFor( 'capture' );
+
+		if ( 'timeout' === $scenario ) {
+			$this->willFailToConnect( 'ordermanagement/v1/orders', $message );
+		} else {
+			$this->haveKlarnaCredentials( 'se', [ 'logging' => 'yes', 'test_shared_secret_se' => '' ] );
+		}
+
+		$this->assertWpErrorCode( $code, KP_WC()->order_management->retrieve_klarna_order( $order->get_id() ) );
+
+		$entry = $this->loggedEntry( 'Retrieve Klarna order' );
+
+		$this->assertSame( [ 'error' => [ 'code' => $code, 'message' => $message ] ], $entry['response']['body'] );
+		$this->assertStringNotContainsString( 'Basic ', $this->loggedText(), 'The auth header rides in the error data and must stay out.' );
+	}
+
+	/** @return array<string, array{0: string, 1: string, 2: string}> */
+	public function provide_unanswered_requests(): array {
+		return [
+			'the connection timed out'   => [ 'timeout', 'http_request_failed', 'cURL error 28: Operation timed out' ],
+			'the credentials are missing' => [ 'credentials', 'missing_credentials', 'Klarna Payments credentials are missing' ],
 		];
 	}
 
