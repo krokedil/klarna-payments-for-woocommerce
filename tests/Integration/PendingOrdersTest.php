@@ -20,10 +20,14 @@ class PendingOrdersTest extends IntegrationTestCase {
 	/** @var array<int, array> Every mail wp_mail() was asked to send, in order. */
 	private $sentMail = [];
 
+	/** @var int|null The last HTTP status the listener set, if any. */
+	private $answeredStatus = null;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		add_filter( 'pre_wp_mail', [ $this, 'recordMail' ], 10, 2 );
+		add_filter( 'status_header', [ $this, 'recordStatus' ], 10, 2 );
 
 		// The legacy post datastore warns about the lookup's meta_query, which WPTestCase fails on. HPOS does not.
 		if ( ! kp_is_hpos_enabled() ) {
@@ -42,6 +46,18 @@ class PendingOrdersTest extends IntegrationTestCase {
 		$this->sentMail[] = $attributes;
 
 		return true;
+	}
+
+	/**
+	 * The `status_header` callback; public so WordPress can call it.
+	 *
+	 * @param string $header The status header line.
+	 * @param int    $code   The HTTP status code.
+	 */
+	public function recordStatus( $header, $code ) {
+		$this->answeredStatus = $code;
+
+		return $header;
 	}
 
 	/**
@@ -128,24 +144,45 @@ class PendingOrdersTest extends IntegrationTestCase {
 	public function test_a_failed_lookup_is_noted_and_answered_so_klarna_retries(): void {
 		$order = $this->havePendingKlarnaOrder();
 
-		$this->willFailToConnect( 'ordermanagement/v1/orders', 'cURL error 28: Operation timed out' );
-
-		$status = null;
-		add_filter(
-			'status_header',
-			static function ( $header, $code ) use ( &$status ) {
-				$status = $code;
-				return $header;
-			},
-			10,
-			2
-		);
+		$this->willFailToRetrieveKlarnaOrder();
 
 		PendingOrders::notification_listener( 'klarna-order-123' );
 
-		$this->assertSame( 503, $status, 'Klarna only retries a notification that was not answered with 200.' );
+		$this->assertSame( 503, $this->answeredStatus, 'Klarna only retries a notification that was not answered with 200.' );
 		$this->assertSame( 'on-hold', $this->statusOf( $order ) );
 		$this->assertOrderHasNote( $order, 'the Klarna order could not be retrieved: cURL error 28: Operation timed out' );
+	}
+
+	public function test_a_retried_notification_that_fails_again_is_noted_once(): void {
+		$order = $this->havePendingKlarnaOrder();
+
+		$this->willFailToRetrieveKlarnaOrder();
+		$this->willFailToRetrieveKlarnaOrder();
+
+		PendingOrders::notification_listener( 'klarna-order-123' );
+		$this->answeredStatus = null;
+		PendingOrders::notification_listener( 'klarna-order-123' );
+
+		$this->assertSame( 503, $this->answeredStatus, 'Every failed attempt still asks Klarna to retry.' );
+		$this->assertCount(
+			1,
+			preg_grep( '/could not be retrieved/', $this->orderNotes( $order ) ),
+			'An outage must not bury the order in notes.'
+		);
+	}
+
+	public function test_a_new_outage_after_a_successful_lookup_is_noted_again(): void {
+		$order = $this->havePendingKlarnaOrder();
+
+		$this->willFailToRetrieveKlarnaOrder();
+		$this->willRetrieveKlarnaOrder( [ 'fraud_status' => 'PENDING' ] );
+		$this->willFailToRetrieveKlarnaOrder();
+
+		PendingOrders::notification_listener( 'klarna-order-123' );
+		PendingOrders::notification_listener( 'klarna-order-123' );
+		PendingOrders::notification_listener( 'klarna-order-123' );
+
+		$this->assertCount( 2, preg_grep( '/could not be retrieved/', $this->orderNotes( $order ) ) );
 	}
 
 	public function test_a_refused_order_emails_the_admin(): void {
