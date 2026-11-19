@@ -25,7 +25,7 @@ parameters:
 
   scanDirectories:
     - vendor/php-stubs
-    - dependencies
+    - vendor/dependencies
 
   bootstrapFiles:
     - phpstan-bootstrap.php

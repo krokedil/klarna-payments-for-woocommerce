@@ -590,7 +590,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function init_composer() {
 			$autoloader              = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
-			$autoloader_dependencies = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/dependencies/scoper-autoload.php';
+			$autoloader_dependencies = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/dependencies/scoper-autoload.php';
 
 			if ( ! is_readable( $autoloader ) || ! is_readable( $autoloader_dependencies ) ) {
 				self::missing_autoloader();

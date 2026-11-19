@@ -54,12 +54,14 @@
   "extra": {
     "wpify-scoper": {
       "prefix": "KrokedilKlarnaPaymentsDeps",
-      "folder": "dependencies",
+      "folder": "vendor/dependencies",
       "autorun": true,
       "globals": [
         "wordpress",
         "woocommerce"
-      ]
+      ],
+      "composerjson": "composer-dependencies.json",
+      "composerlock": "composer-dependencies.lock"
     },
     "installer-paths": {
       "tests/_plugins/{$name}/": [
