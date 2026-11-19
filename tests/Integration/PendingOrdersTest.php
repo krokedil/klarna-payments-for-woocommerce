@@ -95,6 +95,11 @@ class PendingOrdersTest extends IntegrationTestCase {
 	public function test_an_order_the_notification_cannot_resolve_is_left_alone( string $scenario, int $requests ): void {
 		$order = 'no-orders' === $scenario ? null : $this->havePendingKlarnaOrder( [ 'paid' => 'paid' === $scenario ] );
 
+		if ( 'other-gateway' === $scenario ) {
+			$order->set_payment_method( 'cod' );
+			$order->save();
+		}
+
 		if ( 'lookup-failed' !== $scenario && null !== $order ) {
 			$this->willRetrieveKlarnaOrder( [ 'fraud_status' => 'REJECTED' ] );
 		}
@@ -116,7 +121,31 @@ class PendingOrdersTest extends IntegrationTestCase {
 			'the order already paid'      => [ 'paid', 1 ],
 			'the klarna lookup failed'    => [ 'lookup-failed', 1 ],
 			'the store has no orders'     => [ 'no-orders', 0 ],
+			'paid with another gateway'   => [ 'other-gateway', 0 ],
 		];
+	}
+
+	public function test_a_failed_lookup_is_noted_and_answered_so_klarna_retries(): void {
+		$order = $this->havePendingKlarnaOrder();
+
+		$this->willFailToConnect( 'ordermanagement/v1/orders', 'cURL error 28: Operation timed out' );
+
+		$status = null;
+		add_filter(
+			'status_header',
+			static function ( $header, $code ) use ( &$status ) {
+				$status = $code;
+				return $header;
+			},
+			10,
+			2
+		);
+
+		PendingOrders::notification_listener( 'klarna-order-123' );
+
+		$this->assertSame( 503, $status, 'Klarna only retries a notification that was not answered with 200.' );
+		$this->assertSame( 'on-hold', $this->statusOf( $order ) );
+		$this->assertOrderHasNote( $order, 'the Klarna order could not be retrieved: cURL error 28: Operation timed out' );
 	}
 
 	public function test_a_refused_order_emails_the_admin(): void {

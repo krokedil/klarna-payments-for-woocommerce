@@ -37,12 +37,25 @@ class PendingOrders {
 			return;
 		}
 
+		// The endpoint is public, so only a Klarna order may get a failure note or a retry.
 		$order = wc_get_order( $order_id );
+		if ( ! $order || 'klarna_payments' !== $order->get_payment_method() ) {
+			return;
+		}
 
 		$order_management = new OrderManagement();
 		// Check the order status for the klarna order. Bail if it does not exist in order management.
 		$klarna_order = $order_management->retrieve_klarna_order( $order_id );
 		if ( is_wp_error( $klarna_order ) ) {
+			$order->add_order_note(
+				sprintf(
+					/* translators: [merchant-facing]. %s: Error message. */
+					__( 'Klarna sent a notification about this pending order, but the Klarna order could not be retrieved: %s', 'klarna-payments-for-woocommerce' ),
+					$klarna_order->get_error_message()
+				)
+			);
+			// WooCommerce has already answered 200; anything else makes Klarna send the notification again.
+			status_header( 503 );
 			return;
 		}
 
