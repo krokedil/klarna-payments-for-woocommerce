@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+Order management errors are now logged when Klarna cannot be reached, and the order note includes the reason.

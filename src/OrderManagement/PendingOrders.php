@@ -37,18 +37,41 @@ class PendingOrders {
 			return;
 		}
 
+		// The endpoint is public, so only a Klarna order may get a failure note or a retry.
 		$order = wc_get_order( $order_id );
-
-		$order_management = new OrderManagement();
-		// Check the order status for the klarna order. Bail if it does not exist in order management.
-		$klarna_order = $order_management->retrieve_klarna_order( $order_id );
-		if ( is_wp_error( $klarna_order ) ) {
+		if ( ! $order || 'klarna_payments' !== $order->get_payment_method() ) {
 			return;
 		}
 
 		// If a paid date is set, the order has already been processed. It is therefore not a pending order.
 		if ( ! empty( $order->get_date_paid() ) ) {
 			return;
+		}
+
+		$order_management = new OrderManagement();
+		// Check the order status for the klarna order. Bail if it does not exist in order management.
+		$klarna_order = $order_management->retrieve_klarna_order( $order_id );
+		if ( is_wp_error( $klarna_order ) ) {
+			// Note the failure once, so a notification Klarna retries cannot bury the order in notes.
+			if ( ! wc_string_to_bool( $order->get_meta( '_wc_klarna_pending_lookup_failed' ) ) ) {
+				$order->update_meta_data( '_wc_klarna_pending_lookup_failed', 'yes' );
+				$order->save();
+				$order->add_order_note(
+					sprintf(
+						/* translators: [merchant-facing]. %s: Error message. */
+						__( 'Klarna sent a notification about this pending order, but the Klarna order could not be retrieved: %s', 'klarna-payments-for-woocommerce' ),
+						$klarna_order->get_error_message()
+					)
+				);
+			}
+			// WooCommerce has already answered 200; anything else makes Klarna send the notification again.
+			status_header( 503 );
+			return;
+		}
+
+		if ( $order->meta_exists( '_wc_klarna_pending_lookup_failed' ) ) {
+			$order->delete_meta_data( '_wc_klarna_pending_lookup_failed' );
+			$order->save();
 		}
 
 		// Use the order from Klarna for the fraud status check.
