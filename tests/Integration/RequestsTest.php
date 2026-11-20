@@ -210,12 +210,12 @@ class RequestsTest extends IntegrationTestCase {
 	}
 
 	/**
-	 * The plugins API accepts a new klarna_ key on its own, but an older key only paired with its username.
+	 * The plugins API rejects an older key sent without its username, so every key is paired with it.
 	 * The settings page posts the username as client_id, the stored credentials as merchant_id.
 	 *
 	 * @dataProvider provide_feature_check_credentials
 	 */
-	public function test_the_feature_check_signs_itself_for_the_key_format( array $credentials, string $expected ): void {
+	public function test_the_feature_check_signs_with_username_and_password( array $credentials, string $expected ): void {
 		$this->willRespondWith( [], 200, '/features' );
 
 		KP_WC()->api->get_unavailable_features( $credentials + [ 'country_code' => 'se', 'mode' => 'test' ] );
@@ -226,11 +226,19 @@ class RequestsTest extends IntegrationTestCase {
 	/** @return array<string, array{0: array, 1: string}> */
 	public function provide_feature_check_credentials(): array {
 		return [
-			'new key, sent as is'                 => [ [ 'merchant_id' => 'PK123_abc', 'shared_secret' => 'klarna_test_api_x' ], 'basic klarna_test_api_x' ],
+			'new key, stored credentials'         => [ [ 'merchant_id' => 'PK123_abc', 'shared_secret' => 'klarna_test_api_x' ], 'Basic ' . base64_encode( 'PK123_abc:klarna_test_api_x' ) ],
 			'old key, stored credentials'         => [ [ 'merchant_id' => 'PK123_abc', 'shared_secret' => 'oldsecret' ], 'Basic ' . base64_encode( 'PK123_abc:oldsecret' ) ],
 			'old key, settings page'              => [ [ 'client_id' => 'PK123_abc', 'shared_secret' => 'oldsecret' ], 'Basic ' . base64_encode( 'PK123_abc:oldsecret' ) ],
 			'old key, entity encoded by the form' => [ [ 'client_id' => 'PK123_abc', 'shared_secret' => 'a&amp;b&#039;c' ], 'Basic ' . base64_encode( "PK123_abc:a&b'c" ) ],
 		];
+	}
+
+	public function test_the_feature_check_needs_a_username_before_calling_klarna(): void {
+		$response = KP_WC()->api->get_unavailable_features( [ 'shared_secret' => 'klarna_test_api_x', 'country_code' => 'se', 'mode' => 'test' ] );
+
+		$this->assertWPError( $response );
+		$this->assertSame( 'missing_merchant_id', $response->get_error_code() );
+		$this->assertSame( [], $this->klarnaRequestsTo( '/features' ) );
 	}
 
 	/**

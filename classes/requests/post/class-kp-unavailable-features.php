@@ -111,17 +111,13 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 	/**
 	 * Calculates the auth header for the request.
 	 *
-	 * New API keys (prefixed klarna_) carry the credential themselves and are sent as is. Older keys must be
-	 * paired with the username, like every other request to Klarna, or the plugins API responds with a 401.
+	 * Signs with the username and password like every other request to Klarna. Older API passwords
+	 * are rejected by the plugins API with a 401 when sent without the username.
 	 *
 	 * @return string
 	 */
 	public function calculate_auth() {
 		$api_password = htmlspecialchars_decode( (string) $this->api_password, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
-
-		if ( 0 === strpos( $api_password, 'klarna_' ) || empty( $this->api_username ) ) {
-			return 'basic ' . $api_password;
-		}
 
 		return 'Basic ' . base64_encode( $this->api_username . ':' . $api_password ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
 	}

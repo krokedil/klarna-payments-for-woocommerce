@@ -294,15 +294,20 @@ class KP_Api {
 			return new WP_Error( 'missing_shared_secret', __( 'Missing shared secret.', 'klarna-payments-for-woocommerce' ) );
 		}
 
+		// The settings page posts the merchant ID as client_id, the stored credentials use merchant_id.
+		$api_username = $credentials['merchant_id'] ?? $credentials['client_id'] ?? '';
+
+		if ( ! $api_username ) {
+			/* translators: [merchant-facing]. */
+			return new WP_Error( 'missing_merchant_id', __( 'Missing username.', 'klarna-payments-for-woocommerce' ) );
+		}
+
 		if ( ! get_option( 'kp_uuid4' ) ) {
 			add_option( 'kp_uuid4', wp_generate_uuid4() );
 		}
 
 		$mode       = $credentials['mode'] ?? 'live';
 		$request_id = get_option( 'kp_uuid4' );
-
-		// The settings page posts the merchant ID as client_id, the stored credentials use merchant_id.
-		$api_username = $credentials['merchant_id'] ?? $credentials['client_id'] ?? '';
 
 		$response = ( new KP_Unavailable_Features(
 			array(
