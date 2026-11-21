@@ -40,6 +40,8 @@ use Krokedil\Klarna\Utilities\ApiCredentialsUtility;
 use Krokedil\Klarna\Logging\LogMasking;
 use Krokedil\Klarna\Logging\LogWriter;
 
+//test-tests
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
