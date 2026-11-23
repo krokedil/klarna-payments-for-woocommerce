@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Klarna Express Checkout (one step) now sends the product ID as the line item reference when a product has no SKU, the same as the regular Klarna checkout, instead of sending an empty reference.
