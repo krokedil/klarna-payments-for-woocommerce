@@ -88,6 +88,20 @@ class KecOneStepPlacementTest extends IntegrationTestCase {
 		];
 	}
 
+	public function test_an_unreachable_klarna_order_holds_the_order_under_the_plain_klarna_title(): void {
+		$order = $this->haveOrderAwaitingPayment();
+		$this->willRespondWith( [ 'order_id' => 'klarna-order-123' ], 200, '/authorizations/auth-token-1/order' );
+		$this->willRespondWith( [ 'error_code' => 'NOT_FOUND' ], 404, 'ordermanagement/v1/orders' );
+		$this->willRespondWith( [ 'error_code' => 'NOT_FOUND' ], 404, 'ordermanagement/v1/orders' );
+
+		$this->completePayment( $order );
+
+		$saved = $this->reload( $order );
+
+		$this->assertSame( 'on-hold', $saved->get_status() );
+		$this->assertSame( 'Klarna', $saved->get_payment_method_title() );
+	}
+
 	public function test_an_already_paid_order_is_not_placed_again(): void {
 		$order = $this->haveOrderAwaitingPayment( [ 'status' => 'processing', 'paid' => true ] );
 

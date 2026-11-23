@@ -687,7 +687,7 @@ function kp_set_payment_method_title( $order, $klarna_place_order_response ) {
 	$klarna_order_id = $klarna_place_order_response['order_id'];
 	$response        = KP_WC()->api->get_klarna_om_order( $order->get_billing_country(), $klarna_order_id, kp_get_order_credentials_country( $order ) );
 	if ( is_wp_error( $response ) || ! isset( $response['initial_payment_method']['description'] ) ) {
-		$klarna_method = $klarna_place_order_response['authorized_payment_method']['type'];
+		$klarna_method = $klarna_place_order_response['authorized_payment_method']['type'] ?? '';
 		switch ( $klarna_method ) {
 			case 'invoice':
 				$klarna_method = 'Pay Later';
