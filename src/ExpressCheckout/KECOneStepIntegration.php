@@ -50,9 +50,14 @@ class KECOneStepIntegration implements Interfaces\AcquiringPartnerIntegration {
 	 * @param array     $payload The payload data from Klarna.
 	 */
 	private function handle_completed_payment( \WC_Order $order, array $payload ) {
+		if ( ! empty( $order->get_date_paid() ) ) {
+			KP_WC()->logger()->info( "[KEC One Step] Order {$order->get_id()} is already paid, the completed payment was not placed again." );
+			return;
+		}
+
 		$response = KP_WC()->api->place_order( kp_get_klarna_country( $order ), $payload['payment_token'], $order->get_id() );
 		if ( ! empty( $response ) && ! is_wp_error( $response ) ) {
-			kp_process_accepted( $order, $response );
+			$this->process_fraud_status( $order, $response );
 		} else {
 			$error_message = is_wp_error( $response ) ? $response->get_error_message() : 'Unknown error';
 			KP_WC()->logger()->error( "[KEC One Step] Error placing order for Order ID {$order->get_id()}: {$error_message}" );
@@ -76,6 +81,68 @@ class KECOneStepIntegration implements Interfaces\AcquiringPartnerIntegration {
 			 */
 			do_action( 'wc_klarna_pending', $order->get_id(), $response );
 		}
+	}
+
+	/**
+	 * Act on Klarna's fraud assessment of a placed order, as every other place order path does.
+	 *
+	 * @param \WC_Order $order The WooCommerce order object.
+	 * @param array     $response The place order response from Klarna.
+	 */
+	private function process_fraud_status( \WC_Order $order, array $response ) {
+		$fraud_status = $response['fraud_status'] ?? $this->get_klarna_order_fraud_status( $order, $response['order_id'] ?? '' );
+
+		switch ( $fraud_status ) {
+			case 'ACCEPTED':
+				kp_process_accepted( $order, $response );
+				break;
+			case 'PENDING':
+				kp_process_pending( $order, $response );
+				break;
+			case 'REJECTED':
+				kp_process_rejected( $order, $response );
+				break;
+			default:
+				// Klarna created the order, so keep its ID for the merchant, but hold it until the status is known.
+				kp_save_order_meta_data( $order, $response );
+				$order->update_status(
+					'on-hold',
+					sprintf(
+						/* translators: [merchant-facing]. %1$s: Klarna fraud status. %2$s: Klarna order ID. */
+						__( 'Klarna returned an unknown fraud status (%1$s) for order %2$s. Verify the order in the Klarna portal before processing it.', 'klarna-payments-for-woocommerce' ),
+						$fraud_status,
+						$response['order_id'] ?? ''
+					)
+				);
+				break;
+		}
+
+		KP_WC()->logger()->info( "[KEC One Step] Placed order {$order->get_id()} with fraud status {$fraud_status}." );
+	}
+
+	/**
+	 * Get the fraud status from the Klarna order, since placing a one step payment token does not return it.
+	 *
+	 * @param \WC_Order $order The WooCommerce order object.
+	 * @param string    $klarna_order_id The Klarna order ID.
+	 *
+	 * @return string The fraud status, or an empty string if it could not be retrieved.
+	 */
+	private function get_klarna_order_fraud_status( \WC_Order $order, $klarna_order_id ) {
+		if ( empty( $klarna_order_id ) ) {
+			return '';
+		}
+
+		$klarna_order = KP_WC()->api->get_klarna_om_order( kp_get_klarna_country( $order ), $klarna_order_id, kp_get_order_credentials_country( $order ) );
+		if ( is_wp_error( $klarna_order ) || ! is_array( $klarna_order ) ) {
+			KP_WC()->logger()->error( "[KEC One Step] Could not retrieve the Klarna order for order {$order->get_id()} to read its fraud status." );
+			return '';
+		}
+
+		$fraud_status = $klarna_order['fraud_status'] ?? '';
+
+		// Order management reports a stopped order, which must not be fulfilled either.
+		return 'STOPPED' === $fraud_status ? 'REJECTED' : $fraud_status;
 	}
 
 	/**
