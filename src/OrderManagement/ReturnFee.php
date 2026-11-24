@@ -216,8 +216,8 @@ class ReturnFee {
 		$line_item_totals_json     = filter_input( INPUT_POST, 'line_item_totals', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$line_item_tax_totals_json = filter_input( INPUT_POST, 'line_item_tax_totals', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
-		$line_item_totals     = json_decode( htmlspecialchars_decode( $line_item_totals_json ), true ) ?? array();
-		$line_item_tax_totals = json_decode( htmlspecialchars_decode( $line_item_tax_totals_json ), true ) ?? array();
+		$line_item_totals     = json_decode( htmlspecialchars_decode( $line_item_totals_json, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ), true ) ?? array();
+		$line_item_tax_totals = json_decode( htmlspecialchars_decode( $line_item_tax_totals_json, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ), true ) ?? array();
 
 		foreach ( $line_item_totals as $key => $total ) {
 			if ( 'klarna_return_fee' === $key ) {

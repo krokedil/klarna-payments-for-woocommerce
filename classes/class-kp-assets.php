@@ -201,8 +201,8 @@ class KP_Assets {
 
 		// Mirrors WC_Shortcode_Checkout::guest_should_verify_email(), which accepts the email posted by its verify form.
 		$supplied_email = null;
-		if ( wp_verify_nonce( (string) filter_input( INPUT_POST, 'check_submission' ), 'wc_verify_email' ) ) {
-			$supplied_email = sanitize_email( wp_unslash( (string) filter_input( INPUT_POST, 'email' ) ) );
+		if ( wp_verify_nonce( (string) filter_input( INPUT_POST, 'check_submission', FILTER_SANITIZE_FULL_SPECIAL_CHARS ), 'wc_verify_email' ) ) {
+			$supplied_email = sanitize_email( wp_unslash( (string) filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ) ) );
 		}
 
 		return Users::should_user_verify_order_email( $order->get_id(), $supplied_email, 'order-pay' );

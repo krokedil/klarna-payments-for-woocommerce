@@ -84,9 +84,9 @@ class Session {
 		$shipping_value = isset( $posted_data[ 'shipping_' . $wc_field ] ) ? $posted_data[ 'shipping_' . $wc_field ] : '';
 		$klarna_value   = isset( $klarna_address[ $klarna_field ] ) ? $klarna_address[ $klarna_field ] : '';
 
-		$billing_value  = html_entity_decode( $billing_value );
-		$shipping_value = html_entity_decode( $shipping_value );
-		$klarna_value   = html_entity_decode( $klarna_value );
+		$billing_value  = html_entity_decode( $billing_value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+		$shipping_value = html_entity_decode( $shipping_value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+		$klarna_value   = html_entity_decode( $klarna_value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 		if ( $check_shipping_address && $shipping_value !== $klarna_value ) {
 			if ( in_array( $wc_field, array( 'email', 'phone' ), true ) && empty( $shipping_value ) ) {
