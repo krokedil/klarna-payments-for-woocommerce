@@ -47,6 +47,16 @@ class KecOneStepCheckoutTest extends IntegrationTestCase {
 		$this->assertTrue( $this->oneStepOrder()->has_cart_hash( WC()->cart->get_cart_hash() ), self::CART_HASH_MESSAGE );
 	}
 
+	public function test_a_product_without_sku_is_referenced_by_its_id_like_in_kp(): void {
+		$with_sku    = $this->haveSimpleProduct( [ 'sku' => 'with-sku' ] );
+		$without_sku = $this->haveSimpleProduct( [ 'sku' => '' ] );
+		$this->haveCartWith( [ $with_sku, $without_sku ] );
+
+		$references = array_column( OneStepCheckout::get_initiate_body()['supplementaryPurchaseData']['lineItems'], 'lineItemReference' );
+
+		$this->assertSame( [ 'with-sku', (string) $without_sku->get_id() ], $references, 'An empty lineItemReference leaves the Klarna order line without a reference, while KP falls back to the product ID.' );
+	}
+
 	/** Builds the order the way Klarna's shipping address callback does, and returns the chosen rate. */
 	private function haveOneStepOrder(): string {
 		$this->haveCartWith( [ [ $this->haveSimpleProduct( [ 'price' => '100.00' ] ), 2 ] ] );
