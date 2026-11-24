@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Klarna Express Checkout one-step orders now follow Klarna's fraud assessment in the same way as the regular checkout.
