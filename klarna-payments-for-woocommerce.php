@@ -55,7 +55,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
  * Required minimums and constants
  */
 define( 'WC_KLARNA_PAYMENTS_VERSION', '4.14.0' );
-define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
+define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '8.0.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
