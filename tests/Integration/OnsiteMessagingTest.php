@@ -67,6 +67,41 @@ class OnsiteMessagingTest extends IntegrationTestCase {
 		$this->assertNotContains( self::MODULE, wp_script_modules()->get_queue() );
 	}
 
+	/**
+	 * Before the loop the global post is only the main query's first product, which
+	 * gave a shop page banner a random product's price.
+	 */
+	public function test_a_promotion_on_the_shop_page_has_no_purchase_amount(): void {
+		$this->haveSimpleProduct( [ 'price' => '125.00', 'tax_status' => 'none' ] );
+		$this->go_to( get_post_type_archive_link( 'product' ) );
+
+		$this->assertSame( '', $this->purchaseAmountOf( do_shortcode( '[onsite_messaging]' ) ) );
+	}
+
+	public function test_a_placement_in_the_product_loop_uses_that_products_price(): void {
+		$this->haveSimpleProduct( [ 'price' => '125.00', 'tax_status' => 'none' ] );
+		$this->go_to( get_post_type_archive_link( 'product' ) );
+
+		the_post();
+		$html = do_shortcode( '[onsite_messaging data-key="credit-promotion-badge"]' );
+		wp_reset_postdata();
+
+		$this->assertSame( '12500', $this->purchaseAmountOf( $html ) );
+	}
+
+	public function test_a_placement_on_a_product_page_uses_the_product_price(): void {
+		$product = $this->haveSimpleProduct( [ 'price' => '125.00', 'tax_status' => 'none' ] );
+		$this->go_to( get_permalink( $product->get_id() ) );
+
+		$this->assertSame( '12500', $this->purchaseAmountOf( do_shortcode( '[onsite_messaging data-key="credit-promotion-badge"]' ) ) );
+	}
+
+	private function purchaseAmountOf( string $html ): string {
+		$this->assertSame( 1, preg_match( '/data-purchase-amount="([^"]*)"/', $html, $matches ), 'A placement is printed.' );
+
+		return $matches[1];
+	}
+
 	private function assertModuleEnqueued(): void {
 		$this->assertContains( self::MODULE, wp_script_modules()->get_queue(), 'The On-Site Messaging module is enqueued.' );
 	}
