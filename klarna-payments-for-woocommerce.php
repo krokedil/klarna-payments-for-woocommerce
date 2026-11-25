@@ -6,6 +6,8 @@
  * Author: klarna
  * Author URI: https://www.klarna.com/
  * Version: 4.14.0
+ * License: GPLv3 or later
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *

@@ -163,7 +163,7 @@ abstract class Request {
 		$args = $this->get_request_args();
 		if ( is_wp_error( $args ) || ( isset( $args['body'] ) && is_null( json_decode( $args['body'] ) ) ) ) {
 			/* translators: [merchant-facing]. */
-			return is_wp_error( $args ) ? $args : new \WP_Error( 'invalid_json', __( 'Invalid JSON response from the server.', 'woocommerce' ) );
+			return is_wp_error( $args ) ? $args : new \WP_Error( 'invalid_json', __( 'Invalid JSON response from the server.', 'klarna-payments-for-woocommerce' ) );
 		}
 		$response = wp_remote_request( $url, $args );
 		return $this->process_response( $response, $args, $url );

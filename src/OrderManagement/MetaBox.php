@@ -279,7 +279,7 @@ class MetaBox extends OrderMetabox {
 			<?php if ( $actions['any'] ) : ?>
 				<li class="wide" id="kom-capture">
 					<select class="klarna_order_actions" name="kom_order_actions" id="kom_order_actions">
-						<option value=""><?php esc_attr_e( 'Choose an action...', 'woocommerce' ); ?></option>
+						<option value=""><?php esc_attr_e( 'Choose an action...', 'klarna-payments-for-woocommerce' ); ?></option>
 						<?php
 						/**
 						 * Triggers inside the order actions dropdown, allowing additional action options to be rendered.
@@ -293,7 +293,7 @@ class MetaBox extends OrderMetabox {
 						?>
 					</select>
 					<?php /* translators: [merchant-facing]. */ ?>
-					<button class="button wc-reload"><span><?php esc_html_e( 'Apply', 'woocommerce' ); ?></span></button>
+					<button class="button wc-reload"><span><?php esc_html_e( 'Apply', 'klarna-payments-for-woocommerce' ); ?></span></button>
 					<span class="woocommerce-help-tip" data-tip="
 					<?php
 					ob_start();
