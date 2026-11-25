@@ -52,7 +52,7 @@ class Settings {
 		$default = $this->default();
 
 		$settings['onsite_messaging']                       = array(
-			'title' => 'Klarna On-Site Messaging',
+			'title' => 'Klarna On-site messaging',
 			'type'  => 'title',
 		);
 		$settings['onsite_messaging_test_mode']             = array(
@@ -64,7 +64,7 @@ class Settings {
 		$settings['data_client_id']                         = array(
 			'title'       => __( 'Client ID', 'klarna-payments-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter the client ID given by Klarna for Klarna On-Site Messaging', 'klarna-payments-for-woocommerce' ),
+			'description' => sprintf( __( 'Enter the client ID given by Klarna for %s', 'klarna-payments-for-woocommerce' ), 'On-site messaging' ),
 			'default'     => $default['data_client_id'],
 			'desc_tip'    => true,
 		);
@@ -82,7 +82,7 @@ class Settings {
 			'desc_tip'    => true,
 		);
 		$settings['onsite_messaging_product_location']      = array(
-			'title'   => __( 'Product On-Site Messaging placement', 'klarna-payments-for-woocommerce' ),
+			'title'   => sprintf( __( 'Product %s placement', 'klarna-payments-for-woocommerce' ), 'On-site messaging' ),
 			'desc'    => __( 'Select where to display the widget in your product pages', 'klarna-payments-for-woocommerce' ),
 			'id'      => '',
 			'default' => $default['onsite_messaging_product_location'],
@@ -123,7 +123,7 @@ class Settings {
 			'desc_tip'    => true,
 		);
 		$settings['onsite_messaging_cart_location']         = array(
-			'title'   => __( 'Cart On-Site Messaging placement', 'klarna-payments-for-woocommerce' ),
+			'title'   => sprintf( __( 'Cart %s placement', 'klarna-payments-for-woocommerce' ), 'On-site messaging' ),
 			'desc'    => __( 'Select where to display the widget on your cart page', 'klarna-payments-for-woocommerce' ),
 			'id'      => '',
 			'default' => $default['onsite_messaging_cart_location'],
@@ -181,7 +181,7 @@ class Settings {
 
 		$settings['onsite_messaging']                  = array(
 			'id'          => 'kosm',
-			'title'       => 'On-Site Messaging',
+			'title'       => 'On-site messaging',
 			'description' => __( 'Add personalized messaging throughout the shopper journey for higher conversion rates and increased spend.', 'klarna-payments-for-woocommerce' ),
 			'links'       => array(
 				array(
@@ -193,7 +193,7 @@ class Settings {
 		);
 		$settings['onsite_messaging_enabled']          = array(
 			'title'       => __( 'Enable/Disable', 'klarna-payments-for-woocommerce' ),
-			'label'       => __( 'Enable On-site Messaging', 'klarna-payments-for-woocommerce' ),
+			'label'       => sprintf( __( 'Enable %s', 'klarna-payments-for-woocommerce' ), 'On-site messaging' ),
 			'type'        => 'checkbox',
 			'description' => '',
 			'default'     => 'yes',
@@ -266,7 +266,7 @@ class Settings {
 		);
 		$settings['onsite_messaging_theme_product']    = array(
 			'title'       => __( 'Product Page Theme', 'klarna-payments-for-woocommerce' ),
-			'description' => __( 'The On-site messaging placements come in Light and Dark theme to fit into the look and feel of your website.', 'klarna-payments-for-woocommerce' ),
+			'description' => sprintf( __( 'The %s placements come in Light and Dark theme to fit into the look and feel of your website.', 'klarna-payments-for-woocommerce' ), 'On-site messaging' ),
 			'id'          => '',
 			'default'     => $default['onsite_messaging_theme_product'],
 			'desc_tip'    => true,
