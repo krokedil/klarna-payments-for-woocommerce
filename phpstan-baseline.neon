@@ -277,12 +277,6 @@ parameters:
 			path: src/OnsiteMessaging/KlarnaOnsiteMessaging.php
 
 		-
-			message: '#^Variable \$has_shortcode might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/OnsiteMessaging/KlarnaOnsiteMessaging.php
-
-		-
 			message: '#^Access to an undefined property WC_Cart\:\:\$total\.$#'
 			identifier: property.notFound
 			count: 1
