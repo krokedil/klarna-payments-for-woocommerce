@@ -73,14 +73,14 @@ class OnsiteMessagingTest extends IntegrationTestCase {
 	 */
 	public function test_a_promotion_on_the_shop_page_has_no_purchase_amount(): void {
 		$this->haveSimpleProduct( [ 'price' => '125.00', 'tax_status' => 'none' ] );
-		$this->go_to( get_post_type_archive_link( 'product' ) );
+		$this->goToProductListing();
 
 		$this->assertSame( '', $this->purchaseAmountOf( do_shortcode( '[onsite_messaging]' ) ) );
 	}
 
 	public function test_a_placement_in_the_product_loop_uses_that_products_price(): void {
 		$this->haveSimpleProduct( [ 'price' => '125.00', 'tax_status' => 'none' ] );
-		$this->go_to( get_post_type_archive_link( 'product' ) );
+		$this->goToProductListing();
 
 		the_post();
 		$html = do_shortcode( '[onsite_messaging data-key="credit-promotion-badge"]' );
@@ -94,6 +94,15 @@ class OnsiteMessagingTest extends IntegrationTestCase {
 		$this->go_to( get_permalink( $product->get_id() ) );
 
 		$this->assertSame( '12500', $this->purchaseAmountOf( do_shortcode( '[onsite_messaging data-key="credit-promotion-badge"]' ) ) );
+	}
+
+	/**
+	 * A product listing, such as the shop page or a category, without depending on a shop page in the fixture.
+	 */
+	private function goToProductListing(): void {
+		$this->go_to( add_query_arg( 'post_type', 'product', home_url( '/' ) ) );
+		$this->assertFalse( is_product(), 'A listing, not a product page.' );
+		$this->assertInstanceOf( \WP_Post::class, $GLOBALS['post'] ?? null, 'The global post is the first product, as on the shop page.' );
 	}
 
 	private function purchaseAmountOf( string $html ): string {
