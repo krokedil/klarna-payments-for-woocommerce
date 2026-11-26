@@ -53,7 +53,8 @@ class Utility {
 
 		$class = 'klarna-onsite-messaging';
 		if ( ! is_cart() ) {
-			if ( empty( $purchase_amount ) ) {
+			// Elsewhere, the global post is just the first result of the main query, e.g. the first product on the shop page.
+			if ( empty( $purchase_amount ) && ( is_product() || in_the_loop() ) ) {
 				$product = self::get_product();
 				// If the purchase amount is not set, try to retrieve it from the product.
 				if ( is_a( $product, 'WC_Product' ) ) {

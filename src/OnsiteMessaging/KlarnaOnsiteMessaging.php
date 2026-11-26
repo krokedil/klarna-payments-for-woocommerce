@@ -46,6 +46,12 @@ class KlarnaOnsiteMessaging {
 	 */
 	private $shortcode;
 
+	/**
+	 * Whether the scripts have already been enqueued for this request.
+	 *
+	 * @var bool
+	 */
+	private $scripts_enqueued = false;
 
 	/**
 	 * Class constructor.
@@ -76,7 +82,7 @@ class KlarnaOnsiteMessaging {
 
 		$this->product   = new Product( $this->settings );
 		$this->cart      = new Cart( $this->settings );
-		$this->shortcode = new Shortcode();
+		$this->shortcode = new Shortcode( $this );
 
 		add_action( 'widgets_init', array( $this, 'init_widget' ) );
 
@@ -161,6 +167,13 @@ class KlarnaOnsiteMessaging {
 	public function enqueue_scripts( $show_everywhere = false ) {
 		global $post;
 
+		// The shortcode and widget enqueue on render, possibly more than once per page.
+		if ( $this->scripts_enqueued ) {
+			return;
+		}
+
+		$has_shortcode = false;
+
 		/**
 		 * Filters whether to enqueue the on-site messaging scripts on all pages, rather than only on product, cart and shortcode pages.
 		 *
@@ -243,6 +256,7 @@ class KlarnaOnsiteMessaging {
 		KP_Assets::register_module_data( $localize, '@klarna/onsite_messaging' );
 
 		wp_enqueue_script_module( '@klarna/onsite_messaging' );
+		$this->scripts_enqueued = true;
 	}
 
 	/**

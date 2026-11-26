@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+The Klarna On-Site Messaging shortcode now works wherever it is rendered, so placements added through page builders, headers, footers or theme templates show up instead of staying empty.
