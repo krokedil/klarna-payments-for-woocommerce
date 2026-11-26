@@ -14,7 +14,7 @@
 
     <!-- Set minimum supported WordPress version and PHP test version -->
     <config name="minimum_supported_wp_version" value="6.7" />
-    <config name="testVersion" value="7.4-" />
+    <config name="testVersion" value="8.0-" />
 
     <!-- Use Wordpress Coding standards -->
     <rule ref="WordPress" />

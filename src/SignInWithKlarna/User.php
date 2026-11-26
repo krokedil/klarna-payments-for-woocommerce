@@ -83,7 +83,7 @@ class User {
 	 */
 	public static function set_current_user( $user_id, $set_gateway = false ) {
 		wc_set_customer_auth_cookie( $user_id );
-		wp_set_current_user( $user_id );
+		wp_set_current_user( $user_id ); // phpcs:ignore Generic.PHP.ForbiddenFunctions.Discouraged -- Logs in the user Klarna verified through the signed id_token.
 
 		// Set Klarna as the selected payment method (if available).
 		/**
