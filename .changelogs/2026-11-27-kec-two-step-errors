@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Klarna Express Checkout (two step) now shows an error notice on the cart and product page when the payment can't be started, instead of doing nothing.
