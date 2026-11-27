@@ -435,7 +435,7 @@ class MetaBox extends OrderMetabox {
 		if ( ! $actions['capture'] ) {
 			return false; // Capture is on auto, don't present action.
 		}
-		if ( ! $this->is_actionable( $order ) ) {
+		if ( ! $this->can_send_manual_action( $order ) ) {
 			return false;
 		}
 		if ( ! empty( $order->get_meta( '_wc_klarna_capture_id' ) ) ) {
@@ -465,7 +465,7 @@ class MetaBox extends OrderMetabox {
 		if ( ! $actions['cancel'] ) {
 			return false; // Cancel is on auto, don't present action.
 		}
-		if ( ! $this->is_actionable( $order ) ) {
+		if ( ! $this->can_send_manual_action( $order ) ) {
 			return false;
 		}
 		if ( ! empty( $order->get_meta( '_wc_klarna_pending_to_cancelled', true ) ) ) {
@@ -486,7 +486,7 @@ class MetaBox extends OrderMetabox {
 	 *
 	 * @return bool
 	 */
-	protected function is_actionable( $order ) {
+	protected function can_send_manual_action( $order ) {
 		return ! $order->get_meta( '_kom_disconnect' ) && ! empty( $order->get_date_paid() );
 	}
 

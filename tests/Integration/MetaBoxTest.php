@@ -21,7 +21,8 @@ class MetaBoxTest extends IntegrationTestCase {
 	 * @dataProvider provide_order_states
 	 */
 	public function test_the_dropdown_only_offers_an_action_the_order_can_take( string $op, string $state, bool $expected ): void {
-		$order = $this->haveCapturableKlarnaOrder();
+		// The metabox only renders an unpaid order when it is on-hold.
+		$order = $this->haveCapturableKlarnaOrder( 'unpaid' === $state ? [ 'status' => 'on-hold' ] : [] );
 
 		if ( 'disconnected' === $state ) {
 			$order->update_meta_data( '_kom_disconnect', 'yes' );
