@@ -156,7 +156,11 @@ jQuery(function ($) {
       if (!authorizeResult.approved) {
         // A closed popup leaves show_form true; a decline sets it to false, and a failure adds an error.
         if (authorizeResult.show_form === false || authorizeResult.error) {
-          kec_cart.logError("Klarna did not approve the authorization", authorizeResult);
+          // Only log why it failed, the result also holds the client token and the customer's address.
+          kec_cart.logError("Klarna did not approve the authorization", {
+            show_form: authorizeResult.show_form,
+            error: authorizeResult.error,
+          });
           kec_cart.showError();
         }
         return;
