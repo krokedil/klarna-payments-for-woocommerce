@@ -1,6 +1,7 @@
 jQuery(function ($) {
   const kec_cart = {
     selectedVariation: null,
+    lastError: null,
 
     /**
      * Initialize the Klarna Express Checkout button.
@@ -118,13 +119,15 @@ jQuery(function ($) {
      * @returns
      */
     onClickHandler(authorize) {
+      kec_cart.clearError();
+
       // If the customer is on the product page, we need to set the cart to only contain the product, and the quantity of it.
       const { is_product_page } = kec_cart_params;
       if (is_product_page) {
         const setCartResult = kec_cart.productPageHandler();
 
         if (!setCartResult) {
-          // TODO Handle errors.
+          kec_cart.showError("Could not set the cart");
           return;
         }
       }
@@ -132,7 +135,7 @@ jQuery(function ($) {
       const payload = kec_cart.getPayload();
 
       if (!payload) {
-        // TODO Handle errors.
+        kec_cart.showError("Could not get the payload");
         return;
       }
 
@@ -152,7 +155,10 @@ jQuery(function ($) {
      */
     async onAuthorizeHandler(authorizeResult) {
       if (!authorizeResult.approved) {
-        // TODO Handle errors.
+        // Klarna only includes an error when the authorization failed, not when the customer closed the popup.
+        if (authorizeResult.error) {
+          kec_cart.showError("Klarna did not approve the authorization", authorizeResult.error);
+        }
         return;
       }
 
@@ -160,12 +166,57 @@ jQuery(function ($) {
       const authCallbackResult = await kec_cart.authCallback(authorizeResult);
 
       if (!authCallbackResult) {
-        // TODO Handle errors.
+        kec_cart.showError("The auth callback failed");
         return;
       }
 
       // Redirect the customer to the redirect url.
       window.location.href = authCallbackResult;
+    },
+
+    /**
+     * Show an error notice to the customer, and log the details to the console.
+     *
+     * @param {string} reason Why the flow stopped, for the console.
+     * @param {*} details Any extra details for the console.
+     * @returns {void}
+     */
+    showError(reason, details = kec_cart.lastError) {
+      console.error("Klarna Express Checkout:", reason, details || "");
+      kec_cart.clearError();
+
+      const $notice = $('<ul class="woocommerce-error kec-error" role="alert"><li></li></ul>');
+      $notice.find("li").text(kec_cart_params.i18n.error);
+
+      const $wrapper = $(".woocommerce-notices-wrapper").first();
+      if ($wrapper.length) {
+        $wrapper.prepend($notice);
+      } else {
+        $("#kec-pay-button").before($notice);
+      }
+
+      $("html, body").animate({ scrollTop: $notice.offset().top - 100 }, 500);
+    },
+
+    /**
+     * Remove any error notice shown by KEC, and forget the last request error.
+     *
+     * @returns {void}
+     */
+    clearError() {
+      kec_cart.lastError = null;
+      $(".kec-error").remove();
+    },
+
+    /**
+     * Remember why an AJAX request failed, so it can be logged with the error notice.
+     *
+     * @param {object} response The response, or the jqXHR object for a failed request.
+     * @returns {void}
+     */
+    setLastError(response) {
+      const json = response.responseJSON || response;
+      kec_cart.lastError = json.data || response.statusText || null;
     },
 
     /**
@@ -205,8 +256,13 @@ jQuery(function ($) {
         },
         async: false,
         success: (result) => {
-          payload = result.data || false;
+          if (result.success) {
+            payload = result.data || false;
+          } else {
+            kec_cart.setLastError(result);
+          }
         },
+        error: kec_cart.setLastError,
       });
 
       return payload;
@@ -234,9 +290,10 @@ jQuery(function ($) {
           if (response.success) {
             result = response.data || false;
           } else {
-            return false;
+            kec_cart.setLastError(response);
           }
         },
+        error: kec_cart.setLastError,
       });
 
       return result;
@@ -266,7 +323,12 @@ jQuery(function ($) {
         async: false,
         success: (response) => {
           result = response.success || false;
+
+          if (!result) {
+            kec_cart.setLastError(response);
+          }
         },
+        error: kec_cart.setLastError,
       });
 
       return result;

@@ -183,6 +183,9 @@ class Assets {
 			'theme'           => $this->settings->get_theme(),
 			'shape'           => $this->settings->get_shape(),
 			'locale'          => $this->locale,
+			'i18n'            => array(
+				'error' => __( 'Something went wrong with Klarna Express Checkout. Please try again or choose another payment method.', 'klarna-payments-for-woocommerce' ),
+			),
 		);
 
 		wp_localize_script( 'kec-cart', 'kec_cart_params', $cart_params );
