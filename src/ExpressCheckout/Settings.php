@@ -154,6 +154,15 @@ class Settings {
 	}
 
 	/**
+	 * Whether the button should be shown on the checkout page. Only the "All" placement includes it.
+	 *
+	 * @return bool
+	 */
+	public function show_on_checkout() {
+		return 'both' === $this->get_placements();
+	}
+
+	/**
 	 * Get the webhook created in Klarna.
 	 *
 	 * @return array
@@ -268,10 +277,12 @@ class Settings {
 				'default'     => 'default',
 			),
 			'kec_placement'      => array(
-				'title'   => __( 'Placements', 'klarna-payments-for-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'both',
-				'options' => array(
+				'title'       => __( 'Placements', 'klarna-payments-for-woocommerce' ),
+				'type'        => 'select',
+				'description' => __( 'All shows the button on product pages, the cart page and the checkout page.', 'klarna-payments-for-woocommerce' ),
+				'desc_tip'    => true,
+				'default'     => 'both',
+				'options'     => array(
 					'both'    => __( 'All (recommended)', 'klarna-payments-for-woocommerce' ),
 					'product' => __( 'Product pages', 'klarna-payments-for-woocommerce' ),
 					'cart'    => __( 'Cart page', 'klarna-payments-for-woocommerce' ),

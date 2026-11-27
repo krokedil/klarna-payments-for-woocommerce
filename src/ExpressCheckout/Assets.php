@@ -91,10 +91,11 @@ class Assets {
 			return;
 		}
 
-		$flow = $this->settings->get_kec_flow();
+		$flow     = $this->settings->get_kec_flow();
+		$one_step = 'one_step' === $flow && $one_step_available;
 
-		if ( is_cart() || is_product() ) {
-			if ( 'one_step' === $flow && $one_step_available ) {
+		if ( is_cart() || is_product() || $this->show_checkout_button( $one_step ) ) {
+			if ( $one_step ) {
 				$this->enqueue_one_step_assets();
 			} else {
 				$this->enqueue_cart_assets();
@@ -102,6 +103,27 @@ class Assets {
 		} elseif ( is_checkout() && $two_step_available ) {
 			$this->enqueue_checkout_assets();
 		}
+	}
+
+	/**
+	 * Whether the KEC button should be loaded on the current checkout page.
+	 *
+	 * @param bool $one_step Whether the one-step flow is used.
+	 *
+	 * @return bool
+	 */
+	private function show_checkout_button( $one_step ) {
+		if ( ! is_checkout() || is_checkout_pay_page() || is_order_received_page() || ! $this->settings->show_on_checkout() ) {
+			return false;
+		}
+
+		// Two-step KEC can only be finished on the classic checkout.
+		if ( ! $one_step && has_block( 'woocommerce/checkout' ) ) {
+			return false;
+		}
+
+		// A started two-step session is finished on the checkout page, so no new button then.
+		return empty( Session::get_client_token() );
 	}
 
 	/**
@@ -273,7 +295,7 @@ class Assets {
 			'locale'              => $this->locale,
 			'currency'            => get_woocommerce_currency(),
 			'amount'              => intval( floatval( $amount ) * 100 ),
-			'source'              => is_cart() ? 'cart' : ( is_product() ? get_the_ID() : 'unknown' ),
+			'source'              => is_product() ? get_the_ID() : ( is_cart() || is_checkout() ? 'cart' : 'unknown' ),
 			'is_variable_product' => is_product() && isset( $product ) && $product && $product->is_type( 'variable' ),
 		);
 

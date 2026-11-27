@@ -1,0 +1,4 @@
+Type: Feature
+Needs Documentation: yes
+
+Klarna Express Checkout can now be shown at the top of the checkout page. It is included in the "All" placement, and also shows in the express checkout area of the checkout block for the one step flow.
