@@ -222,7 +222,7 @@ class ExpressCheckout {
 		add_action(
 			'woocommerce_blocks_payment_method_type_registration',
 			function ( $payment_method_registry ) {
-				$payment_method_registry->register( new OneStepExpressPaymentMethod( $this->settings ) );
+				$payment_method_registry->register( new OneStepExpressPaymentMethod( $this->settings, $this->assets ) );
 			}
 		);
 	}

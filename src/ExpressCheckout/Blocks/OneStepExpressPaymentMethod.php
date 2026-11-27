@@ -29,12 +29,21 @@ class OneStepExpressPaymentMethod extends AbstractPaymentMethodType {
 	private $kec_settings;
 
 	/**
+	 * The KEC assets, which decide if the button is shown on the checkout.
+	 *
+	 * @var Assets
+	 */
+	private $assets;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Settings $kec_settings The KEC settings.
+	 * @param Assets   $assets       The KEC assets.
 	 */
-	public function __construct( $kec_settings ) {
+	public function __construct( Settings $kec_settings, Assets $assets ) {
 		$this->kec_settings = $kec_settings;
+		$this->assets       = $assets;
 	}
 
 	/**
@@ -77,8 +86,8 @@ class OneStepExpressPaymentMethod extends AbstractPaymentMethodType {
 	 */
 	public function get_payment_method_data() {
 		return array(
-			'title'       => __( 'Klarna Express Checkout', 'klarna-payments-for-woocommerce' ),
-			'is_checkout' => is_checkout(),
+			'title' => __( 'Klarna Express Checkout', 'klarna-payments-for-woocommerce' ),
+			'show'  => $this->assets->show_checkout_button( true ),
 		);
 	}
 }

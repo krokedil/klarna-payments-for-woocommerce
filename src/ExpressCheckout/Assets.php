@@ -91,11 +91,11 @@ class Assets {
 			return;
 		}
 
-		$flow     = $this->settings->get_kec_flow();
-		$one_step = 'one_step' === $flow && $one_step_available;
+		$flow         = $this->settings->get_kec_flow();
+		$use_one_step = 'one_step' === $flow && $one_step_available;
 
-		if ( is_cart() || is_product() || $this->show_checkout_button( $one_step ) ) {
-			if ( $one_step ) {
+		if ( is_cart() || is_product() || $this->show_checkout_button( $use_one_step ) ) {
+			if ( $use_one_step ) {
 				$this->enqueue_one_step_assets();
 			} else {
 				$this->enqueue_cart_assets();
@@ -106,24 +106,54 @@ class Assets {
 	}
 
 	/**
-	 * Whether the KEC button should be loaded on the current checkout page.
+	 * Whether the KEC button should be shown on the current checkout page, classic or block.
 	 *
-	 * @param bool $one_step Whether the one-step flow is used.
+	 * @param bool $use_one_step Whether the one-step flow is used.
 	 *
 	 * @return bool
 	 */
-	private function show_checkout_button( $one_step ) {
+	public function show_checkout_button( $use_one_step ) {
 		if ( ! is_checkout() || is_checkout_pay_page() || is_order_received_page() || ! $this->settings->show_on_checkout() ) {
 			return false;
 		}
 
+		if ( empty( $this->settings->get_credentials_secret() ) ) {
+			return false;
+		}
+
 		// Two-step KEC can only be finished on the classic checkout.
-		if ( ! $one_step && has_block( 'woocommerce/checkout' ) ) {
+		if ( ! $use_one_step && self::is_checkout_block() ) {
 			return false;
 		}
 
 		// A started two-step session is finished on the checkout page, so no new button then.
-		return empty( Session::get_client_token() );
+		if ( ! empty( Session::get_client_token() ) ) {
+			return false;
+		}
+
+		// KEC does not set up recurring payments.
+		if ( class_exists( 'WC_Subscriptions_Cart' ) && \WC_Subscriptions_Cart::cart_contains_subscription() ) {
+			return false;
+		}
+
+		return isset( WC()->payment_gateways()->get_available_payment_gateways()['klarna_payments'] );
+	}
+
+	/**
+	 * Whether the checkout uses the checkout block, in the page or in a block theme template.
+	 *
+	 * @return bool
+	 */
+	private static function is_checkout_block() {
+		if ( wp_is_block_theme() ) {
+			foreach ( get_block_templates( array( 'slug__in' => array( 'checkout', 'page-checkout' ) ) ) as $template ) {
+				if ( has_block( 'woocommerce/checkout', $template->content ) ) {
+					return true;
+				}
+			}
+		}
+
+		return has_block( 'woocommerce/checkout', wc_get_page_id( 'checkout' ) );
 	}
 
 	/**

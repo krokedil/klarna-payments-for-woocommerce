@@ -23,8 +23,8 @@ registerExpressPaymentMethod({
   description: settings.title || "Klarna",
   content: React.createElement(Content),
   edit: React.createElement(Edit),
-  // The cart block already has the button in the order summary, so only show it in the checkout block.
-  canMakePayment: () => !!settings.is_checkout,
+  // Decided server side; also keeps it out of the cart block, which has the button in the order summary.
+  canMakePayment: () => !!settings.show,
   paymentMethodId: "klarna_payments",
   supports: {
     features: ["products"],
