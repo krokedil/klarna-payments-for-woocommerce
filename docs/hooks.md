@@ -325,7 +325,7 @@ Argument | Type | Description
 Examples: 
 - [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-custom-actions-to-the-kom-metabox)
 
-Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 279](../src/OrderManagement/MetaBox.php#L279-L287)
+Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 277](../src/OrderManagement/MetaBox.php#L277-L285)
 
 
 ---
@@ -344,7 +344,7 @@ Argument | Type | Description
 Examples: 
 - [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-tooltip-text-for-kom-metabox-actions)
 
-Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 305](../src/OrderManagement/MetaBox.php#L305-L313)
+Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 302](../src/OrderManagement/MetaBox.php#L302-L310)
 
 
 ---
@@ -363,7 +363,7 @@ Argument | Type | Description
 Examples: 
 - [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-content-when-no-kom-actions-are-available)
 
-Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 320](../src/OrderManagement/MetaBox.php#L320-L328)
+Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 317](../src/OrderManagement/MetaBox.php#L317-L325)
 
 
 ---
@@ -1334,7 +1334,7 @@ Argument | Type | Description
 Examples: 
 - [#1](https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#disable-lookup-of-orders-sharing-a-klarna-transaction-id)
 
-Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 687](../src/OrderManagement/MetaBox.php#L687-L693)
+Source: [./src/OrderManagement/MetaBox.php](../src/OrderManagement/MetaBox.php), [line 684](../src/OrderManagement/MetaBox.php#L684-L690)
 
 
 ---

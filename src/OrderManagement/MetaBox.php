@@ -273,20 +273,17 @@ class MetaBox extends OrderMetabox {
 		$actions['sync']    = ( ! isset( $settings['kom_auto_order_sync'] ) || 'yes' === $settings['kom_auto_order_sync'] ) ? false : true;
 		$actions['any']     = ( $actions['capture'] || $actions['cancel'] || $actions['sync'] );
 
-		$options = '';
-		if ( $actions['any'] ) {
-			ob_start();
-			/**
-			 * Triggers inside the order actions dropdown, allowing additional action options to be rendered.
-			 *
-			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-custom-actions-to-the-kom-metabox
-			 * @param int    $order_id The ID of the order being considered.
-			 * @param object $klarna_order The Klarna order object associated with this order.
-			 * @param array  $actions The available order management actions and their enabled state.
-			 */
-			do_action( 'kom_meta_action_options', $order_id, $klarna_order, $actions );
-			$options = ob_get_clean();
-		}
+		ob_start();
+		/**
+		 * Triggers inside the order actions dropdown, allowing additional action options to be rendered.
+		 *
+		 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-custom-actions-to-the-kom-metabox
+		 * @param int    $order_id The ID of the order being considered.
+		 * @param object $klarna_order The Klarna order object associated with this order.
+		 * @param array  $actions The available order management actions and their enabled state.
+		 */
+		do_action( 'kom_meta_action_options', $order_id, $klarna_order, $actions );
+		$options = ob_get_clean();
 
 		ob_start();
 		?>
