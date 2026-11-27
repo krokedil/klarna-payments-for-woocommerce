@@ -20,6 +20,13 @@ class RequestPostCapture extends RequestPost {
 	protected $order_management;
 
 	/**
+	 * The captured amount sent to Klarna, in minor units. Null until the body is built.
+	 *
+	 * @var int|null
+	 */
+	protected $captured_amount = null;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param OrderManagement $order_management The order management instance.
@@ -73,6 +80,20 @@ class RequestPostCapture extends RequestPost {
 		 * @param array $data The capture request body, including the captured amount and order lines.
 		 * @param int   $order_id The WooCommerce order ID.
 		 */
-		return apply_filters( 'kom_order_capture_args', $data, $this->order_id );
+		$data = apply_filters( 'kom_order_capture_args', $data, $this->order_id );
+
+		// Read back after the filter, so the order note quotes what Klarna was actually sent.
+		$this->captured_amount = isset( $data['captured_amount'] ) && is_numeric( $data['captured_amount'] ) ? (int) round( (float) $data['captured_amount'] ) : null;
+
+		return $data;
+	}
+
+	/**
+	 * Get the captured amount sent to Klarna.
+	 *
+	 * @return int|null The amount in minor units, or null if the request has not been built or sent no amount.
+	 */
+	public function get_captured_amount() {
+		return $this->captured_amount;
 	}
 }

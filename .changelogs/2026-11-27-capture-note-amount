@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+The capture order note now shows the amount actually captured, adds the order total when the two differ, and says whether the Klarna order is fully captured.
