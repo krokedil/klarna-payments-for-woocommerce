@@ -435,6 +435,9 @@ class MetaBox extends OrderMetabox {
 		if ( ! $actions['capture'] ) {
 			return false; // Capture is on auto, don't present action.
 		}
+		if ( ! $this->is_actionable( $order ) ) {
+			return false;
+		}
 		if ( ! empty( $order->get_meta( '_wc_klarna_capture_id' ) ) ) {
 			return false; // Already captured, can't capture again.
 		}
@@ -462,6 +465,9 @@ class MetaBox extends OrderMetabox {
 		if ( ! $actions['cancel'] ) {
 			return false; // Cancel is on auto, don't present action.
 		}
+		if ( ! $this->is_actionable( $order ) ) {
+			return false;
+		}
 		if ( ! empty( $order->get_meta( '_wc_klarna_pending_to_cancelled', true ) ) ) {
 			return false; // A cancellation is already pending, can't cancel again.
 		}
@@ -470,6 +476,18 @@ class MetaBox extends OrderMetabox {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Whether a manual capture or cancel can be sent for the order at all.
+	 * Mirrors the guards in OrderManagement::capture_klarna_order() and cancel_klarna_order().
+	 *
+	 * @param \WC_Order $order The WooCommerce order.
+	 *
+	 * @return bool
+	 */
+	protected function is_actionable( $order ) {
+		return ! $order->get_meta( '_kom_disconnect' ) && ! empty( $order->get_date_paid() );
 	}
 
 	/**
