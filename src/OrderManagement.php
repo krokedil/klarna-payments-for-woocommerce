@@ -536,9 +536,17 @@ class OrderManagement {
 				$response = $this->report()->request( $request->request() );
 
 				if ( ! is_wp_error( $response ) ) {
-					$order->add_order_note( 'Klarna order captured. Capture amount: ' . $order->get_formatted_order_total( '', false ) . '. Capture ID: ' . $response );
-					$order->update_meta_data( '_wc_klarna_capture_id', $response );
+					/**
+					 * A capture answers with the ID from its capture-id header.
+					 *
+					 * @var string $capture_id
+					 */
+					$capture_id = $response;
+
+					// Record the capture before the note's status lookup, which can be slow.
+					$order->update_meta_data( '_wc_klarna_capture_id', $capture_id );
 					$order->save();
+					$order->add_order_note( $this->get_capture_note( $order, $request->get_captured_amount(), $capture_id ) );
 					return true;
 				}
 
@@ -581,6 +589,62 @@ class OrderManagement {
 			$order->add_order_note( __( 'Klarna capture request was not sent because order management is disabled for capture.', 'klarna-payments-for-woocommerce' ) );
 			$order->save();
 		}
+	}
+
+	/**
+	 * Build the order note for a successful capture.
+	 *
+	 * @param \WC_Order $order The WooCommerce order.
+	 * @param int|null  $captured_amount The captured amount sent to Klarna, in minor units.
+	 * @param string    $capture_id The Klarna capture ID.
+	 *
+	 * @return string
+	 */
+	private function get_capture_note( $order, $captured_amount, $capture_id ) {
+		// Klarna amounts are in minor units, so keep both decimals whatever the store displays.
+		$price_args  = array(
+			'currency' => $order->get_currency(),
+			'decimals' => 2,
+		);
+		$order_total = (int) round( (float) $order->get_total() * 100 );
+
+		if ( null === $captured_amount || $order_total === $captured_amount ) {
+			$note = sprintf(
+				/* translators: [merchant-facing]. 1: Captured amount, formatted as a price. 2: Klarna capture ID. */
+				__( 'Klarna order captured. Captured amount: %1$s. Capture ID: %2$s.', 'klarna-payments-for-woocommerce' ),
+				wc_price( $order_total / 100, $price_args ),
+				$capture_id
+			);
+		} else {
+			$note = sprintf(
+				/* translators: [merchant-facing]. 1: Captured amount, formatted as a price. 2: Order total, formatted as a price. 3: Klarna capture ID. */
+				__( 'Klarna order captured. Captured amount: %1$s (order total: %2$s). Capture ID: %3$s.', 'klarna-payments-for-woocommerce' ),
+				wc_price( $captured_amount / 100, $price_args ),
+				wc_price( $order_total / 100, $price_args ),
+				$capture_id
+			);
+		}
+
+		// Ask Klarna rather than infer it, so captures made elsewhere are counted too.
+		$klarna_order = $this->retrieve_klarna_order( $order->get_id() );
+
+		if ( is_wp_error( $klarna_order ) || ! isset( $klarna_order->remaining_authorized_amount ) ) {
+			/* translators: [merchant-facing]. */
+			return $note . ' ' . __( 'The capture status of the Klarna order could not be checked.', 'klarna-payments-for-woocommerce' );
+		}
+
+		$remaining = (int) $klarna_order->remaining_authorized_amount;
+
+		if ( 0 >= $remaining ) {
+			/* translators: [merchant-facing]. */
+			return $note . ' ' . __( 'The Klarna order is fully captured.', 'klarna-payments-for-woocommerce' );
+		}
+
+		return $note . ' ' . sprintf(
+			/* translators: [merchant-facing]. %s: Remaining authorized amount, formatted as a price. */
+			__( 'The Klarna order is not fully captured. Remaining authorized amount: %s.', 'klarna-payments-for-woocommerce' ),
+			wc_price( $remaining / 100, $price_args )
+		);
 	}
 
 	/**

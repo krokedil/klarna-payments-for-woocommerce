@@ -337,12 +337,6 @@ parameters:
 			path: src/OnsiteMessaging/Widget.php
 
 		-
-			message: '#^Binary operation "\." between non\-falsy\-string and array\|object results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/OrderManagement.php
-
-		-
 			message: '#^Method Krokedil\\Klarna\\OrderManagement\:\:capture_klarna_order\(\) should return bool\|WP_Error\|null but empty return statement found\.$#'
 			identifier: return.empty
 			count: 1

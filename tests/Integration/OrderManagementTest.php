@@ -48,7 +48,8 @@ class OrderManagementTest extends IntegrationTestCase {
 			$this->klarnaRequests()[0]['url'],
 			'Every operation looks the Klarna order up first.'
 		);
-		$this->assertKlarnaRequestCount( 2 );
+		// A capture looks the order up again afterwards, to note whether it is fully captured.
+		$this->assertKlarnaRequestCount( 'capture' === $op ? 3 : 2 );
 	}
 
 	/**
@@ -488,14 +489,80 @@ class OrderManagementTest extends IntegrationTestCase {
 
 		$order = $this->haveOrderFor( 'capture' );
 
-		$this->willRetrieveKlarnaOrder( [ 'remaining_authorized_amount' => 31337 ] );
+		// Part of the order was already captured in the Merchant Portal.
+		$this->willRetrieveKlarnaOrder( [ 'status' => 'PART_CAPTURED', 'remaining_authorized_amount' => 16317 ] );
 		$this->willCapture();
+		$this->willRetrieveKlarnaOrder( [ 'status' => 'CAPTURED', 'remaining_authorized_amount' => 0 ] );
 
 		$this->assertTrue( $this->perform( 'capture', $order ) );
 
 		$body = $this->klarnaRequestTo( '/captures' )['json'];
-		$this->assertSame( 31337, $body['captured_amount'] );
+		$this->assertSame( 16317, $body['captured_amount'] );
 		$this->assertArrayNotHasKey( 'order_lines', $body, 'Lines that do not match the authorised amount would be rejected.' );
+		$this->assertOrderHasNote(
+			$order,
+			sprintf(
+				'Klarna order captured. Captured amount: %s (order total: %s). Capture ID: capture-123. The Klarna order is fully captured.',
+				$this->sek( 163.17 ),
+				$this->sek( (float) $order->get_total() )
+			)
+		);
+	}
+
+	public function test_a_capture_of_the_order_total_does_not_repeat_the_amount(): void {
+		$order = $this->haveOrderFor( 'capture' );
+		$this->willSucceed( 'capture' );
+
+		$this->assertTrue( $this->perform( 'capture', $order ) );
+
+		$this->assertOrderHasNote(
+			$order,
+			sprintf( 'Klarna order captured. Captured amount: %s. Capture ID: capture-123. The Klarna order is fully captured.', $this->sek( (float) $order->get_total() ) )
+		);
+		$this->assertOrderHasNoNote( $order, 'order total:' );
+	}
+
+	/** The note quotes what was sent, so a filtered amount shows up as a difference. */
+	public function test_a_filtered_capture_amount_is_noted_with_what_remains(): void {
+		$order = $this->haveOrderFor( 'capture' );
+
+		add_filter(
+			'kom_order_capture_args',
+			static function ( $data ) {
+				$data['captured_amount'] = 12250;
+				return $data;
+			}
+		);
+
+		$this->willRetrieveKlarnaOrder();
+		$this->willCapture();
+		$this->willRetrieveKlarnaOrder( [ 'status' => 'PART_CAPTURED', 'remaining_authorized_amount' => 12750 ] );
+
+		$this->assertTrue( $this->perform( 'capture', $order ) );
+
+		$this->assertOrderHasNote(
+			$order,
+			sprintf(
+				'Captured amount: %s (order total: %s). Capture ID: capture-123. The Klarna order is not fully captured. Remaining authorized amount: %s.',
+				$this->sek( 122.50 ),
+				$this->sek( (float) $order->get_total() ),
+				$this->sek( 127.50 )
+			)
+		);
+	}
+
+	/** The capture itself went through, so failing to check its status must not undo it. */
+	public function test_a_failed_status_check_after_capture_still_counts_as_captured(): void {
+		$order = $this->haveOrderFor( 'capture' );
+
+		$this->willRetrieveKlarnaOrder();
+		$this->willCapture();
+		$this->willFailToRetrieveKlarnaOrder();
+
+		$this->assertTrue( $this->perform( 'capture', $order ) );
+
+		$this->assertSame( 'capture-123', $this->reload( $order )->get_meta( '_wc_klarna_capture_id' ) );
+		$this->assertOrderHasNote( $order, 'Capture ID: capture-123. The capture status of the Klarna order could not be checked.' );
 	}
 
 	public function test_a_capture_made_outside_woocommerce_is_adopted(): void {
@@ -653,6 +720,7 @@ class OrderManagementTest extends IntegrationTestCase {
 		switch ( $op ) {
 			case 'capture':
 				$this->willCapture();
+				$this->willRetrieveKlarnaOrder( [ 'status' => 'CAPTURED', 'remaining_authorized_amount' => 0 ] );
 				return;
 			case 'cancel':
 				$this->willCancel();
@@ -706,6 +774,11 @@ class OrderManagementTest extends IntegrationTestCase {
 		$this->deleteAllTaxRates();
 		$this->configureUsStore();
 		$this->haveKlarnaCredentials( 'us' );
+	}
+
+	/** Formats an amount the way capture notes do: in the order's currency, always with two decimals. */
+	private function sek( float $amount ): string {
+		return wc_price( $amount, [ 'currency' => 'SEK', 'decimals' => 2 ] );
 	}
 
 	private function refundIdOf( \WC_Order $order ): int {
