@@ -26,6 +26,7 @@ registerExpressPaymentMethod({
   // Decided server side; also keeps it out of the cart block, which has the button in the order summary.
   canMakePayment: () => !!settings.show,
   paymentMethodId: "klarna_payments",
+  gatewayId: "klarna_payments",
   supports: {
     features: ["products"],
   },
