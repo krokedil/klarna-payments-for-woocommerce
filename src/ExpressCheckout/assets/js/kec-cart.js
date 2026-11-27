@@ -1,7 +1,6 @@
 jQuery(function ($) {
   const kec_cart = {
     selectedVariation: null,
-    lastError: null,
 
     /**
      * Initialize the Klarna Express Checkout button.
@@ -116,7 +115,7 @@ jQuery(function ($) {
      * Handle the click event on the KEC button.
      *
      * @param {function} authorize
-     * @returns
+     * @returns {void}
      */
     onClickHandler(authorize) {
       kec_cart.clearError();
@@ -127,7 +126,7 @@ jQuery(function ($) {
         const setCartResult = kec_cart.productPageHandler();
 
         if (!setCartResult) {
-          kec_cart.showError("Could not set the cart");
+          kec_cart.showError();
           return;
         }
       }
@@ -135,7 +134,7 @@ jQuery(function ($) {
       const payload = kec_cart.getPayload();
 
       if (!payload) {
-        kec_cart.showError("Could not get the payload");
+        kec_cart.showError();
         return;
       }
 
@@ -155,9 +154,10 @@ jQuery(function ($) {
      */
     async onAuthorizeHandler(authorizeResult) {
       if (!authorizeResult.approved) {
-        // Klarna only includes an error when the authorization failed, not when the customer closed the popup.
-        if (authorizeResult.error) {
-          kec_cart.showError("Klarna did not approve the authorization", authorizeResult.error);
+        // A closed popup leaves show_form true; a decline sets it to false, and a failure adds an error.
+        if (authorizeResult.show_form === false || authorizeResult.error) {
+          kec_cart.logError("Klarna did not approve the authorization", authorizeResult);
+          kec_cart.showError();
         }
         return;
       }
@@ -166,7 +166,7 @@ jQuery(function ($) {
       const authCallbackResult = await kec_cart.authCallback(authorizeResult);
 
       if (!authCallbackResult) {
-        kec_cart.showError("The auth callback failed");
+        kec_cart.showError();
         return;
       }
 
@@ -175,18 +175,15 @@ jQuery(function ($) {
     },
 
     /**
-     * Show an error notice to the customer, and log the details to the console.
+     * Show an error notice to the customer.
      *
-     * @param {string} reason Why the flow stopped, for the console.
-     * @param {*} details Any extra details for the console.
      * @returns {void}
      */
-    showError(reason, details = kec_cart.lastError) {
-      console.error("Klarna Express Checkout:", reason, details || "");
+    showError() {
       kec_cart.clearError();
 
-      const $notice = $('<ul class="woocommerce-error kec-error" role="alert"><li></li></ul>');
-      $notice.find("li").text(kec_cart_params.i18n.error);
+      const $notice = $('<div class="woocommerce-error kec-error" role="alert"></div>');
+      $notice.text(kec_cart_params.i18n.error);
 
       const $wrapper = $(".woocommerce-notices-wrapper").first();
       if ($wrapper.length) {
@@ -199,24 +196,23 @@ jQuery(function ($) {
     },
 
     /**
-     * Remove any error notice shown by KEC, and forget the last request error.
+     * Remove any error notice shown by KEC.
      *
      * @returns {void}
      */
     clearError() {
-      kec_cart.lastError = null;
       $(".kec-error").remove();
     },
 
     /**
-     * Remember why an AJAX request failed, so it can be logged with the error notice.
+     * Log why a step of the KEC flow failed to the console.
      *
-     * @param {object} response The response, or the jqXHR object for a failed request.
+     * @param {string} reason The step that failed.
+     * @param {*} details The response or result the step got.
      * @returns {void}
      */
-    setLastError(response) {
-      const json = response.responseJSON || response;
-      kec_cart.lastError = json.data || response.statusText || null;
+    logError(reason, details) {
+      console.error("Klarna Express Checkout:", reason, details);
     },
 
     /**
@@ -259,10 +255,10 @@ jQuery(function ($) {
           if (result.success) {
             payload = result.data || false;
           } else {
-            kec_cart.setLastError(result);
+            kec_cart.logError("Could not get the payload", result.data);
           }
         },
-        error: kec_cart.setLastError,
+        error: (jqXHR) => kec_cart.logError("Could not get the payload", jqXHR.statusText),
       });
 
       return payload;
@@ -290,10 +286,10 @@ jQuery(function ($) {
           if (response.success) {
             result = response.data || false;
           } else {
-            kec_cart.setLastError(response);
+            kec_cart.logError("The auth callback failed", response.data);
           }
         },
-        error: kec_cart.setLastError,
+        error: (jqXHR) => kec_cart.logError("The auth callback failed", jqXHR.statusText),
       });
 
       return result;
@@ -325,10 +321,10 @@ jQuery(function ($) {
           result = response.success || false;
 
           if (!result) {
-            kec_cart.setLastError(response);
+            kec_cart.logError("Could not set the cart", response.data);
           }
         },
-        error: kec_cart.setLastError,
+        error: (jqXHR) => kec_cart.logError("Could not set the cart", jqXHR.statusText),
       });
 
       return result;
