@@ -475,12 +475,6 @@ parameters:
 			path: src/OrderManagement/Request/Request.php
 
 		-
-			message: '#^Parameter \#6 \$code of static method KP_Logger\:\:format_log\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/OrderManagement/Request/Request.php
-
-		-
 			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
 			identifier: argument.type
 			count: 2

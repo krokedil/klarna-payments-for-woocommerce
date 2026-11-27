@@ -61,6 +61,14 @@ trait CanInterceptHttp {
 		);
 	}
 
+	/** Queues a transport failure, the way WordPress reports a timeout or a refused connection. */
+	protected function willFailToConnect( string $url_contains, string $message ): void {
+		$this->queuedHttpResponses[] = [
+			'url_contains' => $url_contains,
+			'response'     => new \WP_Error( 'http_request_failed', $message ),
+		];
+	}
+
 	/** Queues a canned response. */
 	protected function willRespondWith( array $body, int $status = 200, ?string $url_contains = null, array $headers = [] ): void {
 		$this->queuedHttpResponses[] = [

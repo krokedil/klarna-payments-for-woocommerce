@@ -163,7 +163,9 @@ abstract class Request {
 		$args = $this->get_request_args();
 		if ( is_wp_error( $args ) || ( isset( $args['body'] ) && is_null( json_decode( $args['body'] ) ) ) ) {
 			/* translators: [merchant-facing]. */
-			return is_wp_error( $args ) ? $args : new \WP_Error( 'invalid_json', __( 'Invalid JSON response from the server.', 'klarna-payments-for-woocommerce' ) );
+			$error = is_wp_error( $args ) ? $args : new \WP_Error( 'invalid_json', __( 'Invalid JSON response from the server.', 'klarna-payments-for-woocommerce' ) );
+			$this->log_response( $error, array(), $url, null );
+			return $error;
 		}
 		$response = wp_remote_request( $url, $args );
 		return $this->process_response( $response, $args, $url );
@@ -282,6 +284,8 @@ abstract class Request {
 	 */
 	protected function process_response( $response, $request_args, $request_url ) {
 		if ( is_wp_error( $response ) ) {
+			// Klarna never answered (timeout, DNS, SSL), so the error is the only trace.
+			$this->log_response( $response, $request_args, $request_url, null );
 			return $response;
 		}
 		$response_code = wp_remote_retrieve_response_code( $response );
@@ -358,18 +362,27 @@ abstract class Request {
 	 * @param array|\WP_Error $response The request response.
 	 * @param array           $request_args The arguments of the request.
 	 * @param string          $request_url The request URL.
-	 * @param int             $code The HTTP Response Code this request returned.
+	 * @param int|null        $code The HTTP Response Code this request returned, null if Klarna never answered.
 	 * @return void
 	 */
 	protected function log_response( $response, $request_args, $request_url, $code ) {
-		// Decode the body so the masking can reach into it, and drop the rest of the HTTP
-		// response, which holds nothing a log needs and hides the payload inside a string.
-		$body = is_wp_error( $response ) ? array() : json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( is_wp_error( $response ) ) {
+			// Never the error data: it can carry the request args, Authorization header included.
+			$body = array(
+				'error' => array(
+					'code'    => $response->get_error_code(),
+					'message' => $response->get_error_message(),
+				),
+			);
+		} else {
+			// Decode the body so the masking can reach into it, and drop the rest of the HTTP
+			// response, which holds nothing a log needs and hides the payload inside a string.
+			$body = LogMasking::mask_response( json_decode( wp_remote_retrieve_body( $response ), true ) );
+		}
 
 		$request_args = LogMasking::mask_request( $request_args );
-		$body         = LogMasking::mask_response( $body );
 
 		$log = \KP_Logger::format_log( $this->klarna_order_id, $this->method, $this->log_title, $request_args, $body, $code, $request_url );
-		\KP_Logger::log( $log );
+		\KP_Logger::log( $log, is_wp_error( $response ) ? \WC_Log_Levels::ERROR : \WC_Log_Levels::INFO );
 	}
 }

@@ -264,7 +264,13 @@ class OrderManagement {
 			$klarna_order = $this->retrieve_klarna_order( $order_id );
 
 			if ( is_wp_error( $klarna_order ) ) {
-				$order->add_order_note( 'Klarna order could not be cancelled due to an error.' );
+				$order->add_order_note(
+					sprintf(
+						/* translators: [merchant-facing]. %s: Error message. */
+						__( 'Klarna order could not be cancelled due to an error: %s', 'klarna-payments-for-woocommerce' ),
+						$klarna_order->get_error_message()
+					)
+				);
 				$order->save();
 
 				return new \WP_Error( 'object_error', 'Klarna order object is of type \WP_Error.', $klarna_order );
@@ -372,7 +378,13 @@ class OrderManagement {
 			// Retrieve Klarna order first.
 			$klarna_order = $this->retrieve_klarna_order( $order_id );
 			if ( is_wp_error( $klarna_order ) ) {
-				$order->add_order_note( 'Klarna order could not be updated due to an error.' );
+				$order->add_order_note(
+					sprintf(
+						/* translators: [merchant-facing]. %s: Error message. */
+						__( 'Klarna order could not be updated due to an error: %s', 'klarna-payments-for-woocommerce' ),
+						$klarna_order->get_error_message()
+					)
+				);
 				$order->save();
 
 				return new \WP_Error( 'object_error', 'Klarna order object is of type \WP_Error.', $klarna_order );
@@ -477,7 +489,14 @@ class OrderManagement {
 			$klarna_order = $this->retrieve_klarna_order( $order_id );
 
 			if ( is_wp_error( $klarna_order ) ) {
-				$order->update_status( 'on-hold', 'Klarna order could not be captured due to an error.' );
+				$order->update_status(
+					'on-hold',
+					sprintf(
+						/* translators: [merchant-facing]. %s: Error message. */
+						__( 'Klarna order could not be captured due to an error: %s', 'klarna-payments-for-woocommerce' ),
+						$klarna_order->get_error_message()
+					)
+				);
 				return new \WP_Error( 'object_error', 'Klarna order object is of type \WP_Error.', $klarna_order );
 			}
 			// Check if order is pending review.

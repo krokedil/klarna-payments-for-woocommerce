@@ -303,19 +303,50 @@ class OrderManagementTest extends IntegrationTestCase {
 	public function test_a_failed_lookup_stops_the_operation( string $op, string $note ): void {
 		$order = $this->haveOrderFor( $op );
 
-		// No response queued, so the lookup is the blocked request.
+		$this->willFailToRetrieveKlarnaOrder();
+
 		$this->assertWpErrorCode( 'object_error', $this->perform( $op, $order ) );
 		$this->assertKlarnaRequestCount( 1, '', 'Acting on an order whose state is unknown is not safe.' );
-		$this->assertOrderHasNote( $order, $note );
+		$this->assertOrderHasNote( $order, $note . ' cURL error 28: Operation timed out' );
 	}
 
 	/** @return array<string, array{0: string, 1: string}> */
 	public function provide_lookup_failures(): array {
 		return [
-			'capture' => [ 'capture', 'Klarna order could not be captured due to an error.' ],
-			'cancel'  => [ 'cancel', 'Klarna order could not be cancelled due to an error.' ],
-			'update'  => [ 'update', 'Klarna order could not be updated due to an error.' ],
+			'capture' => [ 'capture', 'Klarna order could not be captured due to an error:' ],
+			'cancel'  => [ 'cancel', 'Klarna order could not be cancelled due to an error:' ],
+			'update'  => [ 'update', 'Klarna order could not be updated due to an error:' ],
 		];
+	}
+
+	/** Klarna never answered, so the error is all support has to go on. */
+	public function test_a_request_that_timed_out_is_logged(): void {
+		$this->haveLoggingEnabled();
+		$order = $this->haveOrderFor( 'capture' );
+
+		$this->willFailToRetrieveKlarnaOrder();
+
+		KP_WC()->order_management->retrieve_klarna_order( $order->get_id() );
+
+		$this->assertSame(
+			[ 'error' => [ 'code' => 'http_request_failed', 'message' => 'cURL error 28: Operation timed out' ] ],
+			$this->loggedEntry( 'Retrieve Klarna order' )['response']['body']
+		);
+		$this->assertStringNotContainsString( 'Basic ', $this->loggedText(), 'The auth header rides in the error data and must stay out.' );
+	}
+
+	public function test_a_request_that_was_never_sent_is_logged(): void {
+		$this->haveLoggingEnabled();
+		$order = $this->haveOrderFor( 'capture' );
+
+		$this->setKlarnaSettings( array_merge( get_option( self::KP_SETTINGS_OPTION ), [ 'test_shared_secret_se' => '' ] ) );
+
+		$this->assertWpErrorCode( 'missing_credentials', KP_WC()->order_management->retrieve_klarna_order( $order->get_id() ) );
+		$this->assertSame(
+			[ 'error' => [ 'code' => 'missing_credentials', 'message' => 'Klarna Payments credentials are missing' ] ],
+			$this->loggedEntry( 'Retrieve Klarna order' )['response']['body']
+		);
+		$this->assertNoKlarnaRequests( 'Without credentials there is nothing to send.' );
 	}
 
 	/**

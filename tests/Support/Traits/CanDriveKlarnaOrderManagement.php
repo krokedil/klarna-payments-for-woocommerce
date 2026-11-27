@@ -25,6 +25,11 @@ trait CanDriveKlarnaOrderManagement {
 		);
 	}
 
+	/** Queues a lookup that never reaches Klarna, the way a timeout fails. */
+	protected function willFailToRetrieveKlarnaOrder( string $message = 'cURL error 28: Operation timed out' ): void {
+		$this->willFailToConnect( 'ordermanagement/v1/orders', $message );
+	}
+
 	/**
 	 * Queues a successful capture. Klarna answers with an empty body and the
 	 * capture id in a `capture-id` header.
