@@ -72,34 +72,9 @@ class OrderManagement {
 	 */
 	public function init() {
 
-		// If the Klarna Order Management plugin is active, do nothing.
+		// If the standalone Klarna Order Management plugin is active, let it handle order management and ask the merchant to deactivate it.
 		if ( class_exists( 'WC_Klarna_Order_Management' ) ) {
-
-			// KCO does not have order management included yet, so we don't want to encourage the disabling of the KOM plugin if KCO is active.
-			if ( ! class_exists( 'KCO' ) ) {
-				add_action(
-					'admin_notices',
-					function () {
-						?>
-						<div class="notice notice-error">
-
-								<?php /* translators: [merchant-facing]. */ ?>
-								<p><strong><?php esc_html_e( 'Klarna Order Management is now included in Klarna for WooCommerce.', 'klarna-payments-for-woocommerce' ); ?></strong></p>
-								<?php /* translators: [merchant-facing]. */ ?>
-								<p><?php esc_html_e( 'Starting with version 4.3.0, you no longer need the separate Klarna Order Management plugin – unless you are also using the Kustom Checkout plugin (formerly Klarna Checkout).', 'klarna-payments-for-woocommerce' ); ?></p>
-
-								<p>
-									<a href="https://docs.krokedil.com/klarna-for-woocommerce/get-started/order-management/#important-please-read" target="_blank">
-										<?php /* translators: [merchant-facing]. */ ?>
-										<?php esc_html_e( 'Read more about this change here.', 'klarna-payments-for-woocommerce' ); ?>
-									</a>
-								</p>
-
-						</div>
-						<?php
-					}
-				);
-			}
+			add_action( 'admin_notices', array( $this, 'kom_plugin_active_notice' ) );
 			return;
 		}
 
@@ -143,6 +118,38 @@ class OrderManagement {
 		);
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin' ) );
+	}
+
+	/**
+	 * Tell the merchant to deactivate the standalone Klarna Order Management plugin.
+	 *
+	 * Order management is built into Klarna for WooCommerce since 4.3.0 and into Kustom Checkout since 2.19.0.
+	 * If an older Kustom Checkout version is active, it still relies on the standalone plugin, so the merchant
+	 * is asked to update Kustom Checkout before deactivating it.
+	 *
+	 * @return void
+	 */
+	public function kom_plugin_active_notice() {
+		$kco_needs_update = defined( 'KCO_WC_VERSION' ) && version_compare( KCO_WC_VERSION, '2.19.0', '<' );
+		?>
+		<div class="notice notice-error">
+			<?php /* translators: [merchant-facing]. */ ?>
+			<p><strong><?php esc_html_e( 'The Klarna Order Management plugin is no longer needed and will be retired.', 'klarna-payments-for-woocommerce' ); ?></strong></p>
+			<?php if ( $kco_needs_update ) : ?>
+				<?php /* translators: [merchant-facing]. */ ?>
+				<p><?php esc_html_e( 'Order management is built into Klarna for WooCommerce (version 4.3.0 and later) and Kustom Checkout (version 2.19.0 and later). Your version of Kustom Checkout still relies on the separate plugin. Update Kustom Checkout, then deactivate the Klarna Order Management plugin.', 'klarna-payments-for-woocommerce' ); ?></p>
+			<?php else : ?>
+				<?php /* translators: [merchant-facing]. */ ?>
+				<p><?php esc_html_e( 'Order management is built into Klarna for WooCommerce (version 4.3.0 and later) and Kustom Checkout (version 2.19.0 and later). Please deactivate the Klarna Order Management plugin. It will no longer be maintained.', 'klarna-payments-for-woocommerce' ); ?></p>
+			<?php endif; ?>
+			<p>
+				<a href="https://docs.krokedil.com/klarna-for-woocommerce/setup-and-configuration/order-management/#important--please-read" target="_blank">
+					<?php /* translators: [merchant-facing]. */ ?>
+					<?php esc_html_e( 'Read more about this change here.', 'klarna-payments-for-woocommerce' ); ?>
+				</a>
+			</p>
+		</div>
+		<?php
 	}
 
 	/**
