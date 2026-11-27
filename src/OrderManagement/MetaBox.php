@@ -273,24 +273,29 @@ class MetaBox extends OrderMetabox {
 		$actions['sync']    = ( ! isset( $settings['kom_auto_order_sync'] ) || 'yes' === $settings['kom_auto_order_sync'] ) ? false : true;
 		$actions['any']     = ( $actions['capture'] || $actions['cancel'] || $actions['sync'] );
 
+		$options = '';
+		if ( $actions['any'] ) {
+			ob_start();
+			/**
+			 * Triggers inside the order actions dropdown, allowing additional action options to be rendered.
+			 *
+			 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-custom-actions-to-the-kom-metabox
+			 * @param int    $order_id The ID of the order being considered.
+			 * @param object $klarna_order The Klarna order object associated with this order.
+			 * @param array  $actions The available order management actions and their enabled state.
+			 */
+			do_action( 'kom_meta_action_options', $order_id, $klarna_order, $actions );
+			$options = ob_get_clean();
+		}
+
 		ob_start();
 		?>
 		<ul class="kom_order_actions_wrapper submitbox">
-			<?php if ( $actions['any'] ) : ?>
+			<?php if ( false !== strpos( $options, '<option' ) ) : // Only show the dropdown when the order has an action to offer. ?>
 				<li class="wide" id="kom-capture">
 					<select class="klarna_order_actions" name="kom_order_actions" id="kom_order_actions">
 						<option value=""><?php esc_attr_e( 'Choose an action...', 'klarna-payments-for-woocommerce' ); ?></option>
-						<?php
-						/**
-						 * Triggers inside the order actions dropdown, allowing additional action options to be rendered.
-						 *
-						 * @link https://docs.krokedil.com/klarna-for-woocommerce/customization/hooks-action-filter/#add-custom-actions-to-the-kom-metabox
-						 * @param int    $order_id The ID of the order being considered.
-						 * @param object $klarna_order The Klarna order object associated with this order.
-						 * @param array  $actions The available order management actions and their enabled state.
-						 */
-						do_action( 'kom_meta_action_options', $order_id, $klarna_order, $actions );
-						?>
+						<?php echo $options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by print_option(), and the whole block passes through wp_kses() below. ?>
 					</select>
 					<?php /* translators: [merchant-facing]. */ ?>
 					<button class="button wc-reload"><span><?php esc_html_e( 'Apply', 'klarna-payments-for-woocommerce' ); ?></span></button>
