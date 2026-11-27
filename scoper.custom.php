@@ -45,5 +45,60 @@ function customize_php_scoper_config( array $config ): array {
 	$config['exclude-namespaces'][] = 'Automattic';
 	$config['exclude-namespaces'][] = 'Krokedil\Klarna';
 
+	$config['patchers'][] = 'kp_scoper_patch_phpcs_annotations';
+
 	return $config;
+}
+
+/**
+ * Restores phpcs annotations that php-scoper displaces, and removes code the WooCommerce.com QIT security scan flags.
+ *
+ * @param string $file_path The path of the scoped file.
+ * @param string $prefix    The scoper prefix.
+ * @param string $content   The scoped file content.
+ * @return string
+ */
+function kp_scoper_patch_phpcs_annotations( string $file_path, string $prefix, string $content ): string {
+	$file_path = str_replace( '\\', '/', $file_path );
+
+	if ( '.php' !== substr( $file_path, -4 ) ) {
+		return $content;
+	}
+
+	if ( false !== strpos( $file_path, '/krokedil/' ) ) {
+		// Only a previous line that ends a statement and has no comment of its own.
+		$patched = preg_replace(
+			'~^((?:(?!//|/\*)[^\r\n])*;)[ \t]*(\R[ \t]*(//\s*phpcs:ignore[^\r\n]*))$~m',
+			'$1 $3$2',
+			$content
+		);
+		$content = null !== $patched ? $patched : $content;
+	}
+
+	// The QIT scan reports debug_backtrace() under its own sniff, so name it next to the WordPress one.
+	if ( false !== strpos( $file_path, '/krokedil/wp-api/src/Logger.php' ) ) {
+		$content = str_replace(
+			'\debug_backtrace(); // phpcs:ignore WordPress.PHP.DevelopmentFunctions ',
+			'\debug_backtrace(); // phpcs:ignore WordPress.PHP.DevelopmentFunctions,QITStandard.PHP.DebugCode.DebugFunctionFound ',
+			$content
+		);
+	}
+
+	// The settings page navigation calls wp_verify_nonce() without using the result. It only reads which tab to show.
+	if ( false !== strpos( $file_path, '/krokedil/settings-page/src/Navigation.php' ) ) {
+		$patched = preg_replace( '~^[ \t]*// Verify the nonce\.\R[ \t]*\\\\?wp_verify_nonce\(\'__nonce\'\);[ \t]*\R~m', '', $content );
+		$content = null !== $patched ? $patched : $content;
+	}
+
+	// Composer's deprecation notice for getRawData() is not debug code.
+	if ( false !== strpos( $file_path, '/composer/InstalledVersions.php' ) ) {
+		$patched = preg_replace(
+			'~^([ \t]*@\\\\?trigger_error\([^\r\n]*\);)[ \t]*$~m',
+			'$1 // phpcs:ignore WordPress.PHP.DevelopmentFunctions,QITStandard.PHP.DebugCode.DebugFunctionFound -- Composer deprecation notice, not debug code.',
+			$content
+		);
+		$content = null !== $patched ? $patched : $content;
+	}
+
+	return $content;
 }

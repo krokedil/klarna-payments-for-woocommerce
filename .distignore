@@ -36,6 +36,8 @@ yarn.lock
 .gitkeep
 playground.config.mjs
 /tools
+/vendor/dependencies/krokedil/*/tests
+phpunit.xml
 /docs/templates
 /.claude
 CLAUDE.md

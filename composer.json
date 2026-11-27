@@ -1,7 +1,7 @@
 {
   "require": {
-    "php": ">=7.4",
-    "firebase/php-jwt": "^6.0.0"
+    "php": ">=8.0",
+    "firebase/php-jwt": "^7.0"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "^3.3",
@@ -54,12 +54,14 @@
   "extra": {
     "wpify-scoper": {
       "prefix": "KrokedilKlarnaPaymentsDeps",
-      "folder": "dependencies",
+      "folder": "vendor/dependencies",
       "autorun": true,
       "globals": [
         "wordpress",
         "woocommerce"
-      ]
+      ],
+      "composerjson": "composer-dependencies.json",
+      "composerlock": "composer-dependencies.lock"
     },
     "installer-paths": {
       "tests/_plugins/{$name}/": [

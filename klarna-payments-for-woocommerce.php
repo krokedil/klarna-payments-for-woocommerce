@@ -6,6 +6,8 @@
  * Author: klarna
  * Author URI: https://www.klarna.com/
  * Version: 4.14.0
+ * License: GPLv3 or later
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: klarna-payments-for-woocommerce
  * Domain Path: /languages
  *
@@ -55,7 +57,7 @@ use KrokedilKlarnaPaymentsDeps\Krokedil\Support\SystemReport;
  * Required minimums and constants
  */
 define( 'WC_KLARNA_PAYMENTS_VERSION', '4.14.0' );
-define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '7.4.0' );
+define( 'WC_KLARNA_PAYMENTS_MIN_PHP_VER', '8.0.0' );
 define( 'WC_KLARNA_PAYMENTS_MIN_WC_VER', '5.6.0' );
 define( 'WC_KLARNA_PAYMENTS_MAIN_FILE', __FILE__ );
 define( 'WC_KLARNA_PAYMENTS_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
@@ -590,7 +592,7 @@ if ( ! class_exists( 'WC_Klarna_Payments' ) ) {
 		 */
 		public function init_composer() {
 			$autoloader              = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/autoload.php';
-			$autoloader_dependencies = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/dependencies/scoper-autoload.php';
+			$autoloader_dependencies = WC_KLARNA_PAYMENTS_PLUGIN_PATH . '/vendor/dependencies/scoper-autoload.php';
 
 			if ( ! is_readable( $autoloader ) || ! is_readable( $autoloader_dependencies ) ) {
 				self::missing_autoloader();

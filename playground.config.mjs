@@ -16,11 +16,11 @@ export default {
 		'/wp-admin/admin.php?page=wc-settings&tab=checkout&section=klarna_payments',
 
 	// The plugin requires both autoloaders (wpify-scoper writes the scoped
-	// Krokedil packages to dependencies/). vendor/ may exist while
-	// dependencies/ is empty, so both markers are needed to trigger install.
+	// Krokedil packages to vendor/dependencies/). vendor/ may exist while
+	// vendor/dependencies/ is empty, so both markers are needed to trigger install.
 	// Installing pulls private krokedil/* repos over SSH.
 	composer: {
-		markers: ['vendor/autoload.php', 'dependencies/scoper-autoload.php'],
+		markers: ['vendor/autoload.php', 'vendor/dependencies/scoper-autoload.php'],
 	},
 
 	// No build config: blocks/build/ output is committed to git. Rebuild

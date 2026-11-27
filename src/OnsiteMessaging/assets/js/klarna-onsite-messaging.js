@@ -165,9 +165,11 @@ const klarna_onsite_messaging = {
 
         const klarnaPlacements = [];
         for (const placement of placements) {
+            // Promotional placements outside the shop have no amount, and Klarna renders nothing if given NaN.
+            const amount = parseInt(placement.dataset.purchaseAmount, 10);
             const tmpPlacement = klarna_onsite_messaging.Klarna.Messaging.placement({
                 key: placement.dataset.key,
-                amount: parseInt(placement.dataset.purchaseAmount),
+                ...(Number.isFinite(amount) && { amount }),
                 locale: placement.dataset.locale,
                 theme: placement.dataset.theme || "default",
             }).mount(placement);

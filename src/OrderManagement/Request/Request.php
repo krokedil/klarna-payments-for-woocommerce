@@ -163,7 +163,7 @@ abstract class Request {
 		$args = $this->get_request_args();
 		if ( is_wp_error( $args ) || ( isset( $args['body'] ) && is_null( json_decode( $args['body'] ) ) ) ) {
 			/* translators: [merchant-facing]. */
-			$error = is_wp_error( $args ) ? $args : new \WP_Error( 'invalid_json', __( 'Invalid JSON response from the server.', 'woocommerce' ) );
+			$error = is_wp_error( $args ) ? $args : new \WP_Error( 'invalid_json', __( 'Invalid JSON response from the server.', 'klarna-payments-for-woocommerce' ) );
 			$this->log_response( $error, array(), $url, null );
 			return $error;
 		}
@@ -243,7 +243,7 @@ abstract class Request {
 		if ( '' === $merchant_id || '' === $shared_secret ) {
 			return new \WP_Error( 'missing_credentials', 'Klarna Payments credentials are missing' );
 		}
-		return 'Basic ' . base64_encode( $merchant_id . ':' . htmlspecialchars_decode( $shared_secret ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Base64 used to calculate auth headers.
+		return 'Basic ' . base64_encode( $merchant_id . ':' . htmlspecialchars_decode( $shared_secret, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Base64 used to calculate auth headers.
 	}
 
 	/**

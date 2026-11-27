@@ -33,6 +33,13 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 	private $api_password;
 
 	/**
+	 * The API username (merchant ID) that old-format API passwords are paired with.
+	 *
+	 * @var string
+	 */
+	private $api_username;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param array $arguments The request arguments.
@@ -41,6 +48,7 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 	 */
 	public function __construct( $arguments ) {
 		$this->api_password = $arguments['api_password'];
+		$this->api_username = $arguments['api_username'] ?? '';
 		$this->mode         = $arguments['mode'];
 		$this->request_id   = $arguments['request_id'];
 		parent::__construct( $arguments );
@@ -103,10 +111,15 @@ class KP_Unavailable_Features extends KP_Requests_Post {
 	/**
 	 * Calculates the auth header for the request.
 	 *
+	 * Signs with the username and password like every other request to Klarna. Older API passwords
+	 * are rejected by the plugins API with a 401 when sent without the username.
+	 *
 	 * @return string
 	 */
 	public function calculate_auth() {
-		return 'basic ' . $this->api_password;
+		$api_password = htmlspecialchars_decode( (string) $this->api_password, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+
+		return 'Basic ' . base64_encode( $this->api_username . ':' . $api_password ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- Base64 used to calculate auth headers.
 	}
 
 	/**

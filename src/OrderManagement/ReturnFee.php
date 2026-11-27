@@ -136,13 +136,13 @@ class ReturnFee {
 		?>
 		<span class="klarna-return-fee-info display_meta" style="display: block; margin-top: 10px; color: #888; font-size: .92em!important;">
 			<?php /* translators: [merchant-facing]. */ ?>
-			<span style="font-weight: bold;"><?php esc_html_e( 'Refund amount: ', 'woocommerce' ); ?></span>
+			<span style="font-weight: bold;"><?php esc_html_e( 'Refund amount: ', 'klarna-payments-for-woocommerce' ); ?></span>
 		<?php echo wp_kses_post( wc_price( $original_amount, array( 'currency' => $refund_order->get_currency() ) ) ); ?><br>
 			<?php /* translators: [merchant-facing]. */ ?>
-			<span style="font-weight: bold;"><?php esc_html_e( 'Return fee: ', 'woocommerce' ); ?></span>
+			<span style="font-weight: bold;"><?php esc_html_e( 'Return fee: ', 'klarna-payments-for-woocommerce' ); ?></span>
 		<?php echo wp_kses_post( wc_price( $total, array( 'currency' => $refund_order->get_currency() ) ) ); ?><br>
 			<?php /* translators: [merchant-facing]. */ ?>
-			<span style="font-weight: bold;"><?php esc_html_e( 'Refunded to customer: ', 'woocommerce' ); ?></span>
+			<span style="font-weight: bold;"><?php esc_html_e( 'Refunded to customer: ', 'klarna-payments-for-woocommerce' ); ?></span>
 		<?php echo wp_kses_post( wc_price( $refund_order->get_total(), array( 'currency' => $refund_order->get_currency() ) ) ); ?>
 		</span>
 		<?php
@@ -194,7 +194,7 @@ class ReturnFee {
 		?>
 		<tr>
 				<?php /* translators: [merchant-facing]. */ ?>
-				<td class="label"><?php esc_html_e( 'Return fee', 'woocommerce' ); ?>:</td>
+				<td class="label"><?php esc_html_e( 'Return fee', 'klarna-payments-for-woocommerce' ); ?>:</td>
 				<td width="1%"></td>
 				<td class="total"><?php echo wc_price( $total_return_fee, array( 'currency' => $order->get_currency() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
 			</tr>
@@ -216,8 +216,8 @@ class ReturnFee {
 		$line_item_totals_json     = filter_input( INPUT_POST, 'line_item_totals', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$line_item_tax_totals_json = filter_input( INPUT_POST, 'line_item_tax_totals', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
-		$line_item_totals     = json_decode( htmlspecialchars_decode( $line_item_totals_json ), true ) ?? array();
-		$line_item_tax_totals = json_decode( htmlspecialchars_decode( $line_item_tax_totals_json ), true ) ?? array();
+		$line_item_totals     = json_decode( htmlspecialchars_decode( $line_item_totals_json, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ), true ) ?? array();
+		$line_item_tax_totals = json_decode( htmlspecialchars_decode( $line_item_tax_totals_json, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ), true ) ?? array();
 
 		foreach ( $line_item_totals as $key => $total ) {
 			if ( 'klarna_return_fee' === $key ) {

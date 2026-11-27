@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+The Klarna order management box no longer offers Capture or Cancel for an order that has order management turned off or has not been paid, and hides the actions dropdown when there is nothing to choose.

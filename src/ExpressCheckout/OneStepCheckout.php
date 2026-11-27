@@ -591,7 +591,7 @@ class OneStepCheckout {
 			$image_url = wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_thumbnail' );
 			$line_item = array(
 				'name'              => $product->get_name(),
-				'lineItemReference' => $product->get_sku(),
+				'lineItemReference' => self::get_line_item_reference( $product, $cart_item ),
 				'quantity'          => $cart_item['quantity'],
 				'totalAmount'       => self::format_price( $cart_item['line_total'] + $cart_item['line_tax'] ),
 				'totalTaxAmount'    => self::format_price( $cart_item['line_tax'] ),
@@ -609,6 +609,21 @@ class OneStepCheckout {
 		}
 
 		return $line_items;
+	}
+
+	/**
+	 * Get the reference for a cart line, the same way the KP flow builds it.
+	 *
+	 * @param \WC_Product $product   The product in the cart item.
+	 * @param array       $cart_item The WooCommerce cart item.
+	 *
+	 * @return string
+	 */
+	private static function get_line_item_reference( $product, $cart_item ) {
+		$sku       = $product->get_sku();
+		$reference = ! empty( $sku ) ? $sku : $product->get_id();
+
+		return (string) apply_filters( 'kp_cart_line_item_sku', $reference, $cart_item );
 	}
 
 	/**
