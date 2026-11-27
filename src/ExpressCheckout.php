@@ -14,6 +14,7 @@ use Krokedil\Klarna\ExpressCheckout\ClientTokenParser;
 use Krokedil\Klarna\ExpressCheckout\WebhookSetup;
 use Krokedil\Klarna\ExpressCheckout\OneStepCheckout;
 use Krokedil\Klarna\ExpressCheckout\Blocks\OneStepBlocksIntegration;
+use Krokedil\Klarna\ExpressCheckout\Blocks\OneStepExpressPaymentMethod;
 use Krokedil\Klarna\ExpressCheckout\Api\Controllers\Notifications;
 
 /**
@@ -217,6 +218,13 @@ class ExpressCheckout {
 				}
 			);
 		}
+
+		add_action(
+			'woocommerce_blocks_payment_method_type_registration',
+			function ( $payment_method_registry ) {
+				$payment_method_registry->register( new OneStepExpressPaymentMethod( $this->settings, $this->assets ) );
+			}
+		);
 	}
 
 	/**
